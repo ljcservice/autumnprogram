@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="InterfaceMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		SYS_INTERFACE
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		IN_ID,
+		TYPE,
+		NAME,
+		CODE
+
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{IN_ID},
+		#{TYPE},
+		#{NAME},	
+		#{CODE}
+	</sql>
+	
+	<!-- 新增会员 -->
+	<insert id="saveI" parameterType="pd">
+		insert into <include refid="tableName"></include> (
+			IN_ID,TYPE,NAME,CODE	
+		) values (
+			#{IN_ID},#{TYPE},#{NAME},#{CODE}
+		)
+	</insert>
+	
+	<!-- 接口业务列表(app用户组) -->
+	<select id="interfacelistPage" parameterType="page" resultType="pd">
+		select 
+			<include refid="Field"></include>
+		from <include refid="tableName"></include> 
+		where 1=1 
+		<if test="pd.keywords != null and pd.keywords != ''"><!-- 用户名检索 -->
+			and(
+					NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				or
+					TYPE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+		</if>
+		order by CODE
+	</select>
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			IN_ID = #{IN_ID}
+	</select>
+	
+	<!-- 删除用户 -->
+	<delete id="deleteI" parameterType="pd">
+		delete from <include refid="tableName"></include> 
+		where 
+			IN_ID = #{IN_ID}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="editI" parameterType="pd">
+		update  <include refid="tableName"></include>
+			set TYPE				= #{TYPE},
+				NAME 					= #{NAME},
+				CODE					= #{CODE}
+			where 
+				IN_ID = #{IN_ID}
+	</update>
+
+	<!-- 全部会员 -->
+	<select id="listAllInterface" parameterType="pd" resultType="pd">
+		select 
+			<include refid="Field"></include>
+		from <include refid="tableName"></include> 
+		where 1=1 
+		<if test="keywords != null and keywords != ''"><!-- 用户名检索 -->
+			and(
+				NAME LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+				)
+		</if>
+		order by CODE
+	</select>
+
+	<!-- 批量删除用户 -->
+	<delete id="deleteAllI" parameterType="String">
+		delete from <include refid="tableName"></include>
+		where 
+			IN_ID in
+  			 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                  #{item}
+             </foreach>
+	</delete>
+	
+	<!-- 获取总数 -->
+	<select id="getInterfaceCount" parameterType="String" resultType="pd">
+		select 
+			count(IN_ID) interfaceCount
+		from 
+		<include refid="tableName"></include>
+	</select>
+	
+	
+	
+</mapper>

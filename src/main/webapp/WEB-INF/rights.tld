@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+	<display-name>"TS Tags"</display-name>
+	<tlib-version>2.2</tlib-version>
+	<short-name>ts</short-name>
+	<uri>/rights</uri>
+
+	<tag>
+	  <!-- 标签名称-->
+	  <name>rights</name>
+	  
+	  <!-- 标签对应的处理类-->
+	  <tag-class>com.ts.util.Taglib.RightsTag</tag-class>
+	  
+	  <!-- 标签体内容,有标签体则设为jsp-->
+	  <body-content>jsp</body-content>
+	  
+	  <!-- 标签的属性声明-->
+	  <attribute>
+		   <name>code</name>
+		   <required>true</required>
+		   <rtexprvalue>true</rtexprvalue>
+	  </attribute>
+	  
+	</tag>
+	<tag>
+	  <!-- 标签名称-->
+	  <name>norights</name>
+	  
+	  <!-- 标签对应的处理类-->
+	  <tag-class>com.ts.util.Taglib.NoRightsTag</tag-class>
+	  
+	  <!-- 标签体内容,有标签体则设为jsp-->
+	  <body-content>jsp</body-content>
+	  
+	  <!-- 标签的属性声明-->
+	</tag>
+</taglib>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LogMapper">
+
+	<insert id="saveLog" parameterType="pd">
+		insert into sys_log
+			(ID,OP_TYPE,KEY,TABLE_NAME,UPDATE_MAN,	UPDATE_TIME,CONTENT)
+		values (  
+			#{ID},#{OP_TYPE},#{KEY},#{TABLE_NAME},#{UPDATE_MAN},#{UPDATE_TIME},#{CONTENT,jdbcType=VARCHAR}
+		)
+	</insert>
+</mapper>

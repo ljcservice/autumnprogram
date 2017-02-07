@@ -1,0 +1,40 @@
+.detailInfo{
+	-webkit-box-shadow: #666 0px 0px 6px;  
+	-moz-box-shadow: #666 0px 0px 6px;  
+	box-shadow: #666 0px 0px 6px;  
+	background: rgb(153, 204, 255);  
+	border:1px solid #d5d5d5;
+	padding: 2px;
+	max-width: 300px;
+}
+.shadow{  
+/* 	-webkit-box-shadow: #666 0px 0px 10px;   */
+/* 	-moz-box-shadow: #666 0px 0px 10px;   */
+/* 	box-shadow: #666 0px 0px 10px;   */
+/* 	background: #EEFF99;   */
+	border:1px solid #d5d5d5;
+	overflow: hidden;
+}
+.tag_grp {
+    border: 1px solid #d3d3d3;
+    border-radius: 3px;
+    color: black;
+    cursor: pointer;
+    display: inline-block;
+    float: none;
+    font-size: 12px;
+    line-height: 22px;
+    margin: 2px 2px 2px 4px;
+    padding: 2px 5px;
+    background-color: rgb(153, 204, 255);
+    width: auto;
+}
+.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+	padding: 4px;
+}
+span.span_remove{
+	background-image: url("../images/remove.gif");
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ColRuleMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		SYS_COL_RULE
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		ID,
+		DR_ID,
+		RULE_NAME,
+		REMARK
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ID},
+		#{DR_ID},
+		#{RULE_NAME},
+		#{REMARK}
+	</sql>
+	
+	<!-- 新增 -->
+	<insert id="saveA" parameterType="pd">
+		insert into <include refid="tableName"></include> (
+			ID,
+			DR_ID,
+			RULE_NAME,
+			REMARK	
+		) values (
+			#{ID},
+			#{DR_ID},
+			#{RULE_NAME},
+			#{REMARK}
+		)
+	</insert>
+	
+	<!-- 可访问字段管理列表查询 -->
+	<select id="colRulelistPage" parameterType="page" resultType="pd">
+		select 
+				C.ID,
+				C.DR_ID,
+				C.RULE_NAME,
+				C.REMARK,
+				D.TABLE_DISC,
+				D.COLUMN_NAME,
+				D.COLUMN_DISC,
+				D.IN_ID	
+		from 
+			SYS_COL_RULE C , SYS_DATA_RIGHT D 
+		where C.DR_ID = #{pd.DR_ID}
+		and C.DR_ID = D.DR_ID
+		order by D.TABLE_DISC,D.COLUMN_NAME
+	</select>
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			ID = #{ID}
+	</select>
+	<!-- 删除用户 -->
+	<delete id="deleteA" parameterType="pd">
+		delete from <include refid="tableName"></include> 
+		where 
+			ID = #{ID}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="editA" parameterType="pd">
+		update  <include refid="tableName"></include>
+			set DR_ID					= #{DR_ID},
+				RULE_NAME				= #{RULE_NAME},
+				REMARK					= #{REMARK}
+			where 
+				ID = #{ID}
+	</update>
+
+	<!-- 批量删除用户 -->
+	<delete id="deleteAllA" parameterType="String">
+		delete from <include refid="tableName"></include>
+		where 
+			ID in
+  			 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                  #{item}
+             </foreach>
+	</delete>
+	
+	<!-- 获取总数 -->
+	<select id="getAccessCount" parameterType="String" resultType="pd">
+		select 
+			count(ID) accessCount
+		from 
+		<include refid="tableName"></include>
+	</select>	
+</mapper>

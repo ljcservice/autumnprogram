@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AIMapper">
+
+	<!-- 获取数据来源 -->
+	<select id="dictList" parameterType="pd" resultType="pd" >
+		select  D_KEY,D_VALUE FROM CO_DICT WHERE DT_ID = #{dt_id}
+	</select>
+	
+	<!-- 获取用户列表 -->
+	<select id="userlistPage" parameterType="pd" resultType="pd" >
+		SELECT U.USER_ID,U.USERNAME,U.NAME,U.USER_NO FROM SYS_USER U,USER_ROLE_RELA R WHERE 
+		U.USER_ID=R.USER_ID AND R.ROLE_ID=#{pd.ROLE_ID}
+	</select>
+	
+	<!-- 诊断名称同义词标准词查询 -->
+	<select id="diagOsynlistPage" parameterType="page" resultType="pd">
+		select b.D_ID ID,a.STAD_DN_ID STAD_ID,a.DN_CHN CN,a.DN_ENG EN,b.STAD_DN_CHN STAD_CN,b.STAD_DN_ENG STAD_EN,b.MAIN_CODE,b.ADD_CODE,a.TERM_TYPE,
+			   a.SYNO_TYPE,a.ORG_DN_CHN ORG_CN,a.ORG_DN_ENG ORG_EN,a.IS_DISABLE,a.DESCRIPTION,a.UPDATE_MAN,a.UPDATE_TIME
+		from on_diag_name a 
+		left join on_diag b on (a.STAD_DN_ID=b.DN_ID ) 
+		where a.IS_DISABLE=0 
+		<if test="pd.DIAG_NAME != null and pd.DIAG_NAME!=''"> <!-- 术语名称 ADD BY ZHY -->
+			and a.DN_CHN LIKE CONCAT(CONCAT('%', #{pd.DIAG_NAME}),'%')
+		</if>
+	</select>
+	<!-- 诊断名称同义词标准词查询根据本体的ID获取标准词的ID获取同义词 -->
+	<select id="diagOsynByTreelistPage" parameterType="page" resultType="pd">
+		select b.D_ID ID,a.STAD_DN_ID STAD_ID,a.DN_CHN CN,a.DN_ENG EN,b.STAD_DN_CHN STAD_CN,b.STAD_DN_ENG STAD_EN,b.MAIN_CODE,b.ADD_CODE,a.TERM_TYPE,
+			   a.SYNO_TYPE,a.ORG_DN_CHN ORG_CN,a.ORG_DN_ENG ORG_EN,a.IS_DISABLE,a.DESCRIPTION,a.UPDATE_MAN,a.UPDATE_TIME
+		from on_diag_name a 
+		join on_diag b on (a.STAD_DN_ID=b.DN_ID and b.D_ID=#{pd.tree_id}) 
+		where a.IS_DISABLE=0 
+	</select>
+	
+	<!-- 本体更新-增加无法干预 -->
+	<insert id="addNonTerm" parameterType="pd" >
+		<selectKey resultType="java.math.BigDecimal" order="BEFORE" keyProperty="NO_ID">  
+	       SELECT SEQ_AI_NO_TERM.Nextval as NO_ID from DUAL  
+	    </selectKey> 
+		insert into AI_NO_TERM (
+			NO_ID,NO_TYPE_ID,TERM_NAME,TERM_TYPE,UPDATE_MAN,UPDATE_TIME,MEMO 
+		) values (
+			#{NO_ID},#{NO_TYPE_ID},#{TERM_NAME},#{TERM_TYPE},#{UPDATE_MAN},SYSDATE,#{MEMO}
+		)
+	</insert>
+	<!-- 诊断本体更新-增加问题单处理结果 -->
+	<insert id="addQDiagRs" parameterType="pd" >
+		insert into AI_Q_DIAG_RS (
+			RS_ID,CHILD_ID,DIAG_WORD,DIAG_ID,DIS_TYPE
+			<if test="STAD_ID != null and STAD_ID!=''"> ,STAD_ID</if>
+			,SYN_TYPE,TERM_TYPE,UPDATE_MAN,UPDATE_TIME,REMARK 
+		) values (
+			SEQ_AI_Q_DIAG_RS.Nextval,#{CHILD_ID},#{DIAG_WORD},#{DIAG_ID},#{DIS_TYPE}
+			<if test="STAD_ID != null and STAD_ID!=''"> ,#{STAD_ID}</if>
+			,#{SYN_TYPE},#{TERM_TYPE},#{UPDATE_MAN},SYSDATE,#{REMARK}
+		)
+	</insert>
+	<!-- 诊断本体查询 根据标准词ID -->
+	<select id="getOnDiagByStd" parameterType="pd" resultType="pd">
+		select D_ID,STAD_DN_CHN,MAIN_CODE,ADD_CODE 
+		from on_diag
+		where DN_ID=#{STAD_DN_ID} and IS_DISABLE=0 
+	</select>
+	<!-- 诊断根据名称获取无用术语 -->
+	<select id="getNonTermByName" parameterType="java.lang.String" resultType="pd">
+		select NO_ID
+		from AI_NO_TERM
+		where TERM_NAME=#{DIAG_WORD} and IS_DISABLE=0 
+	</select>
+	<!-- 诊断校验是否包含诊断名称 -->
+	<select id="checkDiagName" parameterType="pd" resultType="pd">
+		select DN_ID,STAD_DN_ID 
+		from ON_DIAG_NAME where DN_CHN = #{DN_CHN} and IS_DISABLE=0 
+	</select>
+	<!-- 保存AI操作日志信息 -->
+	<insert id="saveOpLog" parameterType="pd" >
+		insert into AI_OP_LOGS (
+			OP_LOG_ID,
+			OP_DESC,
+			UPD_USER,
+			UPD_TIME
+		) values (
+			SEQ_AI_OP_LOGS.Nextval,#{OP_DESC},#{UPD_USER},SYSDATE
+		)
+	</insert>
+	<!-- 保存任务的日志信息 -->
+	<insert id="savaTaskLog" parameterType="pd" >
+	    <selectKey resultType="long" order="BEFORE" keyProperty="LOG_ID">  
+	       SELECT SEQ_AI_TASK_LOG.Nextval as LOG_ID from DUAL  
+	   </selectKey> 
+		insert into AI_TASK_LOG (
+			LOG_ID, TASK_ID, TASK_TYPE_ID,TASK_TYPE_CHILD_ID,STEP,TASK_STAT,UPD_USER,UPD_TIME
+		) values (
+			#{LOG_ID},#{TASK_ID},#{TASK_TYPE_ID},#{TASK_TYPE_CHILD_ID},#{STEP},#{TASK_STAT},#{ALLOT_USER_ID},SYSDATE
+		)
+	</insert>
+	<!-- 校验是否在字典表中 -->
+	<select id="checkInDict" parameterType="pd" resultType="pd">
+		select 1
+		from CO_DICT 
+		where DT_ID=#{DT_ID} and D_KEY=#{D_KEY}  and IS_DISABLE=0 
+	</select>
+	<!-- 根据ID查询单个诊断同义词 -->
+	<!-- 根据ID查询单个诊断同义词 -->
+	<select id="getDiagOsynById" parameterType="pd" resultType="pd">
+		select DN_CHN  
+		from ON_DIAG_NAME 
+		where DN_ID=#{STAD_DN_ID}
+	</select>
+</mapper>

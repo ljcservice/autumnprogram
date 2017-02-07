@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TreeMapper">
+
+	<!-- 新增诊断本体树 -->
+	<insert id="diagTreeInsert" parameterType="pd">
+		insert into on_diag_tree (TREE_ID,D_ID,PARENT_ID ) 
+		values (#{TREE_ID},#{D_ID},#{PARENT_ID,jdbcType=NUMERIC} )
+	</insert>
+	<!-- 新增手术本体树 -->
+	<insert id="opTreeInsert" parameterType="pd">
+		insert into on_operation_tree (TREE_ID,OP_ID,PARENT_ID ) 
+		values (#{TREE_ID},#{D_ID},#{PARENT_ID,jdbcType=NUMERIC} )
+	</insert>
+	<!-- 新增科室本体树 -->
+	<insert id="depTreeInsert" parameterType="pd">
+		insert into on_dep_tree (TREE_ID,DEP_ID,PARENT_ID ) 
+		values (#{TREE_ID},#{D_ID},#{PARENT_ID,jdbcType=NUMERIC} )
+	</insert>
+	
+	<!-- 删除诊断本体树根据本体ID -->
+	<delete id="diagDeleteTreeByOntoId" parameterType="String">
+		delete from on_diag_tree where D_ID = #{ID}
+	</delete>
+	<!-- 删除手术本体树根据本体ID -->
+	<delete id="opDeleteTreeByOntoId" parameterType="String">
+		delete from on_operation_tree where OP_ID = #{ID}
+	</delete>
+	<!-- 删除科室本体树根据本体ID -->
+	<delete id="depDeleteTreeByOntoId" parameterType="String">
+		delete from on_dep_tree where DEP_ID = #{ID}
+	</delete>
+
+	<!-- 诊断树	 -->
+	<select id="diagTreeList" parameterType="pd" resultType="pd">
+		select a.TREE_ID,a.D_ID ID,b.IS_DISABLE,b.STAD_DN_CHN || '[' || decode(b.MAIN_CODE,null,b.ADD_CODE,decode(b.ADD_CODE,null,b.MAIN_CODE,b.MAIN_CODE||','||b.ADD_CODE))  || ']'  NAME,b.STAD_DN_CHN CN,b.MAIN_CODE,b.ADD_CODE,a.PARENT_ID 
+		from on_diag_tree a,on_diag b 
+		where a.D_ID = b.D_ID 
+			<if test="ID!=null">
+				and a.PARENT_ID = #{ID}
+			</if>
+			<if test="ID==null or ID==''">
+				and a.PARENT_ID is null 
+			</if>
+			order by b.MAIN_CODE,b.ADD_CODE
+	</select>
+	
+	<!-- 手术树 -->
+	<select id="opTreeList" parameterType="pd" resultType="pd">
+		select a.TREE_ID,a.OP_ID ID,b.IS_DISABLE,b.STAD_OP_CHN ||'[' ||  b.OP_CODE ||']' NAME,b.OP_CODE MAIN_CODE,a.PARENT_ID 
+		from on_operation_tree a,on_operation b 
+		where a.OP_ID = b.OP_ID 
+			<if test="ID!=null">
+				and a.PARENT_ID = #{ID}
+			</if>
+			<if test="ID==null or ID==''">
+				and a.PARENT_ID is null 
+			</if>
+			order by b.OP_CODE
+	</select>
+	
+	<!-- 药品ATC分类  EN-->
+	<select id="drugTreeList" parameterType="pd" resultType="pd">
+		select a.CG_ID ID,a.CHN_NAME NAME,a.PARENT_ID 
+		from on_drug_cate a 
+		where 1=1 
+			<if test="ID!=null">
+				and a.PARENT_ID = #{ID}
+			</if>
+			<if test="ID==null or ID==''">
+				and a.PARENT_ID is null 
+			</if>
+			<if test="category!=null and category!=''">
+				and a.category = #{category}
+			</if>
+	</select>
+	
+	<!-- 科室树  -->
+	<select id="depTreeList" parameterType="pd" resultType="pd">
+		select a.TREE_ID,a.DEP_ID ID,b.IS_DISABLE,b.DEP_STAD_NAME || '[' || b.DEP_NAME_CODE || ']'  NAME,b.DEP_NAME_CODE MAIN_CODE,a.PARENT_ID 
+		from on_dep_tree a,on_dep b 
+		where a.DEP_ID = b.ID 
+			<if test="ID!=null">
+				and a.PARENT_ID = #{ID}
+			</if>
+			<if test="ID==null or ID==''">
+				and a.PARENT_ID is null 
+			</if>
+			order by b.DEP_NAME_CODE 
+	</select>
+	
+	<!-- 诊断当前结点的所有上级节点 -->
+	<select id="diagTreePidsById" parameterType="pd" resultType="pd">
+		select ROWNUM as rn ,D_ID id from on_diag_tree START WITH D_ID = #{ID} CONNECT BY PRIOR PARENT_ID=D_ID order by rn desc
+	</select>
+	<!-- 手术当前结点的所有上级节点 -->
+	<select id="opTreePidsById" parameterType="pd" resultType="pd">
+		select ROWNUM as rn ,OP_ID id from on_operation_tree START WITH OP_ID = #{ID} CONNECT BY PRIOR PARENT_ID=OP_ID order by rn desc
+	</select>
+		<!-- 科室分类当前结点的所有上级节点 -->
+	<select id="depTreePidsById" parameterType="pd" resultType="pd">
+		select ROWNUM as rn ,DEP_ID id from on_dep_tree START WITH DEP_ID = #{ID} CONNECT BY PRIOR PARENT_ID=DEP_ID order by rn desc
+	</select>
+	<!-- 根据ID查询诊断所有的父亲节点 -->
+	<select id="diagParentOntoInfo" parameterType="String" resultType="pd">
+		select b.D_ID ID,b.STAD_DN_CHN CN,b.STAD_DN_ENG EN ,b.MAIN_CODE,b.ADD_CODE
+			,b.STAD_DN_CHN || '[' || decode(b.MAIN_CODE,null,b.ADD_CODE,decode(b.ADD_CODE,null,b.MAIN_CODE,b.MAIN_CODE||','||b.ADD_CODE))  || ']'  NAME
+		from on_diag_tree a ,on_diag b 
+		where a.PARENT_ID = b.D_ID 
+		and a.D_ID = #{ID}
+	</select>
+		<!-- 根据ID查询手术所有的父亲节点，会有多个 -->
+	<select id="opParentOntoInfo" parameterType="String" resultType="pd">
+		select b.OP_ID ID,b.STAD_OP_CHN CN, STAD_OP_ENG EN ,b.OP_CODE MAIN_CODE ,b.STAD_OP_CHN || '[' || b.OP_CODE || ']'  NAME
+		from on_operation_tree a ,on_operation b  
+		where a.PARENT_ID = b.OP_ID 
+		and a.OP_ID = #{ID}
+	</select>
+		<!-- 根据ID查询科室所有的父亲节点，会有多个 -->
+	<select id="depParentOntoInfo" parameterType="String" resultType="pd">
+		select b.ID ID,b.DEP_STAD_NAME CN , b.DEP_NAME_CODE MAIN_CODE ,b.DEP_STAD_NAME || '[' || b.DEP_NAME_CODE || ']'  NAME
+		from on_dep_tree a ,on_dep b  
+		where a.PARENT_ID = b.ID 
+		and a.dep_ID = #{ID}
+	</select>
+	<!-- 根据ID查询诊断所有的历史上级信息 -->
+	<select id="diagParentOntoHisInfo" parameterType="pd" resultType="pd">
+		select b.D_ID ID,b.STAD_DN_CHN CN, STAD_DN_ENG EN ,b.MAIN_CODE,B.ADD_CODE
+			,b.STAD_DN_CHN || '[' || decode(b.MAIN_CODE,null,b.ADD_CODE,decode(b.ADD_CODE,null,b.MAIN_CODE,b.MAIN_CODE||','||b.ADD_CODE))  || ']'  NAME
+		from ai_alter_tree_hist a ,on_diag b 
+		where a.PARENT_ID = b.D_ID 
+		<!-- 状态为待审核 -->
+<!-- 		and status = 0  -->
+		<!-- 对应本体的ID -->
+		and a.D_ID = #{D_ID} 
+		<!-- 对应本体历史的ID -->
+		and a.ONTO_H_ID = #{H_ID} 
+		and a.ONTO_TYPE = #{ONTOTYPE}
+	</select>
+		<!-- 根据ID查询诊断所有的历史上级信息 -->
+	<select id="opParentOntoHisInfo" parameterType="pd" resultType="pd">
+		select b.OP_ID ID,b.STAD_OP_CHN CN, STAD_OP_ENG EN ,b.OP_CODE MAIN_CODE ,b.STAD_OP_CHN || '[' || b.OP_CODE || ']'  NAME
+		from ai_alter_tree_hist a ,on_operation b 
+		where a.PARENT_ID = b.OP_ID 
+		<!-- 状态为待审核 -->
+<!-- 		and status = 0  -->
+		<!-- 对应本体的ID -->
+		and a.D_ID = #{D_ID} 
+		<!-- 对应本体历史的ID -->
+		and a.ONTO_H_ID = #{H_ID} 
+		and a.ONTO_TYPE = #{ONTOTYPE}
+	</select>
+		<!-- 根据ID查询诊断所有的历史上级信息 -->
+	<select id="depParentOntoHisInfo" parameterType="pd" resultType="pd">
+		select b.ID,b.DEP_STAD_NAME CN,b.DEP_NAME_CODE MAIN_CODE ,b.DEP_STAD_NAME || '[' || b.DEP_NAME_CODE || ']'  NAME
+		from ai_alter_tree_hist a ,on_dep b 
+		where a.PARENT_ID = b.ID 
+		<!-- 状态为待审核 -->
+<!-- 		and status = 0  -->
+		<!-- 对应本体的ID -->
+		and a.D_ID = #{D_ID} 
+		<!-- 对应本体历史的ID -->
+		and a.ONTO_H_ID = #{H_ID} 
+		and a.ONTO_TYPE = #{ONTOTYPE}
+	</select>
+	<!-- 根据ID查询药品所有的父亲节点 ，会有多个-->
+	<select id="drugParentOntoInfo" parameterType="String" resultType="pd">
+		select * from on_diag where D_ID = #{ID}
+	</select>
+	
+	<!-- 保存本体数的历史 -->
+	<insert id="saveOntoTreeHis" parameterType="pd">
+		insert into ai_alter_tree_hist (
+			H_ID,D_ID,PARENT_ID,UPDATE_MAN,UPDATE_TIME,UPD_DESC,STATUS,ONTO_TYPE,OP_TYPE,ONTO_H_ID
+			,TREE_ID,DRUG_TYPE,TYPE_CHN,TYPE_ENG,ORG_DRUG,DRUG_MEMO
+		) values (
+			#{H_ID},#{D_ID},#{PARENT_ID},#{UPDATE_MAN},#{UPDATE_TIME},#{UPD_DESC},#{STATUS},#{ONTO_TYPE},#{OP_TYPE},#{ONTO_H_ID}
+			,#{TREE_ID,jdbcType=VARCHAR},#{DRUG_TYPE,jdbcType=VARCHAR},#{TYPE_CHN,jdbcType=VARCHAR},#{TYPE_ENG,jdbcType=VARCHAR},#{ORG_DRUG,jdbcType=VARCHAR},#{DRUG_MEMO,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<!-- 根据本体历史ID查询对应的本体树历史 -->
+	<select id="treeHisByOntoId" parameterType="String" resultType="pd">
+		select H_ID,TREE_ID,D_ID,PARENT_ID,UPDATE_MAN,UPDATE_TIME,UPD_DESC,STATUS,ONTO_TYPE,OP_TYPE,ONTO_H_ID,DRUG_TYPE,TYPE_CHN,TYPE_ENG,ORG_DRUG,DRUG_MEMO
+		from ai_alter_tree_hist where ONTO_H_ID = #{ID}
+	</select>
+	
+	<!-- 本体审核通过和拒绝，级联更新树状态 -->
+	<update id="ontoTreeCheckStatus" parameterType="pd" >
+		update ai_alter_tree_hist 
+		set 
+			STATUS=#{STATUS},CHECK_USER=#{CHECK_USER},CHECK_TIME=#{CHECK_TIME},CHECK_MEMO=#{CHECK_MEMO,jdbcType=VARCHAR}
+		<!-- ONTO_H_ID 对应 本体历史ID，用于区分不同批次的历史 -->
+		where ONTO_H_ID = #{H_ID}
+	</update>
+	
+	<!-- 删除本体树历史根据本体ID -->
+	<delete id="deleteTreeHisByOntoId" parameterType="pd">
+		delete from ai_alter_tree_hist where D_ID = #{D_ID} and ONTO_H_ID = #{ONTO_H_ID}
+	</delete>
+</mapper>

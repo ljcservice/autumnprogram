@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AiAlterNameHistMapper">
+
+	<resultMap type="AiAlterNameHist" id="aiAlterNameHistResultMap">
+		<id column="H_ID" property="H_ID"/>
+		<result column="DN_ID" property="DN_ID"/>
+		<result column="DN_CHN" property="DN_CHN"/>
+		<result column="DN_ENG" property="DN_ENG"/>
+		<result column="FAC_ABB" property="FAC_ABB"/>
+		<result column="STAD_CHN" property="STAD_CHN"/>
+		<result column="STAD_ENG" property="STAD_ENG"/>
+		<result column="STAD_FAC_ABB" property="STAD_FAC_ABB"/>
+		<result column="STAD_DN_ID" property="STAD_DN_ID"/>
+		<result column="TERM_TYPE" property="TERM_TYPE"/>
+		<result column="SYNO_TYPE" property="SYNO_TYPE"/>
+		<result column="ORG_DN_CHN" property="ORG_DN_CHN"/>
+		<result column="ORG_DN_ENG" property="ORG_DN_ENG"/>
+		<result column="ORG_STAD_CHN" property="ORG_STAD_CHN"/>
+		<result column="ORG_STAD_ENG" property="ORG_STAD_ENG"/>
+		<result column="IS_DISABLE" property="IS_DISABLE"/>
+		<result column="DESCRIPTION" property="DESCRIPTION"/>
+		<result column="VERSION" property="VERSION"/>
+		<result column="UPDATE_MAN" property="UPDATE_MAN"/>
+		<result column="UPDATE_TIME" property="UPDATE_TIME"/>
+		<result column="OPERATION" property="OPERATION"/>
+		<result column="CHECK_USER" property="CHECK_USER"/>
+		<result column="CHECK_TIME" property="CHECK_TIME"/>
+		<result column="CHECK_MEMO" property="CHECK_MEMO"/>
+		<result column="OP_TYPE" property="OP_TYPE"/>
+		<result column="STATUS" property="STATUS"/>
+		<result column="UPD_DESC" property="UPD_DESC"/>
+		<result column="DIAG_ID" property="DIAG_ID"/>
+		<result column="ONTO_TYPE" property="ONTO_TYPE"/>
+		<result column="DRUG_MEMO" property="DRUG_MEMO"/>
+		<result column="ORG_FAC_ABB" property="ORG_FAC_ABB"/>
+		<result column="ORG_STAD_FAC_ABB" property="ORG_STAD_FAC_ABB"/>
+		<result column="COUNTRY" property="COUNTRY"/>
+		<result column="DISTRICT" property="DISTRICT"/>
+		<result column="AREA_CODE" property="AREA_CODE"/>
+		<result column="MEMO" property="MEMO"/>
+		<result column="STAD_PACK_SPEC_CHN" property="STAD_PACK_SPEC_CHN"/>
+		<result column="STAD_PACK_SPEC_ENG" property="STAD_PACK_SPEC_ENG"/>
+		<result column="STAD_PACK_SPEC_UNIT_CHN" property="STAD_PACK_SPEC_UNIT_CHN"/>
+		<result column="STAD_PACK_SPEC_UNIT_ENG" property="STAD_PACK_SPEC_UNIT_ENG"/>
+	</resultMap>
+	
+	<!--表名 -->
+	<sql id="tableName">
+		AI_ALTER_NAME_HIST
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		H_ID,
+		DN_ID,
+		DN_CHN,
+		DN_ENG,
+		FAC_ABB,
+		STAD_CHN,
+		STAD_ENG,
+		STAD_FAC_ABB,
+		STAD_DN_ID,
+		TERM_TYPE,
+		SYNO_TYPE,
+		ORG_DN_CHN,
+		ORG_DN_ENG,
+		ORG_STAD_CHN,
+		ORG_STAD_ENG,
+		IS_DISABLE,
+		DESCRIPTION,
+		VERSION,
+		UPDATE_MAN,
+		UPDATE_TIME,
+		OPERATION,
+		CHECK_USER,
+		CHECK_TIME,
+		CHECK_MEMO,
+		OP_TYPE,
+		STATUS,
+		UPD_DESC,
+		DIAG_ID,
+		ONTO_TYPE,
+		DRUG_MEMO,
+		ORG_FAC_ABB,
+		ORG_STAD_FAC_ABB,
+		COUNTRY,
+		DISTRICT,
+		AREA_CODE,
+		MEMO,
+		STAD_PACK_SPEC_CHN,
+		STAD_PACK_SPEC_ENG,
+		STAD_PACK_SPEC_UNIT_CHN,
+		STAD_PACK_SPEC_UNIT_ENG
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{H_ID},
+		#{DN_ID},
+		#{DN_CHN},
+		#{DN_ENG},
+		#{FAC_ABB},
+		#{STAD_CHN},
+		#{STAD_ENG},
+		#{STAD_FAC_ABB},
+		#{STAD_DN_ID},
+		#{TERM_TYPE},
+		#{SYNO_TYPE},
+		#{ORG_DN_CHN},
+		#{ORG_DN_ENG},
+		#{ORG_STAD_CHN},
+		#{ORG_STAD_ENG},
+		#{IS_DISABLE},
+		#{DESCRIPTION},
+		#{VERSION},
+		#{UPDATE_MAN},
+		#{UPDATE_TIME},
+		#{OPERATION},
+		#{CHECK_USER},
+		#{CHECK_TIME},
+		#{CHECK_MEMO},
+		#{OP_TYPE},
+		#{STATUS},
+		#{UPD_DESC},
+		#{DIAG_ID},
+		#{ONTO_TYPE},
+		#{DRUG_MEMO},
+		#{ORG_FAC_ABB},
+		#{ORG_STAD_FAC_ABB},
+		#{COUNTRY},
+		#{DISTRICT},
+		#{AREA_CODE},
+		#{MEMO},
+		#{STAD_PACK_SPEC_CHN},
+		#{STAD_PACK_SPEC_ENG},
+		#{STAD_PACK_SPEC_UNIT_CHN},
+		#{STAD_PACK_SPEC_UNIT_ENG}
+	</sql>
+<insert id="saveOsynHis">
+	insert into <include refid="tableName"></include> (
+		H_ID,DN_ID,DN_CHN,DN_ENG,STAD_DN_ID,ORG_DN_CHN,ORG_DN_ENG,IS_DISABLE
+		,TERM_TYPE,SYNO_TYPE,VERSION,DESCRIPTION,OPERATION
+		,UPDATE_MAN,UPDATE_TIME,UPD_DESC,ONTO_TYPE,STATUS,OP_TYPE,ONTO_H_ID
+		,STAD_CHN,STAD_ENG,ORG_STAD_CHN,ORG_STAD_ENG,DRUG_MEMO
+		<!-- 药品生产企业 -->
+		,FAC_ABB,STAD_FAC_ABB,ORG_FAC_ABB,ORG_STAD_FAC_ABB,COUNTRY,DISTRICT,AREA_CODE,MEMO
+		<!-- 药品包装规格 -->
+		,STAD_PACK_SPEC_CHN,STAD_PACK_SPEC_ENG,STAD_PACK_SPEC_UNIT_CHN,STAD_PACK_SPEC_UNIT_ENG,PSU_ID
+	) values (
+		#{H_ID},#{DN_ID},#{DN_CHN},#{DN_ENG,jdbcType=VARCHAR},#{STAD_DN_ID},#{ORG_DN_CHN,jdbcType=VARCHAR},#{ORG_DN_ENG,jdbcType=VARCHAR},#{IS_DISABLE}
+		,#{TERM_TYPE,jdbcType=VARCHAR} ,#{SYNO_TYPE,jdbcType=VARCHAR},#{VERSION,jdbcType=VARCHAR},#{DESCRIPTION,jdbcType=VARCHAR},#{OPERATION,jdbcType=VARCHAR}
+		,#{UPDATE_MAN},#{UPDATE_TIME},#{UPD_DESC,jdbcType=VARCHAR},#{ONTO_TYPE},#{STATUS},#{OP_TYPE},#{ONTO_H_ID,jdbcType=VARCHAR} 
+		,#{STAD_CHN,jdbcType=VARCHAR},#{STAD_ENG,jdbcType=VARCHAR},#{ORG_STAD_CHN,jdbcType=VARCHAR} ,#{ORG_STAD_ENG,jdbcType=VARCHAR} ,#{DRUG_MEMO,jdbcType=VARCHAR} 
+		<!-- 药品生产企业 -->
+		,#{FAC_ABB,jdbcType=VARCHAR},#{STAD_FAC_ABB,jdbcType=VARCHAR},#{ORG_FAC_ABB,jdbcType=VARCHAR},#{ORG_STAD_FAC_ABB,jdbcType=VARCHAR},#{COUNTRY,jdbcType=VARCHAR},#{DISTRICT,jdbcType=VARCHAR},#{AREA_CODE,jdbcType=VARCHAR},#{MEMO,jdbcType=VARCHAR} 
+		<!-- 药品包装规格 -->
+		,#{STAD_PACK_SPEC_CHN,jdbcType=VARCHAR},#{STAD_PACK_SPEC_ENG,jdbcType=VARCHAR},#{STAD_PACK_SPEC_UNIT_CHN,jdbcType=VARCHAR},#{STAD_PACK_SPEC_UNIT_ENG,jdbcType=VARCHAR},#{PSU_ID,jdbcType=VARCHAR}
+	)
+</insert>
+	
+<!-- ====================查询开始========================= -->
+
+
+<!-- 查询单个诊断术语变更历史 -->
+<select id="diagHistlistPage" parameterType="page" resultType="pd">
+	select n.dn_chn stand_name,h.h_id,h.dn_id,h.dn_chn,h.dn_eng,h.stad_dn_id,h.term_type,h.syno_type,h.update_man,h.update_time,
+	h.upd_desc,h.check_user,h.check_time,h.CHECK_MEMO from ai_alter_name_hist h left join on_diag_name n on n.dn_id=h.stad_dn_id where h.dn_id=#{pd.DN_ID}
+</select>
+<!-- 查询单个药品同义词变更历史 -->
+<select id="drugHistlistPage" parameterType="pd" resultType="pd">
+	SELECT h.h_id,h.dn_id,h.dn_chn,h.dn_eng,h.fac_abb,h.stad_chn,h.stad_eng,
+	h.stad_fac_abb,h.org_dn_chn,h.org_dn_eng,h.org_stad_chn,h.org_stad_eng,h.op_type,
+	h.update_man,h.update_time,h.upd_desc,h.version,h.is_disable,h.description,
+	h.drug_memo,h.org_fac_abb,h.org_stad_fac_abb,h.country,h.district,h.area_code,
+	h.stad_pack_spec_chn,h.stad_pack_spec_eng,h.stad_pack_spec_unit_chn,h.stad_pack_spec_unit_eng
+	 FROM AI_ALTER_NAME_HIST h where h.dn_id=#{pd.DN_ID} order by h.update_time desc
+</select>
+
+<!-- 术语审核查询术语操作副本标准词信息列表 -->
+<select id="checkNamelistPage" parameterType="page" resultType="pd">
+	select distinct h.h_id,h.dn_id,h.dn_chn,h.dn_eng,h.stad_dn_id,h.term_type,h.syno_type,h.org_dn_chn,h.org_dn_eng,
+	h.op_type,h.is_disable,h.update_man,h.update_time,h.upd_desc,h.onto_type,h.status,h.STAD_CHN,h.STAD_ENG,
+	h.ORG_STAD_CHN,h.ORG_STAD_ENG,h.DRUG_MEMO
+	<if test="pd.TERM_CATEGORY==10301">
+		,d.dn_chn stand_chn_name,d.dn_eng stand_eng_name
+	</if>
+	<if test="pd.TERM_CATEGORY==10502"><!-- 科室 -->
+		<if test="pd.WORD_TYPE == 0">
+			,d.DEP_NAME
+		</if>
+		<if test="pd.WORD_TYPE == 1">
+			,d.dn_chn dep_name
+		</if>
+	</if>
+	<if test="pd.TERM_CATEGORY==10501"><!-- 手术 -->
+		<if test="pd.WORD_TYPE == 0">
+			,d.ON_CHN stand_chn_name,d.ON_ENG stand_eng_name
+		</if>
+		<if test="pd.WORD_TYPE == 1">
+			,d.dn_chn stand_chn_name,d.dn_eng stand_eng_name
+		</if>
+	</if>
+	 from ai_alter_name_hist h 
+	 <if test="pd.TERM_CATEGORY==10301"><!-- 诊断表时查询标准诊断名称 -->
+	 	 left join
+		 <if test="pd.WORD_TYPE == 0">
+		 	on_diag_name
+		 </if>
+		 <if test="pd.WORD_TYPE == 1">
+		 	ai_alter_name_hist
+		 </if>
+		 d on d.dn_id = h.stad_dn_id
+	 </if>
+	 <if test="pd.TERM_CATEGORY==10502"><!-- 科室表时查询标准科室名称-->
+	 	 left join
+		 <if test="pd.WORD_TYPE == 0">
+		 	on_dep_name d on d.id = h.stad_dn_id
+		 </if>
+		 <if test="pd.WORD_TYPE == 1">
+		 	ai_alter_name_hist d on d.dn_id = h.stad_dn_id
+		 </if>	
+	 </if>
+	 <if test="pd.TERM_CATEGORY==10501"><!-- 手术表时查询标准手术名称 -->
+	 	 left join
+		 <if test="pd.WORD_TYPE == 0">
+		 	on_operation_name d on d.on_id = h.stad_dn_id
+		 </if>
+		 <if test="pd.WORD_TYPE == 1">
+		 	ai_alter_name_hist d on d.dn_id = h.stad_dn_id
+		 </if>
+	 </if>
+	
+	   where 1=1
+  	<if test="pd.WORD_TYPE == 1">
+  		and h.dn_id=h.stad_dn_id
+ 	</if>
+ 	<if test="pd.WORD_TYPE == 0">
+  		and h.dn_id!=h.stad_dn_id
+ 	</if>
+ 	<if test="pd.STATUS !=null and pd.STATUS !=''">
+		and h.status = #{pd.STATUS}
+	</if>
+ 	<if test="pd.DN_NAME != null and pd.DN_NAME !=''">
+ 		and (h.dn_chn like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%') 
+ 		or h.dn_eng like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%'))
+ 	</if>
+	<if test="pd.OP_TYPE != null and pd.OP_TYPE !=''">
+		and h.OP_TYPE = #{pd.OP_TYPE}
+	</if>
+	<if test="pd.UPDATE_MAN != null and pd.UPDATE_MAN !=''">
+		and h.UPDATE_MAN=#{pd.UPDATE_MAN}
+	</if>
+	<if test="pd.UPDATE_TIME !=null and pd.UPDATE_TIME!=''">
+		and to_char(h.UPDATE_TIME,'YYYY-MM-DD') &gt;= #{pd.UPDATE_TIME} 
+	</if>
+	<if test="pd.UPDATE_TIME_END !=null and pd.UPDATE_TIME_END !=''">
+		and to_char(h.UPDATE_TIME,'YYYY-MM-DD') &lt;= #{pd.UPDATE_TIME_END} 
+	</if>
+	<if test="pd.IS_DISABLED!=null and pd.IS_DISABLED!=''">
+		and h.is_disable=#{pd.IS_DISABLED}
+	</if>
+		<!-- 同义词类型 -->
+		and h.onto_type = #{pd.TERM_CATEGORY}
+</select>
+
+<!-- 查询单个词语副本信息，审核时查看详细信息 -->
+<select id="alterNameDetail" parameterType="pd" resultType="pd">
+	select 
+	<if test="ONTO_TYPE==10301">
+		d.dn_chn stand_name,
+	</if>
+	<if test="ONTO_TYPE==10501"><!-- 手术标准名称 -->
+		<if test="OP_TYPE==0 and STAD_FLAG==1">
+			d.dn_chn stand_name,
+		</if>
+		<if test="STAD_FLAG==0 or OP_TYPE==1">
+			d.on_chn stand_name,
+		</if>
+	</if>
+	<if test="ONTO_TYPE==10502"><!-- 科室标准名称 -->
+		<if test="OP_TYPE==0 and STAD_FLAG==1">
+			d.dn_chn stand_name,
+		</if>
+		<if test="STAD_FLAG==0 or OP_TYPE==1">
+			d.dep_name stand_name,
+		</if>
+	</if>
+	h.h_id,h.dn_id,h.dn_chn,h.dn_eng,h.stad_dn_id,h.term_type,h.syno_type,h.org_dn_chn,h.org_dn_eng,h.is_disable,h.description,
+	h.version,h.update_man,h.update_time,h.op_type,h.onto_type,h.STAD_CHN,h.STAD_ENG,h.ORG_STAD_CHN,h.ORG_STAD_ENG,h.UPD_DESC,
+	h.FAC_ABB,h.STAD_FAC_ABB,h.ORG_FAC_ABB,h.ORG_STAD_FAC_ABB,h.COUNTRY,h.DISTRICT,h.AREA_CODE,h.DRUG_MEMO,h.STAD_PACK_SPEC_CHN,
+	h.STAD_PACK_SPEC_ENG,h.STAD_PACK_SPEC_UNIT_CHN,h.STAD_PACK_SPEC_UNIT_ENG,h.PSU_ID,h.STATUS
+	 from ai_alter_name_hist h 
+	<if test="ONTO_TYPE==10301">
+		left join
+		<if test="OP_TYPE==0">
+			<if test="STAD_FLAG==1">
+				ai_alter_name_hist
+			</if>
+			<if test="STAD_FLAG==0">
+				on_diag_name
+			</if>
+		</if>
+		<if test="OP_TYPE!=0">
+			on_diag_name
+		</if>
+		d on d.dn_id=h.stad_dn_id
+	</if>
+	<if test="ONTO_TYPE==10501">
+		left join
+		<if test="OP_TYPE==0 and STAD_FLAG==1">
+			ai_alter_name_hist d on d.dn_id=h.stad_dn_id
+		</if>
+		<if test="STAD_FLAG==0 or OP_TYPE!=0">
+			on_operation_name d on d.on_id=h.stad_dn_id
+		</if>
+	</if>
+	<if test="ONTO_TYPE==10502">
+		left join
+		<if test="OP_TYPE==0 and STAD_FLAG==1">
+			ai_alter_name_hist d on d.dn_id=h.stad_dn_id
+		</if>
+		<if test="STAD_FLAG==0 or OP_TYPE==1">
+			on_dep_name d on d.id=h.stad_dn_id
+		</if>
+	</if>
+	  where h.h_id=#{H_ID}
+</select>
+
+<!-- 根据ID查询AI_ALTER_NAME_HIST信息 -->
+<select id="findAlterById" parameterType="String" resultType="pd">
+	select t.h_id,t.dn_id,t.dn_chn,t.dn_eng,t.fac_abb,t.stad_chn,t.stad_eng,t.stad_fac_abb,t.stad_dn_id,t.term_type,
+	t.syno_type,t.org_dn_chn,t.org_dn_eng,t.org_stad_chn,t.org_stad_eng,t.is_disable,t.description,t.version,
+	t.update_man,t.update_time,t.operation,t.check_user,t.check_time,t.check_memo,t.op_type,t.status,t.upd_desc,
+	t.diag_id,t.onto_type,t.drug_memo,t.org_fac_abb,t.org_stad_fac_abb,t.country,t.district,t.area_code,t.memo,
+	t.stad_pack_spec_chn,t.stad_pack_spec_eng,t.stad_pack_spec_unit_chn,t.stad_pack_spec_unit_eng from 
+	ai_alter_name_hist t where t.h_id=#{_parameter}
+</select>
+
+<!-- 查询同义词历史 -->
+<select id="osynHisList"  parameterType="pd" resultType="pd">
+	select * from ai_alter_name_hist 
+	where 1=1 
+	<!-- 对应某批次的本体历史ID -->
+	<if test="ONTO_H_ID!=null and ONTO_H_ID!=''">
+		and ONTO_H_ID=#{ONTO_H_ID} 
+	</if>
+	<if test="ontoType!=null and ontoType!=''">
+		and ONTO_TYPE=#{ontoType} 
+	</if>
+	<if test="STATUS!=null and STATUS!=''">
+		and STATUS=#{STATUS} 
+	</if>
+</select>
+<!-- ========================查询结束======================= -->
+
+<!-- ========================新增开始======================= -->
+
+<!-- 添加诊断同义词 副本-->
+<insert id="saveDiagOsyn">
+	insert into <include refid="tableName"></include> (
+		H_ID,DN_ID,DN_CHN,DN_ENG,STAD_DN_ID,TERM_TYPE,SYNO_TYPE,ORG_DN_CHN,ORG_DN_ENG,IS_DISABLE,DESCRIPTION,UPDATE_MAN,UPDATE_TIME,ONTO_TYPE,STATUS,VERSION,UPD_DESC,OP_TYPE
+	) values (#{H_ID},#{DN_ID},#{DN_CHN},#{DN_ENG},#{STAD_DN_ID},#{TERM_TYPE},#{SYNO_TYPE},#{ORG_DN_CHN},#{ORG_DN_ENG},#{IS_DISABLE},#{DESCRIPTION},#{UPDATE_MAN},
+	 #{UPDATE_TIME} ,#{ONTO_TYPE},#{STATUS},#{VERSION},#{UPD_DESC},#{OP_TYPE}
+	)
+</insert>
+<!-- 添加药品名称副本信息 -->
+<insert id="saveDrugNameOsyn">
+	insert into ai_alter_name_hist (H_ID,DN_ID,STAD_DN_ID,DN_CHN,DN_ENG,STAD_CHN,STAD_ENG,ORG_DN_CHN,ORG_DN_ENG,
+	ORG_STAD_CHN,ORG_STAD_ENG,ONTO_TYPE,DRUG_MEMO,IS_DISABLE,UPDATE_MAN,UPDATE_TIME,DESCRIPTION,STATUS,OP_TYPE,
+	UPD_DESC)values(#{H_ID},#{DN_ID},#{STAD_DN_ID},#{DN_CHN},#{DN_ENG},#{STAD_CHN},#{STAD_ENG},#{ORG_DN_CHN},
+	#{ORG_DN_ENG},#{ORG_STAD_CHN},#{ORG_STAD_ENG},#{ONTO_TYPE},#{DRUG_MEMO},#{IS_DISABLE},#{UPDATE_MAN},
+	 #{UPDATE_TIME},#{DESCRIPTION},#{STATUS},#{OP_TYPE},#{UPD_DESC})
+</insert>
+<!-- ============================ 新增结束======================== -->
+
+<!-- ============================ 修改信息开始========================== -->
+<!-- 修改词语副本单个信息 -->
+<update id="upAlterName" parameterType="pd">
+	update ai_alter_name_hist a set a.check_user=#{CHECK_USER},a.check_time=#{CHECK_TIME},a.check_memo=#{CHECK_MEMO,jdbcType=VARCHAR},a.status=#{STATUS} 
+	<if test="checkModifyFlag != 0">
+		<if test="DN_CHN != null">,a.DN_CHN=#{DN_CHN}</if>
+		<if test="DN_ENG != null">,a.DN_ENG=#{DN_ENG}</if>
+		<if test="ORG_DN_CHN != null">,a.ORG_DN_CHN=#{ORG_DN_CHN}</if>
+		<if test="ORG_DN_ENG != null">,a.ORG_DN_ENG=#{ORG_DN_ENG}</if>
+		<if test="OSYN_TYPE != null">,a.OSYN_TYPE=#{OSYN_TYPE}</if>
+		<if test="IS_DISABLE != null">,a.IS_DISABLE=#{IS_DISABLE}</if>
+		<if test="DESCRIPTION != null">,a.DESCRIPTION=#{DESCRIPTION}</if>
+	</if>
+	WHERE 
+	<!-- 此处不能加上1=1 防止错误数据全部更改。控制前台精确传入参数 -->
+	<if test="H_ID!=null and H_ID!=''">
+		a.h_id=#{H_ID}
+	</if>
+	<if test="ONTO_H_ID!=null and ONTO_H_ID!=''">
+		a.ONTO_H_ID=#{ONTO_H_ID}
+	</if>
+</update>
+<!-- ============================ 修改信息结束========================== -->
+</mapper>

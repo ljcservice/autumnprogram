@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AccessibleFieldMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		SYS_DATA_RIGHT 
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		DR_ID,
+		TABLE_NAME,
+		TABLE_DISC,
+		COLUMN_NAME,
+		COLUMN_DISC,
+		IN_ID
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{DR_ID},
+		#{TABLE_NAME},
+		#{TABLE_DISC},
+		#{COLUMN_NAME},	
+		#{COLUMN_DISC},
+		#{IN_ID}
+	</sql>
+	
+	<!-- 新增会员 -->
+	<insert id="saveA" parameterType="pd">
+		insert into <include refid="tableName"></include> (
+				DR_ID,TABLE_NAME,TABLE_DISC,COLUMN_NAME,COLUMN_DISC,IN_ID	
+		) values (
+				#{DR_ID},#{TABLE_NAME},#{TABLE_DISC},#{COLUMN_NAME},#{COLUMN_DISC},#{IN_ID}
+		)
+	</insert>
+	
+	<!-- 可访问字段管理列表查询 -->
+	<select id="accesslistPage" parameterType="page" resultType="pd">
+		select 
+			distinct
+				D.DR_ID,
+				D.TABLE_NAME,
+				D.TABLE_DISC,
+				D.COLUMN_NAME,
+				D.COLUMN_DISC,
+				D.IN_ID,
+				I.NAME,
+				I.CODE,
+				NVL2( C.DR_ID,1,0) AS isVal 
+		from 
+			SYS_DATA_RIGHT D 
+			LEFT JOIN SYS_INTERFACE I ON D.IN_ID = I.IN_ID 
+			LEFT JOIN SYS_COL_RULE C ON C.DR_ID = D.DR_ID
+		where 1 = 1
+		<if test="pd.businessName != null and pd.businessName != ''"><!-- 业务名称检索 -->
+			and I.TYPE = #{pd.businessName}
+		</if>
+		<if test="pd.fieldDisc != null and pd.fieldDisc != ''"><!-- 列描述检索 -->
+			and D.COLUMN_DISC = #{pd.fieldDisc}
+		</if>
+		order by I.CODE
+	</select>
+	<!-- 字段业务列表(字段) -->
+	<select id="accesslistYP" parameterType="pd" resultType="pd">
+	    select 
+	        distinct
+	        D.DR_ID,
+	        D.TABLE_NAME,
+	        D.TABLE_DISC,
+	        D.COLUMN_NAME,
+	        D.COLUMN_DISC,
+	        D.IN_ID,
+	        I.NAME,
+	        I.CODE,
+      		NVL2( C.DR_ID,1,0) AS isVal ,
+       		NVL2( R.COL_RULE,1,0) AS isCol,
+       		NVL2( R.DR_ID,1,0) AS flag
+	    from 
+	      SYS_DATA_RIGHT D 
+	      LEFT JOIN SYS_INTERFACE I ON D.IN_ID = I.IN_ID
+	      LEFT JOIN SYS_COL_RULE C ON C.DR_ID = D.DR_ID
+	      LEFT JOIN SYS_ROLE_TABLE_RELATION R ON R.DR_ID = D.DR_ID AND R.ROLE_ID = #{ROLE_ID}
+	    where 1=1 
+		<if test="businessName != null and businessName != ''"><!-- 业务名称检索 -->
+			and I.TYPE = #{businessName}
+		</if>
+		<if test="fieldDisc != null and fieldDisc != ''"><!-- 列描述检索 -->
+			and D.COLUMN_DISC = #{fieldDisc}
+		</if>
+		order by I.CODE
+	</select>
+		<!-- 字段业务列表(zTree) -->
+	<select id="accesslistzTree" parameterType="pd" resultType="pd">
+    select 
+      I.NAME, I.IN_ID, I.CODE
+    from 
+      SYS_INTERFACE I
+   where 1=1
+    	<if test="businessName != null and businessName != ''"><!-- 业务名称检索 -->
+			and I.TYPE = #{businessName}
+		</if>
+		order by I.CODE
+	</select>
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			DR_ID = #{DR_ID}
+	</select>
+	<!-- 删除用户 -->
+	<delete id="deleteA" parameterType="pd">
+		delete from <include refid="tableName"></include> 
+		where 
+			DR_ID = #{DR_ID}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="editA" parameterType="pd">
+		update  <include refid="tableName"></include>
+			set TABLE_NAME					= #{TABLE_NAME},
+				TABLE_DISC 					= #{TABLE_DISC},
+				COLUMN_NAME					= #{COLUMN_NAME},
+				COLUMN_DISC					= #{COLUMN_DISC},
+				IN_ID						= #{IN_ID}
+			where 
+				DR_ID = #{DR_ID}
+	</update>
+
+	<!-- 全部会员 -->
+	<select id="listAllAccess" parameterType="pd" resultType="pd">
+		select 
+				D.DR_ID,
+				D.TABLE_NAME,
+				D.TABLE_DISC,
+				D.COLUMN_NAME,
+				D.COLUMN_DISC,
+				D.IN_ID,
+				I.NAME
+		from 
+			SYS_DATA_RIGHT D , SYS_INTERFACE I
+		where D.IN_ID = I.IN_ID 
+		<if test="keywords != null and keywords != ''"><!-- 用户名检索 -->
+			and(
+					D.TABLE_NAME LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+				or
+					D.COLUMN_DISC LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+				or
+					I.NAME LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+				)
+		</if>
+	</select>
+
+	<!-- 批量删除用户 -->
+	<delete id="deleteAllA" parameterType="String">
+		delete from <include refid="tableName"></include>
+		where 
+			DR_ID in
+  			 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                  #{item}
+             </foreach>
+	</delete>
+	
+	<!-- 获取总数 -->
+	<select id="getAccessCount" parameterType="String" resultType="pd">
+		select 
+			count(DR_ID) accessCount
+		from 
+		<include refid="tableName"></include>
+	</select>
+	<!-- 可访问字段管理列表查询 -->
+	<select id="accesslistByType" parameterType="pd" resultType="string">
+		SELECT
+			SRTR.COLUMN_NAME
+		FROM
+			SYS_APP_USER SAU
+		LEFT JOIN USER_ROLE_RELA URR ON SAU.USER_ID = URR.USER_ID
+		LEFT JOIN SYS_ROLE SR ON SR.ROLE_ID = URR.ROLE_ID
+		LEFT JOIN SYS_ROLE_TABLE_RELATION SRTR ON SR.ROLE_ID = SRTR.ROLE_ID
+		LEFT JOIN SYS_INTERFACE SI ON SI.IN_ID = SRTR.IN_ID
+		WHERE
+			SAU.USER_ID = #{user_id} AND SI.TYPE = #{type} 
+	</select>
+	<!-- 可访问字段管理级联下拉框查询 -->
+	<select id="accesslistByBusinessName" parameterType="pd" resultType="string">
+		select 
+				D.COLUMN_DISC
+		from 
+			SYS_DATA_RIGHT D , SYS_INTERFACE I
+		where D.IN_ID = I.IN_ID 
+			and I.TYPE = #{type} 
+		order by D.COLUMN_NAME
+	</select>
+	<!-- 获取该用户角色的可访问业务权限 -->
+	<select id="getSysInterface" parameterType="pd" resultType="string">
+		SELECT 
+			DISTINCT SI.TYPE 
+		FROM 
+			SYS_APP_USER SAU ,USER_ROLE_RELA URR,SYS_ROLE SR,SYS_ROLE_TABLE_RELATION SRTR,SYS_INTERFACE SI
+		WHERE 
+ 			SAU.USER_ID = URR.USER_ID  
+ 			AND SR.ROLE_ID=URR.ROLE_ID 
+ 			AND SR.ROLE_ID= SRTR.ROLE_ID
+ 			AND SI.IN_ID = SRTR.IN_ID AND
+			SAU.USER_ID = #{user_id} 
+	</select>
+	
+</mapper>

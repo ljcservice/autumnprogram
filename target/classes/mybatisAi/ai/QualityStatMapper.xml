@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="QualityStatMapper">
+	<!-- 质量统计列表 -->
+	<select id="statlistPage" parameterType="page" resultType="pd" >
+		select  
+			u2.USERNAME as DUTY_USER,
+			d1.D_VALUE TASK_TYPE,
+			d2.D_VALUE TASK_TYPE_CHILD,
+			t.STEP	,count(TASK_STAT) all_count,
+	        sum(case when TASK_STAT=0 then 1 else 0 end) x0_count,
+	        sum(case when TASK_STAT=1 then 1 else 0 end) x1_count,
+	        sum(case when TASK_STAT=2 then 1 else 0 end) x2_count,
+	        sum(case when TASK_STAT=3 then 1 else 0 end) x3_count,
+	        sum(case when ADOPT_FLAG=1 then 1 else 0 end) adopt_count
+		from  AI_TASK t ,SYS_USER u2,CO_DICT d1,CO_DICT d2 
+		where u2.USER_ID= t.USER_ID and t.TASK_TYPE_ID=d1.D_KEY and t.TASK_TYPE_CHILD_ID=d2.D_KEY 
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					 d1.D_VALUE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or 
+					 d2.D_VALUE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+					 or 
+					 u2.USERNAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+		</if>
+		<if test="pd.DUTY_USER!=null and pd.DUTY_USER!=''"><!-- 责任人检索 -->
+			and u2.USERNAME LIKE CONCAT(CONCAT('%', #{pd.DUTY_USER}),'%')
+		</if>
+		<if test="pd.TASK_TYPE_ID!=null and pd.TASK_TYPE_ID!=''"><!-- 任务类型 -->
+			and t.TASK_TYPE_ID= #{pd.TASK_TYPE_ID} 
+		</if>
+		<if test="pd.TASK_TYPE_CHILD_ID!=null and pd.TASK_TYPE_CHILD_ID!=''"><!-- 任务子类型 -->
+			and t.TASK_TYPE_CHILD_ID= #{pd.TASK_TYPE_CHILD_ID} 
+		</if>
+		<if test="pd.STEP != null and pd.STEP != ''"><!-- 审核步骤 -->
+			and t.STEP=#{pd.STEP} 
+		</if>
+		<if test="pd.ALLOT_START!=null and pd.ALLOT_START!=''"><!-- 任务分配开始时间检索 -->
+			and ALLOT_TIME &gt;= TO_DATE(#{pd.ALLOT_START},'yyyy-mm-dd')
+		</if>
+		<if test="pd.ALLOT_END!=null and pd.ALLOT_END!=''"><!-- 任务分配结束时间检索 -->
+			and ALLOT_TIME &lt;= TO_DATE(#{pd.ALLOT_END},'yyyy-mm-dd')
+		</if>
+		group by u2.username,d1.D_VALUE,d2.D_VALUE,t.STEP order by u2.username 
+	</select>
+	
+		<!-- 质量统计全部列表 -->
+	<select id="statList" parameterType="pd" resultType="pd" >
+		select  
+			u2.USERNAME as DUTY_USER,
+			d1.D_VALUE TASK_TYPE,
+			d2.D_VALUE TASK_TYPE_CHILD,
+			t.STEP	,count(TASK_STAT) all_count,
+	        sum(case when TASK_STAT=0 then 1 else 0 end) x0_count,
+	        sum(case when TASK_STAT=1 then 1 else 0 end) x1_count,
+	        sum(case when TASK_STAT=2 then 1 else 0 end) x2_count,
+	        sum(case when TASK_STAT=3 then 1 else 0 end) x3_count,
+	        sum(case when ADOPT_FLAG=1 then 1 else 0 end) adopt_count
+		from  AI_TASK t ,SYS_USER u2,CO_DICT d1,CO_DICT d2 
+		where u2.USER_ID= t.USER_ID and t.TASK_TYPE_ID=d1.D_KEY and t.TASK_TYPE_CHILD_ID=d2.D_KEY 
+		<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					 d1.D_VALUE LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+					 or 
+					 d2.D_VALUE LIKE CONCAT(CONCAT('%', #{keywords}),'%') 
+					 or 
+					 u2.USERNAME LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+				)
+		</if>
+		<if test="DUTY_USER!=null and DUTY_USER!=''"><!-- 责任人检索 -->
+			and u2.USERNAME LIKE CONCAT(CONCAT('%', #{DUTY_USER}),'%')
+		</if>
+		<if test="TASK_TYPE_ID!=null and TASK_TYPE_ID!=''"><!-- 任务类型 -->
+			and t.TASK_TYPE_ID= #{TASK_TYPE_ID} 
+		</if>
+		<if test="TASK_TYPE_CHILD_ID!=null and TASK_TYPE_CHILD_ID!=''"><!-- 任务子类型 -->
+			and t.TASK_TYPE_CHILD_ID= #{TASK_TYPE_CHILD_ID} 
+		</if>
+		<if test="STEP != null and STEP != ''"><!-- 审核步骤 -->
+			and t.STEP=#{STEP} 
+		</if>
+		<if test="ALLOT_START!=null and ALLOT_START!=''"><!-- 任务分配开始时间检索 -->
+			and ALLOT_TIME &gt;= TO_DATE(#{ALLOT_START},'yyyy-mm-dd hh24:mi:ss')
+		</if>
+		<if test="ALLOT_END!=null and ALLOT_END!=''"><!-- 任务分配结束时间检索 -->
+			and ALLOT_TIME &lt;= TO_DATE(#{ALLOT_END},'yyyy-MM-dd hh24:mi:ss')
+		</if>
+		group by u2.username,d1.D_VALUE,d2.D_VALUE,t.STEP order by u2.username 
+	</select>
+</mapper>

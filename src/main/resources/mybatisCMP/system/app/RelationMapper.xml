@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="RelationMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		SYS_ROLE_TABLE_RELATION
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		TR_ID,
+		ROLE_ID,
+		DR_ID,
+		IN_ID,
+		COL_RULE
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+			#{TR_ID},	
+			#{ROLE_ID},
+			#{DR_ID},
+			#{IN_ID},
+			#{COL_RULE}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="Field"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+	<!-- 批量新增-->
+	<select id="saveAll" parameterType="java.util.List">
+		insert into SYS_ROLE_TABLE_RELATION
+		(TR_ID,ROLE_ID,DR_ID,IN_ID,COL_RULE)
+	  <foreach close=")" collection="list" item="item" index="index" open="(" separator="UNION ALL" > 
+      	select  
+			#{item.TR_ID,jdbcType=VARCHAR}, 
+			#{item.ROLE_ID,jdbcType=VARCHAR}, 
+			#{item.DR_ID,jdbcType=VARCHAR},
+			#{item.IN_ID,jdbcType=VARCHAR},
+			#{item.COL_RULE,jdbcType=VARCHAR} 
+       	from dual
+    </foreach>
+    </select>
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TR_ID = #{TR_ID}
+	</delete>
+	<!-- DRID删除-->
+	<delete id="deleteDRID" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			DR_ID = #{DR_ID}
+	</delete>
+		<!-- 修改 -->
+	<update id="editA" parameterType="pd">
+		update  <include refid="tableName"></include>
+			set COL_RULE	= #{COL_RULE}
+			where 
+				TR_ID = #{TR_ID}
+	</update>
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			ROLE_ID = #{ROLE_ID}
+		and
+			DR_ID = #{DR_ID}
+	</select>
+	<!-- 通过DR_ID获取数据 -->
+	<select id="listByDRId" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			DR_ID = #{DR_ID}
+	</select>
+	<!-- 通过DR_ID验证数据是否别使用 -->
+	<select id="findByDRId" parameterType="String" resultType="Integer">
+		select 
+			count(DR_ID)
+		from 
+			SYS_ROLE_TABLE_RELATION
+		where 
+			DR_ID = #{DR_ID}
+	</select>
+	<!-- 通过COl_RULE获取数据 -->
+	<select id="findByCOL" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			COl_RULE = #{RULE_NAME}
+	</select>
+	<!-- 通过用户ID获取数据 -->
+	<select id="findByUserId" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			USER_ID = #{USER_ID}
+	</select>
+
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where
+			ROLE_ID=#{ROLE_ID}
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TR_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 批量删除数据 -->
+	<delete id="deleteID" parameterType="List">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TR_ID in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+                 #{item.TR_ID,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+	
+	<!-- 通过用户ID获取数据 -->
+	<select id="findDataByUserId" parameterType="pd" resultType="pd">
+		SELECT DISTINCT
+			SDR.COLUMN_NAME,
+			Get_Rule_Name(SRTR.COL_RULE) as COL_RULE,
+			SI. TYPE,
+			SI.CODE
+		FROM
+			SYS_ROLE_TABLE_RELATION SRTR
+		LEFT JOIN USER_ROLE_RELA URR ON SRTR.ROLE_ID = URR.ROLE_ID
+		LEFT JOIN SYS_DATA_RIGHT SDR ON SDR.DR_ID = SRTR.DR_ID
+		LEFT JOIN SYS_APP_USER ASU ON URR.USER_ID = ASU.USER_ID
+		LEFT JOIN SYS_INTERFACE SI ON SI.IN_ID = SRTR.IN_ID
+		WHERE
+			ASU.USER_ID = #{USER_ID}
+		ORDER BY
+			SI.CODE
+	</select>
+		
+</mapper>

@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TaskQueryMapper">
+	<!-- 任务列表 -->
+	<select id="tasklistPage" parameterType="page" resultType="pd" statementType="STATEMENT">
+		select  t.TASK_ID,
+				t.Q_ID,
+				t.USER_ID,
+				u2.USERNAME as DUTY_USER,
+				t.TASK_TYPE_ID,
+				d1.D_VALUE TASK_TYPE,
+				t.TASK_TYPE_CHILD_ID,
+				d2.D_VALUE TASK_TYPE_CHILD,
+				t.STEP,
+				t.TASK_STAT,
+				t.ALLOT_USER_ID,
+				u1.USERNAME as ALLOT_USER,
+				q.${pd.DIAG_NAME} as DIAG_NAME,
+				t.ALLOT_TIME 
+		from  AI_TASK t ,SYS_USER u1,SYS_USER u2,CO_DICT d1,CO_DICT d2,${pd.TABLE_NAME} q 
+		where t.Q_ID=q.${pd.Q_ID} and u1.USER_ID= t.ALLOT_USER_ID and u2.USER_ID= t.USER_ID and t.TASK_TYPE_ID=d1.D_KEY and t.TASK_TYPE_CHILD_ID=d2.D_KEY 
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					 d1.D_VALUE LIKE CONCAT(CONCAT('%', ${pd.keywords}),'%')
+					 or 
+					 d2.D_VALUE LIKE CONCAT(CONCAT('%', ${pd.keywords}),'%') 
+					 or 
+					 q.${pd.DIAG_NAME} LIKE CONCAT(CONCAT('%', ${pd.keywords}),'%')
+					 or 
+					 t.Q_ID LIKE CONCAT(CONCAT('%', ${pd.keywords}),'%')  
+				)
+		</if>
+		<if test="pd.DUTY_USER!=null and pd.DUTY_USER!=''"><!-- 责任人检索 -->
+			and u2.USERNAME LIKE CONCAT(CONCAT('%', '${pd.DUTY_USER}'),'%')
+		</if>
+		<if test="pd.DUTY_USER_ID!=null and pd.DUTY_USER_ID!=''"><!-- 责任人ID -->
+			and u2.USER_ID= '${pd.DUTY_USER_ID}'
+		</if>
+		<if test="pd.TASK_TYPE_ID!=null and pd.TASK_TYPE_ID!=''"><!-- 任务类型 -->
+			and t.TASK_TYPE_ID= ${pd.TASK_TYPE_ID} 
+		</if>
+		<if test="pd.TASK_TYPE_CHILD_ID!=null and pd.TASK_TYPE_CHILD_ID!=''"><!-- 任务子类型 -->
+			and t.TASK_TYPE_CHILD_ID= ${pd.TASK_TYPE_CHILD_ID} 
+		</if>
+		<!-- <if test="pd.TASK_STAT != null and pd.TASK_STAT != ''">任务状态  此处不做判断--> 
+			and t.TASK_STAT=${pd.TASK_STAT} 
+		<!-- </if>-->
+		<if test="pd.STEP != null and pd.STEP != ''"><!-- 审核步骤 -->
+			and t.STEP=${pd.STEP} 
+		</if>
+		<if test="pd.ALLOT_START!=null and pd.ALLOT_START!=''"><!-- 任务分配开始时间检索 -->
+			and ALLOT_TIME &gt;= TO_DATE('${pd.ALLOT_START}','yyyy-mm-dd hh24:mi:ss')
+		</if>
+		<if test="pd.ALLOT_END!=null and pd.ALLOT_END!=''"><!-- 任务分配结束时间检索 -->
+			and ALLOT_TIME &lt;= TO_DATE('${pd.ALLOT_END}','yyyy-mm-dd hh24:mi:ss')
+		</if>
+		order by t.TASK_STAT,t.TASK_ID ASC
+	</select>
+	<!--待处理的任务列表 -->
+	<select id="4CtrlTasklistPage" parameterType="page" resultType="pd" statementType="STATEMENT">
+		SELECT t.TASK_ID,
+			t.Q_ID,
+			t.USER_ID,
+			u2.USERNAME as DUTY_USER,
+			t.TASK_TYPE_ID,
+			d1.D_VALUE TASK_TYPE,
+			t.TASK_TYPE_CHILD_ID,
+			d2.D_VALUE TASK_TYPE_CHILD,
+			t.STEP,
+			t.TASK_STAT,
+			t.ALLOT_USER_ID,
+			u1.USERNAME as ALLOT_USER,
+			t.ALLOT_TIME, 
+       		DECODE(TASK_TYPE_CHILD_ID,85002,(SELECT O_DIAG_NAME FROM AI_Q_DIAG Q WHERE TASK_TYPE_CHILD_ID =85002 AND T.Q_ID = Q.Q_ID),
+                    85001,(SELECT DIAG_NAME FROM AI_Q_DIAG_CHILD Q WHERE TASK_TYPE_CHILD_ID = 85001 AND T.Q_ID = Q.CHILD_ID),'无') DIAG_NAME 
+		FROM AI_TASK t ,SYS_USER u1,SYS_USER u2,CO_DICT d1,CO_DICT d2 
+		WHERE u1.USER_ID= t.ALLOT_USER_ID and u2.USER_ID= t.USER_ID and t.TASK_TYPE_ID=d1.D_KEY and t.TASK_TYPE_CHILD_ID=d2.D_KEY and t.TASK_STAT &lt; 2
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					 d1.D_VALUE LIKE CONCAT(CONCAT('%', ${pd.keywords}),'%')
+					 or 
+					 d2.D_VALUE LIKE CONCAT(CONCAT('%', ${pd.keywords}),'%') 
+					 or 
+					 t.Q_ID LIKE CONCAT(CONCAT('%', ${pd.keywords}),'%')  
+				)
+		</if>
+		<if test="pd.DUTY_USER_ID!=null and pd.DUTY_USER_ID!=''"><!-- 责任人ID -->
+			and u2.USER_ID= '${pd.DUTY_USER_ID}'
+		</if>
+		<if test="pd.TASK_STAT != null and pd.TASK_STAT != ''"><!-- 任务状态  此处不做判断--> 
+			and t.TASK_STAT=${pd.TASK_STAT} 
+		</if>
+		<if test="pd.ALLOT_START!=null and pd.ALLOT_START!=''"><!-- 任务分配开始时间检索 -->
+			and ALLOT_TIME &gt;= TO_DATE('${pd.ALLOT_START}','yyyy-mm-dd hh24:mi:ss')
+		</if>
+		<if test="pd.ALLOT_END!=null and pd.ALLOT_END!=''"><!-- 任务分配结束时间检索 -->
+			and ALLOT_TIME &lt;= TO_DATE('${pd.ALLOT_END}','yyyy-mm-dd hh24:mi:ss')
+		</if>
+		order by t.TASK_STAT,t.TASK_TYPE_ID,t.TASK_TYPE_CHILD_ID,t.STEP,t.TASK_ID ASC
+	</select>
+	
+	<!-- 根据ID获取任务信息 -->
+	<select id="getTask"  parameterType="java.lang.Integer" resultType="pd" >
+		select 
+			TASK_ID,
+			Q_ID,
+			USER_ID,
+			TASK_TYPE_ID,
+			TASK_TYPE_CHILD_ID,
+			STEP,
+			TASK_STAT,
+			ALLOT_USER_ID,
+			ALLOT_TIME,
+			UPD_TIME
+		from 
+			AI_TASK
+		where 
+			TASK_ID = #{task_id}
+	</select>
+	
+	<!-- 保存任务的处理的信息 -->
+	<insert id="saveTaskHis" parameterType="pd" >
+		insert into AI_DIAG_HIS_RS (
+			HIS_RS_ID,CHILD_ID,TASK_ID,STEP,DIAG_WORD,DIS_TYPE,DEAL_FLG,TERM_TYPE,UPDATE_MAN,UPDATE_TIME
+			<if test="STD_ID != null and STD_ID != ''">
+			,STD_ID
+			</if>
+			<if test="SYN_TYPE != null and SYN_TYPE != ''">
+			,SYN_TYPE
+			</if>
+			
+			<if test="MEMO != null and MEMO != ''">
+			,MEMO
+			</if> 
+		) values (
+			SEQ_AI_DIAG_HIS_RS.NEXTVAL,#{Q_ID},#{TASK_ID},#{STEP},#{DIAG_NAME},#{DIS_TYPE} ,#{DEAL_FLG},#{TERM_TYPE},#{UPDATE_MAN},SYSDATE	
+			<if test="STD_ID != null and STD_ID != ''">
+			,#{STD_ID}
+			</if>
+			<if test="SYN_TYPE != null and SYN_TYPE != ''">
+			,#{SYN_TYPE}
+			</if>
+			<if test="MEMO != null and MEMO != ''">
+			,#{MEMO}
+			</if> 
+		)
+	</insert>
+	<!-- 保存NLP任务的处理的信息 -->
+	<insert id="saveNLPRs" parameterType="pd" >
+		insert into AI_DIAG_SPLIT_RS (
+			SPLIT_RS_ID,Q_ID,RIGHT_DESC
+			<if test="ERR_DESC != null and ERR_DESC != ''">
+			,ERR_DESC
+			</if>
+			,SRC_DESC,TASK_ID,UPDATE_MAN,UPDATE_TIME,MTS_CODE
+		) values (
+			SEQ_AI_DIAG_SPLIT_RS.NEXTVAL,#{Q_ID},#{RIGHT_DESC}
+			<if test="ERR_DESC != null and ERR_DESC != ''">
+			,#{ERR_DESC}
+			</if>
+			,#{SRC_DESC},#{TASK_ID} ,#{UPDATE_MAN},SYSDATE,#{MTS_CODE}
+		)
+	</insert>
+	
+	<!-- 获取任务的干预过程结果根据任务的ID信息 -->
+	<select id="getResByTask"  parameterType="java.lang.Integer" resultType="pd" >
+		select 
+			rs.HIS_RS_ID,
+			rs.CHILD_ID,
+			rs.TASK_ID,
+			rs.STEP,
+			rs.NLP_USE_FLG,
+			rs.DIAG_WORD,
+			rs.DIS_TYPE,
+			rs.DEAL_FLG,
+			rs.STD_ID,
+			rs.WORD_TYPE,
+			d1.D_VALUE SYN_TYPE,
+			d2.D_VALUE TERM_TYPE,
+			rs.UPDATE_MAN,
+			rs.UPDATE_TIME,
+			rs.MEMO
+		from 
+			AI_DIAG_HIS_RS rs, CO_DICT d1 , CO_DICT d2 
+		where 
+			rs.SYN_TYPE=d1.D_KEY (+) and rs.TERM_TYPE=d2.D_KEY(+) and (d2.dt_id=40 or d2.dt_id=50 or d2.dt_id=60) and	rs.TASK_ID = #{task_id}
+	</select>
+	
+	<!-- 根据任务的ID获取NLP切分的结果信息 -->
+	<select id="getSplitResByTask"  parameterType="java.lang.Integer" resultType="pd" >
+		select 
+			SPLIT_RS_ID,
+			Q_ID,
+			RIGHT_DESC,
+			ERR_DESC,
+			SRC_DESC,
+			TASK_ID,
+			UPDATE_MAN,
+			UPDATE_TIME,
+			MTS_CODE
+		from 
+			AI_DIAG_SPLIT_RS 
+		where 
+			TASK_ID = #{task_id}
+	</select>
+	<!-- 获取任务的干预过程结果根据任务的ID信息-纯净版 -->
+	<select id="getResByTaskID"  parameterType="java.lang.Integer" resultType="pd" >
+		select 
+			HIS_RS_ID,
+			CHILD_ID,
+			TASK_ID,
+			STEP,
+			NLP_USE_FLG,
+			DIAG_WORD,
+			DIS_TYPE,
+			DEAL_FLG,
+			STD_ID,
+			WORD_TYPE,
+			SYN_TYPE,
+			TERM_TYPE,
+			UPDATE_MAN,
+			UPDATE_TIME,
+			MEMO
+		from 
+			AI_DIAG_HIS_RS  
+		where 
+			TASK_ID = #{TASK_ID}
+	</select>
+	<!-- 获取任务的干预过程结果根据ID信息 -->
+	<select id="getResByID"  parameterType="java.lang.Integer" resultType="pd" >
+		select 
+			HIS_RS_ID,
+			CHILD_ID,
+			TASK_ID,
+			STEP,
+			NLP_USE_FLG,
+			DIAG_WORD,
+			DIS_TYPE,
+			DEAL_FLG,
+			STD_ID,
+			WORD_TYPE,
+			SYN_TYPE,
+			TERM_TYPE,
+			MEMO 
+		from 
+			AI_DIAG_HIS_RS 
+		where 
+			HIS_RS_ID = #{HIS_RS_ID}
+	</select>
+	
+	<!-- 根据当前的任务获取问题单的一审的结果信息 -->
+	<select id="getOneResByTask"  parameterType="java.lang.Integer" resultType="pd" >
+		select 
+			rs.HIS_RS_ID,
+			rs.CHILD_ID,
+			rs.TASK_ID,
+			rs.STEP,
+			rs.NLP_USE_FLG,
+			rs.DIAG_WORD,
+			rs.DIS_TYPE,
+			rs.DEAL_FLG,
+			rs.STD_ID,
+			rs.WORD_TYPE,
+			d1.D_VALUE SYN_TYPE,
+			d2.D_VALUE TERM_TYPE,
+			rs.SYN_TYPE SYN_TYPE_ID,
+			rs.TERM_TYPE TERM_TYPE_ID,
+			rs.UPDATE_MAN,
+			rs.UPDATE_TIME,
+			rs.MEMO
+		from 
+			AI_DIAG_HIS_RS rs,AI_TASK t, CO_DICT d1 , CO_DICT d2 
+		where 
+			rs.SYN_TYPE=d1.D_KEY (+) and rs.TERM_TYPE=d2.D_KEY(+) and (d2.dt_id=40 or d2.dt_id=50 or d2.dt_id=60) and	t.TASK_ID = #{task_id} and t.Q_ID=rs.CHILD_ID and rs.STEP=1 
+	</select>
+	
+	<!-- 删除任务的处理信息根据ID-->
+	<delete id="deleteRs" parameterType="java.lang.Integer" flushCache="false">
+		delete from AI_DIAG_HIS_RS
+		where 
+			HIS_RS_ID = #{HIS_RS_ID}
+	</delete>
+	<!-- 删除任务的处理信息根据TASK_ID -->
+	<delete id="deleteRsByTaskId" parameterType="java.lang.Integer" flushCache="false">
+		delete from AI_DIAG_HIS_RS
+		where 
+			TASK_ID = #{task_id}
+	</delete>
+	<!-- 删除NLP任务的处理信息根据TASK_ID -->
+	<delete id="deleteSplitRsByTaskId" parameterType="java.lang.Integer" flushCache="false">
+		delete from AI_DIAG_SPLIT_RS
+		where 
+			TASK_ID = #{task_id}
+	</delete>
+	
+	<!-- 更新任务的状态信息根据ID -->
+	<update id="updateTaskStat" parameterType="pd" >
+		update  AI_TASK 
+			set	TASK_STAT  = #{TASK_STAT},
+				UPD_TIME   = SYSDATE 
+			where 
+				TASK_ID = #{task_id}
+	</update>
+	
+	<!-- 批量更新任务状态信息为'已提交' -->
+	<update id="updateAllTask" parameterType="String" >
+		update AI_TASK 
+		set	TASK_STAT  = 2,
+			UPD_TIME   = SYSDATE 
+		where 
+			TASK_ID in
+  			 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                  #{item}
+             </foreach>
+	</update>
+	
+	<!-- 批量更新任务处理的历史结果状态信息为'已提交' -->
+	<update id="updateAllHisRs" parameterType="String" >
+		update AI_DIAG_HIS_RS 
+		set	DEAL_FLG  = 2,
+			UPDATE_TIME = SYSDATE 
+		where 
+			TASK_ID in
+  			 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                  #{item}
+             </foreach>
+	</update>
+	
+	<!-- 批量撤销任务信息 -->
+	<delete id="deleteAllTask" parameterType="String" >
+		delete from AI_TASK
+		where 
+			TASK_ID in
+  			 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                  #{item}
+             </foreach>
+	</delete>
+	<!-- 根据ID查询诊断本体信息 -->
+	<select id="onDiagByDnId" parameterType="String" resultType="pd">
+		select D_ID,DN_ID,STAD_DN_CHN,STAD_DN_ENG,MAIN_CODE,ADD_CODE 
+		from on_diag where DN_ID =#{STD_ID} and IS_DISABLE=0 
+	</select>
+	<!-- 更新任务的采纳状态为采纳-->
+	<update id="updateAllTaskAdoptFlag" parameterType="pd" >
+		update AI_TASK 
+		set	ADOPT_FLAG  = 1 ,
+			UPD_TIME   =  SYSDATE 
+		where 
+			TASK_ID in (select TASK_ID from AI_DIAG_HIS_RS 
+				where CHILD_ID =#{CHILD_ID} and STEP=1 and NLP_USE_FLG=#{NLP_USE_FLG}
+					and DIAG_WORD=#{DIAG_WORD} and DIS_TYPE=#{DIS_TYPE} and DEAL_FLG=2 
+					<if test="STD_ID != null and  STD_ID!= ''">
+						and STD_ID=#{STD_ID} 
+					</if>
+					<if test="STD_ID == null or STD_ID == ''">
+						and STD_ID is null 
+					</if>
+					<if test="WORD_TYPE != null and  WORD_TYPE!= ''">
+						and WORD_TYPE=#{WORD_TYPE} 
+					</if>
+					<if test=" WORD_TYPE== null or WORD_TYPE == ''">
+						and WORD_TYPE is null 
+					</if>
+					<if test=" SYN_TYPE!= null and  SYN_TYPE!= ''">
+						and SYN_TYPE=#{SYN_TYPE} 
+					</if>
+					<if test=" SSYN_TYPE== null or SYN_TYPE == ''">
+						and SYN_TYPE is null 
+					</if>
+					<if test=" TERM_TYPE!= null and  TERM_TYPE!= ''">
+						and TERM_TYPE=#{TERM_TYPE} 
+					</if>
+					<if test=" TERM_TYPE== null or TERM_TYPE == ''">
+						and TERM_TYPE is null 
+					</if>
+					
+			
+			)
+	</update>
+	<!-- 获取本体信息根据IDS -->
+	<select id="onDiagByDIds" parameterType="String" resultType="pd">
+		select D_ID,DN_ID,STAD_DN_CHN,STAD_DN_ENG,MAIN_CODE MAIN_CODE,ADD_CODE ADDI_CODE 
+		from on_diag where IS_DISABLE=0 and D_ID in 
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+             #{item}
+        </foreach>
+	</select>
+	<!-- 获取子节点 -->
+	<select id="getDiagTreeByPa" parameterType="pd" resultType="pd">
+		<!--  select * 
+		from on_diag_tree where PARENT_ID=#{D_ID} -->
+		select 1
+		from on_diag_tree t,on_diag o where t.PARENT_ID=#{D_ID} and t.d_id=o.d_id and length(o.main_code)=7
+	</select>
+	<!-- 校验是否在树上  -->
+	<select id="getDiagOnTree" parameterType="pd" resultType="pd">
+		select 1 
+		from on_diag_tree where PARENT_ID=#{D_ID} or D_ID=#{D_ID}
+	</select>
+</mapper>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ImportLogMapper">
+	
+	<select id="loglistPage" parameterType="page" resultType="pd">
+		select 
+			log.IMPORT_ID,
+			log.FILE_NAME,
+			log.BATCH_NUMBER,
+			log.STATUS,
+			log.SUC_COUNT,
+			log.FAIL_COUNT,
+			log.IMPORT_TIME,
+			u1.USERNAME as IMPORT_USER,
+			log.IMPORT_USER as IMPORT_USER_ID 
+		from AI_IMPORT_LOG log,SYS_USER u1 where u1.USER_ID= log.IMPORT_USER 
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					 log.FILE_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+					  or 
+					 log.BATCH_NUMBER LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+		</if>
+		order by log.IMPORT_TIME desc
+	</select>
+	<!-- 添加导入日志 -->
+	<insert id="addLog" parameterType="pd" >
+	    <selectKey resultType="java.math.BigDecimal" order="BEFORE" keyProperty="IMPORT_ID">  
+	       SELECT SEQ_Q_IMPORT_LOG.Nextval as IMPORT_ID from DUAL  
+	   </selectKey> 
+		insert into AI_IMPORT_LOG (
+			IMPORT_ID,FILE_NAME,STATUS,SUC_COUNT,FAIL_COUNT,IMPORT_TIME,IMPORT_USER  
+		) values (
+			#{IMPORT_ID},#{FILE_NAME},#{STATUS},#{SUC_COUNT},#{FAIL_COUNT},SYSDATE,#{IMPORT_USER}
+		)
+	</insert>
+	<!-- 添加问题单 -->
+	<insert id="addQ" parameterType="pd" >
+		<selectKey resultType="java.math.BigDecimal" order="BEFORE" keyProperty="Q_ID">  
+	       SELECT SEQ_AI_Q_DIAG.Nextval as Q_ID from DUAL  
+	   </selectKey> 
+		insert into AI_Q_DIAG (
+			Q_ID,ORIGIN_ID,MTS_RULE_ID,CLM_ID,CLM_TYPE,O_DIAG_NAME,
+			
+			<if test="O_DIAG_CODE!= null and O_DIAG_CODE != ''">
+				O_DIAG_CODE,
+			</if>
+			<if test="NLP_DIAG_NAME!= null and NLP_DIAG_NAME != ''">
+			NLP_DIAG_NAME,
+			</if>
+			<if test="MTS_DIAG_CODE!= null and MTS_DIAG_CODE != ''">
+			MTS_DIAG_CODE,
+			</if>
+			TASK_TYPE_ID,TASK_TYPE_CHILD_ID,STATUS,CREATE_TIME,CREATE_MAN,UPDATE_TIME,UPDATE_MAN  
+		) values (
+			#{Q_ID},#{ORIGIN_ID},#{MTS_RULE_ID},#{CLM_ID},#{CLM_TYPE},#{O_DIAG_NAME}
+			<if test="O_DIAG_CODE!= null and O_DIAG_CODE != ''">
+			,#{O_DIAG_CODE}
+			</if>
+			<if test="NLP_DIAG_NAME!= null and NLP_DIAG_NAME != ''">
+			,#{NLP_DIAG_NAME}
+			</if>
+			<if test="MTS_DIAG_CODE!= null and MTS_DIAG_CODE != ''">
+			,#{MTS_DIAG_CODE}
+			</if>
+			,#{TASK_TYPE_ID},#{TASK_TYPE_CHILD_ID},#{STATUS},SYSDATE,#{CREATE_MAN},SYSDATE,#{UPDATE_MAN}
+		)
+	</insert>
+	
+	<!-- 校验问题单是否存在 -->
+	<select id="checkQ" parameterType="pd" resultType="pd" >
+		select Q_ID from  AI_Q_DIAG
+		where O_DIAG_NAME= #{O_DIAG_NAME}  
+	</select>
+	
+	<!-- 添加原始数据 -->
+	<insert id="addO" parameterType="pd" >
+		<selectKey resultType="java.math.BigDecimal" order="BEFORE" keyProperty="O_ID">  
+	       SELECT SEQ_AI_O_DIAG.Nextval as O_ID from DUAL  
+	   </selectKey> 
+		insert into AI_O_DIAG (
+			O_ID,Q_ID,IMPORT_ID,ORIGIN_ID,MTS_RULE_ID,CLM_ID,CLM_TYPE,O_DIAG_NAME,BATCH_NUMBER
+			<if test="O_DIAG_CODE!= null and O_DIAG_CODE != ''">
+			,O_DIAG_CODE
+			</if>
+			<if test="NLP_DIAG_NAME!= null and NLP_DIAG_NAME != ''">
+			,NLP_DIAG_NAME
+			</if>
+			<if test="MTS_DIAG_CODE!= null and MTS_DIAG_CODE != ''">
+			,MTS_DIAG_CODE
+			</if>
+			,CREATE_TIME,CREATE_MAN,UPDATE_TIME,UPDATE_MAN  
+		) values (
+			#{O_ID},#{Q_ID},#{IMPORT_ID},#{ORIGIN_ID},#{MTS_RULE_ID},#{CLM_ID},#{CLM_TYPE},#{O_DIAG_NAME},#{BATCH_NUMBER}
+			<if test="O_DIAG_CODE!= null and O_DIAG_CODE != ''">
+			,#{O_DIAG_CODE}
+			</if>
+			<if test="NLP_DIAG_NAME!= null and NLP_DIAG_NAME != ''">
+			,#{NLP_DIAG_NAME}
+			</if>
+			<if test="MTS_DIAG_CODE!= null and MTS_DIAG_CODE != ''">
+			,#{MTS_DIAG_CODE}
+			</if>
+			,SYSDATE,#{CREATE_MAN},SYSDATE,#{UPDATE_MAN}
+		)
+	</insert>
+	
+	<!-- 修改导入日志-->
+	<update id="editLog" parameterType="pd" >
+		update  AI_IMPORT_LOG
+			set	STATUS 			= #{STATUS}
+			<if test="SUC_COUNT!= null and SUC_COUNT != ''">
+				,SUC_COUNT		= #{SUC_COUNT}
+			</if>
+			<if test="FAIL_COUNT!= null and FAIL_COUNT != ''">
+				,FAIL_COUNT			= #{FAIL_COUNT}
+			</if>
+			<if test="BATCH_NUMBER!= null and BATCH_NUMBER != ''">
+				,BATCH_NUMBER			= #{BATCH_NUMBER}
+			</if>
+			where 
+				IMPORT_ID = #{IMPORT_ID}
+	</update>
+	<!-- 根据文件名获取日志信息 -->
+	<select id="getLogByFileName" parameterType="String" resultType="pd" >
+		select IMPORT_ID  from  AI_IMPORT_LOG  
+		where FILE_NAME= #{FILE_NAME} and STATUS=1   
+	</select>
+	<!-- 根据文件名获取日志信息 -->
+	<select id="checkDeleteImport" parameterType="pd" resultType="pd" >
+		select Q.O_DIAG_NAME  from  AI_O_DIAG O,AI_Q_DIAG Q  
+		where O.IMPORT_ID=#{IMPORT_ID} AND O.Q_ID=Q.Q_ID 
+			  AND Q.STATUS &gt; 0   
+	</select>
+	<!-- 删除原始数据根据导入日志的ID -->
+	<delete id="deleteOByImportLog" parameterType="pd" flushCache="false">
+		delete from AI_O_DIAG
+		where 
+			IMPORT_ID = #{IMPORT_ID}
+	</delete>
+	<!-- 删除问题单数据根据导入日志的ID -->
+	<delete id="deleteQByImportLog" parameterType="pd" flushCache="false">
+		delete from AI_Q_DIAG  
+		where 
+			Q_ID IN (select q_id  from (select q_id,count(1) c from ai_o_diag where import_id=#{IMPORT_ID}  group by q_id) where c=1)		
+	</delete>
+	<!-- 查询待删除的问题单 -->
+	<select id="selectDeleteQ" parameterType="pd" resultType="pd" >
+		select q_id  from (select q_id,count(1) c from ai_o_diag where import_id=#{IMPORT_ID}  group by q_id) where c=1 
+	</select>
+	<!-- 批量删除问题单信息 -->
+    <delete id="batchDeleteQ" parameterType="java.util.List">
+	 	delete from AI_Q_DIAG
+		  <where>
+		  	<foreach collection="list" index="index" item="item" open="(" separator="or" close=")">     
+		 	 Q_ID=#{item.Q_ID}
+		    </foreach>
+		  </where>
+	  </delete>
+</mapper>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CommonMapper">
+	
+	<!-- 诊断名称同义词-本体 关联查询 -->
+	<select id="diagOsynWidgetlistPage" parameterType="page" resultType="pd">
+		select b.D_ID ID,a.DN_ID N_ID,a.DN_CHN CN,a.DN_ENG EN,b.STAD_DN_CHN STAD_CN,b.STAD_DN_ENG STAD_EN,decode(b.MAIN_CODE,null,b.ADD_CODE,b.MAIN_CODE) MAIN_CODE
+		from on_diag_name a , on_diag b 
+		where a.STAD_DN_ID = b.DN_ID 
+		<if test="pd.CN != null and pd.CN!=''"> <!-- 术语名称 -->
+			and b.STAD_DN_CHN like CONCAT(CONCAT('%', #{pd.CN}),'%')   
+		</if>
+		<if test="pd.MAIN_CODE != null and pd.MAIN_CODE != ''"> <!-- 编码 -->
+			and b.MAIN_CODE like CONCAT(CONCAT('%', #{pd.MAIN_CODE}),'%')    
+		</if>
+		order by b.D_ID,a.DN_ID 
+	</select>
+	<!-- 手术名称同义词-本体 关联查询 -->
+	<select id="opOsynWidgetlistPage" parameterType="page" resultType="pd">
+		select b.OP_ID ID,a.ON_ID N_ID,a.ON_CHN CN,a.ON_ENG EN,b.STAD_OP_CHN STAD_CN,b.STAD_OP_ENG STAD_EN,b.OP_CODE MAIN_CODE
+		from on_operation_name a , on_operation b 
+		where a.STAD_ON_ID = b.ON_ID 
+		<if test="pd.CN != null and pd.CN!=''"> <!-- 术语名称 -->
+			and b.STAD_OP_CHN like CONCAT(CONCAT('%', #{pd.CN}),'%') 
+		</if>
+		<if test="pd.MAIN_CODE != null and pd.MAIN_CODE != ''"> <!-- 编码 -->
+			and b.OP_CODE like CONCAT(CONCAT('%', #{pd.MAIN_CODE}),'%') 
+		</if>
+		order by b.OP_ID,a.ON_ID 
+	</select>
+	<!-- 科室名称同义词-标准词 关联查询 -->
+	<select id="depOsynWidgetlistPage" parameterType="page" resultType="pd">
+		select b.ID,b.DEP_STAD_NAME STAD_CN,b.DEP_NAME_CODE MAIN_CODE,b.UPDATE_MAN,b.UPDATE_TIME
+				,p.DEP_STAD_NAME PARENT_NAME,p.DEP_NAME_CODE PARENT_CODE
+				,a.ID N_ID,a.DEP_NAME CN 
+		from on_dep_name a ,on_dep b
+		left join (
+				select a.DEP_ID ,b.DEP_STAD_NAME,b.DEP_NAME_CODE 
+		        from on_dep_tree a , on_dep b 
+		        where a.PARENT_ID = b.ID 
+			) p on p.DEP_ID = b.ID
+		where a.STAD_ID = b.DN_ID 
+		<if test="pd.CN != null and pd.CN!=''"> <!-- 术语名称 -->
+			and b.DEP_STAD_NAME like CONCAT(CONCAT('%', #{pd.CN}),'%') 
+		</if>
+		<if test="pd.MAIN_CODE != null and pd.MAIN_CODE != ''"> <!-- 编码 -->
+			and b.DEP_NAME_CODE like CONCAT(CONCAT('%', #{pd.MAIN_CODE}),'%') 
+		</if>
+		order by b.ID,a.ID 
+	</select>
+	
+	<!-- 查询序列 -->
+	<select id="querySeqValue" parameterType="String" resultType="Integer">
+		select 
+		<if test="_parameter=='seq_on_diag_tree'"> <!-- 诊断树 -->
+			ts_onto.seq_on_diag_tree.nextval 
+		</if>
+		<if test="_parameter=='seq_on_operation_tree'"> <!-- 手术树 -->
+			ts_onto.seq_on_operation_tree.nextval 
+		</if>
+		<if test="_parameter=='seq_on_dep_tree'"> <!-- 诊断树 -->
+			ts_onto.seq_on_dep_tree.nextval 
+		</if>
+		<if test="_parameter=='seq_on_diag'"> <!-- 诊断 -->
+			ts_onto.seq_on_diag.nextval 
+		</if>
+		<if test="_parameter=='seq_on_operation'"> <!-- 手术  -->
+			ts_onto.seq_on_operation.nextval 
+		</if>
+		<if test="_parameter=='seq_on_dep'"> <!-- 手术  -->
+			ts_onto.seq_on_dep.nextval 
+		</if>
+		<if test="_parameter=='seq_on_diag_name'"> <!-- 诊断词语名称 -->
+			ts_onto.seq_on_diag_name.nextval 
+		</if>
+		<if test="_parameter=='seq_on_operation_name'"><!-- 手术词语 -->
+			ts_onto.seq_on_operation_name.nextval
+		</if>
+		<if test="_parameter=='seq_on_dep_name'"><!-- 手术词语 -->
+			ts_onto.seq_on_dep_name.nextval
+		</if>
+		 from dual 
+	</select>
+</mapper>

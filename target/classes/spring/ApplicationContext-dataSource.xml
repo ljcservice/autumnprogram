@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/aop 
+						http://www.springframework.org/schema/aop/spring-aop.xsd
+						http://www.springframework.org/schema/context 
+						http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/tx 
+						http://www.springframework.org/schema/tx/spring-tx.xsd
+	">
+	
+	<!-- ====================数据源1 CMP平台使用==================== -->
+	<!-- sql会话模版 -->
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactory" />
+	</bean>
+	<!-- 配置mybatis -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    	<property name="dataSource" ref="dataSource" />
+        <property name="configLocation" value="classpath:mybatisCMP/mybatis-config.xml"></property>
+        <!-- mapper扫描 -->
+        <property name="mapperLocations" >
+        	<list>
+        		<value>classpath:mybatisCMP/*/*.xml</value>
+        		<value>classpath:mybatisCMP/*/*/*.xml</value>
+        	</list>
+        </property>
+    </bean>
+	<!-- 阿里 druid数据库连接池 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">  
+         <!-- 数据库基本信息配置 -->
+         <property name="url" value="${url}" />  
+         <property name="username" value="${username}" />  
+         <property name="password" value="${password}" />  
+         <property name="driverClassName" value="${driverClassName}" />  
+         <property name="filters" value="${filters}" />  
+   		 <!-- 最大并发连接数 -->
+         <property name="maxActive" value="${maxActive}" />
+         <!-- 初始化连接数量 -->
+         <property name="initialSize" value="${initialSize}" />
+         <!-- 配置获取连接等待超时的时间 -->
+         <property name="maxWait" value="${maxWait}" />
+         <!-- 最小空闲连接数 -->
+         <property name="minIdle" value="${minIdle}" />  
+   		 <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+         <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis}" />
+         <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+         <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis}" />  
+         <property name="validationQuery" value="${validationQuery}" />  
+         <property name="testWhileIdle" value="${testWhileIdle}" />  
+         <property name="testOnBorrow" value="${testOnBorrow}" />  
+         <property name="testOnReturn" value="${testOnReturn}" />  
+         <property name="maxOpenPreparedStatements" value="${maxOpenPreparedStatements}" />
+         <!-- 打开removeAbandoned功能 -->
+         <property name="removeAbandoned" value="${removeAbandoned}" />
+         <!-- 1800秒，也就是30分钟 -->
+         <property name="removeAbandonedTimeout" value="${removeAbandonedTimeout}" />
+         <!-- 关闭abanded连接时输出错误日志 -->   
+         <property name="logAbandoned" value="${logAbandoned}" />
+	</bean>  
+	<!-- 事物处理 -->
+	<aop:config>
+		<aop:pointcut id="pc" expression="execution(* com.ts.service..*(..))" />
+		<aop:advisor pointcut-ref="pc" advice-ref="txAdvice" />
+	</aop:config>
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="delete*" propagation="REQUIRED" read-only="false" 
+			           rollback-for="java.lang.Exception"/>
+			<tx:method name="insert*" propagation="REQUIRED" read-only="false" 
+			           rollback-for="java.lang.Exception" />
+			<tx:method name="update*" propagation="REQUIRED" read-only="false" 
+			           rollback-for="java.lang.Exception" />
+			<tx:method name="save*" propagation="REQUIRED" read-only="false" 
+			           rollback-for="java.lang.Exception" />
+		</tx:attributes>
+	</tx:advice>
+	<bean name="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">   
+    	<property name="dataSource" ref="dataSource"></property>
+ 	</bean>
+	
+	
+	<!-- ====================数据源2 病人病历 使用==================== -->
+	
+	<bean id="sqlSessionTemplate_ph" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactory_ph" />
+	</bean>
+	<bean id="sqlSessionFactory_ph" class="org.mybatis.spring.SqlSessionFactoryBean">
+    	<property name="dataSource" ref="dataSource_ph" />
+        <property name="configLocation" value="classpath:mybatisPH/mybatis-config.xml"></property>
+        <property name="mapperLocations" value="classpath:mybatisPH/*/*.xml"></property>
+    </bean>
+	<bean id="dataSource_ph" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">  
+         <property name="url" value="${url_ph}" />  
+         <property name="username" value="${username_ph}" />  
+         <property name="password" value="${password_ph}" />  
+         <property name="driverClassName" value="${driverClassName_ph}" />  
+         <property name="filters" value="${filters_ph}" />  
+         <property name="maxActive" value="${maxActive_ph}" />
+         <property name="initialSize" value="${initialSize_ph}" />
+         <property name="maxWait" value="${maxWait_ph}" />
+         <property name="minIdle" value="${minIdle_ph}" />  
+         <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis_ph}" />
+         <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis_ph}" />  
+         <property name="validationQuery" value="${validationQuery_ph}" />  
+         <property name="testWhileIdle" value="${testWhileIdle_ph}" />  
+         <property name="testOnBorrow" value="${testOnBorrow_ph}" />  
+         <property name="testOnReturn" value="${testOnReturn_ph}" />  
+         <property name="maxOpenPreparedStatements" value="${maxOpenPreparedStatements_ph}" />
+         <property name="removeAbandoned" value="${removeAbandoned_ph}" />
+         <property name="removeAbandonedTimeout" value="${removeAbandonedTimeout_ph}" />
+         <property name="logAbandoned" value="${logAbandoned_ph}" />
+	</bean>  
+	<aop:config>
+		<aop:pointcut id="pc_ph" expression="execution(* com.ts.service..*(..))" />
+		<aop:advisor pointcut-ref="pc_ph" advice-ref="txAdvice_ph" />
+	</aop:config>
+	<tx:advice id="txAdvice_ph" transaction-manager="transactionManager_ph">
+		<tx:attributes>
+			<tx:method name="delete*" propagation="REQUIRED" read-only="false" 
+			           rollback-for="java.lang.Exception"/>
+			<tx:method name="insert*" propagation="REQUIRED" read-only="false" 
+			           rollback-for="java.lang.Exception" />
+			<tx:method name="update*" propagation="REQUIRED" read-only="false" 
+			           rollback-for="java.lang.Exception" />
+			<tx:method name="save*" propagation="REQUIRED" read-only="false" 
+			           rollback-for="java.lang.Exception" />
+		</tx:attributes>
+	</tx:advice>
+	<bean name="transactionManager_ph" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">   
+    	<property name="dataSource" ref="dataSource_ph"></property>
+ 	</bean>
+ 
+ 
+ 
+	<!-- ====================数据源 3 ai 使用==================== -->
+	
+	<bean id="sqlSessionTemplate_ai" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactory_ai" />
+	</bean>
+	<bean id="sqlSessionFactory_ai" class="org.mybatis.spring.SqlSessionFactoryBean">
+    	<property name="dataSource" ref="dataSource_ai" />
+        <property name="configLocation" value="classpath:mybatisAi/mybatis-config.xml"></property>
+        <property name="mapperLocations" value="classpath:mybatisAi/*/*.xml"></property>
+    </bean>
+	<bean id="dataSource_ai" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">  
+         <property name="url" value="${url_ai}" />  
+         <property name="username" value="${username_ai}" />  
+         <property name="password" value="${password_ai}" />  
+         <property name="driverClassName" value="${driverClassName_ai}" />  
+         <property name="filters" value="${filters_ai}" />  
+         <property name="maxActive" value="${maxActive_ai}" />
+         <property name="initialSize" value="${initialSize_ai}" />
+         <property name="maxWait" value="${maxWait_ai}" />
+         <property name="minIdle" value="${minIdle_ai}" />  
+         <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis_ai}" />
+         <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis_ai}" />  
+         <property name="validationQuery" value="${validationQuery_ai}" />  
+         <property name="testWhileIdle" value="${testWhileIdle_ai}" />  
+         <property name="testOnBorrow" value="${testOnBorrow_ai}" />  
+         <property name="testOnReturn" value="${testOnReturn_ai}" />  
+         <property name="maxOpenPreparedStatements" value="${maxOpenPreparedStatements_ai}" />
+         <property name="removeAbandoned" value="${removeAbandoned_ai}" />
+         <property name="removeAbandonedTimeout" value="${removeAbandonedTimeout_ai}" />
+         <property name="logAbandoned" value="${logAbandoned_ai}" />
+	</bean>  
+	<aop:config>
+		<aop:pointcut id="pc_ai" expression="execution(* com.ts.service..*(..))" />
+		<aop:advisor pointcut-ref="pc_ai" advice-ref="txAdvice_ai" />
+	</aop:config>
+	<tx:advice id="txAdvice_ai" transaction-manager="transactionManager_ai">
+		<tx:attributes>
+			<tx:method name="delete*" propagation="REQUIRED" read-only="false" 
+			           rollback-for="java.lang.Exception"/>
+			<tx:method name="insert*" propagation="REQUIRED" read-only="false" 
+			           rollback-for="java.lang.Exception" />
+			<tx:method name="update*" propagation="REQUIRED" read-only="false" 
+			           rollback-for="java.lang.Exception" />
+			<tx:method name="save*" propagation="REQUIRED" read-only="false" 
+			           rollback-for="java.lang.Exception" />
+		</tx:attributes>
+	</tx:advice>
+	<bean name="transactionManager_ai" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">   
+    	<property name="dataSource" ref="dataSource_ai"></property>
+ 	</bean>
+ 
+ 	
+</beans>

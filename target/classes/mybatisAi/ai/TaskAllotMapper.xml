@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TaskAllotMapper">
+	<!-- 诊断主问题单列表(全部) -->
+	<select id="questionDiaglistPage" parameterType="page" resultType="pd" >
+		select  Q_ID         Q_NO,
+				O_DIAG_NAME  DIAG_NAME,
+				NLP_DIAG_NAME NLP_DIAG_NAME,
+				'诊断干预'   TASK_TYPE,
+				'NLP审核'    TASK_TYPE_CHILD,
+				d.D_VALUE 	 ORIGIN,
+				STATUS 
+		from  AI_Q_DIAG ,CO_DICT d
+		where ORIGIN_ID=d.D_KEY(+) and STATUS &lt; 2
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					 O_DIAG_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or 
+					 Q_ID LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+				)
+		</if>
+		
+		<if test="pd.ORIGIN_ID!=null and pd.ORIGIN_ID!=''"><!-- 数据来源检索 -->
+			and ORIGIN_ID= #{pd.ORIGIN_ID} 
+		</if>
+		<if test="pd.createStart!=null and pd.createStart!=''"><!-- 导入时间检索 -->
+			and CREATE_TIME &gt;=TO_DATE(#{pd.createStart},'yyyy-mm-dd hh24:mi:ss') 
+		</if>
+		<if test="pd.createEnd!=null and pd.createEnd!=''"><!-- 导入时间检索 -->
+			and CREATE_TIME &lt;= TO_DATE(#{pd.createEnd},'yyyy-mm-dd hh24:mi:ss')  
+		</if>
+		order by STATUS,Q_NO ASC
+	</select>
+	<!-- 诊断子问题单列表 -->
+	<select id="questionDiagChildlistPage" parameterType="page" resultType="pd" >
+		select  CHILD_ID   Q_NO,
+				DIAG_NAME  DIAG_NAME,
+				'诊断干预'  TASK_TYPE,
+				'诊断干预'  TASK_TYPE_CHILD,
+				d.D_VALUE 	 ORIGIN,
+				STATUS 
+		from  AI_Q_DIAG_CHILD,CO_DICT d
+		where ORIGIN_ID=d.D_KEY(+) 
+		<if test="pd.EXP_ID==1"><!-- 一审 -->
+			AND STATUS!=2
+		</if>
+		<if test="pd.EXP_ID==2"><!-- 二审 -->
+			AND STATUS=1 
+			AND CHILD_ID IN(SELECT Q_ID FROM AI_TASK  WHERE TASK_TYPE_ID=84002 AND TASK_TYPE_CHILD_ID=85001) 
+			AND CHILD_ID NOT IN(SELECT Q_ID FROM AI_TASK  WHERE TASK_TYPE_ID=84002 AND TASK_TYPE_CHILD_ID=85001 AND TASK_STAT &lt;2 )
+		</if>
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			AND
+				(
+					 DIAG_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or 
+					 CHILD_ID LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+				)
+		</if>
+		<if test="pd.ORIGIN_ID!=null and pd.ORIGIN_ID!=''"><!-- 数据来源检索 -->
+			and ORIGIN_ID= #{pd.ORIGIN_ID} 
+		</if>
+		<if test="pd.createStart!=null and pd.createStart!=''"><!-- 导入时间检索 -->
+			and CREATE_TIME &gt;=  TO_DATE(#{pd.createStart},'yyyy-mm-dd hh24:mi:ss') 
+		</if>
+		<if test="pd.createEnd!=null and pd.createEnd!=''"><!-- 导入时间检索 -->
+			and CREATE_TIME &lt;= TO_DATE(#{pd.createEnd},'yyyy-mm-dd hh24:mi:ss') 
+		</if>
+		order by STATUS,Q_NO ASC
+	</select>
+	
+	<!-- 获得操作任务的角色信息 -->
+	<select id="getRoleId" parameterType="pd" resultType="String" >
+		select  
+		<if test="SEARCH_EXP_ID==1">
+		EXP_ONE_ROLE  ROLE_ID
+		</if>
+		<if test="SEARCH_EXP_ID==2">
+		EXP_TWO_ROLE  ROLE_ID
+		</if>
+		FROM AI_TASK_PARAM WHERE 
+			TASK_TYPE_ID=#{SEARCH_TASK_TYPE_ID} AND TASK_TYPE_CHILD_ID=#{SEARCH_TASK_TYPE_CHILD_ID}  AND STATUS=0
+	</select>
+	<!-- 批量插入任务信息 -->
+    <select id="savaTaskBatch"   parameterType="java.util.List" resultType="java.util.List"> 
+		insert into AI_TASK (TASK_ID, Q_ID, USER_ID,TASK_TYPE_ID,TASK_TYPE_CHILD_ID,STEP,TASK_STAT,ALLOT_USER_ID,ALLOT_TIME,UPD_TIME)  
+		select SEQ_AI_TASK.NEXTVAL,A.* from(
+		<foreach close=")"  collection="list" item="item" index="index" open="("  separator="UNION ALL" > 
+		select
+		#{item.Q_ID,jdbcType=NUMERIC} as Q_ID,
+		#{item.USER_ID,jdbcType=VARCHAR} as USER_ID,
+		#{item.TASK_TYPE_ID,jdbcType=NUMERIC} as TASK_TYPE_ID,
+		#{item.TASK_TYPE_CHILD_ID,jdbcType=NUMERIC} as TASK_TYPE_CHILD_ID,
+		#{item.STEP,jdbcType=NUMERIC} as STEP,
+		#{item.TASK_STAT,jdbcType=NUMERIC} as TASK_STAT,
+		#{item.ALLOT_USER_ID,jdbcType=VARCHAR} as ALLOT_USER_ID,
+		sysdate as ALLOT_TIME,
+		sysdate as UPD_TIME
+		from dual 
+		</foreach>
+		   ) A
+	</select>
+	<!-- 写入任务的信息 -->
+	<insert id="savaTask" parameterType="pd" >
+	    <selectKey resultType="long" order="BEFORE" keyProperty="TASK_ID">  
+	       SELECT SEQ_AI_TASK.Nextval as TASK_ID from DUAL  
+	   </selectKey> 
+		insert into AI_TASK (
+			TASK_ID, Q_ID, USER_ID,TASK_TYPE_ID,TASK_TYPE_CHILD_ID,STEP,TASK_STAT,ALLOT_USER_ID,ALLOT_TIME,UPD_TIME
+		) values (
+			#{TASK_ID},#{Q_ID},#{USER_ID},#{TASK_TYPE_ID},#{TASK_TYPE_CHILD_ID},#{STEP},#{TASK_STAT},#{ALLOT_USER_ID},SYSDATE,SYSDATE
+		)
+	</insert>
+	
+	<!-- 根据Id获取问题单的信息 -->
+	<select id="findDiagQ" parameterType="java.lang.Integer" resultType="pd">
+		select Q_ID,MTS_RULE_ID,CLM_ID,CLM_TYPE,O_DIAG_NAME,O_DIAG_CODE,NLP_DIAG_NAME,MTS_DIAG_CODE,TASK_TYPE_ID,TASK_TYPE_CHILD_ID,STATUS,ORIGIN_ID
+		from AI_Q_DIAG
+		where Q_ID= #{q_id} 
+	</select>
+	<!-- 根据术语名称获取诊断子问题单的信息 -->
+	<select id="findDiagChildQ" parameterType="java.lang.String" resultType="pd">
+		select CHILD_ID 
+		from AI_Q_DIAG_CHILD
+		where DIAG_NAME= #{nlp_name} 
+	</select>
+	<!-- 根据子问题单的Id获取子问题单信息 -->
+	<select id="findDiagChildQByID" parameterType="java.lang.Integer" resultType="pd">
+		select CHILD_ID ,
+			DIAG_NAME,
+			STATUS,
+			TASK_TYPE_ID,
+			TASK_TYPE_CHILD_ID,
+			ORIGIN_ID
+		from AI_Q_DIAG_CHILD
+		where CHILD_ID= #{q_id} 
+	</select>
+	<!-- 增加子问题的信息 -->
+	<insert id="addChildQ" parameterType="pd" >
+	    <selectKey resultType="long" order="BEFORE" keyProperty="CHILD_ID">  
+	       SELECT SEQ_AI_Q_DIAG_CHILD.Nextval as CHILD_ID from DUAL  
+	   </selectKey> 
+		insert into AI_Q_DIAG_CHILD (
+			CHILD_ID, DIAG_NAME,STATUS, TASK_TYPE_ID,TASK_TYPE_CHILD_ID,ORIGIN_ID,CREATE_TIME,CREATE_MAN,UPDATE_TIME,UPDATE_MAN
+		) values (
+			#{CHILD_ID},#{DIAG_NAME},#{STATUS},#{TASK_TYPE_ID},#{TASK_TYPE_CHILD_ID},#{ORIGIN_ID},SYSDATE,#{CREATE_MAN},SYSDATE,#{UPDATE_MAN}
+		)
+	</insert>
+	<!-- 增加问题单的关联信息 -->
+	<insert id="addRelQ" parameterType="pd" >
+	    <selectKey resultType="long" order="BEFORE" keyProperty="DR_ID">  
+	       SELECT SEQ_AI_Q_DIAG_RELA.Nextval as DR_ID from DUAL  
+	   </selectKey> 
+		insert into AI_Q_DIAG_RELA (
+			DR_ID, Q_ID,CHILD_ID, ORDERS,CREATE_TIME,CREATE_MAN,UPDATE_TIME,UPDATE_MAN
+		) values (
+			#{DR_ID},#{Q_ID},#{CHILD_ID},#{ORDER},SYSDATE,#{CREATE_MAN},SYSDATE,#{UPDATE_MAN}
+		)
+	</insert>
+	
+	<!-- 开始.....以下非分页列表 用于任务分配所有 -->
+	<!-- 诊断主问题单列表(全部) -->
+	<select id="questionDiag" parameterType="pd" resultType="pd" >
+		select  Q_ID   Q_NO
+		from  AI_Q_DIAG  
+		where STATUS &lt; 2
+		<if test="SEARCH_keywords!= null and SEARCH_keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					 O_DIAG_NAME LIKE CONCAT(CONCAT('%', #{SEARCH_keywords}),'%')
+					 or 
+					 Q_ID LIKE CONCAT(CONCAT('%', #{SEARCH_keywords}),'%') 
+				)
+		</if>
+		
+		<if test="SEARCH_ORIGIN_ID!=null and SEARCH_ORIGIN_ID!=''"><!-- 数据来源检索 -->
+			and ORIGIN_ID= #{SEARCH_ORIGIN_ID} 
+		</if>
+		<if test="SEARCH_createStart!=null and SEARCH_createStart!=''"><!-- 导入时间检索 -->
+			and CREATE_TIME" &gt;= TO_DATE(#{SEARCH_createStart},'yyyy-mm-dd hh24:mi:ss')  
+		</if>
+		<if test="SEARCH_createEnd!=null and SEARCH_createEnd!=''"><!-- 导入时间检索 -->
+			and CREATE_TIME &lt;= TO_DATE(#{SEARCH_createEnd},'yyyy-mm-dd hh24:mi:ss') 
+		</if>
+		order by STATUS,Q_NO ASC
+	</select>
+	<!-- 诊断子问题单列表 -->
+	<select id="questionDiagChild" parameterType="pd" resultType="pd" >
+		select  CHILD_ID   Q_NO 
+		from  AI_Q_DIAG_CHILD 
+		where 1=1 
+		<if test="SEARCH_EXP_ID==1"><!-- 一审 -->
+			AND STATUS!=2
+		</if>
+		<if test="SEARCH_EXP_ID==2"><!-- 二审 -->
+			AND STATUS=1 
+			AND CHILD_ID IN(SELECT Q_ID FROM AI_TASK  WHERE TASK_TYPE_ID=84002 AND TASK_TYPE_CHILD_ID=85001) 
+			AND CHILD_ID NOT IN(SELECT Q_ID FROM AI_TASK  WHERE TASK_TYPE_ID=84002 AND TASK_TYPE_CHILD_ID=85001 AND TASK_STAT &lt;2 )
+		</if>
+		<if test="SEARCH_keywords!= null and SEARCH_keywords != ''"><!-- 关键词检索 -->
+			AND
+				(
+					 DIAG_NAME LIKE CONCAT(CONCAT('%', #{SEARCH_keywords}),'%')
+					 or 
+					 CHILD_ID LIKE CONCAT(CONCAT('%', #{SEARCH_keywords}),'%') 
+				)
+		</if>
+		<if test="SEARCH_ORIGIN_ID!=null and SEARCH_ORIGIN_ID!=''"><!-- 数据来源检索 -->
+			and ORIGIN_ID= #{SEARCH_ORIGIN_ID} 
+		</if>
+		<if test="SEARCH_createStart!=null and SEARCH_createStart!=''"><!-- 导入时间检索 -->
+			and CREATE_TIME &gt;= TO_DATE(#{SEARCH_createStart},'yyyy-mm-dd hh24:mi:ss') 
+		</if>
+		<if test="SEARCH_createEnd!=null and SEARCH_createEnd!=''"><!-- 导入时间检索 -->
+			and CREATE_TIME &lt;= TO_DATE(#{SEARCH_createEnd},'yyyy-mm-dd hh24:mi:ss') 
+		</if>
+		order by STATUS,Q_NO ASC
+	</select>
+	<!-- 判断是否分配当前的任务-->
+	<select id="checkHaveTask" parameterType="pd" resultType="pd" >
+		select  1 from AI_TASK 
+		where Q_ID=#{Q_ID} and TASK_TYPE_ID=#{TASK_TYPE_ID} and TASK_TYPE_CHILD_ID=#{TASK_TYPE_CHILD_ID} and STEP=#{STEP} and USER_ID=#{USER_ID} 
+	</select>
+</mapper>

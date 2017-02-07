@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="StandardMapper">
+	
+	<!-- 诊断名称同义词标准词查询 -->
+	<select id="standDiaglistPage" parameterType="pd" resultType="pd">
+		select a.DN_ID ID,a.DN_CHN CN,a.DN_ENG EN,b.DN_CHN STAD_CN,b.DN_ENG STAD_EN,a.TERM_TYPE,
+			   a.SYNO_TYPE,a.ORG_DN_CHN ORG_CN,a.ORG_DN_ENG ORG_EN,a.IS_DISABLE,a.DESCRIPTION,a.UPDATE_MAN,a.UPDATE_TIME
+		from on_diag_name a 
+		left join on_diag_name b on (a.STAD_DN_ID=b.DN_ID and b.STAD_DN_ID=b.DN_ID 
+			<if test="pd.standardId != null">
+				and b.STAD_DN_ID = #{pd.standardId} 
+			</if>
+			) 
+		where 1=1 
+		<if test="pd.osynFlag == 0">
+			and	a.STAD_DN_ID != a.DN_ID 
+		</if>
+		<if test="pd.osynFlag == 1">
+			and	a.STAD_DN_ID = a.DN_ID 
+		</if>
+		<if test="pd.standardId != null">
+			and a.STAD_DN_ID = #{pd.standardId} 
+		</if>
+		<if test="pd.DN_CHN != null and pd.DN_CHN!=''"> <!-- 术语名称 -->
+			and a.DN_CHN = #{pd.DN_CHN} 
+		</if>
+		<if test="pd.UPDATE_TIME != null and pd.UPDATE_TIME != ''"> <!-- 更新时间 -->
+			and to_char(a.UPDATE_TIME,'YYYY-MM-DD') = #{pd.UPDATE_TIME} 
+		</if>
+	</select>
+	<!-- 诊断标准词查询 -->
+	<select id="standardDiaglistPage" parameterType="page" resultType="pd">
+		select n.dn_id,n.dn_chn,n.dn_eng,n.stad_dn_id,n.term_type,n.syno_type,n.org_dn_chn,n.org_dn_eng,
+		n.is_disable,n.update_man,n.update_time
+		 from on_diag_name n where n.dn_id!=n.stad_dn_id
+		 <if test="pd.TERM_TYPE != null and pd.TERM_TYPE != ''">
+		 	and n.term_type=#{pd.TERM_TYPE}
+		 </if>
+		 <if test="pd.OSYN_TYPE != null and pd.OSYN_TYPE != ''">
+		 	and n.syno_type=#{pd.OSYN_TYPE}
+		 </if>
+		 <if test="pd.IS_DISABLED != null and pd.IS_DISABLED != ''">
+		 	and n.is_disable = #{pd.IS_DISABLED}
+		 </if>
+		 <if test="pd.UPDATE_MAN != null and pd.UPDATE_MAN != ''">
+		 	and n.update_man = #{pd.UPDATE_MAN}
+		 </if>
+		 <if test="pd.UPDATE_TIME != null and pd.UPDATE_TIME != ''">
+		 	and to_char(n.UPDATE_TIME,'YYYY-MM-DD') = #{pd.UPDATE_TIME}
+		 </if>
+		 <if test="pd.DN_NAME != null and pd.DN_NAME != ''">
+		 	and (n.dn_chn like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or n.dn_eng like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 	)
+		 </if>
+	</select>
+	
+	
+	<!-- 手术名称同义词查询 -->
+	
+	
+	<!-- 药品通用名同义词查询 -->
+	
+	
+	<!-- 药品产品名同义词查询 -->
+	
+	
+	<!-- 药品化学名同义词查询 -->
+	
+	
+	<!-- 药品通用名同义词查询 -->
+	
+	
+	
+
+	
+	
+		
+</mapper>

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MenuFunMapper">
+
+	<resultMap type="MenuFun" id="menuFunResultMap">
+		<id column="MF_ID" property="MF_ID"/>
+		<result column="MENU_ID" property="MENU_ID"/>
+		<result column="FUN_CODE" property="FUN_CODE"/>
+		<result column="INTRODUCTION" property="INTRODUCTION"/>
+		<result column="REMARK" property="REMARK"/>
+	</resultMap>
+	
+	<!--表名 -->
+	<sql id="tableName">
+		SYS_MENU_FUN
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+ 		MF_ID,
+		MENU_ID,
+ 		FUN_CODE,
+ 		INTRODUCTION,
+ 		REMARK
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+ 		#{MF_ID},
+		#{MENU_ID},
+ 		#{FUN_CODE},
+ 		#{INTRODUCTION},
+ 		#{REMARK}
+	</sql>
+	
+	
+	<!--通过菜单ID获取功能列表 -->
+	<select id="listMenuFunByMenuId" parameterType="String" resultMap="menuFunResultMap">
+		select  
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>
+		where MENU_ID = #{MENU_ID} order by FUN_CODE 
+	</select>
+	
+	<!--新增 -->
+	<insert id="insertMenuFun" parameterType="MenuFun">
+		insert into 
+			<include refid="tableName"></include> 
+		(
+			<include refid="Field"></include>
+		) values (
+			<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!--删除菜单-->
+	<delete id="deleteMenuFunById" parameterType="String">
+		delete from 
+		<include refid="tableName"></include> 
+		where MF_ID=#{MF_ID} 
+	</delete>
+	
+		<!--删除菜单某项功能-->
+	<delete id="deleteRoleMenuFunRelaById" parameterType="String">
+		delete from ROLE_MF_RELA 
+		where MF_ID=#{MF_ID} 
+	</delete>
+	
+	<!--查询菜单功能是否被使用-->
+	<select id="checkMenuFunUesd" parameterType="String" resultType="Integer">
+		select count(MF_ID) from ROLE_MF_RELA 
+		where MF_ID=#{MF_ID} 
+	</select>
+	
+	<!--菜单某项功能code是否存在-->
+	<select id="checkCode" parameterType="PD" resultType="Integer">
+		select count(MF_ID) from SYS_MENU_FUN
+		where FUN_CODE = #{FUN_CODE}
+		<if test="MF_ID!= null and MF_ID != ''">
+			and MF_ID!=#{MF_ID} 
+		</if>
+	</select>
+	
+	<!--通过菜单ID获取数据 -->
+	<select id="getMenuFunById" parameterType="String" resultType="pd">
+		select 
+			a.MF_ID,a.MENU_ID,a.FUN_CODE,a.INTRODUCTION,a.REMARK,b.MENU_NAME 
+		from 
+			SYS_MENU_FUN a 
+		left join SYS_MENU b on ( a.MENU_ID=b.MENU_ID) 
+		where MF_ID=#{MF_ID}
+	</select>
+	
+		<!--编辑 -->
+	<update id="updateMenuFun" parameterType="MenuFun">
+		update 
+		<include refid="tableName"></include> 
+		set 
+			MF_ID =#{MF_ID},
+			MENU_ID  =#{MENU_ID} ,
+			FUN_CODE =#{FUN_CODE},
+			INTRODUCTION =#{INTRODUCTION},
+			REMARK =#{REMARK} 
+		where 
+			MF_ID=#{MF_ID}
+	</update>
+	
+
+	<!--获取所有功能列表 -->
+	<select id="listAllMenuFun" parameterType="String" resultMap="menuFunResultMap">
+		select  
+			MF_ID,
+			MENU_ID,
+	 		FUN_CODE,
+	 		INTRODUCTION,
+	 		null as REMARK 
+		from 
+			<include refid="tableName"></include> 
+	</select>
+	
+		<!--通过用户ID获取用户拥有的所有功能列表（用户角色下属角色拥有的所有功能） -->
+	<select id="listAllMenuFunByUserId" parameterType="pd" resultMap="menuFunResultMap">
+		<choose>
+			<!-- mysql 时调用自定义函数 -->
+		 	<when test="DATABASE_TYPE == 1">
+		 		<if test="ROLE_IDS == null ">
+		 			select * from SYS_MENU_FUN where 1=2
+		 		</if>
+		 		<if test="ROLE_IDS != null ">
+ 				<foreach item="item" index="index" collection="ROLE_IDS" open="" separator=" union " close="">
+					select  
+						distinct(b.MF_ID),
+						b.MENU_ID,
+				 		b.FUN_CODE,
+				 		b.INTRODUCTION,
+				 		null as REMARK 
+					from 
+						ROLE_MF_RELA a , SYS_MENU_FUN b 
+					where 
+						a.MF_ID = b.MF_ID 
+						and FIND_IN_SET(a.ROLE_ID, getChild(#{item},1)) 
+				</foreach>
+		 		</if>
+		 	</when>
+		 	<otherwise>
+				select  
+					distinct(b.MF_ID),
+					b.MENU_ID,
+			 		b.FUN_CODE,
+			 		b.INTRODUCTION,
+			 		null as REMARK 
+				from 
+					ROLE_MF_RELA a , SYS_MENU_FUN b 
+				where 
+					a.ROLE_ID in ( 
+						select distinct(ROLE_ID) from SYS_ROLE 
+						where 1=1 
+						START WITH ROLE_ID in (select ROLE_ID from USER_ROLE_RELA where USER_ID = #{USER_ID}) CONNECT BY PRIOR ROLE_ID = PARENT_ID 
+					) 
+					and a.MF_ID = b.MF_ID 
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 废弃无用，通过角色ID获取当前角色及其下属角色的功能ID集合-->
+	<select id="listAllMenuFunByRoleId" parameterType="String" resultType="String">
+		select  
+			distinct(a.MF_ID) 
+		from 
+			SYS_MENU_FUN a, ROLE_MF_RELA b 
+		where 
+			a.MF_ID = b.MF_ID 
+			and b.ROLE_ID IN 
+			(
+				select ROLE_ID from SYS_ROLE 
+				where 1=1 
+				START WITH ROLE_ID = #{ROLE_ID} CONNECT BY PRIOR ROLE_ID = PARENT_ID 
+			)
+	</select>
+	
+			<!--通过角色ID获取当前角色的功能id集合 -->
+	<select id="listMenuFunByRoleId" parameterType="String" resultType="String">
+		select  
+			a.MF_ID
+		from 
+			SYS_MENU_FUN a, ROLE_MF_RELA b 
+		where 
+			a.MF_ID = b.MF_ID 
+			and b.ROLE_ID = #{ROLE_ID} 
+	</select>
+</mapper>

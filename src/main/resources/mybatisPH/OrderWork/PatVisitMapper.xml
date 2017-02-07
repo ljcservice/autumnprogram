@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PatVistMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		pat_visit
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+ 		patient_id,
+		visit_id,
+		dept_admission_to,
+		admission_date_time,
+		dept_discharge_from,
+		discharge_date_time,
+		occupation,
+		marital_status,
+		identity,
+		armed_services,
+		duty,
+		unit_in_contract,
+		charge_type,
+		working_status,
+		insurance_type,
+		insurance_no,
+		service_agency,
+		mailing_address,
+		zip_code,
+		next_of_kin,
+		relationship,
+		next_of_kin_addr,
+		next_of_kin_zipcode,
+		next_of_kin_phone,
+		patient_class,
+		admission_cause,
+		consulting_date,
+		pat_adm_condition,
+		consulting_doctor,
+		admitted_by,
+		emer_treat_times,
+		esc_emer_times,
+		serious_cond_days,
+		critical_cond_days,
+		icu_days,
+		ccu_days,
+		spec_level_nurs_days,
+		first_level_nurs_days,
+		second_level_nurs_days,
+		autopsy_indicator,
+		blood_type,
+		blood_type_rh,
+		blood_tran_times,
+		blood_tran_vol,
+		blood_tran_react_times,
+		decubital_ulcer_times,
+		alergy_drugs,
+		adverse_reaction_drugs,
+		mr_value,
+		mr_quality,
+		follow_indicator,
+		follow_interval,
+		follow_interval_units,
+		director,
+		attending_doctor,
+		doctor_in_charge,
+		discharge_disposition,
+		total_costs,
+		total_payments,
+		catalog_date,
+		cataloger,
+		catalog_writer,
+		infusion_react_times,
+		top_unit,
+		service_system_indicator,
+		health_level,
+		mr_infect_report,
+		infect_indicator,
+		body_weight,
+		body_height,
+		internal_no,
+		identity_class,
+		hbsag_indicator,
+		hcv_ab_indicator,
+		hiv_ab_indicator,
+		chief_doctor,
+		advanced_studies_doctor,
+		practice_doctor_of_graduate,
+		practice_doctor,
+		doctor_of_control_quality,
+		nurse_of_control_quality,
+		date_of_control_quality,
+		first_case_indicator,
+		third_level_nurs_days,
+		x_exam_no,
+		medical_pay_way,
+		first_aid_indicator,
+		training_injury_indicator,
+		in_dept_name,
+		in_clinic_attr,
+		in_outp_or_inp,
+		in_internal_or_sergery,
+		out_dept_name,
+		out_clinic_attr,
+		out_outp_or_inp,
+		out_internal_or_sergery,
+		settle_indi,
+		link_date
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+ 		#{patient_id}},
+		#{visit_id},
+		#{dept_admission_to},
+		#{admission_date_time},
+		#{dept_discharge_from},
+		#{discharge_date_time},
+		#{occupation},
+		#{marital_status},
+		#{identity},
+		#{armed_services},
+		#{duty},
+		#{unit_in_contract},
+		#{charge_type},
+		#{working_status},
+		#{insurance_type},
+		#{insurance_no},
+		#{service_agency},
+		#{mailing_address},
+		#{zip_code},
+		#{next_of_kin},
+		#{relationship},
+		#{next_of_kin_addr},
+		#{next_of_kin_zipcode},
+		#{next_of_kin_phone},
+		#{patient_class},
+		#{admission_cause},
+		#{consulting_date},
+		#{pat_adm_condition},
+		#{consulting_doctor},
+		#{admitted_by},
+		#{emer_treat_times},
+		#{esc_emer_times},
+		#{serious_cond_days},
+		#{critical_cond_days},
+		#{icu_days},
+		#{ccu_days},
+		#{spec_level_nurs_days},
+		#{first_level_nurs_days},
+		#{second_level_nurs_days},
+		#{autopsy_indicator},
+		#{blood_type},
+		#{blood_type_rh},
+		#{blood_tran_times},
+		#{blood_tran_vol},
+		#{blood_tran_react_times},
+		#{decubital_ulcer_times},
+		#{alergy_drugs},
+		#{adverse_reaction_drugs},
+		#{mr_value},
+		#{mr_quality},
+		#{follow_indicator},
+		#{follow_interval},
+		#{follow_interval_units},
+		#{director},
+		#{attending_doctor},
+		#{doctor_in_charge},
+		#{discharge_disposition},
+		#{total_costs},
+		#{total_payments},
+		#{catalog_date},
+		#{cataloger},
+		#{catalog_writer},
+		#{infusion_react_times},
+		#{top_unit},
+		#{service_system_indicator},
+		#{health_level},
+		#{mr_infect_report},
+		#{infect_indicator},
+		#{body_weight},
+		#{body_height},
+		#{internal_no},
+		#{identity_class},
+		#{hbsag_indicator},
+		#{hcv_ab_indicator},
+		#{hiv_ab_indicator},
+		#{chief_doctor},
+		#{advanced_studies_doctor},
+		#{practice_doctor_of_graduate},
+		#{practice_doctor},
+		#{doctor_of_control_quality},
+		#{nurse_of_control_quality},
+		#{date_of_control_quality},
+		#{first_case_indicator},
+		#{third_level_nurs_days},
+		#{x_exam_no},
+		#{medical_pay_way},
+		#{first_aid_indicator},
+		#{training_injury_indicator},
+		#{in_dept_name},
+		#{in_clinic_attr},
+		#{in_outp_or_inp},
+		#{in_internal_or_sergery},
+		#{out_dept_name},
+		#{out_clinic_attr},
+		#{out_outp_or_inp},
+		#{out_internal_or_sergery},
+		#{settle_indi},
+		#{link_date}
+
+	</sql>
+	
+	
+	<!--查询病人信息  -->
+	<select id="patvisitlistPage" parameterType="page" resultType="pd">
+		select  
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>
+		where 1=1
+		<if test="pd.keywords != null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					 IN_DEPT_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or 
+					 OUT_DEPT_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+				)
+		</if>
+
+		<if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
+			and discharge_date_time &gt;= to_date(#{pd.beginDate},'yyyy-mm-dd') 
+		</if>
+		<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
+			and discharge_date_time &lt; to_date(#{pd.endDate} ,'yyyy-mm-dd') 
+		</if>
+		
+		Order by  discharge_date_time 
+	</select>
+	
+	<select id="patVisitById" parameterType="pd" resultType="pd">
+		select  
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>
+		where  patient_id =#{patient_id} and visit_id = #{visit_id}
+	
+	</select>
+
+</mapper>

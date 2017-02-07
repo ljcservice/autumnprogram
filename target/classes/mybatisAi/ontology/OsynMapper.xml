@@ -1,0 +1,1239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OsynMapper">
+	
+	<!-- 诊断名称同义词标准词查询 -->
+	<select id="diagOsynlistPage" parameterType="page" resultType="pd">
+		select a.DN_ID ID,a.DN_CHN CN,a.DN_ENG EN,b.DN_CHN STAD_CN,b.DN_ENG STAD_EN,a.TERM_TYPE,
+			   a.SYNO_TYPE,a.ORG_DN_CHN ORG_CN,a.ORG_DN_ENG ORG_EN,a.IS_DISABLE,a.DESCRIPTION,a.UPDATE_MAN,a.UPDATE_TIME
+		from on_diag_name a 
+		left join on_diag_name b on (a.STAD_DN_ID=b.DN_ID and b.STAD_DN_ID=b.DN_ID 
+			<if test="pd.standardId != null">
+				and b.STAD_DN_ID = #{pd.standardId} 
+			</if>
+			) 
+		where 1=1 
+		<if test="pd.osynFlag == 0">
+			and	a.STAD_DN_ID != a.DN_ID 
+		</if>
+		<if test="pd.osynFlag == 1">
+			and	a.STAD_DN_ID = a.DN_ID 
+		</if>
+		<if test="pd.standardId != null">
+			and a.STAD_DN_ID = #{pd.standardId} 
+		</if>
+		<if test="pd.DN_CHN != null and pd.DN_CHN!=''"> <!-- 术语名称 -->
+			and a.DN_CHN = #{pd.DN_CHN} 
+		</if>
+		<if test="pd.DN_NAME != null and pd.DN_NAME!=''"> <!-- 术语名称 -->
+			and a.DN_CHN like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%') 
+		</if>
+		<if test="pd.UPDATE_TIME != null and pd.UPDATE_TIME != ''"> <!-- 更新时间 -->
+			and to_char(a.UPDATE_TIME,'YYYY-MM-DD') &gt;= #{pd.UPDATE_TIME} 
+		</if>
+		<if test="pd.UPDATE_TIME_END != null and pd.UPDATE_TIME_END != ''"> <!-- 更新时间 -->
+			and to_char(a.UPDATE_TIME,'YYYY-MM-DD') &lt;= #{pd.UPDATE_TIME_END} 
+		</if>
+	</select>
+	<!-- 诊断同义词查询 -->
+	<select id="diaglistPage" parameterType="page" resultType="pd">
+		select m.dn_chn stand_name,n.dn_id,n.dn_chn,n.dn_eng,n.stad_dn_id,n.term_type,n.syno_type,n.org_dn_chn,n.org_dn_eng,
+		 n.is_disable,n.update_man,n.update_time,decode(Y.DN_ID,null,0,'',0,1) OSYN_EDIT_FLAG from on_diag_name n left join on_diag_name m on m.dn_id=n.stad_dn_id 
+		 left join (select distinct DN_ID from ai_alter_name_hist where ONTO_TYPE=#{pd.TERM_CATEGORY} and STATUS=0 ) y on n.dn_id =y.dn_id
+		 where 1=1
+		 <if test="pd.WORD_TYPE==0">
+			 and n.dn_id!=n.stad_dn_id
+		 </if>
+		 <if test="pd.WORD_TYPE==1">
+			 and n.dn_id = n.stad_dn_id
+		 </if>
+		 <if test="pd.TERM_TYPE != null and pd.TERM_TYPE != ''">
+		 	and n.term_type=#{pd.TERM_TYPE}
+		 </if>
+		 <if test="pd.OSYN_TYPE != null and pd.OSYN_TYPE != ''">
+		 	and n.syno_type=#{pd.OSYN_TYPE}
+		 </if>
+		 <if test="pd.IS_DISABLED != null and pd.IS_DISABLED != ''">
+		 	and n.is_disable = #{pd.IS_DISABLED}
+		 </if>
+		 <if test="pd.UPDATE_MAN != null and pd.UPDATE_MAN != ''">
+		 	and n.update_man = #{pd.UPDATE_MAN}
+		 </if>
+		 <if test="pd.UPDATE_TIME != null and pd.UPDATE_TIME != ''">
+		 	and to_char(n.UPDATE_TIME,'YYYY-MM-DD') &gt;= #{pd.UPDATE_TIME}
+		 </if>
+		 <if test="pd.UPDATE_TIME_END != null and pd.UPDATE_TIME_END != ''">
+		 	and to_char(n.UPDATE_TIME,'YYYY-MM-DD') &lt;= #{pd.UPDATE_TIME_END}
+		 </if>
+		 <if test="pd.DN_NAME != null and pd.DN_NAME != ''">
+		 	and (n.dn_chn like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or n.dn_eng like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or m.dn_chn like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 	)
+		 </if>
+		 <if test="pd.CONDITION==0 or pd.CONDITION==null or pd.CONDITION==''">order by n.dn_id  </if>
+		<if test="pd.CONDITION==1"><!-- 按时间倒序 -->
+			order by t.update_time desc
+		</if>
+		<if test="pd.CONDITION==2"><!-- 按时间正序 -->
+			order by t.update_time asc
+		</if>
+	</select>
+	<!-- 根据ID查询单个诊断同义词 -->
+	<select id="diagOsynById" parameterType="pd" resultType="pd">
+		select s.dn_chn standard_name,n.dn_id,n.dn_chn,n.dn_eng,n.stad_dn_id,n.term_type,n.syno_type,n.org_dn_chn,
+			n.org_dn_eng,n.is_disable,n.description,n.update_man,n.update_time,n.operation 
+		from on_diag_name n 
+		left join on_diag_name s on s.dn_id =n.STAD_DN_ID 
+		where n.dn_id=#{ON_NAME_ID}
+	</select>
+	<!-- 查询手术信息列表 -->
+	<select id="oplistPage" parameterType="page" resultType="pd">
+		SELECT s.on_chn standard_name,P.ON_ID,P.ON_CHN,P.ON_ENG,P.STAD_ON_ID,P.SYNO_TYPE,P.ORG_OP_CHN,P.ORG_OP_ENG,
+		P.IS_DISABLE,P.VERSION,P.UPDATE_MAN,P.UPDATE_TIME,P.DESCRIPTION,P.RECORD,P.COLUMN_14,
+		decode(Y.DN_ID,null,0,'',0,1) OSYN_EDIT_FLAG FROM ON_OPERATION_NAME p left join ON_OPERATION_NAME s on 
+		s.on_id=p.stad_on_id left join (select distinct DN_ID from ai_alter_name_hist where ONTO_TYPE=#{pd.TERM_CATEGORY} and STATUS=0 ) y
+		 on p.ON_ID =y.dn_id where 1=1
+		 <if test="pd.WORD_TYPE==0">
+			 and p.ON_ID!=p.STAD_ON_ID
+		 </if>
+		 <if test="pd.WORD_TYPE==1">
+			 and p.ON_ID = p.STAD_ON_ID
+		 </if>
+		 <if test="pd.OSYN_TYPE != null and pd.OSYN_TYPE != ''">
+		 	and P.SYNO_TYPE=#{pd.OSYN_TYPE}
+		 </if>
+		 <if test="pd.IS_DISABLED != null and pd.IS_DISABLED != ''">
+		 	and P.IS_DISABLE = #{pd.IS_DISABLED}
+		 </if>
+		 <if test="pd.UPDATE_MAN != null and pd.UPDATE_MAN != ''">
+		 	and P.UPDATE_MAN = #{pd.UPDATE_MAN}
+		 </if>
+		 <if test="pd.UPDATE_TIME != null and pd.UPDATE_TIME != ''">
+		 	and to_char(P.UPDATE_TIME,'YYYY-MM-DD') &gt;= #{pd.UPDATE_TIME}
+		 </if>
+		 <if test="pd.UPDATE_TIME_END != null and pd.UPDATE_TIME_END != ''">
+		 	and to_char(P.UPDATE_TIME,'YYYY-MM-DD') &lt;= #{pd.UPDATE_TIME_END}
+		 </if>
+		 <if test="pd.DN_NAME != null and pd.DN_NAME != ''">
+		 	and (P.ON_CHN like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or P.ON_ENG like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or s.on_chn like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 	)
+		 </if>
+		 <if test="pd.CONDITION==0 or pd.CONDITION==null or pd.CONDITION==''">order by P.ON_ID  </if>
+		<if test="pd.CONDITION==1"><!-- 按时间倒序 -->
+			order by P.UPDATE_TIME desc
+		</if>
+		<if test="pd.CONDITION==2"><!-- 按时间正序 -->
+			order by P.UPDATE_TIME asc
+		</if>
+	</select>
+	<!-- 根据ID查询单个诊断同义词 -->
+	<select id="operationOsynById" parameterType="pd" resultType="pd">
+		select s.ON_CHN standard_name,n.on_id,n.on_chn,n.on_eng,n.stad_on_id,n.syno_type,n.org_op_chn,
+			n.org_op_eng,n.is_disable,n.description,n.update_man,n.update_time,n.version
+		from on_operation_name n 
+		left join on_operation_name s on s.on_id =n.STAD_ON_ID 
+		where n.on_id=#{ON_NAME_ID}
+	</select>
+	<!-- 查询科室信息列表 -->
+	<select id="deplistPage" parameterType="page" resultType="pd">
+		select n.dep_name standard_name,d.id,d.stad_id,d.dep_name,d.syno_type,d.is_disable,d.description,d.version,d.update_man,d.update_time,decode(Y.DN_ID,null,0,'',0,1) OSYN_EDIT_FLAG
+		 from on_dep_name d left join on_dep_name n on n.id=d.stad_id left join (select distinct DN_ID from ai_alter_name_hist where ONTO_TYPE=#{pd.TERM_CATEGORY} and STATUS=0 ) y
+		 on d.id =y.dn_id where 1=1
+		 <if test="pd.WORD_TYPE==0">
+			 and d.id!=d.stad_id
+		 </if>
+		 <if test="pd.WORD_TYPE==1">
+			 and d.id = d.stad_id
+		 </if>
+		 <if test="pd.OSYN_TYPE != null and pd.OSYN_TYPE != ''">
+		 	and d.syno_type=#{pd.OSYN_TYPE}
+		 </if>
+		 <if test="pd.IS_DISABLED != null and pd.IS_DISABLED != ''">
+		 	and d.is_disable = #{pd.IS_DISABLED}
+		 </if>
+		 <if test="pd.UPDATE_MAN != null and pd.UPDATE_MAN != ''">
+		 	and d.update_man = #{pd.UPDATE_MAN}
+		 </if>
+		 <if test="pd.UPDATE_TIME != null and pd.UPDATE_TIME != ''">
+		 	and to_char(d.update_time,'YYYY-MM-DD') &gt;= #{pd.UPDATE_TIME}
+		 </if>
+		 <if test="pd.UPDATE_TIME_END != null and pd.UPDATE_TIME_END != ''">
+		 	and to_char(d.update_time,'YYYY-MM-DD') &lt;= #{pd.UPDATE_TIME_END}
+		 </if>
+		 <if test="pd.DN_NAME != null and pd.DN_NAME != ''">
+		 	and (d.dep_name like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or n.dep_name like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 	)
+		 </if>
+		 <if test="pd.CONDITION==0 or pd.CONDITION==null or pd.CONDITION==''">order by d.id  </if>
+		<if test="pd.CONDITION==1"><!-- 按时间倒序 -->
+			order by d.update_time desc
+		</if>
+		<if test="pd.CONDITION==2"><!-- 按时间正序 -->
+			order by d.update_time asc
+		</if>
+	</select>
+	<!-- 根据ID查询单个诊断同义词 -->
+	<select id="depOsynById" parameterType="pd" resultType="pd">
+		select s.DEP_NAME standard_name,n.ID,n.DEP_NAME,n.STAD_ID,n.SYNO_TYPE,n.IS_DISABLE,n.DESCRIPTION,n.UPDATE_MAN,n.UPDATE_TIME,n.version 
+		from on_dep_name n
+		left join on_dep_name s on s.ID =n.STAD_ID 
+		where n.ID=#{ON_NAME_ID} 
+	</select>
+	
+	<!-- 手术名称同义词查询 -->
+	<select id="opOsynlistPage" parameterType="page" resultType="pd">
+		select a.ON_ID ID,a.ON_CHN CN,a.ON_ENG EN,b.ON_CHN STAD_CN,b.ON_ENG STAD_EN,
+			   a.SYNO_TYPE,a.ORG_OP_CHN ORG_CN,a.ORG_OP_ENG ORG_EN,a.IS_DISABLE,a.DESCRIPTION,a.UPDATE_MAN,a.UPDATE_TIME
+		from on_operation_name a 
+		left join on_operation_name b on (a.STAD_ON_ID=b.ON_ID and b.STAD_ON_ID=b.ON_ID 
+			<if test="pd.standardId != null">
+				and b.STAD_ON_ID = #{pd.standardId} 
+			</if>
+			) 
+		where 1=1 
+		<if test="pd.osynFlag == 0">
+			and	a.STAD_ON_ID != a.ON_ID 
+		</if>
+		<if test="pd.osynFlag == 1">
+			and	a.STAD_ON_ID = a.ON_ID 
+		</if>
+		<if test="pd.standardId != null">
+			and a.STAD_ON_ID = #{pd.standardId} 
+		</if>
+		<if test="pd.DN_CHN != null and pd.DN_CHN!=''"> <!-- 术语名称 -->
+			and a.ON_CHN = #{pd.ON_CHN} 
+		</if>
+		<if test="pd.UPDATE_TIME != null and pd.UPDATE_TIME != ''"> <!-- 更新时间 -->
+			and to_char(a.UPDATE_TIME,'YYYY-MM-DD') = #{pd.UPDATE_TIME} 
+		</if>
+	</select>
+	
+	<!-- 药品名称同义词列表查询 -->
+	<select id="drugNamelistPage" parameterType="page" resultType="pd">
+		select n.chn_name stadname, t.dn_id,t.stad_name_id,t.chn_name,t.eng_name,t.stad_chn_name,t.stad_eng_name,
+		t.org_chn_name,t.org_eng_name,t.org_stnd_chn_name,t.org_stnd_eng_name,t.word_type,t.remark,t.is_disable,
+		t.update_man,t.update_time,t.description,decode(Y.DN_ID,null,0,'',0,1) OSYN_EDIT_FLAG from on_drug_name t left join on_drug_name n on
+		n.dn_id=t.stad_name_id left join (select distinct DN_ID from ai_alter_name_hist where ONTO_TYPE=#{pd.TERM_CATEGORY} and STATUS=0 ) y on t.dn_id =y.dn_id where 
+		<if test="pd.WORD_TYPE==1">
+			t.dn_id=t.stad_name_id
+		</if>
+		<if test="pd.WORD_TYPE==0">
+			t.dn_id!=t.stad_name_id
+		</if>
+		<if test="pd.DN_NAME != null and pd.DN_NAME != ''">
+		 	and (t.chn_name like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.eng_name like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.stad_eng_name like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.org_chn_name like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.org_eng_name like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.org_stnd_chn_name like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.org_stnd_eng_name like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or n.chn_name like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 	)
+		 </if>
+		<if test="pd.UPDATE_TIME != null and pd.UPDATE_TIME != ''"> <!-- 更新时间 -->
+			and to_char(t.UPDATE_TIME,'YYYY-MM-DD') &gt;= #{pd.UPDATE_TIME} 
+		</if>
+		<if test="pd.UPDATE_TIME_END != null and pd.UPDATE_TIME_END != ''"> <!-- 更新时间 -->
+			and to_char(t.UPDATE_TIME,'YYYY-MM-DD') &lt;= #{pd.UPDATE_TIME_END} 
+		</if>
+		<if test="pd.TERM_CATEGORY!=null and pd.TERM_CATEGORY !=''"><!-- 词语类型 -->
+			and t.word_type=#{pd.TERM_CATEGORY}
+		</if>
+		<if test="pd.IS_DISABLED!=null and pd.IS_DISABLED!=''">
+			and t.is_disable=#{pd.IS_DISABLED}
+		</if>
+		<if test="pd.CONDITION==0 or pd.CONDITION==null or pd.CONDITION==''">order by t.dn_id  </if>
+		<if test="pd.CONDITION==1"><!-- 按时间倒序 -->
+			order by t.update_time desc
+		</if>
+		<if test="pd.CONDITION==2"><!-- 按时间正序 -->
+			order by t.update_time asc
+		</if>
+	</select>
+	<!-- 单个药品名称同义词查询 -->
+	<select id="drugNameOsynById" parameterType="pd" resultType="pd">
+		SELECT d.dn_id,d.stad_name_id,d.chn_name,d.eng_name,d.stad_chn_name,d.stad_eng_name,d.org_chn_name,d.org_eng_name,
+		d.org_stnd_chn_name,d.org_stnd_eng_name,d.word_type,d.remark,d.is_disable,d.update_man,d.update_time,d.description 
+		FROM ON_DRUG_NAME d where 1=1
+		<if test="ON_ID!=null and ON_ID!=''">
+			 and d.dn_id=#{ON_ID}
+		</if>
+		<if test="STAD_ID!=null and STAD_ID!=''"><!-- 同义词 -->
+			 and d.stad_name_id=#{STAD_ID} 
+		</if>
+		<if test="WORD_TYPE!=null and WORD_TYPE==0">
+			 and d.dn_id!=d.stad_name_id
+		</if>
+	</select>
+	
+	<!-- 药品生产企业同义词查询 -->
+	<select id="drugFactorylistPage" parameterType="page" resultType="pd">
+		select t.fac_id,t.fac_chn,t.fac_eng,t.fac_abb,t.stad_fac_id,t.stad_fac_chn,t.stad_fac_eng,t.stad_fac_abb,t.org_fac_chn,
+		t.org_fac_eng,t.org_stad_fac_chn,t.org_stad_fac_eng,t.org_fac_abb,t.org_stad_fac_abb,t.country,t.area,t.area_code,
+		t.remark,t.is_disable,t.update_man,t.update_time,t.description,t.version,decode(Y.DN_ID,null,0,'',0,1) OSYN_EDIT_FLAG  from on_drug_factory t
+    left join (select distinct DN_ID from ai_alter_name_hist where ONTO_TYPE=#{pd.TERM_CATEGORY} and STATUS=0 ) y on t.fac_id =y.dn_id where 
+		<if test="pd.WORD_TYPE==1">
+			t.fac_id=t.stad_fac_id
+		</if>
+		<if test="pd.WORD_TYPE==0">
+			t.fac_id!=t.stad_fac_id
+		</if>
+		<if test="pd.DN_NAME != null and pd.DN_NAME != ''">
+		 	and (t.fac_chn like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.fac_eng like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.fac_abb like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.COUNTRY like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.AREA like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 	)
+		</if>
+		<if test="pd.UPDATE_TIME != null and pd.UPDATE_TIME != ''"> <!-- 更新开始时间 -->
+			and to_char(t.UPDATE_TIME,'YYYY-MM-DD') &gt;= #{pd.UPDATE_TIME} 
+		</if>
+		<if test="pd.UPDATE_TIME_END != null and pd.UPDATE_TIME_END != ''"> <!-- 更新结束时间 -->
+			and to_char(t.UPDATE_TIME,'YYYY-MM-DD') &lt;= #{pd.UPDATE_TIME_END} 
+		</if>
+		<if test="pd.UPDATE_MAN != null and pd.UPDATE_MAN != ''">
+		 	and t.update_man = #{pd.UPDATE_MAN}
+		</if>
+		<if test="pd.IS_DISABLED!=null and pd.IS_DISABLED!=''">
+			and t.is_disable=#{pd.IS_DISABLED}
+		</if>
+		<if test="pd.CONDITION==0 or pd.CONDITION==null or pd.CONDITION==''">order by t.fac_id  </if>
+		<if test="pd.CONDITION==1"><!-- 按时间倒序 -->
+			order by t.update_time desc
+		</if>
+		<if test="pd.CONDITION==2"><!-- 按时间正序 -->
+			order by t.update_time asc
+		</if>
+	</select>
+	<!-- 根据ID 查询药品生产企业信息 -->
+	<select id="drugFactoryOsynById" parameterType="pd" resultType="pd">
+		select t.fac_id,t.fac_chn,t.fac_eng,t.fac_abb,t.stad_fac_id,t.stad_fac_chn,t.stad_fac_eng,t.stad_fac_abb,t.org_fac_chn,
+		t.org_fac_eng,t.org_stad_fac_chn,t.org_stad_fac_eng,t.org_fac_abb,t.org_stad_fac_abb,t.country,t.area,t.area_code,t.remark,
+		t.is_disable,t.update_man,t.update_time,t.description,t.version from on_drug_factory t WHERE 1=1
+		<if test="ON_ID!=null and ON_ID!=''">
+			 and t.fac_id=#{ON_ID}
+		</if>
+		<if test="STAD_ID!=null and STAD_ID!=''">
+			 and t.stad_fac_id=#{STAD_ID} 
+		</if>
+		<if test="WORD_TYPE!=null and WORD_TYPE==0">
+			 and t.fac_id!=t.stad_fac_id
+		</if>
+	</select>
+	
+	<!-- 药品包装材质同义词查询 -->
+	<select id="drugPacklistPage" parameterType="page" resultType="pd">
+		select t.dp_id,t.dp_chn,t.dp_eng,t.stad_dp_id,t.stad_dp_chn,t.stad_dp_eng,t.org_dp_chn,t.org_dp_eng,t.org_stad_dp_chn,
+		t.org_stad_dp_eng,t.remark,t.is_disable,t.update_man,t.update_time,t.description,t.version,decode(Y.DN_ID,null,0,'',0,1) OSYN_EDIT_FLAG from on_drug_pack t
+		 left join (select distinct DN_ID from ai_alter_name_hist where ONTO_TYPE=#{pd.TERM_CATEGORY} and STATUS=0 ) y on t.dp_id =y.dn_id where
+		<if test="pd.WORD_TYPE==1">
+			t.dp_id=t.stad_dp_id
+		</if>
+		<if test="pd.WORD_TYPE==0">
+			t.dp_id!=t.stad_dp_id
+		</if>
+		<if test="pd.DN_NAME != null and pd.DN_NAME != ''">
+		 	and (t.dp_chn like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.dp_eng like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.stad_dp_chn like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.org_dp_chn like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 	)
+		</if>
+		<if test="pd.UPDATE_TIME != null and pd.UPDATE_TIME != ''"> <!-- 更新开始时间 -->
+			and to_char(t.UPDATE_TIME,'YYYY-MM-DD') &gt;= #{pd.UPDATE_TIME} 
+		</if>
+		<if test="pd.UPDATE_TIME_END != null and pd.UPDATE_TIME_END != ''"> <!-- 更新结束时间 -->
+			and to_char(t.UPDATE_TIME,'YYYY-MM-DD') &lt;= #{pd.UPDATE_TIME_END} 
+		</if>
+		<if test="pd.UPDATE_MAN != null and pd.UPDATE_MAN != ''">
+		 	and t.update_man = #{pd.UPDATE_MAN}
+		</if>
+		<if test="pd.IS_DISABLED!=null and pd.IS_DISABLED!=''">
+			and t.is_disable=#{pd.IS_DISABLED}
+		</if>
+		<if test="pd.CONDITION==0 or pd.CONDITION==null or pd.CONDITION==''">order by t.dp_id  </if>
+		<if test="pd.CONDITION==1"><!-- 按时间倒序 -->
+			order by t.update_time desc
+		</if>
+		<if test="pd.CONDITION==2"><!-- 按时间正序 -->
+			order by t.update_time asc
+		</if>
+	</select>
+	
+	<!-- 根据dp_id 查询药品包装材质信息 -->
+	<select id="drugPackOsynById" parameterType="pd" resultType="pd">
+		select t.dp_id,t.dp_chn,t.dp_eng,t.stad_dp_id,t.stad_dp_chn,t.stad_dp_eng,t.org_dp_chn,t.org_dp_eng,t.org_stad_dp_chn,
+		t.org_stad_dp_eng,t.remark,t.is_disable,t.update_man,t.update_time,t.description,t.version from on_drug_pack
+		 t where 1=1
+		 <if test="ON_ID!=null and ON_ID!=''">
+			 and t.dp_id=#{ON_ID}
+		</if>
+		<if test="STAD_ID!=null and STAD_ID!=''">
+			 and t.stad_dp_id=#{STAD_ID} 
+		</if>
+		<if test="WORD_TYPE!=null and WORD_TYPE==0">
+			 and t.dp_id!=t.stad_dp_id
+		</if>
+		  
+	</select>
+	
+	<!-- 药品规格表同义词查询 -->
+	<select id="drugSpeclistPage" parameterType="page" resultType="pd">
+		select t.sp_id,t.drug_sp,t.drug_stad_id,t.drug_stad,t.org_drug_sp,t.org_drug_stad_sp,t.remark,t.is_disable,
+		t.update_man,t.update_time,t.description,t.version,decode(Y.DN_ID,null,0,'',0,1) OSYN_EDIT_FLAG from on_drug_spec t 
+		left join (select distinct DN_ID from ai_alter_name_hist where ONTO_TYPE=#{pd.TERM_CATEGORY} and STATUS=0 ) y on t.sp_id =y.dn_id where
+		<if test="pd.WORD_TYPE==1">
+			t.sp_id=t.drug_stad_id
+		</if>
+		<if test="pd.WORD_TYPE==0">
+			t.sp_id!=t.drug_stad_id
+		</if>
+		<if test="pd.DN_NAME != null and pd.DN_NAME != ''">
+		 	and (t.drug_sp like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.drug_stad like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.org_drug_sp like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 	)
+		</if>
+		<if test="pd.UPDATE_TIME != null and pd.UPDATE_TIME != ''"> <!-- 更新时间 -->
+			and to_char(t.UPDATE_TIME,'YYYY-MM-DD') &gt;= #{pd.UPDATE_TIME} 
+		</if>
+		<if test="pd.UPDATE_TIME_END != null and pd.UPDATE_TIME_END != ''"> <!-- 更新时间 -->
+			and to_char(t.UPDATE_TIME,'YYYY-MM-DD') &lt;= #{pd.UPDATE_TIME_END} 
+		</if>
+		<if test="pd.UPDATE_MAN != null and pd.UPDATE_MAN != ''">
+		 	and t.update_man = #{pd.UPDATE_MAN}
+		</if>
+		<if test="pd.IS_DISABLED!=null and pd.IS_DISABLED!=''">
+			and t.is_disable=#{pd.IS_DISABLED}
+		</if>
+		<if test="pd.CONDITION==0 or pd.CONDITION==null or pd.CONDITION==''">order by t.sp_id  </if>
+		<if test="pd.CONDITION==1"><!-- 按时间倒序 -->
+			order by t.update_time desc
+		</if>
+		<if test="pd.CONDITION==2"><!-- 按时间正序 -->
+			order by t.update_time asc
+		</if>
+	</select>
+	<!-- 根据sp_id查询药品规格表信息 -->
+	<select id="drugSpecOsynById" parameterType="pd" resultType="pd">
+		select t.sp_id,t.drug_sp,t.drug_stad_id,t.drug_stad,t.org_drug_sp,t.org_drug_stad_sp,t.remark,t.is_disable,
+		t.update_man,t.update_time,t.description,t.version from on_drug_spec t where 1=1
+		 <if test="ON_ID!=null and ON_ID!=''">
+			 and t.sp_id=#{ON_ID}
+		</if>
+		<if test="STAD_ID!=null and STAD_ID!=''">
+			 and t.drug_stad_id=#{STAD_ID} 
+		</if>
+		<if test="WORD_TYPE!=null and WORD_TYPE==0">
+			 and t.sp_id!=t.drug_stad_id
+		</if>
+	</select>
+	<!-- 药品包装规格单位同义词信息列表查询 -->
+	<select id="packSpecUnitlistPage" parameterType="page" resultType="pd">
+		select t.psu_id,t.psu_chn,t.psu_eng,t.psu_stad_id,t.psu_stad_eng,t.psu_stad_chn,t.org_psu_chn,t.org_psu_eng,
+		t.org_psu_stad_chn,t.org_psu_stad_eng,t.remark,t.is_disable,t.update_man,t.update_time,t.description,t.vsersion,decode(Y.DN_ID,null,0,'',0,1) OSYN_EDIT_FLAG
+		 from on_pack_spec_unit t left join (select distinct DN_ID from ai_alter_name_hist where ONTO_TYPE=#{pd.TERM_CATEGORY} and STATUS=0 ) y on t.psu_id =y.dn_id where 
+		 <if test="pd.WORD_TYPE==1">
+			t.psu_id=t.psu_stad_id
+		</if>
+		<if test="pd.WORD_TYPE==0">
+			t.psu_id!=t.psu_stad_id
+		</if>
+		<if test="pd.DN_NAME != null and pd.DN_NAME != ''">
+		 	and (t.psu_chn like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.psu_eng like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.psu_stad_chn like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 	)
+		</if>
+		<if test="pd.UPDATE_TIME != null and pd.UPDATE_TIME != ''"> <!-- 更新开始时间 -->
+			and to_char(t.UPDATE_TIME,'YYYY-MM-DD') &gt;= #{pd.UPDATE_TIME} 
+		</if>
+		<if test="pd.UPDATE_TIME_END != null and pd.UPDATE_TIME_END != ''"> <!-- 更新结束时间 -->
+			and to_char(t.UPDATE_TIME,'YYYY-MM-DD') &lt;= #{pd.UPDATE_TIME_END} 
+		</if>
+		<if test="pd.UPDATE_MAN != null and pd.UPDATE_MAN != ''">
+		 	and t.update_man = #{pd.UPDATE_MAN}
+		</if>
+		<if test="pd.IS_DISABLED!=null and pd.IS_DISABLED!=''">
+			and t.is_disable=#{pd.IS_DISABLED}
+		</if>
+		<if test="pd.CONDITION==0 or pd.CONDITION==null or pd.CONDITION==''">order by t.psu_id  </if>
+		<if test="pd.CONDITION==1"><!-- 按时间倒序 -->
+			order by t.update_time desc
+		</if>
+		<if test="pd.CONDITION==2"><!-- 按时间正序 -->
+			order by t.update_time asc
+		</if>
+	</select>
+	<!-- 根据ID查询药品包装规格单位信息 -->
+	<select id="packSpecUnitOsynById" parameterType="pd" resultType="pd">
+		select t.psu_id,t.psu_chn,t.psu_eng,t.psu_stad_id,t.psu_stad_eng,t.psu_stad_chn,t.org_psu_chn,t.org_psu_eng,
+		t.org_psu_stad_chn,t.org_psu_stad_eng,t.remark,t.is_disable,t.update_man,t.update_time,t.description,t.vsersion
+		 from on_pack_spec_unit t where 1=1
+		 <if test="ON_ID!=null and ON_ID!=''">
+			 and t.psu_id=#{ON_ID}
+		</if>
+		<if test="STAD_ID!=null and STAD_ID!=''">
+			 and t.psu_stad_id=#{STAD_ID} 
+		</if>
+		<if test="WORD_TYPE!=null and WORD_TYPE==0">
+			 and t.psu_id!=t.psu_stad_id
+		</if>
+	</select>
+	
+	<!-- 药品包装规格表查询 -->
+	<select id="packSpeclistPage" parameterType="page" resultType="pd">
+		select t.ps_id,t.ps_chn,t.ps_eng,t.stad_ps_id,t.stad_ps_chn,t.stad_ps_value_chn,t.stad_ps_unit_chn,t.stad_ps_eng,
+		t.stad_ps_value_eng,t.stad_ps_unit_eng,t.psu_id,t.org_ps_chn,t.org_ps_eng,t.org_stad_ps_chn,t.org_stad_ps_eng,
+		t.remark,t.is_disable,t.update_man,t.update_time,t.description,t.version,decode(Y.DN_ID,null,0,'',0,1) OSYN_EDIT_FLAG from on_pack_spec t
+		left join (select distinct DN_ID from ai_alter_name_hist where ONTO_TYPE=#{pd.TERM_CATEGORY} and STATUS=0 ) y on t.ps_id =y.dn_id where
+		<if test="pd.WORD_TYPE==1">
+			t.ps_id=t.stad_ps_id
+		</if>
+		<if test="pd.WORD_TYPE==0">
+			t.ps_id!=t.stad_ps_id
+		</if>
+		<if test="pd.DN_NAME != null and pd.DN_NAME != ''">
+		 	and (t.ps_chn like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.ps_eng like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.stad_ps_chn like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 	)
+		</if>
+		<if test="pd.UPDATE_TIME != null and pd.UPDATE_TIME != ''"> <!-- 更新开始时间 -->
+			and to_char(t.UPDATE_TIME,'YYYY-MM-DD') &gt;= #{pd.UPDATE_TIME} 
+		</if>
+		<if test="pd.UPDATE_TIME_END != null and pd.UPDATE_TIME_END != ''"> <!-- 更新结束时间 -->
+			and to_char(t.UPDATE_TIME,'YYYY-MM-DD') &lt;= #{pd.UPDATE_TIME_END} 
+		</if>
+		<if test="pd.UPDATE_MAN != null and pd.UPDATE_MAN != ''">
+		 	and t.update_man = #{pd.UPDATE_MAN}
+		</if>
+		<if test="pd.IS_DISABLED!=null and pd.IS_DISABLED!=''">
+			and t.is_disable=#{pd.IS_DISABLED}
+		</if>
+		<if test="pd.CONDITION==0 or pd.CONDITION==null or pd.CONDITION==''">order by t.ps_id  </if>
+		<if test="pd.CONDITION==1"><!-- 按时间倒序 -->
+			order by t.update_time desc
+		</if>
+		<if test="pd.CONDITION==2"><!-- 按时间正序 -->
+			order by t.update_time asc
+		</if>
+	</select>
+	
+	<!-- 根据ID查询药品包装规格单位信息 -->
+	<select id="packSpecOsynById" parameterType="pd" resultType="pd">
+		select t.ps_id,t.ps_chn,t.ps_eng,t.stad_ps_id,t.stad_ps_chn,t.stad_ps_value_chn,t.stad_ps_unit_chn,t.stad_ps_eng,
+		t.stad_ps_value_eng,t.stad_ps_unit_eng,t.psu_id,t.org_ps_chn,t.org_ps_eng,t.org_stad_ps_chn,t.org_stad_ps_eng,
+		t.remark,t.is_disable,t.update_man,t.update_time,t.description,t.version from on_pack_spec t where 1=1 
+		<if test="ON_ID!=null and ON_ID!=''">
+			 and t.ps_id=#{ON_ID}
+		</if>
+		<if test="STAD_ID!=null and STAD_ID!=''">
+			 and t.stad_ps_id=#{STAD_ID} 
+		</if>
+		<if test="WORD_TYPE!=null and WORD_TYPE==0">
+			 and t.ps_id!=t.stad_ps_id
+		</if>
+		<if test="FK_PSU_ID!=null and FK_PSU_ID!=''">
+			and t.psu_id=#{FK_PSU_ID}
+		</if>
+		 
+	</select>
+	<!-- 根据规格单位ID修改规格单位中文、英文 -->
+	<update id="packSpecUpdateByPsu">
+		UPDATE ON_PACK_SPEC SET STAD_PS_UNIT_CHN=#{STAD_PS_UNIT_CHN},STAD_PS_UNIT_ENG=#{STAD_PS_UNIT_ENG} WHERE PSU_ID=#{FK_PSU_ID}
+	</update>
+	<!-- 药品给药途径列表查询 -->
+	<select id="drugRoutelistPage" parameterType="page" resultType="pd">
+		select t.dr_id,t.dr_chn,t.dr_eng,t.dr_eng_abb,t.stad_dr_id,t.stad_dr_chn,t.stad_dr_eng,t.concept,
+		t.concept_org,t.org_dr_chn,t.org_dr_eng,t.org_dr_chn_abb,t.org_stad_dr_chn,t.org_stad_dr_eng,t.remark,
+		t.is_disable,t.update_man,t.update_time,t.description,t.version,decode(Y.DN_ID,null,0,'',0,1) OSYN_EDIT_FLAG
+		 from TS_ONTO.ON_DRUG_ROUTE t left join (select distinct DN_ID from ai_alter_name_hist where 
+		 ONTO_TYPE=#{pd.TERM_CATEGORY} and STATUS=0 ) y on t.dr_id =y.dn_id where 1=1 and
+		<if test="pd.WORD_TYPE==1">
+			t.dr_id=t.stad_dr_id
+		</if>
+		<if test="pd.WORD_TYPE==0">
+			t.dr_id!=t.stad_dr_id
+		</if>
+		<if test="pd.DN_NAME != null and pd.DN_NAME != ''">
+		 	and (t.dr_chn like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.dr_eng like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.stad_dr_chn like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.stad_dr_eng like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.concept like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.concept_org like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 	)
+		</if>
+		<if test="pd.UPDATE_TIME != null and pd.UPDATE_TIME != ''"> <!-- 更新开始时间 -->
+			and to_char(t.UPDATE_TIME,'YYYY-MM-DD') &gt;= #{pd.UPDATE_TIME} 
+		</if>
+		<if test="pd.UPDATE_TIME_END != null and pd.UPDATE_TIME_END != ''"> <!-- 更新结束时间 -->
+			and to_char(t.UPDATE_TIME,'YYYY-MM-DD') &lt;= #{pd.UPDATE_TIME_END} 
+		</if>
+		<if test="pd.UPDATE_MAN != null and pd.UPDATE_MAN != ''">
+		 	and t.update_man = #{pd.UPDATE_MAN}
+		</if>
+		<if test="pd.IS_DISABLED!=null and pd.IS_DISABLED!=''">
+			and t.is_disable=#{pd.IS_DISABLED}
+		</if>
+		<if test="pd.CONDITION==0 or pd.CONDITION==null or pd.CONDITION==''">order by t.dr_id  </if>
+		<if test="pd.CONDITION==1"><!-- 按时间倒序 -->
+			order by t.update_time desc
+		</if>
+		<if test="pd.CONDITION==2"><!-- 按时间正序 -->
+			order by t.update_time asc
+		</if>
+	</select>
+	<!-- 根据ID查询药品给药途径 -->
+	<select id="drugRouteOsynById" parameterType="pd" resultType="pd">
+		select t.dr_id,t.dr_chn,t.dr_eng,t.dr_eng_abb,t.stad_dr_id,t.stad_dr_chn,t.stad_dr_eng,t.concept,
+		t.concept_org,t.org_dr_chn,t.org_dr_eng,t.org_dr_chn_abb,t.org_stad_dr_chn,t.org_stad_dr_eng,t.remark,
+		t.is_disable,t.update_man,t.update_time,t.description,t.version from on_drug_route t where 1=1 
+		<if test="ON_ID!=null and ON_ID!=''">
+			 and t.dr_id=#{ON_ID}
+		</if>
+		<if test="STAD_ID!=null and STAD_ID!=''">
+			 and t.stad_dr_id=#{STAD_ID} 
+		</if>
+		<if test="WORD_TYPE!=null and WORD_TYPE==0">
+			 and t.dr_id!=t.stad_dr_id
+		</if>
+	</select>
+	<!-- 药品剂型列表查询 -->
+	<select id="drugFormlistPage" parameterType="page" resultType="pd">
+		select t.f_id,t.f_chn_name,t.f_eng_name,t.stad_dos_id,t.stad_dos_chn,t.stad_dos_eng,t.org_dos_chn,t.org_dos_eng,
+		t.org_stad_dos_chn,t.org_stad_dos_eng,t.remark,t.is_disable,t.description,t.update_man,t.update_time,t.version,
+		decode(Y.DN_ID,null,0,'',0,1) OSYN_EDIT_FLAG from TS_ONTO.ON_DRUG_FORM t left join (select distinct DN_ID from
+		 ai_alter_name_hist where ONTO_TYPE=#{pd.TERM_CATEGORY} and STATUS=0 ) y on t.f_id =y.dn_id where 1=1 and
+		 <if test="pd.WORD_TYPE==1">
+			t.f_id=t.stad_dos_id
+		</if>
+		<if test="pd.WORD_TYPE==0">
+			t.f_id!=t.stad_dos_id
+		</if>
+		<if test="pd.DN_NAME != null and pd.DN_NAME != ''">
+		 	and (t.f_chn_name like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.f_eng_name like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.stad_dos_chn like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.stad_dos_eng like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.org_dos_chn like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.org_dos_eng like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 	)
+		</if>
+		<if test="pd.UPDATE_TIME != null and pd.UPDATE_TIME != ''"> <!-- 更新开始时间 -->
+			and to_char(t.UPDATE_TIME,'YYYY-MM-DD') &gt;= #{pd.UPDATE_TIME} 
+		</if>
+		<if test="pd.UPDATE_TIME_END != null and pd.UPDATE_TIME_END != ''"> <!-- 更新结束时间 -->
+			and to_char(t.UPDATE_TIME,'YYYY-MM-DD') &lt;= #{pd.UPDATE_TIME_END} 
+		</if>
+		<if test="pd.UPDATE_MAN != null and pd.UPDATE_MAN != ''">
+		 	and t.update_man = #{pd.UPDATE_MAN}
+		</if>
+		<if test="pd.IS_DISABLED!=null and pd.IS_DISABLED!=''">
+			and t.is_disable=#{pd.IS_DISABLED}
+		</if>
+		<if test="pd.CONDITION==0 or pd.CONDITION==null or pd.CONDITION==''">order by t.f_id  </if>
+		<if test="pd.CONDITION==1"><!-- 按时间倒序 -->
+			order by t.update_time desc
+		</if>
+		<if test="pd.CONDITION==2"><!-- 按时间正序 -->
+			order by t.update_time asc
+		</if>
+	</select>
+	<!-- 根据ID查询药品剂型 -->
+	<select id="drugFormOsynById" parameterType="pd" resultType="pd">
+		select t.f_id,t.f_chn_name,t.f_eng_name,t.stad_dos_id,t.stad_dos_chn,t.stad_dos_eng,t.org_dos_chn,
+		t.org_dos_eng,t.org_stad_dos_chn,t.org_stad_dos_eng,t.remark,t.is_disable,t.description,t.update_man,
+		t.update_time,t.version from on_drug_form t where 1=1 
+		<if test="ON_ID!=null and ON_ID!=''">
+			 and t.f_id=#{ON_ID}
+		</if>
+		<if test="STAD_ID!=null and STAD_ID!=''">
+			 and t.stad_dos_id=#{STAD_ID} 
+		</if>
+		<if test="WORD_TYPE!=null and WORD_TYPE==0">
+			 and t.f_id!=t.stad_dos_id
+		</if>
+	</select>
+	<!-- 查询药品大概念信息列表 -->
+	<select id="drugConceptlistPage" parameterType="page" resultType="pd">
+		SELECT t.dc_id,t.dn_id,t.dr_id,t.f_id,t.parent_id,t.dc_stad_chn,t.dc_stad_eng,t.dc_dos_stad_chn,
+		t.dc_dos_stad_eng,t.dc_dr_stad_chn,t.dc_dr_stad_eng,t.org_dc,t.remark,t.is_disable,t.update_man,t.update_time,
+		t.description,decode(Y.DN_ID,null,0,'',0,1) OSYN_EDIT_FLAG FROM ON_DRUG_CONCEPT t left join (select distinct 
+		DN_ID from ai_alter_name_hist where ONTO_TYPE=#{pd.TERM_CATEGORY} and STATUS=0 ) y on t.dc_id =y.dn_id where 1=1 and
+		<if test="pd.DN_NAME != null and pd.DN_NAME != ''">
+		 	and (t.dc_stad_chn like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.dc_stad_eng like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.dc_dos_stad_chn like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.dc_dos_stad_eng like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.dc_dr_stad_chn like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.dc_dr_stad_eng like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 		or t.org_dc like CONCAT(CONCAT('%',#{pd.DN_NAME}),'%')
+		 	)
+		</if>
+		<if test="pd.UPDATE_TIME != null and pd.UPDATE_TIME != ''"> <!-- 更新开始时间 -->
+			and to_char(t.UPDATE_TIME,'YYYY-MM-DD') &gt;= #{pd.UPDATE_TIME} 
+		</if>
+		<if test="pd.UPDATE_TIME_END != null and pd.UPDATE_TIME_END != ''"> <!-- 更新结束时间 -->
+			and to_char(t.UPDATE_TIME,'YYYY-MM-DD') &lt;= #{pd.UPDATE_TIME_END} 
+		</if>
+		<if test="pd.UPDATE_MAN != null and pd.UPDATE_MAN != ''">
+		 	and t.update_man = #{pd.UPDATE_MAN}
+		</if>
+		<if test="pd.IS_DISABLED!=null and pd.IS_DISABLED!=''">
+			and t.is_disable=#{pd.IS_DISABLED}
+		</if>
+		<if test="pd.CONDITION==0 or pd.CONDITION==null or pd.CONDITION==''">order by t.dc_id  </if>
+		<if test="pd.CONDITION==1"><!-- 按时间倒序 -->
+			order by t.update_time desc
+		</if>
+		<if test="pd.CONDITION==2"><!-- 按时间正序 -->
+			order by t.update_time asc
+		</if>
+	</select>
+	<!-- 药品制剂信息列表查询 -->
+	<select id="drugPreplistPage" parameterType="page" resultType="pd">
+		
+	</select>
+	<!-- 药品制剂成分（组）信息列表查询 -->
+	<select id="drugPrepComplistPage" parameterType="page" resultType="pd">
+	
+	</select>
+	<!-- 药品通用名、化学名、产品名、商品名新增 -->
+	<insert id="drugInsertOsynName">
+		INSERT INTO ON_DRUG_NAME (DN_ID,STAD_NAME_ID,CHN_NAME,ENG_NAME,STAD_CHN_NAME,STAD_ENG_NAME,ORG_CHN_NAME,
+		ORG_ENG_NAME,ORG_STND_CHN_NAME,ORG_STND_ENG_NAME,WORD_TYPE,REMARK,IS_DISABLE,UPDATE_MAN,UPDATE_TIME,DESCRIPTION)values
+		(#{DN_ID},#{STAD_DN_ID},#{DN_CHN},#{DN_ENG,jdbcType=VARCHAR},#{STAD_CHN},#{STAD_ENG,jdbcType=VARCHAR},#{ORG_DN_CHN,jdbcType=VARCHAR},
+		#{ORG_DN_ENG,jdbcType=VARCHAR},#{ORG_STAD_CHN,jdbcType=VARCHAR},#{ORG_STAD_ENG,jdbcType=VARCHAR},#{ONTO_TYPE},
+		#{DRUG_MEMO,jdbcType=VARCHAR},#{IS_DISABLE},#{UPDATE_MAN},#{UPDATE_TIME},#{DESCRIPTION,jdbcType=VARCHAR})
+	</insert>
+	
+	<!-- 药品通用名、化学名、产品名、商品名修改 -->
+	<update id="drugUpdateOsynName" parameterType="pd">
+		UPDATE ON_DRUG_NAME n SET n.stad_chn_name=#{STAD_CHN}
+		<if test="STAD_DN_ID!=null">
+			,n.stad_name_id=#{STAD_DN_ID}
+		</if>
+		<if test="DN_CHN != null">
+			,n.chn_name=#{DN_CHN}
+		</if>
+		<if test="DN_ENG!=null">
+			,n.eng_name=#{DN_ENG,jdbcType=VARCHAR}
+		</if>
+		<if test="STAD_ENG !=null">
+			,n.stad_eng_name=#{STAD_ENG,jdbcType=VARCHAR}
+		</if>
+		<if test="ORG_DN_CHN!=null">
+			,n.org_chn_name=#{ORG_DN_CHN,jdbcType=VARCHAR}
+		</if>
+		<if test="ORG_DN_ENG!=null">
+			,n.org_eng_name=#{ORG_DN_ENG}
+		</if>
+		<if test="ORG_STAD_CHN!=null">
+			,n.org_stnd_chn_name=#{ORG_STAD_CHN}
+		</if>
+		<if test="ORG_STAD_ENG!=null">
+			,n.org_stnd_eng_name=#{ORG_STAD_ENG}
+		</if>
+		<if test="ONTO_TYPE!=null">
+			,n.word_type=#{ONTO_TYPE}
+		</if>
+		<if test="DRUG_MEMO!=null">
+			n.remark=#{DRUG_MEMO},
+		</if>
+		<if test="IS_DISABLE!=null">
+			,n.is_disable=#{IS_DISABLE}
+		</if>
+		<if test="UPDATE_MAN!=null">
+			,n.update_man=#{UPDATE_MAN}
+		</if>
+		<if test="UPDATE_TIME!=null">
+			,n.update_time=#{UPDATE_TIME}
+		</if>
+		<if test="DESCRIPTION!=null">
+			,n.description=#{DESCRIPTION}
+		</if>
+		 where 
+		<if test="DN_ID!=null">n.dn_id=#{DN_ID}</if>
+		<if test="STAD_ID!=null">n.stad_name_id=#{STAD_ID}</if><!-- 根据标准ID修改同义词时使用 -->
+		 
+	</update>
+	
+	<!-- 药品生产企业新增 -->
+	<insert id="drugFactoryInsertOsynName">
+		INSERT INTO ON_DRUG_FACTORY (FAC_ID,FAC_CHN,FAC_ENG,FAC_ABB,STAD_FAC_ID,STAD_FAC_CHN,STAD_FAC_ENG,STAD_FAC_ABB,
+		ORG_FAC_CHN,ORG_FAC_ENG,ORG_STAD_FAC_CHN,ORG_STAD_FAC_ENG,ORG_FAC_ABB,ORG_STAD_FAC_ABB,COUNTRY,AREA,AREA_CODE,REMARK,
+		IS_DISABLE,UPDATE_MAN,UPDATE_TIME,DESCRIPTION,VERSION)values(#{DN_ID},#{DN_CHN},#{DN_ENG,jdbcType=VARCHAR},#{FAC_ABB,jdbcType=VARCHAR},
+		#{STAD_DN_ID},#{STAD_CHN},#{STAD_ENG,jdbcType=VARCHAR},#{STAD_FAC_ABB,jdbcType=VARCHAR},#{ORG_DN_CHN},#{ORG_DN_ENG,jdbcType=VARCHAR},
+		#{ORG_STAD_CHN},#{ORG_STAD_ENG,jdbcType=VARCHAR},#{ORG_FAC_ABB,jdbcType=VARCHAR},#{ORG_STAD_FAC_ABB,jdbcType=VARCHAR},
+		#{COUNTRY,jdbcType=VARCHAR},#{DISTRICT,jdbcType=VARCHAR},#{AREA_CODE,jdbcType=VARCHAR},#{DRUG_MEMO,jdbcType=VARCHAR},
+		#{IS_DISABLE},#{UPDATE_MAN},#{UPDATE_TIME},#{DESCRIPTION,jdbcType=VARCHAR},#{VERSION,jdbcType=VARCHAR})
+	</insert>
+	<!-- 药品生产企业修改 -->
+	<update id="drugFactoryUpdateOsynName">
+		UPDATE ON_DRUG_FACTORY f SET f.stad_fac_chn=#{STAD_CHN}
+		<if test="DN_CHN != null">
+			,f.fac_chn=#{DN_CHN}
+		</if>
+		<if test="DN_ENG != null">
+			,f.fac_eng=#{DN_ENG,jdbcType=VARCHAR}
+		</if>
+		<if test="FAC_ABB != null">,f.fac_abb=#{FAC_ABB,jdbcType=VARCHAR}</if>
+		<if test="STAD_DN_ID != null">,f.stad_fac_id=#{STAD_DN_ID}</if>
+		<if test="STAD_ENG != null">,f.stad_fac_eng=#{STAD_ENG,jdbcType=VARCHAR}</if>
+		<if test="STAD_FAC_ABB != null">,f.stad_fac_abb=#{STAD_FAC_ABB,jdbcType=VARCHAR}</if>
+		<if test="ORG_DN_CHN != null">,f.org_fac_chn=#{ORG_DN_CHN,jdbcType=VARCHAR}</if>
+		<if test="ORG_DN_ENG != null">,f.org_fac_eng=#{ORG_DN_ENG,jdbcType=VARCHAR}</if>
+		<if test="ORG_STAD_CHN != null">,f.org_stad_fac_chn=#{ORG_STAD_CHN,jdbcType=VARCHAR}</if>
+		<if test="ORG_STAD_ENG != null">,f.org_stad_fac_eng=#{ORG_STAD_ENG,jdbcType=VARCHAR}</if>
+		<if test="ORG_FAC_ABB != null">,f.org_fac_abb=#{ORG_FAC_ABB}</if>
+		<if test="ORG_STAD_FAC_ABB != null">,f.org_stad_fac_abb=#{ORG_STAD_FAC_ABB,jdbcType=VARCHAR}</if>
+		<if test="COUNTRY != null">,f.country=#{COUNTRY,jdbcType=VARCHAR}</if>
+		<if test="DISTRICT != null">,f.area=#{DISTRICT,jdbcType=VARCHAR}</if>
+		<if test="AREA_CODE != null">,f.area_code=#{AREA_CODE,jdbcType=VARCHAR}</if>
+		<if test="DRUG_MEMO != null">,f.remark=#{DRUG_MEMO,jdbcType=VARCHAR}</if>
+		<if test="IS_DISABLE != null">,f.is_disable=#{IS_DISABLE}</if>
+		<if test="UPDATE_MAN != null">,f.update_man=#{UPDATE_MAN}</if>
+		<if test="UPDATE_TIME != null">,f.update_time=#{UPDATE_TIME}</if>
+		<if test="DESCRIPTION != null">,f.description=#{DESCRIPTION,jdbcType=VARCHAR}</if>
+		<if test="VERSION != null">,f.version=#{VERSION,jdbcType=VARCHAR}</if>
+		 where 
+		 <if test="DN_ID != null">f.fac_id=#{DN_ID}</if>
+		 <if test="STAD_ID != null">f.stad_fac_id=#{STAD_ID}</if>
+		 
+	</update>
+	
+	<!-- 药品规格新增 -->
+	<insert id="drugSpecInsertOsynName">
+		INSERT INTO ON_DRUG_SPEC (SP_ID,DRUG_SP,DRUG_STAD_ID,DRUG_STAD,ORG_DRUG_SP,ORG_DRUG_STAD_SP,REMARK,IS_DISABLE,UPDATE_MAN,
+		UPDATE_TIME,DESCRIPTION,VERSION) values (#{DN_ID},#{DN_CHN},#{STAD_DN_ID},#{STAD_CHN},#{ORG_DN_CHN,jdbcType=VARCHAR},
+		#{ORG_STAD_CHN,jdbcType=VARCHAR},#{DRUG_MEMO,jdbcType=VARCHAR},#{IS_DISABLE},#{UPDATE_MAN},#{UPDATE_TIME},
+		#{DESCRIPTION,jdbcType=VARCHAR},#{VERSION,jdbcType=VARCHAR})
+	</insert>
+	<!-- 修改药品规格表信息 -->
+	<update id="drugSpecUpdateOsynName">
+		UPDATE ON_DRUG_SPEC p SET p.drug_stad=#{STAD_CHN}
+		<if test="DN_CHN != null">,p.drug_sp=#{DN_CHN}</if>
+		<if test="STAD_DN_ID != null">,p.drug_stad_id=#{STAD_DN_ID}</if>
+		<if test="ORG_DN_CHN != null">,p.org_drug_sp=#{ORG_DN_CHN}</if>
+		<if test="ORG_STAD_CHN != null">,p.org_drug_stad_sp=#{ORG_STAD_CHN}</if>
+		<if test="DRUG_MEMO != null">,p.remark=#{DRUG_MEMO}</if>
+		<if test="IS_DISABLE != null">,p.is_disable=#{IS_DISABLE}</if>
+		<if test="UPDATE_MAN != null">,p.update_man=#{UPDATE_MAN}</if>
+		<if test="UPDATE_TIME != null">,p.update_time=#{UPDATE_TIME}</if>
+		<if test="DESCRIPTION != null">,p.description=#{DESCRIPTION}</if>
+		<if test="VERSION != null">,p.version=#{VERSION}</if>
+		  where
+		<if test="DN_ID != null">p.sp_id=#{DN_ID}</if><!-- 根据ID更新时使用 -->
+		<if test="STAD_ID != null">p.drug_stad_id=#{STAD_ID}</if><!-- 根据标准词 修改项批量更新同义词时使用-->
+		
+	</update>
+	
+	<!-- 药品包装材质新增 -->
+	<insert id="drugPackInsertOsynName">
+		INSERT INTO ON_DRUG_PACK (DP_ID,DP_CHN,DP_ENG,STAD_DP_ID,STAD_DP_CHN,STAD_DP_ENG,ORG_DP_CHN,ORG_DP_ENG,ORG_STAD_DP_CHN,
+		ORG_STAD_DP_ENG,REMARK,IS_DISABLE,UPDATE_MAN,UPDATE_TIME,DESCRIPTION,VERSION)VALUES(#{DN_ID},#{DN_CHN},
+		#{DN_ENG,jdbcType=VARCHAR},#{STAD_DN_ID},#{STAD_CHN},#{STAD_ENG,jdbcType=VARCHAR},#{ORG_DN_CHN,jdbcType=VARCHAR},
+		#{ORG_DN_ENG,jdbcType=VARCHAR},#{ORG_STAD_CHN},#{ORG_STAD_ENG,jdbcType=VARCHAR},#{DRUG_MEMO,jdbcType=VARCHAR},
+		#{IS_DISABLE},#{UPDATE_MAN},#{UPDATE_TIME},#{DESCRIPTION,jdbcType=VARCHAR},#{VERSION,jdbcType=VARCHAR})
+	</insert>
+	<!-- 修改药品包装材质信息 -->
+	<update id="drugPackUpdateOsynName">
+		UPDATE ON_DRUG_PACK a set a.stad_dp_chn=#{STAD_CHN}
+		<if test="DN_CHN != null">,a.dp_chn=#{DN_CHN}</if>
+		<if test="DN_ENG != null">,a.dp_eng=#{DN_ENG}</if>
+		<if test="STAD_DN_ID != null">,a.stad_dp_id=#{STAD_DN_ID}</if>
+		<if test="STAD_ENG != null">,a.stad_dp_eng=#{STAD_ENG}</if>
+		<if test="ORG_DN_CHN != null">,a.org_dp_chn=#{ORG_DN_CHN}</if>
+		<if test="ORG_DN_ENG != null">,a.org_dp_eng=#{ORG_DN_ENG}</if>
+		<if test="ORG_STAD_CHN != null">,a.org_stad_dp_chn=#{ORG_STAD_CHN}</if>
+		<if test="ORG_STAD_ENG != null">,a.org_stad_dp_eng=#{ORG_STAD_ENG}</if>
+		<if test="DRUG_MEMO != null">,a.remark=#{DRUG_MEMO}</if>
+		<if test="IS_DISABLE != null">,a.is_disable=#{IS_DISABLE}</if>
+		<if test="UPDATE_MAN != null">,a.update_man=#{UPDATE_MAN}</if>
+		<if test="UPDATE_TIME != null">,a.update_time=#{UPDATE_TIME}</if>
+		<if test="DESCRIPTION != null">,a.description=#{DESCRIPTION}</if>
+		<if test="VERSION != null">,a.version=#{VERSION}</if>
+		 where 
+		<if test="DN_ID != null">a.dp_id=#{DN_ID}</if>
+		<if test="STAD_ID != null">a.stad_dp_id=#{STAD_ID}</if><!-- 根据标准词ID批量修改对应的多个同义词时使用 -->
+	</update>
+	
+	<!-- 药品包装规格新增 -->
+	<insert id="packSpecInsertOsynName">
+		INSERT INTO ON_PACK_SPEC (PS_ID,PS_CHN,PS_ENG,STAD_PS_ID,STAD_PS_CHN,STAD_PS_VALUE_CHN,STAD_PS_UNIT_CHN,STAD_PS_ENG,
+		STAD_PS_VALUE_ENG,STAD_PS_UNIT_ENG,PSU_ID,ORG_PS_CHN,ORG_PS_ENG,ORG_STAD_PS_CHN,ORG_STAD_PS_ENG,REMARK,IS_DISABLE,
+		UPDATE_MAN,UPDATE_TIME,DESCRIPTION,VERSION)values(#{DN_ID},#{DN_CHN},#{DN_ENG,jdbcType=VARCHAR},#{STAD_DN_ID},#{STAD_CHN},
+		#{STAD_PACK_SPEC_CHN,jdbcType=VARCHAR},#{STAD_PACK_SPEC_UNIT_CHN,jdbcType=VARCHAR},#{STAD_ENG,jdbcType=VARCHAR},
+		#{STAD_PACK_SPEC_ENG,jdbcType=VARCHAR},#{STAD_PACK_SPEC_UNIT_ENG,jdbcType=VARCHAR},#{PSU_ID,jdbcType=VARCHAR},#{ORG_DN_CHN,jdbcType=VARCHAR},
+		#{ORG_DN_ENG,jdbcType=VARCHAR},#{ORG_STAD_CHN,jdbcType=VARCHAR},#{ORG_STAD_ENG,jdbcType=VARCHAR},#{DRUG_MEMO,jdbcType=VARCHAR},
+		#{IS_DISABLE},#{UPDATE_MAN},#{UPDATE_TIME},#{DESCRIPTION,jdbcType=VARCHAR},#{VERSION,jdbcType=VARCHAR})
+	</insert>
+	<!-- 药品包装规格修改 -->
+	<update id="packSpecUpdateOsynName">
+		UPDATE ON_PACK_SPEC s set s.stad_ps_chn=#{STAD_CHN}
+		<if test="DN_CHN != null">,s.ps_chn=#{DN_CHN}</if>
+		<if test="DN_ENG != null">,s.ps_eng=#{DN_ENG}</if>
+		<if test="STAD_DN_ID != null">,s.stad_ps_id=#{STAD_DN_ID}</if>
+		<if test="STAD_PACK_SPEC_CHN != null">,s.stad_ps_value_chn=#{STAD_PACK_SPEC_CHN}</if>
+		<if test="STAD_PACK_SPEC_UNIT_CHN != null">,s.stad_ps_unit_chn=#{STAD_PACK_SPEC_UNIT_CHN}</if>
+		<if test="STAD_ENG != null">,s.stad_ps_eng=#{STAD_ENG}</if>
+		<if test="STAD_PACK_SPEC_ENG != null">,s.stad_ps_value_eng=#{STAD_PACK_SPEC_ENG}</if>
+		<if test="STAD_PACK_SPEC_UNIT_ENG != null">,s.stad_ps_unit_eng=#{STAD_PACK_SPEC_UNIT_ENG}</if>
+		<if test="PSU_ID != null">,s.psu_id=#{PSU_ID}</if>
+		<if test="ORG_DN_CHN != null">,s.org_ps_chn=#{ORG_DN_CHN}</if>
+		<if test="ORG_DN_ENG != null">,s.org_ps_eng=#{ORG_DN_ENG}</if>
+		<if test="ORG_STAD_CHN != null">,s.org_stad_ps_chn=#{ORG_STAD_CHN}</if>
+		<if test="ORG_STAD_ENG != null">,s.org_stad_ps_eng=#{ORG_STAD_ENG}</if>
+		<if test="DRUG_MEMO != null">,s.remark=#{DRUG_MEMO}</if>
+		<if test="IS_DISABLE != null">,s.is_disable=#{IS_DISABLE}</if>
+		<if test="UPDATE_MAN != null">,s.update_man=#{UPDATE_MAN}</if>
+		<if test="UPDATE_TIME != null">,s.update_time=#{UPDATE_TIME}</if>
+		<if test="DESCRIPTION != null">,s.description=#{DESCRIPTION}</if>
+		<if test="VERSION != null">,s.version=#{VERSION}</if>
+		 where 
+		 <if test="DN_ID != null">s.ps_id=#{DN_ID}</if>
+		 <if test="STAD_ID != null">s.stad_ps_id=#{STAD_ID}</if><!-- 根据标准ID修改同义词信息 -->
+	</update>
+	<!-- 根据规格单位ID修改对应的包装规格表中的单位中文、英文 -->
+	<update id="packSpecUpdateUnitName">
+		UPDATE ON_PACK_SPEC SET STAD_PS_UNIT_CHN=#{STAD_PACK_SPEC_UNIT_CHN},STAD_PS_UNIT_ENG=#{STAD_PACK_SPEC_UNIT_ENG} WHERE PSU_ID=#{PSU_ID}
+	</update>
+	
+	<!-- 药品包装规格单位新增 -->
+	<insert id="packSpecUnitInsertOsynName">
+		INSERT INTO ON_PACK_SPEC_UNIT (PSU_ID,PSU_CHN,PSU_ENG,PSU_STAD_ID,PSU_STAD_ENG,PSU_STAD_CHN,ORG_PSU_CHN,ORG_PSU_ENG,
+		ORG_PSU_STAD_CHN,ORG_PSU_STAD_ENG,REMARK,IS_DISABLE,UPDATE_MAN,UPDATE_TIME,DESCRIPTION,VSERSION)values(#{DN_ID},#{DN_CHN},
+		#{DN_ENG,jdbcType=VARCHAR},#{STAD_DN_ID},#{STAD_ENG,jdbcType=VARCHAR},#{STAD_CHN},#{ORG_DN_CHN,jdbcType=VARCHAR},
+		#{ORG_DN_ENG,jdbcType=VARCHAR},#{ORG_STAD_CHN,jdbcType=VARCHAR},#{ORG_STAD_ENG,jdbcType=VARCHAR},#{DRUG_MEMO,jdbcType=VARCHAR},
+		#{IS_DISABLE},#{UPDATE_MAN},#{UPDATE_TIME},#{DESCRIPTION,jdbcType=VARCHAR},#{VSERSION,jdbcType=VARCHAR})
+	</insert>
+	<!-- 修改药品包装规格单位信息 -->
+	<update id="packSpecUnitUpdateOsynName">
+		UPDATE ON_PACK_SPEC_UNIT u set u.psu_stad_chn=#{STAD_CHN}
+		<if test="DN_CHN != null">,u.psu_chn=#{DN_CHN}</if>
+		<if test="DN_ENG != null">,u.psu_eng=#{DN_ENG}</if>
+		<if test="STAD_DN_ID != null">,u.psu_stad_id=#{STAD_DN_ID}</if>
+		<if test="STAD_ENG != null">,u.psu_stad_eng=#{STAD_ENG}</if>
+		<if test="ORG_DN_CHN != null">,u.org_psu_chn=#{ORG_DN_CHN}</if>
+		<if test="ORG_DN_ENG != null">,u.org_psu_eng=#{ORG_DN_ENG}</if>
+		<if test="ORG_STAD_CHN != null">,u.org_psu_stad_chn=#{ORG_STAD_CHN}</if>
+		<if test="ORG_STAD_ENG != null">,u.org_psu_stad_eng=#{ORG_STAD_ENG}</if>
+		<if test="DRUG_MEMO != null">,u.remark=#{DRUG_MEMO}</if>
+		<if test="IS_DISABLE != null">,u.is_disable=#{IS_DISABLE}</if>
+		<if test="UPDATE_MAN != null">,u.update_man=#{UPDATE_MAN}</if>
+		<if test="UPDATE_TIME != null">,u.update_time=#{UPDATE_TIME}</if>
+		<if test="DESCRIPTION != null">,u.description=#{DESCRIPTION}</if>
+		<if test="VSERSION != null">,u.vsersion=#{VSERSION}</if>
+		 where 
+		<if test="DN_ID!=null">u.psu_id=#{DN_ID}</if>
+		<if test="STAD_ID!=null">u.psu_stad_id=#{STAD_ID}</if><!-- 根据标准ID修改对应的规格单位同义词信息 -->
+		 
+	</update>
+	<insert id="drugFormInsertOsynName">
+		insert into on_drug_form (F_ID, F_CHN_NAME, F_ENG_NAME, STAD_DOS_ID, STAD_DOS_CHN, STAD_DOS_ENG, ORG_DOS_CHN,
+		 ORG_DOS_ENG, ORG_STAD_DOS_CHN, ORG_STAD_DOS_ENG, REMARK, IS_DISABLE, UPDATE_MAN, UPDATE_TIME, DESCRIPTION,
+		  VERSION)values(#{DN_ID},#{DN_CHN},#{DN_ENG,jdbcType=VARCHAR},#{STAD_DN_ID},#{STAD_CHN},#{STAD_ENG,jdbcType=VARCHAR},
+		  #{ORG_DN_CHN,jdbcType=VARCHAR},#{ORG_DN_ENG,jdbcType=VARCHAR},#{ORG_STAD_CHN,jdbcType=VARCHAR},
+		  #{ORG_STAD_ENG,jdbcType=VARCHAR},#{DRUG_MEMO,jdbcType=VARCHAR},#{IS_DISABLE},#{UPDATE_MAN},#{UPDATE_TIME},
+		  #{DESCRIPTION,jdbcType=VARCHAR},#{VSERSION,jdbcType=VARCHAR})
+	</insert>
+	<!-- 修改药品剂型 -->
+	<update id="drugFormUpdateOsynName">
+		update on_drug_form f set f.stad_dos_chn=#{STAD_CHN}
+		<if test="DN_CHN!=null">,f.f_chn_name=#{DN_CHN}</if>
+		<if test="DN_CHN!=null">,f.f_eng_name=#{DN_ENG,jdbcType=VARCHAR}</if>
+		<if test="STAD_DN_ID!=null">,f.STAD_DOS_ID=#{STAD_DN_ID}</if>
+		<if test="STAD_ENG!=null">,f.STAD_DOS_CHN=#{STAD_ENG,jdbcType=VARCHAR}</if>
+		<if test="ORG_DN_CHN!=null">,f.org_dos_chn=#{ORG_DN_CHN}</if>
+		<if test="ORG_DN_ENG!=null">,f.org_dos_eng=#{ORG_DN_ENG}</if>
+		<if test="ORG_STAD_CHN!=null">,f.org_stad_dos_chn=#{ORG_STAD_CHN}</if>
+		<if test="ORG_STAD_ENG!=null">,f.org_stad_dos_eng=#{ORG_STAD_ENG}</if>
+		<if test="DRUG_MEMO!=null">,f.remark=#{DRUG_MEMO}</if>
+		<if test="IS_DISABLE!=null">,f.is_disable=#{IS_DISABLE}</if>
+		<if test="DESCRIPTION!=null">,f.description=#{DESCRIPTION}</if>
+		<if test="UPDATE_MAN!=null">,f.update_man=#{UPDATE_MAN}</if>
+		<if test="UPDATE_TIME!=null">,f.update_time=#{UPDATE_TIME}</if>
+		<if test="VSERSION!=null">,f.version=#{VSERSION}</if>
+		where 
+		<if test="DN_ID !=null">f.f_id=#{DN_ID}</if>
+		<if test="STAD_ID!=null">u.STAD_DOS_ID=#{STAD_ID}</if><!-- 根据标准ID修改对应的药品剂型同义词信息 -->
+	</update>
+	<!-- 新增药品给药途径 -->
+	<insert id="drugRouteInsertOsynName">
+		INSERT INTO ON_DRUG_ROUTE (DR_ID,DR_CHN,DR_ENG,DR_ENG_ABB,STAD_DR_ID,STAD_DR_CHN,STAD_DR_ENG,CONCEPT,
+		CONCEPT_ORG,ORG_DR_CHN,ORG_DR_ENG,ORG_DR_CHN_ABB,ORG_STAD_DR_CHN,ORG_STAD_DR_ENG,REMARK,IS_DISABLE,
+		UPDATE_MAN,UPDATE_TIME,DESCRIPTION,VERSION) VALUES (#{DN_ID},#{DN_CHN},#{DN_ENG,jdbcType=VARCHAR},
+		#{FAC_ABB,jdbcType=VARCHAR},#{STAD_DN_ID},#{STAD_CHN},#{STAD_ENG,jdbcType=VARCHAR},
+		#{COUNTRY,jdbcType=VARCHAR},<!-- 概念 -->
+		#{DISTRICT,jdbcType=VARCHAR},<!-- 概念来源 -->
+		#{ORG_DN_CHN,jdbcType=VARCHAR},#{ORG_DN_ENG,jdbcType=VARCHAR},#{ORG_FAC_ABB,jdbcType=VARCHAR},
+		#{ORG_STAD_CHN,jdbcType=VARCHAR},#{ORG_STAD_ENG,jdbcType=VARCHAR},#{DRUG_MEMO,jdbcType=VARCHAR},
+		#{IS_DISABLE},#{UPDATE_MAN},#{UPDATE_TIME},#{DESCRIPTION,jdbcType=VARCHAR},#{VSERSION,jdbcType=VARCHAR})
+	</insert>
+	<update id="drugRouteUpdateOsynName">
+		update on_drug_route r set r.stad_dr_chn=#{STAD_CHN}
+		<if test="DN_CHN != null">,r.dr_chn=#{DN_CHN}</if>
+		<if test="DN_ENG != null">,r.dr_eng=#{DN_ENG,jdbcType=VARCHAR}</if>
+		<if test="FAC_ABB != null">,r.dr_eng_abb=#{FAC_ABB,jdbcType=VARCHAR}</if>
+		<if test="STAD_DN_ID != null">,r.r.stad_dr_id=#{STAD_DN_ID}</if>
+		<if test="STAD_ENG != null">,r.stad_dr_eng=#{STAD_ENG,jdbcType=VARCHAR}</if>
+		<if test="COUNTRY != null">,r.concept=#{COUNTRY,jdbcType=VARCHAR}</if>
+		<if test="DISTRICT != null">,r.concept_org=#{DISTRICT,jdbcType=VARCHAR}</if>
+		<if test="ORG_DN_CHN != null">,r.org_dr_chn=#{ORG_DN_CHN,jdbcType=VARCHAR}</if>
+		<if test="ORG_DN_ENG != null">,r.org_dr_eng=#{ORG_DN_ENG,jdbcType=VARCHAR}</if>
+		<if test="ORG_FAC_ABB != null">,r.org_dr_chn_abb=#{ORG_FAC_ABB,jdbcType=VARCHAR}</if>
+		<if test="ORG_STAD_CHN != null">,r.org_stad_dr_chn=#{ORG_STAD_CHN,jdbcType=VARCHAR}</if>
+		<if test="ORG_STAD_ENG != null">,r.org_stad_dr_eng=#{ORG_STAD_ENG,jdbcType=VARCHAR}</if>
+		<if test="DRUG_MEMO != null">,r.remark=#{DRUG_MEMO,jdbcType=VARCHAR}</if>
+		<if test="IS_DISABLE != null">,r.is_disable=#{IS_DISABLE}</if>
+		<if test="UPDATE_MAN != null">,r.update_man=#{UPDATE_MAN}</if>
+		<if test="UPDATE_TIME != null">,r.update_time=#{UPDATE_TIME}</if>
+		<if test="DESCRIPTION != null">,r.description=#{DESCRIPTION,jdbcType=VARCHAR}</if>
+		<if test="VSERSION != null">,r.version=#{VSERSION,jdbcType=VARCHAR}</if>
+        where 
+        <if test="DN_ID!=null">r.dr_id=#{DN_ID}</if>
+        <if test="STAD_ID!=null">u.stad_dr_id=#{STAD_ID}</if><!-- 根据标准ID修改对应的药品给药途径同义词信息 -->
+	</update>
+	<!-- 诊断同义词新增 -->
+	<insert id="diagInsertOsynName">
+		INSERT INTO ON_DIAG_NAME (DN_ID,DN_CHN,DN_ENG,STAD_DN_ID,TERM_TYPE,SYNO_TYPE,ORG_DN_CHN,ORG_DN_ENG,
+				IS_DISABLE,DESCRIPTION,VERSION,UPDATE_MAN,UPDATE_TIME,OPERATION) 
+		VALUES (#{DN_ID},#{DN_CHN},#{DN_ENG,jdbcType=VARCHAR},#{STAD_DN_ID},#{TERM_TYPE,jdbcType=VARCHAR},#{SYNO_TYPE,jdbcType=VARCHAR},#{ORG_DN_CHN,jdbcType=VARCHAR},#{ORG_DN_ENG,jdbcType=VARCHAR}
+				,#{IS_DISABLE},#{DESCRIPTION,jdbcType=VARCHAR},#{VERSION,jdbcType=VARCHAR},#{UPDATE_MAN},#{UPDATE_TIME},#{OPERATION,jdbcType=VARCHAR}) 
+	</insert>
+	
+	<!-- 诊断同义词修改  部分更新-->
+	<update id="diagUpdateOsynName" parameterType="pd">
+		UPDATE ON_DIAG_NAME 
+		SET DN_CHN=#{DN_CHN},DN_ENG=#{DN_ENG,jdbcType=VARCHAR},ORG_DN_CHN=#{ORG_DN_CHN,jdbcType=VARCHAR},ORG_DN_ENG=#{ORG_DN_ENG,jdbcType=VARCHAR},
+			UPDATE_MAN=#{UPDATE_MAN},UPDATE_TIME=#{UPDATE_TIME}
+			<if test="TERM_TYPE != null">
+				,TERM_TYPE=#{TERM_TYPE,jdbcType=VARCHAR}
+			</if>
+			<if test="SYNO_TYPE != null ">
+				,SYNO_TYPE=#{SYNO_TYPE,jdbcType=VARCHAR}
+			</if>
+			<if test="IS_DISABLE != null">
+				,IS_DISABLE=#{IS_DISABLE,jdbcType=INTEGER}
+			</if>
+			<if test="DESCRIPTION != null">
+				,DESCRIPTION=#{DESCRIPTION,jdbcType=VARCHAR}
+			</if>
+			<if test="VERSION != null ">
+				,VERSION=#{VERSION,jdbcType=VARCHAR}
+			</if>
+			<if test="STAD_DN_ID != null">
+				,STAD_DN_ID=#{STAD_DN_ID,jdbcType=VARCHAR}
+			</if>
+			<if test="OPERATION != null ">
+				,OPERATION=#{OPERATION,jdbcType=VARCHAR} 
+			</if>
+		WHERE DN_ID=#{DN_ID}
+	</update>
+		<!-- 手术同义词新增 -->
+	<insert id="opInsertOsynName">
+		INSERT INTO ON_OPERATION_NAME (ON_ID,ON_CHN,ON_ENG,STAD_ON_ID,SYNO_TYPE,ORG_OP_CHN,ORG_OP_ENG,
+				IS_DISABLE,DESCRIPTION,VERSION,UPDATE_MAN,UPDATE_TIME) 
+		VALUES (#{DN_ID},#{DN_CHN},#{DN_ENG,jdbcType=VARCHAR},#{STAD_DN_ID},#{SYNO_TYPE,jdbcType=VARCHAR},#{ORG_DN_CHN,jdbcType=VARCHAR},#{ORG_DN_ENG,jdbcType=VARCHAR}
+				,#{IS_DISABLE},#{DESCRIPTION,jdbcType=VARCHAR},#{VERSION,jdbcType=VARCHAR},#{UPDATE_MAN},#{UPDATE_TIME}) 
+	</insert>
+	<!-- 科室同义词新增 -->
+	<insert id="depInsertOsynName">
+		INSERT INTO ON_DEP_NAME (ID,DEP_NAME,STAD_ID,SYNO_TYPE,IS_DISABLE,DESCRIPTION,VERSION,UPDATE_MAN,UPDATE_TIME) 
+		VALUES (#{DN_ID},#{DN_CHN},#{STAD_DN_ID},#{SYNO_TYPE,jdbcType=VARCHAR},#{IS_DISABLE},#{DESCRIPTION,jdbcType=VARCHAR},#{VERSION,jdbcType=VARCHAR},#{UPDATE_MAN},#{UPDATE_TIME}) 
+	</insert>
+	<!-- 手术同义词修改 -->
+	<update id="opUpdateOsynName" parameterType="pd">
+		UPDATE ON_OPERATION_NAME 
+		SET ON_CHN=#{DN_CHN},ON_ENG=#{DN_ENG,jdbcType=VARCHAR},ORG_OP_CHN=#{ORG_DN_CHN,jdbcType=VARCHAR},ORG_OP_ENG=#{ORG_DN_ENG,jdbcType=VARCHAR}
+			,STAD_ON_ID=#{STAD_DN_ID},UPDATE_MAN=#{UPDATE_MAN},UPDATE_TIME=#{UPDATE_TIME}
+			,SYNO_TYPE=#{SYNO_TYPE,jdbcType=VARCHAR},VERSION=#{VERSION,jdbcType=VARCHAR}
+			,IS_DISABLE=#{IS_DISABLE,jdbcType=INTEGER},DESCRIPTION=#{DESCRIPTION,jdbcType=VARCHAR}
+		WHERE ON_ID=#{DN_ID}
+	</update>
+	<!-- 科室同义词修改 -->
+	<update id="depUpdateOsynName" parameterType="pd">
+		UPDATE ON_DEP_NAME 
+		SET DEP_NAME=#{DN_CHN},STAD_ID=#{STAD_DN_ID},SYNO_TYPE=#{SYNO_TYPE,jdbcType=VARCHAR}
+			,UPDATE_MAN=#{UPDATE_MAN},UPDATE_TIME=#{UPDATE_TIME},VERSION=#{VERSION,jdbcType=VARCHAR}
+			,IS_DISABLE=#{IS_DISABLE,jdbcType=INTEGER},DESCRIPTION=#{DESCRIPTION,jdbcType=VARCHAR}
+		WHERE ID=#{DN_ID}
+	</update>
+	
+<!-- 检查手术通用名是否存在 -->
+	<select id="opCheckExistName" parameterType="pd" resultType="pd">
+		select ON_ID from on_operation_name
+		where ON_CHN = #{DN_CHN} 
+			<!-- 排除当前术语 -->
+			<if test="DN_ID != null and DN_ID != '' ">
+				and ON_ID != #{DN_ID}
+			</if>
+	</select>
+		<!-- 检查手术通用名是否存在 -->
+	<select id="depCheckExistName" parameterType="pd" resultType="pd">
+		select ID from on_dep_name
+		where DEP_NAME = #{DN_CHN} 
+			<!-- 排除当前术语 -->
+			<if test="DN_ID != null and DN_ID != '' ">
+				and ID != #{DN_ID}
+			</if>
+	</select>	
+	<!-- 手术同义词新增 -->
+	
+	<!-- 手术同义词修改 -->
+	<!-- 科室同义词新增 -->
+	<!-- 科室同义词修改 -->
+	
+	<!-- 更新诊断同义词停用标志 -->
+	<update id="diagStopOsynName" parameterType="pd">
+		UPDATE ON_DIAG_NAME 
+		SET  IS_DISABLE=#{IS_DISABLE},DESCRIPTION=#{DESCRIPTION,jdbcType=VARCHAR},UPDATE_MAN=#{UPDATE_MAN},UPDATE_TIME=#{UPDATE_TIME} 
+		WHERE STAD_DN_ID=#{STAD_DN_ID} 
+			<if test="standFlag == 1">
+				and DN_ID = STAD_DN_ID 
+			</if>
+	</update>
+	<!-- 更新手术同义词停用标志 -->
+	<update id="opStopOsynName" parameterType="pd">
+		UPDATE ON_OPERATION_NAME 
+		SET IS_DISABLE=#{IS_DISABLE},DESCRIPTION=#{DESCRIPTION,jdbcType=VARCHAR},UPDATE_MAN=#{UPDATE_MAN},UPDATE_TIME=#{UPDATE_TIME} 
+		WHERE STAD_ON_ID=#{STAD_DN_ID}
+			<if test="standFlag == 1">
+				and ON_ID = STAD_ON_ID 
+			</if>
+	</update>
+	<!-- 更新科室同义词停用标志-->
+	<update id="depStopOsynName" parameterType="pd">
+		UPDATE ON_DEP_NAME 
+		SET  IS_DISABLE=#{IS_DISABLE},DESCRIPTION=#{DESCRIPTION,jdbcType=VARCHAR},UPDATE_MAN=#{UPDATE_MAN},UPDATE_TIME=#{UPDATE_TIME} 
+		WHERE STAD_ID=#{STAD_DN_ID} 
+			<if test="standFlag == 1">
+				and ID = STAD_ID 
+			</if>
+	</update>
+	<!-- 根据ID停用诊断同义词 -->
+	<update id="diagOsynStop" parameterType="pd">
+		UPDATE ON_DIAG_NAME 
+		SET  IS_DISABLE=#{IS_DISABLE},DESCRIPTION=#{DESCRIPTION,jdbcType=VARCHAR}
+		WHERE DN_ID=#{DN_ID}
+	</update>
+	<!-- 根据ID停用手术同义词 -->
+	<update id="opOsynStop" parameterType="pd">
+		UPDATE ON_OPERATION_NAME 
+		SET IS_DISABLE=#{IS_DISABLE},DESCRIPTION=#{DESCRIPTION,jdbcType=VARCHAR}
+		WHERE ON_ID=#{DN_ID}
+	</update>
+	<!-- 根据ID停用科室同义词 -->
+	<update id="depOsynStop" parameterType="pd">
+		UPDATE ON_DEP_NAME 
+		SET  IS_DISABLE=#{IS_DISABLE},DESCRIPTION=#{DESCRIPTION,jdbcType=VARCHAR}
+		WHERE ID=#{DN_ID}
+	</update>
+	<!-- 检查诊断通用名是否存在 -->
+	<select id="diagCheckExistName" parameterType="pd" resultType="pd">
+		select DN_ID from on_diag_name where DN_CHN = #{DN_CHN} 
+			<!-- 排除当前术语 -->
+			<if test="DN_ID != null and DN_ID != '' ">
+				and DN_ID != #{DN_ID}
+			</if>
+	</select>
+	
+	
+	<!-- 检查药品名称通用名是否存在 -->
+	<select id="drugCheckExistName" parameterType="pd" resultType="pd">
+		select DN_ID FROM ON_DRUG_NAME WHERE CHN_NAME=#{DN_CHN}
+		<!-- 排除当前术语 -->
+		<if test="DN_ID != null and DN_ID != '' ">
+			and DN_ID != #{DN_ID}
+		</if>
+	</select>
+	<!-- 检查药品生产企业名称是否存在 -->
+	<select id="drugFactoryCheckExistName" parameterType="pd" resultType="pd">
+		SELECT fac_id FROM ON_DRUG_FACTORY WHERE FAC_CHN=#{DN_CHN}
+		<!-- 排除当前术语 -->
+		<if test="DN_ID != null and DN_ID != '' ">
+			and FAC_ID != #{DN_ID}
+		</if>
+	</select>
+	<!-- 检查药品包装材质名称是否存在 -->
+	<select id="drugPackCheckExistName" parameterType="pd" resultType="pd">
+		select DP_ID from on_drug_pack WHERE DP_CHN=#{DN_CHN}
+		<!-- 排除当前术语 -->
+		<if test="DN_ID != null and DN_ID != '' ">
+			and DP_ID != #{DN_ID}
+		</if>
+	</select>
+	<!-- 检查药品规格名称是否存在 -->
+	<select id="drugSpecCheckExistName" parameterType="pd" resultType="pd">
+		select SP_ID from on_drug_spec WHERE DRUG_SP=#{DN_CHN}
+		<!-- 排除当前术语 -->
+		<if test="DN_ID != null and DN_ID != '' ">
+			and SP_ID != #{DN_ID}
+		</if>
+	</select>
+	<!-- 检查药品包装规格中文名是否存在 -->
+	<select id="packSpecCheckExistName" parameterType="pd" resultType="pd">
+		SELECT PS_ID FROM ON_PACK_SPEC WHERE PS_CHN=#{DN_CHN}
+		<!-- 排除当前术语 -->
+		<if test="DN_ID != null and DN_ID != '' ">
+			and PS_ID != #{DN_ID}
+		</if>
+	</select>
+	<!-- 检查药品规格单位名称是否存在 -->
+	<select id="packSpecUnitCheckExistName" parameterType="pd" resultType="pd">
+		SELECT PSU_ID FROM ON_PACK_SPEC_UNIT WHERE PSU_CHN=#{DN_CHN}
+		<!-- 排除当前术语 -->
+		<if test="DN_ID != null and DN_ID != '' ">
+			and PSU_ID != #{DN_ID}
+		</if>
+	</select>
+	<!-- 检查药品给药途径名称是否存在 -->
+	<select id="drugRouteCheckExistName" parameterType="pd" resultType="pd">
+		SELECT DR_ID FROM ON_DRUG_ROUTE WHERE DR_CHN=#{DN_CHN}
+		<!-- 排除当前术语 -->
+		<if test="DN_ID != null and DN_ID != '' ">
+			and DR_ID != #{DN_ID}
+		</if>
+	</select>
+	<!-- 检查药品剂型是否存在 -->
+	<select id="drugFormCheckExistName" parameterType="pd" resultType="pd">
+		SELECT F_ID FROM ON_DRUG_FORM WHERE F_CHN_NAME=#{DN_CHN}
+		<!-- 排除当前术语 -->
+		<if test="DN_ID != null and DN_ID != '' ">
+			and F_ID != #{DN_ID}
+		</if>
+	</select>
+	
+	<!-- 根据术语名称查询术语ID  start  -->
+	<!-- 诊断 -->
+	<select id="diagIdByName" parameterType="pd" resultType="pd">
+		SELECT DN_ID from on_diag_name where dn_chn=#{DN_CHN}
+	</select>
+	<!-- 手术 -->
+	<select id="opIdByName" parameterType="pd" resultType="pd">
+		select on_id as DN_ID from on_operation_name where on_chn=#{DN_CHN}
+	</select>
+	<!-- 科室 -->
+	<select id="depIdByName" parameterType="pd" resultType="pd">
+		select id as DN_ID from on_dep_name where dep_name=#{DN_CHN}
+	</select>
+	<!-- 根据术语名称查询ID   end   -->
+	
+	<update id="depStopAllNameByOntoId" parameterType="pd" >
+		update on_dep_name set IS_DISABLE = 1 ,DESCRIPTION = #{DESCRIPTION} ,UPDATE_MAN=#{UPDATE_MAN},UPDATE_TIME=#{UPDATE_TIME} 
+		where STAD_ID in 
+		(	select DN_ID from on_dep where ID in 
+			(
+				select DEP_ID  from on_dep_tree START WITH  DEP_ID =#{D_ID} CONNECT BY PRIOR DEP_ID=PARENT_ID
+			)
+		)
+	</update>
+</mapper>

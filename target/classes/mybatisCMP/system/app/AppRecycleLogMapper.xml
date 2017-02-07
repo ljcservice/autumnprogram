@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AppRecycleLogMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		SYS_RECYCLE_LOG
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		LOG_ID,
+		INER_TYPE,
+		INPUT,
+		OUTPUT,
+		USER_IP,
+ 		USER_ID,
+		CALL_DATE,
+		CODE
+		
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+			#{LOG_ID},	
+			#{INER_TYPE},	
+			#{INPUT},	
+			#{OUTPUT},	
+			#{USER_IP},	
+			#{USER_ID},
+			to_date(#{CALL_DATE}, 'YYYY-MM-DD hh24:mi:ss'),
+			#{CODE}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="Field"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		    A.USERNAME,
+		    I.NAME,
+		    L.LOG_ID,
+		    L.INER_TYPE,
+		    L.INPUT,
+		    L.OUTPUT,
+		    L.USER_IP,
+		    L.USER_ID,
+		    L.CALL_DATE,
+		    L.CODE 
+		from
+       		SYS_RECYCLE_LOG L 
+    	LEFT JOIN SYS_APP_USER A ON A.USER_ID = L.USER_ID
+    	LEFT JOIN SYS_INTERFACE I ON I.TYPE = L.INER_TYPE 
+		where 
+			LOG_ID = #{LOG_ID}
+	</select>
+	<!-- 通过用户ID获取数据 -->
+	<select id="findByUserId" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			USER_ID = #{USER_ID}
+	</select>
+	<!-- 通过Code获取数据 -->
+	<select id="findByCode" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			CODE = #{CODE}
+	</select>
+
+	<!-- 日志列表() -->
+	<select id="recyclelistPage" parameterType="page" resultType="pd">
+		select
+			A.USERNAME,
+			I.NAME,
+			L.LOG_ID,
+			L.INER_TYPE,
+			L.INPUT,
+			L.OUTPUT,
+			L.USER_IP,
+			L.USER_ID,
+			L.CALL_DATE,
+			L.CODE
+		from
+			SYS_RECYCLE_LOG L
+			LEFT JOIN SYS_APP_USER A ON A.USER_ID = L.USER_ID
+			LEFT JOIN SYS_INTERFACE I ON I.TYPE = L.INER_TYPE 
+		where 1=1
+		<if test="pd.keywords != null and pd.keywords != ''"><!-- 用户名检索 -->
+			and(
+			L.USER_ID LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+			or
+			L.USER_IP LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+			or
+			L.INER_TYPE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+			or
+			L.CODE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+			)
+		</if>
+		<if test="pd.lastLoginStart!=null and pd.lastLoginStart!=''"><!-- 到期时间检索 -->
+			and L.CALL_DATE &gt;= to_date(#{pd.lastLoginStart},'YYYY-MM-DD')
+
+		</if>
+		<if test="pd.lastLoginEnd!=null and pd.lastLoginEnd!=''"><!-- 到期时间检索 -->
+			and L.CALL_DATE &lt;= to_date(#{pd.lastLoginEnd},'YYYY-MM-DD')
+		</if>
+		order by L.CALL_DATE DESC
+	</select>
+		<!-- 获取总数 -->
+	<select id="getRecycleCount" parameterType="String" resultType="pd">
+		select 
+			count(USER_ID) recycleCount
+		from 
+		<include refid="tableName"></include>
+	</select>	
+		<!-- 获取全部 -->
+	<select id="listAllRecycle" parameterType="pd" resultType="pd">
+		select
+			A.USERNAME,
+			L.LOG_ID,
+			L.INER_TYPE,
+			L.INPUT,
+			L.OUTPUT,
+			L.USER_IP,
+			L.USER_ID,
+			L.CALL_DATE,
+			L.CODE
+		from
+			SYS_RECYCLE_LOG L
+			LEFT JOIN SYS_APP_USER A ON A.USER_ID = L.USER_ID
+		where 1=1
+		<if test="keywords != null and keywords != ''"><!-- 用户名检索 -->
+			and(
+			L.USER_ID LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+			or
+			L.USER_IP LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+			or
+			L.INER_TYPE LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+			or
+			L.CODE LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+			)
+		</if>
+		<if test="lastLoginStart!=null and lastLoginStart!=''"><!-- 到期时间检索 -->
+			and L.CALL_DATE &gt;= to_date(#{lastLoginStart},'YYYY-MM-DD')
+
+		</if>
+		<if test="lastLoginEnd!=null and lastLoginEnd!=''"><!-- 到期时间检索 -->
+			and L.CALL_DATE &lt;= to_date(#{lastLoginEnd},'YYYY-MM-DD')
+		</if>
+		order by L.CALL_DATE DESC
+	</select>
+</mapper>

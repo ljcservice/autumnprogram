@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OntologyMapper">
+	
+	<!-- ********************* 本体维护使用SQL start ******************** -->
+	<!-- 诊断本体列表 -->
+	<select id="diagOntolistPage" parameterType="page" resultType="pd">
+		select o.DN_ID OSYN_ID,o.DN_CHN CN,o.DN_ENG EN,o.IS_DISABLE OSYN_IS_DISABLE
+			,a.D_ID ID,a.DN_ID,a.STAD_DN_CHN STAD_CN,a.STAD_DN_ENG STAD_EN,a.MAIN_CODE,a.ADD_CODE,a.TERM_TYPE
+			,a.IS_DISABLE,a.UPDATE_MAN,a.UPDATE_TIME,a.TERM_DEFIN,a.DEP_CATEGORY,a.PART_CATEGORY,a.MAN_CATEGORY,a.DIS_CATEGORY,a.IS_CHRONIC
+			,b.PARENT_NAME,b.P_MAIN_CODE,b.P_ADD_CODE,decode(x.D_ID,null,0,'',0,1) ONTO_EDIT_FLAG,decode(Y.DN_ID,null,0,'',0,1) OSYN_EDIT_FLAG 
+			,d.DEP_STAD_NAME DEP_CATEGORY_NAME
+		from on_diag_name o 
+		<!-- 查询同义词是否更改 -->
+		left join (select distinct DN_ID from ai_alter_name_hist where ONTO_TYPE=#{pd.OSYNTYPE} and STATUS=0 ) y on o.DN_ID = y.DN_ID 
+		,on_diag a 
+		left join 
+			(
+		        select a.D_ID ,listagg(b.STAD_DN_CHN ,';') within GROUP (order by a.D_ID) PARENT_NAME 
+				       ,listagg( b.MAIN_CODE,';') within GROUP (order by a.D_ID) P_MAIN_CODE 
+				       ,listagg( b.ADD_CODE ,';') within GROUP (order by a.D_ID) P_ADD_CODE 
+		        from on_diag_tree a , on_diag b 
+		        where a.PARENT_ID = b.D_ID 
+		        group by a.D_ID
+			) b on a.D_ID = b.D_ID 
+ 		<!-- 查询本体是否更改 -->
+		left join (select distinct D_ID from ai_alter_hist where ONTO_TYPE=#{pd.ONTOTYPE} and STATUS=0 )x on a.D_ID = x.D_ID 
+		left join on_dep d on a.DEP_CATEGORY = d.id
+		where o.STAD_DN_ID = a.DN_ID 
+		<if test="pd.keywords != null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					 a.STAD_DN_CHN LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or 
+					 a.MAIN_CODE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+					 or
+					 a.ADD_CODE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+				)
+		</if>
+		<if test="pd.UPDATE_MAN != null and pd.UPDATE_MAN != ''"> <!-- 更新人 -->
+			and a.UPDATE_MAN = #{pd.UPDATE_MAN} 
+		</if>
+		<if test="pd.UPDATE_TIME_START != null and pd.UPDATE_TIME_START != ''"> <!-- 更新时间 开始-->
+			and to_char(a.UPDATE_TIME,'YYYY-MM-DD') &gt;= #{pd.UPDATE_TIME_START} 
+		</if>
+		<if test="pd.UPDATE_TIME_END != null and pd.UPDATE_TIME_END != ''"> <!-- 更新时间 结束-->
+			and to_char(a.UPDATE_TIME,'YYYY-MM-DD') &lt;= #{pd.UPDATE_TIME_END} 
+		</if>
+		<if test="pd.CATEGORY_ID != null and pd.CATEGORY_ID != ''"> <!-- 诊断树分类 -->
+			and a.D_ID in (
+				select D_ID from on_diag_tree where 1=1 START WITH D_ID = #{pd.CATEGORY_ID} CONNECT BY PRIOR D_ID = PARENT_ID
+			) 
+		</if>
+		<!--  and o.STAD_DN_ID != o.DN_ID  -->
+		
+		<!-- 排序方式 -->
+		<if test="pd.sort_type==0 or pd.sort_type==null or pd.sort_type==''"> order by a.D_ID,o.DN_ID  </if>
+		<if test="pd.sort_type==1">order by  a.MAIN_CODE asc </if>
+		<if test="pd.sort_type==2">order by  a.MAIN_CODE desc </if>
+		<if test="pd.sort_type==3">order by  a.UPDATE_TIME asc </if>
+		<if test="pd.sort_type==4">order by  a.UPDATE_TIME desc </if>
+	</select>
+	
+	<!-- 手术本体列表 -->
+	<select id="opOntolistPage" parameterType="page" resultType="pd">
+		select o.ON_ID OSYN_ID,o.ON_CHN CN,o.oN_ENG EN,o.IS_DISABLE OSYN_IS_DISABLE
+			,a.OP_ID ID,a.ON_ID,a.STAD_OP_CHN STAD_CN,a.STAD_OP_ENG STAD_EN,a.OP_CODE,a.IS_DISABLE,a.UPDATE_MAN,a.UPDATE_TIME,a.ORG_STAD_OP_CHN
+			,b.PARENT_NAME,b.P_OP_CODE,decode(x.D_ID,null,0,'',0,1) ONTO_EDIT_FLAG,decode(Y.DN_ID,null,0,'',0,1) OSYN_EDIT_FLAG 
+		from on_operation_name o 
+		<!-- 查询同义词是否更改 -->
+		left join (select distinct DN_ID from ai_alter_name_hist where ONTO_TYPE=#{pd.OSYNTYPE} and STATUS=0 ) y on o.ON_ID = y.DN_ID 
+		,on_operation a 
+		left join 
+			(
+		        select a.OP_ID ,listagg(b.STAD_OP_CHN ,';') within GROUP (order by a.OP_ID) PARENT_NAME 
+				       ,listagg( b.OP_CODE,';') within GROUP (order by a.OP_ID) P_OP_CODE 
+		        from on_operation_tree a , on_operation b 
+		        where a.PARENT_ID = b.OP_ID 
+		        group by a.OP_ID
+			) b on a.OP_ID = b.OP_ID 
+ 		<!-- 查询本体是否更改 -->
+		left join (select distinct D_ID from ai_alter_hist where ONTO_TYPE=#{pd.ONTOTYPE} and STATUS=0 )x on a.OP_ID = x.D_ID 
+		where o.STAD_ON_ID = a.ON_ID 
+		<if test="pd.keywords != null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					 a.STAD_OP_CHN LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or 
+					 a.OP_CODE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+				)
+		</if>
+		<if test="pd.UPDATE_MAN != null and pd.UPDATE_MAN != ''"> <!-- 更新人 -->
+			and a.UPDATE_MAN = #{pd.UPDATE_MAN} 
+		</if>
+		<if test="pd.UPDATE_TIME_START != null and pd.UPDATE_TIME_START != ''"> <!-- 更新时间 开始-->
+			and to_char(a.UPDATE_TIME,'YYYY-MM-DD') &gt;= #{pd.UPDATE_TIME_START} 
+		</if>
+		<if test="pd.UPDATE_TIME_END != null and pd.UPDATE_TIME_END != ''"> <!-- 更新时间 结束-->
+			and to_char(a.UPDATE_TIME,'YYYY-MM-DD') &lt;= #{pd.UPDATE_TIME_END} 
+		</if>
+		<if test="pd.CATEGORY_ID != null and pd.CATEGORY_ID != ''"> <!-- 手术树分类 -->
+			and a.OP_ID in (
+				select OP_ID from on_operation_tree where 1=1 START WITH OP_ID = #{pd.CATEGORY_ID} CONNECT BY PRIOR OP_ID = PARENT_ID
+			) 
+		</if>
+		<!-- 排序方式 -->
+		<if test="pd.sort_type==0 or pd.sort_type==null or pd.sort_type==''">order by a.OP_ID,o.ON_ID  </if>
+		<if test="pd.sort_type==1">order by a.OP_CODE asc </if>
+		<if test="pd.sort_type==2">order by a.OP_CODE desc </if>
+		<if test="pd.sort_type==3">order by a.UPDATE_TIME asc </if>
+		<if test="pd.sort_type==4">order by a.UPDATE_TIME desc </if>
+	</select>
+
+	<!-- 手术本体列表 -->
+	<select id="depOntolistPage" parameterType="page" resultType="pd">
+		select o.ID OSYN_ID,o.DEP_NAME CN,o.IS_DISABLE OSYN_IS_DISABLE
+			,a.ID ID,a.DN_ID,a.DEP_STAD_NAME STAD_CN,a.DEP_NAME_CODE,a.IS_DISABLE,a.UPDATE_MAN,a.UPDATE_TIME
+			,b.PARENT_NAME,b.P_CODE,decode(x.D_ID,null,0,'',0,1) ONTO_EDIT_FLAG,decode(Y.DN_ID,null,0,'',0,1) OSYN_EDIT_FLAG 
+		from on_dep_name o 
+		<!-- 查询同义词是否更改 -->
+		left join (select distinct DN_ID from ai_alter_name_hist where ONTO_TYPE=#{pd.OSYNTYPE} and STATUS=0 ) y on o.ID = y.DN_ID 
+		,on_dep a 
+		left join 
+			(
+		        select a.DEP_ID ,listagg(b.DEP_STAD_NAME ,';') within GROUP (order by a.DEP_ID) PARENT_NAME 
+				       ,listagg( b.DEP_NAME_CODE,';') within GROUP (order by a.DEP_ID) P_CODE 
+		        from on_dep_tree a , on_dep b 
+		        where a.PARENT_ID = b.ID 
+		        group by a.DEP_ID
+			) b on a.ID = b.DEP_ID 
+ 		<!-- 查询本体是否更改 -->
+		left join (select distinct D_ID from ai_alter_hist where ONTO_TYPE=#{pd.ONTOTYPE} and STATUS=0 )x on a.ID = x.D_ID 
+		where o.STAD_ID = a.DN_ID 
+		<if test="pd.keywords != null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					 a.DEP_STAD_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or 
+					 a.DEP_NAME_CODE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+				)
+		</if>
+		<if test="pd.UPDATE_MAN != null and pd.UPDATE_MAN != ''"> <!-- 更新人 -->
+			and a.UPDATE_MAN = #{pd.UPDATE_MAN} 
+		</if>
+		<if test="pd.UPDATE_TIME_START != null and pd.UPDATE_TIME_START != ''"> <!-- 更新时间 开始-->
+			and to_char(a.UPDATE_TIME,'YYYY-MM-DD') &gt;= #{pd.UPDATE_TIME_START} 
+		</if>
+		<if test="pd.UPDATE_TIME_END != null and pd.UPDATE_TIME_END != ''"> <!-- 更新时间 结束-->
+			and to_char(a.UPDATE_TIME,'YYYY-MM-DD') &lt;= #{pd.UPDATE_TIME_END} 
+		</if>
+		<if test="pd.CATEGORY_ID != null and pd.CATEGORY_ID != ''"> <!-- 手术树分类 -->
+			and a.ID in (
+				select DEP_ID from on_dep_tree where 1=1 START WITH DEP_ID = #{pd.CATEGORY_ID} CONNECT BY PRIOR DEP_ID = PARENT_ID
+			) 
+		</if>
+		<!-- 排序方式 -->
+		<if test="pd.sort_type==0 or pd.sort_type==null or pd.sort_type==''">order by  a.ID,o.ID  </if>
+		<if test="pd.sort_type==1">order by a.OP_CODE asc </if>
+		<if test="pd.sort_type==2">order by a.OP_CODE desc </if>
+		<if test="pd.sort_type==3">order by a.UPDATE_TIME asc </if>
+		<if test="pd.sort_type==4">order by a.UPDATE_TIME desc </if>
+	</select>
+
+	<!-- 保存本体历史 -->
+	<insert id="saveOntoCopy" parameterType="pd">
+		insert into ai_alter_hist (
+			H_ID,D_ID,DN_ID,STAD_DN_CHN,STAD_DN_ENG,MAIN_CODE,ADD_CODE,ORG_STAD_DN_CHN,ORG_STAD_DN_ENG
+			,IS_DISABLE,DESCRIPTION,VERSION,OPERATION,UPDATE_MAN,UPDATE_TIME,UPD_DESC,OP_TYPE,ONTO_TYPE,STATUS
+			<if test="ONTO_TYPE==51005">
+				,TERM_TYPE,TERM_DEFIN,DEP_CATEGORY,PART_CATEGORY,MAN_CATEGORY,DIS_CATEGORY,IS_CHRONIC
+			</if>
+			<if test="ONTO_TYPE==51006">
+				,TERM_DEFIN 
+			</if>
+			<if test="ONTO_TYPE==51001">
+				,SORT_ID,PROD_ID,MER_ID,SPEC_ID,PACK_ID,FAC_ID,PACK_SPEC_ID,FORM_ID,INST_ID,COMP_MARK,IMPORT_MARK,OTC_MARK,DRUG_MEMO,DRUG_SRC
+			</if>
+		) values (
+			#{H_ID},#{D_ID},#{DN_ID},#{STAD_DN_CHN},#{STAD_DN_ENG,jdbcType=VARCHAR},#{MAIN_CODE,jdbcType=VARCHAR},#{ADD_CODE,jdbcType=VARCHAR},#{ORG_STAD_DN_CHN,jdbcType=VARCHAR},#{ORG_STAD_DN_ENG,jdbcType=VARCHAR}
+			,#{IS_DISABLE},#{DESCRIPTION,jdbcType=VARCHAR},#{VERSION,jdbcType=VARCHAR},#{OPERATION,jdbcType=VARCHAR},#{UPDATE_MAN},#{UPDATE_TIME},#{UPD_DESC},#{OP_TYPE},#{ONTO_TYPE},#{STATUS}
+			<if test="ONTO_TYPE==51005">
+				,#{TERM_TYPE},#{TERM_DEFIN,jdbcType=VARCHAR},#{DEP_CATEGORY,jdbcType=VARCHAR},#{PART_CATEGORY,jdbcType=VARCHAR},#{MAN_CATEGORY,jdbcType=VARCHAR},#{DIS_CATEGORY,jdbcType=VARCHAR},#{IS_CHRONIC,jdbcType=INTEGER}
+			</if>
+			<if test="ONTO_TYPE==51006">
+				,#{TERM_DEFIN,jdbcType=VARCHAR} 
+			</if>
+			<if test="ONTO_TYPE==51001">
+				,#{SORT_ID},#{PROD_ID},#{MER_ID},#{SPEC_ID},#{PACK_ID},#{FAC_ID},#{PACK_SPEC_ID},#{FORM_ID},#{INST_ID},#{COMP_MARK},#{IMPORT_MARK},#{OTC_MARK},#{DRUG_MEMO},#{DRUG_SRC}
+			</if>
+		)
+	</insert>
+	
+	<!-- 根据ID查询诊断本体信息 -->
+	<select id="diagById" parameterType="String" resultType="pd">
+		select D_ID,DN_ID,STAD_DN_CHN,STAD_DN_ENG,MAIN_CODE,ADD_CODE,ORG_STAD_DN_CHN,ORG_STAD_DN_ENG
+			   ,TERM_TYPE,TERM_DEFIN,DEP_CATEGORY,PART_CATEGORY,MAN_CATEGORY,DIS_CATEGORY,IS_CHRONIC
+			   ,IS_DISABLE,DESCRIPTION,VERSION,OPERATION,UPDATE_MAN,UPDATE_TIME
+		from on_diag where D_ID = #{ID}
+	</select>
+	<!-- 根据ID查询手术本体信息 -->
+	<select id="opById" parameterType="String" resultType="pd">
+		select * from on_operation where OP_ID = #{ID}
+	</select>
+	<!-- 根据ID查询科室本体信息 -->
+	<select id="depById" parameterType="String" resultType="pd">
+		select * from on_dep where ID = #{ID}
+	</select>
+	<select id="drugById" parameterType="String" resultType="pd">
+	
+	</select>
+	<!-- ********************* 本体维护使用SQL end ******************** -->
+	
+	<!-- ********************* 本体审核使用SQL start ******************** -->
+	
+	<!-- 审核列表-诊断、手术、科室 -->
+	<select id="checklistPage" parameterType="page" resultType="pd">
+		select *
+		from ai_alter_hist a 
+		where 1=1 
+		<if test="pd.keywords != null and pd.keywords != ''"><!-- 关键词检索 -->
+			and (
+				a.STAD_DN_CHN LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				or 
+				a.MAIN_CODE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+				or
+				a.ADD_CODE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+			)
+		</if>
+		<if test="pd.UPDATE_MAN != null and pd.UPDATE_MAN != ''"> <!-- 更新人 -->
+			and a.UPDATE_MAN = #{pd.UPDATE_MAN} 
+		</if>
+		<if test="pd.UPDATE_TIME_START != null and pd.UPDATE_TIME_START != ''"> <!-- 更新时间 开始-->
+			and to_char(a.UPDATE_TIME,'YYYY-MM-DD') &gt;= #{pd.UPDATE_TIME_START} 
+		</if>
+		<if test="pd.UPDATE_TIME_END != null and pd.UPDATE_TIME_END != ''"> <!-- 更新时间 结束-->
+			and to_char(a.UPDATE_TIME,'YYYY-MM-DD') &lt;= #{pd.UPDATE_TIME_END} 
+		</if>
+		<if test="pd.CATEGORY_ID != null and pd.CATEGORY_ID != ''"> <!-- 诊断树分类 -->
+			and a.D_ID in (
+				<if test="pd.ontoType == '51005'">
+					select D_ID from on_diag_tree where 1=1 START WITH D_ID = #{pd.CATEGORY_ID} CONNECT BY PRIOR D_ID = PARENT_ID
+				</if>
+				<if test="pd.ontoType == '51003'">
+					select OP_ID from on_operation_tree where 1=1 START WITH OP_ID = #{pd.CATEGORY_ID} CONNECT BY PRIOR OP_ID = PARENT_ID
+				</if>
+				<if test="pd.ontoType == '51006'">
+					select DEP_ID from on_dep_tree where 1=1 START WITH DEP_ID = #{pd.CATEGORY_ID} CONNECT BY PRIOR DEP_ID = PARENT_ID
+				</if>
+			) 
+		</if>
+		<if test="pd.STATUS != null and pd.STATUS != ''"> <!-- 状态 -->
+			and status = #{pd.STATUS} 
+		</if>
+		<if test="pd.OP_TYPE != null and pd.OP_TYPE != ''"> <!-- 操作类型 -->
+			and a.OP_TYPE = #{pd.OP_TYPE} 
+		</if>
+		<!-- 本体类型 -->
+		and ONTO_TYPE = #{pd.ontoType}
+		<!-- 排序方式 -->
+		<if test="pd.sort_type==0 or pd.sort_type==null or pd.sort_type==''">order by a.UPDATE_TIME desc </if>
+		<if test="pd.sort_type==1">order by a.MAIN_CODE asc </if>
+		<if test="pd.sort_type==2">order by a.MAIN_CODE desc </if>
+		<if test="pd.sort_type==3">order by a.UPDATE_TIME asc </if>
+		<if test="pd.sort_type==4">order by a.UPDATE_TIME desc </if>
+	</select>
+	<!-- 根据ID查询本体历史信息 -->
+	<select id="queryOntoHisById" parameterType="String" resultType="pd">
+		select * 
+		from ai_alter_hist 
+		where H_ID = #{ID} 
+	</select>
+		<!-- 根据ID查询本体历史信息 -->
+	<select id="queryOntoHisByOntoId" parameterType="pd" resultType="pd">
+		select * 
+		from ai_alter_hist 
+		where D_ID = #{ONTO_ID} 
+			and onto_type = #{ontotype}
+			and status=0 
+	</select>
+	
+	<!-- 本体审核通过和拒绝，更新状态 -->
+	<update id="ontoCheckStatus" parameterType="pd" >
+		update ai_alter_hist 
+		set 
+			STATUS=#{STATUS},CHECK_USER=#{CHECK_USER},CHECK_TIME=#{CHECK_TIME},CHECK_MEMO=#{CHECK_MEMO,jdbcType=VARCHAR}
+			<!-- 审核时修改过数据 -->
+			<if test="checkModifyFlag != 0">
+				<if test="STAD_DN_CHN != null">,STAD_DN_CHN=#{STAD_DN_CHN}</if>
+				<if test="STAD_DN_ENG != null">,STAD_DN_ENG=#{STAD_DN_ENG}</if>
+				<if test="ORG_STAD_DN_CHN != null">,ORG_STAD_DN_CHN=#{ORG_STAD_DN_CHN}</if>
+				<if test="ORG_STAD_DN_ENG != null">,ORG_STAD_DN_ENG=#{ORG_STAD_DN_ENG}</if>
+				<if test="IS_DISABLE != null">,IS_DISABLE=#{IS_DISABLE}</if>
+				<if test="DESCRIPTION != null">,DESCRIPTION=#{DESCRIPTION}</if>
+				<if test="TERM_TYPE != null">,TERM_TYPE=#{TERM_TYPE}</if>
+				<if test="TERM_DEFIN != null">	,TERM_DEFIN=#{TERM_DEFIN}</if>
+				<if test="DEP_CATEGORY != null">,DEP_CATEGORY=#{DEP_CATEGORY}</if>
+				<if test="PART_CATEGORY != null">,PART_CATEGORY=#{PART_CATEGORY}</if>
+				<if test="MAN_CATEGORY != null">,MAN_CATEGORY=#{MAN_CATEGORY}</if>
+				<if test="DIS_CATEGORY != null">,DIS_CATEGORY=#{DIS_CATEGORY}</if>
+				<if test="IS_CHRONIC != null">,IS_CHRONIC=#{IS_CHRONIC}</if>
+			</if>
+			<if test="MAIN_CODE!=null">
+				,MAIN_CODE = #{MAIN_CODE}
+			</if>
+			<if test="ADD_CODE!=null">
+				,ADD_CODE = #{ADD_CODE}
+			</if>
+		where H_ID = #{H_ID}
+	</update>
+	
+	<!-- 把诊断本体历史  新增  到本体中 -->
+	<insert id="diagInsertOntoByHis" parameterType="pd">
+		insert into on_diag (
+			D_ID,DN_ID,STAD_DN_CHN,STAD_DN_ENG,MAIN_CODE,ADD_CODE,ORG_STAD_DN_CHN,ORG_STAD_DN_ENG
+			,IS_DISABLE,DESCRIPTION,VERSION,OPERATION,UPDATE_MAN,UPDATE_TIME,TERM_TYPE,TERM_DEFIN
+			,DEP_CATEGORY,PART_CATEGORY,MAN_CATEGORY,DIS_CATEGORY,IS_CHRONIC
+		) values (
+			#{D_ID},#{DN_ID},#{STAD_DN_CHN},#{STAD_DN_ENG,jdbcType=VARCHAR},#{MAIN_CODE,jdbcType=VARCHAR},#{ADD_CODE,jdbcType=VARCHAR},#{ORG_STAD_DN_CHN,jdbcType=VARCHAR},#{ORG_STAD_DN_ENG,jdbcType=VARCHAR}
+			,#{IS_DISABLE},#{DESCRIPTION,jdbcType=VARCHAR},#{VERSION,jdbcType=VARCHAR},#{OPERATION,jdbcType=VARCHAR},#{UPDATE_MAN},#{UPDATE_TIME},#{TERM_TYPE},#{TERM_DEFIN,jdbcType=VARCHAR}
+			,#{DEP_CATEGORY,jdbcType=VARCHAR},#{PART_CATEGORY,jdbcType=VARCHAR},#{MAN_CATEGORY,jdbcType=VARCHAR},#{DIS_CATEGORY,jdbcType=VARCHAR},#{IS_CHRONIC,jdbcType=INTEGER}
+		)
+	</insert>
+	
+	<!-- 把诊断本体历史  新增  到本体中 -->
+	<insert id="opInsertOntoByHis" parameterType="pd">
+		insert into on_operation (
+			OP_ID,ON_ID,STAD_OP_CHN,STAD_OP_ENG,OP_CODE,ORG_STAD_OP_CHN,ORG_STAD_OP_ENG
+			,IS_DISABLE,DESCRIPTION,VERSION,UPDATE_MAN,UPDATE_TIME
+		) values (
+			#{D_ID},#{DN_ID},#{STAD_DN_CHN},#{STAD_DN_ENG,jdbcType=VARCHAR},#{MAIN_CODE},#{ORG_STAD_DN_CHN,jdbcType=VARCHAR},#{ORG_STAD_DN_ENG,jdbcType=VARCHAR}
+			,#{IS_DISABLE},#{DESCRIPTION,jdbcType=VARCHAR},#{VERSION,jdbcType=VARCHAR},#{UPDATE_MAN},#{UPDATE_TIME}
+		)
+	</insert>
+	
+	<!-- 把科室本体历史  新增  到本体中 -->
+	<insert id="depInsertOntoByHis" parameterType="pd">
+		insert into on_dep (
+			ID,DN_ID,DEP_STAD_NAME,DEP_NAME_CODE,DEFINITION
+			,IS_DISABLE,DESCRIPTION,VERSION,UPDATE_MAN,UPDATE_TIME
+		) values (
+			#{D_ID},#{DN_ID},#{STAD_DN_CHN},#{MAIN_CODE},#{TERM_DEFIN,jdbcType=VARCHAR}
+			,#{IS_DISABLE},#{DESCRIPTION,jdbcType=VARCHAR},#{VERSION,jdbcType=VARCHAR},#{UPDATE_MAN},#{UPDATE_TIME}
+		)
+	</insert>
+	
+	<!-- 把诊断本体历史  更新  到本体中 -->
+	<update id="diagUpdateOntoByHis" parameterType="pd" >
+		update on_diag 
+		set DN_ID=#{DN_ID},STAD_DN_CHN=#{STAD_DN_CHN},STAD_DN_ENG=#{STAD_DN_ENG,jdbcType=VARCHAR},MAIN_CODE=#{MAIN_CODE,jdbcType=VARCHAR},ADD_CODE=#{ADD_CODE,jdbcType=VARCHAR}
+			,ORG_STAD_DN_CHN=#{ORG_STAD_DN_CHN},ORG_STAD_DN_ENG=#{ORG_STAD_DN_ENG,jdbcType=VARCHAR},IS_DISABLE=#{IS_DISABLE},DESCRIPTION=#{DESCRIPTION,jdbcType=VARCHAR}
+			,VERSION=#{VERSION,jdbcType=VARCHAR},UPDATE_MAN=#{UPDATE_MAN},UPDATE_TIME=#{UPDATE_TIME},TERM_TYPE=#{TERM_TYPE}
+			,TERM_DEFIN=#{TERM_DEFIN,jdbcType=VARCHAR},IS_CHRONIC=#{IS_CHRONIC,jdbcType=INTEGER},DEP_CATEGORY=#{DEP_CATEGORY,jdbcType=VARCHAR}
+			,PART_CATEGORY=#{PART_CATEGORY,jdbcType=VARCHAR},MAN_CATEGORY=#{MAN_CATEGORY,jdbcType=VARCHAR}
+			,DIS_CATEGORY=#{DIS_CATEGORY,jdbcType=VARCHAR},OPERATION=#{OPERATION,jdbcType=VARCHAR}
+		where D_ID=#{D_ID}
+	</update>
+	<!-- 把手术本体历史  更新  到本体中 -->
+	<update id="opUpdateOntoByHis" parameterType="pd" >
+		update on_operation 
+		set ON_ID=#{DN_ID},STAD_OP_CHN=#{STAD_DN_CHN},STAD_OP_ENG=#{STAD_DN_ENG,jdbcType=VARCHAR},OP_CODE=#{MAIN_CODE}
+			,ORG_STAD_OP_CHN=#{ORG_STAD_DN_CHN},ORG_STAD_OP_ENG=#{ORG_STAD_DN_ENG,jdbcType=VARCHAR},IS_DISABLE=#{IS_DISABLE}
+			,DESCRIPTION=#{DESCRIPTION,jdbcType=VARCHAR},VERSION=#{VERSION,jdbcType=VARCHAR}
+			,UPDATE_MAN=#{UPDATE_MAN},UPDATE_TIME=#{UPDATE_TIME}
+		where OP_ID=#{D_ID}
+	</update>
+	<!-- 把手科室体历史  更新  到本体中 -->
+	<update id="depUpdateOntoByHis" parameterType="pd" >
+		update on_dep 
+		set DN_ID=#{DN_ID},DEP_STAD_NAME=#{STAD_DN_CHN},DEP_NAME_CODE=#{MAIN_CODE},IS_DISABLE=#{IS_DISABLE},DEFINITION=#{TERM_DEFIN,jdbcType=VARCHAR}
+			,DESCRIPTION=#{DESCRIPTION,jdbcType=VARCHAR},VERSION=#{VERSION,jdbcType=VARCHAR}
+			,UPDATE_MAN=#{UPDATE_MAN},UPDATE_TIME=#{UPDATE_TIME}
+		where ID=#{D_ID}
+	</update>
+	<!-- ********************* 本体审核使用SQL end ********************* -->
+	
+	
+	<!-- ********************* 本体历史使用SQL start ********************* -->
+	
+	<!-- 诊断本体历史信息分页 -->
+	<select id="diagOntoHislistPage" parameterType="page" resultType="pd">
+		select a.H_ID,a.D_ID,a.DN_ID,a.STAD_DN_CHN,a.STAD_DN_ENG,a.MAIN_CODE,a.ADD_CODE,a.ORG_STAD_DN_CHN,a.ORG_STAD_DN_ENG
+	        ,a.IS_DISABLE,a.DESCRIPTION,a.VERSION,a.OPERATION,a.UPDATE_MAN,a.UPDATE_TIME,a.UPD_DESC,a.OP_TYPE,a.ONTO_TYPE,a.STATUS
+	        ,a.TERM_TYPE,a.TERM_DEFIN,a.DEP_CATEGORY,a.PART_CATEGORY,a.MAN_CATEGORY,a.DIS_CATEGORY,a.IS_CHRONIC,a.CHECK_USER,a.CHECK_TIME,a.CHECK_MEMO
+	        , b.STAD_DN_CHN || '[' || b.MAIN_CODE || ']'  PARENT_NAME
+	    from ai_alter_hist a 
+	    left join 
+	      (  
+	        select a.ONTO_H_ID,a.D_ID ,a.PARENT_ID,b.STAD_DN_CHN,b.MAIN_CODE
+	        from ai_alter_tree_hist a , on_diag b 
+	        where a.PARENT_ID = b.D_ID 
+	      ) b on (a.D_ID = b.D_ID and a.H_ID = b.ONTO_H_ID)
+	    where 1=1 
+		<if test="pd.keywords != null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					 a.STAD_DN_CHN LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or 
+					 a.MAIN_CODE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+					 or
+					 a.ADD_CODE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+				)
+		</if>
+		<if test="pd.UPDATE_MAN != null and pd.UPDATE_MAN != ''"> <!-- 更新人 -->
+			and a.UPDATE_MAN = #{pd.UPDATE_MAN} 
+		</if>
+		<if test="pd.UPDATE_TIME != null and pd.UPDATE_TIME != ''"> <!-- 更新时间 -->
+			and to_char(a.UPDATE_TIME,'YYYY-MM-DD') = #{pd.UPDATE_TIME} 
+		</if>
+		<if test="pd.CATEGORY_ID != null and pd.CATEGORY_ID != ''"> <!-- 诊断树分类 -->
+			and a.D_ID in (
+				select D_ID from on_diag_tree where 1=1 START WITH D_ID = #{pd.CATEGORY_ID} CONNECT BY PRIOR D_ID = PARENT_ID
+			) 
+		</if>
+		
+		<!-- 排序方式 -->
+		<if test="pd.sort_type==0 or pd.sort_type==null or pd.sort_type==''">order by a.UPDATE_TIME desc </if>
+		<if test="pd.sort_type==1">order by a.MAIN_CODE asc </if>
+		<if test="pd.sort_type==2">order by a.MAIN_CODE desc </if>
+		<if test="pd.sort_type==3">order by a.UPDATE_TIME asc </if>
+		<if test="pd.sort_type==4">order by a.UPDATE_TIME desc </if>
+	</select>
+	
+	<!-- 手术本体历史信息分页 -->
+	<select id="opOntoHislistPage" parameterType="page" resultType="pd">
+		select a.H_ID,a.D_ID,a.DN_ID,a.STAD_DN_CHN,a.STAD_DN_ENG,a.MAIN_CODE,a.ADD_CODE,a.ORG_STAD_DN_CHN,a.ORG_STAD_DN_ENG
+	        ,a.IS_DISABLE,a.DESCRIPTION,a.VERSION,a.OPERATION,a.UPDATE_MAN,a.UPDATE_TIME,a.UPD_DESC,a.OP_TYPE,a.ONTO_TYPE,a.STATUS
+	        ,a.TERM_TYPE,a.TERM_DEFIN,a.DEP_CATEGORY,a.PART_CATEGORY,a.MAN_CATEGORY,a.DIS_CATEGORY,a.IS_CHRONIC
+	        , listagg(b.STAD_DN_CHN || '[' || b.MAIN_CODE || ']',';') within GROUP (order by a.H_ID,a.D_ID) parent_name
+	    from ai_alter_hist a 
+	      left join 
+	      (  
+	        select a.ONTO_H_ID,a.D_ID ,a.PARENT_ID,b.STAD_DN_CHN,b.MAIN_CODE
+	        from ai_alter_tree_hist a , on_diag b 
+	        where a.PARENT_ID = b.D_ID 
+	      ) b on (a.D_ID = b.D_ID and a.H_ID = b.ONTO_H_ID)
+	    where 1=1 
+	    	
+	    group by a.H_ID,a.D_ID,a.DN_ID,a.STAD_DN_CHN,a.STAD_DN_ENG,a.MAIN_CODE,a.ADD_CODE,a.ORG_STAD_DN_CHN,a.ORG_STAD_DN_ENG
+	        ,a.IS_DISABLE,a.DESCRIPTION,a.VERSION,a.OPERATION,a.UPDATE_MAN,a.UPDATE_TIME,a.UPD_DESC,a.OP_TYPE,a.ONTO_TYPE,a.STATUS
+	        ,a.TERM_TYPE,a.TERM_DEFIN,a.DEP_CATEGORY,a.PART_CATEGORY,a.MAN_CATEGORY,a.DIS_CATEGORY,a.IS_CHRONIC
+	</select>
+	
+	<!-- 单个诊断本体历史信息列表 -->
+	<select id="diagOntoHisDetail" parameterType="pd" resultType="pd">
+		select a.H_ID,a.D_ID,a.DN_ID,a.STAD_DN_CHN,a.STAD_DN_ENG,a.MAIN_CODE,a.ADD_CODE,a.ORG_STAD_DN_CHN,a.ORG_STAD_DN_ENG
+	        ,a.IS_DISABLE,a.DESCRIPTION,a.VERSION,a.OPERATION,a.UPDATE_MAN,a.UPDATE_TIME,a.UPD_DESC,a.OP_TYPE,a.ONTO_TYPE,a.STATUS
+	        ,a.TERM_TYPE,a.TERM_DEFIN,a.DEP_CATEGORY,a.PART_CATEGORY,a.MAN_CATEGORY,a.DIS_CATEGORY,a.IS_CHRONIC,a.CHECK_USER,a.CHECK_TIME,a.CHECK_MEMO
+	        ,decode(b.STAD_DN_CHN,null,'','','',b.STAD_DN_CHN || '[' || b.MAIN_CODE || ']')  PARENT_NAME,d.DEP_STAD_NAME DEP_CATEGORY_NAME
+	    from ai_alter_hist a 
+	    left join 
+	      (  
+	        select a.ONTO_H_ID,a.D_ID ,a.PARENT_ID,b.STAD_DN_CHN,b.MAIN_CODE
+	        from ai_alter_tree_hist a , on_diag b 
+	        where a.PARENT_ID = b.D_ID 
+	      ) b on (a.D_ID = b.D_ID and a.H_ID = b.ONTO_H_ID) 
+	    left join on_dep d on a.DEP_CATEGORY = d.id
+	    where a.D_ID=#{D_ID}  and a.ONTO_TYPE=#{ONTOTYPE} 
+		order by a.UPDATE_TIME asc 
+	</select>
+	<!-- 单个手术本体历史信息列表 -->
+	<select id="opOntoHisDetail" parameterType="pd" resultType="pd">
+		select a.H_ID,a.D_ID,a.DN_ID,a.STAD_DN_CHN,a.STAD_DN_ENG,a.MAIN_CODE,a.ADD_CODE,a.ORG_STAD_DN_CHN,a.ORG_STAD_DN_ENG
+	        ,a.IS_DISABLE,a.DESCRIPTION,a.VERSION,a.OPERATION,a.OP_TYPE,a.ONTO_TYPE,a.STATUS
+	        ,a.CHECK_USER,a.CHECK_TIME,a.CHECK_MEMO,a.UPDATE_MAN,a.UPDATE_TIME,a.UPD_DESC
+	        , decode(b.STAD_DN_CHN,null,'','','',b.STAD_DN_CHN || '[' || b.MAIN_CODE || ']')  PARENT_NAME
+	    from ai_alter_hist a 
+	    left join 
+	      (  
+	        select a.ONTO_H_ID,a.D_ID ,a.PARENT_ID,b.STAD_OP_CHN STAD_DN_CHN,b.OP_CODE MAIN_CODE
+	        from ai_alter_tree_hist a , on_operation b 
+	        where a.PARENT_ID = b.OP_ID 
+	      ) b on (a.D_ID = b.D_ID and a.H_ID = b.ONTO_H_ID) 
+	    where a.D_ID=#{D_ID}  and a.ONTO_TYPE=#{ONTOTYPE} 
+		order by a.UPDATE_TIME asc 
+	</select>
+	<!-- 单个科室本体历史信息列表 -->
+	<select id="depOntoHisDetail" parameterType="pd" resultType="pd">
+		select a.H_ID,a.D_ID,a.DN_ID,a.STAD_DN_CHN,a.MAIN_CODE,a.TERM_DEFIN
+	        ,a.IS_DISABLE,a.DESCRIPTION,a.VERSION,a.OPERATION,a.OP_TYPE,a.ONTO_TYPE,a.STATUS
+	        ,a.UPDATE_MAN,a.UPDATE_TIME,a.UPD_DESC,a.CHECK_USER,a.CHECK_TIME,a.CHECK_MEMO
+	        ,decode(b.STAD_DN_CHN,null,'','','',b.STAD_DN_CHN || '[' || b.MAIN_CODE || ']') PARENT_NAME
+	    from ai_alter_hist a 
+	    left join 
+	      (  
+	        select a.ONTO_H_ID,a.D_ID ,a.PARENT_ID,b.DEP_STAD_NAME STAD_DN_CHN,b.DEP_NAME_CODE MAIN_CODE
+	        from ai_alter_tree_hist a , on_dep b 
+	        where a.PARENT_ID = b.ID 
+	      ) b on (a.D_ID = b.D_ID and a.H_ID = b.ONTO_H_ID) 
+	    where a.D_ID=#{D_ID}  and a.ONTO_TYPE=#{ONTOTYPE} 
+		order by a.UPDATE_TIME asc 
+	</select>
+	<!-- ********************* 本体历史使用SQL end ********************* -->
+	
+	<!-- 停用诊断本体 -->
+	<update id="diagStopOntology" parameterType="pd">
+		UPDATE ON_DIAG 
+		SET IS_DISABLE=#{IS_DISABLE},DESCRIPTION=#{DESCRIPTION,jdbcType=VARCHAR},UPDATE_MAN=#{UPDATE_MAN},UPDATE_TIME=#{UPDATE_TIME} 
+		WHERE D_ID=#{D_ID}
+	</update>
+	<!-- 停用手术本体 -->
+	<update id="opStopOntology" parameterType="pd">
+		UPDATE ON_OPERATION 
+		SET IS_DISABLE=#{IS_DISABLE},DESCRIPTION=#{DESCRIPTION,jdbcType=VARCHAR},UPDATE_MAN=#{UPDATE_MAN},UPDATE_TIME=#{UPDATE_TIME} 
+		WHERE OP_ID=#{D_ID}
+	</update>
+	<!-- 停用科室本体 -->
+	<update id="depStopOntology" parameterType="pd">
+		UPDATE ON_DEP 
+		SET IS_DISABLE=#{IS_DISABLE},DESCRIPTION=#{DESCRIPTION,jdbcType=VARCHAR},UPDATE_MAN=#{UPDATE_MAN},UPDATE_TIME=#{UPDATE_TIME} 
+		WHERE ID=#{D_ID}
+	</update>
+	
+	<select id="queryDepCategory" parameterType="String" resultType="pd">
+		select a.ID,a.DEP_STAD_NAME CN,a.DEP_NAME_CODE MAIN_CODE ,a.DEP_STAD_NAME || '[' || a.DEP_NAME_CODE || ']'  NAME
+		from on_dep a,on_diag b 
+		where a.id = b.DEP_CATEGORY 
+			and b.D_ID = #{ONTO_ID} 
+	</select>
+	<select id="queryDepCategoryHis" parameterType="String" resultType="pd">
+		select a.ID,a.DEP_STAD_NAME CN,a.DEP_NAME_CODE MAIN_CODE ,a.DEP_STAD_NAME || '[' || a.DEP_NAME_CODE || ']'  NAME
+		from on_dep a,ai_alter_hist b 
+		where a.id = b.DEP_CATEGORY 
+			and onto_type = '51005' 
+			and b.H_ID = #{H_ID} 
+			and b.D_ID = #{ONTO_ID} 
+	</select>
+	<!-- 诊断 根据DN_ID查询本体D_ID -->
+	<select id="diagIdFindByNameId" parameterType="pd" resultType="pd">
+		select d_id,MAIN_CODE,ADD_CODE,IS_DISABLE from on_diag where dn_id=#{DN_ID}
+	</select>
+	<!-- 手术 -->
+	<select id="opIdFindByNameId" parameterType="pd" resultType="pd">
+		select OP_ID,OP_CODE MAIN_CODE,IS_DISABLE from on_operation where ON_ID=#{DN_ID}
+	</select>
+	<!-- 科室 -->
+	<select id="depIdFindByNameId" parameterType="pd" resultType="pd">
+		SELECT ID,DEP_NAME_CODE MAIN_CODE,IS_DISABLE from ON_DEP WHERE DN_ID=#{DN_ID}
+	</select>
+	
+	<!-- 查询当前数据的上提条历史ID -->
+	<select id="queryBrotherHisInfo" parameterType="pd" resultType="pd">
+		select h_id from ai_alter_hist 
+		where 
+			UPDATE_TIME &lt; #{UPDATE_TIME} 
+			and ONTO_TYPE = #{ONTO_TYPE}
+			and STATUS = 1 
+			and D_ID = #{D_ID} 
+		order by UPDATE_TIME desc
+	</select>
+	<delete id="deleteOntoHist" parameterType="String">
+		delete from ai_alter_hist where h_id=#{ID}
+	</delete>
+	<update id="depStopSubOntoByOntoId" parameterType="pd">
+		update on_dep set IS_DISABLE = 1 ,DESCRIPTION = #{DESCRIPTION},UPDATE_MAN=#{UPDATE_MAN},UPDATE_TIME=#{UPDATE_TIME} 
+		where ID in 
+		(
+			select DEP_ID  from on_dep_tree START WITH  PARENT_ID =#{D_ID} CONNECT BY PRIOR DEP_ID=PARENT_ID
+		)
+	</update>
+	<!-- 更新科室的主要编码 -->
+	<update id="depUpdateOntoCode" parameterType="pd">
+		update on_dep set DEP_NAME_CODE = #{MAIN_CODE} 
+		where ID = #{D_ID}
+	</update>
+	<!-- 查询科室的下级 -->
+	<select id="depSubsOntoByOntoId" parameterType="String" resultType="pd">
+		select b.ID D_ID ,b.DEP_NAME_CODE MAIN_CODE
+		from on_dep_tree a, on_dep b 
+		where a.dep_id = b.id 
+			and a.parent_id = #{id}
+	</select>
+</mapper>

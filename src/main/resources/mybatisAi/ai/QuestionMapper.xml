@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="QuestionMapper">
+	
+	<!-- 原始问题单信息 -->
+	<select id="qlistPage" parameterType="page" resultType="pd">
+		select O.*,Q.STATUS,LOG.FILE_NAME,
+			(select count(1) from AI_Q_DIAG_RELA where Q_ID=O.Q_ID) CHILD_COUNT ,
+			(select count(1) from AI_Q_DIAG_RS RS,AI_Q_DIAG_RELA R where R.Q_ID=O.Q_ID AND RS.CHILD_ID=R.CHILD_ID) RS_COUNT 
+		from AI_O_DIAG O,AI_Q_DIAG Q,AI_IMPORT_LOG LOG  where O.Q_ID=Q.Q_ID AND LOG.IMPORT_ID=O.IMPORT_ID 
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					 O.O_DIAG_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or 
+					 O.O_DIAG_CODE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+					 or 
+					 O.NLP_DIAG_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or 
+					 O.MTS_DIAG_CODE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')  
+				)
+		</if>
+		<if test="pd.ORIGIN_ID!=null and pd.ORIGIN_ID!=''"><!-- 数据来源检索 -->
+			and O.ORIGIN_ID= #{pd.ORIGIN_ID} 
+		</if>
+		<if test="pd.createStart!=null and pd.createStart!=''"><!-- 导入时间检索 -->
+			and O.CREATE_TIME &gt;=TO_DATE(#{pd.createStart},'yyyy-mm-dd hh24:mi:ss') 
+		</if>
+		<if test="pd.createEnd!=null and pd.createEnd!=''"><!-- 导入时间检索 -->
+			and O.CREATE_TIME &lt;= TO_DATE(#{pd.createEnd},'yyyy-mm-dd hh24:mi:ss') 
+		</if>
+		<if test="pd.FILE_NAME!=null and pd.FILE_NAME!=''"><!-- 文件名称 -->
+			and LOG.FILE_NAME LIKE CONCAT(CONCAT('%', #{pd.FILE_NAME}),'%')
+		</if>
+		<if test="pd.BATCH_NUMBER!=null and pd.BATCH_NUMBER!=''"><!-- 文件名称 -->
+			and O.BATCH_NUMBER = #{pd.BATCH_NUMBER}
+		</if>
+		order by 
+		<if test="pd.orders!=null and pd.orders!=''">
+			<if test="pd.orders==1">
+				O.CREATE_TIME asc,
+			</if>
+			<if test="pd.orders==2">
+				O.CREATE_TIME desc,
+			</if>
+		</if>
+		LOG.IMPORT_ID,O.BATCH_NUMBER,Q.STATUS desc
+	</select>
+	<!-- 子问题单的列表 -->
+	<select id="childList" parameterType="pd" resultType="pd">
+		select 
+			C.ORIGIN_ID,
+			C.CHILD_ID,
+			C.DIAG_NAME,
+			C.STATUS,
+			C.TASK_TYPE_ID,
+			C.TASK_TYPE_CHILD_ID,
+			d1.D_VALUE ORIGIN ,
+			R.ORDERS
+		from AI_Q_DIAG_CHILD C ,AI_Q_DIAG_RELA R , CO_DICT d1 
+		where R.Q_ID=#{Q_ID} and R.CHILD_ID=C.CHILD_ID and C.ORIGIN_ID=d1.D_KEY (+)
+		order by R.ORDERS
+	</select>
+	<!-- 问题单结果的列表 -->
+	<select id="resList" parameterType="pd" resultType="pd">
+		select 
+			RS.CHILD_ID,
+			RS.DIAG_WORD,
+			RS.DIAG_ID,
+			RS.DIS_TYPE,
+			RS.STAD_ID,
+			RS.WORD_TYPE,
+			d1.D_VALUE SYN_TYPE,
+			d2.D_VALUE TERM_TYPE,
+			RS.SYN_TYPE SYN_TYPE_ID,
+			RS.TERM_TYPE TERM_TYPE_ID,
+			RS.REMARK,
+			R.ORDERS 
+		from AI_Q_DIAG_RS RS ,AI_Q_DIAG_RELA R, CO_DICT d1 , CO_DICT d2 
+		where R.Q_ID=#{Q_ID} and RS.CHILD_ID=R.CHILD_ID
+			and RS.SYN_TYPE=d1.D_KEY (+) and RS.TERM_TYPE=d2.D_KEY(+) and (d2.dt_id=40 or d2.dt_id=50 or d2.dt_id=60) 
+		order by R.ORDERS
+	</select>
+	<!-- 获取NLP切词结果 -->
+	<select id="getNLPRs" parameterType="pd" resultType="pd">
+		select 
+			RS.Q_ID,
+			RS.RIGHT_DESC,
+			RS.ERR_DESC,
+			RS.SRC_DESC,
+			RS.TASK_ID,
+			RS.UPDATE_MAN,
+			RS.UPDATE_TIME,
+			RS.MTS_CODE
+		from AI_DIAG_SPLIT_RS RS ,AI_TASK T 
+		where RS.Q_ID=#{Q_ID} and RS.TASK_ID=T.TASK_ID AND T.TASK_STAT=2
+	</select>
+	<!-- 更新主问题单的状态 -->
+	<update id="updateDiagQ" parameterType="pd" >
+		update AI_Q_DIAG 
+			set	STATUS=${UPDATE_Q_STATUS },
+			UPDATE_TIME = SYSDATE 
+			where 
+				Q_ID = #{Q_ID}
+	</update>
+	<!-- 更新子问题单的状态 -->
+	<update id="updateDiagChildQ" parameterType="pd" >
+		update AI_Q_DIAG_CHILD 
+			set	STATUS=${UPDATE_Q_STATUS },
+			UPDATE_TIME = SYSDATE 
+			where 
+				CHILD_ID = #{Q_ID}
+	</update>
+	<!-- 批量更新问题单的状态信息为一审-->
+	<update id="updateAllDiagQ" parameterType="String" >
+		update AI_Q_DIAG 
+		set	STATUS  = 0,
+			UPDATE_TIME = SYSDATE 
+		where 
+			Q_ID in (select Q_ID from AI_TASK where TASK_ID in  
+  			 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                  #{item}
+             </foreach>
+            )
+	</update>
+	<update id="updateAllDiagChildQ" parameterType="String" >
+		update AI_Q_DIAG_CHILD  
+		set	STATUS  = 1,
+			UPDATE_TIME = SYSDATE 
+		where 
+			CHILD_ID in (select Q_ID from AI_TASK where TASK_ID in  
+  			 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                  #{item}
+             </foreach>
+            )
+	</update>
+	
+	
+	<!-- ******************* 问题单审核使用sql start ******************* -->
+	<select id="checkList" parameterType="pd" resultType="pd">
+		select w.batch_number ,count (w.q_id) q_count
+		from (  
+		     select q.batch_number, q.q_id , decode (count(r.child_id),count(rs.child_id),0,1 ) complete
+		     from ai_o_diag q ,ai_q_diag_rela  r
+		     left join  ai_q_diag_rs rs  on ( rs.child_id = r.child_id and rs.UPDATE_TIME &lt;= #{UPDATE_TIME} )
+		     where q.q_id = r.q_id 
+		     	   and q.check_status = 0 
+		     	   and q.ORIGIN_ID = #{ORIGIN_ID} 
+		     	   <if test="batch_number !=null and batch_number!=''">
+						and q.batch_number = #{batch_number} 
+		     	   </if>
+		     group by q.batch_number,q.CREATE_TIME,q.q_id 
+		     
+		) w 
+		group by  w.batch_number
+		having sum(complete ) = 0
+	</select>
+	<select id="queryMtsInfo" resultType="pd" >
+		select * from ai_mts_info 
+	</select>
+	
+	<update id="updateMtsInfo" parameterType="pd" >
+		update ai_mts_info set 
+			RELOADING = #{RELOADING} 
+		<if test="UPDATE_TIME != null">
+			, UPDATE_TIME = #{UPDATE_TIME} 
+		</if>
+		<if test="UPDATE_MAN != null and UPDATE_MAN!=''">
+			, UPDATE_MAN = #{UPDATE_MAN} 
+		</if>
+	</update>
+	
+	<select id="originalQuelistPage" parameterType="page" resultType="pd">
+		select O_ID ,Q_ID, O_DIAG_NAME from ai_o_diag where BATCH_NUMBER = #{pd.BATCH_NUMBER}
+	</select>
+	<!-- 更新原始数据问题单的状态 -->
+	<update id="updateOriginalQue" parameterType="String" >
+		update AI_O_DIAG 
+			set	CHECK_STATUS= 1
+			where 
+				BATCH_NUMBER = #{BATCH_NUMBER}
+	</update>
+	<select id="reloadQuestionIds" parameterType="java.util.List" resultType="String">
+		select distinct(c.CHILD_ID ) from ai_q_diag_child c,ai_q_diag_rela r 
+		where r.child_id=c.CHILD_ID 
+			and c.DIAG_NAME in 
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			     #{item.NAME}
+			</foreach>
+			and r.q_id in 
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			     #{item.Q_ID}
+			</foreach>
+	</select>
+	<!-- 	更新子问题单状态为1审 -->
+	<update id="updateChildQbyIds" parameterType="java.util.List">
+		update ai_q_diag_child set STATUS = 1 where CHILD_ID in 
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			     #{item}
+			</foreach>
+	</update>
+	<!-- 	更新一审任务为未完成 -->
+	<update id="updateOneCheckbyIds" parameterType="java.util.List">
+	   update ai_task set TASK_STAT=0  
+	   		where Q_ID in 
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			     #{item} 
+			</foreach>
+	   		and STEP = 1 
+	   		and TASK_TYPE_CHILD_ID ='85001' 
+	</update>
+	<!-- 删除二审任务 -->
+	<delete id="deleteTwoCheckbyIds" parameterType="java.util.List">
+		delete from ai_task 
+		where Q_ID in 
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			     #{item} 
+			</foreach>
+ 		and STEP = 2 
+ 		and TASK_TYPE_CHILD_ID ='85001' 
+	</delete>
+	<!-- 删除问题单结果 -->
+	<delete id="deleteQuestionRs"  parameterType="java.util.List">
+		delete from ai_q_diag_rs 
+		where CHILD_ID in 
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			     #{item}
+			</foreach>
+	</delete>
+		<!-- 删除问题单历史结果 -->
+	<delete id="deleteQuestionHisRs"  parameterType="java.util.List">
+		delete from ai_diag_his_rs 
+		where CHILD_ID in 
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			     #{item}
+			</foreach>
+	</delete>
+	<!-- ******************** 问题单审核使用sql end ******************* -->
+</mapper>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+	<display-name>"TS Tags"</display-name>
+	<tlib-version>2.2</tlib-version>
+	<short-name>ts</short-name>
+    <uri>/clob</uri>
+		<tag>
+			<description>输出Colb对象</description>
+			<name>colb</name>
+			<tag-class>com.ts.annotation.ClobToString</tag-class>
+			<body-content>empty</body-content>
+			<attribute>
+				<description>需要输出的Colb对象</description>
+				<name>clob</name>
+				<required>true</required>
+				<!-- 必须出现 -->
+				<rtexprvalue>true</rtexprvalue>
+			</attribute>
+			<attribute>
+				<description>字符串超过n的时候截取</description>
+				<name>n</name>
+				<required>true</required>
+				<!-- 必须出现 -->
+				<rtexprvalue>true</rtexprvalue>
+			</attribute>
+			<attribute>
+				<description>追加内容</description>
+				<name>addContent</name>
+				<required>true</required>
+				<!-- 必须出现 -->
+				<rtexprvalue>true</rtexprvalue>
+			</attribute>
+		</tag>
+</taglib>

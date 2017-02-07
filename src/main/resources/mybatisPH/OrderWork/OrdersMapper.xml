@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OrdersMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		orders
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+ 		patient_id,
+		visit_id,
+		order_no,
+		order_sub_no,
+		repeat_indicator,
+		order_class,
+		order_text,
+		order_code,
+		dosage,
+		dosage_units,
+		administration,
+		duration,
+		duration_units,
+		start_date_time,
+		stop_date_time,
+		frequency,
+		freq_counter,
+		freq_interval,
+		freq_interval_unit,
+		freq_detail,
+		perform_schedule,
+		perform_result,
+		ordering_dept,
+		doctor,
+		stop_doctor,
+		nurse,
+		enter_date_time,
+		order_status,
+		billing_attr,
+		last_perform_date_time,
+		last_accting_date_time,
+		treat_sheet_flag,
+		pham_std_code,
+		amount,
+		drug_billing_attr,
+		stop_nurse,
+		stop_order_date_time,
+		dept_name,
+		clinic_attr,
+		outp_or_inp,
+		internal_or_sergery,
+		link_date,
+		ddd_value
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+ 		#{patient_id},
+		#{visit_id},
+		#{order_no},
+		#{order_sub_no},
+		#{repeat_indicator},
+		#{order_class},
+		#{order_text},
+		#{order_code},
+		#{dosage},
+		#{dosage_units},
+		#{administration},
+		#{duration},
+		#{duration_units},
+		#{start_date_time},
+		#{stop_date_time},
+		#{frequency},
+		#{freq_counter},
+		#{freq_interval},
+		#{freq_interval_unit},
+		#{freq_detail},
+		#{perform_schedule},
+		#{perform_result},
+		#{ordering_dept},
+		#{doctor},
+		#{stop_doctor},
+		#{nurse},
+		#{enter_date_time},
+		#{order_status},
+		#{billing_attr},
+		#{last_perform_date_time},
+		#{last_accting_date_time},
+		#{treat_sheet_flag},
+		#{pham_std_code},
+		#{amount},
+		#{drug_billing_attr},
+		#{stop_nurse},
+		#{stop_order_date_time},
+		#{dept_name},
+		#{clinic_attr},
+		#{outp_or_inp},
+		#{internal_or_sergery},
+		#{link_date},
+		#{ddd_value}
+	</sql>
+	
+	
+	<!--查询病人信息  -->
+	<select id="OrdersByIdlistPage" parameterType="pd" resultType="pd">
+		select  
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>
+		where 
+			patient_id  = #{patient_id} and visit_id = #{visit_id}
+			
+		<if test="REPEAT_INDICATOR != null and REPEAT_INDICATOR != ''"> <!-- 医嘱标示 1 长期 0 临时-->  
+			and REPEAT_INDICATOR = #{REPEAT_INDICATOR} 
+		</if>
+		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+			and discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+		</if>
+
+		Order by ORDER_NO,order_sub_no 
+	</select>
+	
+
+</mapper>

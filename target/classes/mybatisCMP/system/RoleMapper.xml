@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="RoleMapper">
+	
+	<resultMap type="Role" id="roleResultMap">
+		<id column="ROLE_ID" property="ROLE_ID"/>
+		<result column="ROLE_NAME" property="ROLE_NAME"/>
+		<result column="PARENT_ID" property="PARENT_ID"/>
+		<result column="INTRODUCTION" property="INTRODUCTION"/>
+		<result column="ROLE_TYPE" property="ROLE_TYPE"/>
+	</resultMap>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		ROLE_ID,
+		ROLE_NAME,
+		PARENT_ID,
+		INTRODUCTION,
+		ROLE_TYPE
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ROLE_ID},
+		#{ROLE_NAME},
+		#{PARENT_ID},
+		#{INTRODUCTION},
+		#{ROLE_TYPE}
+	</sql>
+	
+	<!--表名 -->
+	<sql id="tableName">
+		SYS_ROLE
+	</sql>
+	
+	<!--通过ID获取其子一级角色 -->
+	<select id="listSubRoleByParentId" parameterType="String" resultMap="roleResultMap">
+		select  
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>
+		where PARENT_ID = #{parentId} order by ROLE_ID 
+	</select>
+	
+	<!--通过菜单ID获取数据 -->
+	<select id="getRoleById" parameterType="pd" resultType="pd">
+		select  
+			<include refid="Field"></include>
+		 from 
+			<include refid="tableName"></include>
+		 where ROLE_ID=#{ROLE_ID}
+	</select>
+	
+		<!--通过菜单ID获取数据 -->
+	<select id="findRoleById" parameterType="String" resultType="Role">
+		select  
+			<include refid="Field"></include>
+		 from 
+			<include refid="tableName"></include>
+		 where ROLE_ID=#{ROLE_ID}
+	</select>
+	
+	<!-- 	添加 -->
+	<insert id="insertRole" parameterType="Role">
+		insert into 
+		<include refid="tableName"></include>
+		(
+		<include refid="Field"></include>
+		) values (
+		<include refid="FieldValue"></include>	
+		)
+	</insert>
+	
+	<!-- 保存修改 -->
+	<update id="edit" parameterType="Role">
+		update 
+		<include refid="tableName"></include>
+		set ROLE_NAME = #{ROLE_NAME},
+			INTRODUCTION = #{INTRODUCTION},
+			ROLE_TYPE = #{ROLE_TYPE}
+		where ROLE_ID = #{ROLE_ID}
+	</update>
+	
+	<!-- 删除角色  -->
+	<delete id="deleteRoleById" parameterType="pd">
+		delete from 
+		<include refid="tableName"></include> 
+	 	where 
+		<choose>
+			<!-- mysql 时调用自定义函数 -->
+		 	<when test="DATABASE_TYPE == 1">
+		 		FIND_IN_SET(ROLE_ID, getChild(#{ROLE_ID},1));
+		 	</when>
+		 	<otherwise>
+				ROLE_ID in ( 
+					select ROLE_ID  from SYS_ROLE START WITH ROLE_ID =#{ROLE_ID} CONNECT BY PRIOR ROLE_ID=PARENT_ID
+			 	)
+			</otherwise>
+		</choose>
+	</delete>
+	
+	<!-- 删除角色权限  -->
+	<delete id="delRoleMfByRoleId" parameterType="pd">
+		delete from ROLE_MF_RELA 
+	 	where 
+		<choose>
+			<!-- mysql 时调用自定义函数 -->
+		 	<when test="DATABASE_TYPE == 1">
+		 		FIND_IN_SET(ROLE_ID, getChild(#{ROLE_ID},1));
+		 	</when>
+		 	<otherwise>
+				ROLE_ID in ( 
+					select ROLE_ID  from SYS_ROLE START WITH ROLE_ID =#{ROLE_ID} CONNECT BY PRIOR ROLE_ID=PARENT_ID
+			 	)
+			</otherwise>
+		</choose>
+	</delete>
+	
+	<!-- 删除角色接口数据权限关系  -->
+	<delete id="delRelationByRoleId" parameterType="pd">
+		delete from SYS_ROLE_TABLE_RELATION 
+	 	where 
+		<choose>
+			<!-- mysql 时调用自定义函数 -->
+		 	<when test="DATABASE_TYPE == 1">
+		 		FIND_IN_SET(ROLE_ID, getChild(#{ROLE_ID},1);
+		 	</when>
+		 	<otherwise>
+				ROLE_ID in ( 
+					select ROLE_ID  from SYS_ROLE START WITH ROLE_ID =#{ROLE_ID} CONNECT BY PRIOR ROLE_ID=PARENT_ID
+			 	)
+			</otherwise>
+		</choose>
+	</delete>
+	
+		<!-- 删除用户角色关系  -->
+	<delete id="delUserRoleRelaByRoleId" parameterType="pd">
+		delete from USER_ROLE_RELA 
+	 	where 
+		<choose>
+			<!-- mysql 时调用自定义函数 -->
+		 	<when test="DATABASE_TYPE == 1">
+		 		FIND_IN_SET(ROLE_ID, getChild(#{ROLE_ID},1));
+		 	</when>
+		 	<otherwise>
+				ROLE_ID in ( 
+					select ROLE_ID  from SYS_ROLE START WITH ROLE_ID =#{ROLE_ID} CONNECT BY PRIOR ROLE_ID=PARENT_ID
+			 	)
+			</otherwise>
+		</choose>
+	</delete>
+	
+	
+		<!-- 	添加 角色权限关系-->
+	<insert id="insertRoleRights" parameterType="pd">
+		insert into ROLE_MF_RELA
+		(
+			ID,
+			ROLE_ID,
+			MF_ID
+		) values (
+			#{ID},
+			#{ROLE_ID},
+			#{MF_ID}
+		)
+	</insert>
+
+	<!-- 通过用户角色关系，查找用户所有角色（不含下级角色） -->
+	<select id="listUserRolesByUsId" parameterType="String" resultType="Role" >
+		select 
+			a.ROLE_ID,
+			a.ROLE_NAME,
+			a.PARENT_ID,
+			a.INTRODUCTION,
+			a.ROLE_TYPE
+		from 
+			SYS_ROLE a , USER_ROLE_RELA b
+		where 
+			a.ROLE_ID = b.ROLE_ID and b.USER_ID = #{USER_ID}
+	</select>
+
+	<!-- 通过用户角色关系，查找用户所有角色ID及角色下属角色ID集合 -->
+	<select id="listSubRoleByUsId" parameterType="pd" resultType="String" >
+		<choose>
+			<!-- mysql 时调用自定义函数 -->
+		 	<when test="DATABASE_TYPE == 1">
+				<if test="ROLE_IDS == null ">
+			 		select * from SYS_ROLE where 1=2
+			 	</if>
+			 	<if test="ROLE_IDS != null ">
+ 				<foreach item="item" index="index" collection="ROLE_IDS" open="" separator=" union " close="">
+			 		 select 
+						distinct(ROLE_ID) 
+					from 
+						SYS_ROLE 
+					where FIND_IN_SET(ROLE_ID, getChild(#{item},1)) 
+				</foreach>
+				</if>
+		 	</when>
+		 	<otherwise>
+				select 
+					distinct(ROLE_ID)  
+				from 
+					SYS_ROLE 
+				where 1=1 
+					START WITH ROLE_ID in (select ROLE_ID from USER_ROLE_RELA where USER_ID = #{USER_ID} ) 
+					CONNECT BY PRIOR ROLE_ID = PARENT_ID 
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="checkRoleUsed" parameterType="String" resultType="Integer" >
+		select 
+			count(ROLE_ID)  
+		from 
+			USER_ROLE_RELA 
+		where  
+			ROLE_ID = #{ROLE_ID}
+	</select>
+	<!-- 查询所有业务角色 add by zhy -->
+	<select id="listRolesByTypePage" parameterType="Page" resultType="pd" >
+		select 
+			ROLE_ID,ROLE_NAME  
+		from 
+			SYS_ROLE 
+		where  
+			ROLE_TYPE = #{pd.ROLE_TYPE} 
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					 ROLE_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+		</if>
+	</select>
+</mapper>

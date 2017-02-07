@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TaskParamMapper">
+
+	<resultMap type="TaskParam" id="taskParamResultMap">
+		<id column="P_ID" property="P_ID"/>
+		<result column="TASK_TYPE_ID" property="TASK_TYPE_ID"/>
+		<result column="TASK_TYPE_CHILD_ID" property="TASK_TYPE_CHILD_ID"/>
+		<result column="EXP_ONE_ROLE" property="EXP_ONE_ROLE"/>
+		<result column="EXP_TWO_ROLE" property="EXP_TWO_ROLE"/>
+		<result column="STATUS" property="STATUS"/>
+		<result column="CREATE_MAN" property="CREATE_MAN"/>
+		<result column="CREATE_TIME" property="CREATE_TIME"/>
+		<result column="UPDATE_MAN" property="UPDATE_MAN"/>
+		<result column="UPDATE_TIME" property="UPDATE_TIME"/>
+	</resultMap>
+
+	<!--表名 -->
+	<sql id="tableName">
+		AI_TASK_PARAM
+	</sql>
+	
+	<sql id="roleTableName">
+		SYS_ROLE
+	</sql>
+	<sql id="dictTableName">
+		CO_DICT
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		P_ID,
+		TASK_TYPE_ID,
+		TASK_TYPE_CHILD_ID,
+		EXP_ONE_ROLE,
+		EXP_TWO_ROLE,
+		STATUS,
+		CREATE_MAN,
+		CREATE_TIME,
+		UPDATE_MAN,
+		UPDATE_TIME
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{P_ID},
+		#{TASK_TYPE_ID},
+		#{TASK_TYPE_CHILD_ID},
+		#{EXP_ONE_ROLE},
+		#{EXP_TWO_ROLE},
+		#{STATUS},
+		#{CREATE_MAN},
+		#{CREATE_TIME},
+		#{UPDATE_MAN},
+		#{UPDATE_TIME}
+	</sql>
+	
+	<!-- 参数配置列表(全部) -->
+	<select id="taskParamlistPage" parameterType="page" resultType="pd" >
+		select  tp.P_ID,
+				tp.TASK_TYPE_ID,
+				d1.D_VALUE TASK_TYPE,
+				tp.TASK_TYPE_CHILD_ID,
+				d2.D_VALUE TASK_TYPE_CHILD,
+				R1.ROLE_NAME EXP_ONE_ROLE ,
+				R2.ROLE_NAME EXP_TWO_ROLE,
+				tp.STATUS,
+				tp.CREATE_MAN,
+				tp.CREATE_TIME,
+				tp.UPDATE_MAN,
+				tp.UPDATE_TIME
+		from <include refid="tableName"></include> tp ,SYS_ROLE r1,SYS_ROLE r2, <include refid="dictTableName"></include> d1 , <include refid="dictTableName"></include> d2 
+		where tp.TASK_TYPE_ID=d1.D_KEY AND tp.TASK_TYPE_CHILD_ID=d2.D_KEY  and r1.ROLE_ID(+)=tp.EXP_ONE_ROLE AND r2.ROLE_ID=tp.EXP_TWO_ROLE 
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					 d1.D_VALUE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or 
+					 d2.D_VALUE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+					 or
+					 R1.ROLE_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or
+					 R2.ROLE_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+		</if>
+		
+		order by tp.TASK_TYPE_ID desc
+	</select>
+	
+	<!-- 获取总数 -->
+	<select id="getTaskParamCount" parameterType="String" resultType="pd">
+		select 
+			count(P_ID) taskParamCount
+		from 
+		<include refid="tableName"></include>
+	</select>
+	<!--  新增-->
+	<insert id="addTP" parameterType="pd" >
+		insert into <include refid="tableName"></include> (
+			P_ID,TASK_TYPE_ID,TASK_TYPE_CHILD_ID,EXP_ONE_ROLE,EXP_TWO_ROLE,STATUS,CREATE_MAN,CREATE_TIME,UPDATE_MAN,UPDATE_TIME  
+		) values (
+			SEQ_AI_TASK_PARAM.NEXTVAL,#{TASK_TYPE_ID},#{TASK_TYPE_CHILD_ID},#{EXP_ONE_ROLE},#{EXP_TWO_ROLE},#{STATUS} ,#{CREATE_MAN},#{CREATE_TIME},#{UPDATE_MAN},	#{UPDATE_TIME}
+		)
+	</insert>
+	<!-- 修改 -->
+	<update id="editTP" parameterType="pd" >
+		update  <include refid="tableName"></include>
+			set	TASK_TYPE_ID 			= #{TASK_TYPE_ID},
+				TASK_TYPE_CHILD_ID		= #{TASK_TYPE_CHILD_ID},
+				EXP_ONE_ROLE			= #{EXP_ONE_ROLE},
+				EXP_TWO_ROLE			= #{EXP_TWO_ROLE},
+				STATUS					= #{STATUS},
+				UPDATE_TIME				=SYSDATE,
+				UPDATE_MAN				=#{UPDATE_MAN}
+			where 
+				P_ID = #{P_ID}
+	</update>
+	<!-- 删除 -->
+	<delete id="deleteTP" parameterType="pd" flushCache="false">
+		delete from <include refid="tableName"></include>
+		where 
+			P_ID = #{P_ID}
+	</delete>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAllTP" parameterType="String" >
+		delete from <include refid="tableName"></include>
+		where 
+			P_ID in
+  			 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                  #{item}
+             </foreach>
+	</delete>
+		
+	<!-- 通过id获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd" >
+		select 
+				tp.P_ID,
+				tp.TASK_TYPE_ID,
+				tp.TASK_TYPE_CHILD_ID,
+				tp.EXP_ONE_ROLE,
+				tp.EXP_TWO_ROLE,
+				R1.ROLE_NAME  EXP_ONE_ROLE_NAME ,
+				R2.ROLE_NAME  EXP_TWO_ROLE_NAME,
+				tp.STATUS,
+				tp.CREATE_MAN,
+				tp.CREATE_TIME,
+				tp.UPDATE_MAN,
+				tp.UPDATE_TIME
+		from 
+			<include refid="tableName"></include> tp ,SYS_ROLE r1,SYS_ROLE r2
+		where 
+			r1.ROLE_ID(+)=tp.EXP_ONE_ROLE AND r2.ROLE_ID=tp.EXP_TWO_ROLE AND P_ID = #{P_ID}
+	</select>
+	<!-- 根据类型获取配置 -->
+	<select id="findByType" parameterType="INTEGER" resultType="pd" >
+		select 1 from 
+			<include refid="tableName"></include>
+		where TASK_TYPE_CHILD_ID=#{TASK_TYPE_CHILD_ID} AND STATUS=0
+	</select>
+	<!-- 判断能否更改 -->
+	<select id="editCan" parameterType="INTEGER" resultType="pd" >
+		select 1 from 
+			<include refid="tableName"></include> p1,<include refid="tableName"></include> p2 
+		where p1.P_ID=#{P_ID} AND p1.STATUS=1 AND p1.P_ID!=p2.P_ID AND p1.TASK_TYPE_ID=p2.TASK_TYPE_ID AND p1.TASK_TYPE_CHILD_ID=p2.TASK_TYPE_CHILD_ID AND p2.STATUS=0
+	</select>
+	<!-- 判断是否包含任务信息 -->
+	<select id="hasTask" parameterType="INTEGER" resultType="pd" >
+		select 1 from 
+			<include refid="tableName"></include> p,AI_TASK t 
+		where p.P_ID=#{P_ID} AND p.TASK_TYPE_ID=t.TASK_TYPE_ID AND p.TASK_TYPE_CHILD_ID=t.TASK_TYPE_CHILD_ID
+	</select>
+	<!--校验能否都删除  -->
+	<select id="deleteAllCheck" parameterType="String" resultType="pd" >
+		select  distinct d1.D_VALUE TASK_TYPE,
+				d2.D_VALUE TASK_TYPE_CHILD from 
+			<include refid="tableName"></include> p,AI_TASK t ,<include refid="dictTableName"></include> d1 , <include refid="dictTableName"></include> d2 
+		where p.TASK_TYPE_ID=d1.D_KEY AND p.TASK_TYPE_CHILD_ID=d2.D_KEY AND 
+			p.P_ID in
+  			 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                  #{item}
+             </foreach>
+             AND p.STATUS=0 AND p.TASK_TYPE_ID=t.TASK_TYPE_ID AND p.TASK_TYPE_CHILD_ID=t.TASK_TYPE_CHILD_ID
+	</select>
+</mapper>
