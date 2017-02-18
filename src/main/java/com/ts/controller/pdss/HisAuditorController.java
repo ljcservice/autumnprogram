@@ -860,11 +860,12 @@ public class HisAuditorController extends BaseController {
     public TDrugSecurityRslt drugInteractionCheck(TPatientOrder po)
     {
         return drugsecuity.DrugInteractionCheck(po);
-		JSONObject o = JSONObject.fromObject(param);
-		String patId = (String) o.get("patId");
-		String visitId = (String) o.get("visitId");
-		TPatVitalSigns[] t = antiDrugscr.getpatVsVisitSigns(patId, visitId);
-		return t==null?null:JSONObject.fromObject(t).toString();
+        
+//		JSONObject o = JSONObject.fromObject(param);
+//		String patId = (String) o.get("patId");
+//		String visitId = (String) o.get("visitId");
+//		TPatVitalSigns[] t = antiDrugscr.getpatVsVisitSigns(patId, visitId);
+//		return t==null?null:JSONObject.fromObject(t).toString();
 	}
     
     public TDrugSecurityRslt DrugInteractionCheckS(String[] Drugs)
