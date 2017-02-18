@@ -2,7 +2,9 @@ package com.ts.controller.DoctOrder.OrderWork;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +12,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ts.controller.base.BaseController;
@@ -18,6 +21,7 @@ import com.ts.entity.system.User;
 import com.ts.service.DoctOrder.OrderWork.IOrderWorkService;
 import com.ts.util.DateUtil;
 import com.ts.util.PageData;
+import com.ts.util.app.AppUtil;
 import com.ts.util.ontology.HelpUtil;
 
 
@@ -97,13 +101,141 @@ public class OrderWork extends BaseController
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/OrderWorkDetailUI")
-	public ModelAndView OrderWorkDetailUI(String patId , String visitId) throws Exception{
+	public ModelAndView OrderWorkDetailUI(Page page) throws Exception{
 		ModelAndView mv = this.getModelAndView();
-		PageData pdPat   =  this.orderWorkService.findByPatient(patId, visitId);
-		PageData pdOrder = this.orderWorkService.orderList(patId, visitId);
+		PageData pd = this.getPageData();
+		page.setPd(pd);
+		PageData pdPat         = this.orderWorkService.findByPatient(page);
+		List<PageData> pdOper  = this.orderWorkService.operationList(page);
+		//查询结果ByNgroupnum
+		List<PageData> checkRss = this.orderWorkService.findByCheckResultsByNgroupnum(page);
 		mv.setViewName("DoctOrder/OrderWork/OrderWorkDetail");
 		mv.addObject("pat", pdPat);
+		mv.addObject("oper",pdOper);
+		mv.addObject("checkRss", checkRss);
 		return mv;
+	}
+	
+	
+	/**
+	 * 返回点评结果
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/CheckRsViewUI")
+	public ModelAndView CheckRsViewUI(Page page) throws Exception{
+		ModelAndView  mv = this.getModelAndView();
+		PageData pd = this.getPageData();
+		page.setPd(pd);
+		List<PageData> checkRss = this.orderWorkService.findByCheckResultsByNgroupnum(page);
+		mv.addObject("checkRss", checkRss);
+		mv.setViewName("DoctOrder/OrderWork/CheckRsView");
+		mv.addObject("rsTypeDict",getCheckTypeDict());
+		return mv;
+	}
+	
+	public ModelAndView CheckRsDelete(Page page) throws Exception{
+		
+		PageData pd = this.getPageData();
+		
+		
+		return null;
+	}
+	
+	
+	/**
+	 * 医嘱信息
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/DoctOrdersDetail")
+	public ModelAndView DoctOrdersDetail(Page page) throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = this.getPageData();
+		page.setPd(pd);
+		page.setCurrentjztsFlag(1);
+		// 获取医嘱信息
+		List<PageData> pdOrders = this.orderWorkService.orderList(page);
+		//查询结果ByNgroupnum
+		List<PageData> checkRss = this.orderWorkService.findByCheckResultsByNgroupnum(page);
+		Map<String, List<PageData>> map = new HashMap<String , List<PageData>>();
+		for(PageData d : checkRss){
+			String key1 = d.getString("rec_main_no1") + "_" + d.getString("rec_sub_no1");
+			if(!map.containsKey(key1)) map.put(key1, new ArrayList<PageData>()); 
+			map.get(key1).add(d);
+			//增加第二个药品的识别
+			if("".equals(d.getString("rec_main_no2"))) continue;
+			String key2 = d.getString("rec_main_no2") + "_" + d.getString("rec_sub_no2");
+			if(!map.containsKey(key2)) map.put(key2, new ArrayList<PageData>()); 
+			map.get(key2).add(d);
+		}
+
+		mv.addObject("CheckRss",map);
+		mv.addObject("DoctOrders", pdOrders);
+		mv.addObject("rsTypeDict",getCheckTypeDict());
+		mv.setViewName("DoctOrder/OrderWork/DoctOrders");
+		
+		return mv ; 
+		
+	}
+	
+	/**
+	 * 保存快捷点评结果
+	 * @param pid
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/SaveShortcut")
+	@ResponseBody
+	public Object saveShortcutChehck() throws Exception {
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = this.getPageData();
+		Map<String, Object> map = new HashMap<String , Object>();
+		String count = pd.getString("count");
+		String ngroupnum = pd.getString("ngroupnum");
+		//人工是否点评
+		pd.put("ISORDERCHECK", "1");
+		// 是否为正确医嘱
+		pd.put("ISCHECKTRUE", "0");
+		pd.put("CHECKPEOPLE", this.getCurrentUser().getUSER_ID());
+		if("".equals(ngroupnum)) {
+			pd.put("ngroupnum", this.get32UUID());
+			this.orderWorkService.updatePatVisitNgroupnum(pd);
+		}
+		pd.put("rs_id", this.get32UUID());
+		pd.put("in_rs_type", pd.getString("checkType"));
+		pd.put("alert_level", pd.getString("r"));
+		pd.put("alert_hint", pd.getString("checkText"));
+		pd.put("alert_cause", "药师自审");
+		pd.put("alert_level", "r");
+		pd.put("rs_drug_type", "");
+		pd.put("checkdate", DateUtil.getDay());
+		if("1".equals(count)){
+			pd.put("drug_id1", "");
+			pd.put("drug_id1_name", pd.getString("tmpOrder_Name"));
+			pd.put("rec_main_no1", pd.getString("tmpOrder_no"));
+			pd.put("rec_sub_no1", pd.getString("tmpOrder_sub_no"));
+			pd.put("drug_id2", "");
+			pd.put("drug_id2_name", "");
+			pd.put("rec_main_no2", "");
+			pd.put("rec_sub_no2", "");
+		}
+		else if("2".equals(count))
+		{
+			pd.put("drug_id1", pd.getString("order_code"));
+			pd.put("drug_id1_name", pd.getString("order_name"));
+			pd.put("rec_main_no1", pd.getString("order_no"));
+			pd.put("rec_sub_no1", pd.getString("order_sub_no"));
+			pd.put("drug_id2", pd.getString("tmpOrder_Code"));
+			pd.put("drug_id2_name", pd.getString("tmpOrder_Name"));
+			pd.put("rec_main_no2", pd.getString("tmpOrder_no"));
+			pd.put("rec_sub_no2", pd.getString("tmpOrder_sub_no"));
+		}
+		int i = orderWorkService.saveCheckResult(pd);
+		map.put("result", "ok");
+		return  AppUtil.returnObject(pd, map);
 	}
 	
 	/**
@@ -117,4 +249,19 @@ public class OrderWork extends BaseController
 		return  mv;
 	}
 	
+	/**
+	 * 获得字段数据
+	 * @return
+	 * @throws Exception
+	 */
+	private Map<String, PageData> getCheckTypeDict() throws Exception
+	{
+		Map<String, PageData> rs = new HashMap<>();
+		// 审核字典
+		List<PageData> rsTypeDict = this.orderWorkService.selectRsTypeDict();
+		for(PageData pd : rsTypeDict){
+			rs.put(pd.getString("RS_TYPE_CODE"), pd);
+		}
+		return rs;
+	}
 }

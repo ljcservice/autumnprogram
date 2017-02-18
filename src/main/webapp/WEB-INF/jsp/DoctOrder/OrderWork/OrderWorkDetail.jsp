@@ -1,7 +1,7 @@
 ﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %> 
 <%@ taglib prefix="ts" uri="/rights"  %>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,6 +22,7 @@
 .ztree li a.curSelectedNode {
 /* 	background-color: #ffb951;	 */
  }
+
 </style>
 </head>
 <body class="no-skin">
@@ -52,100 +53,156 @@
 												<li>
 													<a data-toggle="tab" href="#opertion">
 														手术情况
-														<span class="badge badge-danger">4</span>
+														<c:if test="${not empty oper}">
+															<span class="badge badge-danger">${oper.size() }</span>
+														</c:if>
 													</a>
 												</li>
 
-												<li>
-													<a data-toggle="tab" href="#examination">
-														检验情况
-														<span class="badge badge-danger">4</span>
-													</a>
-												</li>
-												<li>
-													<a data-toggle="tab" href="#nurse">
-														护理情况
-														<span class="badge badge-danger">4</span>
-													</a>
-												</li>
+<!-- 												<li> -->
+<!-- 													<a data-toggle="tab" href="#examination"> -->
+<!-- 														检验情况 -->
+<!-- 														<span class="badge badge-danger">3</span> -->
+<!-- 													</a> -->
+<!-- 												</li> -->
+<!-- 												<li> -->
+<!-- 													<a data-toggle="tab" href="#nurse"> -->
+<!-- 														护理情况 -->
+<!-- 														<span class="badge badge-danger">1</span> -->
+<!-- 													</a> -->
+<!-- 												</li> -->
 												
-												<li>
-													<a data-toggle="tab" href="#ICUInfo">
-														重症监护
-														<span class="badge badge-danger">4</span>
-													</a>
-												</li>
+<!-- 												<li> -->
+<!-- 													<a data-toggle="tab" href="#ICUInfo"> -->
+<!-- 														重症监护 -->
+<!-- 														<span class="badge badge-danger"></span> -->
+<!-- 													</a> -->
+<!-- 												</li> -->
 												
+<!-- 												<li> -->
+<!-- 													<a data-toggle="tab" href="#inspection"> -->
+<!-- 														检查报告 -->
+<!-- 														<span class="badge badge-danger">3</span> -->
+<!-- 													</a> -->
+<!-- 												</li> -->
 												<li>
-													<a data-toggle="tab" href="#inspection">
-														检查报告
-														<span class="badge badge-danger">4</span>
+													<a data-toggle="tab" href="#orderCheck" >
+														点评结果
+														<c:if test="${not empty checkRss}">
+															<span class="badge badge-danger">${checkRss.size()}</span>
+														</c:if>
 													</a>
 												</li>
 											</ul>
 
-											<div class="tab-content" style="overflow-y:auto;height:150px;padding-top: 5px;padding-left: 2px;padding-right: 2px">
+											<div class="tab-content" style="overflow-y:auto;height:150px;padding-top: 2px;padding-left: 2px;padding-right: 2px;padding-bottom: 0px;">
 												<div id="doctOrder" class="tab-pane fade in active" >
 													<table class="table table-bordered table-striped table-responsive " style="font-size:10px;" >
 														<tbody>
 															<tr>
-																 <td width="10%" class="info">患者ID：</th>
+																 <td width="10%" class="info">患者ID:</th>
 																 <th width="15%"  >${pat.patient_id }(${pat.visit_id})</th>
 																 <td width="10%" class="info">患者姓名:</th>
-																 <th width="15%" >封神榜</th>
+																 <th width="15%" >${pat.name}</th>
 																 <td width="10%" class="info">性别:</th>
-																 <th width="15%" >男</th>
+																 <th width="15%" >${pat.sex}</th>
 																 <td width="10%" class="info">年龄:</th>
-																 <th width="15%" >2</th>
-															</tr>  
-															<tr>
-																 <td width="10%" class="info">入院科室</th>
-																 <th width="15%"  >ddserwer</th>
-																 <td width="10%" class="info">出入科室</th>
-																 <th width="15%" >封神榜</th>
-																 <td width="10%" class="info"></th>
-																 <th width="15%" >男</th>
-																 <td width="10%" class="info">年龄:</th>
-																 <th width="15%" >233333333333</th>
+																 <th width="15%" >
+																 	${pat.PAT_AGE }
+																 </th>
 															</tr>
+															  
 															<tr>
-																  <td width="10%" class="info">患者ID：</th>
-																 <th width="15%"  >ddserwer</th>
-																 <td width="10%" class="info">患者姓名:</th>
-																 <th width="15%" >封神榜</th>
-																 <td width="10%" class="info">性别:</th>
-																 <th width="15%" >男</th>
-																 <td width="10%" class="info">年龄:</th>
-																 <th width="15%" >2</th>
+																  <td width="10%" class="info">出生日期:</th>
+																 <th width="15%"  ><fmt:formatDate value="${pat.DATE_OF_BIRTH }" pattern="yyyy-MM-dd"/></th>
+																 <td width="10%" class="info">费别:</th>
+																 <th width="15%" >${pat.charge_type }</th>
+																 <td width="10%" class="info">住院天数:</th>
+																 <th width="15%" > ${ pat.dayCount} </th>
+																 <td width="10%" class="info">诊断:</th>
+																 <th width="15%" >啧啧啧</th>
 															</tr>
+															
+															<tr>
+																 <td width="10%" class="info">入院科室:</th>
+																 <th width="15%"  >${pat.in_dept_name }</th>
+																 <td width="10%" class="info">入院时间:</th>
+																 <th width="15%" >
+																 	<fmt:formatDate value="${pat.admission_date_time }" pattern="yyyy-MM-dd"/>
+																 </th>
+																 <td width="10%" class="info">出院科室:</th>
+																 <th width="15%" >${pat.out_dept_name }</th>
+																 <td width="10%" class="info">出院时间:</th>
+																 <th width="15%" >
+																 	<fmt:formatDate value="${pat.discharge_date_time}" pattern="yyyy-MM-dd"/> </td>
+																 </th>
+															</tr>
+															
 														</tbody>
 													</table>
 												</div>
 
 												<div id="opertion" class="tab-pane fade" >
-													<p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid.</p>
-													<p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid.</p>
-													<p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid.</p>
-													<p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid.</p>
-													<p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid.</p>
-													<p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid.</p>
-												
+													<table id="simple-table" class="table table-striped table-bordered table-hover" >
+													<thead>
+														<tr>
+															<th class="center" nowrap>手术名称</th>
+															<th class="center" nowrap>切口等级</th>
+															<th class="center" nowrap>切口愈合情况</th>
+															<th class="center" nowrap>手术日期</th>
+															<th class="center" nowrap>麻醉方法</th>
+															<th class="center" nowrap>手术医师</th>
+														</tr>
+													</thead>
+													<tbody>
+													<!-- 开始循环 -->	
+													<c:choose>
+														<c:when test="${not empty oper}">
+															<c:forEach items="${oper}" var="oper" varStatus="vs">
+																<tr ondblclick="edit(this,'Edit')">
+																	<td class='center' >
+																		${oper.OPERATION_DESC }
+																	</td>
+																	<td class="center ">
+																		${oper.WOUND_GRADE}
+																	</td>
+																	<td class="center " >${oper.HEAL }</td>
+																	<td class="center " ><fmt:formatDate value="${oper.OPERATING_DATE }" pattern="yyyy-MM-dd"/></td>
+																	<td class="center " >${oper.ANAESTHESIA_METHOD }</td>
+																	<td class="center " >${oper.OPERATOR } </td>
+																</tr>
+															
+															</c:forEach>
+														</c:when>
+														<c:otherwise>
+															<tr class="main_info">
+																<td colspan="8" class="center">没有相关数据</td>
+															</tr>
+														</c:otherwise>
+													</c:choose>
+													</tbody>
+												</table>
 												</div>
 
-												<div id="examination" class="tab-pane fade">
-													<p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade.</p>
-												</div>
+<!-- 												<div id="examination" class="tab-pane fade"> -->
+<!-- 													<p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade.</p> -->
+<!-- 												</div> -->
 
-												<div id="nurse" class="tab-pane fade">
-													<p>Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin.</p>
-												</div>
+<!-- 												<div id="nurse" class="tab-pane fade"> -->
+<!-- 													<p>Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin.</p> -->
+<!-- 												</div> -->
 												
-												<div id="ICUInfo" class="tab-pane fade">
-													<p>Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin.</p>
-												</div>
+<!-- 												<div id="ICUInfo" class="tab-pane fade"> -->
+<!-- 													<p>Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin.</p> -->
+<!-- 												</div> -->
 												
-												<div id="inspection" class="tab-pane fade">
-													<p>Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin.</p>
+<!-- 												<div id="inspection" class="tab-pane fade"> -->
+<!-- 													dfdsfd -->
+<!-- 												</div> -->
+												<div id="orderCheck" class="tab-pane fade" >
+													<iframe  name="CheckRsFrame" id="CheckRsFrame" scrolling ="auto"" frameborder="0"
+														src="DoctOrder/CheckRsViewUI.do?patient_id=${page.pd.patient_id}&visit_id=${page.pd.visit_id}&ngroupnum=${page.pd.ngroupnum}" style="margin:0px 0px 0px 0px;width:100%;height: 135px;">
+													</iframe>
 												</div>
 											</div>
 										</div>
@@ -158,180 +215,10 @@
 							</tr>
 							<tr id="trLagout" height="*" >
 								<td>
-									<div style="height:430px;overflow-yautod;overflow-x:hidden; ">
-										<div style="margin-top: 5px;margin-bottom: 5px;">
-											<span><b> <font color="blue" >医嘱信息</font></b></span>
-											<div style="float: right;margin-bottom: 5px;">
-												<div class="btn-toolbar">
-												<div class="btn-group">
-													<button class="btn btn-sm btn-yellow">医嘱类型</button>
-													<button data-toggle="dropdown" class="btn btn-sm btn-yellow dropdown-toggle">
-														<i class="ace-icon fa fa-angle-down icon-only"></i>
-													</button>
-													<ul class="dropdown-menu dropdown-yellow">
-														<li>
-															<a href="#">全部医嘱</a>
-														</li>
-														<li>
-															<a href="#">长期医嘱</a>
-														</li>
-														<li>
-															<a href="#">临时医嘱</a>
-														</li>
-														<li>
-															<a href="#">手后医嘱</a>
-														</li>
-	
-														<li class="divider"></li>
-	
-														<li>
-															<a href="#">Separated link</a>
-														</li>
-													</ul>
-												</div><!-- /.btn-group -->
-												
-												
-													<div class="btn-group">
-														<button data-toggle="dropdown" class="btn btn-info btn-sm dropdown-toggle">
-															快捷点评
-															<span class="ace-icon fa fa-caret-down icon-on-right"></span>
-														</button>
-		
-														<ul class="dropdown-menu dropdown-info dropdown-menu-right">
-															<li>
-																<a href="#">相互作用</a>
-															</li>
-															<li>
-																<a href="#">重复用药</a>
-															</li>
-															<li>
-																<a href="#">禁忌症</a>
-															</li>
-															<li>
-																<a href="#">配伍禁忌</a>
-															</li>
-															<li>
-																<a href="#">用法用量</a>
-															</li>
-															<li>
-																<a href="#">特殊人群</a>
-															</li>
-															<li class="divider"></li>
-															<li>
-																<a href="#"> 未选择</a>
-															</li>
-														</ul>
-													</div><!-- /.btn-group -->
-												</div>
-											</div>
-										</div>
-										<table class="table table-striped table-bordered table-hover" >
-											<thead >
-												<tr >
-													<th width="35%"> 医嘱名称</th>
-													<th width="9%">  医嘱类型</th>
-													<th width="9%" > 医嘱科室</th>
-													<th width="8%" > 用法</th>
-													<th width="8%" > 用量</th>
-													<th width="14%"> 开始时间</th>
-													<th width="*" > 结束时间</th>
-												</tr>
-											</thead>
-											<tbody align="center" >
-											<tr>
-												<td >ccc</td>
-												<td  >fff</td>  
-												<td > fsdfsfd	</td>
-												<td  > fsdfsfd	</td>
-												<td  > fsdfsfd	</td>
-												<td  > fsdfsfd水电费水	</td>
-												<td > fsdfsfd水电费水	</td>
-											<tr>
-												<td >ccc</td>
-												<td  >fff</td>  
-												<td > fsdfsfd	</td>
-												<td  > fsdfsfd	</td>
-												<td  > fsdfsfd	</td>
-												<td  > fsdfsfd水电费水	</td>
-												<td > fsdfsfd水电费水	</td>
-											</tr>
-												<tr>
-												<td >ccc</td>
-												<td  >fff</td>  
-												<td > fsdfsfd	</td>
-												<td  > fsdfsfd	</td>
-												<td  > fsdfsfd	</td>
-												<td  > fsdfsfd水电费水	</td>
-												<td > fsdfsfd水电费水	</td>
-											</tr>
-												<tr>
-												<td >ccc</td>
-												<td  >fff</td>  
-												<td > fsdfsfd	</td>
-												<td  > fsdfsfd	</td>
-												<td  > fsdfsfd	</td>
-												<td  > fsdfsfd水电费水	</td>
-												<td > fsdfsfd水电费水	</td>
-											</tr>
-												<tr>
-												<td >ccc</td>
-												<td  >fff</td>  
-												<td > fsdfsfd	</td>
-												<td  > fsdfsfd	</td>
-												<td  > fsdfsfd	</td>
-												<td  > fsdfsfd水电费水	</td>
-												<td > fsdfsfd水电费水	</td>
-											</tr>
-												<tr>
-												<td >ccc</td>
-												<td  >fff</td>  
-												<td > fsdfsfd	</td>
-												<td  > fsdfsfd	</td>
-												<td  > fsdfsfd	</td>
-												<td  > fsdfsfd水电费水	</td>
-												<td > fsdfsfd水电费水	</td>
-											</tr>
-												<tr>
-												<td >ccc</td>
-												<td  >fff</td>  
-												<td > fsdfsfd	</td>
-												<td  > fsdfsfd	</td>
-												<td  > fsdfsfd	</td>
-												<td  > fsdfsfd水电费水	</td>
-												<td > fsdfsfd水电费水	</td>
-											</tr>
-											</tr>
-												<tr>
-												<td >ccc</td>
-												<td  >fff</td>  
-												<td > fsdfsfd	</td>
-												<td  > fsdfsfd	</td>
-												<td  > fsdfsfd	</td>
-												<td  > fsdfsfd水电费水	</td>
-												<td > fsdfsfd水电费水	</td>
-											</tr>
-											</tr>
-												<tr>
-												<td >ccc</td>
-												<td  >fff</td>  
-												<td > fsdfsfd	</td>
-												<td  > fsdfsfd	</td>
-												<td  > fsdfsfd	</td>
-												<td  > fsdfsfd水电费水	</td>
-												<td > fsdfsfd水电费水	</td>
-											</tr>
-											</tr>
-												<tr>
-												<td >ccc</td>
-												<td  >fff</td>  
-												<td > fsdfsfd	</td>
-												<td  > fsdfsfd	</td>
-												<td  > fsdfsfd	</td>
-												<td  > fsdfsfd水电费水	</td>
-												<td > fsdfsfd水电费水	</td>
-											</tr>
-											</tbody>
-										</table>
+									<div style="height:430px;overflow-y:hidden;overflow-x:hidden; ">
+										<iframe name="DoctFrame" id="DoctFrame" scrolling="no" frameborder="0" 
+											src="DoctOrder/DoctOrdersDetail.do?patient_id=${page.pd.patient_id}&visit_id=${page.pd.visit_id}&ngroupnum=${page.pd.ngroupnum}" style="margin:0 auto;width:100%;height: 100%">
+										</iframe>
 									</div>
 								</td>
 							</tr>
@@ -391,7 +278,7 @@
 <script type="text/javascript">
 $(top.hangge());
 $(function() {
-	changeTree();
+	//changeTree();
 	//日期框
 	$('.date-picker').datepicker({autoclose: true,todayHighlight: true});
 	
@@ -401,13 +288,26 @@ $(function() {
 	//下拉框
 	if(!ace.vars['touch']) {
 		$('.chosen-select').chosen({allow_single_deselect:true}); 
+		//resize the chosen on window resize
+	
+		$(window)
+		.off('resize.chosen')
+		.on('resize.chosen', function() {
+			$('.chosen-select').each(function() {
+				 var $this = $(this);
+				 $this.next().css({'width': $this.width()});
+			})
+		}).trigger('resize.chosen');
+		//resize chosen on sidebar collapse/expand
 		$(document).on('settings.ace.chosen', function(e, event_name, event_val) {
 			if(event_name != 'sidebar_collapsed') return;
 			$('.chosen-select').each(function() {
 				 var $this = $(this);
-				 $this.next().css({'width': $this.parent().width()});
-			});
+				 $this.next().css({'width': $this.width()});
+			})
 		});
+	
+	
 		$('#chosen-multiple-style .btn').on('click', function(e){
 			var target = $(this).find('input[type=radio]');
 			var which = parseInt(target.val());

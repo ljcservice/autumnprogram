@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rsDrugCheckRsltMapper">
+
+	<!--表名   手术表-->
+	<sql id="tableName">
+		RS_DRUG_CHECKRSLT
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		rs_id,
+		drug_id1,
+		drug_id1_name,
+		rec_main_no1,
+		rec_sub_no1,
+		drug_id2,
+		drug_id2_name,
+		rec_main_no2,
+		rec_sub_no2,
+		ngroupnum,
+		rs_drug_type,
+		in_rs_type,
+		alert_level,
+		alert_hint,
+		alert_cause,
+		checkdate,
+		CHECKPEOPLE
+
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+ 		#{rs_id},
+		#{drug_id1},
+		#{drug_id1_name},
+		#{rec_main_no1},
+		#{rec_sub_no1},
+		#{drug_id2},
+		#{drug_id2_name},
+		#{rec_main_no2},
+		#{rec_sub_no2},
+		#{ngroupnum},
+		#{rs_drug_type},
+		#{in_rs_type},
+		#{alert_level},
+		#{alert_hint},
+		#{alert_cause},
+		#{checkdate},
+		#{CHECKPEOPLE}
+	</sql>
+	
+<!-- 	保存审核结果 -->
+	<insert id="saveCheckRS" parameterType="pd" >
+		insert into 
+		<include refid="tableName"></include>
+			(
+		<include refid="Field"></include>
+			) values (
+		<include refid="FieldValue"></include>
+			)
+	</insert>
+	
+<!-- 	 查询审核结果 -->
+	<select id="selectCheckRsByNgroupnum" parameterType="page" resultType="pd">
+		select 
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>
+		where 
+		 <!-- 审核结果组号 -->  
+		ngroupnum = #{pd.ngroupnum} 
+	
+	</select>
+	
+	
+	<!--查询病人信息  -->
+<!-- 	<select id="OperationById" parameterType="page" resultType="pd"> -->
+<!-- 		select   -->
+<!-- 			<include refid="Field"></include> -->
+<!-- 		from  -->
+<!-- 			<include refid="tableName"></include> -->
+<!-- 		where  -->
+<!-- 			patient_id  = #{pd.patient_id} and visit_id = #{pd.visit_id} -->
+<!-- 		Order by operating_date -->
+<!-- 	</select> -->
+	
+
+</mapper>

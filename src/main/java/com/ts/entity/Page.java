@@ -20,6 +20,7 @@ public class Page {
 	private String pageStr;		//最终页面显示的底部翻页导航，详细见：getPageStr();
 	private PageData pd = new PageData();
 	private int windowType = 0;//此处非特殊需要勿变更此值
+	private int currentjztsFlag = 0;
 
 	//
 	public Page(){
@@ -121,7 +122,11 @@ public class Page {
 			
 			//换页函数
 			sb.append("function nextPage(page){");
-			sb.append(" top.jzts();");
+			if(currentjztsFlag == 0 ){
+				sb.append(" top.jzts();");	
+			}else{
+				sb.append(" showBG() ;"); 
+			}
 			sb.append("	if(true && document.forms[0]){\n");
 			sb.append("		var url = document.forms[0].getAttribute(\"action\");\n");
 			sb.append("		if(url.indexOf('?')>-1){url += \"&"+(entityOrField?"currentPage":"page.currentPage")+"=\";}\n");
@@ -257,5 +262,12 @@ public class Page {
 	public void setWindowType(int windowType) {
 		this.windowType = windowType;
 	}
-	
+
+	public int getCurrentjztsFlag() {
+		return currentjztsFlag;
+	}
+
+	public void setCurrentjztsFlag(int currentjztsFlag) {
+		this.currentjztsFlag = currentjztsFlag;
+	}
 }

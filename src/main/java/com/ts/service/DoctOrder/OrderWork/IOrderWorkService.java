@@ -10,6 +10,7 @@ import com.ts.util.PageData;
  * @author autumn
  *
  */
+
 public interface IOrderWorkService {
 
 	/**
@@ -25,7 +26,14 @@ public interface IOrderWorkService {
 	 * @param vid
 	 * @return
 	 */
-	public PageData findByPatient(String pid , String vid) throws Exception ;
+	public PageData findByPatient(Page page) throws Exception ;
+	/**
+	 *  添加  NGROUPNUM 关联
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public int updatePatVisitNgroupnum(PageData pd) throws Exception;
 	
 	/**
 	 * 查询患者点评结果信息
@@ -33,7 +41,7 @@ public interface IOrderWorkService {
 	 * @param vid
 	 * @return
 	 */
-	public PageData findByCheckResult(String pid,String vid) throws Exception ;
+	public List<PageData> findByCheckResultsByNgroupnum(Page page) throws Exception ;
 	
 	/**
 	 * 添加点评结果信息
@@ -62,13 +70,28 @@ public interface IOrderWorkService {
 	 * @param vid
 	 * @return
 	 */
-	public PageData orderList(String  pid, String vid) throws Exception ;
+	public List<PageData> orderList(Page page) throws Exception ;
 	
 	/**
 	 *  根据过滤条件查询患者医嘱信息
 	 * @param pd
 	 * @return
 	 */
-	public PageData orderWhereList(PageData pd) throws Exception ;
+	public List<PageData> orderWhereList(PageData pd) throws Exception ;
+	/**
+	 * 查询患者手术信息
+	 * @param pid
+	 * @param vid
+	 * @return
+	 */
+	public List<PageData> operationList(Page page) throws Exception ;
+	
+	/**
+	 * 审核类型字段表
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> selectRsTypeDict() throws Exception;
+	
 	
 }
