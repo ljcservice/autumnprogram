@@ -30,7 +30,7 @@ import com.hitzd.his.Beans.TPatientOrder;
 import com.hitzd.his.Utils.Config;
 import com.hitzd.his.Utils.DictCache;
 import com.hitzd.springBeanManager.SpringBeanUtil;
-import com.ts.service.IHisAuditor;
+import com.ts.service.pdss.IHisAuditor;
 
 /**
  * 事后审核定时程序

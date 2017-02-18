@@ -12,9 +12,12 @@ import com.ts.entity.pdss.peaas.Beans.TOperationDrug;
 import com.ts.entity.pdss.peaas.Beans.TOperationType;
 import com.ts.entity.pdss.peaas.Beans.TPrescPatMasterBean;
 import com.ts.entity.pdss.peaas.RSBeans.TPrescCheckRslt;
+import com.hitzd.his.Beans.TPatOperation;
+import com.hitzd.his.Beans.TPatVitalSigns;
+import com.hitzd.his.Beans.TPatientOrder;
 
 /**
- *  �������ӿ�
+ *  总体审查接口
  * @author Administrator
  *
  */
@@ -22,23 +25,23 @@ public interface IHisAuditor
 {
     
 //    /**
-//     * ���ﴦ���ͻ��Զ������
+//     * 门诊处方客户自定义审核
 //     * @return
 //     */
 //    public TDrugCustomSecurityRslt  OutpCustomCheck(String[] doctorInfo, String[] patientInfo, String[][] drugInfo, String[][] diagnosisInfo, String[][] sensitiveInfo, String[][] patSigns, String[] patOper);
 //    
 //    /**
-//     * סԺҽ���Զ���� 
+//     * 住院医嘱自定审核 
 //     * @return
 //     */
 //    public TDrugCustomSecurityRslt InpCustomCheck(String[] doctorInfo,String[] patientInfo, String[][] drugInfo,String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOper,String[][] antiDrug);
  
     /**
-     * ���������Ϣ 
+     * 返回体检信息 
      */
     public TPatVitalSigns[] getpatVsVisitSigns(String patID , String Visitid);
     /**
-     * ���ؼ�����Ϣ 
+     * 返回检验信息 
      * @param patid
      * @param visitid
      * @return
@@ -50,7 +53,7 @@ public interface IHisAuditor
     public TLabTest getpatLabTestDetail(String TestNO);
     
     /**
-     * ����������Ϣ 
+     * 返回手术信息 
      * @param patid
      * @param visitid
      * @return
@@ -58,29 +61,29 @@ public interface IHisAuditor
     public TPatOperation[] getPatVsVisitOperation(String patid , String visitid);
     
     /**
-     * ���� �������� 
+     * 返回 手术类型 
      * @param name
      * @return
      */
     public TOperationType[] getOperationTypes(String name);
     
     /**
-     * �������������µ�ҩƷ 
+     * 返回手术类型下的药品 
      * @param operationID
      * @return
      */
     public TOperationDrug[] getOperationDrugs(String operationID);
     
     /**
-     * ����Ȩ����ˣ������ڿ���ҩ
+     * 进行权限审核，类似于抗菌药
      * 
-     * @param PrescBeanInfo  ���Ҵ��롢������ơ�ҽ����롢ҽ����ơ�ְ�ƴ��롢ְ����ơ�����ҩƷ�롢����ҩƷ��ƣ�
+     * @param PrescBeanInfo  科室代码、科室名称、医生代码、医生名称、职称代码、职称名称、本地药品码、本地药品名称，
      * @return
      */
     public String[] DrugAuthorizationCheck(String[] PrescBeanInfo);
     
     /**
-     * ����ҩƷ���(ҽ��)
+     * 门诊药品审核(医生)
      * @param doctorInfo
      * @param patientInfo
      * @param drugInfo
@@ -93,7 +96,7 @@ public interface IHisAuditor
     public TPrescCheckRslt PrescCheckRs(String[] doctorInfo, String[] patientInfo, String[][] drugInfo, String[][] diagnosisInfo, String[][] sensitiveInfo, String[][] patSigns, String[] patOper);
     
     /**
-     * ���ز��˿������д�����Ϣ
+     * 返回病人开具所有处方信息
      * @param patient_id
      * @param back
      * @return
@@ -101,34 +104,34 @@ public interface IHisAuditor
     public TPrescPatMasterBean getUsePrescDetail(String patient_id,Integer SelDay, String[] back); 
     
     /**
-     * Ԥ����ҩ��¼���汣��
+     * 预防用药记录保存保存
      * @param PreveUseInfo
      */
     public void SavePreveUseDrug(String[][] PreveUseInfo);
     
     /**
-     * ������ҩ��Ϣ����
+     * 治疗用药信息保存
      * @param TreatUseInfo
      */
     public void SaveTreatUseDrug(String[][] TreatUseInfo);
     
     
 	/**
-	 *      * �������  ���� ��������  
-     * @param po (patient_id , visit_id ) ���� 
+	 *      * 所有审查  并且 保存其结果  
+     * @param po (patient_id , visit_id ) 参数 
 	 * @return
 	 */
     public TCheckResultCollection DrugSecurityCheckAllPO(TPatientOrder po);
 	/**
-	 * ʹ�� ����id ��סԺid ��� 
+	 * 使用 病人id 和住院id 审查 
 	 * @param patientID
 	 * @param visitID
-	 * @return ���� ���� ҩƷ���� �����Ϣ�ַ� 
+	 * @return 返回 带有 药品代码 审查信息字符串 
 	 */
 	public String[] DrugCheckRSByPatientIdAndVisitId(String patientID , String visitID,String parm);
 	
     /**
-     * ���󷵻� �ַ����� 
+     * 审查后返回 字符数组 
      * @param doctorInfo
      * @param patientInfo
      * @param drugInfo
@@ -141,7 +144,7 @@ public interface IHisAuditor
     public String[] DrugCheckRSInfo(String[] doctorInfo,String[] patientInfo, String[][] drugInfo,String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOper , String[][] antiDrug);
     
     /**
-     * ��ݵ�ҩƷ��ѯ�����
+     * 根据单药品查询审查结果
      * @param drugNoLoacl
      * @param recMainNo
      * @param recSubNo
@@ -150,13 +153,13 @@ public interface IHisAuditor
     public TCheckResultCollection getDrugSingleCheckRS(String drugNoLoacl , String recMainNo, String recSubNo);
     
     /**
-     * �º�������� 
+     * 事后审查所用 
      * @param po
      */
     public void DrugSecutityCheckAllPO(TPatientOrder po);
     
     /**
-     * �ַ���װҽ������
+     * 字符串组装医嘱对象
      * @param doctorInfo
      * @param patientInfo
      * @param drugInfo
@@ -167,7 +170,7 @@ public interface IHisAuditor
     public TCheckResultCollection DrugSecurityCheckAll(String[] doctorInfo, String[] patientInfo, String[][] drugInfo, String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOper, String[][] antiDrug);
 
     /**
-	 * ������ʹ�ÿ���ҩ��������ʾ
+	 * 超分线使用抗菌药物监测与提示
 
 	 * @param doctorInfo
 	 * @param patientInfo
@@ -179,7 +182,7 @@ public interface IHisAuditor
 	public TAntiDrugSecurityCheckResult antiDrugOverQuotaA(String[] doctorInfo,String[] diagnosis,String[] operInfo,String[] drugInfo,String[] patientInfo);
 	
 	/**
-	 * ���Ƴ̿���ҩ��ʹ�ü������ʾ
+	 * 超疗程抗菌药物使用监测与提示
 	 * @param doctorInfo
 	 * @param patientInfo
 	 * @param drugInfo
@@ -190,7 +193,7 @@ public interface IHisAuditor
 	public TAntiDrugSecurityCheckResult antiDrugOverTimeA(String[] doctorInfo,String[] diagnosis,String[] operInfo,String[] drugInfo,String[] patientInfo);
 	
 	/**
-	 * ����Ȩʹ�ÿ���ҩ��
+	 * 超授权使用抗菌药物
 	 * @param doctorInfo
 	 * @param patientInfo
 	 * @param drugInfo
@@ -201,7 +204,7 @@ public interface IHisAuditor
 	public TAntiDrugSecurityCheckResult antiDrugExcessAuthorizationA(String[] doctorInfo,String[] diagnosis,String[] operInfo,String[] drugInfo,String[] patientInfo);
 
 	/**
-	 * ��ʹ��ʱ��Ԥ��ʹ�ã�����ҩ��������ʾ
+	 * 超使用时机（预防使用）抗菌药物监测与提示
 	 * @param doctorInfo
 	 * @param diagnosis
 	 * @param operInfo
@@ -211,7 +214,7 @@ public interface IHisAuditor
 	public TAntiDrugSecurityCheckResult antiDrugOverMomentA(String[] doctorInfo,String[] diagnosis,String[] operInfo,String[] drugInfo,String[] patientInfo);
 	
 	/**
-	 * ����ҩ��ٷֱ���ҩ�������ʾ
+	 * 超耐药菌百分比用药监测与提示
 	 * @param doctorInfo
 	 * @param diagnosis
 	 * @param operInfo
@@ -222,7 +225,7 @@ public interface IHisAuditor
 	public TAntiDrugSecurityCheckResult antiDrugOverRateA(String[] doctorInfo, String[] diagnosis, String[] operInfo,	String[] drugInfo,String[] patientInfo);
 	
 	/**
-	 * �ܻ��ⷽ��
+	 * 总汇监测方法
 	 * @param doctorInfo
 	 * @param patientInfo
 	 * @param drugInfo
@@ -233,7 +236,7 @@ public interface IHisAuditor
 	public TAntiDrugSecurityResult AntiDrugSecurityCheckerA( String[] doctorInfo,String[] diagnosis,String[] operInfo,String[] drugInfo,String[] patientInfo);
 	
 	/**
-	 * ���� 
+	 * 手术 
 	 * @param doctorInfo
 	 * @param diagnosis
 	 * @param operInfo
@@ -244,7 +247,7 @@ public interface IHisAuditor
 	public TAntiDrugSecurityCheckResult antiDrugOperationA(String[] doctorInfo, String[] diagnosis, String[] operInfo,   String[] drugInfo,String[] patientInfo);
 	
 	/**
-	 * ����
+	 * 特殊
 	 * @param doctorInfo
 	 * @param diagnosis
 	 * @param operInfo
@@ -255,13 +258,13 @@ public interface IHisAuditor
 	public TAntiDrugSecurityCheckResult antiDrugSpecA(String[] doctorInfo, String[] diagnosis, String[] operInfo,   String[] drugInfo,String[] patientInfo);
 
 	 /**
-     * ȫ�ּ�麯�����һ���Լ�����еļ����Ŀ PatientOrder ҽ������
+     * 全局检查函数，可以一次性检查所有的检查项目 PatientOrder 医嘱对象
      * 
      * @return
      */
     public TDrugSecurityRslt DrugSecurityCheck(TPatientOrder po);
     /**
-     * �ַ���װҽ������
+     * 字符串组装医嘱对象
      * @param doctorInfo
      * @param patientInfo
      * @param drugInfo
@@ -272,33 +275,33 @@ public interface IHisAuditor
     public TDrugSecurityRslt DrugSecurityCheckS(String[] doctorInfo, String[] patientInfo, String[][] drugInfo, String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation);
 
     /**
-     * ������Ϣ
+     * 互动信息
      * 
      * @param Drugs
      * @return
      */
     public TDrugSecurityRslt DrugInteractionCheck(TPatientOrder po );
     /**
-     *  ������Ϣ
+     *  互动信息
      */
     public TDrugSecurityRslt DrugInteractionCheckS(String[] Drugs);
     public TDrugSecurityRslt DrugInteractionCheckA(String[] doctorInfo, String[] patientInfo, String[][] drugInfo, String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation);
 
     /**
-     * ������Ϣ
+     * 配伍信息
      * 
      * @param po
      * @return
      */
     public TDrugSecurityRslt DrugIvEffectCheck(TPatientOrder po);
     /** 
-     * ����
+     * 配伍
      */
     public TDrugSecurityRslt DrugIvEffectCheckS(String[] DrugIds, String[] RecMainIds, String[] AdministrationIds);
     public TDrugSecurityRslt DrugIvEffectCheckA(String[] doctorInfo, String[] patientInfo, String[][] drugInfo, String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation);
 
     /**
-     * ���֢���
+     * 禁忌症审查
      * 
      * @param drugs
      * @param diagnosis
@@ -306,7 +309,7 @@ public interface IHisAuditor
      */
     public TDrugSecurityRslt DrugDiagCheck(TPatientOrder po);
     /**
-     * ���֢���
+     * 禁忌症审查
      * 
      * @param drugs
      * @param diagnosis
@@ -315,66 +318,66 @@ public interface IHisAuditor
     public TDrugSecurityRslt DrugDiagCheckS(String[] drugs, String[] diagnosis);
     public TDrugSecurityRslt DrugDiagCheckA(String[] doctorInfo, String[] patientInfo, String[][] drugInfo, String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation);
     /**
-     * ������Ⱥ
+     * 特殊人群
      * 
      * @param po
      * @return
      */
     public TDrugSecurityRslt DrugSpecPeopleCheck(TPatientOrder po);
     /**
-     *  ������Ⱥ
+     *  特殊人群
      */
     public TDrugSecurityRslt DrugSpecPeopleCheckS(String[] DrugIds, String BirthDay, String patType, String isLiverWhole, String isKidneyWhole);
     public TDrugSecurityRslt DrugSpecPeopleCheckA(String[] doctorInfo, String[] patientInfo, String[][] drugInfo, String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation);
 
     /**
-     * �ظ��ɷ���
+     * 重复成份审
      * 
      * @param po
      * @return
      */
     public TDrugSecurityRslt DrugIngredientCheck(TPatientOrder po);
     /** 
-     * �ظ���ҩ
+     * 重复用药
      */
     public TDrugSecurityRslt DrugIngredientCheckS(String[] DrugIds);
     public TDrugSecurityRslt DrugIngredientCheckA(String[] doctorInfo, String[] patientInfo, String[][] drugInfo, String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation);
 
     /**
-     * ��ҩ;�����
+     * 用药途径审查
      * 
      * @param po
      * @return
      */
     public TDrugSecurityRslt DrugAdministrationCheck(TPatientOrder po);
     /** 
-     * ҩƷ��ҩ;�������
+     * 药品给药途径审查结果
      */
     public TDrugSecurityRslt DrugAdministrationCheckS(String[] DrugIds, String[] AdminIds);
     public TDrugSecurityRslt DrugAdministrationCheckA(String[] doctorInfo, String[] patientInfo, String[][] drugInfo, String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation);
 
     /**
-     * ����ҩ�����
+     * 过敏药物审查
      * 
      * @param po
      * @return
      */
     public TDrugSecurityRslt DrugAllergenCheck(TPatientOrder po);
     /**
-     * ҩ��������
+     * 药物过敏审查
      */
     public TDrugSecurityRslt DrugAllergenCheckS(String[] DrugIds, String[] SensitIds);
     public TDrugSecurityRslt DrugAllergenCheckA(String[] doctorInfo, String[] patientInfo, String[][] drugInfo, String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation);
 
     /**
-     * ҩ��������
+     * 药物剂量审查
      * 
      * @param po
      * @return
      */
     public TDrugSecurityRslt DrugDosageCheck(TPatientOrder po);
     /** 
-     * ҩ����������
+     * 药物剂量审查结果
      */
     public TDrugSecurityRslt DrugDosageCheckS(String[] DrugIds, String[] Dosages, String[] PerformFreqDictIds, 
             String[] StartDates, String[] StopDates, 
@@ -382,20 +385,20 @@ public interface IHisAuditor
     public TDrugSecurityRslt DrugDosageCheckA(String[] doctorInfo, String[] patientInfo, String[][] drugInfo, String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation);
 
     /**
-     * �쳣�ź����
+     * 异常信号审查
      * 
      * @param po
      * @return
      */
     public TDrugSecurityRslt DrugSideCheck(TPatientOrder po);
     /** 
-     * �쳣�ź������ ���˲�����Ӧ
+     * 异常信号审查子 病人不良反应
      */
     public TDrugSecurityRslt DrugSideCheckS(String[] DrugIds, String[] AdminIds, String[] SensitIds);
     public TDrugSecurityRslt DrugSideCheckA(String[] doctorInfo, String[] patientInfo, String[][] drugInfo, String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation);
     
     /**
-     * ҽ�����
+     * 医保审查
      * @param po
      * @return
      */
@@ -404,9 +407,9 @@ public interface IHisAuditor
     public TDrugSecurityRslt MedicareCheckerA(String[] doctorInfo, String[] patientInfo, String[][] drugInfo, String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation);
     
 	/**
-	 * ��ȡ��˺͵Ǽǿ���
-	 * @param DrugDoctorInfo ҩƷ���롢��ơ����͡���񡢳��ҡ���������ҩ;����ҽ������ְ�ơ����Ҵ���
-	 * @return ��ˡ��Ǽǿ���
+	 * 获取审核和登记开关
+	 * @param DrugDoctorInfo 药品代码、名称、剂型、规格、厂家、数量、给药途径、医生姓名、职称、科室代码
+	 * @return 审核、登记开关
 	 */
 	public String[] getAntiDrugCheckRule(String[] DrugDoctorInfo);
 }

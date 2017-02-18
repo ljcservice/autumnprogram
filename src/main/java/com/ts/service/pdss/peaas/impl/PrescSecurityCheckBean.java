@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.hitzd.his.Beans.TPatOrderDrug;
 import com.hitzd.his.Beans.TPatientOrder;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
 import com.ts.entity.pdss.peaas.Beans.TOperationDrug;
@@ -60,7 +61,7 @@ public class PrescSecurityCheckBean implements IPrescSecurityChecker
         TPrescSecurityRslt psr = new TPrescSecurityRslt();
         TDrugSecurityRslt dsr = new TDrugSecurityRslt();
         /* 相互作用检查 */
-        this.drugInteractionCheckerBean.Check(po).CopyInteractionCheckResultTo(dsr);
+        this.drugInteractionCheckerBean.Check(po.getPatOrderDrugs()).CopyInteractionCheckResultTo(dsr);
         /* 禁忌症审查 */
         this.drugDiagCheckerBean.Check(po).CopyDrugDiagInfoRsltTo(dsr);
         /* 配伍审查 */

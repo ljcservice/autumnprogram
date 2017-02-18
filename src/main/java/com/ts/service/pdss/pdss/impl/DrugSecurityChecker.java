@@ -41,9 +41,9 @@ public class DrugSecurityChecker implements IDrugSecurityChecker
     /* 相互作用检查 */
     @Resource(name = "drugInteractionCheckerBean")
     private IDrugInteractionChecker drugInteractionCheckerBean;
-    public TDrugSecurityRslt DrugInteractionCheck(TPatientOrder po)
+    public TDrugSecurityRslt DrugInteractionCheck(TPatOrderDrug[] pods)
     {
-        return drugInteractionCheckerBean.Check(po);
+        return drugInteractionCheckerBean.Check( pods);
     }
     public TDrugSecurityRslt DrugInteractionCheckS(String[] Drugs)
     {
@@ -277,7 +277,7 @@ public class DrugSecurityChecker implements IDrugSecurityChecker
         TDrugSecurityRslt dsr = new TDrugSecurityRslt();
         /* 相互作用检查 */
         long xx = System.currentTimeMillis();
-        this.drugInteractionCheckerBean.Check(po).CopyInteractionCheckResultTo(dsr);
+        this.drugInteractionCheckerBean.Check(po.getPatOrderDrugs()).CopyInteractionCheckResultTo(dsr);
         System.out.println("互动信息:" + (System.currentTimeMillis() - xx));
         /* 配伍审查 */
         xx = System.currentTimeMillis();
@@ -462,7 +462,7 @@ public class DrugSecurityChecker implements IDrugSecurityChecker
             String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation)
     {
     	TPatientOrder      po = CommonUtils.getPatientOrder(doctorInfo, patientInfo, drugInfo, diagnosisInfo, sensitiveInfo, patSigns,patOperation);
-    	TDrugSecurityRslt dsr = this.drugInteractionCheckerBean.Check(po);
+    	TDrugSecurityRslt dsr = this.drugInteractionCheckerBean.Check(po.getPatOrderDrugs());
     	this.patientSavaBean.savePatientCheckInfo(po, dsr);
     	this.patientSavaBean.saveDrugInteractionCheckInfo(dsr);
     	return dsr;

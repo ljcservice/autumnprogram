@@ -850,7 +850,7 @@ public class HisAuditor implements IHisAuditor
     /* 相互作用检查 */
     public TDrugSecurityRslt DrugInteractionCheck(TPatientOrder po)
     {
-        return drugsecuity.DrugInteractionCheck(po);
+        return drugsecuity.DrugInteractionCheck(po.getPatOrderDrugs());
     }
     
     public TDrugSecurityRslt DrugInteractionCheckS(String[] Drugs)
@@ -1163,7 +1163,7 @@ public class HisAuditor implements IHisAuditor
             String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation)
     {
     	TPatientOrder      po = CommonUtils.getPatientOrder(doctorInfo, patientInfo, drugInfo, diagnosisInfo, sensitiveInfo, patSigns,patOperation);
-    	TDrugSecurityRslt dsr = drugsecuity.DrugInteractionCheck(po);
+    	TDrugSecurityRslt dsr = drugsecuity.DrugInteractionCheck(po.getPatOrderDrugs());
     	this.patientSavaBean.savePatientCheckInfo(po, dsr);
     	this.patientSavaBean.saveDrugInteractionCheckInfo(dsr);
     	return dsr;

@@ -35,7 +35,7 @@ public class DrugInteractionCheckerBean extends Persistent4DB implements  IDrugI
      * 
      */
     @Override
-    public TDrugSecurityRslt Check(TPatientOrder po)
+    public TDrugSecurityRslt Check(TPatOrderDrug[] pods)
     {
     	try
     	{
@@ -44,7 +44,7 @@ public class DrugInteractionCheckerBean extends Persistent4DB implements  IDrugI
             /* 药品组合情况*/
             TDrugSecurityRslt dsr = new TDrugSecurityRslt() ;
             /* 查找drugs 中的所有要药品*/
-            TPatOrderDrug[] pods = po.getPatOrderDrugs();
+//            TPatOrderDrug[] pods = po.getPatOrderDrugs();
             // 通过map过滤掉重复的药品码
             Map<String, TDrug> drugs  = QueryUtils.queryDrug(pods, null, query);
             TDrug[] arrDrugs = drugs.values().toArray(new TDrug[0]);

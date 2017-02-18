@@ -1,5 +1,6 @@
 package com.ts.service.pdss.pdss.manager;
 
+import com.hitzd.his.Beans.TPatOrderDrug;
 import com.hitzd.his.Beans.TPatientOrder;
 import com.ts.entity.pdss.pdss.Beans.TDrug;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
@@ -28,7 +29,7 @@ public interface IDrugSecurityChecker
      * @param Drugs
      * @return
      */
-    public TDrugSecurityRslt DrugInteractionCheck(TPatientOrder po );
+    public TDrugSecurityRslt DrugInteractionCheck(TPatOrderDrug[] pods);
     /**
      *  互动信息
      */
