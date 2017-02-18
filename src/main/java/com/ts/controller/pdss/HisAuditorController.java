@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.hitzd.DBUtils.TCommonRecord;
+import com.hitzd.DBUtils.TCommonRecord; 
 import com.hitzd.his.Beans.TLabTest;
 import com.hitzd.his.Beans.TPatOperation;
 import com.hitzd.his.Beans.TPatOrderDiagnosis;
@@ -42,7 +42,7 @@ import com.ts.entity.pdss.peaas.Beans.TOperationType;
 import com.ts.entity.pdss.peaas.Beans.TPrescPatMasterBean;
 import com.ts.entity.pdss.peaas.RSBeans.TPrescCheckRslt;
 import com.ts.entity.pdss.peaas.RSBeans.TPrescSecurityRslt;
-import com.ts.service.IHisGetPatientOrders;
+import com.ts.service.pdss.IHisGetPatientOrders;
 import com.ts.service.pdss.ias.manager.IAntiDrugAuditor;
 import com.ts.service.pdss.ias.manager.IAntiDrugSecurityChecker;
 import com.ts.service.pdss.pdss.Utils.CommonUtils;
@@ -855,8 +855,8 @@ public class HisAuditorController extends BaseController {
 	}
     
     /* 相互作用检查 */
-	@RequestMapping(value="/patVsVisitSigns")
-	@ResponseBody
+//	@RequestMapping(value="/patVsVisitSigns")
+//	@ResponseBody
     public TDrugSecurityRslt drugInteractionCheck(TPatientOrder po)
     {
         return drugsecuity.DrugInteractionCheck(po);

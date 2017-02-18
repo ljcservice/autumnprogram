@@ -31,8 +31,8 @@ import com.hitzd.his.casehistory.helper.CaseHistoryFunction;
 import com.hitzd.his.casehistory.helper.CaseHistoryHelperUtils;
 import com.hitzd.his.casehistory.helper.ICaseHistoryHelper;
 import com.hitzd.springBeanManager.SpringBeanUtil;
-import com.ts.service.IReviewResultServ;
-import com.ts.service.ReviewResultBean;
+import com.ts.service.pdss.IReviewResultServ;
+import com.ts.service.pdss.ReviewResultBean;
 import com.ts.service.pdss.peaas.manager.IPrescReviewChecker;
 
 /**

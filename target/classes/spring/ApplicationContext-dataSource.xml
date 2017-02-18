@@ -138,42 +138,42 @@
  
  
  
-	<!-- ====================数据源 3 ai 使用==================== -->
+	<!-- ====================数据源 3 Pdss 使用==================== -->
 	
-	<bean id="sqlSessionTemplate_ai" class="org.mybatis.spring.SqlSessionTemplate">
-		<constructor-arg ref="sqlSessionFactory_ai" />
+	<bean id="sqlSessionTemplate_Pdss" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactory_Pdss" />
 	</bean>
-	<bean id="sqlSessionFactory_ai" class="org.mybatis.spring.SqlSessionFactoryBean">
-    	<property name="dataSource" ref="dataSource_ai" />
-        <property name="configLocation" value="classpath:mybatisAi/mybatis-config.xml"></property>
-        <property name="mapperLocations" value="classpath:mybatisAi/*/*.xml"></property>
+	<bean id="sqlSessionFactory_Pdss" class="org.mybatis.spring.SqlSessionFactoryBean">
+    	<property name="dataSource" ref="dataSource_Pdss" />
+        <property name="configLocation" value="classpath:mybatisPdss/mybatis-config.xml"></property>
+        <property name="mapperLocations" value="classpath:mybatisPdss/*/*.xml"></property>
     </bean>
-	<bean id="dataSource_ai" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">  
-         <property name="url" value="${url_ai}" />  
-         <property name="username" value="${username_ai}" />  
-         <property name="password" value="${password_ai}" />  
-         <property name="driverClassName" value="${driverClassName_ai}" />  
-         <property name="filters" value="${filters_ai}" />  
-         <property name="maxActive" value="${maxActive_ai}" />
-         <property name="initialSize" value="${initialSize_ai}" />
-         <property name="maxWait" value="${maxWait_ai}" />
-         <property name="minIdle" value="${minIdle_ai}" />  
-         <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis_ai}" />
-         <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis_ai}" />  
-         <property name="validationQuery" value="${validationQuery_ai}" />  
-         <property name="testWhileIdle" value="${testWhileIdle_ai}" />  
-         <property name="testOnBorrow" value="${testOnBorrow_ai}" />  
-         <property name="testOnReturn" value="${testOnReturn_ai}" />  
-         <property name="maxOpenPreparedStatements" value="${maxOpenPreparedStatements_ai}" />
-         <property name="removeAbandoned" value="${removeAbandoned_ai}" />
-         <property name="removeAbandonedTimeout" value="${removeAbandonedTimeout_ai}" />
-         <property name="logAbandoned" value="${logAbandoned_ai}" />
+	<bean id="dataSource_Pdss" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">  
+         <property name="url" value="${url_Pdss}" />  
+         <property name="username" value="${username_Pdss}" />  
+         <property name="password" value="${password_Pdss}" />  
+         <property name="driverClassName" value="${driverClassName_Pdss}" />  
+         <property name="filters" value="${filters_Pdss}" />  
+         <property name="maxActive" value="${maxActive_Pdss}" />
+         <property name="initialSize" value="${initialSize_Pdss}" />
+         <property name="maxWait" value="${maxWait_Pdss}" />
+         <property name="minIdle" value="${minIdle_Pdss}" />  
+         <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis_Pdss}" />
+         <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis_Pdss}" />  
+         <property name="validationQuery" value="${validationQuery_Pdss}" />  
+         <property name="testWhileIdle" value="${testWhileIdle_Pdss}" />  
+         <property name="testOnBorrow" value="${testOnBorrow_Pdss}" />  
+         <property name="testOnReturn" value="${testOnReturn_Pdss}" />  
+         <property name="maxOpenPreparedStatements" value="${maxOpenPreparedStatements_Pdss}" />
+         <property name="removeAbandoned" value="${removeAbandoned_Pdss}" />
+         <property name="removeAbandonedTimeout" value="${removeAbandonedTimeout_Pdss}" />
+         <property name="logAbandoned" value="${logAbandoned_Pdss}" />
 	</bean>  
 	<aop:config>
-		<aop:pointcut id="pc_ai" expression="execution(* com.ts.service..*(..))" />
-		<aop:advisor pointcut-ref="pc_ai" advice-ref="txAdvice_ai" />
+		<aop:pointcut id="pc_Pdss" expression="execution(* com.ts.service..*(..))" />
+		<aop:advisor pointcut-ref="pc_Pdss" advice-ref="txAdvice_Pdss" />
 	</aop:config>
-	<tx:advice id="txAdvice_ai" transaction-manager="transactionManager_ai">
+	<tx:advice id="txAdvice_Pdss" transaction-manager="transactionManager_Pdss">
 		<tx:attributes>
 			<tx:method name="delete*" propagation="REQUIRED" read-only="false" 
 			           rollback-for="java.lang.Exception"/>
@@ -185,8 +185,8 @@
 			           rollback-for="java.lang.Exception" />
 		</tx:attributes>
 	</tx:advice>
-	<bean name="transactionManager_ai" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">   
-    	<property name="dataSource" ref="dataSource_ai"></property>
+	<bean name="transactionManager_Pdss" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">   
+    	<property name="dataSource" ref="dataSource_Pdss"></property>
  	</bean>
  
  	

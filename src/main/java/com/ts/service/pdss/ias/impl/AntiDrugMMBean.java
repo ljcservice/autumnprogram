@@ -37,7 +37,7 @@ import com.ts.util.PageData;
  */
 @Service
 public class AntiDrugMMBean extends Persistent4DB implements IAntiDrugMM{
-	@Resource(name = "daoSupportPdss")
+	@Resource(name = "daoSupport_Pdss")
 	public DaoSupportPdss dao;
 	
 	

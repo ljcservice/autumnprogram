@@ -45,7 +45,7 @@ import net.sf.json.JSONObject;
 @Service("importLogService")
 public class ImportLogService implements ImportLogManager{
 
-	@Resource(name = "sqlSessionTemplate_ai")
+	@Resource(name = "sqlSessionTemplate_Pdss")
 	private SqlSessionTemplate sqlSessionTemplate;
 	
 	@Resource(name = "daoSupportAi")

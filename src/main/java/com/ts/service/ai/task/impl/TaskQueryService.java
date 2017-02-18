@@ -50,7 +50,7 @@ import com.ts.util.ontology.OsynConst;
 @Service("taskQueryService")
 public class TaskQueryService implements TaskQueryManager{
 
-	@Resource(name = "sqlSessionTemplate_ai")
+	@Resource(name = "sqlSessionTemplate_Pdss")
 	private SqlSessionTemplate sqlSessionTemplate;
 	
 	@Resource(name = "daoSupportAi")
