@@ -1,4 +1,4 @@
-package com.ts.service;
+package com.ts.service.pdss;
 
 import com.hitzd.his.Beans.TLabTest;
 import com.hitzd.his.Beans.TPatOperation;

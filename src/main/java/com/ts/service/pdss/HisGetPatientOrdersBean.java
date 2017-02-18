@@ -1,4 +1,4 @@
-package com.ts.service;
+package com.ts.service.pdss;
 
 import java.sql.ResultSet;
 
