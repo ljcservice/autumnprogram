@@ -860,13 +860,17 @@ public class HisAuditorController extends BaseController {
 	}
     
     /* 相互作用检查 */
+    /**
+     * @param param
+     * @return
+     */
 	@RequestMapping(value="/patVsVisitSigns")
 	@ResponseBody
     public String drugInteractionCheck(String param)
     {
 		TDrugSecurityRslt t =null;
 		try {
-			TPatOrderDrug[]	pods = (TPatOrderDrug[])getObject(param,TPatOrderDrug.class,1);
+			TPatOrderDrug[]	pods = (TPatOrderDrug[])getObject(param,TPatOrderDrug.class,2);
 			t = drugsecuity.DrugInteractionCheck( pods);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -878,13 +882,13 @@ public class HisAuditorController extends BaseController {
 	 * 
 	 * @param param
 	 * @param class1
-	 * @param type 0返回类型为单个本体，1为返回数组
+	 * @param type 1返回类型为单个本体，2为返回数组
 	 * @return
 	 * @throws Exception
 	 */
     private Object getObject(String param, Class class1,int type) throws Exception {
     	Field[] fs =class1.getDeclaredFields();
-    	if(type==0){
+    	if(type==1){
     		Object result = class1.newInstance();
     		JSONObject obj = JSONObject.fromObject(param);
     		for(Object o : obj.keySet()){
@@ -900,7 +904,7 @@ public class HisAuditorController extends BaseController {
     			}
     		}
     		return result;
-    	}else if(type==1){
+    	}else if(type==2){
     		List<Object> s = new ArrayList<Object>();
     		JSONArray arrys = JSONArray.fromObject(param);
 			for(int i=0;i<arrys.size();i++){
@@ -963,36 +967,38 @@ public class HisAuditorController extends BaseController {
 	    return obj;
 	}
 
-	public TDrugSecurityRslt DrugInteractionCheckS(String[] Drugs)
+	@RequestMapping(value="/patVsVisitSigns")
+	@ResponseBody
+	public String DrugInteractionCheckS(@RequestParam String param)
     {
-        return drugsecuity.DrugInteractionCheckS(Drugs);
+		JSONArray o = JSONArray.fromObject(param);
+		List<String> ids = (List<String>) JSONArray.toCollection(o, String.class);
+		TDrugSecurityRslt t = drugsecuity.DrugInteractionCheckS(ids);
+		return t==null?null:JSONObject.fromObject(t).toString();
     }
 
-    /* 配伍审查 */
-    public TDrugSecurityRslt DrugIvEffectCheck(TPatientOrder po)
+	/**
+	 * 底层实现没有写，旧借口就没有写
+	 * @param param
+	 * @return
+	 */
+	@RequestMapping(value="/patVsVisitSigns")
+	@ResponseBody
+    public String DrugIvEffectCheckS(@RequestParam String param)
     {
-        TPatOrderDrug[] pods = po.getPatOrderDrugs();
-        String[] DrugIds = new String[pods.length];
-        String[] RecMainIds = new String[pods.length];
-        String[] AdminIds = new String[pods.length];
-        for (int i = 0; i < pods.length; i++)
-        {
-        	TPatOrderDrug drug = pods[i];
-        	DrugIds[i] = drug.getDrugID();
-        	RecMainIds[i] = drug.getRecMainNo();
-        	AdminIds[i] = drug.getAdministrationID();
-        }
-        return DrugIvEffectCheckS(DrugIds, RecMainIds, AdminIds);
-    }
-
-    public TDrugSecurityRslt DrugIvEffectCheckS(String[] DrugIds, String[] RecMainIds, String[] AdministrationIds)
-    {
-    	return drugsecuity.DrugIvEffectCheckS(DrugIds, RecMainIds, AdministrationIds);
+		//旧借口参数String[] DrugIds, String[] RecMainIds, String[] AdministrationIds
+		JSONObject obj = JSONObject.fromObject(param);
+		String[] DrugIds = (String[]) obj.getJSONArray("drugIds").toArray();
+		 String[] RecMainIds = (String[]) obj.getJSONArray("recMainIds").toArray();
+		 String[] AdministrationIds = (String[]) obj.getJSONArray("administrationIds").toArray();
+    	TDrugSecurityRslt t = drugsecuity.DrugIvEffectCheckS(DrugIds, RecMainIds, AdministrationIds);
+    	return t==null?null:JSONObject.fromObject(t).toString();
     }
     
     /* 禁忌症审查 */
-    public TDrugSecurityRslt DrugDiagCheck(TPatientOrder po)
+    public TDrugSecurityRslt DrugDiagCheck()
     {
+    	TPatientOrder po = new TPatientOrder();
         return drugsecuity.DrugDiagCheck(po);
     }
     public TDrugSecurityRslt DrugDiagCheckS(String[] drugs, String[] diagnosis)
@@ -1135,6 +1141,32 @@ public class HisAuditorController extends BaseController {
     public TDrugSecurityRslt DrugSideCheckS(String[] DrugIds, String[] AdminIds, String[] SensitIds)
     {
     	return drugsecuity.DrugSideCheckS(DrugIds, AdminIds, SensitIds);
+    }
+    
+    /* 配伍审查 */
+    /**
+     * 子接口没有实现，所以此处暂时不写了
+     * @param po
+     * @return
+     */
+	@RequestMapping(value="/drugIvEffectCheck")
+	@ResponseBody
+	@Deprecated
+    public String drugIvEffectCheck(@RequestParam TPatientOrder po)
+    {
+        TPatOrderDrug[] pods = po.getPatOrderDrugs();
+        String[] DrugIds = new String[pods.length];
+        String[] RecMainIds = new String[pods.length];
+        String[] AdminIds = new String[pods.length];
+        for (int i = 0; i < pods.length; i++)
+        {
+        	TPatOrderDrug drug = pods[i];
+        	DrugIds[i] = drug.getDrugID();
+        	RecMainIds[i] = drug.getRecMainNo();
+        	AdminIds[i] = drug.getAdministrationID();
+        }
+    	TDrugSecurityRslt t = drugsecuity.DrugIvEffectCheckS(DrugIds, RecMainIds, AdminIds);
+    	return t==null?null:JSONObject.fromObject(t).toString();
     }
     
     /* 相互作用检查 */
@@ -1326,26 +1358,55 @@ public class HisAuditorController extends BaseController {
 		return antiDrugAuditorBean.getAntiDrugCheckRule(DrugDoctorInfo);
 	}
 	public static void main(String[] args) {
-			Integer[] s =new Integer[]{1,-33,2,4,3,3,5,666,77};
-			JSONArray j=JSONArray.fromObject(s);
-			System.out.println(j.toString());
-			
-			TPatVitalSigns p1 = new TPatVitalSigns();
-			p1.setPatid("1111");
-			p1.setBloodLow("1");
-			TPatVitalSigns p2 = new TPatVitalSigns();
-			p2.setPatid("2222");
-			p2.setBloodLow("222222");
-			TPatVitalSigns[] dd =new TPatVitalSigns[]{p1,p2};
-			JSONArray w=JSONArray.fromObject(dd);
-			System.out.println(w.toString());
-			
-			try {
-				new HisAuditorController().getObject(w.toString(), TPatVitalSigns.class, 1);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+//			Integer[] s =new Integer[]{1,-33,2,4,3,3,5,666,77};
+//			JSONArray j=JSONArray.fromObject(s);
+//			System.out.println(j.toString());
+//			
+//			TPatVitalSigns p1 = new TPatVitalSigns();
+//			p1.setPatid("1111");
+//			p1.setBloodLow("1");
+//			TPatVitalSigns p2 = new TPatVitalSigns();
+//			p2.setPatid("2222");
+//			p2.setBloodLow("222222");
+//			TPatVitalSigns[] dd =new TPatVitalSigns[]{p1,p2};
+//			JSONArray w=JSONArray.fromObject(dd);
+//			System.out.println(w.toString());
+//			
+//			try {
+//				new HisAuditorController().getObject(w.toString(), TPatVitalSigns.class, 1);
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+			boolean s=true;
+			for(int i = 1;s;i++){
+				if(i%2!=1){
+					continue;
+				}
+				if(i%3!=0){
+					continue;
+				}
+				if(i%4!=1){
+					continue;
+				}
+				if(i%5!=4){
+					continue;
+				}
+				if(i%6!=3){
+					continue;
+				}
+				if(i%7!=5){
+					continue;
+				}
+				if(i%8!=1){
+					continue;
+				}
+				if(i%9!=0){
+					continue;
+				}
+				s = false;
+				System.out.println("答案就是："+i);
 			}
-			
+		
 	}
 }
