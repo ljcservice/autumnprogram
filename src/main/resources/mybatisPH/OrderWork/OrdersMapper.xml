@@ -104,18 +104,21 @@
 	
 	
 	<!--查询病人信息  -->
-	<select id="OrdersByIdlistPage" parameterType="pd" resultType="pd">
+	<select id="OrdersByIdlistPage" parameterType="page" resultType="pd">
 		select  
 			<include refid="Field"></include>
 		from 
 			<include refid="tableName"></include>
 		where 
-			patient_id  = #{patient_id} and visit_id = #{visit_id}
+			patient_id  = #{pd.patient_id} and visit_id = #{pd.visit_id}
 			
-		<if test="REPEAT_INDICATOR != null and REPEAT_INDICATOR != ''"> <!-- 医嘱标示 1 长期 0 临时-->  
-			and REPEAT_INDICATOR = #{REPEAT_INDICATOR} 
+		<if test="pd.REPEAT_INDICATOR != null and pd.REPEAT_INDICATOR != ''"> <!-- 医嘱标示 1 长期 0 临时-->  
+			and REPEAT_INDICATOR = #{pd.REPEAT_INDICATOR} 
 		</if>
-		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+		<if test="pd.order_class != null and pd.order_class != '' ">
+			and order_class = #{pd.order_class}
+		</if>
+		<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
 			and discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
 		</if>
 

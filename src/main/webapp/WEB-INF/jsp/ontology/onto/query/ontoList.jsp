@@ -271,6 +271,6 @@
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<!--本体查询列表js-->
-	<script type="text/javascript" src="static/js/ontology/query.js?v=2016086"></script>
+<!-- 	<script type="text/javascript" src="static/js/ontology/query.js?v=2016086"></script> -->
 	</body>
 </html>

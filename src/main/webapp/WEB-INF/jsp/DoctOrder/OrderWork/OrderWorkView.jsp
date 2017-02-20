@@ -102,7 +102,7 @@
 									<th class="center"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>出院时间</th>
 									<th class="center">点评</th>
 									<th class="center">合理</th>
-									<th class="center" style="width:200px;">结果</th>
+									<th class="center" style="width:260px;">结果</th>
 								</tr>
 							</thead>
 													
@@ -115,15 +115,33 @@
 												
 										<tr>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
-											<td class="center"> <a onclick="javascript:viewDetail('${patVisit.PATIENT_ID}','${patVisit.VISIT_ID}')" style="cursor:pointer;">${patVisit.PATIENT_ID}(${patVisit.VISIT_ID})</a> </td>
-											<td class="center">${patVisit.USER_NO }</td>
+											<td class="center"> <a onclick="javascript:viewDetail('${patVisit.PATIENT_ID}','${patVisit.VISIT_ID}','${patVisit.ngroupnum}')" style="cursor:pointer;">${patVisit.PATIENT_ID}(${patVisit.VISIT_ID})</a> </td>
+											<td class="center">${patVisit.NAME }</td>
 											<td class="center">${patVisit.in_dept_name }</td>
 											<td class="center"><fmt:formatDate value="${patVisit.admission_date_time }" pattern="yyyy-MM-dd"/> </td>
 											<td class="center"> ${patVisit.out_dept_name }</td>
-											<td class="center"><fmt:formatDate value="${patVisit.discharge_date_time}" pattern="yyyy-MM-dd"/> </td>
-											<td class="center">是</td>
+											<td class="center"><fmt:formatDate value="${patVisit.discharge_date_time}" pattern="yyyy-MM-dd"/> </td> 
+											<td class="center">
+												<c:choose>
+													<c:when test="${patVisit.ISORDERCHECK == 1 }">
+													是
+													</c:when>
+													<c:otherwise>
+													否
+													</c:otherwise>
+												</c:choose>
+											</td>
 											<td style="width: 60px;" class="center">
-												否
+												
+												<c:choose>
+													<c:when test="${patVisit.ISCHECKTRUE == 0 }">
+													否
+													</c:when>
+													<c:otherwise>
+													是
+													</c:otherwise>
+												</c:choose>
+												
 <%-- 												<c:if test="${user.STATUS == '0' }"><span class="label label-success arrowed">正常</span></c:if> --%>
 <%-- 												<c:if test="${user.STATUS == '1' }"><span class="label label-important arrowed-in">冻结</span></c:if> --%>
 											</td>
@@ -141,14 +159,21 @@
 													<a class="btn btn-xs btn-danger"  title="重复用药" onclick="editRoles('${user.USER_ID }');">
 														重
 													</a>
+													<a class="btn btn-xs btn-grey"  title="不良反应" onclick="editRoles('${user.USER_ID }');">
+														反
+													</a>
 													<a class="btn btn-xs btn-info"  title="用法" onclick="editRoles('${user.USER_ID }');">
 														法
 													</a>
-													<a class="btn btn-xs "  title="用量" onclick="editRoles('${user.USER_ID }');">
+													<a class="btn btn-xs btn-pink "  title="用量" onclick="editRoles('${user.USER_ID }');">
 														量
 													</a>
-													<a class="btn btn-xs "  title="特使人群" onclick="editRoles('${user.USER_ID }');">
+													<a class="btn btn-xs btn-yellow"  title="特使人群" onclick="editRoles('${user.USER_ID }');">
 														特
+													</a>
+												
+													<a class="btn btn-xs"  title="医院管理" onclick="editRoles('${user.USER_ID }');">
+														管
 													</a>
 												
 <!-- 														<span class="btn btn-sm" data-rel="tooltip" title="Default">Default</span> -->
@@ -280,15 +305,17 @@ function searchs(){
 	
 }
 
-function viewDetail(patId , visitId){
+function viewDetail(patId , visitId,ngnum){
 	top.jzts();
 	var diag = new top.Dialog();
 	diag.Drag=true;
 	diag.Title ="医嘱点评";
-	diag.URL = "<%=path%>/DoctOrder/OrderWorkDetailUI.do?patId=" + patId + "&visitId=" + visitId;  
+	diag.URL = "<%=path%>/DoctOrder/OrderWorkDetailUI.do?patient_id=" + patId + "&visit_Id=" + visitId + "&ngroupnum=" + ngnum;    
 	diag.Width = 1000;//window.screen.width;
 	diag.Height = 900;//window.screen.height;  
 	diag.CancelEvent = function(){ //关闭事件
+		
+		nextPage(${page.currentPage});
 		/**
 		if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
 			 if('${page.currentPage}' == '0'){

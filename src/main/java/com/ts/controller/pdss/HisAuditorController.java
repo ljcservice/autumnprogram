@@ -860,6 +860,7 @@ public class HisAuditorController extends BaseController {
 	}
     
     /* 相互作用检查 */
+<<<<<<< HEAD
     /**
      * @param param
      * @return
@@ -867,6 +868,11 @@ public class HisAuditorController extends BaseController {
 //	@RequestMapping(value="/patVsVisitSigns")
 //	@ResponseBody
     public String drugInteractionCheck(String param)
+=======
+//	@RequestMapping(value="/patVsVisitSigns")
+//	@ResponseBody
+    public TDrugSecurityRslt drugInteractionCheck(TPatientOrder po)
+>>>>>>> branch 'master' of https://github.com/ljcservice/autumnprogram.git
     {
 		TDrugSecurityRslt t =null;
 		try {

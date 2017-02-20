@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="PatVistMapper">
+<mapper namespace="PatVisitMapper">
 
 	<!--表名 -->
 	<sql id="tableName">
@@ -107,7 +107,10 @@
 		out_outp_or_inp,
 		out_internal_or_sergery,
 		settle_indi,
-		link_date
+		link_date,
+		NGROUPNUM,
+		ISORDERCHECK,
+		ISCHECKTRUE
 	</sql>
 	
 	<!-- 字段值 -->
@@ -209,7 +212,10 @@
 		#{out_outp_or_inp},
 		#{out_internal_or_sergery},
 		#{settle_indi},
-		#{link_date}
+		#{link_date},
+		#{NGROUPNUM},
+		#{ISORDERCHECK},
+		#{ISCHECKTRUE}
 
 	</sql>
 	
@@ -217,36 +223,159 @@
 	<!--查询病人信息  -->
 	<select id="patvisitlistPage" parameterType="page" resultType="pd">
 		select  
-			<include refid="Field"></include>
-		from 
-			<include refid="tableName"></include>
-		where 1=1
+			p.NAME,
+			P.SEX,
+			P.DATE_OF_BIRTH,
+			p.PHONE_NUMBER_HOME,
+			t.PAT_AGE,
+			t.patient_id,
+			t.visit_id,
+			t.dept_admission_to,
+			t.admission_date_time,
+			t.dept_discharge_from,
+			t.discharge_date_time,
+			t.occupation,
+			t.marital_status,
+			t.identity,
+			t.armed_services,
+			t.duty,
+			t.unit_in_contract,
+			t.charge_type,
+			t.working_status,
+			t.insurance_type,
+			t.insurance_no,
+			t.service_agency,
+			t.mailing_address,
+			t.patient_class,
+			t.admission_cause,
+			t.pat_adm_condition,
+			t.consulting_doctor,
+			t.admitted_by,
+			t.serious_cond_days,
+			t.discharge_disposition,
+			t.total_costs,
+			t.total_payments,
+			t.catalog_date,
+			t.cataloger,
+			t.catalog_writer,
+			t.health_level,
+			t.mr_infect_report,
+			t.infect_indicator,
+			t.identity_class,
+			t.chief_doctor,
+			t.advanced_studies_doctor,
+			t.practice_doctor_of_graduate,
+			t.practice_doctor,
+			t.in_dept_name,
+			t.in_clinic_attr,
+			t.in_outp_or_inp,
+			t.in_internal_or_sergery,
+			t.out_dept_name,
+			t.out_clinic_attr,
+			t.out_outp_or_inp,
+			t.out_internal_or_sergery,
+			t.settle_indi,
+			t.link_date,
+			t.NGROUPNUM,
+			t.ISORDERCHECK,
+			t.ISCHECKTRUE
+		from   
+			pat_visit t
+		left join pat_master_index p on t.patient_id = p.patient_id
+		where 1=1 
 		<if test="pd.keywords != null and pd.keywords != ''"><!-- 关键词检索 -->
 			and
 				(
-					 IN_DEPT_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 t.IN_DEPT_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					 or 
-					 OUT_DEPT_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+					 t.OUT_DEPT_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
 				)
 		</if>
 
 		<if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
-			and discharge_date_time &gt;= to_date(#{pd.beginDate},'yyyy-mm-dd') 
+			and t.discharge_date_time &gt;= to_date(#{pd.beginDate},'yyyy-mm-dd') 
 		</if>
 		<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
-			and discharge_date_time &lt; to_date(#{pd.endDate} ,'yyyy-mm-dd') 
+			and t.discharge_date_time &lt; to_date(#{pd.endDate} ,'yyyy-mm-dd') 
 		</if>
-		
-		Order by  discharge_date_time 
+		Order by t.discharge_date_time 
 	</select>
 	
 	<select id="patVisitById" parameterType="pd" resultType="pd">
 		select  
-			<include refid="Field"></include>
+			p.NAME,
+			P.SEX,
+			P.DATE_OF_BIRTH,
+			p.PHONE_NUMBER_HOME,
+			t.patient_id,
+			trunc(t.discharge_date_time) -  trunc(t.admission_date_time) + 1 dayCount ,
+			t.PAT_AGE,
+			t.visit_id,
+			t.dept_admission_to,
+			t.admission_date_time,
+			t.dept_discharge_from,
+			t.discharge_date_time,
+			t.occupation,
+			t.marital_status,
+			t.identity,
+			t.armed_services,
+			t.duty,
+			t.unit_in_contract,
+			t.charge_type,
+			t.working_status,
+			t.insurance_type,
+			t.insurance_no,
+			t.service_agency,
+			t.mailing_address,
+			t.patient_class,
+			t.admission_cause,
+			t.pat_adm_condition,
+			t.consulting_doctor,
+			t.admitted_by,
+			t.serious_cond_days,
+			t.discharge_disposition,
+			t.total_costs,
+			t.total_payments,
+			t.catalog_date,
+			t.cataloger,
+			t.catalog_writer,
+			t.health_level,
+			t.mr_infect_report,
+			t.infect_indicator,
+			t.identity_class,
+			t.chief_doctor,
+			t.advanced_studies_doctor,
+			t.practice_doctor_of_graduate,
+			t.practice_doctor,
+			t.in_dept_name,
+			t.in_clinic_attr,
+			t.in_outp_or_inp,
+			t.in_internal_or_sergery,
+			t.out_dept_name,
+			t.out_clinic_attr,
+			t.out_outp_or_inp,
+			t.out_internal_or_sergery, 
+			t.settle_indi,
+			t.link_date,
+			t.NGROUPNUM,
+			t.ISORDERCHECK,
+			t.ISCHECKTRUE
 		from 
-			<include refid="tableName"></include>
-		where  patient_id =#{patient_id} and visit_id = #{visit_id}
-	
+			pat_visit t 
+		left join pat_master_index p on t.patient_id = p.patient_id
+		where  t.patient_id =#{pd.patient_id} and t.visit_id = #{pd.visit_id}
 	</select>
+	
+	<update id="UpdatePatVisitNgroupnum" parameterType="pd" >
+		update
+			<include refid="tableName">	</include>
+		set
+			ngroupnum = #{NGROUPNUM},
+			ISORDERCHECK = #{ISORDERCHECK}, 
+			ISCHECKTRUE  = #{ISCHECKTRUE} 
+		where 
+			 patient_id =#{patient_id} and visit_id = #{visit_id}
+	
+	</update>
 
 </mapper>
