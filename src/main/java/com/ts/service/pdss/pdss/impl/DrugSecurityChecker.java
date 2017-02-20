@@ -45,9 +45,9 @@ public class DrugSecurityChecker implements IDrugSecurityChecker
     {
         return drugInteractionCheckerBean.Check( pods);
     }
-    public TDrugSecurityRslt DrugInteractionCheckS(String[] Drugs)
+    public TDrugSecurityRslt DrugInteractionCheckS(List<String> ids)
     {
-        return drugInteractionCheckerBean.Check(Drugs);
+        return drugInteractionCheckerBean.Check(ids);
     }
 
     /* 配伍审查 */
@@ -175,6 +175,7 @@ public class DrugSecurityChecker implements IDrugSecurityChecker
     /* 药物剂量审查 */
     @Resource(name = "drugDosageCheckerBean")
     private IDrugDosageChecker drugDosageCheckerBean;
+    
     public TDrugSecurityRslt DrugDosageCheck(TPatientOrder po)
     {
         TPatOrderDrug[] pods = po.getPatOrderDrugs();

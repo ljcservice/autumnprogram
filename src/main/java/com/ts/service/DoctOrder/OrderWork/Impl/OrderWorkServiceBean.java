@@ -21,45 +21,48 @@ public class OrderWorkServiceBean implements IOrderWorkService {
 	@Override
 	public List<PageData> patientList(Page  page) throws Exception 
 	{
-		return (List<PageData>) daoph.findForList("PatVistMapper.patvisitlistPage", page);
+		return (List<PageData>) daoph.findForList("PatVisitMapper.patvisitlistPage", page); 
 	}
 
 	@Override
-	public PageData findByPatient(String pid, String vid) throws Exception {
-		PageData pd = new PageData();
-		pd.put("patient_id", pid);
-		pd.put("visit_id", vid);
-		return (PageData) daoph.findForObject("PatVistMapper.patVisitById", pd);
+	public PageData findByPatient(Page page) throws Exception {
+		
+		return (PageData) daoph.findForObject("PatVisitMapper.patVisitById", page);
 	}
-
+	
 	@Override
-	public PageData findByCheckResult(String pid, String vid)  throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public int updatePatVisitNgroupnum(PageData pd) throws Exception {
+		daoph.update("PatVisitMapper.UpdatePatVisitNgroupnum", pd);
+		return 1;
 	}
 
 	@Override
 	public int saveCheckResult(PageData pd) throws Exception{
-		// TODO Auto-generated method stub
-		return 0;
+		daoph.save("rsDrugCheckRsltMapper.saveCheckRS", pd);
+		return 1;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PageData> findByCheckResultsByNgroupnum(Page page) throws Exception {
+		return (List<PageData>) daoph.findForList("rsDrugCheckRsltMapper.selectCheckRsByNgroupnum", page);
+	}
+	
 	@Override
 	public int deleteCheckReulst(String crid)throws Exception {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public PageData orderList(String pid, String vid)throws Exception {
-		PageData pd = new PageData();
-		pd.put("patient_id", pid);
-		pd.put("visit_id", vid);
-		return (PageData) daoph.findForObject("OrdersMapper.OrdersByIdlistPage", pd);
+	public List<PageData> orderList(Page page)throws Exception {
+		
+		return (List<PageData>) daoph.findForList("OrdersMapper.OrdersByIdlistPage", page);
 	}
 
 	@Override
-	public PageData orderWhereList(PageData pd)throws Exception {
+	public List<PageData> orderWhereList(PageData pd)throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -69,4 +72,18 @@ public class OrderWorkServiceBean implements IOrderWorkService {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	@Override
+	public List<PageData> operationList(Page page) throws Exception {
+		// TODO Auto-generated method stub
+		return (List<PageData>) daoph.findForList("OperationMapper.OperationById", page);
+	}
+
+	@SuppressWarnings("unchecked")  
+	@Override
+	public List<PageData> selectRsTypeDict() throws Exception {
+		
+		return (List<PageData>) daoph.findForList("RS_TYPE_DICTMapper.reTypeDcit","");
+	}
+	
 }

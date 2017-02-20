@@ -853,10 +853,10 @@ public class HisAuditor implements IHisAuditor
         return drugsecuity.DrugInteractionCheck(po.getPatOrderDrugs());
     }
     
-    public TDrugSecurityRslt DrugInteractionCheckS(String[] Drugs)
-    {
-        return drugsecuity.DrugInteractionCheckS(Drugs);
-    }
+//    public TDrugSecurityRslt DrugInteractionCheckS(String[] Drugs)
+//    {
+//        return drugsecuity.DrugInteractionCheckS(Drugs);
+//    }
 
     /* 配伍审查 */
     public TDrugSecurityRslt DrugIvEffectCheck(TPatientOrder po)

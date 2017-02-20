@@ -30,7 +30,7 @@ public class AIService implements AIManager{
 	@Resource(name = "daoSupportAi")
 	public DaoSupportAi dao;
 	
-	@MyDao(name="sqlSessionTemplate_Ai")
+	@MyDao(name="sqlSessionTemplate_Pdss")
 	public DAO daotest;
 	
 	/**

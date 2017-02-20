@@ -284,7 +284,7 @@ public interface IHisAuditor
     /**
      *  互动信息
      */
-    public TDrugSecurityRslt DrugInteractionCheckS(String[] Drugs);
+//    public TDrugSecurityRslt DrugInteractionCheckS(String[] Drugs);
     public TDrugSecurityRslt DrugInteractionCheckA(String[] doctorInfo, String[] patientInfo, String[][] drugInfo, String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation);
 
     /**

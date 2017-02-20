@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.hitzd.DBUtils.TCommonRecord;
+import com.hitzd.DBUtils.TCommonRecord; 
 import com.hitzd.his.Beans.TLabTest;
 import com.hitzd.his.Beans.TPatOperation;
 import com.hitzd.his.Beans.TPatOrderDiagnosis;
@@ -864,8 +864,8 @@ public class HisAuditorController extends BaseController {
      * @param param
      * @return
      */
-	@RequestMapping(value="/patVsVisitSigns")
-	@ResponseBody
+//	@RequestMapping(value="/patVsVisitSigns")
+//	@ResponseBody
     public String drugInteractionCheck(String param)
     {
 		TDrugSecurityRslt t =null;

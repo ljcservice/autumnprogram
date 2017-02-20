@@ -13,6 +13,7 @@
 		<typeAlias type="com.ts.util.PageData" alias="pd"/>
 		<!-- 分页 -->
 		<typeAlias type="com.ts.entity.Page" alias="Page"/>
+		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TDrug" alias="TDrug"/>
 	</typeAliases>
 	
 	<plugins>

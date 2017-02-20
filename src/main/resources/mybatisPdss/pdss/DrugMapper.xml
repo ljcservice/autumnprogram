@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="CommonMapper">
-	
+
 	<!-- 诊断名称同义词-本体 关联查询 -->
-	<select id="diagOsynWidgetlistPage" parameterType="pd" resultType="pd">
-		select * from  dual t
-<!-- 		 where  -->
-		
-<!-- 		t.Patient_ID = '" + patID   + "' and Visit_ID = '" + Visitid + "'", new CommonMapper() -->
-		
+	<select id="diagOsynWidgetlistPage" parameterType="pd"
+		resultType="pd">
+		select * from dual t
+		<!-- where -->
+
+		<!-- t.Patient_ID = '" + patID + "' and Visit_ID = '" + Visitid + "'", 
+			new CommonMapper() -->
 	</select>
+	<!-- 查询单个药品 -->
+	<select id="queryDrugById" parameterType="String" resultType="TDrug">
+		select * from view_DRUG 
+		where drug_no_local =#{id}
+	</select>
+	<!-- 查询单2个成分是否药理冲突 -->
+	<select id="getDrugInteraction" parameterType="pd" resultType="TDrug">
+		select EFFECT_ID, IV_CLASS_CODE1, FIRM_ID1, IV_CLASS_CODE2, FIRM_ID2,RESULT_ID, REFER_INFO, REF_SOURCE from DRUG_IV_EFFECT 
+        where (IV_CLASS_CODE1 = #{code1} and IV_CLASS_CODE2 =#{code2}) 
+        	or (IV_CLASS_CODE1 = #{code2} and IV_CLASS_CODE2 = #{code1})
+　	</select>
 </mapper>

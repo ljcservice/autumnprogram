@@ -1,6 +1,8 @@
 package com.ts.service.pdss.pdss.manager;
 
 
+import java.util.List;
+
 import com.hitzd.his.Beans.TPatOrderDrug;
 import com.hitzd.his.Beans.TPatientOrder;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
@@ -15,7 +17,7 @@ public interface IDrugInteractionChecker
      *  审查
      * @return
      */
-    public TDrugSecurityRslt Check(String[] _Strs);
+    public TDrugSecurityRslt Check(List<String> ids);
     
     /**
      * 医嘱对象
