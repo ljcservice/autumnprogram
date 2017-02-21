@@ -31,10 +31,7 @@ import com.hitzd.his.Utils.Config;
 import com.hitzd.his.Utils.DictCache;
 import com.hitzd.springBeanManager.SpringBeanUtil;
 import com.ts.service.pdss.IHisAuditor;
-<<<<<<< HEAD
-=======
 
->>>>>>> branch 'master' of https://github.com/ljcservice/autumnprogram.git
 
 /**
  * 事后审核定时程序

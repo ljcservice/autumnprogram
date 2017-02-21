@@ -883,7 +883,8 @@ public class HisAuditor implements IHisAuditor
     /* 禁忌症审查 */
     public TDrugSecurityRslt DrugDiagCheck(TPatientOrder po)
     {
-        return drugsecuity.DrugDiagCheck(po);
+//        return drugsecuity.DrugDiagCheck(po);
+    	return null;
     }
     public TDrugSecurityRslt DrugDiagCheckS(String[] drugs, String[] diagnosis)
     {
@@ -1174,11 +1175,12 @@ public class HisAuditor implements IHisAuditor
             String[] patientInfo, String[][] drugInfo,
             String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation)
     {
-    	TPatientOrder      po = CommonUtils.getPatientOrder(doctorInfo, patientInfo, drugInfo, diagnosisInfo, sensitiveInfo, patSigns,patOperation);
-    	TDrugSecurityRslt dsr = drugsecuity.DrugDiagCheck(po);
-    	this.patientSavaBean.savePatientCheckInfo(po, dsr);
-    	this.patientSavaBean.saveDrugDiagCheckInfo(dsr);
-    	return dsr;
+//    	TPatientOrder      po = CommonUtils.getPatientOrder(doctorInfo, patientInfo, drugInfo, diagnosisInfo, sensitiveInfo, patSigns,patOperation);
+//    	TDrugSecurityRslt dsr = drugsecuity.DrugDiagCheck(po);
+//    	this.patientSavaBean.savePatientCheckInfo(po, dsr);
+//    	this.patientSavaBean.saveDrugDiagCheckInfo(dsr);
+//    	return dsr;
+    	return null;
     }
     
 	@Override

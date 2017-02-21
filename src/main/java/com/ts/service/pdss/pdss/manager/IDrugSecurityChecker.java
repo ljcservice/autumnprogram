@@ -58,7 +58,7 @@ public interface IDrugSecurityChecker
      * @param diagnosis
      * @return
      */
-    public TDrugSecurityRslt DrugDiagCheck(TPatientOrder po);
+    public TDrugSecurityRslt DrugDiagCheck( String param);
     /**
      * 禁忌症审查
      * 

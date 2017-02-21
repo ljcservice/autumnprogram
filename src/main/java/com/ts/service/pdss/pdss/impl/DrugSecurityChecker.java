@@ -78,9 +78,9 @@ public class DrugSecurityChecker implements IDrugSecurityChecker
     /* 禁忌症审查 */
     @Resource(name = "drugDiagCheckerBean")
     private IDrugDiagChecker drugDiagCheckerBean;
-    public TDrugSecurityRslt DrugDiagCheck(TPatientOrder po)
+    public TDrugSecurityRslt DrugDiagCheck( String param)
     {
-        return this.drugDiagCheckerBean.Check(po);
+        return this.drugDiagCheckerBean.Check( param);
     }
     public TDrugSecurityRslt DrugDiagCheckS(String[] drugs, String[] diagnosis)
     {
@@ -286,7 +286,8 @@ public class DrugSecurityChecker implements IDrugSecurityChecker
         System.out.println("配伍审查:" + (System.currentTimeMillis() - xx));
         /* 禁忌症审查 */
         xx = System.currentTimeMillis();
-        this.drugDiagCheckerBean.Check(po).CopyDrugDiagInfoRsltTo(dsr);
+        
+//   TODO     this.drugDiagCheckerBean.Check(po).CopyDrugDiagInfoRsltTo(dsr);
         System.out.println("禁忌症  :" + (System.currentTimeMillis() - xx));
         /* 特殊人群审查 */
         xx = System.currentTimeMillis();
@@ -474,10 +475,11 @@ public class DrugSecurityChecker implements IDrugSecurityChecker
             String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation)
     {
     	TPatientOrder      po = CommonUtils.getPatientOrder(doctorInfo, patientInfo, drugInfo, diagnosisInfo, sensitiveInfo, patSigns,patOperation);
-    	TDrugSecurityRslt dsr = this.drugDiagCheckerBean.Check(po);
-    	this.patientSavaBean.savePatientCheckInfo(po, dsr);
-    	this.patientSavaBean.saveDrugDiagCheckInfo(dsr);
-    	return dsr;
+//    	TDrugSecurityRslt dsr = this.drugDiagCheckerBean.Check(po);
+//    	this.patientSavaBean.savePatientCheckInfo(po, dsr);
+//    	this.patientSavaBean.saveDrugDiagCheckInfo(dsr);
+//    	return dsr;
+    	return null;
     }
 	@Override
 	public TDrugSecurityRslt MedicareCheckerA(String[] doctorInfo,

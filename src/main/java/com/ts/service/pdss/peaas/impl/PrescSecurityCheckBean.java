@@ -63,7 +63,7 @@ public class PrescSecurityCheckBean implements IPrescSecurityChecker
         /* 相互作用检查 */
         this.drugInteractionCheckerBean.Check(po.getPatOrderDrugs()).CopyInteractionCheckResultTo(dsr);
         /* 禁忌症审查 */
-        this.drugDiagCheckerBean.Check(po).CopyDrugDiagInfoRsltTo(dsr);
+//        this.drugDiagCheckerBean.Check(po).CopyDrugDiagInfoRsltTo(dsr);
         /* 配伍审查 */
         this.drugIvEffectCheckerBean.Check(po).CopyIvEffectCheckResultTo(dsr);
         /* 过敏药物审查 */

@@ -25,6 +25,9 @@ import com.ts.service.pdss.pdss.RowMapper.DrugDiagInfoMapper;
 import com.ts.service.pdss.pdss.Utils.CommonUtils;
 import com.ts.service.pdss.pdss.Utils.QueryUtils;
 import com.ts.service.pdss.pdss.manager.IDrugDiagChecker;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 /**
  *  禁忌症审查子模块
  * @author liujc
@@ -38,14 +41,13 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
 	
     @SuppressWarnings("unchecked")
     @Override
-    public TDrugSecurityRslt Check(TPatientOrder po)
+    public TDrugSecurityRslt Check( String param)//TPatientOrder po
     {
     	try
     	{
-	        /* 设置访问数据库代码 */
-	        this.setQueryCode("PDSS");
+    		JSONObject obj = JSONObject.fromObject(param);
 	        /* 获得用药信息 */
-	        TPatOrderDrug[] pods = po.getPatOrderDrugs();
+	        TPatOrderDrug[] pods =(TPatOrderDrug[]) JSONArray.toArray(obj.getJSONArray("patOrderDrugs"),TPatOrderDrug.class);
 	        /* 药品id*/
 	        String[] drugs = new String[pods.length];
 	        /* 用药途径  */
@@ -56,7 +58,8 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
 	            admini[i] = pods[i].getAdministrationID();
 	        }
 	        /* 诊断id*/
-	        TPatOrderDiagnosis[] patOds = po.getPatOrderDiagnosiss();
+//	        TPatOrderDiagnosis[] patOds = po.getPatOrderDiagnosiss();
+	        TPatOrderDiagnosis[] patOds = (TPatOrderDiagnosis[]) JSONArray.toArray(obj.getJSONArray("patOrderDiagnosiss"),TPatOrderDiagnosis.class);
 	        String[] diagnosis          = new String[patOds.length];
 	        for (int i = 0; i < patOds.length; i++)
 	        {
