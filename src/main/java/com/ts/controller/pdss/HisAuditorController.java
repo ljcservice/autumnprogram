@@ -28,6 +28,7 @@ import com.hitzd.his.Beans.TPatOrderDiagnosis;
 import com.hitzd.his.Beans.TPatOrderDrug;
 import com.hitzd.his.Beans.TPatOrderDrugSensitive;
 import com.hitzd.his.Beans.TPatVitalSigns;
+import com.hitzd.his.Beans.TPatient;
 import com.hitzd.his.Beans.TPatientOrder;
 import com.hitzd.his.Utils.Config;
 import com.hitzd.his.Utils.DateUtils;
@@ -139,13 +140,11 @@ public class HisAuditorController extends BaseController {
 	 * @param visitid
 	 * @return
 	 */
-	@SuppressWarnings ("unchecked")
     public TLabTest[] getPatLabTest(String patid , String visitid)
 	{
 	   return antiDrugscr.getPatLabTest(patid, visitid);
 	}
 	
-    @SuppressWarnings ("unchecked")
     public TLabTest[] getpatLabTestNoDetail(String patid , String visitid)
     {
         return antiDrugscr.getpatLabTestNoDetail(patid, visitid);
@@ -860,19 +859,13 @@ public class HisAuditorController extends BaseController {
 	}
     
     /* 相互作用检查 */
-<<<<<<< HEAD
     /**
      * @param param
      * @return
      */
-//	@RequestMapping(value="/patVsVisitSigns")
-//	@ResponseBody
-    public String drugInteractionCheck(String param)
-=======
-//	@RequestMapping(value="/patVsVisitSigns")
-//	@ResponseBody
-    public TDrugSecurityRslt drugInteractionCheck(TPatientOrder po)
->>>>>>> branch 'master' of https://github.com/ljcservice/autumnprogram.git
+	@RequestMapping(value="/drugInteractionCheck")
+	@ResponseBody
+    public String drugInteractionCheck(@RequestParam String param)
     {
 		TDrugSecurityRslt t =null;
 		try {
@@ -901,7 +894,7 @@ public class HisAuditorController extends BaseController {
     			for(Field f:fs){
     				Class<?> clsType = f.getType();
     				String name = f.getName();
-    				if(name.equals((String)o)){
+    				if(o instanceof String && name.equals((String)o)){
     					String strSet = "set" + name.substring(0, 1).toUpperCase() + name.substring(1, name.length());
     					Method methodSet = class1.getDeclaredMethod(strSet,	clsType);
 						Object objValue = typeConversion(clsType,obj.get(o).toString());
@@ -919,7 +912,7 @@ public class HisAuditorController extends BaseController {
 	    		for(Object o : obj.keySet()){
 	    			for(Field f:fs){
 	    				String name = f.getName();
-	    				if(name.equals((String)o)){
+	    				if(o instanceof String && name.equals((String)o)){
 	    					Class<?> clsType = f.getType();
 	    					String strSet = "set" + name.substring(0, 1).toUpperCase() + name.substring(1, name.length());
 	    					Method methodSet = class1.getDeclaredMethod(strSet,	clsType);
@@ -973,7 +966,7 @@ public class HisAuditorController extends BaseController {
 	    return obj;
 	}
 
-	@RequestMapping(value="/patVsVisitSigns")
+	@RequestMapping(value="/drugInteractionCheckS")
 	@ResponseBody
 	public String DrugInteractionCheckS(@RequestParam String param)
     {
@@ -988,7 +981,7 @@ public class HisAuditorController extends BaseController {
 	 * @param param
 	 * @return
 	 */
-	@RequestMapping(value="/patVsVisitSigns")
+	@RequestMapping(value="/drugIvEffectCheckS")
 	@ResponseBody
     public String DrugIvEffectCheckS(@RequestParam String param)
     {
@@ -1002,12 +995,39 @@ public class HisAuditorController extends BaseController {
     }
     
     /* 禁忌症审查 */
-    public TDrugSecurityRslt DrugDiagCheck()
+	@RequestMapping(value="/drugDiagCheck")
+	@ResponseBody
+    public String DrugDiagCheck(@RequestParam String param)
     {
-    	TPatientOrder po = new TPatientOrder();
-        return drugsecuity.DrugDiagCheck(po);
+		try {
+			TDrugSecurityRslt t= drugsecuity.DrugDiagCheck(param);
+			return t==null?null:JSONObject.fromObject(t).toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	return  null;
+        
     }
-    public TDrugSecurityRslt DrugDiagCheckS(String[] drugs, String[] diagnosis)
+    private Object getObject(JSONObject obj, Class class1) throws Exception {
+    	if(obj==null)return null;
+    	Field[] fs =class1.getDeclaredFields();
+    		Object result = class1.newInstance();
+    		for(Object o : obj.keySet()){
+    			for(Field f:fs){
+    				Class<?> clsType = f.getType();
+    				String name = f.getName();
+    				if(o instanceof String && name.equals((String)o)){
+    					String strSet = "set" + name.substring(0, 1).toUpperCase() + name.substring(1, name.length());
+    					Method methodSet = class1.getDeclaredMethod(strSet,	clsType);
+						Object objValue = typeConversion(clsType,obj.get(o).toString());
+						methodSet.invoke(result, objValue);
+    				}
+    			}
+    		}
+    		return result;
+	}
+
+	public TDrugSecurityRslt DrugDiagCheckS(String[] drugs, String[] diagnosis)
     {
         return drugsecuity.DrugDiagCheckS(drugs, diagnosis);
     }
@@ -1218,6 +1238,7 @@ public class HisAuditorController extends BaseController {
      */
     public TDrugSecurityRslt DrugSecurityCheck(final TPatientOrder po)
     {
+    	
          return drugsecuity.DrugSecurityCheck(po);
     }
     
@@ -1323,10 +1344,11 @@ public class HisAuditorController extends BaseController {
             String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation)
     {
     	TPatientOrder      po = CommonUtils.getPatientOrder(doctorInfo, patientInfo, drugInfo, diagnosisInfo, sensitiveInfo, patSigns,patOperation);
-    	TDrugSecurityRslt dsr = drugsecuity.DrugDiagCheck(po);
-    	this.patientSavaBean.savePatientCheckInfo(po, dsr);
-    	this.patientSavaBean.saveDrugDiagCheckInfo(dsr);
-    	return dsr;
+//    	TDrugSecurityRslt dsr = drugsecuity.DrugDiagCheck(po);
+//    	this.patientSavaBean.savePatientCheckInfo(po, dsr);
+//    	this.patientSavaBean.saveDrugDiagCheckInfo(dsr);
+//    	return dsr;
+    	return null;
     }
     
 	
@@ -1367,51 +1389,21 @@ public class HisAuditorController extends BaseController {
 //			Integer[] s =new Integer[]{1,-33,2,4,3,3,5,666,77};
 //			JSONArray j=JSONArray.fromObject(s);
 //			System.out.println(j.toString());
-//			
-//			TPatVitalSigns p1 = new TPatVitalSigns();
-//			p1.setPatid("1111");
-//			p1.setBloodLow("1");
-//			TPatVitalSigns p2 = new TPatVitalSigns();
-//			p2.setPatid("2222");
-//			p2.setBloodLow("222222");
-//			TPatVitalSigns[] dd =new TPatVitalSigns[]{p1,p2};
-//			JSONArray w=JSONArray.fromObject(dd);
-//			System.out.println(w.toString());
-//			
-//			try {
-//				new HisAuditorController().getObject(w.toString(), TPatVitalSigns.class, 1);
-//			} catch (Exception e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-			boolean s=true;
-			for(int i = 1;s;i++){
-				if(i%2!=1){
-					continue;
-				}
-				if(i%3!=0){
-					continue;
-				}
-				if(i%4!=1){
-					continue;
-				}
-				if(i%5!=4){
-					continue;
-				}
-				if(i%6!=3){
-					continue;
-				}
-				if(i%7!=5){
-					continue;
-				}
-				if(i%8!=1){
-					continue;
-				}
-				if(i%9!=0){
-					continue;
-				}
-				s = false;
-				System.out.println("答案就是："+i);
+			
+			TPatVitalSigns p1 = new TPatVitalSigns();
+			p1.setPatid("1111");
+			p1.setBloodLow("1");
+			TPatVitalSigns p2 = new TPatVitalSigns();
+			p2.setPatid("2222");
+			p2.setBloodLow("222222");
+			TPatVitalSigns[] dd =new TPatVitalSigns[]{p1,p2};
+			JSONArray w=JSONArray.fromObject(dd);
+			System.out.println(w.toString());
+			
+			try {
+				new HisAuditorController().getObject(w.toString(), TPatVitalSigns.class, 1);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		
 	}
