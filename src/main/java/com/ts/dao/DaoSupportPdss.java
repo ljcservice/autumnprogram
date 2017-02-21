@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
  * @author 
  * 修改时间：2015、12、11
  */
-@Repository("daoSupport_Pdss")
+@Repository("daoSupportPdss")
 public class DaoSupportPdss implements DAO {
 
 	@Resource(name = "sqlSessionTemplate_Pdss")
