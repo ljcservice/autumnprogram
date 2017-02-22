@@ -860,12 +860,21 @@ public class HisAuditor implements IHisAuditor
 		return antiDrugscr.AntiDrugSecurityCheckerA(doctorInfo, diagnosis, operInfo, drugInfo, patientInfo);
 	}
     
-    /* 相互作用检查 */
+    /**
+     * 相互作用检查
+     * 改造完成
+     */
     public TDrugSecurityRslt DrugInteractionCheck(TPatientOrder po)
     {
         return drugsecuity.DrugInteractionCheck(po);
     }
     
+    /**
+     * 
+     * 改造完成
+     * @param Drugs
+     * @return
+     */
     public TDrugSecurityRslt DrugInteractionCheckS(String[] Drugs)
     {
         return drugsecuity.DrugInteractionCheckS(Drugs);
@@ -888,6 +897,9 @@ public class HisAuditor implements IHisAuditor
         return DrugIvEffectCheckS(DrugIds, RecMainIds, AdminIds);
     }
 
+    /**
+     * TODO 无具体实现
+     */
     public TDrugSecurityRslt DrugIvEffectCheckS(String[] DrugIds, String[] RecMainIds, String[] AdministrationIds)
     {
     	return drugsecuity.DrugIvEffectCheckS(DrugIds, RecMainIds, AdministrationIds);
@@ -896,8 +908,7 @@ public class HisAuditor implements IHisAuditor
     /* 禁忌症审查 */
     public TDrugSecurityRslt DrugDiagCheck(TPatientOrder po)
     {
-//        return drugsecuity.DrugDiagCheck(po);
-    	return null;
+        return drugsecuity.DrugDiagCheck(po);
     }
     public TDrugSecurityRslt DrugDiagCheckS(String[] drugs, String[] diagnosis)
     {

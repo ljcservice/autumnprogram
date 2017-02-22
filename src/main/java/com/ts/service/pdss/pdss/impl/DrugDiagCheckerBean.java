@@ -5,7 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,16 +18,21 @@ import com.hitzd.his.Beans.TPatOrderDrug;
 import com.hitzd.his.Beans.TPatientOrder;
 import com.hitzd.his.Utils.Config;
 import com.hitzd.persistent.Persistent4DB;
+import com.ts.dao.DaoSupportPdss;
 import com.ts.entity.pdss.pdss.Beans.TAdministration;
 import com.ts.entity.pdss.pdss.Beans.TDrug;
 import com.ts.entity.pdss.pdss.Beans.TDrugDiagInfo;
 import com.ts.entity.pdss.pdss.Beans.TDrugDiagRel;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugDiagRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
+import com.ts.service.cache.CacheProcessor;
+import com.ts.service.cache.CacheTemplate;
+import com.ts.service.pdss.pdss.Cache.PdssCache;
 import com.ts.service.pdss.pdss.RowMapper.DrugDiagInfoMapper;
 import com.ts.service.pdss.pdss.Utils.CommonUtils;
 import com.ts.service.pdss.pdss.Utils.QueryUtils;
 import com.ts.service.pdss.pdss.manager.IDrugDiagChecker;
+import com.ts.util.PageData;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -39,15 +47,20 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
 {
 	private final static Logger log = Logger.getLogger(DrugDiagCheckerBean.class);
 	
+	@Resource(name = "daoSupportPdss")
+	private DaoSupportPdss dao;
+	
+	@Resource(name = "pdssCache")
+	private PdssCache pdssCache;
+   
     @SuppressWarnings("unchecked")
     @Override
     public TDrugSecurityRslt Check( TPatientOrder po)//TPatientOrder po
     {
     	try
     	{
-//    		JSONObject obj = JSONObject.fromObject(param);
 	        /* 获得用药信息 */
-	        TPatOrderDrug[] pods = po.getPatOrderDrugs() ;//(TPatOrderDrug[]) JSONArray.toArray(obj.getJSONArray("patOrderDrugs"),TPatOrderDrug.class);
+	        TPatOrderDrug[] pods = po.getPatOrderDrugs() ;
 	        /* 药品id*/
 	        String[] drugs = new String[pods.length];
 	        /* 用药途径  */
@@ -59,8 +72,7 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
 	        }
 	        /* 诊断id*/
 	        TPatOrderDiagnosis[] patOds = po.getPatOrderDiagnosiss();
-//	        TPatOrderDiagnosis[] patOds = (TPatOrderDiagnosis[]) JSONArray.toArray(obj.getJSONArray("patOrderDiagnosiss"),TPatOrderDiagnosis.class);
-	        String[] diagnosis          = new String[patOds.length];
+	        String[] diagnosis = new String[patOds.length];
 	        for (int i = 0; i < patOds.length; i++)
 	        {
 	            diagnosis[i] = patOds[i].getDiagnosisDictID();
@@ -70,7 +82,13 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
 	        if(!Config.getParamValue("diag_icd9_conv_flag").equals("1") && !Config.getParamValue("diag_icd10_conv_flag").equals("1") )
 	        {
     	        /* 疾病诊断码sql组装     queryDiagDictMap 转换 诊断码 */
-    	        diagnosis = QueryUtils.queryDiagDictMap(diagnosis,query);
+//    	        diagnosis = QueryUtils.queryDiagDictMap(diagnosis,query);
+    	       PageData p = new PageData();
+    	       p.put("diagnosis", diagnosis);
+    	       List<String> s = (List<String>) dao.findForList("DrugMapper.queryDiagDictMap", p);
+    	       if(s!=null){
+    	    	   diagnosis = s.toArray(new String[0]);
+    	       }
 	        }
 	        /* 检查是否有值 */
 	        if(diagnosis.length == 0)
@@ -80,7 +98,8 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
 	        Map<String, List<TCommonRecord>> diseVsdiagMap = new HashMap<String, List<TCommonRecord>>();
 	        for(String str : diagnosis)
 	        {
-	            List<TCommonRecord> list = QueryUtils.queryDiseageVsdiag(str, query);
+//	            List<TCommonRecord> list = QueryUtils.queryDiseageVsdiag(str, query);
+	        	List<TCommonRecord> list = pdssCache.getDiseageVsDiag(str);
 //	            diseVsdiagMap.put(str, list);
 	            if(list == null || list.size() == 0 ) continue;
 	            for(TCommonRecord t : list)
@@ -93,9 +112,15 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
 	        else 
 	            return  new TDrugSecurityRslt();
 	        /* 所有药品信息 */
-	        List<TDrug> drugslist  = QueryUtils.queryDrug(drugs, null, query);
+//	        List<TDrug> drugslist  = QueryUtils.queryDrug(drugs, null, query);
+	        List<TDrug> drugslist = pdssCache.queryDrugListByIds(drugs);
+	        
 	        /* 用药途径 */
-	        List<TAdministration> adstraion = QueryUtils.queryAdministration(admini, null, query);
+//	        List<TAdministration> adstraion = QueryUtils.queryAdministration(admini, null, query);
+	        List<TAdministration> adstraion = pdssCache.queryAdministration(admini);
+	        
+	        //TODO  做到此处
+	        
 	        /* 药品类别  组装 */
 	        String[] drugClassID  = new String[drugslist.size()];
 	        for(int i = 0 ;i<drugslist.size();i++)
@@ -115,6 +140,8 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
 	        {
 	            drugDiagRels = QueryUtils.queryDrugDiagRel(drugClassID, admini, null, query);
 	        }
+	        
+	        
 	        /*  药物禁忌症对应CONTRAIND_ID 组装sql*/
 	        StringBuffer drugDiagRelIds = new StringBuffer();
 	        for(TDrugDiagRel entry : drugDiagRels)

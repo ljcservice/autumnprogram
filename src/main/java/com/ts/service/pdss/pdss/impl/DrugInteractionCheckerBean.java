@@ -23,6 +23,8 @@ import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
 import com.ts.service.cache.CacheProcessor;
 import com.ts.service.cache.CacheTemplate;
 import com.ts.service.pdss.pdss.Cache.BeanRSCache;
+import com.ts.service.pdss.pdss.Cache.DBSnapshot;
+import com.ts.service.pdss.pdss.Cache.PdssCache;
 import com.ts.service.pdss.pdss.Utils.QueryUtils;
 import com.ts.service.pdss.pdss.manager.IDrugInteractionChecker;
 import com.ts.util.PageData;
@@ -36,167 +38,14 @@ import com.ts.util.PageData;
 @Transactional
 public class DrugInteractionCheckerBean extends Persistent4DB implements  IDrugInteractionChecker
 {
-	String DRUG_ID = "DRUG_ID";
-	String DRUG_INTERACTION = "DRUG_INTERACTION";
-	String DRUG_CODE_INTERACTION = "DRUG_CODE_INTERACTION";
-	@Resource(name = "daoSupportPdss")
-	private DaoSupportPdss dao;
-	
-	@Autowired
-	private CacheTemplate cacheTemplate;
     private final static Logger log = Logger.getLogger(DrugInteractionCheckerBean.class);
     
-    //查询两个药品，是否互相药理冲突
-    public TDrugInteractionRslt queryDrugInteraction(final TDrug drugA,final TDrug drugB){
-        String key1 = drugA.getDRUG_NO_LOCAL();
-        String key2 = drugB.getDRUG_NO_LOCAL();
-        if (drugA.getDRUG_NO_LOCAL().compareTo(drugB.getDRUG_NO_LOCAL()) > 0)
-        {
-        	key1 = drugB.getDRUG_NO_LOCAL();
-            key2 = drugA.getDRUG_NO_LOCAL();
-        }
-    	TDrugInteractionRslt t = cacheTemplate.cache(DRUG_INTERACTION+key1+key2, new CacheProcessor<TDrugInteractionRslt>() {
-			@Override
-			public TDrugInteractionRslt handle() {
-				TDrugInteractionRslt res=null;
-				try {
-                    // 药品A成分 分割后 组装sql
-                    if(drugA.getINGR_CLASS_IDS() == null)
-                        return null;
-                    String[] ingrclassidsA = drugA.getINGR_CLASS_IDS().split(",");
-                    // 药品B成分  分割后 组装sql
-                    if(drugB == null || drugB.getINGR_CLASS_IDS() == null)
-                    	return null;
-                    String[] ingrclassidsB = drugB.getINGR_CLASS_IDS().split(",");
-                    List<TDrugInteractionInfo> list = queryDrugInteractionInfo(ingrclassidsA,ingrclassidsB, null);
-                    if(list != null && list.size() > 0){
-                    	res.addDrugInfo(new TDrug(drugA), new TDrug(drugB), list);
-                    }
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				return res;
-			}
-		});
-    	return t;
-    }
-    
-    /**
-     * 药品互作用信息，已应用数据库快照
-     * 
-     * @param Code1
-     * @param Code2
-     * @param wheres
-     * @param query
-     * @return
-     */
-    public List<TDrugInteractionInfo> queryDrugInteractionInfo(String[] Codes1, String[] Codes2,String wheres)
-    {
-        List<TDrugInteractionInfo> list = new ArrayList<TDrugInteractionInfo>();
-        for (int i = 0; i < Codes1.length; i++)
-        {
-            for (int j = 0; j < Codes2.length; j++)
-            {
-            	String Code1 = Codes1[i];
-            	String Code2 = Codes2[j];
-            	if (Code1.equals(Code2))
-            		continue;
-            	TDrugInteractionInfo diix = null;
-                // 数据库中小号在前面
-                if (Integer.parseInt(Code1) > Integer.parseInt(Code2)) {
-                	diix = getDrugInteractionInfo(Code2,Code1);
-                }else{
-                	diix = getDrugInteractionInfo(Code1,Code2);
-                }
-                if (diix != null)
-                {
-                	list.add(diix);
-                }
-            }
-        }
-        return list;
-    }
-    /**
-     * 查询单2个成分是否药理冲突
-     * @param Code1
-     * @param Code2
-     * @return
-     */
-    public TDrugInteractionInfo getDrugInteractionInfo(final String code1, final String code2){
-    	TDrugInteractionInfo t = cacheTemplate.cache(DRUG_CODE_INTERACTION+code1+code2, new CacheProcessor<TDrugInteractionInfo>() {
-			@Override
-			public TDrugInteractionInfo handle() {
-				TDrugInteractionInfo res=null;
-				try {
-					PageData pd = new PageData();
-					pd.put("code1", code1);
-					pd.put("code2", code2);
-					res = (TDrugInteractionInfo) dao.findForObject("DrugMapper.getDrugInteraction",pd);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				return res;
-			}
-		});
-    	return t;
-    }
-    
-    /**
-     * 查询单个药品信息，使用缓存
-     * @param id
-     * @return
-     */
-    public TDrug queryDrugById(final String id){
-    	TDrug t = cacheTemplate.cache(DRUG_ID+id, new CacheProcessor<TDrug>() {
-			@Override
-			public TDrug handle() {
-				TDrug res=null;
-				try {
-					res = (TDrug) dao.findForObject("DrugMapper.queryDrugById",id);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				return res;
-			}
-		});
-    	return t;
-    }
-    /**
-     * 查询单个药品信息，使用缓存
-     * @param id
-     * @return
-     */
-    public List<TDrug> queryDrugListByIds(String[] ids){
-    	List<TDrug> rs = new ArrayList<TDrug>();
-    	final Set<String> set = new HashSet<String>();
-    	for(String id:ids){
-    		if(!set.contains(id)){
-    			set.add(id);
-    			TDrug t = queryDrugById(id);
-    			if(t!=null)
-    				rs.add(t);
-    		}
-    	}
-    	return rs;
-    }
-    
-    private List<TDrug> queryDrugListByIds(List<String> ids){
-    	List<TDrug> rs = new ArrayList<TDrug>();
-    	final Set<String> set = new HashSet<String>();
-    	for(String id:ids){
-    		if(!set.contains(id)){
-    			set.add(id);
-    			TDrug t = queryDrugById(id);
-    			if(t!=null)
-    				rs.add(t);
-    		}
-    	}
-    	return rs;
-    }
+	@Resource(name = "pdssCache")
+	private PdssCache pdssCache;
     
     /**
      * 互动信息查询
-     * 
+     * 改造完成，应用缓存
      */
     @Override
     public TDrugSecurityRslt Check(TPatientOrder  po)
@@ -215,48 +64,23 @@ public class DrugInteractionCheckerBean extends Persistent4DB implements  IDrugI
             for(TPatOrderDrug tp:pods){
             	ids.add(tp.getDrugID());
             }
-            List<TDrug> drugs = queryDrugListByIds(ids);
+            List<TDrug> drugs = pdssCache.queryDrugListByIds(ids);
             
-//            TDrug[] arrDrugs = drugs.values().toArray(new TDrug[0]);
             // 下面循环无重复的药品码之间的配对
             // 将配对结果放入缓存中
             // 后面所有的审查结果从缓存中取出来
             // 只有这个循环读取数据库
-//            for (int i = 0; i < drugs.size(); i++)
-//            {
-//            	TDrug drugA = drugs.get(i);
-//            	for (int j = i + 1; j < drugs.size(); j++)
-//            	{
-//            		TDrug drugB = drugs.get(j);
-//            		
-//            		TDrugInteractionRslt diRslt = null;
-                    // 此处从缓存中取结果=====================================
+            for (int i = 0; i < drugs.size(); i++)
+            {
+            	TDrug drugA = drugs.get(i);
+            	for (int j = i + 1; j < drugs.size(); j++)
+            	{
+            		TDrug drugB = drugs.get(j);
+            		// 此处从缓存中取结果=====================================
+            		pdssCache.queryDrugInteraction(drugA,drugB);
                     
-                    /*
-                    diRslt = BeanRSCache.getDrugInteraction(key1, key2);
-                    // 如果缓存中没有数据，从数据库里构造缓存
-                    if (diRslt == null)
-                    {
-                    	if (!DBSnapshot.DrugInteractionRsltInDB(key1, key2))
-                    		continue;
-	                    diRslt = new TDrugInteractionRslt();
-						// 将结果缓存cache中
-	                    BeanRSCache.setDrugInteraction(key1, key2, diRslt);
-	                    // 药品A成分 分割后 组装sql
-	                    if(drugA.getINGR_CLASS_IDS() == null)
-	                        continue;
-	                    String[] ingrclassidsA = drugA.getINGR_CLASS_IDS().split(",");
-	                    // 药品B成分  分割后 组装sql
-	                    if(drugB == null || drugB.getINGR_CLASS_IDS() == null)
-	                        continue;
-	                    String[] ingrclassidsB = drugB.getINGR_CLASS_IDS().split(",");
-	                    List<TDrugInteractionInfo> list = QueryUtils.queryDrugInteractionInfo(ingrclassidsA,ingrclassidsB, null, query);
-	                    if(list != null && list.size() > 0)
-	                        diRslt.addDrugInfo(new TDrug(drugA), new TDrug(drugB), list);
-                    }
-            		*/
-//            	}
-//            }
+            	}
+            }
             for (int i = 0; i < pods.length; i++)
             {
             	TPatOrderDrug podA = pods[i];
@@ -269,12 +93,9 @@ public class DrugInteractionCheckerBean extends Persistent4DB implements  IDrugI
                     // 此处从缓存中取结果=====================================
                     String key1 = podA.getDrugID();
                     String key2 = podB.getDrugID();
-                    if (podA.getDrugID().compareTo(podB.getDrugID()) > 0)
-                    {
-                    	key1 = podB.getDrugID();
-                        key2 = podA.getDrugID();
-                    }
-                    TDrugInteractionRslt diRslt = BeanRSCache.getDrugInteraction(key1, key2);
+                    TDrug drugA = pdssCache.queryDrugById(key1);
+                    TDrug drugB = pdssCache.queryDrugById(key2);
+                    TDrugInteractionRslt diRslt = pdssCache.queryDrugInteraction(drugA,drugB);
                     if ((diRslt != null) && (diRslt.getDrugInteractionInfo().length > 0))
                     {
                         TDrugInteractionRslt copyCache = diRslt.deepClone();
@@ -310,6 +131,8 @@ public class DrugInteractionCheckerBean extends Persistent4DB implements  IDrugI
     		return new TDrugSecurityRslt();
     	}
     }
+    
+    
     /*
             /* 组合本地药品
             for (int i = 0 ; i < pods.length ; i++)
@@ -430,7 +253,7 @@ public class DrugInteractionCheckerBean extends Persistent4DB implements  IDrugI
         /* 药品组合情况*/
         TDrugSecurityRslt dsr = new TDrugSecurityRslt();
         /* 查找drugs 中的所有要药品*/
-        List<TDrug> drugs  = queryDrugListByIds(ids);
+        List<TDrug> drugs  = pdssCache.queryDrugListByIds(ids);
         /* 组合本地药品*/
         for(int i =0 ; i <= drugs.size() ; i++)
         {
@@ -446,7 +269,7 @@ public class DrugInteractionCheckerBean extends Persistent4DB implements  IDrugI
                     continue;
                 String[] ingrclassidsB = drugs.get(j).getINGR_CLASS_IDS().split(",");
                 /*TODO: 需要统计一下5的数量占比多少，如果超过50%以上则可以通过sql过滤掉5的情况，提高数据库查询速度。*/
-                List<TDrugInteractionInfo> list = queryDrugInteractionInfo(ingrclassidsA, ingrclassidsB, null); 
+                List<TDrugInteractionInfo> list = pdssCache.queryDrugInteractionInfo(ingrclassidsA, ingrclassidsB, null); 
                 diRslt.addDrugInfo(drugs.get(i), drugs.get(j), list);
                 dsr.regInteractionCheckResult(drugs.get(i), drugs.get(j), diRslt);
             }
