@@ -24,5 +24,5 @@ public interface IDrugDiagChecker
      * @param diagnosis
      * @return
      */
-    public TDrugSecurityRslt Check( String param);
+    public TDrugSecurityRslt Check( TPatientOrder po);
 }

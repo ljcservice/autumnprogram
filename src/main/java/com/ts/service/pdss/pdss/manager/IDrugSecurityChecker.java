@@ -31,11 +31,11 @@ public interface IDrugSecurityChecker
      * @param Drugs
      * @return
      */
-    public TDrugSecurityRslt DrugInteractionCheck(TPatOrderDrug[] pods);
+    public TDrugSecurityRslt DrugInteractionCheck(TPatientOrder  po);
     /**
      *  互动信息
      */
-    public TDrugSecurityRslt DrugInteractionCheckS(List<String> ids);
+    public TDrugSecurityRslt DrugInteractionCheckS(String[] Drugs);
     public TDrugSecurityRslt DrugInteractionCheckA(String[] doctorInfo, String[] patientInfo, String[][] drugInfo, String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation);
 
     /**
@@ -58,7 +58,7 @@ public interface IDrugSecurityChecker
      * @param diagnosis
      * @return
      */
-    public TDrugSecurityRslt DrugDiagCheck( String param);
+    public TDrugSecurityRslt DrugDiagCheck( TPatientOrder po);
     /**
      * 禁忌症审查
      * 

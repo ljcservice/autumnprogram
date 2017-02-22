@@ -3,7 +3,7 @@ package com.ts.listener;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.hitzd.LListenerM.CLListenerManager;
+import com.hitzd.LListenerM.CLListenerManager2;
 import com.ts.entity.pdss.SaveER.SaveThreadTCR;
 import com.ts.entity.pdss.Saver.SaveThread;
 import com.ts.service.pdss.timer.Scheduler;
@@ -13,7 +13,7 @@ import com.ts.service.pdss.timer.Scheduler;
  * @author Administrator
  *
  */
-public class SaveListenerBean extends CLListenerManager
+public class SaveListenerBean extends CLListenerManager2
 {
     @Override
     protected void ProgInit()

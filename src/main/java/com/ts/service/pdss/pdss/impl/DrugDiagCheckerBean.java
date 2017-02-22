@@ -41,13 +41,13 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
 	
     @SuppressWarnings("unchecked")
     @Override
-    public TDrugSecurityRslt Check( String param)//TPatientOrder po
+    public TDrugSecurityRslt Check( TPatientOrder po)//TPatientOrder po
     {
     	try
     	{
-    		JSONObject obj = JSONObject.fromObject(param);
+//    		JSONObject obj = JSONObject.fromObject(param);
 	        /* 获得用药信息 */
-	        TPatOrderDrug[] pods =(TPatOrderDrug[]) JSONArray.toArray(obj.getJSONArray("patOrderDrugs"),TPatOrderDrug.class);
+	        TPatOrderDrug[] pods = po.getPatOrderDrugs() ;//(TPatOrderDrug[]) JSONArray.toArray(obj.getJSONArray("patOrderDrugs"),TPatOrderDrug.class);
 	        /* 药品id*/
 	        String[] drugs = new String[pods.length];
 	        /* 用药途径  */
@@ -58,8 +58,8 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
 	            admini[i] = pods[i].getAdministrationID();
 	        }
 	        /* 诊断id*/
-//	        TPatOrderDiagnosis[] patOds = po.getPatOrderDiagnosiss();
-	        TPatOrderDiagnosis[] patOds = (TPatOrderDiagnosis[]) JSONArray.toArray(obj.getJSONArray("patOrderDiagnosiss"),TPatOrderDiagnosis.class);
+	        TPatOrderDiagnosis[] patOds = po.getPatOrderDiagnosiss();
+//	        TPatOrderDiagnosis[] patOds = (TPatOrderDiagnosis[]) JSONArray.toArray(obj.getJSONArray("patOrderDiagnosiss"),TPatOrderDiagnosis.class);
 	        String[] diagnosis          = new String[patOds.length];
 	        for (int i = 0; i < patOds.length; i++)
 	        {

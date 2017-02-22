@@ -1,5 +1,9 @@
 package com.ts.service.pdss;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,11 +11,14 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+import javax.jws.WebService;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import com.hitzd.DBUtils.TCommonRecord;
 import com.hitzd.his.Beans.TLabTest;
@@ -50,7 +57,13 @@ import com.ts.service.pdss.peaas.manager.IPrescSecurityChecker;
  * 
  * 总体审查接口 
  */
-@Service
+@WebService(
+        endpointInterface = "com.ts.service.pdss.IHisAuditor",
+        portName = "pdssServicePort",
+        serviceName = "pdssService",
+        targetNamespace = "http://www.tmp.com/services/pdssService"
+    )
+@Service("hisAuditor")
 public class HisAuditor implements IHisAuditor 
 {
 	//private final static Logger log = Logger.getLogger(HisAuditor.class);
@@ -113,9 +126,9 @@ public class HisAuditor implements IHisAuditor
 	 * 返回体检信息 
 	 */
 	@SuppressWarnings ("unchecked")
-    public TPatVitalSigns[] getpatVsVisitSigns(String patID , String Visitid)
+	@WebMethod
+    public TPatVitalSigns[] getpatVsVisitSigns(@WebParam(name = "patID")String patID ,@WebParam(name = "Visitid") String Visitid)
 	{
-
 	    return antiDrugscr.getpatVsVisitSigns(patID, Visitid);
 	}
 	
@@ -850,13 +863,13 @@ public class HisAuditor implements IHisAuditor
     /* 相互作用检查 */
     public TDrugSecurityRslt DrugInteractionCheck(TPatientOrder po)
     {
-        return drugsecuity.DrugInteractionCheck(po.getPatOrderDrugs());
+        return drugsecuity.DrugInteractionCheck(po);
     }
     
-//    public TDrugSecurityRslt DrugInteractionCheckS(String[] Drugs)
-//    {
-//        return drugsecuity.DrugInteractionCheckS(Drugs);
-//    }
+    public TDrugSecurityRslt DrugInteractionCheckS(String[] Drugs)
+    {
+        return drugsecuity.DrugInteractionCheckS(Drugs);
+    }
 
     /* 配伍审查 */
     public TDrugSecurityRslt DrugIvEffectCheck(TPatientOrder po)
@@ -1163,8 +1176,8 @@ public class HisAuditor implements IHisAuditor
             String[] patientInfo, String[][] drugInfo,
             String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation)
     {
-    	TPatientOrder      po = CommonUtils.getPatientOrder(doctorInfo, patientInfo, drugInfo, diagnosisInfo, sensitiveInfo, patSigns,patOperation);
-    	TDrugSecurityRslt dsr = drugsecuity.DrugInteractionCheck(po.getPatOrderDrugs());
+    	TPatientOrder  po = CommonUtils.getPatientOrder(doctorInfo, patientInfo, drugInfo, diagnosisInfo, sensitiveInfo, patSigns,patOperation);
+    	TDrugSecurityRslt dsr = drugsecuity.DrugInteractionCheck(po);
     	this.patientSavaBean.savePatientCheckInfo(po, dsr);
     	this.patientSavaBean.saveDrugInteractionCheckInfo(dsr);
     	return dsr;
@@ -1175,12 +1188,11 @@ public class HisAuditor implements IHisAuditor
             String[] patientInfo, String[][] drugInfo,
             String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation)
     {
-//    	TPatientOrder      po = CommonUtils.getPatientOrder(doctorInfo, patientInfo, drugInfo, diagnosisInfo, sensitiveInfo, patSigns,patOperation);
-//    	TDrugSecurityRslt dsr = drugsecuity.DrugDiagCheck(po);
-//    	this.patientSavaBean.savePatientCheckInfo(po, dsr);
-//    	this.patientSavaBean.saveDrugDiagCheckInfo(dsr);
-//    	return dsr;
-    	return null;
+    	TPatientOrder      po = CommonUtils.getPatientOrder(doctorInfo, patientInfo, drugInfo, diagnosisInfo, sensitiveInfo, patSigns,patOperation);
+    	TDrugSecurityRslt dsr = drugsecuity.DrugDiagCheck(po);
+    	this.patientSavaBean.savePatientCheckInfo(po, dsr);
+    	this.patientSavaBean.saveDrugDiagCheckInfo(dsr);
+    	return dsr;
     }
     
 	@Override
@@ -1200,8 +1212,7 @@ public class HisAuditor implements IHisAuditor
 	private String getRemoteAddrIp()
 	{
 	    String ip = this.WebClientIP;
-	    HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
-	    if(request != null) ip = request.getRemoteAddr();
+//	    if(XFireServletController.getRequest() != null) ip = XFireServletController.getRequest().getRemoteAddr();
 	    return ip;
 	}
 
@@ -1218,4 +1229,106 @@ public class HisAuditor implements IHisAuditor
 	{
 		return antiDrugAuditorBean.getAntiDrugCheckRule(DrugDoctorInfo);
 	}
+	private Object getObject(String param, Class class1,int type) throws Exception {
+    	Field[] fs =class1.getDeclaredFields();
+    	if(type==1){
+    		Object result = class1.newInstance();
+    		JSONObject obj = JSONObject.fromObject(param);
+    		for(Object o : obj.keySet()){
+    			for(Field f:fs){
+    				Class<?> clsType = f.getType();
+    				String name = f.getName();
+    				if(o instanceof String && name.equals((String)o)){
+    					String strSet = "set" + name.substring(0, 1).toUpperCase() + name.substring(1, name.length());
+    					Method methodSet = class1.getDeclaredMethod(strSet,	clsType);
+						Object objValue = typeConversion(clsType,obj.get(o).toString());
+						methodSet.invoke(result, objValue);
+    				}
+    			}
+    		}
+    		return result;
+    	}else if(type==2){
+    		List<Object> s = new ArrayList<Object>();
+    		JSONArray arrys = JSONArray.fromObject(param);
+			for(int i=0;i<arrys.size();i++){
+				JSONObject obj= (JSONObject) arrys.get(i);
+				Object result = class1.newInstance();
+	    		for(Object o : obj.keySet()){
+	    			for(Field f:fs){
+	    				String name = f.getName();
+	    				if(o instanceof String && name.equals((String)o)){
+	    					Class<?> clsType = f.getType();
+	    					String strSet = "set" + name.substring(0, 1).toUpperCase() + name.substring(1, name.length());
+	    					Method methodSet = class1.getDeclaredMethod(strSet,	clsType);
+							Object objValue = typeConversion(clsType,obj.get(o).toString());
+							methodSet.invoke(result, objValue);
+							break;
+	    				}
+	    			}
+	    		}
+	    		s.add(result) ;
+    		}
+
+    		return s.toArray();
+    	}
+		return null;
+	}
+
+    /**
+     * 得到类型值
+     */
+	public static Object typeConversion(Class<?> cls, String str) {
+	    Object obj = null;
+	    if("".equals(str)||str==null)
+	    	return null;
+	    String nameType = cls.getSimpleName();
+	    if ("Integer".equals(nameType)) {
+	        obj = Integer.valueOf(str);
+	    }else if ("String".equals(nameType)) {
+	        obj = str;
+	    }else if ("Float".equals(nameType)) {
+	        obj = Float.valueOf(str);
+	    }else if ("Double".equals(nameType)) {
+	        obj = Double.valueOf(str);
+	    }else if ("Boolean".equals(nameType)) {
+	        obj = Boolean.valueOf(str.equals("1")?true:false);
+	    }else if ("Long".equals(nameType)) {
+	        obj = Long.valueOf(str);
+	    }else if ("Short".equals(nameType)) {
+	        obj = Short.valueOf(str);
+	    }else if ("Character".equals(nameType)) {
+	        obj = str.charAt(1);
+	    }else if ("Date".equals(nameType)) {
+	        try {
+				obj = new SimpleDateFormat("yyyy-MM-dd").parse(str) ;
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    }
+	
+	    return obj;
+	}
+	public static void main(String[] args) {
+//		Integer[] s =new Integer[]{1,-33,2,4,3,3,5,666,77};
+//		JSONArray j=JSONArray.fromObject(s);
+//		System.out.println(j.toString());
+		
+		TPatVitalSigns p1 = new TPatVitalSigns();
+		p1.setPatid("1111");
+		p1.setBloodLow("1");
+		TPatVitalSigns p2 = new TPatVitalSigns();
+		p2.setPatid("2222");
+		p2.setBloodLow("222222");
+		TPatVitalSigns[] dd =new TPatVitalSigns[]{p1,p2};
+		JSONArray w=JSONArray.fromObject(dd);
+		System.out.println(w.toString());
+		
+		try {
+			//new HisAuditorController().getObject(w.toString(), TPatVitalSigns.class, 1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+}
 }

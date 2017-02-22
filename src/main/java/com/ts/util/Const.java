@@ -40,7 +40,7 @@ public class Const {
 	public static final String FILEPATHFILE = "uploadFiles/file/";		//文件上传路径
 	public static final String EXCEL = "excel/";						//excel模板路径
 	public static final String FILEPATHTWODIMENSIONCODE = "uploadFiles/twoDimensionCode/"; //二维码存放路径
-	public static final String NO_INTERCEPTOR_PATH = ".*/((plugins)|(login)|(logout)|(code)|(app)|(pdss)|(weixin)|(static)|(main)|(websocket)).*";	//不对匹配该值的访问路径拦截（正则）
+	public static final String NO_INTERCEPTOR_PATH = ".*/((plugins)|(login)|(logout)|(code)|(app)|(pdss)|(weixin)|(static)|(main)|(websocket)|(services)).*";	//不对匹配该值的访问路径拦截（正则）
 	public static ApplicationContext WEB_APP_CONTEXT = null; //该值会在web容器启动时由WebAppContextListener初始化
 	
 	//菜单功能的标志

@@ -17,12 +17,12 @@ public interface IDrugInteractionChecker
      *  审查
      * @return
      */
-    public TDrugSecurityRslt Check(List<String> ids);
+    public TDrugSecurityRslt Check(String[] ids);
     
     /**
      * 医嘱对象
      * @param po
      * @return
      */
-    public TDrugSecurityRslt Check(TPatOrderDrug[] pods);
+    public TDrugSecurityRslt Check(TPatientOrder  po);
 }

@@ -6,7 +6,7 @@ import org.springframework.web.context.ContextLoaderListener;
 
 import com.hitzd.his.Utils.DictCache;
 
-public class CLListenerManager extends ContextLoaderListener
+public class CLListenerManager2 extends ContextLoaderListener
 {
     @Override
     public void contextInitialized(ServletContextEvent event)

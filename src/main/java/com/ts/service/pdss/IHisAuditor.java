@@ -1,5 +1,9 @@
 package com.ts.service.pdss;
 
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+import javax.jws.WebService;
+
 import com.hitzd.his.Beans.TLabTest;
 import com.hitzd.his.Beans.TPatOperation;
 import com.hitzd.his.Beans.TPatVitalSigns;
@@ -21,6 +25,10 @@ import com.hitzd.his.Beans.TPatientOrder;
  * @author Administrator
  *
  */
+@WebService(
+        name = "IHisAuditor",
+        targetNamespace = "http://www.tmp.com/services/pdssService"
+    )
 public interface IHisAuditor 
 {
     
@@ -39,7 +47,8 @@ public interface IHisAuditor
     /**
      * 返回体检信息 
      */
-    public TPatVitalSigns[] getpatVsVisitSigns(String patID , String Visitid);
+	@WebMethod
+    public TPatVitalSigns[] getpatVsVisitSigns(@WebParam(name = "patID")String patID ,@WebParam(name = "Visitid") String Visitid);
     /**
      * 返回检验信息 
      * @param patid

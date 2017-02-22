@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hitzd.his.Beans.TPatOrderDrug;
+import com.hitzd.his.Beans.TPatientOrder;
 import com.hitzd.persistent.Persistent4DB;
 import com.ts.dao.DaoSupportPdss;
 import com.ts.entity.pdss.pdss.Beans.TDrug;
@@ -165,7 +166,21 @@ public class DrugInteractionCheckerBean extends Persistent4DB implements  IDrugI
      * @param id
      * @return
      */
-    public List<TDrug> queryDrugListByIds(List<String> ids){
+    public List<TDrug> queryDrugListByIds(String[] ids){
+    	List<TDrug> rs = new ArrayList<TDrug>();
+    	final Set<String> set = new HashSet<String>();
+    	for(String id:ids){
+    		if(!set.contains(id)){
+    			set.add(id);
+    			TDrug t = queryDrugById(id);
+    			if(t!=null)
+    				rs.add(t);
+    		}
+    	}
+    	return rs;
+    }
+    
+    private List<TDrug> queryDrugListByIds(List<String> ids){
     	List<TDrug> rs = new ArrayList<TDrug>();
     	final Set<String> set = new HashSet<String>();
     	for(String id:ids){
@@ -184,7 +199,7 @@ public class DrugInteractionCheckerBean extends Persistent4DB implements  IDrugI
      * 
      */
     @Override
-    public TDrugSecurityRslt Check(TPatOrderDrug[] pods)
+    public TDrugSecurityRslt Check(TPatientOrder  po)
     {
     	try
     	{
@@ -193,7 +208,7 @@ public class DrugInteractionCheckerBean extends Persistent4DB implements  IDrugI
             /* 药品组合情况*/
             TDrugSecurityRslt dsr = new TDrugSecurityRslt() ;
             /* 查找drugs 中的所有要药品*/
-//            TPatOrderDrug[] pods = po.getPatOrderDrugs();
+            TPatOrderDrug[] pods = po.getPatOrderDrugs();
             // 通过map过滤掉重复的药品码
 //            Map<String, TDrug> drugs2  = QueryUtils.queryDrug(pods, null, query);
             List<String> ids = new ArrayList<String>();
@@ -207,16 +222,15 @@ public class DrugInteractionCheckerBean extends Persistent4DB implements  IDrugI
             // 将配对结果放入缓存中
             // 后面所有的审查结果从缓存中取出来
             // 只有这个循环读取数据库
-            for (int i = 0; i < drugs.size(); i++)
-            {
-            	TDrug drugA = drugs.get(i);
-            	for (int j = i + 1; j < drugs.size(); j++)
-            	{
-            		TDrug drugB = drugs.get(j);
-            		
-            		TDrugInteractionRslt diRslt = null;
+//            for (int i = 0; i < drugs.size(); i++)
+//            {
+//            	TDrug drugA = drugs.get(i);
+//            	for (int j = i + 1; j < drugs.size(); j++)
+//            	{
+//            		TDrug drugB = drugs.get(j);
+//            		
+//            		TDrugInteractionRslt diRslt = null;
                     // 此处从缓存中取结果=====================================
-
                     
                     /*
                     diRslt = BeanRSCache.getDrugInteraction(key1, key2);
@@ -241,8 +255,8 @@ public class DrugInteractionCheckerBean extends Persistent4DB implements  IDrugI
 	                        diRslt.addDrugInfo(new TDrug(drugA), new TDrug(drugB), list);
                     }
             		*/
-            	}
-            }
+//            	}
+//            }
             for (int i = 0; i < pods.length; i++)
             {
             	TPatOrderDrug podA = pods[i];
@@ -411,7 +425,7 @@ public class DrugInteractionCheckerBean extends Persistent4DB implements  IDrugI
             }
      */
     
-    public TDrugSecurityRslt Check(List<String> ids)
+    public TDrugSecurityRslt Check(String[] ids)
     {
         /* 药品组合情况*/
         TDrugSecurityRslt dsr = new TDrugSecurityRslt();
