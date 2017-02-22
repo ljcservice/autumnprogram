@@ -11,11 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hitzd.DBUtils.JDBCQueryImpl;
 import com.hitzd.DBUtils.TCommonRecord;
 import com.hitzd.his.Utils.Config;
 import com.ts.dao.DaoSupportPdss;
 import com.ts.entity.pdss.pdss.Beans.TAdministration;
 import com.ts.entity.pdss.pdss.Beans.TDrug;
+import com.ts.entity.pdss.pdss.Beans.TDrugDiagRel;
 import com.ts.entity.pdss.pdss.Beans.TDrugInteractionInfo;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugInteractionRslt;
 import com.ts.service.cache.CacheProcessor;
@@ -31,15 +33,72 @@ public class PdssCache {
 	private static String DRUG_CODE_INTERACTION = "DRUG_CODE_INTERACTION";//药品成分冲突Key
 	private static String DiseageVsDiag = "DiseageVsDiag";//诊断对应的疾病key
 	private static String drugadmini = "drugadmini";//用药途径key
+	private static String ddrCache = "ddrCache";//药物禁忌症对应key
+	
 	@Autowired
 	private CacheTemplate cacheTemplate;
 	
 	@Resource(name = "daoSupportPdss")
 	private DaoSupportPdss dao;
 	
-	//用药途径
-	public List<TAdministration> queryAdministration(String[] administrationID){
-		
+    /**
+     * 药物禁忌症对应，已应用数据库快照
+     * @param DrugClassIDs
+     * @param drugAdminis
+     * @return
+     */
+    public List<TDrugDiagRel> queryDrugDiagRels(String[] drugClassIDs, String[] drugAdmini)
+    {
+        final List<TDrugDiagRel> list = new ArrayList<TDrugDiagRel>();
+        List<String> param = new ArrayList<String>();
+        
+        for (int i = 0; i < drugClassIDs.length; i++){
+            for (int j = 0; j < drugAdmini.length; j++){
+	        	if(param.contains(drugClassIDs[i]+"_"+drugAdmini[j])){
+	        		//重复数据
+	        	}else{
+	        		TDrugDiagRel o = queryDrugDiagRel(drugClassIDs[i], drugAdmini[j]);
+	        		if(o!=null){
+	        			list.add(o);
+	        		}
+	        		param.add(drugClassIDs[i]+"_"+drugAdmini[j]);
+	        	}
+            }
+        }       
+        return list;	
+    	
+    }
+    /**
+     * 药物禁忌症对应，已应用数据库快照
+     * @param DrugClassID
+     * @param drugAdmini
+     * @return
+     */
+  	public TDrugDiagRel queryDrugDiagRel(final String drugClassId,final String drugAdmini){
+  		TDrugDiagRel t = cacheTemplate.cache(ddrCache,drugClassId+"_"+drugAdmini, new CacheProcessor<TDrugDiagRel>() {
+  			@Override
+  			public TDrugDiagRel handle() {
+  				TDrugDiagRel res=null;
+  				try {
+  	            	PageData pd = new PageData();
+  	            	pd.put("drugClassId", drugClassId);
+  	            	pd.put("drugAdmini", drugAdmini);
+  			    	res = (TDrugDiagRel) dao.findForObject("DrugMapper.queryDrugDiagRel",pd);
+  				} catch (Exception e) {
+  					e.printStackTrace();
+  				}
+  				return res;
+  			}
+  		});
+      	return t;
+  	}
+    
+	/**
+	 * 用药途径，多个查询
+	 * @param administrationID
+	 * @return
+	 */
+	public List<TAdministration> queryAdministrations(String[] administrationID){
         final List<TAdministration> list = new ArrayList<TAdministration>();
         List<String> param = new ArrayList<String>();
         
@@ -48,7 +107,7 @@ public class PdssCache {
         	if(param.contains(administrationID[i])){
         		//重复数据
         	}else{
-        		TAdministration aid = getAdministration(administrationID[i]);
+        		TAdministration aid = queryAdministration(administrationID[i]);
         		list.add(aid);
         		param.add(administrationID[i]);
         	}
@@ -56,9 +115,13 @@ public class PdssCache {
         return list;		
 	}
 	
-	//用药途径
-	public TAdministration getAdministration(final String administrationID){
-		TAdministration t = cacheTemplate.cache(drugadmini+administrationID, new CacheProcessor<TAdministration>() {
+	/**
+	 * 用药途径单个缓存查询
+	 * @param administrationID
+	 * @return
+	 */
+	public TAdministration queryAdministration(final String administrationID){
+		TAdministration t = cacheTemplate.cache(drugadmini,administrationID, new CacheProcessor<TAdministration>() {
 			@Override
 			public TAdministration handle() {
 				TAdministration res=null;

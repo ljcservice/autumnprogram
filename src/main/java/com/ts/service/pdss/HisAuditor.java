@@ -880,7 +880,9 @@ public class HisAuditor implements IHisAuditor
         return drugsecuity.DrugInteractionCheckS(Drugs);
     }
 
-    /* 配伍审查 */
+    /**
+     *   配伍审查
+     */
     public TDrugSecurityRslt DrugIvEffectCheck(TPatientOrder po)
     {
         TPatOrderDrug[] pods = po.getPatOrderDrugs();
@@ -905,11 +907,15 @@ public class HisAuditor implements IHisAuditor
     	return drugsecuity.DrugIvEffectCheckS(DrugIds, RecMainIds, AdministrationIds);
     }
     
-    /* 禁忌症审查 */
+    /**
+     * 禁忌症审查 
+     * 改造完成
+     */
     public TDrugSecurityRslt DrugDiagCheck(TPatientOrder po)
     {
         return drugsecuity.DrugDiagCheck(po);
     }
+    
     public TDrugSecurityRslt DrugDiagCheckS(String[] drugs, String[] diagnosis)
     {
         return drugsecuity.DrugDiagCheckS(drugs, diagnosis);

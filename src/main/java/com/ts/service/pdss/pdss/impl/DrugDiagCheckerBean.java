@@ -94,38 +94,37 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
 	        if(diagnosis.length == 0)
 	            return new TDrugSecurityRslt();
 	        // 诊断对应的疾病 sql 组装 
-	        StringBuffer DiaeVsDiag = new StringBuffer();
+	        List<String> diaeVsDiags = new ArrayList<String>();
 	        Map<String, List<TCommonRecord>> diseVsdiagMap = new HashMap<String, List<TCommonRecord>>();
 	        for(String str : diagnosis)
 	        {
 //	            List<TCommonRecord> list = QueryUtils.queryDiseageVsdiag(str, query);
 	        	List<TCommonRecord> list = pdssCache.getDiseageVsDiag(str);
 //	            diseVsdiagMap.put(str, list);
-	            if(list == null || list.size() == 0 ) continue;
+	            if(list == null || list.size() == 0 ){ 
+	            	continue;
+	            }
 	            for(TCommonRecord t : list)
 	            {
-	                DiaeVsDiag.append(t.get("disease_id")).append(",");
+	            	diaeVsDiags.add(t.get("disease_id").toString()) ;
 	            }
 	        }
-	        if(DiaeVsDiag.length() > 0 ) 
-	            DiaeVsDiag.deleteCharAt(DiaeVsDiag.length() - 1);
-	        else 
+	        if(diaeVsDiags == null || diaeVsDiags.size() == 0 ) {
 	            return  new TDrugSecurityRslt();
+	        }
 	        /* 所有药品信息 */
 //	        List<TDrug> drugslist  = QueryUtils.queryDrug(drugs, null, query);
 	        List<TDrug> drugslist = pdssCache.queryDrugListByIds(drugs);
 	        
 	        /* 用药途径 */
 //	        List<TAdministration> adstraion = QueryUtils.queryAdministration(admini, null, query);
-	        List<TAdministration> adstraion = pdssCache.queryAdministration(admini);
-	        
-	        //TODO  做到此处
+	        List<TAdministration> adstraion = pdssCache.queryAdministrations(admini);
 	        
 	        /* 药品类别  组装 */
 	        String[] drugClassID  = new String[drugslist.size()];
 	        for(int i = 0 ;i<drugslist.size();i++)
 	        {
-	            TDrug drug      = drugslist.get(i);
+	            TDrug drug = drugslist.get(i);
 	            if(drug.getDRUG_CLASS_ID()!=null)
 	                drugClassID[i] = drug.getDRUG_CLASS_ID();
 	        }
@@ -138,28 +137,30 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
 	        List<TDrugDiagRel> drugDiagRels = new ArrayList<TDrugDiagRel>();
 	        if(drugClassID.length > 0)
 	        {
-	            drugDiagRels = QueryUtils.queryDrugDiagRel(drugClassID, admini, null, query);
+	            drugDiagRels = pdssCache.queryDrugDiagRels(drugClassID, admini );
 	        }
-	        
 	        
 	        /*  药物禁忌症对应CONTRAIND_ID 组装sql*/
-	        StringBuffer drugDiagRelIds = new StringBuffer();
+	        List<String> drugDiagRelIds = new ArrayList<String>();
 	        for(TDrugDiagRel entry : drugDiagRels)
 	        {
-	            drugDiagRelIds.append("'").append(entry.getCONTRAIND_ID()).append("',");
+	        	drugDiagRelIds.add(entry.getCONTRAIND_ID());
 	        }
 	        /* 检查是否有值 */
-	        if(drugDiagRelIds.length() == 0)
+	        if(drugDiagRelIds.size()==0){
 	        	return new TDrugSecurityRslt();
-	        /* 药物禁忌症信息 */
-	        String strSql = "select DRUG_DIAG_INFO_ID,DIAGNOSIS_DICT_ID,DRUG_DIAG_REL_ID,SEQ_ID,INTER_INDI,DIAG_DESC,DRUG_REF_SOURCE,CONTRAIND_ID from DRUG_DIAG_INFO where " +
-	        " disease_id in (" + DiaeVsDiag.toString() + ") ";
-	        if(drugDiagRelIds.length() > 0)
-	        {
-	            drugDiagRelIds.deleteCharAt(drugDiagRelIds.length()-1);
-	            strSql += " and contraind_id in (" + drugDiagRelIds.toString() + ")";
 	        }
-	        List<TDrugDiagInfo> drugDiagInfos = (List<TDrugDiagInfo>) query.query(strSql, new DrugDiagInfoMapper());
+	        /* 药物禁忌症信息 */
+//	        String strSql = "select DRUG_DIAG_INFO_ID,DIAGNOSIS_DICT_ID,DRUG_DIAG_REL_ID,SEQ_ID,INTER_INDI,DIAG_DESC,DRUG_REF_SOURCE,CONTRAIND_ID from DRUG_DIAG_INFO where " +
+//	        " disease_id in (" + DiaeVsDiag.toString() + ") ";
+	     
+	        PageData pp = new PageData();
+	        pp.put("diaeVsDiags", diaeVsDiags);
+	        if(drugDiagRelIds.size() > 0)
+	        {
+	        	pp.put("drugDiagRelIds", drugDiagRelIds);
+	        }
+	        List<TDrugDiagInfo> drugDiagInfos = (List<TDrugDiagInfo>) dao.findForList("getDrugDiagInfos",pp);
 	        /* 整理返回数据结果 */
 	        TDrugSecurityRslt result = new TDrugSecurityRslt();
 	        for(int i = 0 ;i<pods.length ; i++)
@@ -216,6 +217,14 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
     	}
     }
 
+    
+    
+    
+//    做到此处
+    
+    
+    
+    
     @SuppressWarnings({ "unchecked", "static-access" })
     @Override
     public TDrugSecurityRslt Check(String[] drugs, String[] diagnosis)
