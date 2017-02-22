@@ -72,6 +72,17 @@
     <servlet-name>springMvc</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping>
+     <!-- CXF Servlet -->
+    <servlet>
+        <servlet-name>cxfservlet</servlet-name>
+        <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>cxfservlet</servlet-name>
+        <!-- 匹配/services下的所有请求 -->
+        <url-pattern>/services/*</url-pattern>
+    </servlet-mapping>
+    <!-- End CXF Servlet -->
   <filter>
     <filter-name>startFilter</filter-name>
     <filter-class>com.ts.filter.startFilter</filter-class>
