@@ -14,6 +14,8 @@
 		<!-- 分页 -->
 		<typeAlias type="com.ts.entity.Page" alias="Page"/>
 		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TDrug" alias="TDrug"/>
+		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TAdministration" alias="TAdministration"/>
+		
 	</typeAliases>
 	
 	<plugins>
