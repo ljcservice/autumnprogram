@@ -22,32 +22,56 @@
         where (IV_CLASS_CODE1 = #{code1} and IV_CLASS_CODE2 =#{code2}) 
         	or (IV_CLASS_CODE1 = #{code2} and IV_CLASS_CODE2 = #{code1})
 　	</select>
+	<!-- 诊断信息转换 -->
 	<select id="queryDiagDictMap" parameterType="pd" resultType="String">
-<!-- 		select ICD9,id, diagnosis_no_local, diagnosis_name_local, diagnosis_id, oper_user, oper_time, oper_type  -->
+	<!-- 		select ICD9,id, diagnosis_no_local, diagnosis_name_local, diagnosis_id, oper_user, oper_time, oper_type  -->
 		select ICD9 from diagnosis_map 
 		where diagnosis_no_local in 
  		<foreach item="item" index="index" collection="diagnosis" open="(" separator="," close=")">  
  			 #{item}  
  		</foreach> 
 	</select>
-	
+	<!-- 	查询单个诊断对应的疾病 -->
 	<select id="getDiseageVsDiag" parameterType="String" resultType="pd">
 		select t.disease_id,t.diagnosis_code,t.disease_name 
 		from view_Disease_vs_diagnosis t 
 		where t.diagnosis_code = #{code}
 	</select>
-	
+	<!-- 	用药途径 -->
 	<select id="getAdministration" parameterType="String" resultType="TAdministration">
 		select ADMINISTRATION_ID,ADMINISTRATION_NAME,INPUT_CODE,ADMINISTRATION_CLASS,ROUTE_METHOD,ROUTE_CLASS,
  			ADMINISTRATION_NO_LOCAL,ADMINISTRATION_NAME_LOCAL,ADMINISTRATION_ID,OPER_USER,OPER_TIME 
  			from view_administration 
  			where ADMINISTRATION_ID = #{id}
 	</select>
+	<!-- 	用药途径 -->
 	<select id="getAdministrationLocal" parameterType="String" resultType="TAdministration">
 		select ADMINISTRATION_ID,ADMINISTRATION_NAME,INPUT_CODE,ADMINISTRATION_CLASS,ROUTE_METHOD,ROUTE_CLASS,
 			ADMINISTRATION_NO_LOCAL,ADMINISTRATION_NAME_LOCAL,ADMINISTRATION_ID,OPER_USER,OPER_TIME 
 			from view_administration 
 			where ADMINISTRATION_NO_LOCAL = #{id}
     
+	</select>
+	<!-- 	药物禁忌症对应信息 -->
+	<select id="queryDrugDiagRel" parameterType="pd" resultType="TDrugDiagRel">
+		select DRUG_DIAG_REL_ID,CONTRAIND_ID,DRUG_CLASS_ID,ADMINISTRATION_ID,INDEX_ID 
+		from DRUG_DIAG_REL
+        where DRUG_CLASS_ID = #{drugClassId} 
+        	and ADMINISTRATION_ID = #{drugAdmini}
+	</select>
+	<!-- 	药物禁忌症对应CONTRAIND_ID -->
+	<select id="getDrugDiagInfos" parameterType="pd" resultType="TDrugDiagInfo">
+		select DRUG_DIAG_INFO_ID,DIAGNOSIS_DICT_ID,DRUG_DIAG_REL_ID,SEQ_ID,INTER_INDI,DIAG_DESC,DRUG_REF_SOURCE,CONTRAIND_ID 
+		from DRUG_DIAG_INFO 
+		where disease_id in
+	    	<foreach item="item" index="index" collection="diaeVsDiags" open="(" separator="," close=")">  
+ 			 	#{item}  
+ 			</foreach> 
+ 			<if test="drugDiagRelIds != null and drugDiagRelIds != ''">
+	 			and contraind_id in 
+	 			<foreach item="item" index="index" collection="drugDiagRelIds" open="(" separator="," close=")">  
+	 			 	#{item}  
+	 			</foreach> 
+	        </if>
 	</select>
 </mapper>
