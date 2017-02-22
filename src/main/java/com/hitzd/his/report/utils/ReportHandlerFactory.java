@@ -1,7 +1,7 @@
 package com.hitzd.his.report.utils;
 
 /**
- * ¹¹½¨±¨±í´¦ÀíÀà
+ * æ„å»ºæŠ¥è¡¨å¤„ç†ç±»
  * @author
  *
  */

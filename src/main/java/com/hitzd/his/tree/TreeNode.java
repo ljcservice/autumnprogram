@@ -6,7 +6,7 @@ import java.util.List;
 import com.hitzd.DBUtils.TCommonRecord;
 
 /**
- * ²Ëµ¥Ê÷¶ÔÏó 
+ * èœå•æ ‘å¯¹è±¡ 
  * @author 
  *
  */
@@ -29,12 +29,12 @@ public class TreeNode
     private String   MenuParam    = "";
     private String   MenuIsRpt    = "";
     private String   MenuRefID    = "";
-    /* ÊÇ·ñÏÔÊ¾¸ø½Úµã*/
+    /* æ˜¯å¦æ˜¾ç¤ºç»™èŠ‚ç‚¹*/
     private String   MenuIsView   = "";
     private TreeNode RefMenu      = null;
     
-    /* Â³Í¢Ã÷20140529ĞŞ¸Ä  */
-    /* µ±Ç°²Ëµ¥ÏòÄÄ¸ö·şÎñÆ÷ÇëÇó */
+    /* é²å»·æ˜20140529ä¿®æ”¹  */
+    /* å½“å‰èœå•å‘å“ªä¸ªæœåŠ¡å™¨è¯·æ±‚ */
     private String   Server       = "";
 
     public TreeNode getRefMenu()

@@ -9,7 +9,7 @@ import com.hitzd.DBUtils.CommonMapper;
 import com.hitzd.persistent.Persistent4DB;
 
 /**
- * ·ÖÒ³»ùÀà 
+ * åˆ†é¡µåŸºç±» 
  * @author Administrator
  *
  */
@@ -17,15 +17,15 @@ public class BasePageBean extends Persistent4DB
 {
     
     /**
-     *  ·ÖÒ³²Ù×÷
-     * @param maxresult    Ò»Ò³ÏÔÊ¾¼ÇÂ¼Êı
-     * @param currentpage  Ò³Âë
-     * @param queryCode    ÏµÍ³´úÂë
-     * @param wheres       Ìõ¼ş 
-     * @param value        ²ÎÊıÖµ
-     * @param orders       ÅÅĞò
-     * @param tableName    ±íÃû
-     * @param fields       ×Ö¶ÎÃû³Æ 
+     *  åˆ†é¡µæ“ä½œ
+     * @param maxresult    ä¸€é¡µæ˜¾ç¤ºè®°å½•æ•°
+     * @param currentpage  é¡µç 
+     * @param queryCode    ç³»ç»Ÿä»£ç 
+     * @param wheres       æ¡ä»¶ 
+     * @param value        å‚æ•°å€¼
+     * @param orders       æ’åº
+     * @param tableName    è¡¨å
+     * @param fields       å­—æ®µåç§° 
      * @return
      */
     @SuppressWarnings ("unchecked")
@@ -33,33 +33,33 @@ public class BasePageBean extends Persistent4DB
             ,String wheres,Object[] value ,LinkedHashMap<String, String> orders,String tableName,String fields)
     {
         setQueryCode(queryCode);
-        /* ·ÖÒ³Êı¾İ¼¯ºÏ  */
+        /* åˆ†é¡µæ•°æ®é›†åˆ  */
         QueryResult<TCommonRecord> qr = new QueryResult<TCommonRecord>();
-        /* Ò³Âë */
+        /* é¡µç  */
         currentpage = currentpage < 1 ? 1 : currentpage;
-        /* Ò»Ò³ÏÔÊ¾¼ÇÂ¼Êı */
+        /* ä¸€é¡µæ˜¾ç¤ºè®°å½•æ•° */
         maxresult   = maxresult < 1? 12 : maxresult;
         PageView<TCommonRecord>  pageView = new PageView<TCommonRecord>(maxresult,currentpage);
-        /* Êı¾İ×ÜÊı  */
+        /* æ•°æ®æ€»æ•°  */
         StringBuffer countSql = new StringBuffer();
         countSql.append("select count(*) total from ").append(tableName).append(" where 1=1 ").append(wheres);
-        /* Êı¾İ×ÜÊı */
+        /* æ•°æ®æ€»æ•° */
         qr.setTotalrecord(((TCommonRecord)query.queryForObject(countSql.toString(),value == null ? new Object[]{} : value,new CommonMapper())).getInt("total"));
-        /* µ±×ÜÒ³ÊıĞ¡ÓÚµ±Ç°Ò³  µ±Ç°Ò³ÉèÖÃÎª µÚÒ»Ò³ */
+        /* å½“æ€»é¡µæ•°å°äºå½“å‰é¡µ  å½“å‰é¡µè®¾ç½®ä¸º ç¬¬ä¸€é¡µ */
         if(((qr.getTotalrecord() / maxresult) + ((qr.getTotalrecord() % maxresult) > 0 ? 1 : 0 )) < currentpage)
         {
             pageView.setCurrentpage(1);
         }
         Integer firstindex = (pageView.getCurrentpage()-1) * pageView.getMaxresult();
         Integer lastindex  = (pageView.getCurrentpage()) * pageView.getMaxresult();
-        /* ÊÇ·ñÖ¸¶¨×Ö¶Î²éÑ¯  */
+        /* æ˜¯å¦æŒ‡å®šå­—æ®µæŸ¥è¯¢  */
         fields  = fields == null? "*": fields;
-        /* ·ÖÒ³Êı¾İ */
+        /* åˆ†é¡µæ•°æ® */
         StringBuffer pageSql = new StringBuffer("select * from (select t.* ,rownum rn from (select ").append(fields).append(" from ");
         pageSql.append(tableName).append(" where 1=1 ").append(wheres);
         pageSql.append(getOrder(orders));
         pageSql.append(") t where rownum <= ").append(lastindex.toString()).append(") b where b.rn > ").append(firstindex.toString());
-        /*  ·ÖÒ³Êı¾İ  */
+        /*  åˆ†é¡µæ•°æ®  */
         qr.setResultlist(query.query(pageSql.toString(),value == null?new Object[]{}:value, new CommonMapper()));
         pageView.setQueryResult(qr);
         return pageView;
@@ -95,7 +95,7 @@ public class BasePageBean extends Persistent4DB
     }
     
     /**
-     * ¹¹½¨ÅÅĞò·½·¨ 
+     * æ„å»ºæ’åºæ–¹æ³• 
      * @param orders
      * @return
      */

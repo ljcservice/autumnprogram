@@ -4,22 +4,22 @@ import com.hitzd.his.Utils.Config;
 import com.hitzd.his.Utils.DictCache;
 
 /**
- * @description Ò½ÖöÕï¶ÏĞÅÏ¢Àà£ºPatOrderDiagnosis ¶ÔÓ¦Êı¾İ¿â±í£ºÒ½ÖöÕï¶ÏĞÅÏ¢(Pat_Order_Diagnosis)
+ * @description åŒ»å˜±è¯Šæ–­ä¿¡æ¯ç±»ï¼šPatOrderDiagnosis å¯¹åº”æ•°æ®åº“è¡¨ï¼šåŒ»å˜±è¯Šæ–­ä¿¡æ¯(Pat_Order_Diagnosis)
  * @author
  */
 public class TPatOrderDiagnosis
 {
 
-    /* Õï¶ÏID*/
+    /* è¯Šæ–­ID*/
     private String diagnosisDictID;
 
-    /* Õï¶ÏÃû³Æ */
+    /* è¯Šæ–­åç§° */
     private String diagnosisName;
-    // Õï¶Ï´úÂë*/
+    // è¯Šæ–­ä»£ç */
 
-    // ¼±ÂıĞÔ±êÖ¾ 1¼±ĞÔ3ÂıĞÔ2ÖĞ¼ä
+    // æ€¥æ…¢æ€§æ ‡å¿— 1æ€¥æ€§3æ…¢æ€§2ä¸­é—´
     // private String acuteFlag;
-    // // ÊÇ·ñĞÂÔö
+    // // æ˜¯å¦æ–°å¢
     // private String isNew;
 
     // public String getAcuteFlag() {

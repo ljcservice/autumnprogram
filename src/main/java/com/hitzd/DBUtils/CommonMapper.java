@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 
 /**
- * Í¨ÓÃmapper 
+ * é€šç”¨mapper 
  * @author Administrator
  *
  */

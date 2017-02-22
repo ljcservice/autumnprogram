@@ -5,7 +5,7 @@ import java.util.Calendar;
 import com.hitzd.his.Utils.*;
 
 /**
- * @description ²¡ÈËĞÅÏ¢Àà£ºPatient ¶ÔÓ¦Êı¾İ¿â±í£º²¡ÈËĞÅÏ¢(PAT_MASTER_INFO)
+ * @description ç—…äººä¿¡æ¯ç±»ï¼šPatient å¯¹åº”æ•°æ®åº“è¡¨ï¼šç—…äººä¿¡æ¯(PAT_MASTER_INFO)
  * @author
  */
 public class TPatient implements java.io.Serializable
@@ -13,19 +13,19 @@ public class TPatient implements java.io.Serializable
 
     private static final long serialVersionUID = 1L;
 
-    // ²¡ÈËÃû³Æ*/
+    // ç—…äººåç§°*/
     private String            name;
 
-    // ²¡ÈËĞÔ±ğ*/
+    // ç—…äººæ€§åˆ«*/
     private String            sex;
 
-    // ²¡ÈË³öÉúÈÕÆÚ*/
+    // ç—…äººå‡ºç”Ÿæ—¥æœŸ*/
     private String            dateOfBirth;
 
-    // ²¡ÈË³öÉúµØ*/
+    // ç—…äººå‡ºç”Ÿåœ°*/
     private String            birthPlace;
 
-    // Ãñ×å*/
+    // æ°‘æ—*/
     private String            nation;
 
     public TPatient()
@@ -33,14 +33,14 @@ public class TPatient implements java.io.Serializable
     }
     
     /**
-     * ·µ»ØĞÔ±ğ trueÎªÄĞĞÔ falseÅ®ĞÔ
+     * è¿”å›æ€§åˆ« trueä¸ºç”·æ€§ falseå¥³æ€§
      * @return
      */
     public boolean TheIsSex()
     {
         if(this.sex != null)
         {
-            if(this.sex.indexOf("ÄĞ")!=-1||"MAN".equals(this.sex.toUpperCase())||"MALE".equals(this.sex.toUpperCase()))
+            if(this.sex.indexOf("ç”·")!=-1||"MAN".equals(this.sex.toUpperCase())||"MALE".equals(this.sex.toUpperCase()))
             {
                 return true;
             }

@@ -17,7 +17,7 @@ import com.hitzd.DBUtils.CommonMapper;
 
 
 /**
- *   ¹¹½¨±¨±í»ã×ÜÀà
+ *   æ„å»ºæŠ¥è¡¨æ±‡æ€»ç±»
  *   @author Administrator
  */
 public class ReportScheduler extends SysLog4Dcdt
@@ -40,7 +40,7 @@ public class ReportScheduler extends SysLog4Dcdt
 		{
 	    	if (Config.getParamValue("SchedulerSwitch").equalsIgnoreCase("false"))
 	    	{
-	    		Log("¶¨Ê±Æ÷¿ª¹ØÎª¹Ø×´Ì¬£¬²»½øĞĞÊı¾İ³éÈ¡²Ù×÷");
+	    		Log("å®šæ—¶å™¨å¼€å…³ä¸ºå…³çŠ¶æ€ï¼Œä¸è¿›è¡Œæ•°æ®æŠ½å–æ“ä½œ");
 	    		return false;
 	    	}
 		}
@@ -67,7 +67,7 @@ public class ReportScheduler extends SysLog4Dcdt
 			    boolean flag       = false;
 			    if(iClazz.length == 0)
 			    {
-			        vctLog.add(ADate + " " + cr.get("classpath") + ": ÀàÃ»ÓĞ¼Ì³Ğ com.hitzd.his.ReportBuilder.Interfaces.IReportBuilder ½Ó¿Ú !");
+			        vctLog.add(ADate + " " + cr.get("classpath") + ": ç±»æ²¡æœ‰ç»§æ‰¿ com.hitzd.his.ReportBuilder.Interfaces.IReportBuilder æ¥å£ !");
 			        break;
 			    }
 			    for(Class c : iClazz)
@@ -80,7 +80,7 @@ public class ReportScheduler extends SysLog4Dcdt
 			    }
 			    if(!flag)
 			    {
-			        vctLog.add(ADate + " " + cr.get("classpath") + ": ÀàÃ»ÓĞ¼Ì³Ğ com.hitzd.his.ReportBuilder.Interfaces.IReportBuilder ½Ó¿Ú !");
+			        vctLog.add(ADate + " " + cr.get("classpath") + ": ç±»æ²¡æœ‰ç»§æ‰¿ com.hitzd.his.ReportBuilder.Interfaces.IReportBuilder æ¥å£ !");
 			        break;
 			    }
 				IReportBuilder rb = (IReportBuilder) clazz.newInstance();
@@ -112,7 +112,7 @@ public class ReportScheduler extends SysLog4Dcdt
 	}
 	
 	/**
-	 * ¹¹½¨±¨±í
+	 * æ„å»ºæŠ¥è¡¨
 	 * @param ADate
 	 * @param key
 	 * @param vctLog
@@ -145,7 +145,7 @@ public class ReportScheduler extends SysLog4Dcdt
 			    boolean flag       = false;
 			    if(iClazz.length == 0)
 			    {
-			        vctLog.add(ADate + " " + cr.get("classpath") + ": ÀàÃ»ÓĞ¼Ì³Ğ com.hitzd.his.ReportBuilder.Interfaces.IReportBuilder ½Ó¿Ú !");
+			        vctLog.add(ADate + " " + cr.get("classpath") + ": ç±»æ²¡æœ‰ç»§æ‰¿ com.hitzd.his.ReportBuilder.Interfaces.IReportBuilder æ¥å£ !");
 			        break;
 			    }
 			    for(Class c : iClazz)
@@ -158,7 +158,7 @@ public class ReportScheduler extends SysLog4Dcdt
 			    }
 			    if(!flag)
 			    {
-			        vctLog.add(ADate + " " + cr.get("classpath") + ": ÀàÃ»ÓĞ¼Ì³Ğ com.hitzd.his.ReportBuilder.Interfaces.IReportBuilder ½Ó¿Ú !");
+			        vctLog.add(ADate + " " + cr.get("classpath") + ": ç±»æ²¡æœ‰ç»§æ‰¿ com.hitzd.his.ReportBuilder.Interfaces.IReportBuilder æ¥å£ !");
 			        break;
 			    }
 				IReportBuilder rb = (IReportBuilder) clazz.newInstance();

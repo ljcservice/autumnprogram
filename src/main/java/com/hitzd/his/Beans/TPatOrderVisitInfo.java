@@ -3,40 +3,40 @@ package com.hitzd.his.Beans;
 import java.io.Serializable;
 
 /**
- * @description ²¡ÈË×¡ÔºĞÅÏ¢Àà£ºPatOrderVisitInfo ¶ÔÓ¦Êı¾İ¿â±í£º²¡ÈË×¡ÔºĞÅÏ¢(PAT_ORDER_VISITINFO)
+ * @description ç—…äººä½é™¢ä¿¡æ¯ç±»ï¼šPatOrderVisitInfo å¯¹åº”æ•°æ®åº“è¡¨ï¼šç—…äººä½é™¢ä¿¡æ¯(PAT_ORDER_VISITINFO)
  * @author
  */
 public class TPatOrderVisitInfo implements Serializable
 {
 
     private static final long serialVersionUID = 1L;
-    /* ²¡ÈË±¾´Î×¡Ôº±êÊ¶ HISÏµÍ³ID*/
+    /* ç—…äººæœ¬æ¬¡ä½é™¢æ ‡è¯† HISç³»ç»ŸID*/
     private String visitID;
-    /* ²¡ÈËID*/
+    /* ç—…äººID*/
     private String patientID;
-    /* ÈëÔº¿ÆÊÒ*/
+    /* å…¥é™¢ç§‘å®¤*/
     private String inDept;
-    /* ÈëÔº·½Ê½ Ê¹ÓÃ´úÂë£¬ÃÅÕï¡¢¼±Õï¡¢×ªÈëµÈ*/
+    /* å…¥é™¢æ–¹å¼ ä½¿ç”¨ä»£ç ï¼Œé—¨è¯Šã€æ€¥è¯Šã€è½¬å…¥ç­‰*/
     private String inMode;
-    /* ÈëÔºÈÕÆÚ*/
+    /* å…¥é™¢æ—¥æœŸ*/
     private String inDate;
-    /* ×¡ÔºÄ¿µÄ*/
+    /* ä½é™¢ç›®çš„*/
     // private String inCause;
-    /* ³öÔº¿ÆÊÒ*/
+    /* å‡ºé™¢ç§‘å®¤*/
     private String outDept;
-    /* ³öÔºÈÕÆÚ¼°Ê±¼ä*/
+    /* å‡ºé™¢æ—¥æœŸåŠæ—¶é—´*/
     // private String outDate;
-    /* ³öÔº·½Ê½*/
+    /* å‡ºé™¢æ–¹å¼*/
     // private String outMode;
-    /* ½ÓÕïÈÕÆÚ*/
+    /* æ¥è¯Šæ—¥æœŸ*/
     // private String consultingDate;
-    /* ÈëÔº²¡Çé Ê¹ÓÃ´úÂë, Î£¡¢¼±¡¢Ò»°ã*/
+    /* å…¥é™¢ç—…æƒ… ä½¿ç”¨ä»£ç , å±ã€æ€¥ã€ä¸€èˆ¬*/
     private String patAdmCondition;
-    /* Ö÷ÖÎÒ½Ê¦ */
+    /* ä¸»æ²»åŒ»å¸ˆ */
     private String mainDoctor;
-    /* ¾­ÖÎÒ½Ê¦ */
+    /* ç»æ²»åŒ»å¸ˆ */
     private String otherDoctor;
-    /* ÃÅÕïÒ½Ê¦*/
+    /* é—¨è¯ŠåŒ»å¸ˆ*/
     private String consultingDoctor;
     public String getVisitID()
     {

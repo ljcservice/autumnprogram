@@ -1,7 +1,7 @@
 package com.hitzd.his.report.utils;
 
 /**
- * º”‘ÿ¿‡µΩjvm ÷–
+ * Âä†ËΩΩÁ±ªÂà∞jvm ‰∏≠
  * @author Administrator
  *
  */

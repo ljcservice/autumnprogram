@@ -1,20 +1,20 @@
 package com.hitzd.his.Beans.Middle;
 
 /**
- * 查询条件定义配置
+ * 鏌ヨ鏉′欢瀹氫箟閰嶇疆
  * @author Crystal
  */
 public class TQueryConfig
 {
-	/* 唯一标识 */
+	/* 鍞竴鏍囪瘑 */
 	private String queryId;
-	/* 所属表ID */
+	/* 鎵�灞炶〃ID */
 	private String tableId;
-	/* 查询条件 */
+	/* 鏌ヨ鏉′欢 */
 	private String queryCondition;
-	/* 备注 */
+	/* 澶囨敞 */
 	private String remark;
-	/* HIS标准，默认JWYH-304 */
+	/* HIS鏍囧噯锛岄粯璁WYH-304 */
 	private String hisName;
 	
 	public TQueryConfig()

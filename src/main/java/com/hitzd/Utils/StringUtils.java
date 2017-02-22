@@ -18,16 +18,16 @@ import com.hitzd.his.casehistory.helper.ICaseHistoryHelper;
 public class StringUtils 
 {
 
-	public static String styleQBy£¤ = "£¤###,##0";
-	public static String styleQNo£¤ = "###,##0";
-	public static String styleBy£¤  = "£¤##0";
-	public static String styleNo£¤  = "##0";
+	public static String styleQByï¿¥ = "ï¿¥###,##0";
+	public static String styleQNoï¿¥ = "###,##0";
+	public static String styleByï¿¥  = "ï¿¥##0";
+	public static String styleNoï¿¥  = "##0";
 	public static String styleRate  = "##0";
 	/**
 	 * 
-	 * @param value  ĞèÒª¸ñÊ½»¯µÄÊıÖµ
-	 * @param decCount  ĞèÒª´ø¼¸Î»Ğ¡Êıµã
-	 * @param style  ¸ñÊ½»¯µÄÑùÊ½
+	 * @param value  éœ€è¦æ ¼å¼åŒ–çš„æ•°å€¼
+	 * @param decCount  éœ€è¦å¸¦å‡ ä½å°æ•°ç‚¹
+	 * @param style  æ ¼å¼åŒ–çš„æ ·å¼
 	 * @return
 	 */
 	public static String formatDouble(double value,int decCount,String style)
@@ -42,46 +42,46 @@ public class StringUtils
 		return df.format(value);
 	}
 	/**
-	 * ·µ»Ø¸ñÊ½»¯ÊıÖµÑùÊ½000,000.00
+	 * è¿”å›æ ¼å¼åŒ–æ•°å€¼æ ·å¼000,000.00
 	 * @param value
 	 * @return
 	 */
-	public static String formatQBy£¤(double value)
+	public static String formatQByï¿¥(double value)
 	{
-		return formatDouble(value,2,styleQBy£¤);
+		return formatDouble(value,2,styleQByï¿¥);
 	}
 	/**
-	 * ·µ»Ø¸ñÊ½»¯ÊıÖµÑùÊ½000,000.00
+	 * è¿”å›æ ¼å¼åŒ–æ•°å€¼æ ·å¼000,000.00
 	 * @param value
 	 * @return
 	 */
-	public static String formatQNo£¤(double value)
+	public static String formatQNoï¿¥(double value)
 	{
-		return formatDouble(value,2,styleQNo£¤);
+		return formatDouble(value,2,styleQNoï¿¥);
 	}
 	/**
-	 * ·µ»Ø¸ñÊ½»¯ÊıÖµÑùÊ½0.00
+	 * è¿”å›æ ¼å¼åŒ–æ•°å€¼æ ·å¼0.00
 	 * @param value
 	 * @return
 	 */
-	public static String formatBy£¤(double value)
+	public static String formatByï¿¥(double value)
 	{
-		return formatDouble(value,2,styleBy£¤);
+		return formatDouble(value,2,styleByï¿¥);
 	}
 	/**
-	 * ·µ»Ø¸ñÊ½»¯ÊıÖµÑùÊ½0.00
+	 * è¿”å›æ ¼å¼åŒ–æ•°å€¼æ ·å¼0.00
 	 * @param value
 	 * @return
 	 */
-	public static String formatNo£¤(double value)
+	public static String formatNoï¿¥(double value)
 	{
-		return formatDouble(value,2,styleNo£¤);
+		return formatDouble(value,2,styleNoï¿¥);
 	}
 	/**
-	 * ·µ»Ø±ÈÀı°Ù·Ö±È
-	 * @param one ±»³ıÊı
-	 * @param two ³ıÊı
-	 * @param decCount ¼¸Î»Ğ¡Êıµã
+	 * è¿”å›æ¯”ä¾‹ç™¾åˆ†æ¯”
+	 * @param one è¢«é™¤æ•°
+	 * @param two é™¤æ•°
+	 * @param decCount å‡ ä½å°æ•°ç‚¹
 	 * @return
 	 */
 	public static String getRate(double one,double two,int decCount,String sytle)
@@ -103,9 +103,9 @@ public class StringUtils
 		return df.format(one/two * 100)+"%";
 	}
 	/**
-	 * ·µ»Ø±ÈÀı°Ù·Ö±È£¬Ä¬ÈÏÁ½Î»Ğ¡Êıµã
-	 * @param one ±»³ıÊı
-	 * @param two ³ıÊı
+	 * è¿”å›æ¯”ä¾‹ç™¾åˆ†æ¯”ï¼Œé»˜è®¤ä¸¤ä½å°æ•°ç‚¹
+	 * @param one è¢«é™¤æ•°
+	 * @param two é™¤æ•°
 	 * @return
 	 */
 	public static String getRate(double one,double two)
@@ -113,9 +113,9 @@ public class StringUtils
 		return getRate(one, two, 2,styleRate);
 	}
 	/**
-	 * ´«ÈëÒ»¸ödoubleÀàĞÍÊı¾İ£¬·µ»Ø¸ÃÊıÖµ*100²¢Ğ¡Êıµã±£ÁôÁ½Î» 
+	 * ä¼ å…¥ä¸€ä¸ªdoubleç±»å‹æ•°æ®ï¼Œè¿”å›è¯¥æ•°å€¼*100å¹¶å°æ•°ç‚¹ä¿ç•™ä¸¤ä½ 
 	 * @param value
-	 * @return Èç´«Èë99£¬Ôò·µ»Ø99*100+%=9900%
+	 * @return å¦‚ä¼ å…¥99ï¼Œåˆ™è¿”å›99*100+%=9900%
 	 */
 	public static String formatRate(double value)
 	{
@@ -125,9 +125,9 @@ public class StringUtils
 		return df.format(value * 100)+"%";
 	}
 	/**
-	 * ¼ì²é´«ÈëµÄÊıÖµÊÇ·ñÎª0
+	 * æ£€æŸ¥ä¼ å…¥çš„æ•°å€¼æ˜¯å¦ä¸º0
 	 * @param value
-	 * @return ÊÇÔò·µ»Øtrue ·ñÔò·µ»Øfalse
+	 * @return æ˜¯åˆ™è¿”å›true å¦åˆ™è¿”å›false
 	 */
 	public static boolean checkZero(double value)
 	{
@@ -191,7 +191,7 @@ public class StringUtils
 	}
 	public static List<TCommonRecord> getSupplier()
 	{
-		System.out.println("²éÑ¯³§¼Ò¶ÔÕÕ±í£¬³§¼Ò¼òĞ´£¡");
+		System.out.println("æŸ¥è¯¢å‚å®¶å¯¹ç…§è¡¨ï¼Œå‚å®¶ç®€å†™ï¼");
 		JDBCQueryImpl his = DBQueryFactory.getQuery("HIS");
 		ICaseHistoryHelper chhr = CaseHistoryFactory.getCaseHistoryHelper();
 		List<TCommonRecord> lsGroups = new ArrayList<TCommonRecord>();
@@ -226,7 +226,7 @@ public class StringUtils
 		}
 		else
 		{
-			System.out.println("Ã»ÓĞ²ğ·Ö¹æ¸ñÓë³§¼ÒµÄ²ÎÊıÖµ£¬»ò²»ĞèÒª²ğ·Ö");
+			System.out.println("æ²¡æœ‰æ‹†åˆ†è§„æ ¼ä¸å‚å®¶çš„å‚æ•°å€¼ï¼Œæˆ–ä¸éœ€è¦æ‹†åˆ†");
 			return null;
 		}
 //		return his.query(sql.toString(), new CommonMapper());

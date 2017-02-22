@@ -16,7 +16,7 @@ import com.hitzd.his.Program.Web.Utils.CommonUtils;
 import com.hitzd.his.sso.SSOController;
 
 /**
- * servletÏÂµÄÀ¹½Ø session 
+ * servletä¸‹çš„æ‹¦æˆª session 
  * @author Administrator
  *
  */

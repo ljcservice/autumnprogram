@@ -15,7 +15,7 @@ import com.hitzd.his.task.Task;
 import com.hitzd.persistent.Persistent4DB;
 
 /**
- * Ò©Æ·Í³¼ÆÖ§³Ö²¿¶ÓÒ½Ôº ¾üÎ¯Ò»ºÅµÄÇé¿ö  (Ò©·¿±í)
+ * è¯å“ç»Ÿè®¡æ”¯æŒéƒ¨é˜ŸåŒ»é™¢ å†›å§”ä¸€å·çš„æƒ…å†µ  (è¯æˆ¿è¡¨)
  * @author jingcong
  *
  */
@@ -45,7 +45,7 @@ public class DR_OutDrugCostInfo_Force extends Persistent4DB implements IReportBu
     }
     
     /**
-     * °´Ììµ¥Ò©Æ··ÑÓÃÍ³¼Æ
+     * æŒ‰å¤©å•è¯å“è´¹ç”¨ç»Ÿè®¡
      * @param ADate
      */
     private void DrugDayCost(final String ADate)
@@ -105,7 +105,7 @@ public class DR_OutDrugCostInfo_Force extends Persistent4DB implements IReportBu
     }
     
     /**
-     * °´ÌìÒ½Éúµ¥Ò©Æ··ÑÓÃÍ³¼Æ
+     * æŒ‰å¤©åŒ»ç”Ÿå•è¯å“è´¹ç”¨ç»Ÿè®¡
      * @param ADate
      */
     private void DrugDoctorDeptCost(final String ADate)
@@ -158,7 +158,7 @@ public class DR_OutDrugCostInfo_Force extends Persistent4DB implements IReportBu
                             ",'" + t.get("drug_code",true)        + "'" +
                             ",'" + t.get("drug_name",true)        + "'" +
                             ",'" + t.get("doctor_code",true)      + "'" +
-                            ",'" + (!"".equals(t.get("prescribed_by"))?t.get("prescribed_by",true):"ÎŞ") + "'" +
+                            ",'" + (!"".equals(t.get("prescribed_by"))?t.get("prescribed_by",true):"æ— ") + "'" +
                             ",'" + t.get("amount",true)           + "'" +
                             ",'" + t.get("costs",true)            + "'" +
                             ",'" + t.get("drug_spec",true)     + "'" +
@@ -182,7 +182,7 @@ public class DR_OutDrugCostInfo_Force extends Persistent4DB implements IReportBu
     }
     
     /**
-     * °´Ìì²¡ÈËµ¥Ò©Æ··Ñ
+     * æŒ‰å¤©ç—…äººå•è¯å“è´¹
      * @param ADate
      */
     private void DrugPatDDCost(final String ADate)
@@ -242,13 +242,13 @@ public class DR_OutDrugCostInfo_Force extends Persistent4DB implements IReportBu
                             + "to_date('"  + ADate     + "','yyyy-mm-dd')"
                             + ",'" + t.get("drug_code",true)      + "'"
                             + ",'" + t.get("drug_name",true)      + "'"
-                            + ",'" + (!"".equals(t.get("patient_id"))?t.get("patient_id",true):"ÎŞ") + "'"
+                            + ",'" + (!"".equals(t.get("patient_id"))?t.get("patient_id",true):"æ— ") + "'"
                             + ",'" + t.get("name",true)   + "'"
                             + ",'" + t.get("sex",true)    + "'"
                             + ",'" + t.get("age",true)    + "'"
                             + ",'" + t.get("identity",true)       + "'"
                             + ",'" + t.get("doctor_code",true)    + "'"
-                            + ",'" + (!"".equals(t.get("prescribed_by"))?t.get("prescribed_by",true):"ÎŞ") + "'" 
+                            + ",'" + (!"".equals(t.get("prescribed_by"))?t.get("prescribed_by",true):"æ— ") + "'" 
                             + ",'" + t.get("amount",true)         + "'"
                             + ",'" + t.get("costs",true)          + "'"
                             + ",'" + t.get("drug_spec",true)   + "'"
@@ -273,7 +273,7 @@ public class DR_OutDrugCostInfo_Force extends Persistent4DB implements IReportBu
     }
     
     /**
-     *  Ñ¡Ôñ ×¥È¡ÃÅÕï´¦·½ ³öÈ¥Ò© Ò©·¿  
+     *  é€‰æ‹© æŠ“å–é—¨è¯Šå¤„æ–¹ å‡ºå»è¯ è¯æˆ¿  
      * @return
      
     private String getFetchDeptCode()

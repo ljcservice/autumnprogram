@@ -46,7 +46,7 @@ class  lobCreater extends AbstractLobCreatingPreparedStatementCallback
     @Override
     protected void setValues(PreparedStatement ps, LobCreator lobCreator) throws SQLException, DataAccessException
     {
-        if(values == null) throw new RuntimeException("输入参数为空!");
+        if(values == null) throw new RuntimeException("杈撳叆鍙傛暟涓虹┖!");
         for(int i = 0 ;i < values.length; i++)
         {
             Object o = values[i];

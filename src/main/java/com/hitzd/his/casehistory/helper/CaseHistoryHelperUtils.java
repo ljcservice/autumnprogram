@@ -5,63 +5,63 @@ import com.hitzd.DBUtils.TCommonRecord;
 public class CaseHistoryHelperUtils 
 {
 	/**
-	 * µÈºÅ£º=
+	 * ç­‰å·ï¼š=
 	 */
 	public static final String EQ = "=";
 	
 	/**
-	 * Ä£ºı²éÑ¯£ºlike
+	 * æ¨¡ç³ŠæŸ¥è¯¢ï¼šlike
 	 */
 	public static final String LIKE = "like";
 	
 	/**
-	 * È¡Á½ÖµÖ®¼äµÄÊı¾İ£ºbetween..and..
+	 * å–ä¸¤å€¼ä¹‹é—´çš„æ•°æ®ï¼šbetween..and..
 	 */
 	public static final String BETWEENAND = "between..and";
 	
 	/**
-	 * Ğ¡ÓÚ£º<
+	 * å°äºï¼š<
 	 */
 	public static final String LESS = "<";
 	
 	/**
-	 * ´óÓÚ£º>
+	 * å¤§äºï¼š>
 	 */
 	public static final String MORE = ">";
 	
 	/**
-	 * Ğ¡ÓÚµÈÓÚ£º<=
+	 * å°äºç­‰äºï¼š<=
 	 */
 	public static final String LESSEQ = "<=";
 	
 	/**
-	 * ´óÓÚµÈÓÚ£º>=
+	 * å¤§äºç­‰äºï¼š>=
 	 */
 	public static final String MOREEQ = ">=";
 	
 	/**
-	 * ²éÑ¯Ìõ¼ş¹æ¶¨¶à¸öÖµ£ºin
+	 * æŸ¥è¯¢æ¡ä»¶è§„å®šå¤šä¸ªå€¼ï¼šin
 	 */
 	public static final String IN = "in";
 	
 	/**
-	 * ²éÑ¯ is ÎªÁ¬½Ó¼ìË÷
+	 * æŸ¥è¯¢ is ä¸ºè¿æ¥æ£€ç´¢
 	 */
 	public static final String IS =  "is";
 	
 	/**
-	 * @param lsWheres Ìõ¼şÁĞ±í£¬ÊÇÒ»¸öTCommonRecordµÄÁĞ±í£¬Ã¿Ò»ÏîTCommonRecord°üÀ¨FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
-	 * ÆäÖĞ
-	 * FieldName : ±íÊ¾¸ÃÌõ¼şÓëÄÄ¸ö×Ö¶ÎÏà¹Ø
-	 * FieldValue: ±íÊ¾¸ÃÌõ¼şµÄ×Ö¶ÎÈ¡Öµ£¬Èç¹ûFieldValueµÄµÚÒ»¸ö»ò×îºóÒ»¸ö×Ö·ûÎª%£¬ÔòÉú³ÉlikeÓï¾ä
-	 * FieldType : ±íÊ¾¸Ã×Ö¶ÎµÄÀàĞÍ£¬Èç¹ûÊÇChar£¬ÔòÆ´ºÃµÄsqlÖĞ°üÀ¨'£¬·ñÔò²»°üÀ¨'£¬Ä¬ÈÏÖµÎª·Çchar£¬¼´²»´ø'
-	 * Relation  : ±íÊ¾×Ö¶ÎÃûÓë×Ö¶ÎÖµÖ®¼äµÄ¹ØÏµ£¬=¡¢>=¡¢<=µÈµÈ£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾¹ØÏµÎª=
-	 * GroupNo   : ±íÊ¾¸ÃÌõ¼şµÄ×éºÅ£¬Èç¹û2¸öÌõ¼şÎªÒ»×é£¬ĞèÒªÁª¶¯²éÑ¯£¬ÀıÈç£º
+	 * @param lsWheres æ¡ä»¶åˆ—è¡¨ï¼Œæ˜¯ä¸€ä¸ªTCommonRecordçš„åˆ—è¡¨ï¼Œæ¯ä¸€é¡¹TCommonRecordåŒ…æ‹¬FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
+	 * å…¶ä¸­
+	 * FieldName : è¡¨ç¤ºè¯¥æ¡ä»¶ä¸å“ªä¸ªå­—æ®µç›¸å…³
+	 * FieldValue: è¡¨ç¤ºè¯¥æ¡ä»¶çš„å­—æ®µå–å€¼ï¼Œå¦‚æœFieldValueçš„ç¬¬ä¸€ä¸ªæˆ–æœ€åä¸€ä¸ªå­—ç¬¦ä¸º%ï¼Œåˆ™ç”Ÿæˆlikeè¯­å¥
+	 * FieldType : è¡¨ç¤ºè¯¥å­—æ®µçš„ç±»å‹ï¼Œå¦‚æœæ˜¯Charï¼Œåˆ™æ‹¼å¥½çš„sqlä¸­åŒ…æ‹¬'ï¼Œå¦åˆ™ä¸åŒ…æ‹¬'ï¼Œé»˜è®¤å€¼ä¸ºécharï¼Œå³ä¸å¸¦'
+	 * Relation  : è¡¨ç¤ºå­—æ®µåä¸å­—æ®µå€¼ä¹‹é—´çš„å…³ç³»ï¼Œ=ã€>=ã€<=ç­‰ç­‰ï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå…³ç³»ä¸º=
+	 * GroupNo   : è¡¨ç¤ºè¯¥æ¡ä»¶çš„ç»„å·ï¼Œå¦‚æœ2ä¸ªæ¡ä»¶ä¸ºä¸€ç»„ï¼Œéœ€è¦è”åŠ¨æŸ¥è¯¢ï¼Œä¾‹å¦‚ï¼š
 	 * ((StartDateTime <= to_date('2011-01-01', 'yyyy-mm-dd')) and (StopDateTime >= to_date('2011-02-01', 'yyyy-mm-dd')))
-	 * ÉÏÃæµÄ2¸öÌõ¼ş¾Í±ØĞëÒ»ÆğÓÃ£¬Òò´ËÒÔÉÏ2¸ö×Ö¶ÎÎªÒ»×é£¬GroupNo²»Ó¦¸Ã·¢ÉúÖØ¸´£¬Ä¬ÈÏÎª¿ÕÖµ£¬±íÊ¾¸ÃÌõ¼şµ¥¶ÀËãÊÇÒ»¸öÌõ¼ş
-	 * Condition : ±íÊ¾¸ÃÌõ¼şÇ°Ãæ¸úµÄÊÇand »¹ÊÇ or£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾Ç°Ãæ¸ú and 
-	 * @param strGroup group by Óï¾äºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬1ÏîÄÚÈİ£¬FieldName
-	 * @param strOrder order by ºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬2ÏîÄÚÈİ£¬Ò»ÏîÊÇFieldName£¬Ò»ÏîÊÇBy£¬ByµÄÈ¡ÖµÎª¿Õ£¬asc»òdesc
+	 * ä¸Šé¢çš„2ä¸ªæ¡ä»¶å°±å¿…é¡»ä¸€èµ·ç”¨ï¼Œå› æ­¤ä»¥ä¸Š2ä¸ªå­—æ®µä¸ºä¸€ç»„ï¼ŒGroupNoä¸åº”è¯¥å‘ç”Ÿé‡å¤ï¼Œé»˜è®¤ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºè¯¥æ¡ä»¶å•ç‹¬ç®—æ˜¯ä¸€ä¸ªæ¡ä»¶
+	 * Condition : è¡¨ç¤ºè¯¥æ¡ä»¶å‰é¢è·Ÿçš„æ˜¯and è¿˜æ˜¯ orï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå‰é¢è·Ÿ and 
+	 * @param strGroup group by è¯­å¥åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«1é¡¹å†…å®¹ï¼ŒFieldName
+	 * @param strOrder order by åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«2é¡¹å†…å®¹ï¼Œä¸€é¡¹æ˜¯FieldNameï¼Œä¸€é¡¹æ˜¯Byï¼ŒByçš„å–å€¼ä¸ºç©ºï¼Œascæˆ–desc
 	 */
 	public static TCommonRecord genWhereCR(String FieldName, String FieldValue, String FieldType, String Relation, String GroupNo, String Condition)
 	{
@@ -76,7 +76,7 @@ public class CaseHistoryHelperUtils
 	}
 	
 	/**
-	 * Éú³É´øÖĞÎÄµÄ²éÑ¯Ìõ¼ş
+	 * ç”Ÿæˆå¸¦ä¸­æ–‡çš„æŸ¥è¯¢æ¡ä»¶
 	 * @param FieldName
 	 * @param FieldValue
 	 * @param FieldType
@@ -107,7 +107,7 @@ public class CaseHistoryHelperUtils
 	}
 	
 	/**
-	 * Éú³É·Ö×éÓï¾ä
+	 * ç”Ÿæˆåˆ†ç»„è¯­å¥
 	 * @param FieldName
 	 * @return
 	 */
@@ -119,7 +119,7 @@ public class CaseHistoryHelperUtils
 	}
 	
 	/**
-	 * Éú³ÉÅÅĞòÓï¾ä
+	 * ç”Ÿæˆæ’åºè¯­å¥
 	 * @param FieldName
 	 * @param By
 	 * @return

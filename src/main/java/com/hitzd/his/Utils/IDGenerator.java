@@ -15,12 +15,12 @@ public class IDGenerator
 		{
 		} // ignore exception
 
-        Calendar now = Calendar.getInstance();    //ȡ��ϵͳʱ��
+        Calendar now = Calendar.getInstance();    //取得系统时间
         int year, month, date;
         int h, m, s, ms;
-        year  = now.get(Calendar.YEAR);            //ȡ�� YEAR �ֶε�ֵ
-        month = now.get(Calendar.MONTH) + 1;       //ȡ�� MONTH �ֶε�ֵ
-        date  = now.get(Calendar.DATE);            //ȡ�� DATE �ֶε�ֵ
+        year  = now.get(Calendar.YEAR);            //取得 YEAR 字段的值
+        month = now.get(Calendar.MONTH) + 1;       //取得 MONTH 字段的值
+        date  = now.get(Calendar.DATE);            //取得 DATE 字段的值
         h     = now.get(Calendar.HOUR_OF_DAY);
         m     = now.get(Calendar.MINUTE);
         s     = now.get(Calendar.SECOND);

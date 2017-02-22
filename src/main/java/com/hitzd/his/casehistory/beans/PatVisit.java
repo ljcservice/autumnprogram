@@ -221,7 +221,7 @@ public class PatVisit implements java.io.Serializable {
 
 	private Date linkDate;
 	
-	// Õï¶ÏÁĞ±í
+	// è¯Šæ–­åˆ—è¡¨
 	private List<Diagnosis> diagnosis = new ArrayList<Diagnosis>();
 	public int getDiagnosisCount()
 	{
@@ -240,7 +240,7 @@ public class PatVisit implements java.io.Serializable {
 		diagnosis.remove(index);
 	}
 	
-	// °ÚÒ©¼ÇÂ¼
+	// æ‘†è¯è®°å½•
 	private List<DrugDispenseRec> drugDispenseRecs = new ArrayList<DrugDispenseRec>();
 	public int getDrugDispenseRecCount()
 	{
@@ -258,7 +258,7 @@ public class PatVisit implements java.io.Serializable {
 	{
 		drugDispenseRecs.remove(index);
 	}
-	// ×¡Ôº·ÑÓÃÃ÷Ï¸
+	// ä½é™¢è´¹ç”¨æ˜ç»†
 	private List<InpBillDetail> inpBillDetails = new ArrayList<InpBillDetail>();
 	public int getInpBillDetailCount()
 	{
@@ -276,7 +276,7 @@ public class PatVisit implements java.io.Serializable {
 	{
 		inpBillDetails.remove(index);
 	}
-	// ÊÖÊõ¼ÇÂ¼
+	// æ‰‹æœ¯è®°å½•
 	private List<Operation> operations = new ArrayList<Operation>();
 	public int getOperationCount()
 	{
@@ -294,7 +294,7 @@ public class PatVisit implements java.io.Serializable {
 	{
 		operations.remove(index);
 	}
-	// ÊÖÊõÖ÷¼ÇÂ¼
+	// æ‰‹æœ¯ä¸»è®°å½•
 	private List<OperationMaster> operationMasters = new ArrayList<OperationMaster>();
 	public int getOperationMasterCount()
 	{
@@ -312,7 +312,7 @@ public class PatVisit implements java.io.Serializable {
 	{
 		operationMasters.remove(index);
 	}
-	// ÊÖÊõÃû³Æ
+	// æ‰‹æœ¯åç§°
 	private List<OperationName> operationNames = new ArrayList<OperationName>();
 	public int getOperationNameCount()
 	{
@@ -330,7 +330,7 @@ public class PatVisit implements java.io.Serializable {
 	{
 		operationNames.remove(index);
 	}
-	// Ò½Öö¼ÇÂ¼
+	// åŒ»å˜±è®°å½•
 	private List<Orders> orders = new ArrayList<Orders>();
 	public int getOrdersCount()
 	{
@@ -348,7 +348,7 @@ public class PatVisit implements java.io.Serializable {
 	{
 		orders.remove(index);
 	}
-	// ÌåÕ÷¼ÇÂ¼
+	// ä½“å¾è®°å½•
 	private List<VitalSignsRec> vitalSignsRecs = new ArrayList<VitalSignsRec>();
 	public int getVitalSignsRecCount()
 	{
@@ -366,7 +366,7 @@ public class PatVisit implements java.io.Serializable {
 	{
 		vitalSignsRecs.remove(index);
 	}
-	// ¼ì²é¼ÇÂ¼
+	// æ£€æŸ¥è®°å½•
 	private List<ExamMaster> examMasters = new ArrayList<ExamMaster>();
 	public int getExamMasterCount()
 	{
@@ -384,7 +384,7 @@ public class PatVisit implements java.io.Serializable {
 	{
 		examMasters.remove(index);
 	}
-	// Î¢ÉúÎï¼ìÑé¼ÇÂ¼
+	// å¾®ç”Ÿç‰©æ£€éªŒè®°å½•
 	private List<GermTest> germTests = new ArrayList<GermTest>();
 	public int getGermTestCount()
 	{
@@ -402,7 +402,7 @@ public class PatVisit implements java.io.Serializable {
 	{
 		germTests.remove(index);
 	}
-	// ¼ì²â¼ÇÂ¼
+	// æ£€æµ‹è®°å½•
 	private List<LabTestMaster> labTestMaster = new ArrayList<LabTestMaster>();
 	public int getLabTestMasterCount()
 	{

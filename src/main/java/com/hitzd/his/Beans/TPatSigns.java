@@ -3,7 +3,7 @@ package com.hitzd.his.Beans;
 import java.io.Serializable;
 
 /**
- * ÌåÕ÷ĞÅÏ¢
+ * ä½“å¾ä¿¡æ¯
  * 
  * @author Administrator
  * 

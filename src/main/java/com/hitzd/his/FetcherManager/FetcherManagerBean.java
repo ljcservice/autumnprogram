@@ -9,7 +9,7 @@ import com.hitzd.Factory.DBQueryFactory;
 import com.hitzd.his.Scheduler.ReportScheduler;
 
 /**
- * 增加一个中间层
+ * 澧炲姞涓�涓腑闂村眰
  * @author Administrator
  *
  */
@@ -47,7 +47,7 @@ public class FetcherManagerBean extends ReportScheduler
         {
             e.printStackTrace();
         }
-        System.out.println(" 中间层数据耗时 :" + (System.currentTimeMillis() - x));
+        System.out.println(" 涓棿灞傛暟鎹�楁椂 :" + (System.currentTimeMillis() - x));
     }
 
     @SuppressWarnings ("unchecked")

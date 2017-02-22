@@ -7,7 +7,7 @@ import com.hitzd.DBUtils.TCommonRecord;
 public class CommonRecordHelper 
 {
 	/**
-	 * 把list里的数据变成Json格式
+	 * 鎶妉ist閲岀殑鏁版嵁鍙樻垚Json鏍煎紡
 	 * @param list
 	 * @return
 	 */
@@ -27,7 +27,7 @@ public class CommonRecordHelper
 	}
 	
 	/**
-	 * 把TCommonRecord变成Json格式
+	 * 鎶奣CommonRecord鍙樻垚Json鏍煎紡
 	 * @param cr
 	 * @return
 	 */

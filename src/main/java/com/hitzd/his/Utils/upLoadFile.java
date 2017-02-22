@@ -21,7 +21,7 @@ import com.hitzd.DBUtils.TCommonRecord;
 import com.hitzd.Factory.DBQueryFactory;
 
 /**
- * ÉÏ´« ÏÂÔØ ÎÄ¼ş 
+ * ä¸Šä¼  ä¸‹è½½ æ–‡ä»¶ 
  * @author Administrator
  *
  */
@@ -30,15 +30,15 @@ public class upLoadFile
 	private HttpServletRequest req;
 	private HttpServletResponse res;
 	private InputStream input = null;
-	/* ÎÄ¼şµÄÕæÊÇµØÖ· */
+	/* æ–‡ä»¶çš„çœŸæ˜¯åœ°å€ */
 	private String fileRealPath;
-	/* ÎÄ¼şµÄÕæÊµÃû×Ö*/
+	/* æ–‡ä»¶çš„çœŸå®åå­—*/
 	private String fileRealName;
-	/* ÎÄ¼şµØÖ·*/
+	/* æ–‡ä»¶åœ°å€*/
 	private String filePath;
-	/*ÎÄ¼şÃû³Æ*/
+	/*æ–‡ä»¶åç§°*/
 	private String fileName;
-	/*ÎÄ¼şÀ©Õ¹Ãû*/
+	/*æ–‡ä»¶æ‰©å±•å*/
 	private String fileSuffix;
 	/**/
 	private String filePathAssortName = "/" ;
@@ -89,7 +89,7 @@ public class upLoadFile
 	}
 	
 	/**
-	 * ÉÏ´«
+	 * ä¸Šä¼ 
 	 * @param setQueryCode
 	 * @param insertMapper
 	 * @return
@@ -135,7 +135,7 @@ public class upLoadFile
 	}
 	
 	/**
-	 * ÏÂÔØĞÅÏ¢ 
+	 * ä¸‹è½½ä¿¡æ¯ 
 	 * @return
 	 */
 	public void downLoad(String setQueryCode , IFileMapper  SelectByIdMapper)
@@ -154,7 +154,7 @@ public class upLoadFile
 			File file = new File(readFilepath);
 			if(!file.exists())
 			{ 
-				new RuntimeException("ÎÄ¼ş²»´æÔÚ£¡" + readFilepath);
+				new RuntimeException("æ–‡ä»¶ä¸å­˜åœ¨ï¼" + readFilepath);
 			}
 			InputStream input = new BufferedInputStream(new FileInputStream(file));
 			res.setContentType("APPLICATION/OCTET-STREAM"); 
@@ -209,7 +209,7 @@ public class upLoadFile
 	}
 	
 	/**
-	 * ¹Ø±ÕÁ÷
+	 * å…³é—­æµ
 	 * @param input
 	 */
 	public void inputClose()

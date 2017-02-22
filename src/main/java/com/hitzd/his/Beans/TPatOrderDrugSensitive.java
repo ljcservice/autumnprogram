@@ -3,18 +3,18 @@ package com.hitzd.his.Beans;
 import java.io.Serializable;
 
 /**
- * @description Ò½ÖöÒ©Îï¹ıÃôĞÅÏ¢Àà£ºPatOrderDrugSensitive ¶ÔÓ¦Êı¾İ¿â±í£ºÒ½ÖöÒ©Îï¹ıÃôĞÅÏ¢(PAT_ORDER_DRUG_SENSITIVE)
+ * @description åŒ»å˜±è¯ç‰©è¿‡æ•ä¿¡æ¯ç±»ï¼šPatOrderDrugSensitive å¯¹åº”æ•°æ®åº“è¡¨ï¼šåŒ»å˜±è¯ç‰©è¿‡æ•ä¿¡æ¯(PAT_ORDER_DRUG_SENSITIVE)
  * @author
  */
 public class TPatOrderDrugSensitive implements Serializable{
 	
     private static final long serialVersionUID = 1L;
-    /* Ò©Îï¹ıÃô¼ÇÂ¼ID*/
+    /* è¯ç‰©è¿‡æ•è®°å½•ID*/
 	private String  patOrderDrugSensitiveID;
 
-	/* Ò©ÃôĞÅÏ¢´úÂë */
+	/* è¯æ•ä¿¡æ¯ä»£ç  */
 	private String  drugAllergenID;
-	/* ¹ıÃôÔ´*/
+	/* è¿‡æ•æº*/
 	//private String sensitiveSource;
 
 	

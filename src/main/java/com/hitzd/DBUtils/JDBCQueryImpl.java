@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 /**
- * ·â×°spring jdbctemplateÀà
+ * å°è£…spring jdbctemplateç±»
  * @author liujc
  *
  */
@@ -24,7 +24,7 @@ public final class  JDBCQueryImpl implements JDBCQuery
         this.DBName = dbName;
     }
     
-    /* µÃµ½Êı¾İÔ´µÄ´úÂë */
+    /* å¾—åˆ°æ•°æ®æºçš„ä»£ç  */
     public String getDbName()
     {
         return this.DBName;
@@ -49,17 +49,20 @@ public final class  JDBCQueryImpl implements JDBCQuery
     
     public int queryForInt(String sql)
     {
-        return query.queryForInt(sql);
+//        return query.queryForObject(sql);
+    	return 0;
     }
     
     public int queryForInt(String sql,Object[] _Values)
     {
-        return query.queryForInt(sql, _Values);
+//        return query.queryForInt(sql, _Values);
+    	return 0;
     }
     
     public int queryForInt(String sql,Object[] _Values,int[] _Types)
     {
-        return query.queryForInt(sql, _Values,_Types);
+//        return query.queryForInt(sql, _Values,_Types);
+    	return 0;
     }
     
     public Object queryForObject(String sql, RowMapper rowMapper)

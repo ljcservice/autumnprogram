@@ -1,7 +1,7 @@
 package com.hitzd.DBUtils.DBTypeBean;
 
 /**
- * 数据处理Clob 
+ * 鏁版嵁澶勭悊Clob 
  * @author jingcong
  *
  */
@@ -13,7 +13,7 @@ public class DBClobBean
     
     public DBClobBean(String value)
     {
-        if(value == null) throw new RuntimeException("DBClobBean 参数为空! ");
+        if(value == null) throw new RuntimeException("DBClobBean 鍙傛暟涓虹┖! ");
         this.valueClob =  value;
         this.valueLength = value.length();
     }

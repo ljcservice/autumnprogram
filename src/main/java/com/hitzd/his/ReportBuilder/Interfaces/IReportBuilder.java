@@ -6,8 +6,8 @@ import com.hitzd.his.task.Task;
 public interface IReportBuilder 
 {
 	/**
-	 *  ´´½¨ĞèÒª±¨±í³éÈ¡ÊµÏÖ
-	 *  ·µ»Ø´íÎóĞÅÏ¢£¬ÎŞ´íÎó·µ»Ø¿Õ×Ö·û´®
+	 *  åˆ›å»ºéœ€è¦æŠ¥è¡¨æŠ½å–å®ç°
+	 *  è¿”å›é”™è¯¯ä¿¡æ¯ï¼Œæ— é”™è¯¯è¿”å›ç©ºå­—ç¬¦ä¸²
 	 * @param ADate
 	 * @return
 	 */
@@ -15,7 +15,7 @@ public interface IReportBuilder
 	
 	public String BuildReportWithCR(String ADate, TCommonRecord crPatInfo, Task AOwner);
 	/**
-	 *  ·µ»Ø±¾´ÎµÄÈÕÖ¾ÎÄ¼şÃû
+	 *  è¿”å›æœ¬æ¬¡çš„æ—¥å¿—æ–‡ä»¶å
 	 * @return
 	 */
 	public String getLogFileName();

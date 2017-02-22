@@ -11,36 +11,36 @@ import java.util.Set;
 
 public class BeanHelper {
 
-	// ÊôĞÔ¸´ÖÆÖĞÅÅ³ıÔÚÍâµÄÊôĞÔÃû³Æ
+	// å±æ€§å¤åˆ¶ä¸­æ’é™¤åœ¨å¤–çš„å±æ€§åç§°
 	private static String[] exceptString = { "class", "value",
 			"servletWrapper", "servlet", "multipartRequestHandler" };
 	/**
-	 * ¸´ÖÆÏàÍ¬Ãû³ÆÊôĞÔ£¬Ö§³ÖÊı¾İÀàĞÍ×Ô¶¯×ª»» String to Integer Ê¹ÓÃ·½·¨ StrToInteger(String s) Integer
-	 * to String Ê¹ÓÃ·½·¨ ObjectToString(Object src) String to Long Ê¹ÓÃ·½·¨
-	 * StrToLong(String s) Long to String Ê¹ÓÃ·½·¨ ObjectToString(Object src) String
-	 * to Double Ê¹ÓÃ·½·¨ StrToDouble(String s) Double to String Ê¹ÓÃ·½·¨
-	 * ObjectToString(Object src) Sting to Date Ê¹ÓÃ·½·¨ StringtoDate(String date)
-	 * Ä¬ÈÏ×ª»»ĞÎÊ½yyyy-MM-dd£¬¿ÉÒÔÍ¨¹ısetDateformat(String dateformat)ĞÎÊ½¸ü¸Ä×ª»»¸ñÊ½
-	 * Util.datefmt;Ä¬ÈÏ¸ñÊ½ Util.datetimefmt;ÈÕÆÚÊ±¼ä¸ñÊ½ Date to String Ê¹ÓÃ·½·¨
-	 * DatetoString(Date dt) ×ª»»¸ñÊ½Í¬ÉÏ
+	 * å¤åˆ¶ç›¸åŒåç§°å±æ€§ï¼Œæ”¯æŒæ•°æ®ç±»å‹è‡ªåŠ¨è½¬æ¢ String to Integer ä½¿ç”¨æ–¹æ³• StrToInteger(String s) Integer
+	 * to String ä½¿ç”¨æ–¹æ³• ObjectToString(Object src) String to Long ä½¿ç”¨æ–¹æ³•
+	 * StrToLong(String s) Long to String ä½¿ç”¨æ–¹æ³• ObjectToString(Object src) String
+	 * to Double ä½¿ç”¨æ–¹æ³• StrToDouble(String s) Double to String ä½¿ç”¨æ–¹æ³•
+	 * ObjectToString(Object src) Sting to Date ä½¿ç”¨æ–¹æ³• StringtoDate(String date)
+	 * é»˜è®¤è½¬æ¢å½¢å¼yyyy-MM-ddï¼Œå¯ä»¥é€šè¿‡setDateformat(String dateformat)å½¢å¼æ›´æ”¹è½¬æ¢æ ¼å¼
+	 * Util.datefmt;é»˜è®¤æ ¼å¼ Util.datetimefmt;æ—¥æœŸæ—¶é—´æ ¼å¼ Date to String ä½¿ç”¨æ–¹æ³•
+	 * DatetoString(Date dt) è½¬æ¢æ ¼å¼åŒä¸Š
 	 * 
 	 * @param src
-	 *            Ô´¶ÔÏó
+	 *            æºå¯¹è±¡
 	 * @param dest
-	 *            Ä¿±ê¶ÔÏó 1.PropertyDescriptor[] ÃèÊö Java Bean Í¨¹ıÒ»¶Ô´æ´¢Æ÷·½·¨µ¼³öµÄÒ»¸öÊôĞÔ
-	 *            2.pdsrc[i].getPropertyType() »ñÈ¡ java Bean µÄÊôĞÔÀàĞÍ
-	 *            3.pddest[j].getName() »ñÈ¡ java Bean µÄÊôĞÔÃû³Æ
-	 *            4.pdsrc[i].getPropertyType().getName() »ñÈ¡ java Bean µÄÊôĞÔÀàĞÍÃû³Æ
-	 *            5.IllegalAccessExceptionÒì³£
-	 *            µ±Ó¦ÓÃ³ÌĞòÊÔÍ¼´´½¨Ò»¸öÊµÀı£¨¶ø²»ÊÇÊı×é£©¡¢ÉèÖÃ»ò»ñÈ¡Ò»¸ö×Ö¶Î£¬»òÕßµ÷ÓÃÒ»¸ö·½·¨
-	 *            £¬µ«µ±Ç°ÕıÔÚÖ´ĞĞµÄ·½·¨ÎŞ·¨·ÃÎÊÖ¸¶¨Àà¡¢×Ö¶Î¡¢·½·¨»ò¹¹Ôì·½·¨µÄ¶¨ÒåÊ±£¬Å×³ö IllegalAccessException¡£
-	 *            6.InvocationTargetExceptionÒì³£ ÊÇÒ»ÖÖ°ü×°ÓÉµ÷ÓÃ·½·¨»ò¹¹Ôì·½·¨ËùÅ×³öÒì³£µÄ¾­¹ı¼ì²éµÄÒì³£¡£
-	 *            7.NoSuchMethodExceptionÒì³£ ÎŞ·¨ÕÒµ½Ä³Ò»ÌØ¶¨·½·¨Ê±£¬Å×³ö¸ÃÒì³£
-	 *            8.PropertyUtils.getPropertyDescriptors(¶ÔÏó)
-	 *            ½«¶ÔÏóµÄÊôĞÔ·µ»Ø³ÉPropertyDescriptor[]Êı×é
-	 *            9.PropertyUtils.setProperty(¶ÔÏó£¬¶ÔÏóÊôĞÔÃû³Æ£¬¶ÔÏóÊôĞÔÖµ)
-	 *            //½«²ÎÊıÖĞµÄ¶ÔÏóÊôĞÔÖµ¸³½ø²ÎÊıÖĞµÄ¶ÔÏóÊôĞÔÖĞ
-	 *            10.PropertyUtils.getProperty(¶ÔÏó£¬¶ÔÏóÊôĞÔÃû³Æ) //»ñÈ¡Ö¸¶¨¶ÔÏóÊôĞÔÀïµÄÖµ
+	 *            ç›®æ ‡å¯¹è±¡ 1.PropertyDescriptor[] æè¿° Java Bean é€šè¿‡ä¸€å¯¹å­˜å‚¨å™¨æ–¹æ³•å¯¼å‡ºçš„ä¸€ä¸ªå±æ€§
+	 *            2.pdsrc[i].getPropertyType() è·å– java Bean çš„å±æ€§ç±»å‹
+	 *            3.pddest[j].getName() è·å– java Bean çš„å±æ€§åç§°
+	 *            4.pdsrc[i].getPropertyType().getName() è·å– java Bean çš„å±æ€§ç±»å‹åç§°
+	 *            5.IllegalAccessExceptionå¼‚å¸¸
+	 *            å½“åº”ç”¨ç¨‹åºè¯•å›¾åˆ›å»ºä¸€ä¸ªå®ä¾‹ï¼ˆè€Œä¸æ˜¯æ•°ç»„ï¼‰ã€è®¾ç½®æˆ–è·å–ä¸€ä¸ªå­—æ®µï¼Œæˆ–è€…è°ƒç”¨ä¸€ä¸ªæ–¹æ³•
+	 *            ï¼Œä½†å½“å‰æ­£åœ¨æ‰§è¡Œçš„æ–¹æ³•æ— æ³•è®¿é—®æŒ‡å®šç±»ã€å­—æ®µã€æ–¹æ³•æˆ–æ„é€ æ–¹æ³•çš„å®šä¹‰æ—¶ï¼ŒæŠ›å‡º IllegalAccessExceptionã€‚
+	 *            6.InvocationTargetExceptionå¼‚å¸¸ æ˜¯ä¸€ç§åŒ…è£…ç”±è°ƒç”¨æ–¹æ³•æˆ–æ„é€ æ–¹æ³•æ‰€æŠ›å‡ºå¼‚å¸¸çš„ç»è¿‡æ£€æŸ¥çš„å¼‚å¸¸ã€‚
+	 *            7.NoSuchMethodExceptionå¼‚å¸¸ æ— æ³•æ‰¾åˆ°æŸä¸€ç‰¹å®šæ–¹æ³•æ—¶ï¼ŒæŠ›å‡ºè¯¥å¼‚å¸¸
+	 *            8.PropertyUtils.getPropertyDescriptors(å¯¹è±¡)
+	 *            å°†å¯¹è±¡çš„å±æ€§è¿”å›æˆPropertyDescriptor[]æ•°ç»„
+	 *            9.PropertyUtils.setProperty(å¯¹è±¡ï¼Œå¯¹è±¡å±æ€§åç§°ï¼Œå¯¹è±¡å±æ€§å€¼)
+	 *            //å°†å‚æ•°ä¸­çš„å¯¹è±¡å±æ€§å€¼èµ‹è¿›å‚æ•°ä¸­çš„å¯¹è±¡å±æ€§ä¸­
+	 *            10.PropertyUtils.getProperty(å¯¹è±¡ï¼Œå¯¹è±¡å±æ€§åç§°) //è·å–æŒ‡å®šå¯¹è±¡å±æ€§é‡Œçš„å€¼
 	 * 
 	 */
 	public void copySameProperties(Object src, Object dest) {
@@ -49,28 +49,28 @@ public class BeanHelper {
 		PropertyDescriptor[] pdsrc = PropertyUtils.getPropertyDescriptors(src);
 		PropertyDescriptor[] pddest = PropertyUtils
 				.getPropertyDescriptors(dest);
-		// ½«Ô´¶ÔÏóÊôĞÔÑ­»·
+		// å°†æºå¯¹è±¡å±æ€§å¾ªç¯
 		for (int i = 0; i < pdsrc.length; i++) {
-			// ²»ÔÚ¸´ÖÆÄ¿±êÄÚµÄÊôĞÔÃû³Æ
+			// ä¸åœ¨å¤åˆ¶ç›®æ ‡å†…çš„å±æ€§åç§°
 			for (int es = 0; es < exceptString.length; es++) {
-				// Èç¹ûµ±Ç°¶ÔÏóµÄÊôĞÔµÈÓÚ£¬²»ÔÚ¸´ÖÆÄ¿±êÄÚµÄ¡£
-				// testÎª¼Ù£¬²»½øĞĞ¸´ÖÆ²Ù×÷¡£²¢Ìø³öÑ­»·£¬·´Ö®TESTÎªÕæ
+				// å¦‚æœå½“å‰å¯¹è±¡çš„å±æ€§ç­‰äºï¼Œä¸åœ¨å¤åˆ¶ç›®æ ‡å†…çš„ã€‚
+				// testä¸ºå‡ï¼Œä¸è¿›è¡Œå¤åˆ¶æ“ä½œã€‚å¹¶è·³å‡ºå¾ªç¯ï¼Œåä¹‹TESTä¸ºçœŸ
 				if (pdsrc[i].getName().equals(exceptString[es])) {
 					test = false;
 					break;
 				} else
 					test = true;
 			}
-			// Èç¹ûtestÎªÕæµÄ»°½øĞĞÊôĞÔÖµ¸´ÖÆ²Ù×÷
+			// å¦‚æœtestä¸ºçœŸçš„è¯è¿›è¡Œå±æ€§å€¼å¤åˆ¶æ“ä½œ
 			if (test) {
-				// ½øĞĞÄ¿±êÊôĞÔÑ­»·
+				// è¿›è¡Œç›®æ ‡å±æ€§å¾ªç¯
 				for (int j = 0; j < pddest.length; j++) {
-					// Èç¹ûÔ´¶ÔÏóÊôĞÔÃûÓëÄ¿±êÊôĞÔÃûÏàµÈ¡£½øĞĞÏÂÒ»²½ÅĞ¶Ï
+					// å¦‚æœæºå¯¹è±¡å±æ€§åä¸ç›®æ ‡å±æ€§åç›¸ç­‰ã€‚è¿›è¡Œä¸‹ä¸€æ­¥åˆ¤æ–­
 					if (pdsrc[i].getName().equals(pddest[j].getName())) {
-						// Èç¹ûÔ´¶ÔÏóÊôĞÔÓëÄ¿±êÊôĞÔÀàĞÍÏàµÈ¡£½øĞĞÏÂÒ»²½²Ù×÷
+						// å¦‚æœæºå¯¹è±¡å±æ€§ä¸ç›®æ ‡å±æ€§ç±»å‹ç›¸ç­‰ã€‚è¿›è¡Œä¸‹ä¸€æ­¥æ“ä½œ
 						if (pdsrc[i].getPropertyType() == pddest[j]
 								.getPropertyType()) {
-							// ½«Ô´¶ÔÏñÊôĞÔÖµ¸´ÖÆµ½Ä¿±ê¶ÔÏóÊôĞÔÖµÀïÃæ
+							// å°†æºå¯¹åƒå±æ€§å€¼å¤åˆ¶åˆ°ç›®æ ‡å¯¹è±¡å±æ€§å€¼é‡Œé¢
 							try {
 								PropertyUtils.setProperty(
 										dest,
@@ -84,16 +84,16 @@ public class BeanHelper {
 							} catch (NoSuchMethodException e) {
 								e.printStackTrace();
 							}
-							// Èç¹ûÔ´¶ÔÏóÊôĞÔÓëÄ¿±êÊôĞÔÀàĞÍ²»ÏàµÈ £¬½øĞĞÊôĞÔÀàĞÍ×ª»»ÎªÏàµÈ
+							// å¦‚æœæºå¯¹è±¡å±æ€§ä¸ç›®æ ‡å±æ€§ç±»å‹ä¸ç›¸ç­‰ ï¼Œè¿›è¡Œå±æ€§ç±»å‹è½¬æ¢ä¸ºç›¸ç­‰
 						} else {
 							try {
-								// Èç¹ûÔ´¶ÔÏóÊôĞÔÀàĞÍÃûÊÇÈÕÆÚĞÍ²¢ÇÒÄ¿±ê¶ÔÏóÊôĞÔÀàĞÍÃûÊÇ×Ö·û´®ĞÍ
+								// å¦‚æœæºå¯¹è±¡å±æ€§ç±»å‹åæ˜¯æ—¥æœŸå‹å¹¶ä¸”ç›®æ ‡å¯¹è±¡å±æ€§ç±»å‹åæ˜¯å­—ç¬¦ä¸²å‹
 								if (pdsrc[i].getPropertyType().getName()
 										.equals("java.util.Date")
 										&& pddest[j].getPropertyType()
 												.getName()
 												.equals("java.lang.String"))
-									// ½«×ª»»Îª×Ö·û´®ĞÍµÄÔ´¶ÔÏñÊôĞÔÖµ¸´ÖÆµ½Ä¿±ê¶ÔÏóÊôĞÔÖµÀïÃæ
+									// å°†è½¬æ¢ä¸ºå­—ç¬¦ä¸²å‹çš„æºå¯¹åƒå±æ€§å€¼å¤åˆ¶åˆ°ç›®æ ‡å¯¹è±¡å±æ€§å€¼é‡Œé¢
 									PropertyUtils
 											.setProperty(
 													dest,
@@ -102,13 +102,13 @@ public class BeanHelper {
 															.getProperty(
 																	src,
 																	pdsrc[i].getName())));
-								// Èç¹ûÔ´¶ÔÏóÊôĞÔÀàĞÍÃûÊÇ×Ö·û´®ĞÍ²¢ÇÒÄ¿±ê¶ÔÏóÊôĞÔÀàĞÍÃûÊÇÈÕÆÚĞÍ
+								// å¦‚æœæºå¯¹è±¡å±æ€§ç±»å‹åæ˜¯å­—ç¬¦ä¸²å‹å¹¶ä¸”ç›®æ ‡å¯¹è±¡å±æ€§ç±»å‹åæ˜¯æ—¥æœŸå‹
 								if (pdsrc[i].getPropertyType().getName()
 										.equals("java.lang.String")
 										&& pddest[j].getPropertyType()
 												.getName()
 												.equals("java.util.Date"))
-									// ½«×ª»»ÎªÈÕÆÚĞÍµÄÔ´¶ÔÏñÊôĞÔÖµ¸´ÖÆµ½Ä¿±ê¶ÔÏóÊôĞÔÖµÀïÃæ
+									// å°†è½¬æ¢ä¸ºæ—¥æœŸå‹çš„æºå¯¹åƒå±æ€§å€¼å¤åˆ¶åˆ°ç›®æ ‡å¯¹è±¡å±æ€§å€¼é‡Œé¢
 									PropertyUtils
 											.setProperty(
 													dest,
@@ -117,13 +117,13 @@ public class BeanHelper {
 															.getProperty(
 																	src,
 																	pdsrc[i].getName())));
-								// Èç¹ûÔ´¶ÔÏóÊôĞÔÀàĞÍÃûÊÇ¸¡µãĞÍ²¢ÇÒÄ¿±ê¶ÔÏóÊôĞÔÀàĞÍÃûÊÇ×Ö·û´®ĞÍ
+								// å¦‚æœæºå¯¹è±¡å±æ€§ç±»å‹åæ˜¯æµ®ç‚¹å‹å¹¶ä¸”ç›®æ ‡å¯¹è±¡å±æ€§ç±»å‹åæ˜¯å­—ç¬¦ä¸²å‹
 								if (pdsrc[i].getPropertyType().getName()
 										.equals("java.lang.Double")
 										&& pddest[j].getPropertyType()
 												.getName()
 												.equals("java.lang.String"))
-									// ½«×ª»»Îª×Ö·û´®ĞÍµÄÔ´¶ÔÏñÊôĞÔÖµ¸´ÖÆµ½Ä¿±ê¶ÔÏóÊôĞÔÖµÀïÃæ
+									// å°†è½¬æ¢ä¸ºå­—ç¬¦ä¸²å‹çš„æºå¯¹åƒå±æ€§å€¼å¤åˆ¶åˆ°ç›®æ ‡å¯¹è±¡å±æ€§å€¼é‡Œé¢
 									PropertyUtils
 											.setProperty(
 													dest,
@@ -132,13 +132,13 @@ public class BeanHelper {
 															.getProperty(
 																	src,
 																	pdsrc[i].getName())));
-								// Èç¹ûÔ´¶ÔÏóÊôĞÔÀàĞÍÃûÊÇ×Ö·û´®ĞÍ²¢ÇÒÄ¿±ê¶ÔÏóÊôĞÔÀàĞÍÃûÊÇ¸¡µãĞÍ
+								// å¦‚æœæºå¯¹è±¡å±æ€§ç±»å‹åæ˜¯å­—ç¬¦ä¸²å‹å¹¶ä¸”ç›®æ ‡å¯¹è±¡å±æ€§ç±»å‹åæ˜¯æµ®ç‚¹å‹
 								if (pdsrc[i].getPropertyType().getName()
 										.equals("java.lang.String")
 										&& pddest[j].getPropertyType()
 												.getName()
 												.equals("java.lang.Double"))
-									// ½«×ª»»Îª¸¡µãĞÍµÄÔ´¶ÔÏñÊôĞÔÖµ¸´ÖÆµ½Ä¿±ê¶ÔÏóÊôĞÔÖµÀïÃæ
+									// å°†è½¬æ¢ä¸ºæµ®ç‚¹å‹çš„æºå¯¹åƒå±æ€§å€¼å¤åˆ¶åˆ°ç›®æ ‡å¯¹è±¡å±æ€§å€¼é‡Œé¢
 									PropertyUtils
 											.setProperty(
 													dest,
@@ -147,13 +147,13 @@ public class BeanHelper {
 															.getProperty(
 																	src,
 																	pdsrc[i].getName())));
-								// Èç¹ûÔ´¶ÔÏóÊôĞÔÀàĞÍÃûÊÇÕûĞÍ²¢ÇÒÄ¿±ê¶ÔÏóÊôĞÔÀàĞÍÃûÊÇ×Ö·û´®ĞÍ
+								// å¦‚æœæºå¯¹è±¡å±æ€§ç±»å‹åæ˜¯æ•´å‹å¹¶ä¸”ç›®æ ‡å¯¹è±¡å±æ€§ç±»å‹åæ˜¯å­—ç¬¦ä¸²å‹
 								if (pdsrc[i].getPropertyType().getName()
 										.equals("java.lang.Integer")
 										&& pddest[j].getPropertyType()
 												.getName()
 												.equals("java.lang.String"))
-									// ½«×ª»»Îª×Ö·û´®ĞÍµÄÔ´¶ÔÏñÊôĞÔÖµ¸´ÖÆµ½Ä¿±ê¶ÔÏóÊôĞÔÖµÀïÃæ
+									// å°†è½¬æ¢ä¸ºå­—ç¬¦ä¸²å‹çš„æºå¯¹åƒå±æ€§å€¼å¤åˆ¶åˆ°ç›®æ ‡å¯¹è±¡å±æ€§å€¼é‡Œé¢
 									PropertyUtils
 											.setProperty(
 													dest,
@@ -162,13 +162,13 @@ public class BeanHelper {
 															.getProperty(
 																	src,
 																	pdsrc[i].getName())));
-								// Èç¹ûÔ´¶ÔÏóÊôĞÔÀàĞÍÃûÊÇ×Ö·û´®ĞÍ²¢ÇÒÄ¿±ê¶ÔÏóÊôĞÔÀàĞÍÃûÊÇÕûĞÍ
+								// å¦‚æœæºå¯¹è±¡å±æ€§ç±»å‹åæ˜¯å­—ç¬¦ä¸²å‹å¹¶ä¸”ç›®æ ‡å¯¹è±¡å±æ€§ç±»å‹åæ˜¯æ•´å‹
 								if (pdsrc[i].getPropertyType().getName()
 										.equals("java.lang.String")
 										&& pddest[j].getPropertyType()
 												.getName()
 												.equals("java.lang.Integer"))
-									// ½«×ª»»ÎªÕûĞÍµÄÔ´¶ÔÏñÊôĞÔÖµ¸´ÖÆµ½Ä¿±ê¶ÔÏóÊôĞÔÖµÀïÃæ
+									// å°†è½¬æ¢ä¸ºæ•´å‹çš„æºå¯¹åƒå±æ€§å€¼å¤åˆ¶åˆ°ç›®æ ‡å¯¹è±¡å±æ€§å€¼é‡Œé¢
 									PropertyUtils
 											.setProperty(
 													dest,
@@ -177,13 +177,13 @@ public class BeanHelper {
 															.getProperty(
 																	src,
 																	pdsrc[i].getName())));
-								// Èç¹ûÔ´¶ÔÏóÊôĞÔÀàĞÍÃûÊÇ³¤ÕûĞÍ²¢ÇÒÄ¿±ê¶ÔÏóÊôĞÔÀàĞÍÃûÊÇ×Ö·û´®ĞÍ
+								// å¦‚æœæºå¯¹è±¡å±æ€§ç±»å‹åæ˜¯é•¿æ•´å‹å¹¶ä¸”ç›®æ ‡å¯¹è±¡å±æ€§ç±»å‹åæ˜¯å­—ç¬¦ä¸²å‹
 								if (pdsrc[i].getPropertyType().getName()
 										.equals("java.lang.Long")
 										&& pddest[j].getPropertyType()
 												.getName()
 												.equals("java.lang.String"))
-									// ½«×ª»»Îª×Ö·û´®ĞÍµÄÔ´¶ÔÏñÊôĞÔÖµ¸´ÖÆµ½Ä¿±ê¶ÔÏóÊôĞÔÖµÀïÃæ
+									// å°†è½¬æ¢ä¸ºå­—ç¬¦ä¸²å‹çš„æºå¯¹åƒå±æ€§å€¼å¤åˆ¶åˆ°ç›®æ ‡å¯¹è±¡å±æ€§å€¼é‡Œé¢
 									PropertyUtils
 											.setProperty(
 													dest,
@@ -192,13 +192,13 @@ public class BeanHelper {
 															.getProperty(
 																	src,
 																	pdsrc[i].getName())));
-								// Èç¹ûÔ´¶ÔÏóÊôĞÔÀàĞÍÃûÊÇ×Ö·û´®ĞÍ²¢ÇÒÄ¿±ê¶ÔÏóÊôĞÔÀàĞÍÃûÊÇ³¤ÕûĞÍ
+								// å¦‚æœæºå¯¹è±¡å±æ€§ç±»å‹åæ˜¯å­—ç¬¦ä¸²å‹å¹¶ä¸”ç›®æ ‡å¯¹è±¡å±æ€§ç±»å‹åæ˜¯é•¿æ•´å‹
 								if (pdsrc[i].getPropertyType().getName()
 										.equals("java.lang.String")
 										&& pddest[j].getPropertyType()
 												.getName()
 												.equals("java.lang.Long"))
-									// ½«×ª»»Îª³¤ÕûĞÍµÄÔ´¶ÔÏñÊôĞÔÖµ¸´ÖÆµ½Ä¿±ê¶ÔÏóÊôĞÔÖµÀïÃæ
+									// å°†è½¬æ¢ä¸ºé•¿æ•´å‹çš„æºå¯¹åƒå±æ€§å€¼å¤åˆ¶åˆ°ç›®æ ‡å¯¹è±¡å±æ€§å€¼é‡Œé¢
 									PropertyUtils
 											.setProperty(
 													dest,
@@ -272,21 +272,21 @@ public class BeanHelper {
 	}
 
 	/**
-	 * Ä¬ÈÏÈÕÆÚ×ª»»¸ñÊ½
+	 * é»˜è®¤æ—¥æœŸè½¬æ¢æ ¼å¼
 	 */
 	public static String datefmt = "yyyy-MM-dd";
 	/**
-	 * ÈÕÆÚÊ±¼ä¸ñÊ½
+	 * æ—¥æœŸæ—¶é—´æ ¼å¼
 	 */
 	public static String datetimefmt = "yyyy-MM-dd hh:mm:ss";
 
 	public String dateformat = datefmt;
 
 	/**
-	 * ÈÕÆÚ×ª»»Îª×Ö·û´®
+	 * æ—¥æœŸè½¬æ¢ä¸ºå­—ç¬¦ä¸²
 	 * 
 	 * @param dt
-	 *            ÈÕÆÚĞÍ²ÎÊı
+	 *            æ—¥æœŸå‹å‚æ•°
 	 */
 	public String DatetoString(Date dt) {
 		if (dt == null) {
@@ -297,10 +297,10 @@ public class BeanHelper {
 	}
 
 	/**
-	 * ×Ö·û´®×ª»»ÎªDate
+	 * å­—ç¬¦ä¸²è½¬æ¢ä¸ºDate
 	 * 
 	 * @param date
-	 *            StringĞÍ²ÎÊı
+	 *            Stringå‹å‚æ•°
 	 */
 	public Date StringtoDate(String date) {
 		try {
@@ -315,10 +315,10 @@ public class BeanHelper {
 	}
 
 	/**
-	 * ×Ö·û´®×ª»»ÎªÕûĞÎ
+	 * å­—ç¬¦ä¸²è½¬æ¢ä¸ºæ•´å½¢
 	 * 
 	 * @param s
-	 *            ×Ö·ûĞÍ²ÎÊı
+	 *            å­—ç¬¦å‹å‚æ•°
 	 */
 	public Integer StrToInteger(String s) {
 		try {
@@ -329,10 +329,10 @@ public class BeanHelper {
 	}
 
 	/**
-	 * ×Ö·û´®×ª»»Îª³¤ÕûĞÎ
+	 * å­—ç¬¦ä¸²è½¬æ¢ä¸ºé•¿æ•´å½¢
 	 * 
 	 * @param s
-	 *            ×Ö·ûĞÍ²ÎÊı
+	 *            å­—ç¬¦å‹å‚æ•°
 	 */
 	public Long StrToLong(String s) {
 		try {
@@ -343,10 +343,10 @@ public class BeanHelper {
 	}
 
 	/**
-	 * ×Ö·û´®×ª»»ÎªË«¾«¶ÈĞÍ
+	 * å­—ç¬¦ä¸²è½¬æ¢ä¸ºåŒç²¾åº¦å‹
 	 * 
 	 * @param s
-	 *            ×Ö·ûĞÍ²ÎÊı
+	 *            å­—ç¬¦å‹å‚æ•°
 	 */
 	public Double StrToDouble(String s) {
 		try {
@@ -357,10 +357,10 @@ public class BeanHelper {
 	}
 
 	/**
-	 * object×ª»»ÎªSting
+	 * objectè½¬æ¢ä¸ºSting
 	 * 
 	 * @param src
-	 *            ¶ÔÏó²ÎÊı
+	 *            å¯¹è±¡å‚æ•°
 	 */
 	public String ObjectToString(Object src) {
 		if (src != null)
@@ -370,7 +370,7 @@ public class BeanHelper {
 	}
 
 	/**
-	 * ·µ»ØÈÕÆÚ×ª»»¸ñÊ½
+	 * è¿”å›æ—¥æœŸè½¬æ¢æ ¼å¼
 	 * 
 	 * @param dateformat
 	 */
@@ -379,7 +379,7 @@ public class BeanHelper {
 	}
 
 	/**
-	 * ÉèÖÃÈÕÆÚ×ª»»¸ñÊ½
+	 * è®¾ç½®æ—¥æœŸè½¬æ¢æ ¼å¼
 	 * 
 	 * @param dateformat
 	 */
@@ -388,50 +388,50 @@ public class BeanHelper {
 	}
 
 	/**
-	 * pojo¶ÔÏóÃû³ÆÓëÊôĞÔÖµÊä³ö
+	 * pojoå¯¹è±¡åç§°ä¸å±æ€§å€¼è¾“å‡º
 	 * 
 	 * @param obj
-	 *            pojo¶ÔÏó»ò´æ·Åpojo¶ÔÏóµÄlist
+	 *            pojoå¯¹è±¡æˆ–å­˜æ”¾pojoå¯¹è±¡çš„list
 	 * @param wholeWord
-	 *            Õû×ÖÊä³ö£¬tureÊÇ£¬false·ñ£¬Ñ¡ÔñfalseÖ»Êä³öÇ°30¸öÎÄ×Ö
+	 *            æ•´å­—è¾“å‡ºï¼Œtureæ˜¯ï¼Œfalseå¦ï¼Œé€‰æ‹©falseåªè¾“å‡ºå‰30ä¸ªæ–‡å­—
 	 */
 	@SuppressWarnings("rawtypes")
 	public static void logOut(Object obj, boolean wholeWord) {
-		// Èç¹û¶ÔÏó²»Îª¿ÕµÄ»°½øĞĞÏÂÒ»²¿²Ù×÷
+		// å¦‚æœå¯¹è±¡ä¸ä¸ºç©ºçš„è¯è¿›è¡Œä¸‹ä¸€éƒ¨æ“ä½œ
 		if (obj != null) {
-			// ³õÊ¹»¯±êÊ¶
+			// åˆä½¿åŒ–æ ‡è¯†
 			boolean showTitle = true;
-			// Èç¹û¶ÔÏóµÄÀàĞÍÃû³ÆÊÇ¼¯ºÏµÄ»°£¬½øĞĞÏÂÒ»²½²Ù×÷
+			// å¦‚æœå¯¹è±¡çš„ç±»å‹åç§°æ˜¯é›†åˆçš„è¯ï¼Œè¿›è¡Œä¸‹ä¸€æ­¥æ“ä½œ
 			if (obj.getClass().getName().equals("java.util.ArrayList")
 					|| obj.getClass().getName().equals("java.util.List")) {
 				showTitle = true;
-				// ½«¶ÔÏó×ª³É¼¯ºÏ
+				// å°†å¯¹è±¡è½¬æˆé›†åˆ
 				List list = (List) obj;
-				// µü´ø¼¯ºÏ
+				// è¿­å¸¦é›†åˆ
 				for (int i = 0; i < list.size(); i++) {
-					// ½«µü´ø³öÀ´µÄÔªËØ´æÈëobject¶ÔÏóÖĞÈ¥
+					// å°†è¿­å¸¦å‡ºæ¥çš„å…ƒç´ å­˜å…¥objectå¯¹è±¡ä¸­å»
 					Object o = list.get(i);
-					// ÔËĞĞorganizStr£¨object¶ÔÏó,ÊäÈë³¤¶È±êÊ¶£¬±êÌâ±êÊ¶£©Êä³ö¶ÔÏóÄÚÈİ
+					// è¿è¡ŒorganizStrï¼ˆobjectå¯¹è±¡,è¾“å…¥é•¿åº¦æ ‡è¯†ï¼Œæ ‡é¢˜æ ‡è¯†ï¼‰è¾“å‡ºå¯¹è±¡å†…å®¹
 					organizStr(o, wholeWord, showTitle);
 					showTitle = false;
 				}
 			}
-			// ·ñÔò Èç¹û¶ÔÏóµÄÀàĞÍÃû³ÆÊÇ map
+			// å¦åˆ™ å¦‚æœå¯¹è±¡çš„ç±»å‹åç§°æ˜¯ map
 			else if (obj.getClass().getName().equals("java.util.HashSet")) {
 				showTitle = true;
-				// ½«¶ÔÏó×ª³Éset¼¯ºÏ
+				// å°†å¯¹è±¡è½¬æˆseté›†åˆ
 				Set set = (Set) obj;
-				// ½«set¼¯ºÏ×ª³É ÃûÎª itµÄ µü´øÆ÷
+				// å°†seté›†åˆè½¬æˆ åä¸º itçš„ è¿­å¸¦å™¨
 				Iterator it = set.iterator();
-				// µü´øµü´øÆ÷
+				// è¿­å¸¦è¿­å¸¦å™¨
 				while (it.hasNext()) {
-					// ½«µü´ø³öÀ´µÄÔªËØ´æÈëobject¶ÔÏóÖĞÈ¥
+					// å°†è¿­å¸¦å‡ºæ¥çš„å…ƒç´ å­˜å…¥objectå¯¹è±¡ä¸­å»
 					Object o = it.next();
-					// ÔËĞĞorganizStr£¨object¶ÔÏó,ÊäÈë³¤¶È±êÊ¶£¬±êÌâ±êÊ¶£©Êä³ö¶ÔÏóÄÚÈİ
+					// è¿è¡ŒorganizStrï¼ˆobjectå¯¹è±¡,è¾“å…¥é•¿åº¦æ ‡è¯†ï¼Œæ ‡é¢˜æ ‡è¯†ï¼‰è¾“å‡ºå¯¹è±¡å†…å®¹
 					organizStr(o, wholeWord, showTitle);
 					showTitle = false;
 				}
-				// ·ñÔò ÔËĞĞorganizStr£¨object¶ÔÏó,ÊäÈë³¤¶È±êÊ¶£¬±êÌâ±êÊ¶£©Êä³ö¶ÔÏóÄÚÈİ
+				// å¦åˆ™ è¿è¡ŒorganizStrï¼ˆobjectå¯¹è±¡,è¾“å…¥é•¿åº¦æ ‡è¯†ï¼Œæ ‡é¢˜æ ‡è¯†ï¼‰è¾“å‡ºå¯¹è±¡å†…å®¹
 			} else {
 				organizStr(obj, wholeWord, true);
 			}
@@ -439,14 +439,14 @@ public class BeanHelper {
 	}
 
 	/**
-	 * ×éÖ¯Êä³ö×Ö·û´®
+	 * ç»„ç»‡è¾“å‡ºå­—ç¬¦ä¸²
 	 * 
 	 * @param o
-	 *            Òª½øĞĞÊä³öµÄ¶ÔÏó
+	 *            è¦è¿›è¡Œè¾“å‡ºçš„å¯¹è±¡
 	 * @param wholeWord
-	 *            Õû×ÖÊä³ö£¬tureÊÇ£¬false·ñ£¬Ñ¡ÔñfalseÖ»Êä³öÇ°30¸öÎÄ×Ö
+	 *            æ•´å­—è¾“å‡ºï¼Œtureæ˜¯ï¼Œfalseå¦ï¼Œé€‰æ‹©falseåªè¾“å‡ºå‰30ä¸ªæ–‡å­—
 	 * @param showTitle
-	 *            ÊÇ·ñÊä³öÀàÃûºÍpojo±êÌâ
+	 *            æ˜¯å¦è¾“å‡ºç±»åå’Œpojoæ ‡é¢˜
 	 */
 	private static void organizStr(Object o, boolean wholeWord,
 			boolean showTitle) {
@@ -454,49 +454,49 @@ public class BeanHelper {
 		String result = "";
 		String key = "";
 		String value = "";
-		// ½«¶ÔÏóµÄÊôĞÔ×ª»»³ÉÊôĞÔÊı×é
+		// å°†å¯¹è±¡çš„å±æ€§è½¬æ¢æˆå±æ€§æ•°ç»„
 		PropertyDescriptor[] pdout = PropertyUtils.getPropertyDescriptors(o);
-		// Èç¹û±êÊ¶ÎªÕæ¡£¡£¡£¡£¡£¡£¡£´òÓ¡¶ÔÏóÀàĞÍÃû³Æ
+		// å¦‚æœæ ‡è¯†ä¸ºçœŸã€‚ã€‚ã€‚ã€‚ã€‚ã€‚ã€‚æ‰“å°å¯¹è±¡ç±»å‹åç§°
 		//if (showTitle)
 			//log.info("**********************" + o.getClass().getName()
 			//		+ "*************************" + showTitle);
-		// ³õÊ¼»¯±êÊ¶
+		// åˆå§‹åŒ–æ ‡è¯†
 		boolean test = true;
-		// ³õÊ¼»¯¼¯ºÏ
+		// åˆå§‹åŒ–é›†åˆ
 		List<Object> nextlist = new ArrayList<Object>();
-		// Ñ­»·ÊôĞÔÊı×é
+		// å¾ªç¯å±æ€§æ•°ç»„
 		for (int j = 0; j < pdout.length; j++) {
-			// Ñ­»·²»ÔÚ´òÓ¡ÊôĞÔµÄ×Ö·û´®Êı×é
+			// å¾ªç¯ä¸åœ¨æ‰“å°å±æ€§çš„å­—ç¬¦ä¸²æ•°ç»„
 			for (int es = 0; es < exceptString.length; es++) {
-				// Èç¹ûÊôĞÔÃû³ÆµÈÓÚ²»´òÓ¡µÄÊôĞÔÃû³Æ,±êÊ¶Îª¼Ù²¢ÍËÁË¡£·ñÔò±êÊ¶ÎªÕæ
+				// å¦‚æœå±æ€§åç§°ç­‰äºä¸æ‰“å°çš„å±æ€§åç§°,æ ‡è¯†ä¸ºå‡å¹¶é€€äº†ã€‚å¦åˆ™æ ‡è¯†ä¸ºçœŸ
 				if (pdout[j].getName().equals(exceptString[es])) {
 					test = false;
 					break;
 				} else
 					test = true;
 			}
-			// Èç¹û±êÊ¶ÎªÕæ
+			// å¦‚æœæ ‡è¯†ä¸ºçœŸ
 			if (test) {
-				// Èç¹û±êÌâ±êÊ¶ÎªÕæ
+				// å¦‚æœæ ‡é¢˜æ ‡è¯†ä¸ºçœŸ
 				if (showTitle) {
-					// ½«ÊôĞÔÃû³Æ×·¼Ó×Ö·û´®±äÁ¿Àï
+					// å°†å±æ€§åç§°è¿½åŠ å­—ç¬¦ä¸²å˜é‡é‡Œ
 					key += addorSubKey(pdout[j].getName(), wholeWord) + "|";
 				}
 				try {
-					// ½«ÊôĞÔÖµ ´æ·ÅÓÚobject±äÁ¿Àï
+					// å°†å±æ€§å€¼ å­˜æ”¾äºobjectå˜é‡é‡Œ
 					Object getobj = PropertyUtils.getProperty(o,
 							pdout[j].getName());
-					// ½«ÊôĞÔÖµ ×·¼Ó×Ö·ûÖĞ±äÁ¿Àï
+					// å°†å±æ€§å€¼ è¿½åŠ å­—ç¬¦ä¸­å˜é‡é‡Œ
 					value += addorSubValue(getobj, wholeWord) + "|";
-					// Èç¹ûobject¶ÔÏó²»Îª¿ÕµÄ ½øĞĞÏÂÒ»²½²Ù×÷
+					// å¦‚æœobjectå¯¹è±¡ä¸ä¸ºç©ºçš„ è¿›è¡Œä¸‹ä¸€æ­¥æ“ä½œ
 					if (getobj != null) {
-						// ½«object ¶ÔÏóµÄÀàĞÍÃû³Æ·ÅÈë×Ö·û´®±äÁ¿Àï
+						// å°†object å¯¹è±¡çš„ç±»å‹åç§°æ”¾å…¥å­—ç¬¦ä¸²å˜é‡é‡Œ
 						String type = getobj.getClass().getName();
-						// ×Ö·û´®±äÁ¿µÄÖµÈç¹û°üº¬ HashSet »ò HashSet»ò ArrayList ½øĞĞÏÂÒ»²½²Ù×÷
+						// å­—ç¬¦ä¸²å˜é‡çš„å€¼å¦‚æœåŒ…å« HashSet æˆ– HashSetæˆ– ArrayList è¿›è¡Œä¸‹ä¸€æ­¥æ“ä½œ
 						if (type.indexOf("HashSet") != -1
 								|| type.indexOf("HashSet") != -1
 								|| type.indexOf("ArrayList") != -1) {
-							// Èç¹ûobject¶ÔÏóÊÇ¼¯ºÏµÄ»°¡£ÖÃÈë¼¯ºÏÖĞ
+							// å¦‚æœobjectå¯¹è±¡æ˜¯é›†åˆçš„è¯ã€‚ç½®å…¥é›†åˆä¸­
 							nextlist.add(getobj);
 						}
 					}
@@ -510,41 +510,41 @@ public class BeanHelper {
 
 			}
 		}
-		// ×Ö·û´®»»ĞĞ
+		// å­—ç¬¦ä¸²æ¢è¡Œ
 		key += "\n";
-		// »ñÈ¡×Ö·û´®µÄ³¤¶ÈÖµ
+		// è·å–å­—ç¬¦ä¸²çš„é•¿åº¦å€¼
 		int kl = key.length();
-		// Ñ­»·×Ö·û´®µÄ³¤¶È
+		// å¾ªç¯å­—ç¬¦ä¸²çš„é•¿åº¦
 		for (int lenKey = 0; lenKey < kl; lenKey++) {
-			// ÔÚ×Ö·û´®±äÁ¿ÖĞ×· ¼Ó -
+			// åœ¨å­—ç¬¦ä¸²å˜é‡ä¸­è¿½ åŠ  -
 			key += "-";
 		}
-		// Èç¹û±êÌâ±êÊ¶ÎªÕæ
+		// å¦‚æœæ ‡é¢˜æ ‡è¯†ä¸ºçœŸ
 		if (showTitle) {
-			// ×Ö·û´®±äÁ¿ ×·¼Ó »»ĞĞ×·¼Ó ÊôĞÔÃû×Ö·û´®±äÁ¿ ×·¼Ó »»ĞĞ ×·¼Ó ÊôĞÔÖµ×Ö·û´®±äÁ¿
+			// å­—ç¬¦ä¸²å˜é‡ è¿½åŠ  æ¢è¡Œè¿½åŠ  å±æ€§åå­—ç¬¦ä¸²å˜é‡ è¿½åŠ  æ¢è¡Œ è¿½åŠ  å±æ€§å€¼å­—ç¬¦ä¸²å˜é‡
 			result += "\n" + key + "\n" + value;
 		} else {
-			// ×Ö·û´®±äÁ¿ ×·¼Ó ÊôĞÔÖµ×Ö·û´®±äÁ¿
+			// å­—ç¬¦ä¸²å˜é‡ è¿½åŠ  å±æ€§å€¼å­—ç¬¦ä¸²å˜é‡
 			result += value;
 		}
 		// System.out.println(result);
-		// µü´ø¼¯ºÏ
+		// è¿­å¸¦é›†åˆ
 		for (int n = 0; n < nextlist.size(); n++) {
-			// ½«µü´øÔªËØ´æÈëobject¶ÔÏóÖĞ
+			// å°†è¿­å¸¦å…ƒç´ å­˜å…¥objectå¯¹è±¡ä¸­
 			Object nextobj = nextlist.get(n);
-			// logOut(¶ÔÏóÃû , ³¤¶ÈÏŞÖÆ±êÊ¶)
+			// logOut(å¯¹è±¡å , é•¿åº¦é™åˆ¶æ ‡è¯†)
 			logOut(nextobj, wholeWord);
 		}
 		*/
 	}
 
 	/**
-	 * pojo¶ÔÏóÊôĞÔÃûÌí¼Ó¿Õ¸ñÓë·Ö¸ô·û
+	 * pojoå¯¹è±¡å±æ€§åæ·»åŠ ç©ºæ ¼ä¸åˆ†éš”ç¬¦
 	 * 
 	 * @param str
-	 *            ÒªÊä³öµÄ×Ö·û´®
+	 *            è¦è¾“å‡ºçš„å­—ç¬¦ä¸²
 	 * @param wholeWord
-	 *            Õû×ÖÊä³ö£¬tureÊÇ£¬false·ñ£¬Ñ¡ÔñfalseÖ»Êä³öÇ°30¸öÎÄ×Ö
+	 *            æ•´å­—è¾“å‡ºï¼Œtureæ˜¯ï¼Œfalseå¦ï¼Œé€‰æ‹©falseåªè¾“å‡ºå‰30ä¸ªæ–‡å­—
 	 */
 	private static String addorSubKey(Object str, boolean wholeWord) {
 
@@ -575,12 +575,12 @@ public class BeanHelper {
 	}
 
 	/**
-	 * pojo¶ÔÏóÊôĞÔÖµÌí¼Ó¿Õ¸ñÓë·Ö¸ô·û
+	 * pojoå¯¹è±¡å±æ€§å€¼æ·»åŠ ç©ºæ ¼ä¸åˆ†éš”ç¬¦
 	 * 
 	 * @param str
-	 *            ÒªÊä³öµÄ×Ö·û´®
+	 *            è¦è¾“å‡ºçš„å­—ç¬¦ä¸²
 	 * @param wholeWord
-	 *            Õû×ÖÊä³ö£¬tureÊÇ£¬false·ñ£¬Ñ¡ÔñfalseÖ»Êä³öÇ°30¸öÎÄ×Ö
+	 *            æ•´å­—è¾“å‡ºï¼Œtureæ˜¯ï¼Œfalseå¦ï¼Œé€‰æ‹©falseåªè¾“å‡ºå‰30ä¸ªæ–‡å­—
 	 */
 	private static String addorSubValue(Object str, boolean wholeWord) {
 

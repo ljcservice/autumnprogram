@@ -6,7 +6,7 @@ import com.hitzd.DBUtils.TCommonRecord;
 import com.hitzd.Factory.DBQueryFactory;
 
 /**
- * ÖĞ¼ä²ã¹¤¾ßÀà
+ * ä¸­é—´å±‚å·¥å…·ç±»
  * @author jingcong
  *
  */
@@ -17,7 +17,7 @@ public  class CaseHistoryUtils
     }
     
     /**
-     * »ñÈ¡µÄtable_configËùÓĞĞÅÏ¢
+     * è·å–çš„table_configæ‰€æœ‰ä¿¡æ¯
      * @param tableid
      * @return
      */

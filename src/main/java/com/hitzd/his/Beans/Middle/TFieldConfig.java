@@ -1,24 +1,24 @@
 package com.hitzd.his.Beans.Middle;
 
 /**
- * 字段定义配置
+ * 瀛楁瀹氫箟閰嶇疆
  * @author Crystal
  */
 public class TFieldConfig
 {
-	/* 唯一标识 */
+	/* 鍞竴鏍囪瘑 */
 	private String fieldId;
-	/* 所属表ID */
+	/* 鎵�灞炶〃ID */
 	private String tableId;
-	/* 字段描述 */
+	/* 瀛楁鎻忚堪 */
 	private String fieldDesc;
-	/* 原始字段 */
+	/* 鍘熷瀛楁 */
 	private String originalField;
-	/* 目标字段 */
+	/* 鐩爣瀛楁 */
 	private String targetField;
-	/* 备注 */
+	/* 澶囨敞 */
 	private String remark;
-	/* HIS标准，默认JWYH-304 */
+	/* HIS鏍囧噯锛岄粯璁WYH-304 */
 	private String hisName;
 	
 	public TFieldConfig()

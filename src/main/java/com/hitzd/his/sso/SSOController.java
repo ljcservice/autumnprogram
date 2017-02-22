@@ -16,7 +16,7 @@ import com.hitzd.his.Service.authority.Impl.Authorization;
 import com.hitzd.his.Utils.DateUtils;
 
 /**
- * ¿çÆ½Ì¨µÄ¿ØÖÆ
+ * è·¨å¹³å°çš„æ§åˆ¶
  * @author jingcong
  *
  */
@@ -25,7 +25,7 @@ public class SSOController
 	public static String Token = "Jill_SSO_Token";
 	
 	/**
-	 * ÓÃ»§»ñµÃ
+	 * ç”¨æˆ·è·å¾—
 	 * @param request 
 	 * @return
 	 */
@@ -34,7 +34,7 @@ public class SSOController
 		HttpSession session = request.getSession();
 		User user = (User)session.getAttribute(User.UserSessionCode);
 		String token = CommonUtils.getRequestParameter(request, "token", "");
-		/* Ìæ»»ÓÅÏÈ¼¶ */
+		/* æ›¿æ¢ä¼˜å…ˆçº§ */
         if (token == null || "".equals(token)) 
         {
             token = (String)request.getSession().getAttribute(SSOController.Token);
@@ -47,9 +47,9 @@ public class SSOController
 	}
 	
 	/**
-	 * »ñµÃÓÃ»§ 
-	 * @param token      ±ê¼Ç ÓÃ»§¿çÆ½Ì¨ 
-	 * @param ProgramID  ÏµÍ³´úÂë 
+	 * è·å¾—ç”¨æˆ· 
+	 * @param token      æ ‡è®° ç”¨æˆ·è·¨å¹³å° 
+	 * @param ProgramID  ç³»ç»Ÿä»£ç  
 	 * @return
 	 */
 	public static User getUser(String token, String ProgramID)
@@ -77,7 +77,7 @@ public class SSOController
         	return null;
         TCommonRecord crUser = lsUser.get(0);
         /*
-         * ÎªÁË¿ÉÒÔ½«¼¯³ÉÄ£¿éÓëÆ½Ì¨È¨ÏŞ·ÖÀë¿ª
+         * ä¸ºäº†å¯ä»¥å°†é›†æˆæ¨¡å—ä¸å¹³å°æƒé™åˆ†ç¦»å¼€
         ProgramID = ProgramID.replaceAll("/", "");
         String[] Programs = crUser.get("UserProgram").split(",");
         int ErrorCode = 30;
@@ -101,7 +101,7 @@ public class SSOController
         user.setUserDuty(crUser.get("UserDuty"));
         user.setUserUnit(crUser.get("UserUnit"));
         user.setUserProgram(crUser.get("UserProgram"));
-        // 2014-04-28 Áõ­Z´Ï Ôö¼Ó token ±êÊ¾ 
+        // 2014-04-28 åˆ˜ç’Ÿèª å¢åŠ  token æ ‡ç¤º 
         user.setUserToken(token);
         sql = "update Jill_Online set lastAccess = '" + DateUtils.getDateTime() + "' where tokenid = '" + token + "'";
         try
@@ -157,7 +157,7 @@ public class SSOController
 	 }
     
 	 /**
-	  * µÇ³öÊ±ºò×ö´¦Àí 
+	  * ç™»å‡ºæ—¶å€™åšå¤„ç† 
 	  * @param user
 	  * @param token
 	  * @param SysName
@@ -170,7 +170,7 @@ public class SSOController
 		String sql = "update Jill_Online set LogoutTime = '" + DateUtils.getDateTime() + "' where " +
 			"UserID  = '" + user.getUserID() + "' and " +
 			"TokenID = '" + token + "' ";
-		/* Ö»ÍË³ö×Ô¼ºËùÔÚÏµÍ³µÄ token */
+		/* åªé€€å‡ºè‡ªå·±æ‰€åœ¨ç³»ç»Ÿçš„ token */
 		if(SysName != null && !"".equals(SysName))
 		{
 		    sql += "and loginsystem = '" + SysName + "'";
@@ -195,8 +195,8 @@ public class SSOController
 		JDBCQuery query = DBQueryFactory.getQuery("PEAAS");
 		String token = UUID.randomUUID().toString();
 		token = token.replace("-", "");
-		if(user == null) throw new RuntimeException("ÓÃ»§µÇÂ¼Ê§°Ü,User = null");
-		// ÉèÖÃÓÃ»§token±êÊ¶ 
+		if(user == null) throw new RuntimeException("ç”¨æˆ·ç™»å½•å¤±è´¥,User = null");
+		// è®¾ç½®ç”¨æˆ·tokenæ ‡è¯† 
 		user.setUserToken(token);
 		String sql = "insert into Jill_Online (TOKENID,USERID,LASTACCESS,LOGINTIME,LOGINSYSTEM) values (" + 
 			"'" + token                   + "', " +
@@ -218,7 +218,7 @@ public class SSOController
 	}
 	
 	/**
-	 * Éú³É¿çÆ½Ì¨Á¬½Ó
+	 * ç”Ÿæˆè·¨å¹³å°è¿æ¥
 	 * @param session
 	 * @return token=xxxxxxxxxx
 	 */
@@ -228,7 +228,7 @@ public class SSOController
 	}
 	
 	/**
-     * Éú³É¿çÆ½Ì¨Á¬½Ó
+     * ç”Ÿæˆè·¨å¹³å°è¿æ¥
      * @param session
      * @return xxxxxxxxxx
      */

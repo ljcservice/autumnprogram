@@ -10,29 +10,29 @@ import com.hitzd.Factory.DBQueryFactory;
 
 public class MsgUtils 
 {
-	// ÏûÏ¢ÀàĞÍ
+	// æ¶ˆæ¯ç±»å‹
 	public static String TextMsg  = "Text";
 	public static String ImageMsg = "Image";
 
-	// ÏûÏ¢ÊôĞÔ
+	// æ¶ˆæ¯å±æ€§
 	public static String CommonMsg = "CommonMsg";
 	public static String SystemMsg = "SystemMsg";
 
 	/**
-	 * ·¢ËÍÏûÏ¢¸øÖ¸¶¨µÄÒ½Éú
-	 * @param FromDeptName ·¢ËÍÕßµÄ²¿ÃÅÃû³Æ
-	 * @param FromDeptCode ·¢ËÍÕßµÄ²¿ÃÅ´úÂë
-	 * @param FromUserName ·¢ËÍÕßµÄÓÃ»§Ãû³Æ
-	 * @param FromUserCode ·¢ËÍÕßµÄÓÃ»§´úÂë
-	 * @param ToDeptName   ½ÓÊÕÕßµÄ²¿ÃÅÃû³Æ
-	 * @param ToDeptCode   ½ÓÊÕÕßµÄ²¿ÃÅ´úÂë
-	 * @param ToUserName   ½ÓÊÕÕßµÄÓÃ»§Ãû³Æ
-	 * @param ToUserCode   ½ÓÊÕÕßµÄÓÃ»§´úÂë
-	 * @param Content      ÏûÏ¢ÄÚÈİ
-	 * @param MsgType      ÏûÏ¢ÀàĞÍ
-	 * @param LinkUrl      ¹ØÁªµÄurlµØÖ·
-	 * @param Resverd      ±£Áô²ÎÊı£¬ÔİÊ±Îª¿Õ×Ö·û´®
-	 * @return ·µ»Ø´íÎóĞÅÏ¢£¬Ã»ÓĞ´íÎó·µ»Ø¿Õ×Ö·û´®
+	 * å‘é€æ¶ˆæ¯ç»™æŒ‡å®šçš„åŒ»ç”Ÿ
+	 * @param FromDeptName å‘é€è€…çš„éƒ¨é—¨åç§°
+	 * @param FromDeptCode å‘é€è€…çš„éƒ¨é—¨ä»£ç 
+	 * @param FromUserName å‘é€è€…çš„ç”¨æˆ·åç§°
+	 * @param FromUserCode å‘é€è€…çš„ç”¨æˆ·ä»£ç 
+	 * @param ToDeptName   æ¥æ”¶è€…çš„éƒ¨é—¨åç§°
+	 * @param ToDeptCode   æ¥æ”¶è€…çš„éƒ¨é—¨ä»£ç 
+	 * @param ToUserName   æ¥æ”¶è€…çš„ç”¨æˆ·åç§°
+	 * @param ToUserCode   æ¥æ”¶è€…çš„ç”¨æˆ·ä»£ç 
+	 * @param Content      æ¶ˆæ¯å†…å®¹
+	 * @param MsgType      æ¶ˆæ¯ç±»å‹
+	 * @param LinkUrl      å…³è”çš„urlåœ°å€
+	 * @param Resverd      ä¿ç•™å‚æ•°ï¼Œæš‚æ—¶ä¸ºç©ºå­—ç¬¦ä¸²
+	 * @return è¿”å›é”™è¯¯ä¿¡æ¯ï¼Œæ²¡æœ‰é”™è¯¯è¿”å›ç©ºå­—ç¬¦ä¸²
 	 */
 	public static String sendMsg(String FromDeptName, String FromDeptCode, String FromUserName, String FromUserCode,
 			String ToDeptName, String ToDeptCode, String ToUserName, String ToUserCode,

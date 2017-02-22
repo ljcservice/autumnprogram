@@ -3,6 +3,7 @@ package com.hitzd.springBeanManager;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.core.ResolvableType;
 
 public class xxxx implements BeanFactory
 {
@@ -73,5 +74,23 @@ public class xxxx implements BeanFactory
         // TODO Auto-generated method stub
         return null;
     }
+
+	@Override
+	public <T> T getBean(Class<T> requiredType) throws BeansException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <T> T getBean(Class<T> requiredType, Object... args) throws BeansException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isTypeMatch(String name, ResolvableType typeToMatch) throws NoSuchBeanDefinitionException {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

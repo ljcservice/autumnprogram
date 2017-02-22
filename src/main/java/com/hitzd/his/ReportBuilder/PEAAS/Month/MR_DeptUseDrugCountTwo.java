@@ -28,7 +28,7 @@ public class MR_DeptUseDrugCountTwo extends Persistent4DB implements IReportBuil
             /* yyyy-MM */
             String MRDate = sf.format(cal.getTime());
             List<String> sqlsList = new ArrayList<String>();
-            // °´´¦·½Êı£¬²»º¬ÍâÓÃÒ©Êı¾İ
+            // æŒ‰å¤„æ–¹æ•°ï¼Œä¸å«å¤–ç”¨è¯æ•°æ®
             List <TCommonRecord> rs = this.getNoOutAntiDrugDeptCount(MRDate);
             for (TCommonRecord tcr : rs)
             {
@@ -36,7 +36,7 @@ public class MR_DeptUseDrugCountTwo extends Persistent4DB implements IReportBuil
             				 "values ('" + tcr.get("org_code") + "', '" + tcr.get("org_name") + "', '" + MRDate + "', '" + tcr.get("c") + "', '" + tcr.get("kj") + "', '" + tcr.get("ord") + "', '0', '0')";
             	sqlsList.add(sql);
             }
-            // °´´¦·½Êı£¬º¬ÍâÓÃÒ©Êı¾İ
+            // æŒ‰å¤„æ–¹æ•°ï¼Œå«å¤–ç”¨è¯æ•°æ®
             rs = this.getDeptUseDrugCount(MRDate);
             for (TCommonRecord tcr : rs)
             {
@@ -44,7 +44,7 @@ public class MR_DeptUseDrugCountTwo extends Persistent4DB implements IReportBuil
             				 "values ('" + tcr.get("org_code") + "', '" + tcr.get("org_name") + "', '" + MRDate + "', '" + tcr.get("c") + "', '" + tcr.get("kj") + "', '" + tcr.get("ord") + "', '0', '1')";
             	sqlsList.add(sql);
             }
-            // °´´¦·½Êı£¨ÈË´Î£©£¬²»º¬ÍâÓÃÒ©Êı¾İ
+            // æŒ‰å¤„æ–¹æ•°ï¼ˆäººæ¬¡ï¼‰ï¼Œä¸å«å¤–ç”¨è¯æ•°æ®
             rs = this.getNoAntiDeptPatientUDC(MRDate);
             for (TCommonRecord tcr : rs)
             {
@@ -52,7 +52,7 @@ public class MR_DeptUseDrugCountTwo extends Persistent4DB implements IReportBuil
             				 "values ('" + tcr.get("org_code") + "', '" + tcr.get("org_name") + "', '" + MRDate + "', '" + tcr.get("c") + "', '" + tcr.get("kj") + "', '" + tcr.get("ord") + "', '1', '0')";
             	sqlsList.add(sql);
             }
-            // °´´¦·½Êı£¨ÈË´Î£©£¬º¬ÍâÓÃÒ©Êı¾İ
+            // æŒ‰å¤„æ–¹æ•°ï¼ˆäººæ¬¡ï¼‰ï¼Œå«å¤–ç”¨è¯æ•°æ®
             rs = this.getDeptPatientUDC(MRDate);
             for (TCommonRecord tcr : rs)
             {
@@ -66,7 +66,7 @@ public class MR_DeptUseDrugCountTwo extends Persistent4DB implements IReportBuil
             }
             else
             {
-            	new RuntimeException("²åÈëÅúÁ¿list²»µÃÎª¿Õ£¡");
+            	new RuntimeException("æ’å…¥æ‰¹é‡listä¸å¾—ä¸ºç©ºï¼");
             }
         }
         catch(Exception e)
@@ -77,7 +77,7 @@ public class MR_DeptUseDrugCountTwo extends Persistent4DB implements IReportBuil
 	}
 	
 	/**
-	 * °´´¦·½Êı£¬²»º¬ÍâÓÃÒ©
+	 * æŒ‰å¤„æ–¹æ•°ï¼Œä¸å«å¤–ç”¨è¯
 	 * @param MRDate
 	 * */
 	@SuppressWarnings("unchecked")
@@ -103,7 +103,7 @@ public class MR_DeptUseDrugCountTwo extends Persistent4DB implements IReportBuil
 	}
 	
 	/**
-	 * °´´¦·½Êı£¬º¬ÍâÓÃÒ©
+	 * æŒ‰å¤„æ–¹æ•°ï¼Œå«å¤–ç”¨è¯
 	 * @param MRDate
 	 * */
 	@SuppressWarnings ("unchecked")
@@ -120,7 +120,7 @@ public class MR_DeptUseDrugCountTwo extends Persistent4DB implements IReportBuil
 	}
     
     /**
-     * °´´¦·½Êı(ÈË´Î)£¬²»º¬ÍâÓÃÒ©
+     * æŒ‰å¤„æ–¹æ•°(äººæ¬¡)ï¼Œä¸å«å¤–ç”¨è¯
 	 * @param MRDate
      * */
     @SuppressWarnings("unchecked")
@@ -148,7 +148,7 @@ public class MR_DeptUseDrugCountTwo extends Persistent4DB implements IReportBuil
 	}
     
     /**
-     * °´´¦·½Êı(ÈË´Î)£¬º¬ÍâÓÃÒ©
+     * æŒ‰å¤„æ–¹æ•°(äººæ¬¡)ï¼Œå«å¤–ç”¨è¯
 	 * @param MRDate
      * */
 	@SuppressWarnings ("unchecked")
@@ -167,7 +167,7 @@ public class MR_DeptUseDrugCountTwo extends Persistent4DB implements IReportBuil
     }
 	
     /**
-     * ¼ÆËãÍâÓÃµÄ¿¹¾ú´¦·½ÊıºÍ¿¹¾úÒ©Îï´¦·½È¡³ö 
+     * è®¡ç®—å¤–ç”¨çš„æŠ—èŒå¤„æ–¹æ•°å’ŒæŠ—èŒè¯ç‰©å¤„æ–¹å–å‡º 
      * @param result
      * @param conut
      */

@@ -3,7 +3,7 @@ package com.hitzd.his.Beans;
 import com.hitzd.his.Beans.TBaseBean;
 
 /**
- * Ô¤·ÀÓÃÒ©ĞÅÏ¢¼ÇÂ¼
+ * é¢„é˜²ç”¨è¯ä¿¡æ¯è®°å½•
  * 
  * @author Administrator
  * 
@@ -12,61 +12,61 @@ public class TPreveUseDrug extends TBaseBean
 {
     private static final long serialVersionUID = -1971327703516467313L;
 
-    /* Ô¤·ÀÓÃÒ©id */
+    /* é¢„é˜²ç”¨è¯id */
     private String            YF_ID;
-    /* ²¡ÈËidºÅ(×¡ÔººÅ) */
+    /* ç—…äººidå·(ä½é™¢å·) */
     private String            PATIENT_ID;
-    /* ³öÔº´ÎÊı */
+    /* å‡ºé™¢æ¬¡æ•° */
     private String            VISIT_ID;
-    /* ¿ÆÊÒ´úÂë */
+    /* ç§‘å®¤ä»£ç  */
     private String            DEPT_CODE;
-    /* ¿ÆÊÒÃû³Æ */
+    /* ç§‘å®¤åç§° */
     private String            DEPT_NAME;
-    /* Ò½ÉúÃû³Æ */
+    /* åŒ»ç”Ÿåç§° */
     private String            DOCTOR_NAME;
-    /* ĞÕÃû */
+    /* å§“å */
     private String            NAME;
-    /* ĞÔ±ğ */
+    /* æ€§åˆ« */
     private String            SEX;
-    /* ÄêÁä */
+    /* å¹´é¾„ */
     private String            AGE;
-    /* ÌåÖØ */
+    /* ä½“é‡ */
     private String            WEIGHT;
-    /* ±¾µØÒ©Æ·Âë */
+    /* æœ¬åœ°è¯å“ç  */
     private String            DRUG_CODE;
-    /* ±¾µØÒ©Æ·Ãû³Æ */
+    /* æœ¬åœ°è¯å“åç§° */
     private String            DRUG_NAME;
-    /* ×îĞ¡¼ÁÁ¿ */
+    /* æœ€å°å‰‚é‡ */
     private String            DOSAGE;
-    /* ×îĞ¡µ¥Î» */
+    /* æœ€å°å•ä½ */
     private String            DOSAGE_UNITS;
-    /* ÓÃÒ©Í¾¾¶ */
+    /* ç”¨è¯é€”å¾„ */
     private String            ADMINISTRATION;
-    /* ÊÖÊõÊ±¼ä */
+    /* æ‰‹æœ¯æ—¶é—´ */
     private String            OPERTOR_DATE;
-    /* ÊÖÊõÃû³Æ */
+    /* æ‰‹æœ¯åç§° */
     private String            OPERTOR_NAME;
-    /* ÊÖÊõÀàĞÍ */
+    /* æ‰‹æœ¯ç±»å‹ */
     private String            OPERTOR_TYPE;
-    /* ÊÖÊõÊ±³¤ */
+    /* æ‰‹æœ¯æ—¶é•¿ */
     private String            OPERTOR_USE_TIME;
-    /* Ê¹ÓÃÊ±¼äµã */
+    /* ä½¿ç”¨æ—¶é—´ç‚¹ */
     private String            DRUG_USE_TIME;
-    /* ¹ıÃôÊ· */
+    /* è¿‡æ•å² */
     private String            GMS;
-    /* ¦Â¹ıÃôÊ· */
+    /* Î²è¿‡æ•å² */
     private String            BTGMS;
-    /* Î£ÏÕÒòËØ */
+    /* å±é™©å› ç´  */
     private String            WXYS;
-    /* ¿ÉÄÜµÄÖÎ²¡¾ú */
+    /* å¯èƒ½çš„æ²»ç—…èŒ */
     private String            KNDZBJ;
-    /* ¿ËÁÖ¼ÁÁ¿°±ÄÏ¼ÁÁ¿ */
+    /* å…‹æ—å‰‚é‡æ°¨å—å‰‚é‡ */
     private String            KLJLANJL;
-    /* Ô¤·ÀÊ¹ÓÃ¿¹¾úÒ©ÎïµÄÒÀ¾İ */
+    /* é¢„é˜²ä½¿ç”¨æŠ—èŒè¯ç‰©çš„ä¾æ® */
     private String            YF_USE_DRUG_YJ;
-    /* ÌØÊâÒªÇó */
+    /* ç‰¹æ®Šè¦æ±‚ */
     private String            TSYQ;
-    /* ¼ÇÂ¼Ê±¼ä */
+    /* è®°å½•æ—¶é—´ */
     private String REC_DATE;
     
     public String getREC_DATE()

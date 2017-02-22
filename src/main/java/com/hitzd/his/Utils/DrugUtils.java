@@ -10,33 +10,33 @@ import com.hitzd.DBUtils.TCommonRecord;
 import com.hitzd.Factory.DBQueryFactory;
 
 /**
- * Ò©Æ·»ù±¾ĞÅÏ¢
+ * è¯å“åŸºæœ¬ä¿¡æ¯
  * @author jingcong
  *
  */
 public class DrugUtils 
 {
     /**
-     * ¸ù¾İ¹æÔòÈ·¶¨Ò©Æ·ÀàĞÍ
+     * æ ¹æ®è§„åˆ™ç¡®å®šè¯å“ç±»å‹
      * @param DrugCode
      * @return
-     *   1 ±íÊ¾¸ø¶¨Ò©Æ·ÂëÊÇ×¢Éä¼Á
-     *   2 ±íÊ¾¸ø¶¨Ò©Æ·ÂëÊÇÖĞÒ©
-     *   3 ±íÊ¾¸ø¶¨Ò©Æ·ÂëÊÇÂé×íÕòÍ´Ò©
-     *   4 ±íÊ¾¸ø¶¨Ò©Æ·ÂëÊÇ¾«ÉñÒ©    
-     *   5 ±íÊ¾¸ø¶¨Ò©Æ·ÂëÊÇ¿¹¾úÒ©      
-     *   0 ±íÊ¾²»ÄÜ¸ø³öÒ©Æ··ÖÀà
+     *   1 è¡¨ç¤ºç»™å®šè¯å“ç æ˜¯æ³¨å°„å‰‚
+     *   2 è¡¨ç¤ºç»™å®šè¯å“ç æ˜¯ä¸­è¯
+     *   3 è¡¨ç¤ºç»™å®šè¯å“ç æ˜¯éº»é†‰é•‡ç—›è¯
+     *   4 è¡¨ç¤ºç»™å®šè¯å“ç æ˜¯ç²¾ç¥è¯    
+     *   5 è¡¨ç¤ºç»™å®šè¯å“ç æ˜¯æŠ—èŒè¯      
+     *   0 è¡¨ç¤ºä¸èƒ½ç»™å‡ºè¯å“åˆ†ç±»
      *   
-     *  PZ  Æ·ÖÖ£¬Ò©Æ·ÂëÇ°¶àÉÙÎ»¿ÉÒÔ±êÊ¶Ò»ÖÖÒ©
-     *  ZS  ×¢Éä¼Á£¬ÓÃÒ©Í¾¾¶·ÖÀàÂëÎª¶àÉÙÊ±ÊÇ×¢Éä¼Á
-     *  ZY  ÖĞ³ÉÒ©Ò©Æ·ÂëÒÔÊ²Ã´¿ªÍ·ÎªÖĞÒ©
-     *  MZ  Âé×íÕòÍ´Ò©£¬Ò©Æ·Âë¿ªÍ·ÎªºÎÖµÊ±ÎªÂé×íÒ©
-     *  JS  ¾«ÉñÒ©£¬Í¬ÉÏ
-     *  KJ  ¿¹¾úÒ©£¬Í¬ÉÏ
+     *  PZ  å“ç§ï¼Œè¯å“ç å‰å¤šå°‘ä½å¯ä»¥æ ‡è¯†ä¸€ç§è¯
+     *  ZS  æ³¨å°„å‰‚ï¼Œç”¨è¯é€”å¾„åˆ†ç±»ç ä¸ºå¤šå°‘æ—¶æ˜¯æ³¨å°„å‰‚
+     *  ZY  ä¸­æˆè¯è¯å“ç ä»¥ä»€ä¹ˆå¼€å¤´ä¸ºä¸­è¯
+     *  MZ  éº»é†‰é•‡ç—›è¯ï¼Œè¯å“ç å¼€å¤´ä¸ºä½•å€¼æ—¶ä¸ºéº»é†‰è¯
+     *  JS  ç²¾ç¥è¯ï¼ŒåŒä¸Š
+     *  KJ  æŠ—èŒè¯ï¼ŒåŒä¸Š
      */
 	
 	/**
-	 * ÊÇ·ñÊÇ×¢Éä¼Á
+	 * æ˜¯å¦æ˜¯æ³¨å°„å‰‚
 	 * 
 	 */
     public static boolean isZSDrug(String DrugCode, String DrugSpec)
@@ -61,7 +61,7 @@ public class DrugUtils
 	}
 	
     /**
-     * ÊÇ·ñÊÇÍâÓÃÒ©
+     * æ˜¯å¦æ˜¯å¤–ç”¨è¯
      * @param DrugCode
      * @param DrugSpec
      * @return
@@ -88,7 +88,7 @@ public class DrugUtils
     }
     
     /**
-     * »ñµÃÍâÓÃÒ©±àºÅÁĞ±í
+     * è·å¾—å¤–ç”¨è¯ç¼–å·åˆ—è¡¨
      * @return
      */
     public static String getExternalDrugNos()
@@ -123,7 +123,7 @@ public class DrugUtils
     
     
     /**
-     * »ñµÃ¿¹¹ıÃôÒ©Îï±àºÅÁĞ±í
+     * è·å¾—æŠ—è¿‡æ•è¯ç‰©ç¼–å·åˆ—è¡¨
      * @return
      */
     public static String getAntiAllergyDrugNos()
@@ -157,10 +157,10 @@ public class DrugUtils
     }
         
     /**
-     * ·µ»ØÒ©Æ·µÄ¶¾ÀíÊôĞÔ
+     * è¿”å›è¯å“çš„æ¯’ç†å±æ€§
      * @param DrugCode
      * @param DrugSpec
-     * @return ·µ»ØÖµÎª¶¾Ò©¡¢ÂéÒ©¡¢¾«Ò»¡¢¾«¶ş¡¢¹óÖØ¡¢·ÅÉä¡¢¸ßÎ£¡¢¶¾Âé¡£
+     * @return è¿”å›å€¼ä¸ºæ¯’è¯ã€éº»è¯ã€ç²¾ä¸€ã€ç²¾äºŒã€è´µé‡ã€æ”¾å°„ã€é«˜å±ã€æ¯’éº»ã€‚
      */
     public static String getDrugToxiProperty(String DrugCode, String DrugSpec)
     {
@@ -187,7 +187,7 @@ public class DrugUtils
     }
     
     /**
-     * ¶¾Ò©
+     * æ¯’è¯
      */
     @Deprecated
     public static String getDYList()
@@ -222,7 +222,7 @@ public class DrugUtils
     }
     
     /**
-     * ÊÇ·ñÊÇÖĞÒ©×¢Éä¼Á
+     * æ˜¯å¦æ˜¯ä¸­è¯æ³¨å°„å‰‚
      * @param drugCode
      * @return
      */
@@ -248,7 +248,7 @@ public class DrugUtils
     }
 	
     /**
-     * ÊÇ·ñÊÇÖĞÒ©
+     * æ˜¯å¦æ˜¯ä¸­è¯
      * @param DrugCode
      * @return
      */
@@ -274,7 +274,7 @@ public class DrugUtils
 	}
 	
 	/**
-	 * ÊÇ·ñÊÇÂé×íÒ©
+	 * æ˜¯å¦æ˜¯éº»é†‰è¯
 	 * @param DrugCode
 	 * @return
 	 */
@@ -301,9 +301,9 @@ public class DrugUtils
 	}
 	
 	/**
-	 * ÊÇ·ñÊÇ¾«ÉñÓÃÒ©
+	 * æ˜¯å¦æ˜¯ç²¾ç¥ç”¨è¯
 	 * @param DrugCode
-	 * @return ·µ»Ø¾«Ò»¡¢¾«¶ş
+	 * @return è¿”å›ç²¾ä¸€ã€ç²¾äºŒ
 	 */
 	@Deprecated
 	public static String isJSDrug(String DrugCode, String DrugSpec)
@@ -311,7 +311,7 @@ public class DrugUtils
 		JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
 		try
 		{
-			String sql = "select * from Drug_Map where Drug_No_Local = '" + DrugCode + "' and Drug_Spec = '" + DrugSpec + "' and TOXI_PROPERTY like '%¾«%'";
+			String sql = "select * from Drug_Map where Drug_No_Local = '" + DrugCode + "' and Drug_Spec = '" + DrugSpec + "' and TOXI_PROPERTY like '%ç²¾%'";
 			TCommonRecord cr = (TCommonRecord)query.queryForObject(sql, new CommonMapper());
 			sql = null;
 			if (cr == null)
@@ -342,10 +342,10 @@ public class DrugUtils
 	}
 	
 	/**
-	 * ÊÇ·ñÊÇÒ½±£ÓÃÒ©
+	 * æ˜¯å¦æ˜¯åŒ»ä¿ç”¨è¯
 	 * @param DrugCode
 	 * @param DrugSpec
-	 * @return 0ÊÇ·ÇÒ½±££¬1ÊÇ¼×ÀàÒ½±££¬2ÊÇÒÒÀàÒ½±£
+	 * @return 0æ˜¯éåŒ»ä¿ï¼Œ1æ˜¯ç”²ç±»åŒ»ä¿ï¼Œ2æ˜¯ä¹™ç±»åŒ»ä¿
 	 */
 	public static String isMedcareDrug(String DrugCode, String DrugSpec)
 	{
@@ -371,7 +371,7 @@ public class DrugUtils
 		return "";
 	}
 
-    /* ¹ú¼Ò»ù±¾Ò©Îï*/
+    /* å›½å®¶åŸºæœ¬è¯ç‰©*/
     private static List<TCommonRecord> Base = new ArrayList<TCommonRecord>();
     @SuppressWarnings ("unchecked")
     public static List<TCommonRecord> getAllBaseDrug()
@@ -396,7 +396,7 @@ public class DrugUtils
 	    return Base;
 	}
 	/**
-	 * ÊÇ·ñÊÇ¹ú¼Ò»ù±¾Ò©Æ·Ä¿Â¼ÖĞµÄÒ©Æ·
+	 * æ˜¯å¦æ˜¯å›½å®¶åŸºæœ¬è¯å“ç›®å½•ä¸­çš„è¯å“
 	 * @param DrugCode
 	 * @param DrugSpec
 	 * @return
@@ -423,7 +423,7 @@ public class DrugUtils
 	}
 	
 	/**
-	 * ÊÇ·ñÊÇĞË·Ü¼Á
+	 * æ˜¯å¦æ˜¯å…´å¥‹å‰‚
 	 * @param DrugCode
 	 * @return
 	 */
@@ -450,7 +450,7 @@ public class DrugUtils
 	}
 	
 	/**
-	 * ÊÇ·ñÊÇ¿Ú·şÖÆ¼Á
+	 * æ˜¯å¦æ˜¯å£æœåˆ¶å‰‚
 	 * @param DrugCode
 	 * @param DrugSpec
 	 * @return
@@ -478,22 +478,22 @@ public class DrugUtils
 	}
 	
 	/**
-	 *  ÊÇ·ñ±ê×¼×¢Éä¼ÁÒ©Æ· 
+	 *  æ˜¯å¦æ ‡å‡†æ³¨å°„å‰‚è¯å“ 
 	 * @param drugCode
-	 * @return ÒÑÈ¡Ïû
+	 * @return å·²å–æ¶ˆ
 	 */
 	@Deprecated
 	public static boolean isZSNormDrug(String drugCode)
 	{
 	    TCommonRecord drug = DictCache.getNewInstance().getDrugDictInfo(drugCode);
-        if("Õë¼Á".equals(drug.get("drug_form")))
+        if("é’ˆå‰‚".equals(drug.get("drug_form")))
         {
             return true;    
         }
         return false;
 	}
 	
-	/* ¿¹¾úÒ©Îï¼¯ºÏ  */
+	/* æŠ—èŒè¯ç‰©é›†åˆ  */
 	private static List<TCommonRecord> KJDrug = new ArrayList<TCommonRecord>();
 	@SuppressWarnings ("unchecked")
     public static List<TCommonRecord> getAllKJDrug()
@@ -519,7 +519,7 @@ public class DrugUtils
 	}
 	
 	/**
-	 * ·µ»Ø¿¹¾úÒ©ÁĞ±í 
+	 * è¿”å›æŠ—èŒè¯åˆ—è¡¨ 
 	 * @return
 	 */
 	public static String getKJDrugList()
@@ -535,7 +535,7 @@ public class DrugUtils
 	}
 	
 	/**
-	 * ÊÇ·ñÊÇ¿¹¾úÒ©
+	 * æ˜¯å¦æ˜¯æŠ—èŒè¯
 	 * @param DrugCode
 	 * @return
 	 */
@@ -563,7 +563,7 @@ public class DrugUtils
 	}
 	
 	/**
-	 * ÅĞ¶ÏÊÇ·ñÊÇ½éÈëÊÖÊõ
+	 * åˆ¤æ–­æ˜¯å¦æ˜¯ä»‹å…¥æ‰‹æœ¯
 	 * @param OperName
 	 * @param OperID
 	 * @return
@@ -582,7 +582,7 @@ public class DrugUtils
 	}
 	
 	/**
-	 * ÊÇ·ñÊÇÌØÊâ¼¶¿¹¾úÒ©
+	 * æ˜¯å¦æ˜¯ç‰¹æ®Šçº§æŠ—èŒè¯
 	 * @param DrugCode
 	 * @param DrugSpec
 	 * @return 
@@ -620,10 +620,10 @@ public class DrugUtils
 	}
 	
 	/**
-	 * ·µ»ØÒ©Æ·µÇ¼Ç
+	 * è¿”å›è¯å“ç™»è®°
 	 * @param DrugCode
 	 * @param DrugSpec
-	 * @return 1ÊÇ·ÇÏŞÖÆÓÃÒ©£¬2ÊÇÏŞÖÆÓÃÒ©£¬3ÊÇÌØÊâÓÃÒ©
+	 * @return 1æ˜¯éé™åˆ¶ç”¨è¯ï¼Œ2æ˜¯é™åˆ¶ç”¨è¯ï¼Œ3æ˜¯ç‰¹æ®Šç”¨è¯
 	 */
 	public static String getDrugLevel(String DrugCode, String DrugSpec)
 	{
@@ -650,7 +650,7 @@ public class DrugUtils
 	}
 	
 	/**
-	 * ÊÇ·ñÊÇÏŞÖÆÓÃÒ©
+	 * æ˜¯å¦æ˜¯é™åˆ¶ç”¨è¯
 	 * @param DrugCode
 	 * @param DrugSpec
 	 * @return
@@ -688,11 +688,11 @@ public class DrugUtils
 	}
 	
 	/**
-	 * ·µ»ØÒ©Æ·ÀàĞÍ
+	 * è¿”å›è¯å“ç±»å‹
 	 * @param DrugCode
 	 * @param DrugSpec
 	 * @param administration
-	 * @return 1ÊÇ×¢Éä¼Á¡¢2ÊÇÖĞÒ©¡¢3ÊÇÂé×íÒ©¡¢4ÊÇ¾«ÉñÒ©¡¢5ÊÇ¿¹¾úÒ©
+	 * @return 1æ˜¯æ³¨å°„å‰‚ã€2æ˜¯ä¸­è¯ã€3æ˜¯éº»é†‰è¯ã€4æ˜¯ç²¾ç¥è¯ã€5æ˜¯æŠ—èŒè¯
 	 */
     public static String getDrugType(String DrugCode, String DrugSpec, String administration)
     {
@@ -705,7 +705,7 @@ public class DrugUtils
     }
     
     /**
-     * ¸Ã¹æÔòÖ¸¶¨ÁËÒ½ÖöÖĞÓÃÒ©Í¾¾¶ÎªºÎÖµÊ±£¬±êÊ¶Ò©Æ·ÊÇÔÚÊÖÊõÖĞÊ¹ÓÃµÄ
+     * è¯¥è§„åˆ™æŒ‡å®šäº†åŒ»å˜±ä¸­ç”¨è¯é€”å¾„ä¸ºä½•å€¼æ—¶ï¼Œæ ‡è¯†è¯å“æ˜¯åœ¨æ‰‹æœ¯ä¸­ä½¿ç”¨çš„
      * @param administration
      * @return
      */
@@ -721,7 +721,7 @@ public class DrugUtils
     }
     
     /**
-     * ¸Ã¹æÔòÖ¸¶¨ÁËÒ½ÖöÖĞItem_Class£¬Ò½ÖöÄÇĞ©ÀàĞÍÎªÒ½ÖöµÄÓÃÒ©Ò½Öö 
+     * è¯¥è§„åˆ™æŒ‡å®šäº†åŒ»å˜±ä¸­Item_Classï¼ŒåŒ»å˜±é‚£äº›ç±»å‹ä¸ºåŒ»å˜±çš„ç”¨è¯åŒ»å˜± 
      * @param ItemClass
      * @return
      */
@@ -737,7 +737,7 @@ public class DrugUtils
     }
     
     /**
-     * ¸ĞÈ¾±êÖ¾
+     * æ„ŸæŸ“æ ‡å¿—
      * @param DiagnosisType
      * @return
      */
@@ -753,7 +753,7 @@ public class DrugUtils
     }
     
     /**
-     * ÖØÖÃÒ©Æ·¿â drug_map
+     * é‡ç½®è¯å“åº“ drug_map
      */
     public static void ReSetToxiProperty()
     {
@@ -768,10 +768,10 @@ public class DrugUtils
         Base.clear();
     }
 
-    /* ¶¾ÂéÒ©*/
+    /* æ¯’éº»è¯*/
     private static List<TCommonRecord> DM = new ArrayList<TCommonRecord>();
     /**
-     * ·µ»ØËùÓĞ¶¾ÂéÒ©  
+     * è¿”å›æ‰€æœ‰æ¯’éº»è¯  
      * @return
      */
     @SuppressWarnings ("unchecked")
@@ -801,7 +801,7 @@ public class DrugUtils
     
     /**
      * 
-     * ·µ»ØÂéÒ© ÁĞ±íÒ©Îï 'code','code','code' ´øÓĞcacheÖĞ 
+     * è¿”å›éº»è¯ åˆ—è¡¨è¯ç‰© 'code','code','code' å¸¦æœ‰cacheä¸­ 
      * @return
      */
     public static String getDMList()
@@ -826,7 +826,7 @@ public class DrugUtils
     }
     
     /**
-     * ·µ»ØÊÇ·ñÎª¶¾ÂéÒ© 
+     * è¿”å›æ˜¯å¦ä¸ºæ¯’éº»è¯ 
      * @param Code
      * @return
      */
@@ -841,10 +841,10 @@ public class DrugUtils
         return false;
     }
     
-    /* ¶¾Ò© */
+    /* æ¯’è¯ */
     private static List<TCommonRecord> DY = new ArrayList<TCommonRecord>();
     /**
-     * ·µ»ØÂéÒ© ´Ó drug_map ±í³öÊı¾İ
+     * è¿”å›éº»è¯ ä» drug_map è¡¨å‡ºæ•°æ®
      * @return
      */
     @SuppressWarnings ("unchecked")
@@ -875,7 +875,7 @@ public class DrugUtils
     
     /**
      * 
-     * ·µ»ØÂéÒ© ÁĞ±íÒ©Îï 'code','code','code' ´øÓĞcacheÖĞ 
+     * è¿”å›éº»è¯ åˆ—è¡¨è¯ç‰© 'code','code','code' å¸¦æœ‰cacheä¸­ 
      * @return
      */
     public static String getDYList1()
@@ -900,7 +900,7 @@ public class DrugUtils
     }
     
     /**
-     * ·µ»ØÊÇ·ñÎª¶¾Ò© 
+     * è¿”å›æ˜¯å¦ä¸ºæ¯’è¯ 
      * @param Code
      * @return
      */
@@ -915,11 +915,11 @@ public class DrugUtils
         return false;
     }
     
-    /* ÂéÒ© */
+    /* éº»è¯ */
     private static List<TCommonRecord> MY = new ArrayList<TCommonRecord>();
     
     /**
-     * ·µ»ØÂéÒ© ´Ó drug_map ±í³öÊı¾İ
+     * è¿”å›éº»è¯ ä» drug_map è¡¨å‡ºæ•°æ®
      * @return
      */
     @SuppressWarnings ("unchecked")
@@ -948,7 +948,7 @@ public class DrugUtils
     }
     
     /**
-     * ·µ»ØÂéÒ© ÁĞ±íÒ©Îï 'code','code','code'
+     * è¿”å›éº»è¯ åˆ—è¡¨è¯ç‰© 'code','code','code'
      * @return
      */
     public static String getMYList()
@@ -973,7 +973,7 @@ public class DrugUtils
     }
     
     /**
-     * ·µ»ØÊÇ·ñÎªÂéÒ© 
+     * è¿”å›æ˜¯å¦ä¸ºéº»è¯ 
      * @param Code
      * @return
      */
@@ -988,11 +988,11 @@ public class DrugUtils
         return false;
     }
     
-    /* Ò»Àà¾« */
+    /* ä¸€ç±»ç²¾ */
     private static List<TCommonRecord> YJ = new ArrayList<TCommonRecord>();
     
     /**
-     * ·µ»ØÒ»Àà¾«ÉñÒ©Îï ´Ó drug_map ±í³öÊı¾İ
+     * è¿”å›ä¸€ç±»ç²¾ç¥è¯ç‰© ä» drug_map è¡¨å‡ºæ•°æ®
      * @return
      */
     @SuppressWarnings ("unchecked")
@@ -1021,7 +1021,7 @@ public class DrugUtils
     }
     
     /**
-     * ·µ»ØÒ»Àà¾«ÉñÁĞ±íÒ©Îï 'code','code','code'
+     * è¿”å›ä¸€ç±»ç²¾ç¥åˆ—è¡¨è¯ç‰© 'code','code','code'
      * @return
      */
     public static String getYJList()
@@ -1046,7 +1046,7 @@ public class DrugUtils
     }
     
     /**
-     * ·µ»ØÊÇ·ñÎªÒ»Àà¾«ÉñÒ©Îï 
+     * è¿”å›æ˜¯å¦ä¸ºä¸€ç±»ç²¾ç¥è¯ç‰© 
      * @param Code
      * @return
      */
@@ -1061,11 +1061,11 @@ public class DrugUtils
         return false;
     }
     
-    /* ¶şÀà¾« */
+    /* äºŒç±»ç²¾ */
     private static List<TCommonRecord> EJ = new ArrayList<TCommonRecord>();
     
     /**
-     * ·µ»Ø ¶şÀà¾«ÉñÒ©Îï 
+     * è¿”å› äºŒç±»ç²¾ç¥è¯ç‰© 
      * @return
      */
     @SuppressWarnings ("unchecked")
@@ -1094,7 +1094,7 @@ public class DrugUtils
     }
     
     /**
-     * ·µ»Ø¶şÀà¾«ÉñÁĞ±íÒ©Îï 'code','code','code'
+     * è¿”å›äºŒç±»ç²¾ç¥åˆ—è¡¨è¯ç‰© 'code','code','code'
      * @return
      */
     public static String getEJList()
@@ -1119,7 +1119,7 @@ public class DrugUtils
     }
     
     /**
-     * ·µ»ØÊÇ·ñÎª¶şÀà¾«ÉñÒ©Îï 
+     * è¿”å›æ˜¯å¦ä¸ºäºŒç±»ç²¾ç¥è¯ç‰© 
      * @param Code
      * @return
      */
@@ -1134,16 +1134,16 @@ public class DrugUtils
         return false;
     }
     
-    /* ·ÅÉä */
+    /* æ”¾å°„ */
     private static List<TCommonRecord> FS = new ArrayList<TCommonRecord>();
     
     /**
-     * ·µ»Ø ·ÅÉäÒ©Æ· drug_map Êı¾İ
+     * è¿”å› æ”¾å°„è¯å“ drug_map æ•°æ®
      * @return
      */
     @SuppressWarnings ("unchecked")
     /**
-     *  ·µ»ØËùÓĞ·ÅÉäÒ©Îï drug_map Êı¾İ
+     *  è¿”å›æ‰€æœ‰æ”¾å°„è¯ç‰© drug_map æ•°æ®
      */
     public static List<TCommonRecord> getAllFS()
     {
@@ -1170,7 +1170,7 @@ public class DrugUtils
     }
     
     /**
-     * ·µ»Ø·ÅÉäÁĞ±íÒ©Îï 'code','code','code'
+     * è¿”å›æ”¾å°„åˆ—è¡¨è¯ç‰© 'code','code','code'
      * @return
      */
     public static String getFSList()
@@ -1195,7 +1195,7 @@ public class DrugUtils
     }
     
     /**
-     * ·µ»ØÊÇ·ñÎª·ÅÉäÒ©Îï 
+     * è¿”å›æ˜¯å¦ä¸ºæ”¾å°„è¯ç‰© 
      * @param Code
      * @return
      */
@@ -1210,10 +1210,10 @@ public class DrugUtils
         return false;
     }
     
-    /* ¹óÖØ  */
+    /* è´µé‡  */
     private static List<TCommonRecord> GZ = new ArrayList<TCommonRecord>();
     /**
-     * ·µ»Ø ¹óÖØÒ©Æ· drug_map Êı¾İ
+     * è¿”å› è´µé‡è¯å“ drug_map æ•°æ®
      * @return
      */
     @SuppressWarnings ("unchecked")
@@ -1242,7 +1242,7 @@ public class DrugUtils
     }
 
     /**
-     * ·µ»Ø¹óÖØÒ©ÎïÁĞ±í   'code','code','code'
+     * è¿”å›è´µé‡è¯ç‰©åˆ—è¡¨   'code','code','code'
      * @return
      */
     public static String getGZList()
@@ -1267,7 +1267,7 @@ public class DrugUtils
     }
     
     /**
-     * ·µ»ØÊÇ·ñÎª¹óÖØÒ©Îï 
+     * è¿”å›æ˜¯å¦ä¸ºè´µé‡è¯ç‰© 
      * @param Code
      * @return
      */
@@ -1282,11 +1282,11 @@ public class DrugUtils
         return false;
     }
     
-    /* ÏŞÖÆ  */
+    /* é™åˆ¶  */
     private static List<TCommonRecord> XZ = new ArrayList<TCommonRecord>();
     
     /**
-     * ·µ»Ø ÏŞÖÆÒ©Æ· drug_map Êı¾İ
+     * è¿”å› é™åˆ¶è¯å“ drug_map æ•°æ®
      * @return
      */
     @SuppressWarnings ("unchecked")
@@ -1315,7 +1315,7 @@ public class DrugUtils
     }
 
     /**
-     * ·µ»ØÏŞÖÆÒ©ÎïÁĞ±í   'code','code','code'
+     * è¿”å›é™åˆ¶è¯ç‰©åˆ—è¡¨   'code','code','code'
      * @return
      */
     public static String getXZList()
@@ -1340,10 +1340,10 @@ public class DrugUtils
     }
     
     
-    /* ÌØÊâ */
+    /* ç‰¹æ®Š */
     private static List<TCommonRecord> TS = new ArrayList<TCommonRecord>();
     /**
-     * ·µ»Ø ÌØÊâÒ©Æ· drug_map Êı¾İ
+     * è¿”å› ç‰¹æ®Šè¯å“ drug_map æ•°æ®
      * @return
      */
     @SuppressWarnings ("unchecked")
@@ -1372,7 +1372,7 @@ public class DrugUtils
     }
 
     /**
-     * ·µ»ØÌØÊâÒ©ÎïÁĞ±í   'code','code','code'
+     * è¿”å›ç‰¹æ®Šè¯ç‰©åˆ—è¡¨   'code','code','code'
      * @return
      */
     public static String getTSList()
@@ -1397,10 +1397,10 @@ public class DrugUtils
     }
 
     /**
-     * È¥³ıÉóºËÖĞÖØ¸´µÄĞÅÏ¢ 
-     * Ã¿´ÎÊÇÊ¹ÓÃºóĞèÒª µ÷ÓÃÒ»ÏÂ clearDistinctDrugIngerInfo() ·½·¨À´Çå¿Õ ¹ıÂËµÄÊı¾İ
-     * @param drug1 ¿ÉÒÔÎ¨Ò»È·¶¨Ò©Æ·1
-     * @param drug2 ¿ÉÒÔÎ¨Ò»È·¶¨Ò©Æ·2
+     * å»é™¤å®¡æ ¸ä¸­é‡å¤çš„ä¿¡æ¯ 
+     * æ¯æ¬¡æ˜¯ä½¿ç”¨åéœ€è¦ è°ƒç”¨ä¸€ä¸‹ clearDistinctDrugIngerInfo() æ–¹æ³•æ¥æ¸…ç©º è¿‡æ»¤çš„æ•°æ®
+     * @param drug1 å¯ä»¥å”¯ä¸€ç¡®å®šè¯å“1
+     * @param drug2 å¯ä»¥å”¯ä¸€ç¡®å®šè¯å“2
      * @return 
      * 
      */
@@ -1422,7 +1422,7 @@ public class DrugUtils
         return false;
     }
     /**
-     * Çå³ıÈ¥ÖØ¼ÇÂ¼
+     * æ¸…é™¤å»é‡è®°å½•
      * 
      */
     public static void clearDistinctDrugIngerInfo()

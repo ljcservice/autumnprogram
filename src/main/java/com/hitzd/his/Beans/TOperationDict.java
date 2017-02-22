@@ -1,7 +1,7 @@
 package com.hitzd.his.Beans;
 
 /**
- * ÊÖÊõ×ÖµäĞÅÏ¢ 
+ * æ‰‹æœ¯å­—å…¸ä¿¡æ¯ 
  * @author Administrator
  *
  */
@@ -9,11 +9,11 @@ public class TOperationDict extends TBaseBean
 {
     private static final long serialVersionUID = -1166457621702576200L;
     
-    /* ÊÖÊõ´úÂë */
+    /* æ‰‹æœ¯ä»£ç  */
     private String OperationCode ;
-    /* ÊÖÊõÃû×Ö */
+    /* æ‰‹æœ¯åå­— */
     private String OperationName ;
-    /* ÊäÈëÂë  */
+    /* è¾“å…¥ç   */
     private String inputCode;
     public String getOperationCode()
     {

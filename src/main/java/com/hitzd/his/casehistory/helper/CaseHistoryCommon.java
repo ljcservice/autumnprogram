@@ -24,7 +24,7 @@ import com.hitzd.his.casehistory.CaseHistory;
 public class CaseHistoryCommon extends CaseHistoryHelperBase
 {
 	/**
-	 * »ñÈ¡Ö¸¶¨²¡°¸ºÅºÍ×¡ÔººÅµÄ²¡ÈËµÄ²¡Àú£¬ÔİÊ±·µ»Ø¿ÕÖµ
+	 * è·å–æŒ‡å®šç—…æ¡ˆå·å’Œä½é™¢å·çš„ç—…äººçš„ç—…å†ï¼Œæš‚æ—¶è¿”å›ç©ºå€¼
 	 * @param PatientID
 	 * @param VisitID
 	 * @param srcQuery
@@ -37,10 +37,10 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃÖ¸¶¨²¡°¸ºÅºÍ×¡ÔººÅµÄ²¡ÈËµÄ²¡Àú£¬·µ»ØTCommonRecord½á¹¹£¬ÏÂÃæÒÔcrPatInfo´úÌæ¸Ã¶ÔÏó£¬¸Ã½á¹¹°üº¬²¡ÈË»ù±¾ĞÅÏ¢£¬Í¬Ê±°üº¬²¡ÈËµÄ¾ÍÕïĞÅÏ¢
-	 * ²¡ÈËµÄ¾ÍÕïĞÅÏ¢Í¨¹ı·µ»Ø½á¹ûµÄcrPatInfo.getObj(ICaseHistoryHelper.Key_PatVisit)À´»ñµÃ£¬¾ÍÕïĞÅÏ¢·µ»ØÎªÒ»¸öTCommonRecord¶ÔÏó£¬ÏÂÃæÒÔcrVisit´úÌæ
-	 * ²¡ÈËµÄ¾ÍÕïĞÅÏ¢ÖĞ°üº¬²¡ÈËµÄÒ½Öö¡¢Õï¶Ï¡¢ÊÖÊõ¡¢°ÚÒ©¡¢¼ì²é¡¢¼ìÑé¡¢Î¢ÉúÎï¡¢ÌåÕ÷¡¢ÕËµ¥µÈĞÅÏ¢;
-	 * »ñµÃ²¡ÈËµÄÒ½Öö£¬Í¨¹ı¾ÍÕïĞÅÏ¢µÄcrVisit.getObj(ICaseHistoryHelper.Key_Orders)À´»ñµÃ£»
+	 * è·å¾—æŒ‡å®šç—…æ¡ˆå·å’Œä½é™¢å·çš„ç—…äººçš„ç—…å†ï¼Œè¿”å›TCommonRecordç»“æ„ï¼Œä¸‹é¢ä»¥crPatInfoä»£æ›¿è¯¥å¯¹è±¡ï¼Œè¯¥ç»“æ„åŒ…å«ç—…äººåŸºæœ¬ä¿¡æ¯ï¼ŒåŒæ—¶åŒ…å«ç—…äººçš„å°±è¯Šä¿¡æ¯
+	 * ç—…äººçš„å°±è¯Šä¿¡æ¯é€šè¿‡è¿”å›ç»“æœçš„crPatInfo.getObj(ICaseHistoryHelper.Key_PatVisit)æ¥è·å¾—ï¼Œå°±è¯Šä¿¡æ¯è¿”å›ä¸ºä¸€ä¸ªTCommonRecordå¯¹è±¡ï¼Œä¸‹é¢ä»¥crVisitä»£æ›¿
+	 * ç—…äººçš„å°±è¯Šä¿¡æ¯ä¸­åŒ…å«ç—…äººçš„åŒ»å˜±ã€è¯Šæ–­ã€æ‰‹æœ¯ã€æ‘†è¯ã€æ£€æŸ¥ã€æ£€éªŒã€å¾®ç”Ÿç‰©ã€ä½“å¾ã€è´¦å•ç­‰ä¿¡æ¯;
+	 * è·å¾—ç—…äººçš„åŒ»å˜±ï¼Œé€šè¿‡å°±è¯Šä¿¡æ¯çš„crVisit.getObj(ICaseHistoryHelper.Key_Orders)æ¥è·å¾—ï¼›
 	 * @param PatientID
 	 * @param VisitID
 	 * @param srcQuery
@@ -49,7 +49,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	@Override
 	public TCommonRecord fetchCaseHistory2CR(String PatientID, String VisitID, JDBCQueryImpl srcQuery)
 	{
-		// ²¡ÈË»ù±¾ĞÅÏ¢
+		// ç—…äººåŸºæœ¬ä¿¡æ¯
 		TCommonRecord crPatMasterIndex = null;
 		String ErrorInfo = "";
 		try
@@ -71,7 +71,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 			} 
 			catch (Exception e) 
 			{
-				ErrorInfo += "\n¾ÍÕïĞÅÏ¢£º" + e.getMessage();
+				ErrorInfo += "\nå°±è¯Šä¿¡æ¯ï¼š" + e.getMessage();
 				e.printStackTrace();
 			}
 			crPatMasterIndex.setObj(Key_PatVisit, crPatVisit);
@@ -120,7 +120,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 				} 
 				catch (Exception e8) 
 				{
-					ErrorInfo += "\n°ÚÒ©¼ÇÂ¼: " + e8.getMessage();
+					ErrorInfo += "\næ‘†è¯è®°å½•: " + e8.getMessage();
 					e8.printStackTrace();
 				}
 				crPatVisit.setObj(Key_DrugDispenseRec, DrugDispenseRec);
@@ -134,7 +134,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 				} 
 				catch (Exception e7) 
 				{
-					ErrorInfo += "\nÒ½Öö: " + e7.getMessage();
+					ErrorInfo += "\nåŒ»å˜±: " + e7.getMessage();
 					e7.printStackTrace();
 				}
 		    	crPatVisit.setObj(Key_Orders, orders);
@@ -146,7 +146,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 				} 
 				catch (Exception e6) 
 				{
-					ErrorInfo += "\nÕï¶Ï: " + e6.getMessage();
+					ErrorInfo += "\nè¯Šæ–­: " + e6.getMessage();
 					e6.printStackTrace();
 				}
 		    	crPatVisit.setObj(Key_Diagnosis, diagnosis);
@@ -158,7 +158,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 				} 
 				catch (Exception e5) 
 				{
-					ErrorInfo += "\n×¡ÔºÕËµ¥: " + e5.getMessage();
+					ErrorInfo += "\nä½é™¢è´¦å•: " + e5.getMessage();
 					e5.printStackTrace();
 				}
 		    	crPatVisit.setObj(Key_InpBillDetail, InpBillDetail);
@@ -170,7 +170,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 				} 
 				catch (Exception e4) 
 				{
-					ErrorInfo += "\n¼ì²é¼ÇÂ¼: " + e4.getMessage();
+					ErrorInfo += "\næ£€æŸ¥è®°å½•: " + e4.getMessage();
 					e4.printStackTrace();
 				}
 		    	crPatVisit.setObj(Key_LabTestMaster, LabTestMaster);
@@ -182,7 +182,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 				} 
 				catch (Exception e3) 
 				{
-					ErrorInfo += "\nÌåÕ÷ĞÅÏ¢: " + e3.getMessage();
+					ErrorInfo += "\nä½“å¾ä¿¡æ¯: " + e3.getMessage();
 					e3.printStackTrace();
 				}
 		    	crPatVisit.setObj(Key_VitalSignsRec, VitalSignsRec);
@@ -194,7 +194,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 				} 
 				catch (Exception e2) 
 				{
-					ErrorInfo += "\n¼ìÑé¼ÇÂ¼: " + e2.getMessage();
+					ErrorInfo += "\næ£€éªŒè®°å½•: " + e2.getMessage();
 					e2.printStackTrace();
 				}
 		    	crPatVisit.setObj(Key_ExamMaster, ExamMaster);
@@ -206,7 +206,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 				} 
 				catch (Exception e1) 
 				{
-					ErrorInfo += "\nÎ¢ÉúÎï: " + e1.getMessage();
+					ErrorInfo += "\nå¾®ç”Ÿç‰©: " + e1.getMessage();
 					e1.printStackTrace();
 				}
 		    	crPatVisit.setObj(Key_GermTest, GermTest);
@@ -218,7 +218,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 				} 
 				catch (Exception e)
 				{
-					ErrorInfo += "\nÍ¿Æ¬¼ìÑé: " + e.getMessage();
+					ErrorInfo += "\næ¶‚ç‰‡æ£€éªŒ: " + e.getMessage();
 					e.printStackTrace();
 				}
 		    	crPatVisit.setObj(Key_GermTestResult, GermTestResult);
@@ -230,9 +230,9 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃ²¡ÈËµÄ»ù±¾ĞÅÏ¢£¬Í¨¹ıPatientIDÈ¡µÃÓÃ»§»ù±¾ĞÅÏ¢
-	 * µ¥±í²éÑ¯£ºPat_Master_Index
-	 * @param PatientID ²¡ÈË±êÊ¶
+	 * è·å¾—ç—…äººçš„åŸºæœ¬ä¿¡æ¯ï¼Œé€šè¿‡PatientIDå–å¾—ç”¨æˆ·åŸºæœ¬ä¿¡æ¯
+	 * å•è¡¨æŸ¥è¯¢ï¼šPat_Master_Index
+	 * @param PatientID ç—…äººæ ‡è¯†
 	 * @param srcQuery
 	 * @return
 	 * @throws Exception
@@ -249,33 +249,33 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃ²¡ÈËµÄ»ù±¾ĞÅÏ¢
-	 * µ¥±í²éÑ¯£ºPat_Master_Index
-	 * @param ×Ö¶ÎÁĞ±í£¬Ò»°ãÊÇFieldName1, FieldName2,...FieldNameN£¬Ò²¿ÉÒÔÊÇ*£¬»òÕßÊÇcount(*)µÈµÈ
-	 * @param lsWheres Ìõ¼şÁĞ±í
-	 * ÊÇÒ»¸öTCommonRecordµÄÁĞ±í£¬Ã¿Ò»ÏîTCommonRecord°üÀ¨FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
-	 * ÆäÖĞ
-	 * FieldName : ±íÊ¾¸ÃÌõ¼şÓëÄÄ¸ö×Ö¶ÎÏà¹Ø
-	 * FieldValue: ±íÊ¾¸ÃÌõ¼şµÄ×Ö¶ÎÈ¡Öµ£¬Èç¹ûFieldValueµÄµÚÒ»¸ö»ò×îºóÒ»¸ö×Ö·ûÎª%£¬ÔòÉú³ÉlikeÓï¾ä
-	 * FieldType : ±íÊ¾¸Ã×Ö¶ÎµÄÀàĞÍ£¬Èç¹ûÊÇChar£¬ÔòÆ´ºÃµÄsqlÖĞ°üÀ¨'£¬·ñÔò²»°üÀ¨'£¬Ä¬ÈÏÖµÎª·Çchar£¬¼´²»´ø'
-	 * Relation  : ±íÊ¾×Ö¶ÎÃûÓë×Ö¶ÎÖµÖ®¼äµÄ¹ØÏµ£¬=¡¢>=¡¢<=µÈµÈ£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾¹ØÏµÎª=
-	 * GroupNo   : ±íÊ¾¸ÃÌõ¼şµÄ×éºÅ£¬Èç¹û2¸öÌõ¼şÎªÒ»×é£¬ĞèÒªÁª¶¯²éÑ¯£¬ÀıÈç£º
+	 * è·å¾—ç—…äººçš„åŸºæœ¬ä¿¡æ¯
+	 * å•è¡¨æŸ¥è¯¢ï¼šPat_Master_Index
+	 * @param å­—æ®µåˆ—è¡¨ï¼Œä¸€èˆ¬æ˜¯FieldName1, FieldName2,...FieldNameNï¼Œä¹Ÿå¯ä»¥æ˜¯*ï¼Œæˆ–è€…æ˜¯count(*)ç­‰ç­‰
+	 * @param lsWheres æ¡ä»¶åˆ—è¡¨
+	 * æ˜¯ä¸€ä¸ªTCommonRecordçš„åˆ—è¡¨ï¼Œæ¯ä¸€é¡¹TCommonRecordåŒ…æ‹¬FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
+	 * å…¶ä¸­
+	 * FieldName : è¡¨ç¤ºè¯¥æ¡ä»¶ä¸å“ªä¸ªå­—æ®µç›¸å…³
+	 * FieldValue: è¡¨ç¤ºè¯¥æ¡ä»¶çš„å­—æ®µå–å€¼ï¼Œå¦‚æœFieldValueçš„ç¬¬ä¸€ä¸ªæˆ–æœ€åä¸€ä¸ªå­—ç¬¦ä¸º%ï¼Œåˆ™ç”Ÿæˆlikeè¯­å¥
+	 * FieldType : è¡¨ç¤ºè¯¥å­—æ®µçš„ç±»å‹ï¼Œå¦‚æœæ˜¯Charï¼Œåˆ™æ‹¼å¥½çš„sqlä¸­åŒ…æ‹¬'ï¼Œå¦åˆ™ä¸åŒ…æ‹¬'ï¼Œé»˜è®¤å€¼ä¸ºécharï¼Œå³ä¸å¸¦'
+	 * Relation  : è¡¨ç¤ºå­—æ®µåä¸å­—æ®µå€¼ä¹‹é—´çš„å…³ç³»ï¼Œ=ã€>=ã€<=ç­‰ç­‰ï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå…³ç³»ä¸º=
+	 * GroupNo   : è¡¨ç¤ºè¯¥æ¡ä»¶çš„ç»„å·ï¼Œå¦‚æœ2ä¸ªæ¡ä»¶ä¸ºä¸€ç»„ï¼Œéœ€è¦è”åŠ¨æŸ¥è¯¢ï¼Œä¾‹å¦‚ï¼š
 	 * ((StartDateTime <= to_date('2011-01-01', 'yyyy-mm-dd')) and (StopDateTime >= to_date('2011-02-01', 'yyyy-mm-dd')))
-	 * ÉÏÃæµÄ2¸öÌõ¼ş¾Í±ØĞëÒ»ÆğÓÃ£¬Òò´ËÒÔÉÏ2¸ö×Ö¶ÎÎªÒ»×é£¬GroupNo²»Ó¦¸Ã·¢ÉúÖØ¸´£¬Ä¬ÈÏÎª¿ÕÖµ£¬±íÊ¾¸ÃÌõ¼şµ¥¶ÀËãÊÇÒ»¸öÌõ¼ş
-	 * Condition : ±íÊ¾¸ÃÌõ¼şÇ°Ãæ¸úµÄÊÇand »¹ÊÇ or£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾Ç°Ãæ¸ú and 
-	 * @param lsGroups group by Óï¾äºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬1ÏîÄÚÈİ£¬FieldName
-	 * @param lsOrders order by ºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬2ÏîÄÚÈİ£¬Ò»ÏîÊÇFieldName£¬Ò»ÏîÊÇBy£¬ByµÄÈ¡ÖµÎª¿Õ£¬asc»òdesc
+	 * ä¸Šé¢çš„2ä¸ªæ¡ä»¶å°±å¿…é¡»ä¸€èµ·ç”¨ï¼Œå› æ­¤ä»¥ä¸Š2ä¸ªå­—æ®µä¸ºä¸€ç»„ï¼ŒGroupNoä¸åº”è¯¥å‘ç”Ÿé‡å¤ï¼Œé»˜è®¤ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºè¯¥æ¡ä»¶å•ç‹¬ç®—æ˜¯ä¸€ä¸ªæ¡ä»¶
+	 * Condition : è¡¨ç¤ºè¯¥æ¡ä»¶å‰é¢è·Ÿçš„æ˜¯and è¿˜æ˜¯ orï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå‰é¢è·Ÿ and 
+	 * @param lsGroups group by è¯­å¥åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«1é¡¹å†…å®¹ï¼ŒFieldName
+	 * @param lsOrders order by åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«2é¡¹å†…å®¹ï¼Œä¸€é¡¹æ˜¯FieldNameï¼Œä¸€é¡¹æ˜¯Byï¼ŒByçš„å–å€¼ä¸ºç©ºï¼Œascæˆ–desc
 	 * @param srcQuery
-	 * @return ·µ»Ø·ûºÏÌõ¼şµÄÊı¾İ½á¹û
+	 * @return è¿”å›ç¬¦åˆæ¡ä»¶çš„æ•°æ®ç»“æœ
 	 * @throws Exception
 	 * 
-	 * ¾Ù¸öÀı×Ó£º
-	 * ²éÑ¯²¡ÈËµÄÈ«²¿ĞÅÏ¢£¬Ìõ¼şÎª2011Äê1ÔÂ1ÈÕÔÚÔºµÄ²¡ÈË£¬²¢ÇÒÊÇĞÕÁõµÄ²¡ÈË£¬²¢ÇÒ°´²¡ÈËµÄ×¡ÔºÈÕÆÚ½øĞĞÉıĞòÅÅÁĞ
+	 * ä¸¾ä¸ªä¾‹å­ï¼š
+	 * æŸ¥è¯¢ç—…äººçš„å…¨éƒ¨ä¿¡æ¯ï¼Œæ¡ä»¶ä¸º2011å¹´1æœˆ1æ—¥åœ¨é™¢çš„ç—…äººï¼Œå¹¶ä¸”æ˜¯å§“åˆ˜çš„ç—…äººï¼Œå¹¶ä¸”æŒ‰ç—…äººçš„ä½é™¢æ—¥æœŸè¿›è¡Œå‡åºæ’åˆ—
 	 * String strFields = "*";
 	 * List<TCommonRecord> lsWheres = new ArrayList<TCommonRecord>();
 	 * TCommonRecord crWheres1 = new TCommonRecord();
 	 * crWheres1.set("FieldName", "Name");
-	 * crWheres1.set("FieldValue", "Áõ%");
+	 * crWheres1.set("FieldValue", "åˆ˜%");
 	 * lsWheres.add(crWheres1);
 	 * 
 	 * crWheres1 = new TCommonRecord();
@@ -295,8 +295,8 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	 * lsWheres.add(crWheres1);
 	 * 
 	 * List<TCommonRecord> lsPatVisitInfo = fetchPatVisitInfo(strFields, lsWheres, "", "Patient_ID");
-	 * ÒÔÉÏÌõ¼şÆ´³öµÄsqlÎª
-	 * select * from Pat_Visit where 1=1 and Name like 'Áõ%' and 
+	 * ä»¥ä¸Šæ¡ä»¶æ‹¼å‡ºçš„sqlä¸º
+	 * select * from Pat_Visit where 1=1 and Name like 'åˆ˜%' and 
 	 *   ((Admission_Date <= to_date('2011-01-01', 'yyyy-mm-dd')) and (Discharge_Date >= to_date('2011-01-01', 'yyyy-mm-dd')))
 	 * order by Patient_ID asc
 	 */
@@ -329,9 +329,9 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃ²¡ÈËµÄ¾ÍÕïĞÅÏ¢£¬°üÀ¨¶à´Î×¡ÔºµÄĞÅÏ¢
-	 * µ¥±í²éÑ¯£ºpat_visit
-	 * @param PatientID ²¡ÈË±êÊ¶
+	 * è·å¾—ç—…äººçš„å°±è¯Šä¿¡æ¯ï¼ŒåŒ…æ‹¬å¤šæ¬¡ä½é™¢çš„ä¿¡æ¯
+	 * å•è¡¨æŸ¥è¯¢ï¼špat_visit
+	 * @param PatientID ç—…äººæ ‡è¯†
 	 * @param srcQuery
 	 * @return
 	 * @throws Exception
@@ -348,10 +348,10 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃ²¡ÈËµÄÒ»´Î¾ÍÕïĞÅÏ¢
-	 * µ¥±í²éÑ¯£ºpat_visit
-	 * @param PatientID ²¡ÈË±êÊ¶
-	 * @param VisitID ×¡Ôº´ÎÊı
+	 * è·å¾—ç—…äººçš„ä¸€æ¬¡å°±è¯Šä¿¡æ¯
+	 * å•è¡¨æŸ¥è¯¢ï¼špat_visit
+	 * @param PatientID ç—…äººæ ‡è¯†
+	 * @param VisitID ä½é™¢æ¬¡æ•°
 	 * @param srcQuery
 	 * @return
 	 * @throws Exception
@@ -370,24 +370,24 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃ¾ÍÕïĞÅÏ¢
-	 * µ¥±í²éÑ¯£ºpat_visit
-	 * @param ×Ö¶ÎÁĞ±í£¬Ò»°ãÊÇFieldName1, FieldName2,...FieldNameN£¬Ò²¿ÉÒÔÊÇ*£¬»òÕßÊÇcount(*)µÈµÈ
-	 * @param lsWheres Ìõ¼şÁĞ±í
-	 * ÊÇÒ»¸öTCommonRecordµÄÁĞ±í£¬Ã¿Ò»ÏîTCommonRecord°üÀ¨FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
-	 * ÆäÖĞ
-	 * FieldName : ±íÊ¾¸ÃÌõ¼şÓëÄÄ¸ö×Ö¶ÎÏà¹Ø
-	 * FieldValue: ±íÊ¾¸ÃÌõ¼şµÄ×Ö¶ÎÈ¡Öµ£¬Èç¹ûFieldValueµÄµÚÒ»¸ö»ò×îºóÒ»¸ö×Ö·ûÎª%£¬ÔòÉú³ÉlikeÓï¾ä
-	 * FieldType : ±íÊ¾¸Ã×Ö¶ÎµÄÀàĞÍ£¬Èç¹ûÊÇChar£¬ÔòÆ´ºÃµÄsqlÖĞ°üÀ¨'£¬·ñÔò²»°üÀ¨'£¬Ä¬ÈÏÖµÎª·Çchar£¬¼´²»´ø'
-	 * Relation  : ±íÊ¾×Ö¶ÎÃûÓë×Ö¶ÎÖµÖ®¼äµÄ¹ØÏµ£¬=¡¢>=¡¢<=µÈµÈ£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾¹ØÏµÎª=
-	 * GroupNo   : ±íÊ¾¸ÃÌõ¼şµÄ×éºÅ£¬Èç¹û2¸öÌõ¼şÎªÒ»×é£¬ĞèÒªÁª¶¯²éÑ¯£¬ÀıÈç£º
+	 * è·å¾—å°±è¯Šä¿¡æ¯
+	 * å•è¡¨æŸ¥è¯¢ï¼špat_visit
+	 * @param å­—æ®µåˆ—è¡¨ï¼Œä¸€èˆ¬æ˜¯FieldName1, FieldName2,...FieldNameNï¼Œä¹Ÿå¯ä»¥æ˜¯*ï¼Œæˆ–è€…æ˜¯count(*)ç­‰ç­‰
+	 * @param lsWheres æ¡ä»¶åˆ—è¡¨
+	 * æ˜¯ä¸€ä¸ªTCommonRecordçš„åˆ—è¡¨ï¼Œæ¯ä¸€é¡¹TCommonRecordåŒ…æ‹¬FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
+	 * å…¶ä¸­
+	 * FieldName : è¡¨ç¤ºè¯¥æ¡ä»¶ä¸å“ªä¸ªå­—æ®µç›¸å…³
+	 * FieldValue: è¡¨ç¤ºè¯¥æ¡ä»¶çš„å­—æ®µå–å€¼ï¼Œå¦‚æœFieldValueçš„ç¬¬ä¸€ä¸ªæˆ–æœ€åä¸€ä¸ªå­—ç¬¦ä¸º%ï¼Œåˆ™ç”Ÿæˆlikeè¯­å¥
+	 * FieldType : è¡¨ç¤ºè¯¥å­—æ®µçš„ç±»å‹ï¼Œå¦‚æœæ˜¯Charï¼Œåˆ™æ‹¼å¥½çš„sqlä¸­åŒ…æ‹¬'ï¼Œå¦åˆ™ä¸åŒ…æ‹¬'ï¼Œé»˜è®¤å€¼ä¸ºécharï¼Œå³ä¸å¸¦'
+	 * Relation  : è¡¨ç¤ºå­—æ®µåä¸å­—æ®µå€¼ä¹‹é—´çš„å…³ç³»ï¼Œ=ã€>=ã€<=ç­‰ç­‰ï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå…³ç³»ä¸º=
+	 * GroupNo   : è¡¨ç¤ºè¯¥æ¡ä»¶çš„ç»„å·ï¼Œå¦‚æœ2ä¸ªæ¡ä»¶ä¸ºä¸€ç»„ï¼Œéœ€è¦è”åŠ¨æŸ¥è¯¢ï¼Œä¾‹å¦‚ï¼š
 	 * ((StartDateTime <= to_date('2011-01-01', 'yyyy-mm-dd')) and (StopDateTime >= to_date('2011-02-01', 'yyyy-mm-dd')))
-	 * ÉÏÃæµÄ2¸öÌõ¼ş¾Í±ØĞëÒ»ÆğÓÃ£¬Òò´ËÒÔÉÏ2¸ö×Ö¶ÎÎªÒ»×é£¬GroupNo²»Ó¦¸Ã·¢ÉúÖØ¸´£¬Ä¬ÈÏÎª¿ÕÖµ£¬±íÊ¾¸ÃÌõ¼şµ¥¶ÀËãÊÇÒ»¸öÌõ¼ş
-	 * Condition : ±íÊ¾¸ÃÌõ¼şÇ°Ãæ¸úµÄÊÇand »¹ÊÇ or£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾Ç°Ãæ¸ú and 
-	 * @param lsGroups group by Óï¾äºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬1ÏîÄÚÈİ£¬FieldName
-	 * @param lsOrders order by ºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬2ÏîÄÚÈİ£¬Ò»ÏîÊÇFieldName£¬Ò»ÏîÊÇBy£¬ByµÄÈ¡ÖµÎª¿Õ£¬asc»òdesc
+	 * ä¸Šé¢çš„2ä¸ªæ¡ä»¶å°±å¿…é¡»ä¸€èµ·ç”¨ï¼Œå› æ­¤ä»¥ä¸Š2ä¸ªå­—æ®µä¸ºä¸€ç»„ï¼ŒGroupNoä¸åº”è¯¥å‘ç”Ÿé‡å¤ï¼Œé»˜è®¤ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºè¯¥æ¡ä»¶å•ç‹¬ç®—æ˜¯ä¸€ä¸ªæ¡ä»¶
+	 * Condition : è¡¨ç¤ºè¯¥æ¡ä»¶å‰é¢è·Ÿçš„æ˜¯and è¿˜æ˜¯ orï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå‰é¢è·Ÿ and 
+	 * @param lsGroups group by è¯­å¥åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«1é¡¹å†…å®¹ï¼ŒFieldName
+	 * @param lsOrders order by åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«2é¡¹å†…å®¹ï¼Œä¸€é¡¹æ˜¯FieldNameï¼Œä¸€é¡¹æ˜¯Byï¼ŒByçš„å–å€¼ä¸ºç©ºï¼Œascæˆ–desc
 	 * @param srcQuery
-	 * @return ·µ»Ø·ûºÏÌõ¼şµÄÊı¾İ½á¹û
+	 * @return è¿”å›ç¬¦åˆæ¡ä»¶çš„æ•°æ®ç»“æœ
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
@@ -525,10 +525,10 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃ²¡ÈËµÄ°ÚÒ©¼ÇÂ¼
-	 * µ¥±í²éÑ¯£ºdrug_dispense_rec
-	 * @param PatientID ²¡ÈË±êÊ¶
-	 * @param VisitID ×¡Ôº´ÎÊı
+	 * è·å¾—ç—…äººçš„æ‘†è¯è®°å½•
+	 * å•è¡¨æŸ¥è¯¢ï¼šdrug_dispense_rec
+	 * @param PatientID ç—…äººæ ‡è¯†
+	 * @param VisitID ä½é™¢æ¬¡æ•°
 	 * @param srcQuery
 	 * @return
 	 * @throws Exception
@@ -536,7 +536,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	@Override
 	public List<TCommonRecord> fetchDrugDispenseRec2CR(String PatientID, String VisitID, JDBCQueryImpl srcQuery) throws Exception
 	{
-		//°ÚÒ©¼ÇÂ¼
+		//æ‘†è¯è®°å½•
 		String strFields = "*"; 
 		List<TCommonRecord> lsWheres = new ArrayList<TCommonRecord>();
 		TCommonRecord crWheres = CaseHistoryHelperUtils.genWhereCR("Patient_ID", PatientID, "Char", "", "", "");
@@ -548,24 +548,24 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃ°ÚÒ©¼ÇÂ¼
-	 * µ¥±í²éÑ¯£ºdrug_dispense_rec
-	 * @param ×Ö¶ÎÁĞ±í£¬Ò»°ãÊÇFieldName1, FieldName2,...FieldNameN£¬Ò²¿ÉÒÔÊÇ*£¬»òÕßÊÇcount(*)µÈµÈ
-	 * @param lsWheres Ìõ¼şÁĞ±í
-	 * ÊÇÒ»¸öTCommonRecordµÄÁĞ±í£¬Ã¿Ò»ÏîTCommonRecord°üÀ¨FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
-	 * ÆäÖĞ
-	 * FieldName : ±íÊ¾¸ÃÌõ¼şÓëÄÄ¸ö×Ö¶ÎÏà¹Ø
-	 * FieldValue: ±íÊ¾¸ÃÌõ¼şµÄ×Ö¶ÎÈ¡Öµ£¬Èç¹ûFieldValueµÄµÚÒ»¸ö»ò×îºóÒ»¸ö×Ö·ûÎª%£¬ÔòÉú³ÉlikeÓï¾ä
-	 * FieldType : ±íÊ¾¸Ã×Ö¶ÎµÄÀàĞÍ£¬Èç¹ûÊÇChar£¬ÔòÆ´ºÃµÄsqlÖĞ°üÀ¨'£¬·ñÔò²»°üÀ¨'£¬Ä¬ÈÏÖµÎª·Çchar£¬¼´²»´ø'
-	 * Relation  : ±íÊ¾×Ö¶ÎÃûÓë×Ö¶ÎÖµÖ®¼äµÄ¹ØÏµ£¬=¡¢>=¡¢<=µÈµÈ£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾¹ØÏµÎª=
-	 * GroupNo   : ±íÊ¾¸ÃÌõ¼şµÄ×éºÅ£¬Èç¹û2¸öÌõ¼şÎªÒ»×é£¬ĞèÒªÁª¶¯²éÑ¯£¬ÀıÈç£º
+	 * è·å¾—æ‘†è¯è®°å½•
+	 * å•è¡¨æŸ¥è¯¢ï¼šdrug_dispense_rec
+	 * @param å­—æ®µåˆ—è¡¨ï¼Œä¸€èˆ¬æ˜¯FieldName1, FieldName2,...FieldNameNï¼Œä¹Ÿå¯ä»¥æ˜¯*ï¼Œæˆ–è€…æ˜¯count(*)ç­‰ç­‰
+	 * @param lsWheres æ¡ä»¶åˆ—è¡¨
+	 * æ˜¯ä¸€ä¸ªTCommonRecordçš„åˆ—è¡¨ï¼Œæ¯ä¸€é¡¹TCommonRecordåŒ…æ‹¬FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
+	 * å…¶ä¸­
+	 * FieldName : è¡¨ç¤ºè¯¥æ¡ä»¶ä¸å“ªä¸ªå­—æ®µç›¸å…³
+	 * FieldValue: è¡¨ç¤ºè¯¥æ¡ä»¶çš„å­—æ®µå–å€¼ï¼Œå¦‚æœFieldValueçš„ç¬¬ä¸€ä¸ªæˆ–æœ€åä¸€ä¸ªå­—ç¬¦ä¸º%ï¼Œåˆ™ç”Ÿæˆlikeè¯­å¥
+	 * FieldType : è¡¨ç¤ºè¯¥å­—æ®µçš„ç±»å‹ï¼Œå¦‚æœæ˜¯Charï¼Œåˆ™æ‹¼å¥½çš„sqlä¸­åŒ…æ‹¬'ï¼Œå¦åˆ™ä¸åŒ…æ‹¬'ï¼Œé»˜è®¤å€¼ä¸ºécharï¼Œå³ä¸å¸¦'
+	 * Relation  : è¡¨ç¤ºå­—æ®µåä¸å­—æ®µå€¼ä¹‹é—´çš„å…³ç³»ï¼Œ=ã€>=ã€<=ç­‰ç­‰ï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå…³ç³»ä¸º=
+	 * GroupNo   : è¡¨ç¤ºè¯¥æ¡ä»¶çš„ç»„å·ï¼Œå¦‚æœ2ä¸ªæ¡ä»¶ä¸ºä¸€ç»„ï¼Œéœ€è¦è”åŠ¨æŸ¥è¯¢ï¼Œä¾‹å¦‚ï¼š
 	 * ((StartDateTime <= to_date('2011-01-01', 'yyyy-mm-dd')) and (StopDateTime >= to_date('2011-02-01', 'yyyy-mm-dd')))
-	 * ÉÏÃæµÄ2¸öÌõ¼ş¾Í±ØĞëÒ»ÆğÓÃ£¬Òò´ËÒÔÉÏ2¸ö×Ö¶ÎÎªÒ»×é£¬GroupNo²»Ó¦¸Ã·¢ÉúÖØ¸´£¬Ä¬ÈÏÎª¿ÕÖµ£¬±íÊ¾¸ÃÌõ¼şµ¥¶ÀËãÊÇÒ»¸öÌõ¼ş
-	 * Condition : ±íÊ¾¸ÃÌõ¼şÇ°Ãæ¸úµÄÊÇand »¹ÊÇ or£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾Ç°Ãæ¸ú and 
-	 * @param lsGroups group by Óï¾äºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬1ÏîÄÚÈİ£¬FieldName
-	 * @param lsOrders order by ºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬2ÏîÄÚÈİ£¬Ò»ÏîÊÇFieldName£¬Ò»ÏîÊÇBy£¬ByµÄÈ¡ÖµÎª¿Õ£¬asc»òdesc
+	 * ä¸Šé¢çš„2ä¸ªæ¡ä»¶å°±å¿…é¡»ä¸€èµ·ç”¨ï¼Œå› æ­¤ä»¥ä¸Š2ä¸ªå­—æ®µä¸ºä¸€ç»„ï¼ŒGroupNoä¸åº”è¯¥å‘ç”Ÿé‡å¤ï¼Œé»˜è®¤ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºè¯¥æ¡ä»¶å•ç‹¬ç®—æ˜¯ä¸€ä¸ªæ¡ä»¶
+	 * Condition : è¡¨ç¤ºè¯¥æ¡ä»¶å‰é¢è·Ÿçš„æ˜¯and è¿˜æ˜¯ orï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå‰é¢è·Ÿ and 
+	 * @param lsGroups group by è¯­å¥åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«1é¡¹å†…å®¹ï¼ŒFieldName
+	 * @param lsOrders order by åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«2é¡¹å†…å®¹ï¼Œä¸€é¡¹æ˜¯FieldNameï¼Œä¸€é¡¹æ˜¯Byï¼ŒByçš„å–å€¼ä¸ºç©ºï¼Œascæˆ–desc
 	 * @param srcQuery
-	 * @return ·µ»Ø·ûºÏÌõ¼şµÄÊı¾İ½á¹û
+	 * @return è¿”å›ç¬¦åˆæ¡ä»¶çš„æ•°æ®ç»“æœ
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
@@ -595,10 +595,10 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃ²¡ÈËµÄÔÚÔºĞÅÏ¢
-	 * µ¥±í²éÑ¯£ºPats_In_Hospital
-	 * @param PatientID ²¡ÈË±êÊ¶
-	 * @param VisitID ×¡Ôº´ÎÊı
+	 * è·å¾—ç—…äººçš„åœ¨é™¢ä¿¡æ¯
+	 * å•è¡¨æŸ¥è¯¢ï¼šPats_In_Hospital
+	 * @param PatientID ç—…äººæ ‡è¯†
+	 * @param VisitID ä½é™¢æ¬¡æ•°
 	 * @param srcQuery
 	 * @return
 	 * @throws Exception
@@ -617,24 +617,24 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃÔÚÔºĞÅÏ¢
-	 * µ¥±í²éÑ¯£ºPats_In_Hospital
-	 * @param ×Ö¶ÎÁĞ±í£¬Ò»°ãÊÇFieldName1, FieldName2,...FieldNameN£¬Ò²¿ÉÒÔÊÇ*£¬»òÕßÊÇcount(*)µÈµÈ
-	 * @param lsWheres Ìõ¼şÁĞ±í
-	 * ÊÇÒ»¸öTCommonRecordµÄÁĞ±í£¬Ã¿Ò»ÏîTCommonRecord°üÀ¨FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
-	 * ÆäÖĞ
-	 * FieldName : ±íÊ¾¸ÃÌõ¼şÓëÄÄ¸ö×Ö¶ÎÏà¹Ø
-	 * FieldValue: ±íÊ¾¸ÃÌõ¼şµÄ×Ö¶ÎÈ¡Öµ£¬Èç¹ûFieldValueµÄµÚÒ»¸ö»ò×îºóÒ»¸ö×Ö·ûÎª%£¬ÔòÉú³ÉlikeÓï¾ä
-	 * FieldType : ±íÊ¾¸Ã×Ö¶ÎµÄÀàĞÍ£¬Èç¹ûÊÇChar£¬ÔòÆ´ºÃµÄsqlÖĞ°üÀ¨'£¬·ñÔò²»°üÀ¨'£¬Ä¬ÈÏÖµÎª·Çchar£¬¼´²»´ø'
-	 * Relation  : ±íÊ¾×Ö¶ÎÃûÓë×Ö¶ÎÖµÖ®¼äµÄ¹ØÏµ£¬=¡¢>=¡¢<=µÈµÈ£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾¹ØÏµÎª=
-	 * GroupNo   : ±íÊ¾¸ÃÌõ¼şµÄ×éºÅ£¬Èç¹û2¸öÌõ¼şÎªÒ»×é£¬ĞèÒªÁª¶¯²éÑ¯£¬ÀıÈç£º
+	 * è·å¾—åœ¨é™¢ä¿¡æ¯
+	 * å•è¡¨æŸ¥è¯¢ï¼šPats_In_Hospital
+	 * @param å­—æ®µåˆ—è¡¨ï¼Œä¸€èˆ¬æ˜¯FieldName1, FieldName2,...FieldNameNï¼Œä¹Ÿå¯ä»¥æ˜¯*ï¼Œæˆ–è€…æ˜¯count(*)ç­‰ç­‰
+	 * @param lsWheres æ¡ä»¶åˆ—è¡¨
+	 * æ˜¯ä¸€ä¸ªTCommonRecordçš„åˆ—è¡¨ï¼Œæ¯ä¸€é¡¹TCommonRecordåŒ…æ‹¬FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
+	 * å…¶ä¸­
+	 * FieldName : è¡¨ç¤ºè¯¥æ¡ä»¶ä¸å“ªä¸ªå­—æ®µç›¸å…³
+	 * FieldValue: è¡¨ç¤ºè¯¥æ¡ä»¶çš„å­—æ®µå–å€¼ï¼Œå¦‚æœFieldValueçš„ç¬¬ä¸€ä¸ªæˆ–æœ€åä¸€ä¸ªå­—ç¬¦ä¸º%ï¼Œåˆ™ç”Ÿæˆlikeè¯­å¥
+	 * FieldType : è¡¨ç¤ºè¯¥å­—æ®µçš„ç±»å‹ï¼Œå¦‚æœæ˜¯Charï¼Œåˆ™æ‹¼å¥½çš„sqlä¸­åŒ…æ‹¬'ï¼Œå¦åˆ™ä¸åŒ…æ‹¬'ï¼Œé»˜è®¤å€¼ä¸ºécharï¼Œå³ä¸å¸¦'
+	 * Relation  : è¡¨ç¤ºå­—æ®µåä¸å­—æ®µå€¼ä¹‹é—´çš„å…³ç³»ï¼Œ=ã€>=ã€<=ç­‰ç­‰ï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå…³ç³»ä¸º=
+	 * GroupNo   : è¡¨ç¤ºè¯¥æ¡ä»¶çš„ç»„å·ï¼Œå¦‚æœ2ä¸ªæ¡ä»¶ä¸ºä¸€ç»„ï¼Œéœ€è¦è”åŠ¨æŸ¥è¯¢ï¼Œä¾‹å¦‚ï¼š
 	 * ((StartDateTime <= to_date('2011-01-01', 'yyyy-mm-dd')) and (StopDateTime >= to_date('2011-02-01', 'yyyy-mm-dd')))
-	 * ÉÏÃæµÄ2¸öÌõ¼ş¾Í±ØĞëÒ»ÆğÓÃ£¬Òò´ËÒÔÉÏ2¸ö×Ö¶ÎÎªÒ»×é£¬GroupNo²»Ó¦¸Ã·¢ÉúÖØ¸´£¬Ä¬ÈÏÎª¿ÕÖµ£¬±íÊ¾¸ÃÌõ¼şµ¥¶ÀËãÊÇÒ»¸öÌõ¼ş
-	 * Condition : ±íÊ¾¸ÃÌõ¼şÇ°Ãæ¸úµÄÊÇand »¹ÊÇ or£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾Ç°Ãæ¸ú and 
-	 * @param lsGroups group by Óï¾äºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬1ÏîÄÚÈİ£¬FieldName
-	 * @param lsOrders order by ºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬2ÏîÄÚÈİ£¬Ò»ÏîÊÇFieldName£¬Ò»ÏîÊÇBy£¬ByµÄÈ¡ÖµÎª¿Õ£¬asc»òdesc
+	 * ä¸Šé¢çš„2ä¸ªæ¡ä»¶å°±å¿…é¡»ä¸€èµ·ç”¨ï¼Œå› æ­¤ä»¥ä¸Š2ä¸ªå­—æ®µä¸ºä¸€ç»„ï¼ŒGroupNoä¸åº”è¯¥å‘ç”Ÿé‡å¤ï¼Œé»˜è®¤ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºè¯¥æ¡ä»¶å•ç‹¬ç®—æ˜¯ä¸€ä¸ªæ¡ä»¶
+	 * Condition : è¡¨ç¤ºè¯¥æ¡ä»¶å‰é¢è·Ÿçš„æ˜¯and è¿˜æ˜¯ orï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå‰é¢è·Ÿ and 
+	 * @param lsGroups group by è¯­å¥åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«1é¡¹å†…å®¹ï¼ŒFieldName
+	 * @param lsOrders order by åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«2é¡¹å†…å®¹ï¼Œä¸€é¡¹æ˜¯FieldNameï¼Œä¸€é¡¹æ˜¯Byï¼ŒByçš„å–å€¼ä¸ºç©ºï¼Œascæˆ–desc
 	 * @param srcQuery
-	 * @return ·µ»Ø·ûºÏÌõ¼şµÄÊı¾İ½á¹û
+	 * @return è¿”å›ç¬¦åˆæ¡ä»¶çš„æ•°æ®ç»“æœ
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
@@ -663,10 +663,10 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃ²¡ÈËµÄÒ½Öö¼ÇÂ¼
-	 * µ¥±í²éÑ¯£ºorders
-	 * @param PatientID ²¡ÈË±êÊ¶
-	 * @param VisitID ×¡Ôº´ÎÊı
+	 * è·å¾—ç—…äººçš„åŒ»å˜±è®°å½•
+	 * å•è¡¨æŸ¥è¯¢ï¼šorders
+	 * @param PatientID ç—…äººæ ‡è¯†
+	 * @param VisitID ä½é™¢æ¬¡æ•°
 	 * @param srcQuery
 	 * @return
 	 * @throws Exception
@@ -685,24 +685,24 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃÒ½Öö¼ÇÂ¼
-	 * µ¥±í²éÑ¯£ºorders
-	 * @param ×Ö¶ÎÁĞ±í£¬Ò»°ãÊÇFieldName1, FieldName2,...FieldNameN£¬Ò²¿ÉÒÔÊÇ*£¬»òÕßÊÇcount(*)µÈµÈ
-	 * @param lsWheres Ìõ¼şÁĞ±í
-	 * ÊÇÒ»¸öTCommonRecordµÄÁĞ±í£¬Ã¿Ò»ÏîTCommonRecord°üÀ¨FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
-	 * ÆäÖĞ
-	 * FieldName : ±íÊ¾¸ÃÌõ¼şÓëÄÄ¸ö×Ö¶ÎÏà¹Ø
-	 * FieldValue: ±íÊ¾¸ÃÌõ¼şµÄ×Ö¶ÎÈ¡Öµ£¬Èç¹ûFieldValueµÄµÚÒ»¸ö»ò×îºóÒ»¸ö×Ö·ûÎª%£¬ÔòÉú³ÉlikeÓï¾ä
-	 * FieldType : ±íÊ¾¸Ã×Ö¶ÎµÄÀàĞÍ£¬Èç¹ûÊÇChar£¬ÔòÆ´ºÃµÄsqlÖĞ°üÀ¨'£¬·ñÔò²»°üÀ¨'£¬Ä¬ÈÏÖµÎª·Çchar£¬¼´²»´ø'
-	 * Relation  : ±íÊ¾×Ö¶ÎÃûÓë×Ö¶ÎÖµÖ®¼äµÄ¹ØÏµ£¬=¡¢>=¡¢<=µÈµÈ£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾¹ØÏµÎª=
-	 * GroupNo   : ±íÊ¾¸ÃÌõ¼şµÄ×éºÅ£¬Èç¹û2¸öÌõ¼şÎªÒ»×é£¬ĞèÒªÁª¶¯²éÑ¯£¬ÀıÈç£º
+	 * è·å¾—åŒ»å˜±è®°å½•
+	 * å•è¡¨æŸ¥è¯¢ï¼šorders
+	 * @param å­—æ®µåˆ—è¡¨ï¼Œä¸€èˆ¬æ˜¯FieldName1, FieldName2,...FieldNameNï¼Œä¹Ÿå¯ä»¥æ˜¯*ï¼Œæˆ–è€…æ˜¯count(*)ç­‰ç­‰
+	 * @param lsWheres æ¡ä»¶åˆ—è¡¨
+	 * æ˜¯ä¸€ä¸ªTCommonRecordçš„åˆ—è¡¨ï¼Œæ¯ä¸€é¡¹TCommonRecordåŒ…æ‹¬FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
+	 * å…¶ä¸­
+	 * FieldName : è¡¨ç¤ºè¯¥æ¡ä»¶ä¸å“ªä¸ªå­—æ®µç›¸å…³
+	 * FieldValue: è¡¨ç¤ºè¯¥æ¡ä»¶çš„å­—æ®µå–å€¼ï¼Œå¦‚æœFieldValueçš„ç¬¬ä¸€ä¸ªæˆ–æœ€åä¸€ä¸ªå­—ç¬¦ä¸º%ï¼Œåˆ™ç”Ÿæˆlikeè¯­å¥
+	 * FieldType : è¡¨ç¤ºè¯¥å­—æ®µçš„ç±»å‹ï¼Œå¦‚æœæ˜¯Charï¼Œåˆ™æ‹¼å¥½çš„sqlä¸­åŒ…æ‹¬'ï¼Œå¦åˆ™ä¸åŒ…æ‹¬'ï¼Œé»˜è®¤å€¼ä¸ºécharï¼Œå³ä¸å¸¦'
+	 * Relation  : è¡¨ç¤ºå­—æ®µåä¸å­—æ®µå€¼ä¹‹é—´çš„å…³ç³»ï¼Œ=ã€>=ã€<=ç­‰ç­‰ï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå…³ç³»ä¸º=
+	 * GroupNo   : è¡¨ç¤ºè¯¥æ¡ä»¶çš„ç»„å·ï¼Œå¦‚æœ2ä¸ªæ¡ä»¶ä¸ºä¸€ç»„ï¼Œéœ€è¦è”åŠ¨æŸ¥è¯¢ï¼Œä¾‹å¦‚ï¼š
 	 * ((StartDateTime <= to_date('2011-01-01', 'yyyy-mm-dd')) and (StopDateTime >= to_date('2011-02-01', 'yyyy-mm-dd')))
-	 * ÉÏÃæµÄ2¸öÌõ¼ş¾Í±ØĞëÒ»ÆğÓÃ£¬Òò´ËÒÔÉÏ2¸ö×Ö¶ÎÎªÒ»×é£¬GroupNo²»Ó¦¸Ã·¢ÉúÖØ¸´£¬Ä¬ÈÏÎª¿ÕÖµ£¬±íÊ¾¸ÃÌõ¼şµ¥¶ÀËãÊÇÒ»¸öÌõ¼ş
-	 * Condition : ±íÊ¾¸ÃÌõ¼şÇ°Ãæ¸úµÄÊÇand »¹ÊÇ or£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾Ç°Ãæ¸ú and 
-	 * @param lsGroups group by Óï¾äºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬1ÏîÄÚÈİ£¬FieldName
-	 * @param lsOrders order by ºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬2ÏîÄÚÈİ£¬Ò»ÏîÊÇFieldName£¬Ò»ÏîÊÇBy£¬ByµÄÈ¡ÖµÎª¿Õ£¬asc»òdesc
+	 * ä¸Šé¢çš„2ä¸ªæ¡ä»¶å°±å¿…é¡»ä¸€èµ·ç”¨ï¼Œå› æ­¤ä»¥ä¸Š2ä¸ªå­—æ®µä¸ºä¸€ç»„ï¼ŒGroupNoä¸åº”è¯¥å‘ç”Ÿé‡å¤ï¼Œé»˜è®¤ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºè¯¥æ¡ä»¶å•ç‹¬ç®—æ˜¯ä¸€ä¸ªæ¡ä»¶
+	 * Condition : è¡¨ç¤ºè¯¥æ¡ä»¶å‰é¢è·Ÿçš„æ˜¯and è¿˜æ˜¯ orï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå‰é¢è·Ÿ and 
+	 * @param lsGroups group by è¯­å¥åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«1é¡¹å†…å®¹ï¼ŒFieldName
+	 * @param lsOrders order by åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«2é¡¹å†…å®¹ï¼Œä¸€é¡¹æ˜¯FieldNameï¼Œä¸€é¡¹æ˜¯Byï¼ŒByçš„å–å€¼ä¸ºç©ºï¼Œascæˆ–desc
 	 * @param srcQuery
-	 * @return ·µ»Ø·ûºÏÌõ¼şµÄÊı¾İ½á¹û
+	 * @return è¿”å›ç¬¦åˆæ¡ä»¶çš„æ•°æ®ç»“æœ
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
@@ -731,10 +731,10 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃ²¡ÈËµÄÕï¶Ï¼ÇÂ¼
-	 * µ¥±í²éÑ¯£ºorders
-	 * @param PatientID ²¡ÈË±êÊ¶
-	 * @param VisitID ×¡Ôº´ÎÊı
+	 * è·å¾—ç—…äººçš„è¯Šæ–­è®°å½•
+	 * å•è¡¨æŸ¥è¯¢ï¼šorders
+	 * @param PatientID ç—…äººæ ‡è¯†
+	 * @param VisitID ä½é™¢æ¬¡æ•°
 	 * @param srcQuery
 	 * @return
 	 * @throws Exception
@@ -753,24 +753,24 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃÕï¶Ï¼ÇÂ¼
-	 * µ¥±í²éÑ¯£ºorders
-	 * @param ×Ö¶ÎÁĞ±í£¬Ò»°ãÊÇFieldName1, FieldName2,...FieldNameN£¬Ò²¿ÉÒÔÊÇ*£¬»òÕßÊÇcount(*)µÈµÈ
-	 * @param lsWheres Ìõ¼şÁĞ±í
-	 * ÊÇÒ»¸öTCommonRecordµÄÁĞ±í£¬Ã¿Ò»ÏîTCommonRecord°üÀ¨FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
-	 * ÆäÖĞ
-	 * FieldName : ±íÊ¾¸ÃÌõ¼şÓëÄÄ¸ö×Ö¶ÎÏà¹Ø
-	 * FieldValue: ±íÊ¾¸ÃÌõ¼şµÄ×Ö¶ÎÈ¡Öµ£¬Èç¹ûFieldValueµÄµÚÒ»¸ö»ò×îºóÒ»¸ö×Ö·ûÎª%£¬ÔòÉú³ÉlikeÓï¾ä
-	 * FieldType : ±íÊ¾¸Ã×Ö¶ÎµÄÀàĞÍ£¬Èç¹ûÊÇChar£¬ÔòÆ´ºÃµÄsqlÖĞ°üÀ¨'£¬·ñÔò²»°üÀ¨'£¬Ä¬ÈÏÖµÎª·Çchar£¬¼´²»´ø'
-	 * Relation  : ±íÊ¾×Ö¶ÎÃûÓë×Ö¶ÎÖµÖ®¼äµÄ¹ØÏµ£¬=¡¢>=¡¢<=µÈµÈ£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾¹ØÏµÎª=
-	 * GroupNo   : ±íÊ¾¸ÃÌõ¼şµÄ×éºÅ£¬Èç¹û2¸öÌõ¼şÎªÒ»×é£¬ĞèÒªÁª¶¯²éÑ¯£¬ÀıÈç£º
+	 * è·å¾—è¯Šæ–­è®°å½•
+	 * å•è¡¨æŸ¥è¯¢ï¼šorders
+	 * @param å­—æ®µåˆ—è¡¨ï¼Œä¸€èˆ¬æ˜¯FieldName1, FieldName2,...FieldNameNï¼Œä¹Ÿå¯ä»¥æ˜¯*ï¼Œæˆ–è€…æ˜¯count(*)ç­‰ç­‰
+	 * @param lsWheres æ¡ä»¶åˆ—è¡¨
+	 * æ˜¯ä¸€ä¸ªTCommonRecordçš„åˆ—è¡¨ï¼Œæ¯ä¸€é¡¹TCommonRecordåŒ…æ‹¬FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
+	 * å…¶ä¸­
+	 * FieldName : è¡¨ç¤ºè¯¥æ¡ä»¶ä¸å“ªä¸ªå­—æ®µç›¸å…³
+	 * FieldValue: è¡¨ç¤ºè¯¥æ¡ä»¶çš„å­—æ®µå–å€¼ï¼Œå¦‚æœFieldValueçš„ç¬¬ä¸€ä¸ªæˆ–æœ€åä¸€ä¸ªå­—ç¬¦ä¸º%ï¼Œåˆ™ç”Ÿæˆlikeè¯­å¥
+	 * FieldType : è¡¨ç¤ºè¯¥å­—æ®µçš„ç±»å‹ï¼Œå¦‚æœæ˜¯Charï¼Œåˆ™æ‹¼å¥½çš„sqlä¸­åŒ…æ‹¬'ï¼Œå¦åˆ™ä¸åŒ…æ‹¬'ï¼Œé»˜è®¤å€¼ä¸ºécharï¼Œå³ä¸å¸¦'
+	 * Relation  : è¡¨ç¤ºå­—æ®µåä¸å­—æ®µå€¼ä¹‹é—´çš„å…³ç³»ï¼Œ=ã€>=ã€<=ç­‰ç­‰ï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå…³ç³»ä¸º=
+	 * GroupNo   : è¡¨ç¤ºè¯¥æ¡ä»¶çš„ç»„å·ï¼Œå¦‚æœ2ä¸ªæ¡ä»¶ä¸ºä¸€ç»„ï¼Œéœ€è¦è”åŠ¨æŸ¥è¯¢ï¼Œä¾‹å¦‚ï¼š
 	 * ((StartDateTime <= to_date('2011-01-01', 'yyyy-mm-dd')) and (StopDateTime >= to_date('2011-02-01', 'yyyy-mm-dd')))
-	 * ÉÏÃæµÄ2¸öÌõ¼ş¾Í±ØĞëÒ»ÆğÓÃ£¬Òò´ËÒÔÉÏ2¸ö×Ö¶ÎÎªÒ»×é£¬GroupNo²»Ó¦¸Ã·¢ÉúÖØ¸´£¬Ä¬ÈÏÎª¿ÕÖµ£¬±íÊ¾¸ÃÌõ¼şµ¥¶ÀËãÊÇÒ»¸öÌõ¼ş
-	 * Condition : ±íÊ¾¸ÃÌõ¼şÇ°Ãæ¸úµÄÊÇand »¹ÊÇ or£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾Ç°Ãæ¸ú and 
-	 * @param lsGroups group by Óï¾äºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬1ÏîÄÚÈİ£¬FieldName
-	 * @param lsOrders order by ºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬2ÏîÄÚÈİ£¬Ò»ÏîÊÇFieldName£¬Ò»ÏîÊÇBy£¬ByµÄÈ¡ÖµÎª¿Õ£¬asc»òdesc
+	 * ä¸Šé¢çš„2ä¸ªæ¡ä»¶å°±å¿…é¡»ä¸€èµ·ç”¨ï¼Œå› æ­¤ä»¥ä¸Š2ä¸ªå­—æ®µä¸ºä¸€ç»„ï¼ŒGroupNoä¸åº”è¯¥å‘ç”Ÿé‡å¤ï¼Œé»˜è®¤ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºè¯¥æ¡ä»¶å•ç‹¬ç®—æ˜¯ä¸€ä¸ªæ¡ä»¶
+	 * Condition : è¡¨ç¤ºè¯¥æ¡ä»¶å‰é¢è·Ÿçš„æ˜¯and è¿˜æ˜¯ orï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå‰é¢è·Ÿ and 
+	 * @param lsGroups group by è¯­å¥åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«1é¡¹å†…å®¹ï¼ŒFieldName
+	 * @param lsOrders order by åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«2é¡¹å†…å®¹ï¼Œä¸€é¡¹æ˜¯FieldNameï¼Œä¸€é¡¹æ˜¯Byï¼ŒByçš„å–å€¼ä¸ºç©ºï¼Œascæˆ–desc
 	 * @param srcQuery
-	 * @return ·µ»Ø·ûºÏÌõ¼şµÄÊı¾İ½á¹û
+	 * @return è¿”å›ç¬¦åˆæ¡ä»¶çš„æ•°æ®ç»“æœ
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
@@ -788,10 +788,10 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃ²¡ÈËµÄ·ÑÓÃÃ÷Ï¸
-	 * µ¥±í²éÑ¯£ºInp_Bill_Detail
-	 * @param PatientID ²¡ÈË±êÊ¶
-	 * @param VisitID ×¡Ôº´ÎÊı
+	 * è·å¾—ç—…äººçš„è´¹ç”¨æ˜ç»†
+	 * å•è¡¨æŸ¥è¯¢ï¼šInp_Bill_Detail
+	 * @param PatientID ç—…äººæ ‡è¯†
+	 * @param VisitID ä½é™¢æ¬¡æ•°
 	 * @param srcQuery
 	 * @return
 	 * @throws Exception
@@ -810,24 +810,24 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃ·ÑÓÃÃ÷Ï¸
-	 * µ¥±í²éÑ¯£ºInp_Bill_Detail
-	 * @param ×Ö¶ÎÁĞ±í£¬Ò»°ãÊÇFieldName1, FieldName2,...FieldNameN£¬Ò²¿ÉÒÔÊÇ*£¬»òÕßÊÇcount(*)µÈµÈ
-	 * @param lsWheres Ìõ¼şÁĞ±í
-	 * ÊÇÒ»¸öTCommonRecordµÄÁĞ±í£¬Ã¿Ò»ÏîTCommonRecord°üÀ¨FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
-	 * ÆäÖĞ
-	 * FieldName : ±íÊ¾¸ÃÌõ¼şÓëÄÄ¸ö×Ö¶ÎÏà¹Ø
-	 * FieldValue: ±íÊ¾¸ÃÌõ¼şµÄ×Ö¶ÎÈ¡Öµ£¬Èç¹ûFieldValueµÄµÚÒ»¸ö»ò×îºóÒ»¸ö×Ö·ûÎª%£¬ÔòÉú³ÉlikeÓï¾ä
-	 * FieldType : ±íÊ¾¸Ã×Ö¶ÎµÄÀàĞÍ£¬Èç¹ûÊÇChar£¬ÔòÆ´ºÃµÄsqlÖĞ°üÀ¨'£¬·ñÔò²»°üÀ¨'£¬Ä¬ÈÏÖµÎª·Çchar£¬¼´²»´ø'
-	 * Relation  : ±íÊ¾×Ö¶ÎÃûÓë×Ö¶ÎÖµÖ®¼äµÄ¹ØÏµ£¬=¡¢>=¡¢<=µÈµÈ£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾¹ØÏµÎª=
-	 * GroupNo   : ±íÊ¾¸ÃÌõ¼şµÄ×éºÅ£¬Èç¹û2¸öÌõ¼şÎªÒ»×é£¬ĞèÒªÁª¶¯²éÑ¯£¬ÀıÈç£º
+	 * è·å¾—è´¹ç”¨æ˜ç»†
+	 * å•è¡¨æŸ¥è¯¢ï¼šInp_Bill_Detail
+	 * @param å­—æ®µåˆ—è¡¨ï¼Œä¸€èˆ¬æ˜¯FieldName1, FieldName2,...FieldNameNï¼Œä¹Ÿå¯ä»¥æ˜¯*ï¼Œæˆ–è€…æ˜¯count(*)ç­‰ç­‰
+	 * @param lsWheres æ¡ä»¶åˆ—è¡¨
+	 * æ˜¯ä¸€ä¸ªTCommonRecordçš„åˆ—è¡¨ï¼Œæ¯ä¸€é¡¹TCommonRecordåŒ…æ‹¬FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
+	 * å…¶ä¸­
+	 * FieldName : è¡¨ç¤ºè¯¥æ¡ä»¶ä¸å“ªä¸ªå­—æ®µç›¸å…³
+	 * FieldValue: è¡¨ç¤ºè¯¥æ¡ä»¶çš„å­—æ®µå–å€¼ï¼Œå¦‚æœFieldValueçš„ç¬¬ä¸€ä¸ªæˆ–æœ€åä¸€ä¸ªå­—ç¬¦ä¸º%ï¼Œåˆ™ç”Ÿæˆlikeè¯­å¥
+	 * FieldType : è¡¨ç¤ºè¯¥å­—æ®µçš„ç±»å‹ï¼Œå¦‚æœæ˜¯Charï¼Œåˆ™æ‹¼å¥½çš„sqlä¸­åŒ…æ‹¬'ï¼Œå¦åˆ™ä¸åŒ…æ‹¬'ï¼Œé»˜è®¤å€¼ä¸ºécharï¼Œå³ä¸å¸¦'
+	 * Relation  : è¡¨ç¤ºå­—æ®µåä¸å­—æ®µå€¼ä¹‹é—´çš„å…³ç³»ï¼Œ=ã€>=ã€<=ç­‰ç­‰ï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå…³ç³»ä¸º=
+	 * GroupNo   : è¡¨ç¤ºè¯¥æ¡ä»¶çš„ç»„å·ï¼Œå¦‚æœ2ä¸ªæ¡ä»¶ä¸ºä¸€ç»„ï¼Œéœ€è¦è”åŠ¨æŸ¥è¯¢ï¼Œä¾‹å¦‚ï¼š
 	 * ((StartDateTime <= to_date('2011-01-01', 'yyyy-mm-dd')) and (StopDateTime >= to_date('2011-02-01', 'yyyy-mm-dd')))
-	 * ÉÏÃæµÄ2¸öÌõ¼ş¾Í±ØĞëÒ»ÆğÓÃ£¬Òò´ËÒÔÉÏ2¸ö×Ö¶ÎÎªÒ»×é£¬GroupNo²»Ó¦¸Ã·¢ÉúÖØ¸´£¬Ä¬ÈÏÎª¿ÕÖµ£¬±íÊ¾¸ÃÌõ¼şµ¥¶ÀËãÊÇÒ»¸öÌõ¼ş
-	 * Condition : ±íÊ¾¸ÃÌõ¼şÇ°Ãæ¸úµÄÊÇand »¹ÊÇ or£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾Ç°Ãæ¸ú and 
-	 * @param lsGroups group by Óï¾äºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬1ÏîÄÚÈİ£¬FieldName
-	 * @param lsOrders order by ºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬2ÏîÄÚÈİ£¬Ò»ÏîÊÇFieldName£¬Ò»ÏîÊÇBy£¬ByµÄÈ¡ÖµÎª¿Õ£¬asc»òdesc
+	 * ä¸Šé¢çš„2ä¸ªæ¡ä»¶å°±å¿…é¡»ä¸€èµ·ç”¨ï¼Œå› æ­¤ä»¥ä¸Š2ä¸ªå­—æ®µä¸ºä¸€ç»„ï¼ŒGroupNoä¸åº”è¯¥å‘ç”Ÿé‡å¤ï¼Œé»˜è®¤ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºè¯¥æ¡ä»¶å•ç‹¬ç®—æ˜¯ä¸€ä¸ªæ¡ä»¶
+	 * Condition : è¡¨ç¤ºè¯¥æ¡ä»¶å‰é¢è·Ÿçš„æ˜¯and è¿˜æ˜¯ orï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå‰é¢è·Ÿ and 
+	 * @param lsGroups group by è¯­å¥åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«1é¡¹å†…å®¹ï¼ŒFieldName
+	 * @param lsOrders order by åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«2é¡¹å†…å®¹ï¼Œä¸€é¡¹æ˜¯FieldNameï¼Œä¸€é¡¹æ˜¯Byï¼ŒByçš„å–å€¼ä¸ºç©ºï¼Œascæˆ–desc
 	 * @param srcQuery
-	 * @return ·µ»Ø·ûºÏÌõ¼şµÄÊı¾İ½á¹û
+	 * @return è¿”å›ç¬¦åˆæ¡ä»¶çš„æ•°æ®ç»“æœ
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
@@ -845,10 +845,10 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃ²¡ÈËµÄ¼ì²éĞÅÏ¢
-	 * µ¥±í²éÑ¯£ºLab_Test_Master
-	 * @param PatientID ²¡ÈË±êÊ¶
-	 * @param VisitID ×¡Ôº´ÎÊı
+	 * è·å¾—ç—…äººçš„æ£€æŸ¥ä¿¡æ¯
+	 * å•è¡¨æŸ¥è¯¢ï¼šLab_Test_Master
+	 * @param PatientID ç—…äººæ ‡è¯†
+	 * @param VisitID ä½é™¢æ¬¡æ•°
 	 * @param srcQuery
 	 * @return
 	 * @throws Exception
@@ -888,24 +888,24 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃ¼ì²éĞÅÏ¢
-	 * µ¥±í²éÑ¯£ºLab_Test_Master
-	 * @param ×Ö¶ÎÁĞ±í£¬Ò»°ãÊÇFieldName1, FieldName2,...FieldNameN£¬Ò²¿ÉÒÔÊÇ*£¬»òÕßÊÇcount(*)µÈµÈ
-	 * @param lsWheres Ìõ¼şÁĞ±í
-	 * ÊÇÒ»¸öTCommonRecordµÄÁĞ±í£¬Ã¿Ò»ÏîTCommonRecord°üÀ¨FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
-	 * ÆäÖĞ
-	 * FieldName : ±íÊ¾¸ÃÌõ¼şÓëÄÄ¸ö×Ö¶ÎÏà¹Ø
-	 * FieldValue: ±íÊ¾¸ÃÌõ¼şµÄ×Ö¶ÎÈ¡Öµ£¬Èç¹ûFieldValueµÄµÚÒ»¸ö»ò×îºóÒ»¸ö×Ö·ûÎª%£¬ÔòÉú³ÉlikeÓï¾ä
-	 * FieldType : ±íÊ¾¸Ã×Ö¶ÎµÄÀàĞÍ£¬Èç¹ûÊÇChar£¬ÔòÆ´ºÃµÄsqlÖĞ°üÀ¨'£¬·ñÔò²»°üÀ¨'£¬Ä¬ÈÏÖµÎª·Çchar£¬¼´²»´ø'
-	 * Relation  : ±íÊ¾×Ö¶ÎÃûÓë×Ö¶ÎÖµÖ®¼äµÄ¹ØÏµ£¬=¡¢>=¡¢<=µÈµÈ£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾¹ØÏµÎª=
-	 * GroupNo   : ±íÊ¾¸ÃÌõ¼şµÄ×éºÅ£¬Èç¹û2¸öÌõ¼şÎªÒ»×é£¬ĞèÒªÁª¶¯²éÑ¯£¬ÀıÈç£º
+	 * è·å¾—æ£€æŸ¥ä¿¡æ¯
+	 * å•è¡¨æŸ¥è¯¢ï¼šLab_Test_Master
+	 * @param å­—æ®µåˆ—è¡¨ï¼Œä¸€èˆ¬æ˜¯FieldName1, FieldName2,...FieldNameNï¼Œä¹Ÿå¯ä»¥æ˜¯*ï¼Œæˆ–è€…æ˜¯count(*)ç­‰ç­‰
+	 * @param lsWheres æ¡ä»¶åˆ—è¡¨
+	 * æ˜¯ä¸€ä¸ªTCommonRecordçš„åˆ—è¡¨ï¼Œæ¯ä¸€é¡¹TCommonRecordåŒ…æ‹¬FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
+	 * å…¶ä¸­
+	 * FieldName : è¡¨ç¤ºè¯¥æ¡ä»¶ä¸å“ªä¸ªå­—æ®µç›¸å…³
+	 * FieldValue: è¡¨ç¤ºè¯¥æ¡ä»¶çš„å­—æ®µå–å€¼ï¼Œå¦‚æœFieldValueçš„ç¬¬ä¸€ä¸ªæˆ–æœ€åä¸€ä¸ªå­—ç¬¦ä¸º%ï¼Œåˆ™ç”Ÿæˆlikeè¯­å¥
+	 * FieldType : è¡¨ç¤ºè¯¥å­—æ®µçš„ç±»å‹ï¼Œå¦‚æœæ˜¯Charï¼Œåˆ™æ‹¼å¥½çš„sqlä¸­åŒ…æ‹¬'ï¼Œå¦åˆ™ä¸åŒ…æ‹¬'ï¼Œé»˜è®¤å€¼ä¸ºécharï¼Œå³ä¸å¸¦'
+	 * Relation  : è¡¨ç¤ºå­—æ®µåä¸å­—æ®µå€¼ä¹‹é—´çš„å…³ç³»ï¼Œ=ã€>=ã€<=ç­‰ç­‰ï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå…³ç³»ä¸º=
+	 * GroupNo   : è¡¨ç¤ºè¯¥æ¡ä»¶çš„ç»„å·ï¼Œå¦‚æœ2ä¸ªæ¡ä»¶ä¸ºä¸€ç»„ï¼Œéœ€è¦è”åŠ¨æŸ¥è¯¢ï¼Œä¾‹å¦‚ï¼š
 	 * ((StartDateTime <= to_date('2011-01-01', 'yyyy-mm-dd')) and (StopDateTime >= to_date('2011-02-01', 'yyyy-mm-dd')))
-	 * ÉÏÃæµÄ2¸öÌõ¼ş¾Í±ØĞëÒ»ÆğÓÃ£¬Òò´ËÒÔÉÏ2¸ö×Ö¶ÎÎªÒ»×é£¬GroupNo²»Ó¦¸Ã·¢ÉúÖØ¸´£¬Ä¬ÈÏÎª¿ÕÖµ£¬±íÊ¾¸ÃÌõ¼şµ¥¶ÀËãÊÇÒ»¸öÌõ¼ş
-	 * Condition : ±íÊ¾¸ÃÌõ¼şÇ°Ãæ¸úµÄÊÇand »¹ÊÇ or£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾Ç°Ãæ¸ú and 
-	 * @param lsGroups group by Óï¾äºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬1ÏîÄÚÈİ£¬FieldName
-	 * @param lsOrders order by ºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬2ÏîÄÚÈİ£¬Ò»ÏîÊÇFieldName£¬Ò»ÏîÊÇBy£¬ByµÄÈ¡ÖµÎª¿Õ£¬asc»òdesc
+	 * ä¸Šé¢çš„2ä¸ªæ¡ä»¶å°±å¿…é¡»ä¸€èµ·ç”¨ï¼Œå› æ­¤ä»¥ä¸Š2ä¸ªå­—æ®µä¸ºä¸€ç»„ï¼ŒGroupNoä¸åº”è¯¥å‘ç”Ÿé‡å¤ï¼Œé»˜è®¤ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºè¯¥æ¡ä»¶å•ç‹¬ç®—æ˜¯ä¸€ä¸ªæ¡ä»¶
+	 * Condition : è¡¨ç¤ºè¯¥æ¡ä»¶å‰é¢è·Ÿçš„æ˜¯and è¿˜æ˜¯ orï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå‰é¢è·Ÿ and 
+	 * @param lsGroups group by è¯­å¥åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«1é¡¹å†…å®¹ï¼ŒFieldName
+	 * @param lsOrders order by åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«2é¡¹å†…å®¹ï¼Œä¸€é¡¹æ˜¯FieldNameï¼Œä¸€é¡¹æ˜¯Byï¼ŒByçš„å–å€¼ä¸ºç©ºï¼Œascæˆ–desc
 	 * @param srcQuery
-	 * @return ·µ»Ø·ûºÏÌõ¼şµÄÊı¾İ½á¹û
+	 * @return è¿”å›ç¬¦åˆæ¡ä»¶çš„æ•°æ®ç»“æœ
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
@@ -951,10 +951,10 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃ²¡ÈËµÄÌåÕ÷ĞÅÏ¢
-	 * µ¥±í²éÑ¯£ºVital_Signs_Rec
-	 * @param PatientID ²¡ÈË±êÊ¶
-	 * @param VisitID ×¡Ôº´ÎÊı
+	 * è·å¾—ç—…äººçš„ä½“å¾ä¿¡æ¯
+	 * å•è¡¨æŸ¥è¯¢ï¼šVital_Signs_Rec
+	 * @param PatientID ç—…äººæ ‡è¯†
+	 * @param VisitID ä½é™¢æ¬¡æ•°
 	 * @param srcQuery
 	 * @return
 	 * @throws Exception
@@ -973,24 +973,24 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃÌåÕ÷ĞÅÏ¢
-	 * µ¥±í²éÑ¯£ºVital_Signs_Rec
-	 * @param ×Ö¶ÎÁĞ±í£¬Ò»°ãÊÇFieldName1, FieldName2,...FieldNameN£¬Ò²¿ÉÒÔÊÇ*£¬»òÕßÊÇcount(*)µÈµÈ
-	 * @param lsWheres Ìõ¼şÁĞ±í
-	 * ÊÇÒ»¸öTCommonRecordµÄÁĞ±í£¬Ã¿Ò»ÏîTCommonRecord°üÀ¨FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
-	 * ÆäÖĞ
-	 * FieldName : ±íÊ¾¸ÃÌõ¼şÓëÄÄ¸ö×Ö¶ÎÏà¹Ø
-	 * FieldValue: ±íÊ¾¸ÃÌõ¼şµÄ×Ö¶ÎÈ¡Öµ£¬Èç¹ûFieldValueµÄµÚÒ»¸ö»ò×îºóÒ»¸ö×Ö·ûÎª%£¬ÔòÉú³ÉlikeÓï¾ä
-	 * FieldType : ±íÊ¾¸Ã×Ö¶ÎµÄÀàĞÍ£¬Èç¹ûÊÇChar£¬ÔòÆ´ºÃµÄsqlÖĞ°üÀ¨'£¬·ñÔò²»°üÀ¨'£¬Ä¬ÈÏÖµÎª·Çchar£¬¼´²»´ø'
-	 * Relation  : ±íÊ¾×Ö¶ÎÃûÓë×Ö¶ÎÖµÖ®¼äµÄ¹ØÏµ£¬=¡¢>=¡¢<=µÈµÈ£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾¹ØÏµÎª=
-	 * GroupNo   : ±íÊ¾¸ÃÌõ¼şµÄ×éºÅ£¬Èç¹û2¸öÌõ¼şÎªÒ»×é£¬ĞèÒªÁª¶¯²éÑ¯£¬ÀıÈç£º
+	 * è·å¾—ä½“å¾ä¿¡æ¯
+	 * å•è¡¨æŸ¥è¯¢ï¼šVital_Signs_Rec
+	 * @param å­—æ®µåˆ—è¡¨ï¼Œä¸€èˆ¬æ˜¯FieldName1, FieldName2,...FieldNameNï¼Œä¹Ÿå¯ä»¥æ˜¯*ï¼Œæˆ–è€…æ˜¯count(*)ç­‰ç­‰
+	 * @param lsWheres æ¡ä»¶åˆ—è¡¨
+	 * æ˜¯ä¸€ä¸ªTCommonRecordçš„åˆ—è¡¨ï¼Œæ¯ä¸€é¡¹TCommonRecordåŒ…æ‹¬FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
+	 * å…¶ä¸­
+	 * FieldName : è¡¨ç¤ºè¯¥æ¡ä»¶ä¸å“ªä¸ªå­—æ®µç›¸å…³
+	 * FieldValue: è¡¨ç¤ºè¯¥æ¡ä»¶çš„å­—æ®µå–å€¼ï¼Œå¦‚æœFieldValueçš„ç¬¬ä¸€ä¸ªæˆ–æœ€åä¸€ä¸ªå­—ç¬¦ä¸º%ï¼Œåˆ™ç”Ÿæˆlikeè¯­å¥
+	 * FieldType : è¡¨ç¤ºè¯¥å­—æ®µçš„ç±»å‹ï¼Œå¦‚æœæ˜¯Charï¼Œåˆ™æ‹¼å¥½çš„sqlä¸­åŒ…æ‹¬'ï¼Œå¦åˆ™ä¸åŒ…æ‹¬'ï¼Œé»˜è®¤å€¼ä¸ºécharï¼Œå³ä¸å¸¦'
+	 * Relation  : è¡¨ç¤ºå­—æ®µåä¸å­—æ®µå€¼ä¹‹é—´çš„å…³ç³»ï¼Œ=ã€>=ã€<=ç­‰ç­‰ï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå…³ç³»ä¸º=
+	 * GroupNo   : è¡¨ç¤ºè¯¥æ¡ä»¶çš„ç»„å·ï¼Œå¦‚æœ2ä¸ªæ¡ä»¶ä¸ºä¸€ç»„ï¼Œéœ€è¦è”åŠ¨æŸ¥è¯¢ï¼Œä¾‹å¦‚ï¼š
 	 * ((StartDateTime <= to_date('2011-01-01', 'yyyy-mm-dd')) and (StopDateTime >= to_date('2011-02-01', 'yyyy-mm-dd')))
-	 * ÉÏÃæµÄ2¸öÌõ¼ş¾Í±ØĞëÒ»ÆğÓÃ£¬Òò´ËÒÔÉÏ2¸ö×Ö¶ÎÎªÒ»×é£¬GroupNo²»Ó¦¸Ã·¢ÉúÖØ¸´£¬Ä¬ÈÏÎª¿ÕÖµ£¬±íÊ¾¸ÃÌõ¼şµ¥¶ÀËãÊÇÒ»¸öÌõ¼ş
-	 * Condition : ±íÊ¾¸ÃÌõ¼şÇ°Ãæ¸úµÄÊÇand »¹ÊÇ or£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾Ç°Ãæ¸ú and 
-	 * @param lsGroups group by Óï¾äºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬1ÏîÄÚÈİ£¬FieldName
-	 * @param lsOrders order by ºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬2ÏîÄÚÈİ£¬Ò»ÏîÊÇFieldName£¬Ò»ÏîÊÇBy£¬ByµÄÈ¡ÖµÎª¿Õ£¬asc»òdesc
+	 * ä¸Šé¢çš„2ä¸ªæ¡ä»¶å°±å¿…é¡»ä¸€èµ·ç”¨ï¼Œå› æ­¤ä»¥ä¸Š2ä¸ªå­—æ®µä¸ºä¸€ç»„ï¼ŒGroupNoä¸åº”è¯¥å‘ç”Ÿé‡å¤ï¼Œé»˜è®¤ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºè¯¥æ¡ä»¶å•ç‹¬ç®—æ˜¯ä¸€ä¸ªæ¡ä»¶
+	 * Condition : è¡¨ç¤ºè¯¥æ¡ä»¶å‰é¢è·Ÿçš„æ˜¯and è¿˜æ˜¯ orï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå‰é¢è·Ÿ and 
+	 * @param lsGroups group by è¯­å¥åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«1é¡¹å†…å®¹ï¼ŒFieldName
+	 * @param lsOrders order by åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«2é¡¹å†…å®¹ï¼Œä¸€é¡¹æ˜¯FieldNameï¼Œä¸€é¡¹æ˜¯Byï¼ŒByçš„å–å€¼ä¸ºç©ºï¼Œascæˆ–desc
 	 * @param srcQuery
-	 * @return ·µ»Ø·ûºÏÌõ¼şµÄÊı¾İ½á¹û
+	 * @return è¿”å›ç¬¦åˆæ¡ä»¶çš„æ•°æ®ç»“æœ
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
@@ -1008,10 +1008,10 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃ²¡ÈËµÄ¼ìÑéĞÅÏ¢
-	 * µ¥±í²éÑ¯£ºExam_Master
-	 * @param PatientID ²¡ÈË±êÊ¶
-	 * @param VisitID ×¡Ôº´ÎÊı
+	 * è·å¾—ç—…äººçš„æ£€éªŒä¿¡æ¯
+	 * å•è¡¨æŸ¥è¯¢ï¼šExam_Master
+	 * @param PatientID ç—…äººæ ‡è¯†
+	 * @param VisitID ä½é™¢æ¬¡æ•°
 	 * @param srcQuery
 	 * @return
 	 * @throws Exception
@@ -1053,24 +1053,24 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃ¼ìÑéĞÅÏ¢
-	 * µ¥±í²éÑ¯£ºExam_Master
-	 * @param ×Ö¶ÎÁĞ±í£¬Ò»°ãÊÇFieldName1, FieldName2,...FieldNameN£¬Ò²¿ÉÒÔÊÇ*£¬»òÕßÊÇcount(*)µÈµÈ
-	 * @param lsWheres Ìõ¼şÁĞ±í
-	 * ÊÇÒ»¸öTCommonRecordµÄÁĞ±í£¬Ã¿Ò»ÏîTCommonRecord°üÀ¨FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
-	 * ÆäÖĞ
-	 * FieldName : ±íÊ¾¸ÃÌõ¼şÓëÄÄ¸ö×Ö¶ÎÏà¹Ø
-	 * FieldValue: ±íÊ¾¸ÃÌõ¼şµÄ×Ö¶ÎÈ¡Öµ£¬Èç¹ûFieldValueµÄµÚÒ»¸ö»ò×îºóÒ»¸ö×Ö·ûÎª%£¬ÔòÉú³ÉlikeÓï¾ä
-	 * FieldType : ±íÊ¾¸Ã×Ö¶ÎµÄÀàĞÍ£¬Èç¹ûÊÇChar£¬ÔòÆ´ºÃµÄsqlÖĞ°üÀ¨'£¬·ñÔò²»°üÀ¨'£¬Ä¬ÈÏÖµÎª·Çchar£¬¼´²»´ø'
-	 * Relation  : ±íÊ¾×Ö¶ÎÃûÓë×Ö¶ÎÖµÖ®¼äµÄ¹ØÏµ£¬=¡¢>=¡¢<=µÈµÈ£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾¹ØÏµÎª=
-	 * GroupNo   : ±íÊ¾¸ÃÌõ¼şµÄ×éºÅ£¬Èç¹û2¸öÌõ¼şÎªÒ»×é£¬ĞèÒªÁª¶¯²éÑ¯£¬ÀıÈç£º
+	 * è·å¾—æ£€éªŒä¿¡æ¯
+	 * å•è¡¨æŸ¥è¯¢ï¼šExam_Master
+	 * @param å­—æ®µåˆ—è¡¨ï¼Œä¸€èˆ¬æ˜¯FieldName1, FieldName2,...FieldNameNï¼Œä¹Ÿå¯ä»¥æ˜¯*ï¼Œæˆ–è€…æ˜¯count(*)ç­‰ç­‰
+	 * @param lsWheres æ¡ä»¶åˆ—è¡¨
+	 * æ˜¯ä¸€ä¸ªTCommonRecordçš„åˆ—è¡¨ï¼Œæ¯ä¸€é¡¹TCommonRecordåŒ…æ‹¬FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
+	 * å…¶ä¸­
+	 * FieldName : è¡¨ç¤ºè¯¥æ¡ä»¶ä¸å“ªä¸ªå­—æ®µç›¸å…³
+	 * FieldValue: è¡¨ç¤ºè¯¥æ¡ä»¶çš„å­—æ®µå–å€¼ï¼Œå¦‚æœFieldValueçš„ç¬¬ä¸€ä¸ªæˆ–æœ€åä¸€ä¸ªå­—ç¬¦ä¸º%ï¼Œåˆ™ç”Ÿæˆlikeè¯­å¥
+	 * FieldType : è¡¨ç¤ºè¯¥å­—æ®µçš„ç±»å‹ï¼Œå¦‚æœæ˜¯Charï¼Œåˆ™æ‹¼å¥½çš„sqlä¸­åŒ…æ‹¬'ï¼Œå¦åˆ™ä¸åŒ…æ‹¬'ï¼Œé»˜è®¤å€¼ä¸ºécharï¼Œå³ä¸å¸¦'
+	 * Relation  : è¡¨ç¤ºå­—æ®µåä¸å­—æ®µå€¼ä¹‹é—´çš„å…³ç³»ï¼Œ=ã€>=ã€<=ç­‰ç­‰ï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå…³ç³»ä¸º=
+	 * GroupNo   : è¡¨ç¤ºè¯¥æ¡ä»¶çš„ç»„å·ï¼Œå¦‚æœ2ä¸ªæ¡ä»¶ä¸ºä¸€ç»„ï¼Œéœ€è¦è”åŠ¨æŸ¥è¯¢ï¼Œä¾‹å¦‚ï¼š
 	 * ((StartDateTime <= to_date('2011-01-01', 'yyyy-mm-dd')) and (StopDateTime >= to_date('2011-02-01', 'yyyy-mm-dd')))
-	 * ÉÏÃæµÄ2¸öÌõ¼ş¾Í±ØĞëÒ»ÆğÓÃ£¬Òò´ËÒÔÉÏ2¸ö×Ö¶ÎÎªÒ»×é£¬GroupNo²»Ó¦¸Ã·¢ÉúÖØ¸´£¬Ä¬ÈÏÎª¿ÕÖµ£¬±íÊ¾¸ÃÌõ¼şµ¥¶ÀËãÊÇÒ»¸öÌõ¼ş
-	 * Condition : ±íÊ¾¸ÃÌõ¼şÇ°Ãæ¸úµÄÊÇand »¹ÊÇ or£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾Ç°Ãæ¸ú and 
-	 * @param lsGroups group by Óï¾äºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬1ÏîÄÚÈİ£¬FieldName
-	 * @param lsOrders order by ºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬2ÏîÄÚÈİ£¬Ò»ÏîÊÇFieldName£¬Ò»ÏîÊÇBy£¬ByµÄÈ¡ÖµÎª¿Õ£¬asc»òdesc
+	 * ä¸Šé¢çš„2ä¸ªæ¡ä»¶å°±å¿…é¡»ä¸€èµ·ç”¨ï¼Œå› æ­¤ä»¥ä¸Š2ä¸ªå­—æ®µä¸ºä¸€ç»„ï¼ŒGroupNoä¸åº”è¯¥å‘ç”Ÿé‡å¤ï¼Œé»˜è®¤ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºè¯¥æ¡ä»¶å•ç‹¬ç®—æ˜¯ä¸€ä¸ªæ¡ä»¶
+	 * Condition : è¡¨ç¤ºè¯¥æ¡ä»¶å‰é¢è·Ÿçš„æ˜¯and è¿˜æ˜¯ orï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå‰é¢è·Ÿ and 
+	 * @param lsGroups group by è¯­å¥åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«1é¡¹å†…å®¹ï¼ŒFieldName
+	 * @param lsOrders order by åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«2é¡¹å†…å®¹ï¼Œä¸€é¡¹æ˜¯FieldNameï¼Œä¸€é¡¹æ˜¯Byï¼ŒByçš„å–å€¼ä¸ºç©ºï¼Œascæˆ–desc
 	 * @param srcQuery
-	 * @return ·µ»Ø·ûºÏÌõ¼şµÄÊı¾İ½á¹û
+	 * @return è¿”å›ç¬¦åˆæ¡ä»¶çš„æ•°æ®ç»“æœ
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
@@ -1116,10 +1116,10 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃ²¡ÈËµÄÎ¢ÉúÎï¼ìÑé
-	 * µ¥±í²éÑ¯£ºGERM_TEST
-	 * @param PatientID ²¡ÈË±êÊ¶
-	 * @param VisitID ×¡Ôº´ÎÊı
+	 * è·å¾—ç—…äººçš„å¾®ç”Ÿç‰©æ£€éªŒ
+	 * å•è¡¨æŸ¥è¯¢ï¼šGERM_TEST
+	 * @param PatientID ç—…äººæ ‡è¯†
+	 * @param VisitID ä½é™¢æ¬¡æ•°
 	 * @param srcQuery
 	 * @return
 	 * @throws Exception
@@ -1152,24 +1152,24 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃÎ¢ÉúÎï¼ìÑé
-	 * µ¥±í²éÑ¯£ºGERM_TEST
-	 * @param ×Ö¶ÎÁĞ±í£¬Ò»°ãÊÇFieldName1, FieldName2,...FieldNameN£¬Ò²¿ÉÒÔÊÇ*£¬»òÕßÊÇcount(*)µÈµÈ
-	 * @param lsWheres Ìõ¼şÁĞ±í
-	 * ÊÇÒ»¸öTCommonRecordµÄÁĞ±í£¬Ã¿Ò»ÏîTCommonRecord°üÀ¨FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
-	 * ÆäÖĞ
-	 * FieldName : ±íÊ¾¸ÃÌõ¼şÓëÄÄ¸ö×Ö¶ÎÏà¹Ø
-	 * FieldValue: ±íÊ¾¸ÃÌõ¼şµÄ×Ö¶ÎÈ¡Öµ£¬Èç¹ûFieldValueµÄµÚÒ»¸ö»ò×îºóÒ»¸ö×Ö·ûÎª%£¬ÔòÉú³ÉlikeÓï¾ä
-	 * FieldType : ±íÊ¾¸Ã×Ö¶ÎµÄÀàĞÍ£¬Èç¹ûÊÇChar£¬ÔòÆ´ºÃµÄsqlÖĞ°üÀ¨'£¬·ñÔò²»°üÀ¨'£¬Ä¬ÈÏÖµÎª·Çchar£¬¼´²»´ø'
-	 * Relation  : ±íÊ¾×Ö¶ÎÃûÓë×Ö¶ÎÖµÖ®¼äµÄ¹ØÏµ£¬=¡¢>=¡¢<=µÈµÈ£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾¹ØÏµÎª=
-	 * GroupNo   : ±íÊ¾¸ÃÌõ¼şµÄ×éºÅ£¬Èç¹û2¸öÌõ¼şÎªÒ»×é£¬ĞèÒªÁª¶¯²éÑ¯£¬ÀıÈç£º
+	 * è·å¾—å¾®ç”Ÿç‰©æ£€éªŒ
+	 * å•è¡¨æŸ¥è¯¢ï¼šGERM_TEST
+	 * @param å­—æ®µåˆ—è¡¨ï¼Œä¸€èˆ¬æ˜¯FieldName1, FieldName2,...FieldNameNï¼Œä¹Ÿå¯ä»¥æ˜¯*ï¼Œæˆ–è€…æ˜¯count(*)ç­‰ç­‰
+	 * @param lsWheres æ¡ä»¶åˆ—è¡¨
+	 * æ˜¯ä¸€ä¸ªTCommonRecordçš„åˆ—è¡¨ï¼Œæ¯ä¸€é¡¹TCommonRecordåŒ…æ‹¬FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
+	 * å…¶ä¸­
+	 * FieldName : è¡¨ç¤ºè¯¥æ¡ä»¶ä¸å“ªä¸ªå­—æ®µç›¸å…³
+	 * FieldValue: è¡¨ç¤ºè¯¥æ¡ä»¶çš„å­—æ®µå–å€¼ï¼Œå¦‚æœFieldValueçš„ç¬¬ä¸€ä¸ªæˆ–æœ€åä¸€ä¸ªå­—ç¬¦ä¸º%ï¼Œåˆ™ç”Ÿæˆlikeè¯­å¥
+	 * FieldType : è¡¨ç¤ºè¯¥å­—æ®µçš„ç±»å‹ï¼Œå¦‚æœæ˜¯Charï¼Œåˆ™æ‹¼å¥½çš„sqlä¸­åŒ…æ‹¬'ï¼Œå¦åˆ™ä¸åŒ…æ‹¬'ï¼Œé»˜è®¤å€¼ä¸ºécharï¼Œå³ä¸å¸¦'
+	 * Relation  : è¡¨ç¤ºå­—æ®µåä¸å­—æ®µå€¼ä¹‹é—´çš„å…³ç³»ï¼Œ=ã€>=ã€<=ç­‰ç­‰ï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå…³ç³»ä¸º=
+	 * GroupNo   : è¡¨ç¤ºè¯¥æ¡ä»¶çš„ç»„å·ï¼Œå¦‚æœ2ä¸ªæ¡ä»¶ä¸ºä¸€ç»„ï¼Œéœ€è¦è”åŠ¨æŸ¥è¯¢ï¼Œä¾‹å¦‚ï¼š
 	 * ((StartDateTime <= to_date('2011-01-01', 'yyyy-mm-dd')) and (StopDateTime >= to_date('2011-02-01', 'yyyy-mm-dd')))
-	 * ÉÏÃæµÄ2¸öÌõ¼ş¾Í±ØĞëÒ»ÆğÓÃ£¬Òò´ËÒÔÉÏ2¸ö×Ö¶ÎÎªÒ»×é£¬GroupNo²»Ó¦¸Ã·¢ÉúÖØ¸´£¬Ä¬ÈÏÎª¿ÕÖµ£¬±íÊ¾¸ÃÌõ¼şµ¥¶ÀËãÊÇÒ»¸öÌõ¼ş
-	 * Condition : ±íÊ¾¸ÃÌõ¼şÇ°Ãæ¸úµÄÊÇand »¹ÊÇ or£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾Ç°Ãæ¸ú and 
-	 * @param lsGroups group by Óï¾äºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬1ÏîÄÚÈİ£¬FieldName
-	 * @param lsOrders order by ºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬2ÏîÄÚÈİ£¬Ò»ÏîÊÇFieldName£¬Ò»ÏîÊÇBy£¬ByµÄÈ¡ÖµÎª¿Õ£¬asc»òdesc
+	 * ä¸Šé¢çš„2ä¸ªæ¡ä»¶å°±å¿…é¡»ä¸€èµ·ç”¨ï¼Œå› æ­¤ä»¥ä¸Š2ä¸ªå­—æ®µä¸ºä¸€ç»„ï¼ŒGroupNoä¸åº”è¯¥å‘ç”Ÿé‡å¤ï¼Œé»˜è®¤ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºè¯¥æ¡ä»¶å•ç‹¬ç®—æ˜¯ä¸€ä¸ªæ¡ä»¶
+	 * Condition : è¡¨ç¤ºè¯¥æ¡ä»¶å‰é¢è·Ÿçš„æ˜¯and è¿˜æ˜¯ orï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå‰é¢è·Ÿ and 
+	 * @param lsGroups group by è¯­å¥åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«1é¡¹å†…å®¹ï¼ŒFieldName
+	 * @param lsOrders order by åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«2é¡¹å†…å®¹ï¼Œä¸€é¡¹æ˜¯FieldNameï¼Œä¸€é¡¹æ˜¯Byï¼ŒByçš„å–å€¼ä¸ºç©ºï¼Œascæˆ–desc
 	 * @param srcQuery
-	 * @return ·µ»Ø·ûºÏÌõ¼şµÄÊı¾İ½á¹û
+	 * @return è¿”å›ç¬¦åˆæ¡ä»¶çš„æ•°æ®ç»“æœ
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
@@ -1201,10 +1201,10 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃ²¡ÈËµÄÍ¿Æ¬¼ìÑéĞÅÏ¢
-	 * µ¥±í²éÑ¯£ºGERM_TEST_RESULT
-	 * @param PatientID ²¡ÈË±êÊ¶
-	 * @param VisitID ×¡Ôº´ÎÊı
+	 * è·å¾—ç—…äººçš„æ¶‚ç‰‡æ£€éªŒä¿¡æ¯
+	 * å•è¡¨æŸ¥è¯¢ï¼šGERM_TEST_RESULT
+	 * @param PatientID ç—…äººæ ‡è¯†
+	 * @param VisitID ä½é™¢æ¬¡æ•°
 	 * @param srcQuery
 	 * @return
 	 * @throws Exception
@@ -1223,24 +1223,24 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃÍ¿Æ¬¼ìÑéĞÅÏ¢
-	 * µ¥±í²éÑ¯£ºGERM_TEST_RESULT
-	 * @param ×Ö¶ÎÁĞ±í£¬Ò»°ãÊÇFieldName1, FieldName2,...FieldNameN£¬Ò²¿ÉÒÔÊÇ*£¬»òÕßÊÇcount(*)µÈµÈ
-	 * @param lsWheres Ìõ¼şÁĞ±í
-	 * ÊÇÒ»¸öTCommonRecordµÄÁĞ±í£¬Ã¿Ò»ÏîTCommonRecord°üÀ¨FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
-	 * ÆäÖĞ
-	 * FieldName : ±íÊ¾¸ÃÌõ¼şÓëÄÄ¸ö×Ö¶ÎÏà¹Ø
-	 * FieldValue: ±íÊ¾¸ÃÌõ¼şµÄ×Ö¶ÎÈ¡Öµ£¬Èç¹ûFieldValueµÄµÚÒ»¸ö»ò×îºóÒ»¸ö×Ö·ûÎª%£¬ÔòÉú³ÉlikeÓï¾ä
-	 * FieldType : ±íÊ¾¸Ã×Ö¶ÎµÄÀàĞÍ£¬Èç¹ûÊÇChar£¬ÔòÆ´ºÃµÄsqlÖĞ°üÀ¨'£¬·ñÔò²»°üÀ¨'£¬Ä¬ÈÏÖµÎª·Çchar£¬¼´²»´ø'
-	 * Relation  : ±íÊ¾×Ö¶ÎÃûÓë×Ö¶ÎÖµÖ®¼äµÄ¹ØÏµ£¬=¡¢>=¡¢<=µÈµÈ£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾¹ØÏµÎª=
-	 * GroupNo   : ±íÊ¾¸ÃÌõ¼şµÄ×éºÅ£¬Èç¹û2¸öÌõ¼şÎªÒ»×é£¬ĞèÒªÁª¶¯²éÑ¯£¬ÀıÈç£º
+	 * è·å¾—æ¶‚ç‰‡æ£€éªŒä¿¡æ¯
+	 * å•è¡¨æŸ¥è¯¢ï¼šGERM_TEST_RESULT
+	 * @param å­—æ®µåˆ—è¡¨ï¼Œä¸€èˆ¬æ˜¯FieldName1, FieldName2,...FieldNameNï¼Œä¹Ÿå¯ä»¥æ˜¯*ï¼Œæˆ–è€…æ˜¯count(*)ç­‰ç­‰
+	 * @param lsWheres æ¡ä»¶åˆ—è¡¨
+	 * æ˜¯ä¸€ä¸ªTCommonRecordçš„åˆ—è¡¨ï¼Œæ¯ä¸€é¡¹TCommonRecordåŒ…æ‹¬FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
+	 * å…¶ä¸­
+	 * FieldName : è¡¨ç¤ºè¯¥æ¡ä»¶ä¸å“ªä¸ªå­—æ®µç›¸å…³
+	 * FieldValue: è¡¨ç¤ºè¯¥æ¡ä»¶çš„å­—æ®µå–å€¼ï¼Œå¦‚æœFieldValueçš„ç¬¬ä¸€ä¸ªæˆ–æœ€åä¸€ä¸ªå­—ç¬¦ä¸º%ï¼Œåˆ™ç”Ÿæˆlikeè¯­å¥
+	 * FieldType : è¡¨ç¤ºè¯¥å­—æ®µçš„ç±»å‹ï¼Œå¦‚æœæ˜¯Charï¼Œåˆ™æ‹¼å¥½çš„sqlä¸­åŒ…æ‹¬'ï¼Œå¦åˆ™ä¸åŒ…æ‹¬'ï¼Œé»˜è®¤å€¼ä¸ºécharï¼Œå³ä¸å¸¦'
+	 * Relation  : è¡¨ç¤ºå­—æ®µåä¸å­—æ®µå€¼ä¹‹é—´çš„å…³ç³»ï¼Œ=ã€>=ã€<=ç­‰ç­‰ï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå…³ç³»ä¸º=
+	 * GroupNo   : è¡¨ç¤ºè¯¥æ¡ä»¶çš„ç»„å·ï¼Œå¦‚æœ2ä¸ªæ¡ä»¶ä¸ºä¸€ç»„ï¼Œéœ€è¦è”åŠ¨æŸ¥è¯¢ï¼Œä¾‹å¦‚ï¼š
 	 * ((StartDateTime <= to_date('2011-01-01', 'yyyy-mm-dd')) and (StopDateTime >= to_date('2011-02-01', 'yyyy-mm-dd')))
-	 * ÉÏÃæµÄ2¸öÌõ¼ş¾Í±ØĞëÒ»ÆğÓÃ£¬Òò´ËÒÔÉÏ2¸ö×Ö¶ÎÎªÒ»×é£¬GroupNo²»Ó¦¸Ã·¢ÉúÖØ¸´£¬Ä¬ÈÏÎª¿ÕÖµ£¬±íÊ¾¸ÃÌõ¼şµ¥¶ÀËãÊÇÒ»¸öÌõ¼ş
-	 * Condition : ±íÊ¾¸ÃÌõ¼şÇ°Ãæ¸úµÄÊÇand »¹ÊÇ or£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾Ç°Ãæ¸ú and 
-	 * @param lsGroups group by Óï¾äºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬1ÏîÄÚÈİ£¬FieldName
-	 * @param lsOrders order by ºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬2ÏîÄÚÈİ£¬Ò»ÏîÊÇFieldName£¬Ò»ÏîÊÇBy£¬ByµÄÈ¡ÖµÎª¿Õ£¬asc»òdesc
+	 * ä¸Šé¢çš„2ä¸ªæ¡ä»¶å°±å¿…é¡»ä¸€èµ·ç”¨ï¼Œå› æ­¤ä»¥ä¸Š2ä¸ªå­—æ®µä¸ºä¸€ç»„ï¼ŒGroupNoä¸åº”è¯¥å‘ç”Ÿé‡å¤ï¼Œé»˜è®¤ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºè¯¥æ¡ä»¶å•ç‹¬ç®—æ˜¯ä¸€ä¸ªæ¡ä»¶
+	 * Condition : è¡¨ç¤ºè¯¥æ¡ä»¶å‰é¢è·Ÿçš„æ˜¯and è¿˜æ˜¯ orï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå‰é¢è·Ÿ and 
+	 * @param lsGroups group by è¯­å¥åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«1é¡¹å†…å®¹ï¼ŒFieldName
+	 * @param lsOrders order by åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«2é¡¹å†…å®¹ï¼Œä¸€é¡¹æ˜¯FieldNameï¼Œä¸€é¡¹æ˜¯Byï¼ŒByçš„å–å€¼ä¸ºç©ºï¼Œascæˆ–desc
 	 * @param srcQuery
-	 * @return ·µ»Ø·ûºÏÌõ¼şµÄÊı¾İ½á¹û
+	 * @return è¿”å›ç¬¦åˆæ¡ä»¶çš„æ•°æ®ç»“æœ
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
@@ -1269,9 +1269,9 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃ²¡ÈËµÄ×¡Ôº´¦·½ĞÅÏ¢
-	 * µ¥±í²éÑ¯£ºoutp_presc_master
-	 * @param PatientID ²¡ÈË±êÊ¶
+	 * è·å¾—ç—…äººçš„ä½é™¢å¤„æ–¹ä¿¡æ¯
+	 * å•è¡¨æŸ¥è¯¢ï¼šoutp_presc_master
+	 * @param PatientID ç—…äººæ ‡è¯†
 	 * @param InpDate
 	 * @param OutDate
 	 * @param srcQuery
@@ -1296,24 +1296,24 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃ×¡Ôº´¦·½ĞÅÏ¢
-	 * µ¥±í²éÑ¯£ºoutp_presc_master
-	 * @param ×Ö¶ÎÁĞ±í£¬Ò»°ãÊÇFieldName1, FieldName2,...FieldNameN£¬Ò²¿ÉÒÔÊÇ*£¬»òÕßÊÇcount(*)µÈµÈ
-	 * @param lsWheres Ìõ¼şÁĞ±í
-	 * ÊÇÒ»¸öTCommonRecordµÄÁĞ±í£¬Ã¿Ò»ÏîTCommonRecord°üÀ¨FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
-	 * ÆäÖĞ
-	 * FieldName : ±íÊ¾¸ÃÌõ¼şÓëÄÄ¸ö×Ö¶ÎÏà¹Ø
-	 * FieldValue: ±íÊ¾¸ÃÌõ¼şµÄ×Ö¶ÎÈ¡Öµ£¬Èç¹ûFieldValueµÄµÚÒ»¸ö»ò×îºóÒ»¸ö×Ö·ûÎª%£¬ÔòÉú³ÉlikeÓï¾ä
-	 * FieldType : ±íÊ¾¸Ã×Ö¶ÎµÄÀàĞÍ£¬Èç¹ûÊÇChar£¬ÔòÆ´ºÃµÄsqlÖĞ°üÀ¨'£¬·ñÔò²»°üÀ¨'£¬Ä¬ÈÏÖµÎª·Çchar£¬¼´²»´ø'
-	 * Relation  : ±íÊ¾×Ö¶ÎÃûÓë×Ö¶ÎÖµÖ®¼äµÄ¹ØÏµ£¬=¡¢>=¡¢<=µÈµÈ£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾¹ØÏµÎª=
-	 * GroupNo   : ±íÊ¾¸ÃÌõ¼şµÄ×éºÅ£¬Èç¹û2¸öÌõ¼şÎªÒ»×é£¬ĞèÒªÁª¶¯²éÑ¯£¬ÀıÈç£º
+	 * è·å¾—ä½é™¢å¤„æ–¹ä¿¡æ¯
+	 * å•è¡¨æŸ¥è¯¢ï¼šoutp_presc_master
+	 * @param å­—æ®µåˆ—è¡¨ï¼Œä¸€èˆ¬æ˜¯FieldName1, FieldName2,...FieldNameNï¼Œä¹Ÿå¯ä»¥æ˜¯*ï¼Œæˆ–è€…æ˜¯count(*)ç­‰ç­‰
+	 * @param lsWheres æ¡ä»¶åˆ—è¡¨
+	 * æ˜¯ä¸€ä¸ªTCommonRecordçš„åˆ—è¡¨ï¼Œæ¯ä¸€é¡¹TCommonRecordåŒ…æ‹¬FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
+	 * å…¶ä¸­
+	 * FieldName : è¡¨ç¤ºè¯¥æ¡ä»¶ä¸å“ªä¸ªå­—æ®µç›¸å…³
+	 * FieldValue: è¡¨ç¤ºè¯¥æ¡ä»¶çš„å­—æ®µå–å€¼ï¼Œå¦‚æœFieldValueçš„ç¬¬ä¸€ä¸ªæˆ–æœ€åä¸€ä¸ªå­—ç¬¦ä¸º%ï¼Œåˆ™ç”Ÿæˆlikeè¯­å¥
+	 * FieldType : è¡¨ç¤ºè¯¥å­—æ®µçš„ç±»å‹ï¼Œå¦‚æœæ˜¯Charï¼Œåˆ™æ‹¼å¥½çš„sqlä¸­åŒ…æ‹¬'ï¼Œå¦åˆ™ä¸åŒ…æ‹¬'ï¼Œé»˜è®¤å€¼ä¸ºécharï¼Œå³ä¸å¸¦'
+	 * Relation  : è¡¨ç¤ºå­—æ®µåä¸å­—æ®µå€¼ä¹‹é—´çš„å…³ç³»ï¼Œ=ã€>=ã€<=ç­‰ç­‰ï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå…³ç³»ä¸º=
+	 * GroupNo   : è¡¨ç¤ºè¯¥æ¡ä»¶çš„ç»„å·ï¼Œå¦‚æœ2ä¸ªæ¡ä»¶ä¸ºä¸€ç»„ï¼Œéœ€è¦è”åŠ¨æŸ¥è¯¢ï¼Œä¾‹å¦‚ï¼š
 	 * ((StartDateTime <= to_date('2011-01-01', 'yyyy-mm-dd')) and (StopDateTime >= to_date('2011-02-01', 'yyyy-mm-dd')))
-	 * ÉÏÃæµÄ2¸öÌõ¼ş¾Í±ØĞëÒ»ÆğÓÃ£¬Òò´ËÒÔÉÏ2¸ö×Ö¶ÎÎªÒ»×é£¬GroupNo²»Ó¦¸Ã·¢ÉúÖØ¸´£¬Ä¬ÈÏÎª¿ÕÖµ£¬±íÊ¾¸ÃÌõ¼şµ¥¶ÀËãÊÇÒ»¸öÌõ¼ş
-	 * Condition : ±íÊ¾¸ÃÌõ¼şÇ°Ãæ¸úµÄÊÇand »¹ÊÇ or£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾Ç°Ãæ¸ú and 
-	 * @param lsGroups group by Óï¾äºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬1ÏîÄÚÈİ£¬FieldName
-	 * @param lsOrders order by ºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬2ÏîÄÚÈİ£¬Ò»ÏîÊÇFieldName£¬Ò»ÏîÊÇBy£¬ByµÄÈ¡ÖµÎª¿Õ£¬asc»òdesc
+	 * ä¸Šé¢çš„2ä¸ªæ¡ä»¶å°±å¿…é¡»ä¸€èµ·ç”¨ï¼Œå› æ­¤ä»¥ä¸Š2ä¸ªå­—æ®µä¸ºä¸€ç»„ï¼ŒGroupNoä¸åº”è¯¥å‘ç”Ÿé‡å¤ï¼Œé»˜è®¤ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºè¯¥æ¡ä»¶å•ç‹¬ç®—æ˜¯ä¸€ä¸ªæ¡ä»¶
+	 * Condition : è¡¨ç¤ºè¯¥æ¡ä»¶å‰é¢è·Ÿçš„æ˜¯and è¿˜æ˜¯ orï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå‰é¢è·Ÿ and 
+	 * @param lsGroups group by è¯­å¥åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«1é¡¹å†…å®¹ï¼ŒFieldName
+	 * @param lsOrders order by åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«2é¡¹å†…å®¹ï¼Œä¸€é¡¹æ˜¯FieldNameï¼Œä¸€é¡¹æ˜¯Byï¼ŒByçš„å–å€¼ä¸ºç©ºï¼Œascæˆ–desc
 	 * @param srcQuery
-	 * @return ·µ»Ø·ûºÏÌõ¼şµÄÊı¾İ½á¹û
+	 * @return è¿”å›ç¬¦åˆæ¡ä»¶çš„æ•°æ®ç»“æœ
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
@@ -1386,24 +1386,24 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃÒ©Æ·×ÖµäĞÅÏ¢
-	 * µ¥±í²éÑ¯£ºdrug_dict
-	 * @param ×Ö¶ÎÁĞ±í£¬Ò»°ãÊÇFieldName1, FieldName2,...FieldNameN£¬Ò²¿ÉÒÔÊÇ*£¬»òÕßÊÇcount(*)µÈµÈ
-	 * @param lsWheres Ìõ¼şÁĞ±í
-	 * ÊÇÒ»¸öTCommonRecordµÄÁĞ±í£¬Ã¿Ò»ÏîTCommonRecord°üÀ¨FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
-	 * ÆäÖĞ
-	 * FieldName : ±íÊ¾¸ÃÌõ¼şÓëÄÄ¸ö×Ö¶ÎÏà¹Ø
-	 * FieldValue: ±íÊ¾¸ÃÌõ¼şµÄ×Ö¶ÎÈ¡Öµ£¬Èç¹ûFieldValueµÄµÚÒ»¸ö»ò×îºóÒ»¸ö×Ö·ûÎª%£¬ÔòÉú³ÉlikeÓï¾ä
-	 * FieldType : ±íÊ¾¸Ã×Ö¶ÎµÄÀàĞÍ£¬Èç¹ûÊÇChar£¬ÔòÆ´ºÃµÄsqlÖĞ°üÀ¨'£¬·ñÔò²»°üÀ¨'£¬Ä¬ÈÏÖµÎª·Çchar£¬¼´²»´ø'
-	 * Relation  : ±íÊ¾×Ö¶ÎÃûÓë×Ö¶ÎÖµÖ®¼äµÄ¹ØÏµ£¬=¡¢>=¡¢<=µÈµÈ£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾¹ØÏµÎª=
-	 * GroupNo   : ±íÊ¾¸ÃÌõ¼şµÄ×éºÅ£¬Èç¹û2¸öÌõ¼şÎªÒ»×é£¬ĞèÒªÁª¶¯²éÑ¯£¬ÀıÈç£º
+	 * è·å¾—è¯å“å­—å…¸ä¿¡æ¯
+	 * å•è¡¨æŸ¥è¯¢ï¼šdrug_dict
+	 * @param å­—æ®µåˆ—è¡¨ï¼Œä¸€èˆ¬æ˜¯FieldName1, FieldName2,...FieldNameNï¼Œä¹Ÿå¯ä»¥æ˜¯*ï¼Œæˆ–è€…æ˜¯count(*)ç­‰ç­‰
+	 * @param lsWheres æ¡ä»¶åˆ—è¡¨
+	 * æ˜¯ä¸€ä¸ªTCommonRecordçš„åˆ—è¡¨ï¼Œæ¯ä¸€é¡¹TCommonRecordåŒ…æ‹¬FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
+	 * å…¶ä¸­
+	 * FieldName : è¡¨ç¤ºè¯¥æ¡ä»¶ä¸å“ªä¸ªå­—æ®µç›¸å…³
+	 * FieldValue: è¡¨ç¤ºè¯¥æ¡ä»¶çš„å­—æ®µå–å€¼ï¼Œå¦‚æœFieldValueçš„ç¬¬ä¸€ä¸ªæˆ–æœ€åä¸€ä¸ªå­—ç¬¦ä¸º%ï¼Œåˆ™ç”Ÿæˆlikeè¯­å¥
+	 * FieldType : è¡¨ç¤ºè¯¥å­—æ®µçš„ç±»å‹ï¼Œå¦‚æœæ˜¯Charï¼Œåˆ™æ‹¼å¥½çš„sqlä¸­åŒ…æ‹¬'ï¼Œå¦åˆ™ä¸åŒ…æ‹¬'ï¼Œé»˜è®¤å€¼ä¸ºécharï¼Œå³ä¸å¸¦'
+	 * Relation  : è¡¨ç¤ºå­—æ®µåä¸å­—æ®µå€¼ä¹‹é—´çš„å…³ç³»ï¼Œ=ã€>=ã€<=ç­‰ç­‰ï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå…³ç³»ä¸º=
+	 * GroupNo   : è¡¨ç¤ºè¯¥æ¡ä»¶çš„ç»„å·ï¼Œå¦‚æœ2ä¸ªæ¡ä»¶ä¸ºä¸€ç»„ï¼Œéœ€è¦è”åŠ¨æŸ¥è¯¢ï¼Œä¾‹å¦‚ï¼š
 	 * ((StartDateTime <= to_date('2011-01-01', 'yyyy-mm-dd')) and (StopDateTime >= to_date('2011-02-01', 'yyyy-mm-dd')))
-	 * ÉÏÃæµÄ2¸öÌõ¼ş¾Í±ØĞëÒ»ÆğÓÃ£¬Òò´ËÒÔÉÏ2¸ö×Ö¶ÎÎªÒ»×é£¬GroupNo²»Ó¦¸Ã·¢ÉúÖØ¸´£¬Ä¬ÈÏÎª¿ÕÖµ£¬±íÊ¾¸ÃÌõ¼şµ¥¶ÀËãÊÇÒ»¸öÌõ¼ş
-	 * Condition : ±íÊ¾¸ÃÌõ¼şÇ°Ãæ¸úµÄÊÇand »¹ÊÇ or£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾Ç°Ãæ¸ú and 
-	 * @param lsGroups group by Óï¾äºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬1ÏîÄÚÈİ£¬FieldName
-	 * @param lsOrders order by ºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬2ÏîÄÚÈİ£¬Ò»ÏîÊÇFieldName£¬Ò»ÏîÊÇBy£¬ByµÄÈ¡ÖµÎª¿Õ£¬asc»òdesc
+	 * ä¸Šé¢çš„2ä¸ªæ¡ä»¶å°±å¿…é¡»ä¸€èµ·ç”¨ï¼Œå› æ­¤ä»¥ä¸Š2ä¸ªå­—æ®µä¸ºä¸€ç»„ï¼ŒGroupNoä¸åº”è¯¥å‘ç”Ÿé‡å¤ï¼Œé»˜è®¤ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºè¯¥æ¡ä»¶å•ç‹¬ç®—æ˜¯ä¸€ä¸ªæ¡ä»¶
+	 * Condition : è¡¨ç¤ºè¯¥æ¡ä»¶å‰é¢è·Ÿçš„æ˜¯and è¿˜æ˜¯ orï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå‰é¢è·Ÿ and 
+	 * @param lsGroups group by è¯­å¥åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«1é¡¹å†…å®¹ï¼ŒFieldName
+	 * @param lsOrders order by åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«2é¡¹å†…å®¹ï¼Œä¸€é¡¹æ˜¯FieldNameï¼Œä¸€é¡¹æ˜¯Byï¼ŒByçš„å–å€¼ä¸ºç©ºï¼Œascæˆ–desc
 	 * @param srcQuery
-	 * @return ·µ»Ø·ûºÏÌõ¼şµÄÊı¾İ½á¹û
+	 * @return è¿”å›ç¬¦åˆæ¡ä»¶çš„æ•°æ®ç»“æœ
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
@@ -1421,24 +1421,24 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃ²¡°¸Ë÷Òı
-	 * µ¥±í²éÑ¯£ºMR_INDEX
-	 * @param ×Ö¶ÎÁĞ±í£¬Ò»°ãÊÇFieldName1, FieldName2,...FieldNameN£¬Ò²¿ÉÒÔÊÇ*£¬»òÕßÊÇcount(*)µÈµÈ
-	 * @param lsWheres Ìõ¼şÁĞ±í
-	 * ÊÇÒ»¸öTCommonRecordµÄÁĞ±í£¬Ã¿Ò»ÏîTCommonRecord°üÀ¨FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
-	 * ÆäÖĞ
-	 * FieldName : ±íÊ¾¸ÃÌõ¼şÓëÄÄ¸ö×Ö¶ÎÏà¹Ø
-	 * FieldValue: ±íÊ¾¸ÃÌõ¼şµÄ×Ö¶ÎÈ¡Öµ£¬Èç¹ûFieldValueµÄµÚÒ»¸ö»ò×îºóÒ»¸ö×Ö·ûÎª%£¬ÔòÉú³ÉlikeÓï¾ä
-	 * FieldType : ±íÊ¾¸Ã×Ö¶ÎµÄÀàĞÍ£¬Èç¹ûÊÇChar£¬ÔòÆ´ºÃµÄsqlÖĞ°üÀ¨'£¬·ñÔò²»°üÀ¨'£¬Ä¬ÈÏÖµÎª·Çchar£¬¼´²»´ø'
-	 * Relation  : ±íÊ¾×Ö¶ÎÃûÓë×Ö¶ÎÖµÖ®¼äµÄ¹ØÏµ£¬=¡¢>=¡¢<=µÈµÈ£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾¹ØÏµÎª=
-	 * GroupNo   : ±íÊ¾¸ÃÌõ¼şµÄ×éºÅ£¬Èç¹û2¸öÌõ¼şÎªÒ»×é£¬ĞèÒªÁª¶¯²éÑ¯£¬ÀıÈç£º
+	 * è·å¾—ç—…æ¡ˆç´¢å¼•
+	 * å•è¡¨æŸ¥è¯¢ï¼šMR_INDEX
+	 * @param å­—æ®µåˆ—è¡¨ï¼Œä¸€èˆ¬æ˜¯FieldName1, FieldName2,...FieldNameNï¼Œä¹Ÿå¯ä»¥æ˜¯*ï¼Œæˆ–è€…æ˜¯count(*)ç­‰ç­‰
+	 * @param lsWheres æ¡ä»¶åˆ—è¡¨
+	 * æ˜¯ä¸€ä¸ªTCommonRecordçš„åˆ—è¡¨ï¼Œæ¯ä¸€é¡¹TCommonRecordåŒ…æ‹¬FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
+	 * å…¶ä¸­
+	 * FieldName : è¡¨ç¤ºè¯¥æ¡ä»¶ä¸å“ªä¸ªå­—æ®µç›¸å…³
+	 * FieldValue: è¡¨ç¤ºè¯¥æ¡ä»¶çš„å­—æ®µå–å€¼ï¼Œå¦‚æœFieldValueçš„ç¬¬ä¸€ä¸ªæˆ–æœ€åä¸€ä¸ªå­—ç¬¦ä¸º%ï¼Œåˆ™ç”Ÿæˆlikeè¯­å¥
+	 * FieldType : è¡¨ç¤ºè¯¥å­—æ®µçš„ç±»å‹ï¼Œå¦‚æœæ˜¯Charï¼Œåˆ™æ‹¼å¥½çš„sqlä¸­åŒ…æ‹¬'ï¼Œå¦åˆ™ä¸åŒ…æ‹¬'ï¼Œé»˜è®¤å€¼ä¸ºécharï¼Œå³ä¸å¸¦'
+	 * Relation  : è¡¨ç¤ºå­—æ®µåä¸å­—æ®µå€¼ä¹‹é—´çš„å…³ç³»ï¼Œ=ã€>=ã€<=ç­‰ç­‰ï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå…³ç³»ä¸º=
+	 * GroupNo   : è¡¨ç¤ºè¯¥æ¡ä»¶çš„ç»„å·ï¼Œå¦‚æœ2ä¸ªæ¡ä»¶ä¸ºä¸€ç»„ï¼Œéœ€è¦è”åŠ¨æŸ¥è¯¢ï¼Œä¾‹å¦‚ï¼š
 	 * ((StartDateTime <= to_date('2011-01-01', 'yyyy-mm-dd')) and (StopDateTime >= to_date('2011-02-01', 'yyyy-mm-dd')))
-	 * ÉÏÃæµÄ2¸öÌõ¼ş¾Í±ØĞëÒ»ÆğÓÃ£¬Òò´ËÒÔÉÏ2¸ö×Ö¶ÎÎªÒ»×é£¬GroupNo²»Ó¦¸Ã·¢ÉúÖØ¸´£¬Ä¬ÈÏÎª¿ÕÖµ£¬±íÊ¾¸ÃÌõ¼şµ¥¶ÀËãÊÇÒ»¸öÌõ¼ş
-	 * Condition : ±íÊ¾¸ÃÌõ¼şÇ°Ãæ¸úµÄÊÇand »¹ÊÇ or£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾Ç°Ãæ¸ú and 
-	 * @param lsGroups group by Óï¾äºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬1ÏîÄÚÈİ£¬FieldName
-	 * @param lsOrders order by ºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬2ÏîÄÚÈİ£¬Ò»ÏîÊÇFieldName£¬Ò»ÏîÊÇBy£¬ByµÄÈ¡ÖµÎª¿Õ£¬asc»òdesc
+	 * ä¸Šé¢çš„2ä¸ªæ¡ä»¶å°±å¿…é¡»ä¸€èµ·ç”¨ï¼Œå› æ­¤ä»¥ä¸Š2ä¸ªå­—æ®µä¸ºä¸€ç»„ï¼ŒGroupNoä¸åº”è¯¥å‘ç”Ÿé‡å¤ï¼Œé»˜è®¤ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºè¯¥æ¡ä»¶å•ç‹¬ç®—æ˜¯ä¸€ä¸ªæ¡ä»¶
+	 * Condition : è¡¨ç¤ºè¯¥æ¡ä»¶å‰é¢è·Ÿçš„æ˜¯and è¿˜æ˜¯ orï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå‰é¢è·Ÿ and 
+	 * @param lsGroups group by è¯­å¥åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«1é¡¹å†…å®¹ï¼ŒFieldName
+	 * @param lsOrders order by åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«2é¡¹å†…å®¹ï¼Œä¸€é¡¹æ˜¯FieldNameï¼Œä¸€é¡¹æ˜¯Byï¼ŒByçš„å–å€¼ä¸ºç©ºï¼Œascæˆ–desc
 	 * @param srcQuery
-	 * @return ·µ»Ø·ûºÏÌõ¼şµÄÊı¾İ½á¹û
+	 * @return è¿”å›ç¬¦åˆæ¡ä»¶çš„æ•°æ®ç»“æœ
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
@@ -1456,24 +1456,24 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * »ñµÃ²¡ÀúÎÄ¼şË÷Òı
-	 * µ¥±í²éÑ¯£ºMR_FILE_INDEX
-	 * @param ×Ö¶ÎÁĞ±í£¬Ò»°ãÊÇFieldName1, FieldName2,...FieldNameN£¬Ò²¿ÉÒÔÊÇ*£¬»òÕßÊÇcount(*)µÈµÈ
-	 * @param lsWheres Ìõ¼şÁĞ±í
-	 * ÊÇÒ»¸öTCommonRecordµÄÁĞ±í£¬Ã¿Ò»ÏîTCommonRecord°üÀ¨FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
-	 * ÆäÖĞ
-	 * FieldName : ±íÊ¾¸ÃÌõ¼şÓëÄÄ¸ö×Ö¶ÎÏà¹Ø
-	 * FieldValue: ±íÊ¾¸ÃÌõ¼şµÄ×Ö¶ÎÈ¡Öµ£¬Èç¹ûFieldValueµÄµÚÒ»¸ö»ò×îºóÒ»¸ö×Ö·ûÎª%£¬ÔòÉú³ÉlikeÓï¾ä
-	 * FieldType : ±íÊ¾¸Ã×Ö¶ÎµÄÀàĞÍ£¬Èç¹ûÊÇChar£¬ÔòÆ´ºÃµÄsqlÖĞ°üÀ¨'£¬·ñÔò²»°üÀ¨'£¬Ä¬ÈÏÖµÎª·Çchar£¬¼´²»´ø'
-	 * Relation  : ±íÊ¾×Ö¶ÎÃûÓë×Ö¶ÎÖµÖ®¼äµÄ¹ØÏµ£¬=¡¢>=¡¢<=µÈµÈ£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾¹ØÏµÎª=
-	 * GroupNo   : ±íÊ¾¸ÃÌõ¼şµÄ×éºÅ£¬Èç¹û2¸öÌõ¼şÎªÒ»×é£¬ĞèÒªÁª¶¯²éÑ¯£¬ÀıÈç£º
+	 * è·å¾—ç—…å†æ–‡ä»¶ç´¢å¼•
+	 * å•è¡¨æŸ¥è¯¢ï¼šMR_FILE_INDEX
+	 * @param å­—æ®µåˆ—è¡¨ï¼Œä¸€èˆ¬æ˜¯FieldName1, FieldName2,...FieldNameNï¼Œä¹Ÿå¯ä»¥æ˜¯*ï¼Œæˆ–è€…æ˜¯count(*)ç­‰ç­‰
+	 * @param lsWheres æ¡ä»¶åˆ—è¡¨
+	 * æ˜¯ä¸€ä¸ªTCommonRecordçš„åˆ—è¡¨ï¼Œæ¯ä¸€é¡¹TCommonRecordåŒ…æ‹¬FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
+	 * å…¶ä¸­
+	 * FieldName : è¡¨ç¤ºè¯¥æ¡ä»¶ä¸å“ªä¸ªå­—æ®µç›¸å…³
+	 * FieldValue: è¡¨ç¤ºè¯¥æ¡ä»¶çš„å­—æ®µå–å€¼ï¼Œå¦‚æœFieldValueçš„ç¬¬ä¸€ä¸ªæˆ–æœ€åä¸€ä¸ªå­—ç¬¦ä¸º%ï¼Œåˆ™ç”Ÿæˆlikeè¯­å¥
+	 * FieldType : è¡¨ç¤ºè¯¥å­—æ®µçš„ç±»å‹ï¼Œå¦‚æœæ˜¯Charï¼Œåˆ™æ‹¼å¥½çš„sqlä¸­åŒ…æ‹¬'ï¼Œå¦åˆ™ä¸åŒ…æ‹¬'ï¼Œé»˜è®¤å€¼ä¸ºécharï¼Œå³ä¸å¸¦'
+	 * Relation  : è¡¨ç¤ºå­—æ®µåä¸å­—æ®µå€¼ä¹‹é—´çš„å…³ç³»ï¼Œ=ã€>=ã€<=ç­‰ç­‰ï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå…³ç³»ä¸º=
+	 * GroupNo   : è¡¨ç¤ºè¯¥æ¡ä»¶çš„ç»„å·ï¼Œå¦‚æœ2ä¸ªæ¡ä»¶ä¸ºä¸€ç»„ï¼Œéœ€è¦è”åŠ¨æŸ¥è¯¢ï¼Œä¾‹å¦‚ï¼š
 	 * ((StartDateTime <= to_date('2011-01-01', 'yyyy-mm-dd')) and (StopDateTime >= to_date('2011-02-01', 'yyyy-mm-dd')))
-	 * ÉÏÃæµÄ2¸öÌõ¼ş¾Í±ØĞëÒ»ÆğÓÃ£¬Òò´ËÒÔÉÏ2¸ö×Ö¶ÎÎªÒ»×é£¬GroupNo²»Ó¦¸Ã·¢ÉúÖØ¸´£¬Ä¬ÈÏÎª¿ÕÖµ£¬±íÊ¾¸ÃÌõ¼şµ¥¶ÀËãÊÇÒ»¸öÌõ¼ş
-	 * Condition : ±íÊ¾¸ÃÌõ¼şÇ°Ãæ¸úµÄÊÇand »¹ÊÇ or£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾Ç°Ãæ¸ú and 
-	 * @param lsGroups group by Óï¾äºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬1ÏîÄÚÈİ£¬FieldName
-	 * @param lsOrders order by ºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬2ÏîÄÚÈİ£¬Ò»ÏîÊÇFieldName£¬Ò»ÏîÊÇBy£¬ByµÄÈ¡ÖµÎª¿Õ£¬asc»òdesc
+	 * ä¸Šé¢çš„2ä¸ªæ¡ä»¶å°±å¿…é¡»ä¸€èµ·ç”¨ï¼Œå› æ­¤ä»¥ä¸Š2ä¸ªå­—æ®µä¸ºä¸€ç»„ï¼ŒGroupNoä¸åº”è¯¥å‘ç”Ÿé‡å¤ï¼Œé»˜è®¤ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºè¯¥æ¡ä»¶å•ç‹¬ç®—æ˜¯ä¸€ä¸ªæ¡ä»¶
+	 * Condition : è¡¨ç¤ºè¯¥æ¡ä»¶å‰é¢è·Ÿçš„æ˜¯and è¿˜æ˜¯ orï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå‰é¢è·Ÿ and 
+	 * @param lsGroups group by è¯­å¥åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«1é¡¹å†…å®¹ï¼ŒFieldName
+	 * @param lsOrders order by åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«2é¡¹å†…å®¹ï¼Œä¸€é¡¹æ˜¯FieldNameï¼Œä¸€é¡¹æ˜¯Byï¼ŒByçš„å–å€¼ä¸ºç©ºï¼Œascæˆ–desc
 	 * @param srcQuery
-	 * @return ·µ»Ø·ûºÏÌõ¼şµÄÊı¾İ½á¹û
+	 * @return è¿”å›ç¬¦åˆæ¡ä»¶çš„æ•°æ®ç»“æœ
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
@@ -1883,40 +1883,40 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * ·ÖÒ³²éÑ¯
-	 * @param maxresult   Ã¿Ò³ÏÔÊ¾ÊıÁ¿
-	 * @param currentpage µ±Ç°Ò³Êı
-	 * @param fields      ²éÑ¯×Ö¶Î£¬Ò»°ãÊÇFieldName1, FieldName2,...FieldNameN
-	 * @param tableName   ²éÑ¯±í
-	 * @param lsWheres Ìõ¼şÁĞ±í
-	 * ÊÇÒ»¸öTCommonRecordµÄÁĞ±í£¬Ã¿Ò»ÏîTCommonRecord°üÀ¨FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
-	 * ÆäÖĞ
-	 * FieldName : ±íÊ¾¸ÃÌõ¼şÓëÄÄ¸ö×Ö¶ÎÏà¹Ø
-	 * FieldValue: ±íÊ¾¸ÃÌõ¼şµÄ×Ö¶ÎÈ¡Öµ£¬Èç¹ûFieldValueµÄµÚÒ»¸ö»ò×îºóÒ»¸ö×Ö·ûÎª%£¬ÔòÉú³ÉlikeÓï¾ä
-	 * FieldType : ±íÊ¾¸Ã×Ö¶ÎµÄÀàĞÍ£¬Èç¹ûÊÇChar£¬ÔòÆ´ºÃµÄsqlÖĞ°üÀ¨'£¬·ñÔò²»°üÀ¨'£¬Ä¬ÈÏÖµÎª·Çchar£¬¼´²»´ø'
-	 * Relation  : ±íÊ¾×Ö¶ÎÃûÓë×Ö¶ÎÖµÖ®¼äµÄ¹ØÏµ£¬=¡¢>=¡¢<=µÈµÈ£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾¹ØÏµÎª=
-	 * GroupNo   : ±íÊ¾¸ÃÌõ¼şµÄ×éºÅ£¬Èç¹û2¸öÌõ¼şÎªÒ»×é£¬ĞèÒªÁª¶¯²éÑ¯£¬ÀıÈç£º
+	 * åˆ†é¡µæŸ¥è¯¢
+	 * @param maxresult   æ¯é¡µæ˜¾ç¤ºæ•°é‡
+	 * @param currentpage å½“å‰é¡µæ•°
+	 * @param fields      æŸ¥è¯¢å­—æ®µï¼Œä¸€èˆ¬æ˜¯FieldName1, FieldName2,...FieldNameN
+	 * @param tableName   æŸ¥è¯¢è¡¨
+	 * @param lsWheres æ¡ä»¶åˆ—è¡¨
+	 * æ˜¯ä¸€ä¸ªTCommonRecordçš„åˆ—è¡¨ï¼Œæ¯ä¸€é¡¹TCommonRecordåŒ…æ‹¬FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
+	 * å…¶ä¸­
+	 * FieldName : è¡¨ç¤ºè¯¥æ¡ä»¶ä¸å“ªä¸ªå­—æ®µç›¸å…³
+	 * FieldValue: è¡¨ç¤ºè¯¥æ¡ä»¶çš„å­—æ®µå–å€¼ï¼Œå¦‚æœFieldValueçš„ç¬¬ä¸€ä¸ªæˆ–æœ€åä¸€ä¸ªå­—ç¬¦ä¸º%ï¼Œåˆ™ç”Ÿæˆlikeè¯­å¥
+	 * FieldType : è¡¨ç¤ºè¯¥å­—æ®µçš„ç±»å‹ï¼Œå¦‚æœæ˜¯Charï¼Œåˆ™æ‹¼å¥½çš„sqlä¸­åŒ…æ‹¬'ï¼Œå¦åˆ™ä¸åŒ…æ‹¬'ï¼Œé»˜è®¤å€¼ä¸ºécharï¼Œå³ä¸å¸¦'
+	 * Relation  : è¡¨ç¤ºå­—æ®µåä¸å­—æ®µå€¼ä¹‹é—´çš„å…³ç³»ï¼Œ=ã€>=ã€<=ç­‰ç­‰ï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå…³ç³»ä¸º=
+	 * GroupNo   : è¡¨ç¤ºè¯¥æ¡ä»¶çš„ç»„å·ï¼Œå¦‚æœ2ä¸ªæ¡ä»¶ä¸ºä¸€ç»„ï¼Œéœ€è¦è”åŠ¨æŸ¥è¯¢ï¼Œä¾‹å¦‚ï¼š
 	 * ((StartDateTime <= to_date('2011-01-01', 'yyyy-mm-dd')) and (StopDateTime >= to_date('2011-02-01', 'yyyy-mm-dd')))
-	 * ÉÏÃæµÄ2¸öÌõ¼ş¾Í±ØĞëÒ»ÆğÓÃ£¬Òò´ËÒÔÉÏ2¸ö×Ö¶ÎÎªÒ»×é£¬GroupNo²»Ó¦¸Ã·¢ÉúÖØ¸´£¬Ä¬ÈÏÎª¿ÕÖµ£¬±íÊ¾¸ÃÌõ¼şµ¥¶ÀËãÊÇÒ»¸öÌõ¼ş
-	 * Condition : ±íÊ¾¸ÃÌõ¼şÇ°Ãæ¸úµÄÊÇand »¹ÊÇ or£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾Ç°Ãæ¸ú and 
-	 * @param lsGroups group by Óï¾äºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬1ÏîÄÚÈİ£¬FieldName
-	 * @param lsOrders order by ºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬2ÏîÄÚÈİ£¬Ò»ÏîÊÇFieldName£¬Ò»ÏîÊÇBy£¬ByµÄÈ¡ÖµÎª¿Õ£¬asc»òdesc
+	 * ä¸Šé¢çš„2ä¸ªæ¡ä»¶å°±å¿…é¡»ä¸€èµ·ç”¨ï¼Œå› æ­¤ä»¥ä¸Š2ä¸ªå­—æ®µä¸ºä¸€ç»„ï¼ŒGroupNoä¸åº”è¯¥å‘ç”Ÿé‡å¤ï¼Œé»˜è®¤ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºè¯¥æ¡ä»¶å•ç‹¬ç®—æ˜¯ä¸€ä¸ªæ¡ä»¶
+	 * Condition : è¡¨ç¤ºè¯¥æ¡ä»¶å‰é¢è·Ÿçš„æ˜¯and è¿˜æ˜¯ orï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå‰é¢è·Ÿ and 
+	 * @param lsGroups group by è¯­å¥åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«1é¡¹å†…å®¹ï¼ŒFieldName
+	 * @param lsOrders order by åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«2é¡¹å†…å®¹ï¼Œä¸€é¡¹æ˜¯FieldNameï¼Œä¸€é¡¹æ˜¯Byï¼ŒByçš„å–å€¼ä¸ºç©ºï¼Œascæˆ–desc
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public PageView<TCommonRecord> fetchTable2PV(int maxresult, int currentpage, String strFields, String strTables, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery)
 	{
-	    /* »ñµÃÁ¬½ÓµÄÀàĞÍ */
+	    /* è·å¾—è¿æ¥çš„ç±»å‹ */
         String dbBase = Config.getDBUrlConfig(srcQuery.getDbName()).getDb_base();
-        /* ·ÖÒ³Êı¾İ¼¯ºÏ  */
+        /* åˆ†é¡µæ•°æ®é›†åˆ  */
         QueryResult<TCommonRecord> qr = new QueryResult<TCommonRecord>();
-        /* Ò³Âë */
+        /* é¡µç  */
         currentpage = currentpage < 1 ? 1 : currentpage;
-        /* Ò»Ò³ÏÔÊ¾¼ÇÂ¼Êı */
+        /* ä¸€é¡µæ˜¾ç¤ºè®°å½•æ•° */
         maxresult   = maxresult < 1? 12 : maxresult;
         PageView<TCommonRecord>  pageView = new PageView<TCommonRecord>(maxresult,currentpage);
-        //»ñÈ¡·ÖÒ³×ÜÊ±£¬ÄÜ´øorder by ºÍ group by µÄÌõ¼ş               ¡ª¡ªModify by Ivy
+        //è·å–åˆ†é¡µæ€»æ—¶ï¼Œèƒ½å¸¦order by å’Œ group by çš„æ¡ä»¶               â€”â€”Modify by Ivy
         String reusltSetSql = "";
         if("SQLServer".equals(dbBase))
         {
@@ -1928,10 +1928,10 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
             reusltSetSql = this.genSQL(strFields, strTables, lsWheres, lsGroups, lsOrders);
         }
         
-        // 2014-04-22 liujc ĞŞ¸Ä  Ôö¼Ó±í±ğÃû
+        // 2014-04-22 liujc ä¿®æ”¹  å¢åŠ è¡¨åˆ«å
         String countSql = this.genSQL("count(*) total ", "[ " + reusltSetSql + " ] pvTotal", null, null, null);
        // String countSql = this.genSQL("count(*) total",strTables , lsWheres, lsGroups, lsOrders);
-        /* Êı¾İ×ÜÊı */
+        /* æ•°æ®æ€»æ•° */
         if (countSql.indexOf("?") >= 0)
         {
 	        try
@@ -1947,26 +1947,26 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
         {
         	qr.setTotalrecord(((TCommonRecord)srcQuery.queryForObject(countSql,new CommonMapper())).getInt("total"));
         }
-        /* µ±×ÜÒ³ÊıĞ¡ÓÚµ±Ç°Ò³  µ±Ç°Ò³ÉèÖÃÎª µÚÒ»Ò³ */
+        /* å½“æ€»é¡µæ•°å°äºå½“å‰é¡µ  å½“å‰é¡µè®¾ç½®ä¸º ç¬¬ä¸€é¡µ */
         if(((qr.getTotalrecord() / maxresult) + ((qr.getTotalrecord() % maxresult) > 0 ? 1 : 0 )) < currentpage)
         {
             pageView.setCurrentpage(1);
         }
         Integer firstindex = (pageView.getCurrentpage()-1) * pageView.getMaxresult();
         Integer lastindex  = (pageView.getCurrentpage()) * pageView.getMaxresult();
-        /*  ·ÖÒ³Êı¾İ  */        
+        /*  åˆ†é¡µæ•°æ®  */        
         String pageSql = ""; 
         if("SQLServer".equals(dbBase))
         {
-            /* sqlserver ·ÖÒ³   */
+            /* sqlserver åˆ†é¡µ   */
             pageSql = getSqlServerPage(strFields, strTables, lsWheres, lsGroups, lsOrders, firstindex, lastindex);
         }
         else
         {
-            /* oracle  ·ÖÒ³   */
+            /* oracle  åˆ†é¡µ   */
             pageSql = getOraclePage(strFields, strTables, lsWheres, lsGroups, lsOrders, firstindex, lastindex);
         }
-        // ´¦ÀíĞÅÏ¢Õ¼Î»·ûÇé¿ö
+        // å¤„ç†ä¿¡æ¯å ä½ç¬¦æƒ…å†µ
         if (pageSql.indexOf("?") >= 0)
         {
 	        try
@@ -1987,7 +1987,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 	/**
-	 * ·µ»ØSqlserver ·ÖÒ³·½·¨
+	 * è¿”å›Sqlserver åˆ†é¡µæ–¹æ³•
 	 * @param strFields
 	 * @param strTables
 	 * @param lsWheres
@@ -2001,7 +2001,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	private String getSqlServerPage(String strFields, String strTables, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, Integer firstindex, Integer lastindex)
     {
 	    strTables = initTables(strTables);
-	    /* ´¦Àí±íÃû */
+	    /* å¤„ç†è¡¨å */
 	    Map<String, String> tablesMap = getTablesMap(strTables);
 	    String Orders = "";
         if (lsOrders == null || lsOrders.size() == 0 )
@@ -2035,7 +2035,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
     }
 	
 	/**
-	 * Oracle ·ÖÒ³·½·¨ 
+	 * Oracle åˆ†é¡µæ–¹æ³• 
 	 * @param strFields
 	 * @param strTables
 	 * @param lsWheres
@@ -2047,7 +2047,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	 */
     private String getOraclePage(String strFields, String strTables, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, Integer firstindex, Integer lastindex)
     {
-        /* ·ÖÒ³Êı¾İ */
+        /* åˆ†é¡µæ•°æ® */
         String pageSql = this.genSQL(strFields, strTables, lsWheres, lsGroups, lsOrders);
         String tn = "[" + pageSql + "] t";
         lsWheres = new ArrayList<TCommonRecord>();
@@ -2067,37 +2067,37 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
     }
 
 	/**
-	 * Éú³ÉsqlÓï¾ä
-	 * @param ×Ö¶ÎÁĞ±í£¬ÔÊĞí¸÷Ê½ÈçÏÂ£º
-	 * 1¡¢*£¬ÕâÖÖÇé¿ö£¬±ØĞëÎªµ¥±í²éÑ¯
-	 * 2¡¢FieldName1, FieldName2,...FieldNameN£»µ¥±í²éÑ¯»òcount(*)£¬rownumµÈ
-	 * 3¡¢Table1.FieldName1, Table1.FieldName2, Table2.FieldName1, Table2.FieldName2, ¡­£¬¶à±íÁªºÏ²éÑ¯£¬Îñ±ØÎªÃ¿¸ö±íÉèÖÃ±ğÃû
-	 * @param ±íÁĞ±í£¬ÔÊĞí¸÷Ê½ÈçÏÂ£º
-	 * 1¡¢µ¥±í²éÑ¯£¬ÕâÖÖÇé¿ö¿ÉÒÔ²»Îª±íÉèÖÃ±ğÃû
-	 * 2¡¢¶à¸ö¼òµ¥±íÁªºÏ²éÑ¯£¬Îñ±ØÎªÃ¿¸ö±íÉèÖÃ±ğÃû£¬Èç£ºtable1 t1, table2 t2, table3 t3
-	 * 3¡¢º¬ÁÙÊ±±íµÄµ¥ÁÙÊ±±í»ò¶à±í²éÑ¯£¬ÁÙÊ±±íÒªÒÔ[]À¨Æğ£¬²¢È¡±ğÃû£¬Èç£ºTable1 a, Table2 b, Table3 c, [select * from Table4] d
-	 *    ÁÙÊ±±íµÄ²éÑ¯Óï¾äÒ²ÒªÓÃgenSQL·½·¨Éú³É¡£
-	 * @param lsWheres Ìõ¼şÁĞ±í
-	 * ÊÇÒ»¸öTCommonRecordµÄÁĞ±í£¬Ã¿Ò»ÏîTCommonRecord°üÀ¨FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
-	 * ÆäÖĞ
-	 * FieldName : ±íÊ¾¸ÃÌõ¼şÓëÄÄ¸ö×Ö¶ÎÏà¹Ø
-	 * FieldValue: ±íÊ¾¸ÃÌõ¼şµÄ×Ö¶ÎÈ¡Öµ£¬Èç¹ûFieldValueµÄµÚÒ»¸ö»ò×îºóÒ»¸ö×Ö·ûÎª%£¬ÔòÉú³ÉlikeÓï¾ä
-	 * FieldType : ±íÊ¾¸Ã×Ö¶ÎµÄÀàĞÍ£¬Èç¹ûÊÇChar£¬ÔòÆ´ºÃµÄsqlÖĞ°üÀ¨'£¬·ñÔò²»°üÀ¨'£¬Ä¬ÈÏÖµÎª·Çchar£¬¼´²»´ø'
-	 * Relation  : ±íÊ¾×Ö¶ÎÃûÓë×Ö¶ÎÖµÖ®¼äµÄ¹ØÏµ£¬=¡¢>=¡¢<=µÈµÈ£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾¹ØÏµÎª=£»
-	 *             ÁíÍâÒ²¿ÉÒÔÉèÖÃÎª×óÓÒÁª¹ØÏµ£¬Éú³ÉµÄÓï¾äÊÇFieldName = FieldValue(+)£¬Òò´ËÕâÖÖÇé¿öÏÂÒª×¢ÒâFieldNameºÍFieldValueµÄË³ĞòÎÊÌâ
-	 *             ÀıÈç£º
+	 * ç”Ÿæˆsqlè¯­å¥
+	 * @param å­—æ®µåˆ—è¡¨ï¼Œå…è®¸å„å¼å¦‚ä¸‹ï¼š
+	 * 1ã€*ï¼Œè¿™ç§æƒ…å†µï¼Œå¿…é¡»ä¸ºå•è¡¨æŸ¥è¯¢
+	 * 2ã€FieldName1, FieldName2,...FieldNameNï¼›å•è¡¨æŸ¥è¯¢æˆ–count(*)ï¼Œrownumç­‰
+	 * 3ã€Table1.FieldName1, Table1.FieldName2, Table2.FieldName1, Table2.FieldName2, â€¦ï¼Œå¤šè¡¨è”åˆæŸ¥è¯¢ï¼ŒåŠ¡å¿…ä¸ºæ¯ä¸ªè¡¨è®¾ç½®åˆ«å
+	 * @param è¡¨åˆ—è¡¨ï¼Œå…è®¸å„å¼å¦‚ä¸‹ï¼š
+	 * 1ã€å•è¡¨æŸ¥è¯¢ï¼Œè¿™ç§æƒ…å†µå¯ä»¥ä¸ä¸ºè¡¨è®¾ç½®åˆ«å
+	 * 2ã€å¤šä¸ªç®€å•è¡¨è”åˆæŸ¥è¯¢ï¼ŒåŠ¡å¿…ä¸ºæ¯ä¸ªè¡¨è®¾ç½®åˆ«åï¼Œå¦‚ï¼štable1 t1, table2 t2, table3 t3
+	 * 3ã€å«ä¸´æ—¶è¡¨çš„å•ä¸´æ—¶è¡¨æˆ–å¤šè¡¨æŸ¥è¯¢ï¼Œä¸´æ—¶è¡¨è¦ä»¥[]æ‹¬èµ·ï¼Œå¹¶å–åˆ«åï¼Œå¦‚ï¼šTable1 a, Table2 b, Table3 c, [select * from Table4] d
+	 *    ä¸´æ—¶è¡¨çš„æŸ¥è¯¢è¯­å¥ä¹Ÿè¦ç”¨genSQLæ–¹æ³•ç”Ÿæˆã€‚
+	 * @param lsWheres æ¡ä»¶åˆ—è¡¨
+	 * æ˜¯ä¸€ä¸ªTCommonRecordçš„åˆ—è¡¨ï¼Œæ¯ä¸€é¡¹TCommonRecordåŒ…æ‹¬FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
+	 * å…¶ä¸­
+	 * FieldName : è¡¨ç¤ºè¯¥æ¡ä»¶ä¸å“ªä¸ªå­—æ®µç›¸å…³
+	 * FieldValue: è¡¨ç¤ºè¯¥æ¡ä»¶çš„å­—æ®µå–å€¼ï¼Œå¦‚æœFieldValueçš„ç¬¬ä¸€ä¸ªæˆ–æœ€åä¸€ä¸ªå­—ç¬¦ä¸º%ï¼Œåˆ™ç”Ÿæˆlikeè¯­å¥
+	 * FieldType : è¡¨ç¤ºè¯¥å­—æ®µçš„ç±»å‹ï¼Œå¦‚æœæ˜¯Charï¼Œåˆ™æ‹¼å¥½çš„sqlä¸­åŒ…æ‹¬'ï¼Œå¦åˆ™ä¸åŒ…æ‹¬'ï¼Œé»˜è®¤å€¼ä¸ºécharï¼Œå³ä¸å¸¦'
+	 * Relation  : è¡¨ç¤ºå­—æ®µåä¸å­—æ®µå€¼ä¹‹é—´çš„å…³ç³»ï¼Œ=ã€>=ã€<=ç­‰ç­‰ï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå…³ç³»ä¸º=ï¼›
+	 *             å¦å¤–ä¹Ÿå¯ä»¥è®¾ç½®ä¸ºå·¦å³è”å…³ç³»ï¼Œç”Ÿæˆçš„è¯­å¥æ˜¯FieldName = FieldValue(+)ï¼Œå› æ­¤è¿™ç§æƒ…å†µä¸‹è¦æ³¨æ„FieldNameå’ŒFieldValueçš„é¡ºåºé—®é¢˜
+	 *             ä¾‹å¦‚ï¼š
 	 *             List<TCommonRecord> lsWheres = new ArrayList<TCommonRecord>();
 	 *			   TCommonRecord crWheres = CaseHistoryHelperUtils.genWhereCR("v.patient_id", "h.patient_id", "", "join", "", "");
 	 *			   lsWheres.add(crWheres);
-	 *             Éú³ÉsqlÎªv.patient_id=h.patient_id(+)
-	 * GroupNo   : ±íÊ¾¸ÃÌõ¼şµÄ×éºÅ£¬Èç¹û2¸öÌõ¼şÎªÒ»×é£¬ĞèÒªÁª¶¯²éÑ¯£¬ÀıÈç£º
+	 *             ç”Ÿæˆsqlä¸ºv.patient_id=h.patient_id(+)
+	 * GroupNo   : è¡¨ç¤ºè¯¥æ¡ä»¶çš„ç»„å·ï¼Œå¦‚æœ2ä¸ªæ¡ä»¶ä¸ºä¸€ç»„ï¼Œéœ€è¦è”åŠ¨æŸ¥è¯¢ï¼Œä¾‹å¦‚ï¼š
 	 * ((StartDateTime <= to_date('2011-01-01', 'yyyy-mm-dd')) and (StopDateTime >= to_date('2011-02-01', 'yyyy-mm-dd')))
-	 * ÉÏÃæµÄ2¸öÌõ¼ş¾Í±ØĞëÒ»ÆğÓÃ£¬Òò´ËÒÔÉÏ2¸ö×Ö¶ÎÎªÒ»×é£¬GroupNo²»Ó¦¸Ã·¢ÉúÖØ¸´£¬Ä¬ÈÏÎª¿ÕÖµ£¬±íÊ¾¸ÃÌõ¼şµ¥¶ÀËãÊÇÒ»¸öÌõ¼ş
-	 * Condition : ±íÊ¾¸ÃÌõ¼şÇ°Ãæ¸úµÄÊÇand »¹ÊÇ or£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾Ç°Ãæ¸ú and 
-	 * @param lsGroups group by Óï¾äºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬1ÏîÄÚÈİ£¬FieldName
-	 * @param lsOrders order by ºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬2ÏîÄÚÈİ£¬Ò»ÏîÊÇFieldName£¬Ò»ÏîÊÇBy£¬ByµÄÈ¡ÖµÎª¿Õ£¬asc»òdesc
+	 * ä¸Šé¢çš„2ä¸ªæ¡ä»¶å°±å¿…é¡»ä¸€èµ·ç”¨ï¼Œå› æ­¤ä»¥ä¸Š2ä¸ªå­—æ®µä¸ºä¸€ç»„ï¼ŒGroupNoä¸åº”è¯¥å‘ç”Ÿé‡å¤ï¼Œé»˜è®¤ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºè¯¥æ¡ä»¶å•ç‹¬ç®—æ˜¯ä¸€ä¸ªæ¡ä»¶
+	 * Condition : è¡¨ç¤ºè¯¥æ¡ä»¶å‰é¢è·Ÿçš„æ˜¯and è¿˜æ˜¯ orï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå‰é¢è·Ÿ and 
+	 * @param lsGroups group by è¯­å¥åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«1é¡¹å†…å®¹ï¼ŒFieldName
+	 * @param lsOrders order by åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«2é¡¹å†…å®¹ï¼Œä¸€é¡¹æ˜¯FieldNameï¼Œä¸€é¡¹æ˜¯Byï¼ŒByçš„å–å€¼ä¸ºç©ºï¼Œascæˆ–desc
 	 * @param srcQuery
-	 * @return ·µ»Ø·ûºÏÌõ¼şµÄÊı¾İ½á¹û
+	 * @return è¿”å›ç¬¦åˆæ¡ä»¶çš„æ•°æ®ç»“æœ
 	 * @throws Exception
 	 */
 	@SuppressWarnings("rawtypes")
@@ -2107,13 +2107,13 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 		StringBuffer sql = new StringBuffer();
 		List<String> fieldsList = initFields(strFields);
 		strTables = initTables(strTables);
-		/* ´¦Àí±íÃû */
+		/* å¤„ç†è¡¨å */
 		Map<String, String> tablesMap = getTablesMap(strTables);
-		/* ´¦Àí×Ö¶Î */
+		/* å¤„ç†å­—æ®µ */
 		//String fields = getFields(tablesMap, strFields);
 		String fields = getFields(tablesMap, fieldsList);
 		sql.append("select ").append(fields).append(" from ");
-		/* ÅĞ¶Ï±íÊÇ·ñÔÚ Oracle ÖĞ  */
+		/* åˆ¤æ–­è¡¨æ˜¯å¦åœ¨ Oracle ä¸­  */
 		boolean isOracle = false;
 		Iterator it = tablesMap.entrySet().iterator();
 		while (it.hasNext())
@@ -2128,7 +2128,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	        }
 			if ("".equals(tb) || "NULL".equals(tb.toUpperCase()))
 			{
-			    System.out.println("¸ÃÓï¾ä²éÑ¯µÄÔ­Ê¼×Ö¶ÎÎª£º" + tbCom.getOriginalTable() + ",Ò½ÔºÄ¿±ê×Ö¶ÎÎª£º" +  tb);
+			    System.out.println("è¯¥è¯­å¥æŸ¥è¯¢çš„åŸå§‹å­—æ®µä¸ºï¼š" + tbCom.getOriginalTable() + ",åŒ»é™¢ç›®æ ‡å­—æ®µä¸ºï¼š" +  tb);
 				sql.append(entry.getValue().toString()).append(" ").append(entry.getKey().toString()).append(", ");
 			}
 			else
@@ -2288,7 +2288,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 
 //	/**
-//	 * »ñÈ¡Ä¿±ê±í
+//	 * è·å–ç›®æ ‡è¡¨
 //	 * @param originalTable
 //	 * @return
 //	 */
@@ -2307,7 +2307,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 //	}
 
 	/**
-	 * »ñÈ¡Ä¿±ê±í
+	 * è·å–ç›®æ ‡è¡¨
 	 * @param originalTable
 	 * @return
 	 */
@@ -2324,7 +2324,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 	
 //	/**
-//     * »ñÈ¡Ä¿±ê±í
+//     * è·å–ç›®æ ‡è¡¨
 //     * @param originalTable
 //     * @return
 //     */
@@ -2343,7 +2343,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 //    }
 	
 	/**
-     * »ñÈ¡Ä¿±ê±í¶ÔÏó
+     * è·å–ç›®æ ‡è¡¨å¯¹è±¡
      * @param originalTable
      * @return
      */
@@ -2361,7 +2361,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
     
 	
 //	/**
-//	 * ¸ù¾İÔ­Ê¼±íÃûºÍ×Ö¶Î»ñÈ¡¶ÔÓ¦µÄÄ¿±ê×Ö¶Î
+//	 * æ ¹æ®åŸå§‹è¡¨åå’Œå­—æ®µè·å–å¯¹åº”çš„ç›®æ ‡å­—æ®µ
 //	 * @param originalField
 //	 * @param originalTable
 //	 * @return
@@ -2382,7 +2382,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
     
 	
 	/**
-	 * ¸ù¾İÔ­Ê¼±íÃûºÍ×Ö¶Î»ñÈ¡¶ÔÓ¦µÄÄ¿±ê×Ö¶Î
+	 * æ ¹æ®åŸå§‹è¡¨åå’Œå­—æ®µè·å–å¯¹åº”çš„ç›®æ ‡å­—æ®µ
 	 * @param originalField
 	 * @param originalTable
 	 * @return
@@ -2402,7 +2402,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 	
 //	/**
-//	 * ¸ù¾İÔ­Ê¼±íÃû»ñÈ¡Ä¿±ê±í¶ÔÓ¦µÄÔ­Ê¼ºÍÄ¿±ê×Ö¶Î
+//	 * æ ¹æ®åŸå§‹è¡¨åè·å–ç›®æ ‡è¡¨å¯¹åº”çš„åŸå§‹å’Œç›®æ ‡å­—æ®µ
 //	 * @param originalTable
 //	 * @return
 //	 */
@@ -2416,7 +2416,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 //	}
 	
 	/**
-	 * ¸ù¾İÔ­Ê¼±íÃû»ñÈ¡Ä¿±ê±í¶ÔÓ¦µÄÔ­Ê¼ºÍÄ¿±ê×Ö¶Î
+	 * æ ¹æ®åŸå§‹è¡¨åè·å–ç›®æ ‡è¡¨å¯¹åº”çš„åŸå§‹å’Œç›®æ ‡å­—æ®µ
 	 * @param originalTable
 	 * @return
 	 */
@@ -2430,7 +2430,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 	
 //	/**
-//	 * »ñÈ¡µÄtable_configËùÓĞĞÅÏ¢
+//	 * è·å–çš„table_configæ‰€æœ‰ä¿¡æ¯
 //	 * @param tableid
 //	 * @return
 //	 */
@@ -2443,7 +2443,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 //	}
 	
 	/**
-	 * »ñÈ¡±íÃûÓë±ğÃûµÄMap£ºkey-±ğÃû£»value-±íÃû
+	 * è·å–è¡¨åä¸åˆ«åçš„Mapï¼škey-åˆ«åï¼›value-è¡¨å
 	 * @param strTables
 	 * @return
 	 */
@@ -2476,7 +2476,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 	
 	/**
-	 * »ñÈ¡µ¥¸ö×Ö¶Î
+	 * è·å–å•ä¸ªå­—æ®µ
 	 * @param tablesMap
 	 * @param field
 	 * @return
@@ -2488,22 +2488,22 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 			fieldName = field.substring(field.indexOf("fn:") + 3, field.indexOf(":end"));
 		else
 		{
-			// ±íÃû.×Ö¶Î
+			// è¡¨å.å­—æ®µ
 			if (field.indexOf(".") >= 0)
 			{
 				String[] fis = field.split("\\.");
 				String tn = getTargetTable(tablesMap.get(fis[0]));
-				// ·Ç¶¨Òå±í
+				// éå®šä¹‰è¡¨
 				if ("".equals(tn))
 					fieldName = field;
 				else
 					fieldName = "".equals(getTargetField(fis[1], tablesMap.get(fis[0]))) ? "''" : fis[0] + "." + getTargetField(fis[1], tablesMap.get(fis[0]));
 			}
-			// ÎŞ±íÃû×Ö¶Î
+			// æ— è¡¨åå­—æ®µ
 			else
 			{
 				String tn = getTargetTable(tablesMap.get("imtmp") == null ? "" : tablesMap.get("imtmp"));
-				// ·Ç¶¨Òå±í
+				// éå®šä¹‰è¡¨
 				if ("".equals(tn) || "''".equals(getTargetField(field, tablesMap.get("imtmp") == null ? "" : tablesMap.get("imtmp"))))
 					fieldName = field;
 				else
@@ -2514,7 +2514,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 	
 	/**
-	 * »ñÈ¡×Ö¶ÎÁĞ±í
+	 * è·å–å­—æ®µåˆ—è¡¨
 	 * @param tablesMap
 	 * @param strFields
 	 * @return
@@ -2522,7 +2522,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	private String getFields(Map<String, String>tablesMap, List<String> fieldsL)
 	{
 		String fields = "";
-		/* Èç¹û×Ö¶ÎÎª*£¬±ØĞëÊÇµ¥±í²éÑ¯£¬·ñÔòĞèÒªĞ´³öËù²é×Ö¶Î£¬¼´Ê¹ÊÇĞèÒªËùÓĞµÄ×Ö¶ÎÒ²ÒªÒ»Ò»Ğ´³ö */
+		/* å¦‚æœå­—æ®µä¸º*ï¼Œå¿…é¡»æ˜¯å•è¡¨æŸ¥è¯¢ï¼Œå¦åˆ™éœ€è¦å†™å‡ºæ‰€æŸ¥å­—æ®µï¼Œå³ä½¿æ˜¯éœ€è¦æ‰€æœ‰çš„å­—æ®µä¹Ÿè¦ä¸€ä¸€å†™å‡º */
 		for (String field : fieldsL)
 		{
 			if ("*".equals(field))
@@ -2539,15 +2539,15 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 			}
 			else
 			{
-				// Èç¹û²»°üº¬fn:£¬ËµÃ÷ÎªÕı³£×Ö¶Î£»·ñÔòÎªº¯Êı²Ù×÷
+				// å¦‚æœä¸åŒ…å«fn:ï¼Œè¯´æ˜ä¸ºæ­£å¸¸å­—æ®µï¼›å¦åˆ™ä¸ºå‡½æ•°æ“ä½œ
 				if (field.indexOf("fn:") < 0)
 				{
-					// ±íÃû.×Ö¶Î
+					// è¡¨å.å­—æ®µ
 					if (field.indexOf(".") >= 0)
 					{
 						String[] fis = field.split("\\.");
 						String tn = getTargetTable(tablesMap.get(fis[0]));
-						// ·Ç¶¨Òå±í
+						// éå®šä¹‰è¡¨
 						if ("".equals(tn))
 						{
 							if ("".equals(fields))
@@ -2557,7 +2557,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 						}
 						else
 						{
-							// ±íÃû.×Ö¶Î ±ğÃû
+							// è¡¨å.å­—æ®µ åˆ«å
 							if (fis[1].indexOf(" ") >= 0)
 							{
 								if ("".equals(fields))
@@ -2565,7 +2565,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 								else
 									fields += ", " + ("".equals(getTargetField(fis[1].split(" ")[0], tablesMap.get(fis[0]))) ? "''" : (fis[0] + "." + getTargetField(fis[1].split(" ")[0], tablesMap.get(fis[0])))) + " as " + fis[1].split(" ")[1];
 							}
-							// ±íÃû.×Ö¶Î
+							// è¡¨å.å­—æ®µ
 							else
 							{
 								if ("*".equals(fis[1]))
@@ -2590,13 +2590,13 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 							}
 						}
 					}
-					// ÎŞ±íÃû×Ö¶Î
-					// 1.µ¥±í²éÑ¯
-					// 2.º¯Êı²éÑ¯
+					// æ— è¡¨åå­—æ®µ
+					// 1.å•è¡¨æŸ¥è¯¢
+					// 2.å‡½æ•°æŸ¥è¯¢
 					else
 					{
 						String tn = getTargetTable(tablesMap.get("imtmp") == null ? "" : tablesMap.get("imtmp"));
-						// ·Ç¶¨Òå±í
+						// éå®šä¹‰è¡¨
 						if ("".equals(tn) || "".equals(getTargetField(field, tablesMap.get("imtmp") == null ? "" : tablesMap.get("imtmp"))))
 						{
 							if ("".equals(fields))
@@ -2606,7 +2606,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 						}
 						else
 						{
-							// ×Ö¶Î ±ğÃû
+							// å­—æ®µ åˆ«å
 							if (field.indexOf(" ") >= 0)
 							{
 								String[] fis = field.split(" ");
@@ -2615,7 +2615,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 								else
 									fields += ", " + ("".equals(getTargetField(fis[0], tablesMap.get("imtmp"))) ? "''" : getTargetField(fis[0], tablesMap.get("imtmp"))) + " as " + fis[1];
 							}
-							// ×Ö¶Î
+							// å­—æ®µ
 							else
 							{
 								if ("".equals(fields))
@@ -2639,7 +2639,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	}
 	
 	/**
-	 * ×ª»»ÎªoracleÈÕÆÚ¸ñÊ½
+	 * è½¬æ¢ä¸ºoracleæ—¥æœŸæ ¼å¼
 	 * @param src
 	 * @param fmt
 	 * @return
@@ -2656,7 +2656,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
     }
     
     /**
-     * ³õÊ¼»¯Tables
+     * åˆå§‹åŒ–Tables
      * @param strTables
      * @return
      */
@@ -2677,7 +2677,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
     }
     
     /**
-     * ³õÊ¼»¯Fields
+     * åˆå§‹åŒ–Fields
      * @param strFields
      * @return
      */
@@ -2720,7 +2720,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
     }
     
     /**
-     * »ñÈ¡?ÔÚ×Ö·û´®ÖĞµÄ¸öÊı
+     * è·å–?åœ¨å­—ç¬¦ä¸²ä¸­çš„ä¸ªæ•°
      * @param source
      * @return
      */
@@ -2736,7 +2736,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
     }
     
 //    /**
-//     * »ñÈ¡ÌØÊâÌõ¼ş
+//     * è·å–ç‰¹æ®Šæ¡ä»¶
 //     * @param originalTable
 //     * @return
 //     */
@@ -2750,7 +2750,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 //    }
     
     /**
-     * »ñÈ¡ÌØÊâÌõ¼ş
+     * è·å–ç‰¹æ®Šæ¡ä»¶
      * @param originalTable
      * @return
      */
@@ -2764,7 +2764,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
     }
     
     /**
-     * »ñÈ¡¸ù¾İ²éÑ¯Ìõ¼ş»ñÈ¡ÌØÊâÅäÖÃÔ­Ê¼±í
+     * è·å–æ ¹æ®æŸ¥è¯¢æ¡ä»¶è·å–ç‰¹æ®Šé…ç½®åŸå§‹è¡¨
      * @param strTables
      * @param lsWheres
      * @return
@@ -2778,9 +2778,9 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
     	{
     		for (TQueryConfig lsQueryConfig : lsQueryConfigs)
     		{
-    			// »ñÈ¡Ìõ¼şÃèÊö
+    			// è·å–æ¡ä»¶æè¿°
     			String query_condition = lsQueryConfig.getQueryCondition();
-    			// »ñÈ¡ÏàÓ¦×Ö¶Î ps:Ìõ¼şÃèÊöÖĞµÄ¹ØÏµÔËËã·ûÔİÊ±Ö»Ö§³Ö=
+    			// è·å–ç›¸åº”å­—æ®µ ps:æ¡ä»¶æè¿°ä¸­çš„å…³ç³»è¿ç®—ç¬¦æš‚æ—¶åªæ”¯æŒ=
 				String field = query_condition.substring(0, query_condition.indexOf("="));
 				TCommonRecord where = null;
 	        	for (TCommonRecord lsWhere : lsWheres)
@@ -2792,15 +2792,15 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	        	}
 	        	if (where == null)
 	        		return tn;
-    			// ÅĞ¶ÏÌõ¼şÃèÊöÊÇ·ñ´øSQL ps:´øSQL±êÖ¾Îªsql:¿ªÍ·£¬:end½áÎ²
+    			// åˆ¤æ–­æ¡ä»¶æè¿°æ˜¯å¦å¸¦SQL ps:å¸¦SQLæ ‡å¿—ä¸ºsql:å¼€å¤´ï¼Œ:endç»“å°¾
     			if (query_condition.indexOf("sql:") >= 0)
     			{
     				String sql = query_condition.substring(query_condition.indexOf("sql:") + 4, query_condition.indexOf(":end"));
-    				// »ñÈ¡sqlÖĞµÄËÄ¸ö²ÎÊı£º±íÃû¡¢×Ö¶ÎÃû¡¢×Ö¶ÎÖµ¡¢½á¹û¼¯ÀàĞÍ
-    				// ±íÃû£ºÏ£ÍûÒò¹ØÁª×Ö¶ÎÆ¥ÅäÒª²éÑ¯µÄÄ¿±ê±í
-    				// ×Ö¶ÎÃû£ºĞèÒªµÃµ½µÄ×Ö¶ÎÃû£¬»òÕßËµÓĞÌØÊâ²éÑ¯Ìõ¼şµÄ×Ö¶ÎÃû
-    				// ×Ö¶ÎÖµ£ºÌØÊâµÄ²éÑ¯×Ö¶Î¶ÔÓ¦µÄÖµ
-    				// ½á¹û¼¯ÀàĞÍ£ºµ¥Ò»¶ÔÏó²éÑ¯single»òÕß¶à½á¹û²éÑ¯list
+    				// è·å–sqlä¸­çš„å››ä¸ªå‚æ•°ï¼šè¡¨åã€å­—æ®µåã€å­—æ®µå€¼ã€ç»“æœé›†ç±»å‹
+    				// è¡¨åï¼šå¸Œæœ›å› å…³è”å­—æ®µåŒ¹é…è¦æŸ¥è¯¢çš„ç›®æ ‡è¡¨
+    				// å­—æ®µåï¼šéœ€è¦å¾—åˆ°çš„å­—æ®µåï¼Œæˆ–è€…è¯´æœ‰ç‰¹æ®ŠæŸ¥è¯¢æ¡ä»¶çš„å­—æ®µå
+    				// å­—æ®µå€¼ï¼šç‰¹æ®Šçš„æŸ¥è¯¢å­—æ®µå¯¹åº”çš„å€¼
+    				// ç»“æœé›†ç±»å‹ï¼šå•ä¸€å¯¹è±¡æŸ¥è¯¢singleæˆ–è€…å¤šç»“æœæŸ¥è¯¢list
     				String[] params = sql.split(",");
     				String tableName = params[0];
     				String fieldName = params[1];
@@ -2810,7 +2810,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
     				wheres.add(where);
     				JDBCQueryImpl query = DBQueryFactory.getQuery(getDbUrl(tableName));
     				sql = genSQL(fieldName, tableName, wheres, new ArrayList<TCommonRecord>(), new ArrayList<TCommonRecord>());
-    				// ½á¹û¼¯ÀàĞÍ£ºµ¥Ò»¶ÔÏó²éÑ¯
+    				// ç»“æœé›†ç±»å‹ï¼šå•ä¸€å¯¹è±¡æŸ¥è¯¢
     				if ("single".equals(resultSet))
     				{
     					TCommonRecord entity = (TCommonRecord) query.queryForObject(sql, new CommonMapper());
@@ -2820,13 +2820,13 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
     						return tn;
     					}
     				}
-					// ½á¹û¼¯ÀàĞÍ£º¶à½á¹û¼¯list
+					// ç»“æœé›†ç±»å‹ï¼šå¤šç»“æœé›†list
     				else
     				{
     					
     				}
     			}
-    			// ¹Ì¶¨×Ö¶Î£¬ÌØÊâÖµ£¬ÌØÊâ²éÑ¯£º×Ö¶ÎÃû=Öµ 
+    			// å›ºå®šå­—æ®µï¼Œç‰¹æ®Šå€¼ï¼Œç‰¹æ®ŠæŸ¥è¯¢ï¼šå­—æ®µå=å€¼ 
     			else
     			{
     				

@@ -12,7 +12,7 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 /**
- * Êı¾İÔ´¹¤³§
+ * æ•°æ®æºå·¥å‚
  * @author Administrator
  *
  */
@@ -24,7 +24,7 @@ public final class DBQueryFactory
     }
 
     /**
-     * »ñµÃÊı¾İÔ´
+     * è·å¾—æ•°æ®æº
      * @param resourceID
      * @return
      */
@@ -33,7 +33,7 @@ public final class DBQueryFactory
         DataSource ds = null;
         try
         {
-            //2014-10-21 liujc ĞŞ¸Ä Ê¹ÓÃtomcat  Êı¾İÁ¬½Ó³Ø
+            //2014-10-21 liujc ä¿®æ”¹ ä½¿ç”¨tomcat  æ•°æ®è¿æ¥æ± 
             Context  initContext = new InitialContext();
             Context envContext = (Context)initContext.lookup("java:/comp/env");
             ds = (DataSource)envContext.lookup(resourceID);
@@ -46,7 +46,7 @@ public final class DBQueryFactory
     }
     
     /**
-     * spring Ô­Ê¼´¦Àísql JdbcTemplate  
+     * spring åŸå§‹å¤„ç†sql JdbcTemplate  
      * @param resourceID
      * @return
      */
@@ -57,15 +57,15 @@ public final class DBQueryFactory
             DataSource ds = null;
             try
             {
-                //2014-10-21 liujc ĞŞ¸Ä Ê¹ÓÃtomcat  Êı¾İÁ¬½Ó³Ø
+                //2014-10-21 liujc ä¿®æ”¹ ä½¿ç”¨tomcat  æ•°æ®è¿æ¥æ± 
                 ds = getDataSource(resourceID);
                 
-                // 2014-10-21 liujc ĞŞ¸Ä   ½«Êı¾İÁ¬½Ó³Ø²»ÍĞ¹ÜÔÚspringÈİÆ÷ÖĞ
+                // 2014-10-21 liujc ä¿®æ”¹   å°†æ•°æ®è¿æ¥æ± ä¸æ‰˜ç®¡åœ¨springå®¹å™¨ä¸­
                 //ds = (DataSource) SpringBeanUtil.getBean(resourceID);    
             }
             catch(NullPointerException nullPoiE)
             {
-                new RuntimeException("NullPointerException ¿ÕÖ¸ÕëÒì³£");
+                new RuntimeException("NullPointerException ç©ºæŒ‡é’ˆå¼‚å¸¸");
             }
             catch (Exception e) 
             {
@@ -76,7 +76,7 @@ public final class DBQueryFactory
     }
     
     /**
-     * Ö±½Ó»ñµÃÊı¾İ¿â·ÃÎÊ¶ÔÏó
+     * ç›´æ¥è·å¾—æ•°æ®åº“è®¿é—®å¯¹è±¡
      * @param resourceID
      * @return
      */

@@ -9,7 +9,7 @@ import com.hitzd.his.Program.Web.Utils.CommonUtils;
 import com.hitzd.his.Program.Web.Utils.ICharStrategy;
 
 /**
- * ±¨±í ¹ÜÀíÆ÷
+ * æŠ¥è¡¨ ç®¡ç†å™¨
  * @author jingcong
  *
  */
@@ -75,7 +75,7 @@ public class ReportHandler
 			return first(page);
 	}
 	/**
-	 * ÓÃÓÚ»­Í¼Ìø×ª
+	 * ç”¨äºç”»å›¾è·³è½¬
 	 * @param page
 	 */
 	public List<TCommonRecord> GraphPanel(IPage page)
@@ -84,7 +84,7 @@ public class ReportHandler
 		return null;
 	}
 	/**
-	 * ÓÃÓÚ»­Í¼Ìø×ª
+	 * ç”¨äºç”»å›¾è·³è½¬
 	 * @param page
 	 */
 	public List<TCommonRecord> Graph(IPage page)
@@ -120,14 +120,14 @@ public class ReportHandler
 		return null;
 	}
 	/**
-	 * »ñµÃ Êı¾İĞÅÏ¢ 
+	 * è·å¾— æ•°æ®ä¿¡æ¯ 
 	 * @param request
 	 */
 	private void getSessionObj(IPage page)
 	{
 	    List<Object>  objs = CommonUtils.getSessionObject((HttpServletRequest)page.getAttribute("Request"), getCurClassName());
         if(objs == null)
-            //TODO  ÔÚsession ÕÒ²»µ½Êı¾İ¼¯Ê± ĞèÒªÒ»¸ö´íÎóÒ³Ãæ ÔöÏîÓÃ»§ÌåÑé ¡£
+            //TODO  åœ¨session æ‰¾ä¸åˆ°æ•°æ®é›†æ—¶ éœ€è¦ä¸€ä¸ªé”™è¯¯é¡µé¢ å¢é¡¹ç”¨æˆ·ä½“éªŒ ã€‚
             this.forward = "/index.jsp" ;
         else
         	((HttpServletRequest)page.getAttribute("Request")).setAttribute("sessionObject",objs);
@@ -135,7 +135,7 @@ public class ReportHandler
 	}
 	
 	/**
-	 * »ñµÃµ±Ç°ÀàÃû×Ö ×öÎª session key ´æ·ÅÊı¾İ¼¯
+	 * è·å¾—å½“å‰ç±»åå­— åšä¸º session key å­˜æ”¾æ•°æ®é›†
 	 * @return
 	 */
 	protected String getCurClassName()
@@ -144,7 +144,7 @@ public class ReportHandler
 	}
 	
 	/**
-	 * ´æ·ÅÊı¾İ¼¯ ÓÃÓÚ´òÓ¡ £¬µ¼³ö£¬pdf ±ÜÃâÖØ¸´ÖØĞÂ 
+	 * å­˜æ”¾æ•°æ®é›† ç”¨äºæ‰“å° ï¼Œå¯¼å‡ºï¼Œpdf é¿å…é‡å¤é‡æ–° 
 	 * @param request
 	 * @param objs
 	 */
@@ -154,7 +154,7 @@ public class ReportHandler
 	}
 	
     /**
-     * pdfµ¼³ö 
+     * pdfå¯¼å‡º 
      * @param request
      * @param response
      */
@@ -162,25 +162,25 @@ public class ReportHandler
 	
 	
     /**
-     * ÏÔÊ¾Í¼ĞÎµÄ»ù±¾·½·¨
-     * Ê¹ÓÃÕßÊµÏÖÕâÑùµÄ½Ó¿Ú·½·¨ charBaseData.setCharBaseData() À´×éÖ¯ºÃÊı¾İ   
+     * æ˜¾ç¤ºå›¾å½¢çš„åŸºæœ¬æ–¹æ³•
+     * ä½¿ç”¨è€…å®ç°è¿™æ ·çš„æ¥å£æ–¹æ³• charBaseData.setCharBaseData() æ¥ç»„ç»‡å¥½æ•°æ®   
      * @param request
      * @return
      */
     protected String chartView(IPage page, ICharStrategy charBaseData)
     {
-        String graphtype = page.getParameter("graphtype", "");  // Í¼ĞÎ¸ñÊ½
+        String graphtype = page.getParameter("graphtype", "");  // å›¾å½¢æ ¼å¼
         LinkedHashMap<String, String> chart  = charBaseData.setCharBaseData();
         String strChar = "";
         switch(Integer.parseInt(graphtype))
         {
-            case 1:                     //ÖùĞÎÍ¼
+            case 1:                     //æŸ±å½¢å›¾
                 strChar = ChartUtils.ColumnChart(page, chart);
                 break;
-            case 3:                     //ÕÛÏßÍ¼
+            case 3:                     //æŠ˜çº¿å›¾
                 strChar = ChartUtils.LineChart(page, chart);
                 break;
-            case 6:                     //±ıÍ¼
+            case 6:                     //é¥¼å›¾
                 strChar = ChartUtils.PieChart(page, chart);
                 break;
         }

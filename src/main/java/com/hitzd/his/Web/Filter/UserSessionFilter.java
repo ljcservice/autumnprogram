@@ -15,7 +15,7 @@ import com.hitzd.his.Program.Web.Utils.CommonUtils;
 import com.hitzd.his.sso.SSOController;
 
 /**
- *  À¹½Øsession ÖĞÊÇ·ñ´æÔÚ
+ *  æ‹¦æˆªsession ä¸­æ˜¯å¦å­˜åœ¨
  */
 public class UserSessionFilter implements Filter {
 

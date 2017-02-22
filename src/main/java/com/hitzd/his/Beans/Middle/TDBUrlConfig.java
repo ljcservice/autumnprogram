@@ -1,7 +1,7 @@
 package com.hitzd.his.Beans.Middle;
 
 /**
- * ÖĞ¼ä²ãÊı¾İÔ´×Öµä±í 
+ * ä¸­é—´å±‚æ•°æ®æºå­—å…¸è¡¨ 
  * @author jingcong
  *
  */
@@ -10,19 +10,19 @@ public class TDBUrlConfig
 
     /* id */
     private String id;     
-    /* Êı¾İÔ´Ãû×Ö*/
+    /* æ•°æ®æºåå­—*/
     private String db_url;
-    /* ±¸×¢ */
+    /* å¤‡æ³¨ */
     private String remark;
-    /* Êı¾İ¿âÀàĞÍ */
+    /* æ•°æ®åº“ç±»å‹ */
     private String db_base;
-    /* Êı¾İ¿âÓÃ»§Ãû×Ö */
+    /* æ•°æ®åº“ç”¨æˆ·åå­— */
     private String  db_user;
-    /* Êı¾İ¿âÃÜÂë */
+    /* æ•°æ®åº“å¯†ç  */
     private String  db_pwd;  
-    /* Êı¾İ¿âÁ¬½ÓµØÖ· */
+    /* æ•°æ®åº“è¿æ¥åœ°å€ */
     private String  conn_url;
-    /* ÅäÖÃÎÄ¼şÊÇ·ñ´æÔÚÁ¬½Ó  */
+    /* é…ç½®æ–‡ä»¶æ˜¯å¦å­˜åœ¨è¿æ¥  */
     private String  flag;    
     
     public String getId()

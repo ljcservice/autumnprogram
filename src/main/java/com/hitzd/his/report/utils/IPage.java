@@ -3,7 +3,7 @@ package com.hitzd.his.report.utils;
 import java.util.*;
 
 /**
- *  策略 Web 参数 原型接口 Page 
+ *  绛栫暐 Web 鍙傛暟 鍘熷瀷鎺ュ彛 Page 
  * @author jingcong
  *
  */

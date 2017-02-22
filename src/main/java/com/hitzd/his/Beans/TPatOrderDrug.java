@@ -8,80 +8,80 @@ import com.hitzd.his.Utils.Config;
 import com.hitzd.his.Utils.DictCache;
 
 /**
- * @description ²¡ÈËÓÃÒ©¼ÇÂ¼Àà£ºPatOrderDrug ¶ÔÓ¦Êı¾İ¿â±í£º²¡ÈËÓÃÒ©¼ÇÂ¼(Pat_Order_Drug)
+ * @description ç—…äººç”¨è¯è®°å½•ç±»ï¼šPatOrderDrug å¯¹åº”æ•°æ®åº“è¡¨ï¼šç—…äººç”¨è¯è®°å½•(Pat_Order_Drug)
  * @author
  */
 public class TPatOrderDrug implements Serializable
 {
 
     private static final long serialVersionUID = 1L;
-    // Ò©Æ·ID
+    // è¯å“ID
     private String            drugID;
-    // Ò©Æ·±ê×¼ID
+    // è¯å“æ ‡å‡†ID
     private String            drugStandID;
-    /* Ò©Æ·Ãû³Æ */
+    /* è¯å“åç§° */
     private String            DrugName;
     private String            DoctorName;
-    // Ò½ÖöĞòºÅ
+    // åŒ»å˜±åºå·
     private String            recMainNo;
-    // Ò½Öö×ÓĞòºÅ
+    // åŒ»å˜±å­åºå·
     private String            recSubNo;
-    // Ò»´ÎÊ¹ÓÃ¼ÁÁ¿
+    // ä¸€æ¬¡ä½¿ç”¨å‰‚é‡
     private String            dosage;
-    // ¼ÁÁ¿µ¥Î»
+    // å‰‚é‡å•ä½
     private String            doseUnits;
-    // ¸øÒ©Í¾¾¶ID
+    // ç»™è¯é€”å¾„ID
     private String            administrationID;
-    // ¸øÒ©Í¾¾¶±ê×¼ID
+    // ç»™è¯é€”å¾„æ ‡å‡†ID
     private String            administrationStandID;
-    // Ö´ĞĞÆµÂÊID
+    // æ‰§è¡Œé¢‘ç‡ID
     private String            performFreqDictID;
-    // Ö´ĞĞÆµÂÊ±ê×¼ID
+    // æ‰§è¡Œé¢‘ç‡æ ‡å‡†ID
     private String            performFreqDictStandID;
-    // Ö´ĞĞÖ´ĞĞÆµÂÊÎÄ±¾(ÊäÈëÖ´ĞĞÆµÂÊÃèÊö)
+    // æ‰§è¡Œæ‰§è¡Œé¢‘ç‡æ–‡æœ¬(è¾“å…¥æ‰§è¡Œé¢‘ç‡æè¿°)
     private String            performFreqDictText;
-    // ¿ªÊ¼ÈÕÆÚÊ±¼ä
+    // å¼€å§‹æ—¥æœŸæ—¶é—´
     private String            startDateTime;
-    // ½áÊøÈÕÆÚÊ±¼ä
+    // ç»“æŸæ—¥æœŸæ—¶é—´
     private String            stopDateTime;
-    // ¿ª¾ßÒ½Öö¿ÆÊÒ
+    // å¼€å…·åŒ»å˜±ç§‘å®¤
     private String            doctorDept;
-    // ¿ª¾ßÒ½ÖöÒ½Éú
+    // å¼€å…·åŒ»å˜±åŒ»ç”Ÿ
     private String            doctor;
-    // ÊÇ·ñ×é
+    // æ˜¯å¦ç»„
     private String            isGroup;
-    // Ò©Æ·³§ÉÌID
+    // è¯å“å‚å•†ID
     private String            firmID;
-    // ÊÇ·ñÎªĞÂÒ½Öö
+    // æ˜¯å¦ä¸ºæ–°åŒ»å˜±
     private String            isNew;
-    // È·ÈÏÊ±¼ä
+    // ç¡®è®¤æ—¶é—´
     private String            dvaliddate;
-    /* ¸øÒ©Í¾¾¶Ãû³Æ */
+    /* ç»™è¯é€”å¾„åç§° */
     private String            adminName;
-    /* "Ô¤·ÀÓÃ"ÓÃ1±íÊ¾£¬¡°ÖÎÁÆÓÃ¡±ÓÃ2±íÊ¾ */
+    /* "é¢„é˜²ç”¨"ç”¨1è¡¨ç¤ºï¼Œâ€œæ²»ç–—ç”¨â€ç”¨2è¡¨ç¤º */
     private String            useType;
-    /* Ê¹ÓÃÔ­Òò */
+    /* ä½¿ç”¨åŸå›  */
     private String            useCause;
     
     
-    /* ÃÅÕïĞèÒªµÄĞÅÏ¢bean Begin */
-    /* ´¦·½ĞòºÅ */
+    /* é—¨è¯Šéœ€è¦çš„ä¿¡æ¯bean Begin */
+    /* å¤„æ–¹åºå· */
     private String PRESC_NO;
-    /* ÏîÄ¿ĞòºÅ */
+    /* é¡¹ç›®åºå· */
     private String ITEM_NO ;
-    /* ÊıÁ¿ */
+    /* æ•°é‡ */
     private String AMOUNT; 
-    /* ¼Æ¼Û½ğ¶î */
+    /* è®¡ä»·é‡‘é¢ */
     private String COSTS;
-    /* µ¥Î» */
+    /* å•ä½ */
     private String UNITS;
-    /* Ò©Æ·¹æ¸ñ */
+    /* è¯å“è§„æ ¼ */
     private String DRUG_SPEC;
-    /* Á÷Ë®ºÅ */
+    /* æµæ°´å· */
     private String SERIAL_NO;
-    /* ÏîÄ¿Àà±ğ  */
+    /* é¡¹ç›®ç±»åˆ«  */
     private String ITEM_CLASS;
-    /* ÃÅÕïĞèÒªµÄĞÅÏ¢bean End*/
+    /* é—¨è¯Šéœ€è¦çš„ä¿¡æ¯bean End*/
     
     public String getUseCause()
     {
@@ -151,8 +151,8 @@ public class TPatOrderDrug implements Serializable
     public void setAdministrationID(String administrationID)
     {
         String admin = administrationID;
-        /* ¹ıÂËÒ»ÏÂ ´«ÈëµÄÊÇ·ñÊÇ code Îª 1 Ê± administrationID ÔòÊÇÃû×Ö ĞèÒª×ª»» 
-         * 1Îª ÓÃÒ©Í¾¾¶µÄÃû×Ö 2Îª hisÖĞµÄÓÃÒ©±àÂë 0Îª ±¾¿âÖĞµÄ±ê×¼Âë 
+        /* è¿‡æ»¤ä¸€ä¸‹ ä¼ å…¥çš„æ˜¯å¦æ˜¯ code ä¸º 1 æ—¶ administrationID åˆ™æ˜¯åå­— éœ€è¦è½¬æ¢ 
+         * 1ä¸º ç”¨è¯é€”å¾„çš„åå­— 2ä¸º hisä¸­çš„ç”¨è¯ç¼–ç  0ä¸º æœ¬åº“ä¸­çš„æ ‡å‡†ç  
          * */
         DictCache dc = DictCache.getNewInstance();
         if (Config.getParamValue("admin_conv_flag").equals("1"))
@@ -212,8 +212,8 @@ public class TPatOrderDrug implements Serializable
     public void setPerformFreqDictID(String performFreqDictID)
     {
     	 String performFreq = performFreqDictID;
-         /* ¹ıÂËÒ»ÏÂ ´«ÈëµÄÊÇ·ñÊÇ code Îª 1 Ê± performFreqDictID ÔòÊÇÃû×Ö ĞèÒª×ª»» 
-          * 1Îª Æµ´ÎµÄÃû×Ö  
+         /* è¿‡æ»¤ä¸€ä¸‹ ä¼ å…¥çš„æ˜¯å¦æ˜¯ code ä¸º 1 æ—¶ performFreqDictID åˆ™æ˜¯åå­— éœ€è¦è½¬æ¢ 
+          * 1ä¸º é¢‘æ¬¡çš„åå­—  
           * */
          DictCache dc = DictCache.getNewInstance();
          if (Config.getParamValue("perform_conv_flag").equals("1"))

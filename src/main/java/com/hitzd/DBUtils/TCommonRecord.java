@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- * Í¨ÓÃÊı¾İ¼¯   
+ * é€šç”¨æ•°æ®é›†   
  * @author Administrator
  *
  */
@@ -54,9 +54,9 @@ public class TCommonRecord implements Serializable
 	}
 	
 	/**
-	 * Òª´¦Àíµ¥ÒıºÅµÄÇé¿ö
+	 * è¦å¤„ç†å•å¼•å·çš„æƒ…å†µ
 	 * @param key
-	 * @param singleq true : Òª´¦Àíµ¥ÒıºÅ£¬false £º²»´¦Àí£»
+	 * @param singleq true : è¦å¤„ç†å•å¼•å·ï¼Œfalse ï¼šä¸å¤„ç†ï¼›
 	 * @return
 	 */
 	public String get(String key , boolean singleq)
@@ -116,7 +116,7 @@ public class TCommonRecord implements Serializable
 		}
 	}
 	/**
-	 * ½«Ö¸¶¨×Ö·û×Ö·ûÌæ»»Îª¿Õ×Ö·û´®¡£  
+	 * å°†æŒ‡å®šå­—ç¬¦å­—ç¬¦æ›¿æ¢ä¸ºç©ºå­—ç¬¦ä¸²ã€‚  
 	 * @param key
 	 * @param str
 	 * @return
@@ -137,7 +137,7 @@ public class TCommonRecord implements Serializable
 	
 	
 	/**
-	 * ½«Ö¸¶¨×Ö·û×Ö·ûÌæ»»Îª¿Õ×Ö·û´®¡£ 
+	 * å°†æŒ‡å®šå­—ç¬¦å­—ç¬¦æ›¿æ¢ä¸ºç©ºå­—ç¬¦ä¸²ã€‚ 
 	 * @param key
 	 * @param strs
 	 * @return
@@ -147,7 +147,7 @@ public class TCommonRecord implements Serializable
 	    return get(key,new String[]{strs});
 	}
 	/**
-	 * µÃµ½YYYY-MM-DD¸ñÊ½µÄ×Ö·û´®
+	 * å¾—åˆ°YYYY-MM-DDæ ¼å¼çš„å­—ç¬¦ä¸²
 	 * @param key
 	 * @return
 	 */
@@ -157,7 +157,7 @@ public class TCommonRecord implements Serializable
 		return value;
 	}
 	/**
-	 * µÃµ½YYYY-MM-DD HI24:MI:SS¸ñÊ½µÄ×Ö·û´®
+	 * å¾—åˆ°YYYY-MM-DD HI24:MI:SSæ ¼å¼çš„å­—ç¬¦ä¸²
 	 * @param key
 	 * @return
 	 */
@@ -168,18 +168,18 @@ public class TCommonRecord implements Serializable
 	}
 	
 	/**
-	 * ¸´ÖÆ¶ÔÏó
+	 * å¤åˆ¶å¯¹è±¡
 	 * @return
 	 */
     public Object deepClone() 
     {
         try
         {
-         // ½«¶ÔÏóĞ´µ½Á÷Àï
+         // å°†å¯¹è±¡å†™åˆ°æµé‡Œ
             ByteArrayOutputStream bo = new ByteArrayOutputStream();
             ObjectOutputStream oo = new ObjectOutputStream(bo);
             oo.writeObject(this);
-            // ´ÓÁ÷Àï¶Á³öÀ´
+            // ä»æµé‡Œè¯»å‡ºæ¥
             ByteArrayInputStream bi = new ByteArrayInputStream(bo.toByteArray());
             ObjectInputStream oi = new ObjectInputStream(bi);
             return (oi.readObject());

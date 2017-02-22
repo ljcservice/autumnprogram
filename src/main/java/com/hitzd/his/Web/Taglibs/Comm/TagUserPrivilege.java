@@ -7,7 +7,7 @@ import com.hitzd.his.Beans.frame.User;
 import com.hitzd.his.tree.TreeNode;
 
 /**
- * 模块功能权限过滤 Tag
+ * 妯″潡鍔熻兘鏉冮檺杩囨护 Tag
  * @author jingcong
  *
  */
@@ -15,9 +15,9 @@ public class TagUserPrivilege extends TagSupport
 {
     private static final long serialVersionUID = 1L;
     
-    /* 菜单模块 */
+    /* 鑿滃崟妯″潡 */
     private String menuId   = "";
-    /* 模块功能 */
+    /* 妯″潡鍔熻兘 */
     private String menuFunc = "";
     
     public String getMenuId()

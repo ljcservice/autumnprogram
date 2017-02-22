@@ -10,7 +10,7 @@ import com.hitzd.Factory.DBQueryFactory;
 
 
 /**
- * ÊÂÎñÄ£°åÀà
+ * äº‹åŠ¡æ¨¡æ¿ç±»
  * @author Administrator
  *
  */
@@ -23,7 +23,7 @@ public class TransactionTemp extends TransactionTemplate
         DataSourceTransactionManager d = new DataSourceTransactionManager();
         d.setDataSource(DBQueryFactory.getDataSource(TransactionSource));
 
-        // 2014-10-21 liujc ĞŞ¸Ä ÊÂÎñbean²»´Óspring ÈİÆ÷ÖĞ»ñµÃ        
+        // 2014-10-21 liujc ä¿®æ”¹ äº‹åŠ¡beanä¸ä»spring å®¹å™¨ä¸­è·å¾—        
 //        ts = "txManager" + TransactionSource;
 //        if(ts == null || "".equals(ts))
 //            throw new RuntimeException();

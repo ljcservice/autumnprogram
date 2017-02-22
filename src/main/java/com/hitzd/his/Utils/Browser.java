@@ -11,24 +11,24 @@ public class Browser
 	protected static HttpServletRequest request;
 	/*  */
 	protected static String userAgent = "";
-	/* ÖÆÔìÉÌÃû³Æ */
+	/* åˆ¶é€ å•†åç§° */
 	protected static String company = "";
-	/* ä¯ÀÀÆ÷Ãû³Æ */
+	/* æµè§ˆå™¨åç§° */
 	protected static String name = "";
-	/* °æ±¾ */
+	/* ç‰ˆæœ¬ */
 	protected static String version = "" ;
-	/* Ö÷Òª°æ±¾ */
+	/* ä¸»è¦ç‰ˆæœ¬ */
 	protected static String mainVersion = "";
-	/* ´ÎÒª°æ±¾ */
+	/* æ¬¡è¦ç‰ˆæœ¬ */
 	protected static String minorVersion = "";
-	/* ²Ù×÷ÏµÍ³ */
+	/* æ“ä½œç³»ç»Ÿ */
 	protected static String os = "";
-	/* ÓïÑÔ±àÂë±ê×¼ */
+	/* è¯­è¨€ç¼–ç æ ‡å‡† */
 	protected static String language = "de";
-	/* ±¾µØ°æ±¾¶ÔÏó */
+	/* æœ¬åœ°ç‰ˆæœ¬å¯¹è±¡ */
 	protected static Locale locale;
-	/* ÓïÑÔÉèÖÃ */
-	/* Ö§³ÖµÄÓïÑÔ */
+	/* è¯­è¨€è®¾ç½® */
+	/* æ”¯æŒçš„è¯­è¨€ */
 	private static Hashtable<String, String> supportedLanguages;
 
 	public Browser(HttpServletRequest request)
@@ -103,7 +103,7 @@ public class Browser
 	}
 
 	/**
-	 * Ìá¹©Ê¹ÓÃµÄä¯ÀÀÆ÷ÖÆÔìÉÌµÄ¹«Ë¾Ãû³Æ
+	 * æä¾›ä½¿ç”¨çš„æµè§ˆå™¨åˆ¶é€ å•†çš„å…¬å¸åç§°
 	 */
 	public static String getCompany()
 	{
@@ -134,7 +134,7 @@ public class Browser
 	}
 
 	/**
-	 * »ñÈ¡Ê¹ÓÃµÄä¯ÀÀÆ÷µÄÃû³Æ
+	 * è·å–ä½¿ç”¨çš„æµè§ˆå™¨çš„åç§°
 	 */
 	public static String getName()
 	{
@@ -167,7 +167,7 @@ public class Browser
 	}
 
 	/**
-	 * ·µ»ØÊ¹ÓÃµÄä¯ÀÀÆ÷µÄ°æ±¾ºÅ
+	 * è¿”å›ä½¿ç”¨çš„æµè§ˆå™¨çš„ç‰ˆæœ¬å·
 	 */
 	public static String getVersion()
 	{
@@ -180,7 +180,7 @@ public class Browser
 	}
 
 	/**
-	 * ·µ»ØÊ¹ÓÃµÄä¯ÀÀÆ÷µÄÖ÷°æ±¾ºÅ
+	 * è¿”å›ä½¿ç”¨çš„æµè§ˆå™¨çš„ä¸»ç‰ˆæœ¬å·
 	 */
 	public static String getMainVersion()
 	{
@@ -193,7 +193,7 @@ public class Browser
 	}
 
 	/**
-	 * ·µ»ØÊ¹ÓÃµÄä¯ÀÀÆ÷µÄ´Î°æ±¾ºÅ
+	 * è¿”å›ä½¿ç”¨çš„æµè§ˆå™¨çš„æ¬¡ç‰ˆæœ¬å·
 	 */
 	public static String getMinorVersion()
 	{
@@ -224,7 +224,7 @@ public class Browser
 	}
 
 	/**
-	 * »ñÈ¡²Ù×÷ÏµÍ³µÄÃû³Æ
+	 * è·å–æ“ä½œç³»ç»Ÿçš„åç§°
 	 */
 	public static String getOs()
 	{
@@ -250,7 +250,7 @@ public class Browser
 	}
 
 	/**
-	 * setLanguage()¸¨Öú¹¦ÄÜ
+	 * setLanguage()è¾…åŠ©åŠŸèƒ½
 	 */
 	private static String parseLocale(String language)
 	{
@@ -266,7 +266,7 @@ public class Browser
 	}
 
 	/**
-	 * ·µ»ØÓÃ»§µÄÊ×Ñ¡ÓïÑÔµÄ¹ú¼Ò´úÂë
+	 * è¿”å›ç”¨æˆ·çš„é¦–é€‰è¯­è¨€çš„å›½å®¶ä»£ç 
 	 */
 	public static String getLanguage()
 	{

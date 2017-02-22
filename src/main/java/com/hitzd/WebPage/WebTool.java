@@ -8,10 +8,10 @@ package com.hitzd.WebPage;
 public class WebTool {
     
     /**
-     * web页面方法
-     * @param viewpagecount 显示页面个数
-     * @param currenPage  当前页码
-     * @param totalpage   页数
+     * web椤甸潰鏂规硶
+     * @param viewpagecount 鏄剧ず椤甸潰涓暟
+     * @param currenPage  褰撳墠椤电爜
+     * @param totalpage   椤垫暟
      * @return
      */
   public static PageIndex getPageIndex(long viewpagecount, int currenPage, long totalpage){

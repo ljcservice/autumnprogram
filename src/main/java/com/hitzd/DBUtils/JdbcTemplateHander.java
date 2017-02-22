@@ -14,7 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import com.hitzd.his.Utils.DateUtils;
 
 /**
- * ½«Êı¾İ²Ù×÷×÷Îª´úÀí£¬¿ÉÓÃ¿ØÖÆsql
+ * å°†æ•°æ®æ“ä½œä½œä¸ºä»£ç†ï¼Œå¯ç”¨æ§åˆ¶sql
  * @author jingcong
  *
  */
@@ -57,7 +57,7 @@ public class JdbcTemplateHander implements InvocationHandler
     	Object result  = method.invoke(this.realJdbcTemplate, args);
 //        if(result == null)
 //        {
-//            //System.out.println("½øÈë»º´æÀ¹½Ø!");
+//            //System.out.println("è¿›å…¥ç¼“å­˜æ‹¦æˆª!");
 //            //System.out.println("info:" + args[0]);
 //        }	
         return result;
@@ -76,7 +76,7 @@ public class JdbcTemplateHander implements InvocationHandler
     }
     
     /**
-     * ´¦Àí×Ö·û´®
+     * å¤„ç†å­—ç¬¦ä¸²
      * @param o
      * @return
      */
@@ -87,7 +87,7 @@ public class JdbcTemplateHander implements InvocationHandler
     }
     
     /**
-     * ´¦ÀíObject[]  Ä¿µÄÊÇ³öÈë£¿²ÎÊıµÄ¾ßÌåÊı¾İÖµ
+     * å¤„ç†Object[]  ç›®çš„æ˜¯å‡ºå…¥ï¼Ÿå‚æ•°çš„å…·ä½“æ•°æ®å€¼
      * @param o
      * @return
      */
@@ -104,7 +104,7 @@ public class JdbcTemplateHander implements InvocationHandler
     }
     
     /**
-     * ´¦ÀíCommonMapper
+     * å¤„ç†CommonMapper
      * @param o
      * @return
      */

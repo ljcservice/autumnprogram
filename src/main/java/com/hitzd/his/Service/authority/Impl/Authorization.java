@@ -18,7 +18,7 @@ import com.hitzd.DBUtils.CommonMapper;
 import com.hitzd.persistent.Persistent4DB;
 
 /**
- * µÇÂ¼ÈÏÖ¤¶ÔÏó
+ * ç™»å½•è®¤è¯å¯¹è±¡
  */
 @Service
 @Transactional
@@ -86,11 +86,11 @@ public class Authorization extends Persistent4DB implements IAuthorization, Seri
     }
     
     /**
-     * Ğ£ÑéµÇÂ¼£¬Í¨¹ı·µ»ØUser¶ÔÏó£¬ErrorCode = 0;
-     * ²»Í¨¹ıµÄ»°£¬getErrorCode()·µ»ØĞ£Ñé´íÎóĞÅÏ¢
-     * ÓÃ»§²»´æÔÚ  ErrorCode = 10
-     * ÃÜÂë´íÎó  ErrorCode = 20
-     * Ã»ÓĞ¶Ô¸ÃÏµÍ³µÄ·ÃÎÊÈ¨ÏŞ ErrorCode = 30
+     * æ ¡éªŒç™»å½•ï¼Œé€šè¿‡è¿”å›Userå¯¹è±¡ï¼ŒErrorCode = 0;
+     * ä¸é€šè¿‡çš„è¯ï¼ŒgetErrorCode()è¿”å›æ ¡éªŒé”™è¯¯ä¿¡æ¯
+     * ç”¨æˆ·ä¸å­˜åœ¨  ErrorCode = 10
+     * å¯†ç é”™è¯¯  ErrorCode = 20
+     * æ²¡æœ‰å¯¹è¯¥ç³»ç»Ÿçš„è®¿é—®æƒé™ ErrorCode = 30
      */
     @SuppressWarnings("unchecked")
 	public User VerifyLogin(String UserName, String Password, String ProgramID)
@@ -125,7 +125,7 @@ public class Authorization extends Persistent4DB implements IAuthorization, Seri
     }
     
     /**
-     * ·µ»ØÓÃ»§Ê¹ÓÃ²Ëµ¥
+     * è¿”å›ç”¨æˆ·ä½¿ç”¨èœå•
      * @param userId
      * @return
      */

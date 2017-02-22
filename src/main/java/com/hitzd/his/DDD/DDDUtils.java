@@ -27,7 +27,7 @@ public class DDDUtils
 		    Date endTime = df.parse(Stop);
 		    long dayInterval = 0;
 		    dayInterval = (endTime.getTime() - beginTime.getTime()) / (24 * 60 * 60 * 1000) + 1;
-		    // µ±Ìì¿ªÒ©£¬µ±Ìì½áÊø£¬Ëã1´Î
+		    // å½“å¤©å¼€è¯ï¼Œå½“å¤©ç»“æŸï¼Œç®—1æ¬¡
 		    dayInterval = dayInterval == 0 ? 1 : dayInterval; 
 		    return dayInterval * 24;
 		}
@@ -72,14 +72,14 @@ public class DDDUtils
 	}
 	
 	/**
-	 * ¼ÆËãDDDµÄÁíÒ»ÖÖ·½·¨£¬¸Ã·½·¨Ö»¿¼ÂÇÒ©Æ·ÖĞµÄÊıÁ¿Ö®±È£¬²»¿¼ÂÇµ¥Î»£¬ÎÒÃÇ¼Ù¶¨µÇ¼ÇµÄDDDµ¥Î»ºÍ°ÚÒ©ÖĞ³öÏÖµÄµ¥Î»ÊÇÒ»ÖÂµÄ
-	 * Èç´Ë¼ÆËãµÄºÃ´¦ÊÇ²»ĞèÒª½øĞĞµ¥Î»×ª»»£¬µ«ÊÇÒªÇóÒ½ÔºÔÚÌîĞ´DDDµÄÊ±ºò£¬½«¹ú¼Ê¹æ¶¨µÄDDDµ¥Î»×ª»»³ÉÊµ¼ÊÊ¹ÓÃÖĞµÄµ¥Î»¡£
-	 * ¾ÙÀı£º
-	 *     Ò©Æ·A£¬¹ú¼Ê¹æ¶¨DDDÎª3.6g£¬¶øÊµ¼ÊÊ¹ÓÃÊ±¿ÉÄÜµ¥Î»ÎªÖ§£¬Ã¿Ö§º¬Ò©Æ·A1.8g£¬ÕâÑù£¬Ò©Æ·AÃ¿ÈÕ×î´ó¼ÁÁ¿ÊÇ2Ö§£¬Òò´ËÒ©Æ·Åä¶ÔÀïÌîĞ´2¼´¿É£¬
-	 *     ·ñÔò°´Ô­À´µÄ·½Ê½£¬Ò©Æ·Åä¶ÔÀïÌîĞ´3.6£¬Í¬Ê±ÒªÌîĞ´µ¥Î»×ª»»±í£¬Ö§->¿ËµÄ×ª»»µ¥Î»Îª1.8g/Ö§£¬¼ÆËã¸´ÔÓ¡£
+	 * è®¡ç®—DDDçš„å¦ä¸€ç§æ–¹æ³•ï¼Œè¯¥æ–¹æ³•åªè€ƒè™‘è¯å“ä¸­çš„æ•°é‡ä¹‹æ¯”ï¼Œä¸è€ƒè™‘å•ä½ï¼Œæˆ‘ä»¬å‡å®šç™»è®°çš„DDDå•ä½å’Œæ‘†è¯ä¸­å‡ºç°çš„å•ä½æ˜¯ä¸€è‡´çš„
+	 * å¦‚æ­¤è®¡ç®—çš„å¥½å¤„æ˜¯ä¸éœ€è¦è¿›è¡Œå•ä½è½¬æ¢ï¼Œä½†æ˜¯è¦æ±‚åŒ»é™¢åœ¨å¡«å†™DDDçš„æ—¶å€™ï¼Œå°†å›½é™…è§„å®šçš„DDDå•ä½è½¬æ¢æˆå®é™…ä½¿ç”¨ä¸­çš„å•ä½ã€‚
+	 * ä¸¾ä¾‹ï¼š
+	 *     è¯å“Aï¼Œå›½é™…è§„å®šDDDä¸º3.6gï¼Œè€Œå®é™…ä½¿ç”¨æ—¶å¯èƒ½å•ä½ä¸ºæ”¯ï¼Œæ¯æ”¯å«è¯å“A1.8gï¼Œè¿™æ ·ï¼Œè¯å“Aæ¯æ—¥æœ€å¤§å‰‚é‡æ˜¯2æ”¯ï¼Œå› æ­¤è¯å“é…å¯¹é‡Œå¡«å†™2å³å¯ï¼Œ
+	 *     å¦åˆ™æŒ‰åŸæ¥çš„æ–¹å¼ï¼Œè¯å“é…å¯¹é‡Œå¡«å†™3.6ï¼ŒåŒæ—¶è¦å¡«å†™å•ä½è½¬æ¢è¡¨ï¼Œæ”¯->å…‹çš„è½¬æ¢å•ä½ä¸º1.8g/æ”¯ï¼Œè®¡ç®—å¤æ‚ã€‚
 	 *     
-	 * ÔÙ¾ÙÀı
-	 *     Ò©Æ·B£¬¹ú¼Ê¹æ¶¨DDDÎª2g£¬Êµ¼ÊÊ¹ÓÃµ¥Î»ÎªÍòµ¥Î»£¬Ã¿100Íòµ¥Î»º¬ÒªÒ©Æ·B 0.8g£¬Òò´Ë£¬Ò©Æ·BÃ¿ÈÕ×î´ó¼ÁÁ¿ÊÇ250Íòµ¥Î»£¬Ò©Æ·Åä¶ÔÀïÌîĞ´250¼´¿É¡£
+	 * å†ä¸¾ä¾‹
+	 *     è¯å“Bï¼Œå›½é™…è§„å®šDDDä¸º2gï¼Œå®é™…ä½¿ç”¨å•ä½ä¸ºä¸‡å•ä½ï¼Œæ¯100ä¸‡å•ä½å«è¦è¯å“B 0.8gï¼Œå› æ­¤ï¼Œè¯å“Bæ¯æ—¥æœ€å¤§å‰‚é‡æ˜¯250ä¸‡å•ä½ï¼Œè¯å“é…å¯¹é‡Œå¡«å†™250å³å¯ã€‚
 	 *     
 	 * @param DrugCode
 	 * @param DrugSpec
@@ -95,7 +95,7 @@ public class DDDUtils
 		TCommonRecord DrugInfo = DictCache.getNewInstance().getDrugInfoByCodeUnitSpec(DrugCode, DrugUnits, DrugSpec);
 		if (DrugInfo == null)
 		{
-			String s = "Ò©Æ·£º" + DrugCode + " " + DrugSpec + " " + DrugUnits + " Î´ÄÜÕÒµ½¶ÔÓ¦¼ÇÂ¼£¬²»ÄÜ¼ÆËãDDD";
+			String s = "è¯å“ï¼š" + DrugCode + " " + DrugSpec + " " + DrugUnits + " æœªèƒ½æ‰¾åˆ°å¯¹åº”è®°å½•ï¼Œä¸èƒ½è®¡ç®—DDD";
 			System.out.println(s);
 			return 0;
 		}
@@ -124,7 +124,7 @@ public class DDDUtils
 	    	{
 	    		if (dddUnit == 0)
 	    		{
-	    			String s = "Ò©Æ·£º" + DrugCode + " " + DrugSpec + " " + DrugUnits + " Î´ÄÜÕÒµ½¶ÔÓ¦¼ÇÂ¼£¬²»ÄÜ¼ÆËãDDD";
+	    			String s = "è¯å“ï¼š" + DrugCode + " " + DrugSpec + " " + DrugUnits + " æœªèƒ½æ‰¾åˆ°å¯¹åº”è®°å½•ï¼Œä¸èƒ½è®¡ç®—DDD";
 	    			System.out.println(s);
 	    			return 0;
 	    		}
@@ -143,22 +143,22 @@ public class DDDUtils
 		if (crList.size() > 0)
 	    {
 	    	TCommonRecord crAntiDrug = crList.get(0);
-	    	//2014-04-30 liujc ĞŞ¸Ä  Êı¾İÔö¼Ó DDD_PER_UNIT ×Ö¶Î   ¼ÆËãdddÊ±ºò ĞèÒªÖØĞÂÕûÀí¼ÆËã»ùÊı£¬ÎªÁË²»Ó°ÏìÒ½ÔºÊı¾İ¹Ê´Ë´¦Àí£¬±ØĞë¼æÈİÒÑ¾­ÊµÊ©µÄÒ½Ôº 
-	    	// ¿¼ÂÇµØ·½Ò½ÔºÊı¾İ¿â¿ÉÄÜÃ»ÓĞ Dose_Per_Unit £¬ Dose_Units 
+	    	//2014-04-30 liujc ä¿®æ”¹  æ•°æ®å¢åŠ  DDD_PER_UNIT å­—æ®µ   è®¡ç®—dddæ—¶å€™ éœ€è¦é‡æ–°æ•´ç†è®¡ç®—åŸºæ•°ï¼Œä¸ºäº†ä¸å½±å“åŒ»é™¢æ•°æ®æ•…æ­¤å¤„ç†ï¼Œå¿…é¡»å…¼å®¹å·²ç»å®æ–½çš„åŒ»é™¢ 
+	    	// è€ƒè™‘åœ°æ–¹åŒ»é™¢æ•°æ®åº“å¯èƒ½æ²¡æœ‰ Dose_Per_Unit ï¼Œ Dose_Units 
 	    	double DosePerUnit = crAntiDrug.getDouble("DDD_PER_UNIT") != 0 ? crAntiDrug.getDouble("DDD_PER_UNIT") : crAntiDrug.getDouble("Dose_Per_Unit");
-			// È¡³ö»ù±¾¼ÁÁ¿µÄµ¥Î»£¬¿ÉÄÜÊÇ¿Ë¡¢ºÁ¿Ë¡¢g¡¢mg¡¢ml¡¢ºÁÉı¡¢Íòµ¥Î»¡¢µ¥Î»¡¢Íòu¡¢Íòiu¡£¡£¡£¡£¡£¡£
+			// å–å‡ºåŸºæœ¬å‰‚é‡çš„å•ä½ï¼Œå¯èƒ½æ˜¯å…‹ã€æ¯«å…‹ã€gã€mgã€mlã€æ¯«å‡ã€ä¸‡å•ä½ã€å•ä½ã€ä¸‡uã€ä¸‡iuã€‚ã€‚ã€‚ã€‚ã€‚ã€‚
 			String DoseUnit    = crAntiDrug.getDouble("DDD_PER_UNIT") != 0 ? crAntiDrug.get("DDD_UNIT") : crAntiDrug.get("Dose_Units").trim();
 	    	double dddUnit     = crAntiDrug.getDouble("DDD_Value");
-	    	// È¡³öÃ¿µ¥Î»µÄ»ù±¾¼ÁÁ¿
+	    	// å–å‡ºæ¯å•ä½çš„åŸºæœ¬å‰‚é‡
 			double Total       = DosePerUnit * Double.parseDouble(Amount);
 	    	if (dddUnit == 0 || dddUnit < 0)
 	    		return 0;
-	    	// µ¥Î»Í³Ò»×ª»»³Émg£¬Ä¿Ç°Ó¦¸ÃÓĞÈıÖÖµ¥Î»:¿Ë¡¢µ¥Î»¡¢ºÁÉı
-	    	if (DoseUnit.equals("¿Ë") || DoseUnit.equals("ºÁ¿Ë") || 
+	    	// å•ä½ç»Ÿä¸€è½¬æ¢æˆmgï¼Œç›®å‰åº”è¯¥æœ‰ä¸‰ç§å•ä½:å…‹ã€å•ä½ã€æ¯«å‡
+	    	if (DoseUnit.equals("å…‹") || DoseUnit.equals("æ¯«å…‹") || 
 	    		DoseUnit.equalsIgnoreCase("g") || DoseUnit.equalsIgnoreCase("mg"))
 	    	{
-	    		// ºÁ¿Ë×ª»»Îª¿Ë
-	    		if (DoseUnit.equals("ºÁ¿Ë") || DoseUnit.equalsIgnoreCase("mg"))
+	    		// æ¯«å…‹è½¬æ¢ä¸ºå…‹
+	    		if (DoseUnit.equals("æ¯«å…‹") || DoseUnit.equalsIgnoreCase("mg"))
 	    		{
 	    			Total = Total / 1000;
 	    		}

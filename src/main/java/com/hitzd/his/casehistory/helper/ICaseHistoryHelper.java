@@ -12,7 +12,7 @@ import com.hitzd.his.casehistory.CaseHistory;
 public interface ICaseHistoryHelper 
 {
 	/**
-	 * ¾ÍÕï¼ÇÂ¼Ö÷¼ü
+	 * å°±è¯Šè®°å½•ä¸»é”®
 	 */
 	public static String Key_PatVisit         = "PatVisit";
 
@@ -45,14 +45,14 @@ public interface ICaseHistoryHelper
 
     
     /**
-     * »ñÈ¡hisÊı¾İÁ¬½Ó
+     * è·å–hisæ•°æ®è¿æ¥
      * @param originalTable
      * @return
      */
 	public abstract String getDbUrl(String originalTable);
 	
 	/**
-	 * »ñÈ¡Ö¸¶¨²¡°¸ºÅºÍ×¡ÔººÅµÄ²¡ÈËµÄ²¡Àú£¬ÔİÊ±·µ»Ø¿ÕÖµ
+	 * è·å–æŒ‡å®šç—…æ¡ˆå·å’Œä½é™¢å·çš„ç—…äººçš„ç—…å†ï¼Œæš‚æ—¶è¿”å›ç©ºå€¼
 	 * @param PatientID
 	 * @param VisitID
 	 * @param srcQuery
@@ -60,10 +60,10 @@ public interface ICaseHistoryHelper
 	 */
 	public abstract CaseHistory fetchCaseHistory(String PatientID, String VisitID, JDBCQueryImpl srcQuery);
 	/**
-	 * »ñµÃÖ¸¶¨²¡°¸ºÅºÍ×¡ÔººÅµÄ²¡ÈËµÄ²¡Àú£¬·µ»ØTCommonRecord½á¹¹£¬ÏÂÃæÒÔcrPatInfo´úÌæ¸Ã¶ÔÏó£¬¸Ã½á¹¹°üº¬²¡ÈË»ù±¾ĞÅÏ¢£¬Í¬Ê±°üº¬²¡ÈËµÄ¾ÍÕïĞÅÏ¢
-	 * ²¡ÈËµÄ¾ÍÕïĞÅÏ¢Í¨¹ı·µ»Ø½á¹ûµÄcrPatInfo.getObj(ICaseHistoryHelper.Key_PatVisit)À´»ñµÃ£¬¾ÍÕïĞÅÏ¢·µ»ØÎªÒ»¸öTCommonRecord¶ÔÏó£¬ÏÂÃæÒÔcrVisit´úÌæ
-	 * ²¡ÈËµÄ¾ÍÕïĞÅÏ¢ÖĞ°üº¬²¡ÈËµÄÒ½Öö¡¢Õï¶Ï¡¢ÊÖÊõ¡¢°ÚÒ©¡¢¼ì²é¡¢¼ìÑé¡¢Î¢ÉúÎï¡¢ÌåÕ÷¡¢ÕËµ¥µÈĞÅÏ¢;
-	 * »ñµÃ²¡ÈËµÄÒ½Öö£¬Í¨¹ı¾ÍÕïĞÅÏ¢µÄcrVisit.getObj(ICaseHistoryHelper.Key_Orders)À´»ñµÃ£»
+	 * è·å¾—æŒ‡å®šç—…æ¡ˆå·å’Œä½é™¢å·çš„ç—…äººçš„ç—…å†ï¼Œè¿”å›TCommonRecordç»“æ„ï¼Œä¸‹é¢ä»¥crPatInfoä»£æ›¿è¯¥å¯¹è±¡ï¼Œè¯¥ç»“æ„åŒ…å«ç—…äººåŸºæœ¬ä¿¡æ¯ï¼ŒåŒæ—¶åŒ…å«ç—…äººçš„å°±è¯Šä¿¡æ¯
+	 * ç—…äººçš„å°±è¯Šä¿¡æ¯é€šè¿‡è¿”å›ç»“æœçš„crPatInfo.getObj(ICaseHistoryHelper.Key_PatVisit)æ¥è·å¾—ï¼Œå°±è¯Šä¿¡æ¯è¿”å›ä¸ºä¸€ä¸ªTCommonRecordå¯¹è±¡ï¼Œä¸‹é¢ä»¥crVisitä»£æ›¿
+	 * ç—…äººçš„å°±è¯Šä¿¡æ¯ä¸­åŒ…å«ç—…äººçš„åŒ»å˜±ã€è¯Šæ–­ã€æ‰‹æœ¯ã€æ‘†è¯ã€æ£€æŸ¥ã€æ£€éªŒã€å¾®ç”Ÿç‰©ã€ä½“å¾ã€è´¦å•ç­‰ä¿¡æ¯;
+	 * è·å¾—ç—…äººçš„åŒ»å˜±ï¼Œé€šè¿‡å°±è¯Šä¿¡æ¯çš„crVisit.getObj(ICaseHistoryHelper.Key_Orders)æ¥è·å¾—ï¼›
 	 * @param PatientID
 	 * @param VisitID
 	 * @param srcQuery
@@ -72,7 +72,7 @@ public interface ICaseHistoryHelper
 	public abstract TCommonRecord fetchCaseHistory2CR(String PatientID, String VisitID, JDBCQueryImpl srcQuery);
 	
 	/**
-	 * »ñµÃ²¡ÈËµÄ»ù±¾ĞÅÏ¢£¬Í¨¹ıPatientIDÈ¡µÃÓÃ»§»ù±¾ĞÅÏ¢
+	 * è·å¾—ç—…äººçš„åŸºæœ¬ä¿¡æ¯ï¼Œé€šè¿‡PatientIDå–å¾—ç”¨æˆ·åŸºæœ¬ä¿¡æ¯
 	 * @param PatientID
 	 * @param srcQuery
 	 * @return
@@ -82,7 +82,7 @@ public interface ICaseHistoryHelper
 	public abstract TCommonRecord fetchPatInfo2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	public abstract List<TCommonRecord> fetchPatInfo2List(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	/**
-	 * »ñµÃ²¡ÈËµÄ¾ÍÕïĞÅÏ¢£¬°üÀ¨¶à´Î×¡ÔºµÄĞÅÏ¢
+	 * è·å¾—ç—…äººçš„å°±è¯Šä¿¡æ¯ï¼ŒåŒ…æ‹¬å¤šæ¬¡ä½é™¢çš„ä¿¡æ¯
 	 * @param PatientID
 	 * @param srcQuery
 	 * @return
@@ -93,31 +93,31 @@ public interface ICaseHistoryHelper
 	public abstract TCommonRecord fetchPatVisit2CR(String PatientID, String VisitID, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * ²éÑ¯²¡ÈËµÄ¾ÍÕïĞÅÏ¢£¬Í¨¹ı¸½´øÌõ¼şÆ´³ÉÌØÊâµÄsqlÓï¾ä
-	 * @param strFields ×Ö¶ÎÁĞ±í£¬Ò»°ãÊÇFieldName1, FieldName2,...FieldNameN£¬Ò²¿ÉÒÔÊÇ*£¬»òÕßÊÇcount(*)µÈµÈ
-	 * @param lsWheres Ìõ¼şÁĞ±í£¬ÊÇÒ»¸öTCommonRecordµÄÁĞ±í£¬Ã¿Ò»ÏîTCommonRecord°üÀ¨FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
-	 * ÆäÖĞ
-	 * FieldName : ±íÊ¾¸ÃÌõ¼şÓëÄÄ¸ö×Ö¶ÎÏà¹Ø
-	 * FieldValue: ±íÊ¾¸ÃÌõ¼şµÄ×Ö¶ÎÈ¡Öµ£¬Èç¹ûFieldValueµÄµÚÒ»¸ö»ò×îºóÒ»¸ö×Ö·ûÎª%£¬ÔòÉú³ÉlikeÓï¾ä
-	 * FieldType : ±íÊ¾¸Ã×Ö¶ÎµÄÀàĞÍ£¬Èç¹ûÊÇChar£¬ÔòÆ´ºÃµÄsqlÖĞ°üÀ¨'£¬·ñÔò²»°üÀ¨'£¬Ä¬ÈÏÖµÎª·Çchar£¬¼´²»´ø'
-	 * Relation  : ±íÊ¾×Ö¶ÎÃûÓë×Ö¶ÎÖµÖ®¼äµÄ¹ØÏµ£¬=¡¢>=¡¢<=µÈµÈ£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾¹ØÏµÎª=
-	 * GroupNo   : ±íÊ¾¸ÃÌõ¼şµÄ×éºÅ£¬Èç¹û2¸öÌõ¼şÎªÒ»×é£¬ĞèÒªÁª¶¯²éÑ¯£¬ÀıÈç£º
+	 * æŸ¥è¯¢ç—…äººçš„å°±è¯Šä¿¡æ¯ï¼Œé€šè¿‡é™„å¸¦æ¡ä»¶æ‹¼æˆç‰¹æ®Šçš„sqlè¯­å¥
+	 * @param strFields å­—æ®µåˆ—è¡¨ï¼Œä¸€èˆ¬æ˜¯FieldName1, FieldName2,...FieldNameNï¼Œä¹Ÿå¯ä»¥æ˜¯*ï¼Œæˆ–è€…æ˜¯count(*)ç­‰ç­‰
+	 * @param lsWheres æ¡ä»¶åˆ—è¡¨ï¼Œæ˜¯ä¸€ä¸ªTCommonRecordçš„åˆ—è¡¨ï¼Œæ¯ä¸€é¡¹TCommonRecordåŒ…æ‹¬FieldName, GroupNo, FieldValue, FieldType, Relation, Condition
+	 * å…¶ä¸­
+	 * FieldName : è¡¨ç¤ºè¯¥æ¡ä»¶ä¸å“ªä¸ªå­—æ®µç›¸å…³
+	 * FieldValue: è¡¨ç¤ºè¯¥æ¡ä»¶çš„å­—æ®µå–å€¼ï¼Œå¦‚æœFieldValueçš„ç¬¬ä¸€ä¸ªæˆ–æœ€åä¸€ä¸ªå­—ç¬¦ä¸º%ï¼Œåˆ™ç”Ÿæˆlikeè¯­å¥
+	 * FieldType : è¡¨ç¤ºè¯¥å­—æ®µçš„ç±»å‹ï¼Œå¦‚æœæ˜¯Charï¼Œåˆ™æ‹¼å¥½çš„sqlä¸­åŒ…æ‹¬'ï¼Œå¦åˆ™ä¸åŒ…æ‹¬'ï¼Œé»˜è®¤å€¼ä¸ºécharï¼Œå³ä¸å¸¦'
+	 * Relation  : è¡¨ç¤ºå­—æ®µåä¸å­—æ®µå€¼ä¹‹é—´çš„å…³ç³»ï¼Œ=ã€>=ã€<=ç­‰ç­‰ï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå…³ç³»ä¸º=
+	 * GroupNo   : è¡¨ç¤ºè¯¥æ¡ä»¶çš„ç»„å·ï¼Œå¦‚æœ2ä¸ªæ¡ä»¶ä¸ºä¸€ç»„ï¼Œéœ€è¦è”åŠ¨æŸ¥è¯¢ï¼Œä¾‹å¦‚ï¼š
 	 * ((StartDateTime <= to_date('2011-01-01', 'yyyy-mm-dd')) and (StopDateTime >= to_date('2011-02-01', 'yyyy-mm-dd')))
-	 * ÉÏÃæµÄ2¸öÌõ¼ş¾Í±ØĞëÒ»ÆğÓÃ£¬Òò´ËÒÔÉÏ2¸ö×Ö¶ÎÎªÒ»×é£¬GroupNo²»Ó¦¸Ã·¢ÉúÖØ¸´£¬Ä¬ÈÏÎª¿ÕÖµ£¬±íÊ¾¸ÃÌõ¼şµ¥¶ÀËãÊÇÒ»¸öÌõ¼ş
-	 * Condition : ±íÊ¾¸ÃÌõ¼şÇ°Ãæ¸úµÄÊÇand »¹ÊÇ or£¬Ä¬ÈÏÖµÎª¿ÕÖµ£¬±íÊ¾Ç°Ãæ¸ú and 
-	 * @param strGroup group by Óï¾äºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬1ÏîÄÚÈİ£¬FieldName
-	 * @param strOrder order by ºóÃæ¸ú×ÅµÄ×Ö¶ÎÁĞ±í£¬°üº¬2ÏîÄÚÈİ£¬Ò»ÏîÊÇFieldName£¬Ò»ÏîÊÇBy£¬ByµÄÈ¡ÖµÎª¿Õ£¬asc»òdesc
+	 * ä¸Šé¢çš„2ä¸ªæ¡ä»¶å°±å¿…é¡»ä¸€èµ·ç”¨ï¼Œå› æ­¤ä»¥ä¸Š2ä¸ªå­—æ®µä¸ºä¸€ç»„ï¼ŒGroupNoä¸åº”è¯¥å‘ç”Ÿé‡å¤ï¼Œé»˜è®¤ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºè¯¥æ¡ä»¶å•ç‹¬ç®—æ˜¯ä¸€ä¸ªæ¡ä»¶
+	 * Condition : è¡¨ç¤ºè¯¥æ¡ä»¶å‰é¢è·Ÿçš„æ˜¯and è¿˜æ˜¯ orï¼Œé»˜è®¤å€¼ä¸ºç©ºå€¼ï¼Œè¡¨ç¤ºå‰é¢è·Ÿ and 
+	 * @param strGroup group by è¯­å¥åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«1é¡¹å†…å®¹ï¼ŒFieldName
+	 * @param strOrder order by åé¢è·Ÿç€çš„å­—æ®µåˆ—è¡¨ï¼ŒåŒ…å«2é¡¹å†…å®¹ï¼Œä¸€é¡¹æ˜¯FieldNameï¼Œä¸€é¡¹æ˜¯Byï¼ŒByçš„å–å€¼ä¸ºç©ºï¼Œascæˆ–desc
 	 * 
-	 * @return ·µ»Ø·ûºÏÌõ¼şµÄÊı¾İ½á¹û
+	 * @return è¿”å›ç¬¦åˆæ¡ä»¶çš„æ•°æ®ç»“æœ
 	 * @throws Exception
 	 * 
-	 * ¾Ù¸öÀı×Ó£º
-	 * ²éÑ¯²¡ÈËµÄÈ«²¿ĞÅÏ¢£¬Ìõ¼şÎª2011Äê1ÔÂ1ÈÕÔÚÔºµÄ²¡ÈË£¬²¢ÇÒÊÇĞÕÁõµÄ²¡ÈË£¬²¢ÇÒ°´²¡ÈËµÄ×¡ÔºÈÕÆÚ½øĞĞÉıĞòÅÅÁĞ
+	 * ä¸¾ä¸ªä¾‹å­ï¼š
+	 * æŸ¥è¯¢ç—…äººçš„å…¨éƒ¨ä¿¡æ¯ï¼Œæ¡ä»¶ä¸º2011å¹´1æœˆ1æ—¥åœ¨é™¢çš„ç—…äººï¼Œå¹¶ä¸”æ˜¯å§“åˆ˜çš„ç—…äººï¼Œå¹¶ä¸”æŒ‰ç—…äººçš„ä½é™¢æ—¥æœŸè¿›è¡Œå‡åºæ’åˆ—
 	 * String strFields = "*";
 	 * List<TCommonRecord> lsWheres = new ArrayList<TCommonRecord>();
 	 * TCommonRecord crWheres1 = new TCommonRecord();
 	 * crWheres1.set("FieldName", "Name");
-	 * crWheres1.set("FieldValue", "Áõ%");
+	 * crWheres1.set("FieldValue", "åˆ˜%");
 	 * lsWheres.add(crWheres1);
 	 * 
 	 * crWheres1 = new TCommonRecord();
@@ -137,8 +137,8 @@ public interface ICaseHistoryHelper
 	 * lsWheres.add(crWheres1);
 	 * 
 	 * List<TCommonRecord> lsPatVisitInfo = fetchPatVisitInfo(strFields, lsWheres, "", "Patient_ID");
-	 * ÒÔÉÏÌõ¼şÆ´³öµÄsqlÎª
-	 * select * from Pat_Visit where 1=1 and Name like 'Áõ%' and 
+	 * ä»¥ä¸Šæ¡ä»¶æ‹¼å‡ºçš„sqlä¸º
+	 * select * from Pat_Visit where 1=1 and Name like 'åˆ˜%' and 
 	 *   ((Admission_Date <= to_date('2011-01-01', 'yyyy-mm-dd')) and (Discharge_Date >= to_date('2011-01-01', 'yyyy-mm-dd')))
 	 * order by Patient_ID asc  
 	 * 
@@ -146,7 +146,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchPatVisitInfo(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * Éú³ÉsqlÓï¾ä
+	 * ç”Ÿæˆsqlè¯­å¥
 	 * @param strFields
 	 * @param strTables
 	 * @param lsWheres
@@ -157,7 +157,7 @@ public interface ICaseHistoryHelper
 	 */
 	public abstract String genSQL(String strFields, String strTables, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders);
 	/**
-	 * Éú³ÉsqlÓï¾ä
+	 * ç”Ÿæˆsqlè¯­å¥
 	 * @param strFields
 	 * @param strTables
 	 * @param lsWheres
@@ -169,7 +169,7 @@ public interface ICaseHistoryHelper
 	public abstract String genSQLComm(String strFields, String strTables, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders);
 	
 	/**
-	 * »ñµÃ²¡ÈËµÄÊÖÊõĞÅÏ¢£¬Ö¸¶¨ÁË²¡ÈËidºÍ¾ÍÕïid
+	 * è·å¾—ç—…äººçš„æ‰‹æœ¯ä¿¡æ¯ï¼ŒæŒ‡å®šäº†ç—…äººidå’Œå°±è¯Šid
 	 * @param PatientID
 	 * @param VisitID
 	 * @param srcQuery
@@ -180,7 +180,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchOperationMaster2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-     * »ñµÃ ²¡ÈËÔÚ¿Æ¼ÇÂ¼ ĞÅÏ¢£¬Ö¸¶¨ÁË²¡ÈËidºÍ¾ÍÕïid
+     * è·å¾— ç—…äººåœ¨ç§‘è®°å½• ä¿¡æ¯ï¼ŒæŒ‡å®šäº†ç—…äººidå’Œå°±è¯Šid
      * @param PatientID
      * @param VisitID
      * @param srcQuery
@@ -211,7 +211,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchOperationName2CR(String PatientID, String VisitID, JDBCQueryImpl srcQuery) throws Exception;
 	public abstract List<TCommonRecord> fetchOperationName2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	/**
-	 * »ñµÃ²¡ÈËµÄ°ÚÒ©¼ÇÂ¼
+	 * è·å¾—ç—…äººçš„æ‘†è¯è®°å½•
 	 * @param PatientID
 	 * @param VisitID
 	 * @param srcQuery
@@ -221,7 +221,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchDrugDispenseRec2CR(String PatientID, String VisitID, JDBCQueryImpl srcQuery) throws Exception;
 	public abstract List<TCommonRecord> fetchDrugDispenseRec2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	/**
-	 * »ñµÃ²¡ÈËµÄÔÚÔºĞÅÏ¢
+	 * è·å¾—ç—…äººçš„åœ¨é™¢ä¿¡æ¯
 	 * @param PatientID
 	 * @param VisitID
 	 * @param srcQuery
@@ -231,7 +231,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchPatsInHospital2CR(String PatientID, String VisitID, JDBCQueryImpl srcQuery) throws Exception;
 	public abstract List<TCommonRecord> fetchPatsInHospital2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	/**
-	 * »ñµÃ²¡ÈËµÄÒ½Öö¼ÇÂ¼
+	 * è·å¾—ç—…äººçš„åŒ»å˜±è®°å½•
 	 * @param PatientID
 	 * @param VisitID
 	 * @param srcQuery
@@ -241,7 +241,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchOrders2CR(String PatientID, String VisitID, JDBCQueryImpl srcQuery) throws Exception;
 	public abstract List<TCommonRecord> fetchOrders2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	/**
-	 * »ñµÃ²¡ÈËµÄÕï¶Ï¼ÇÂ¼
+	 * è·å¾—ç—…äººçš„è¯Šæ–­è®°å½•
 	 * @param PatientID
 	 * @param VisitID
 	 * @param srcQuery
@@ -251,7 +251,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchDiagnosis2CR(String PatientID, String VisitID, JDBCQueryImpl srcQuery) throws Exception;
 	public abstract List<TCommonRecord> fetchDiagnosis2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	/**
-	 * »ñµÃ²¡ÈËµÄ·ÑÓÃÃ÷Ï¸
+	 * è·å¾—ç—…äººçš„è´¹ç”¨æ˜ç»†
 	 * @param PatientID
 	 * @param VisitID
 	 * @param srcQuery
@@ -261,7 +261,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchInpBillDetail2CR(String PatientID, String VisitID, JDBCQueryImpl srcQuery) throws Exception;
 	public abstract List<TCommonRecord> fetchInpBillDetail2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	/**
-	 * »ñµÃ²¡ÈËµÄ¼ì²éĞÅÏ¢
+	 * è·å¾—ç—…äººçš„æ£€æŸ¥ä¿¡æ¯
 	 * @param PatientID
 	 * @param VisitID
 	 * @param srcQuery
@@ -273,7 +273,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchLabResult2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	public abstract List<TCommonRecord> fetchLabTestItems2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	/**
-	 * »ñµÃ²¡ÈËµÄÌåÕ÷ĞÅÏ¢
+	 * è·å¾—ç—…äººçš„ä½“å¾ä¿¡æ¯
 	 * @param PatientID
 	 * @param VisitID
 	 * @param srcQuery
@@ -283,7 +283,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchVitalSignsRec2CR(String PatientID, String VisitID, JDBCQueryImpl srcQuery) throws Exception;
 	public abstract List<TCommonRecord> fetchVitalSignsRec2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	/**
-	 * »ñµÃ²¡ÈËµÄ¼ìÑéĞÅÏ¢
+	 * è·å¾—ç—…äººçš„æ£€éªŒä¿¡æ¯
 	 * @param PatientID
 	 * @param VisitID
 	 * @param srcQuery
@@ -295,7 +295,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchExamItems2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	public abstract List<TCommonRecord> fetchExamMaster2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	/**
-	 * »ñµÃ²¡ÈËµÄÎ¢ÉúÎï¼ìÑé
+	 * è·å¾—ç—…äººçš„å¾®ç”Ÿç‰©æ£€éªŒ
 	 * @param PatientID
 	 * @param VisitID
 	 * @param srcQuery
@@ -306,7 +306,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchGermTest2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	public abstract List<TCommonRecord>  fetchDrugSensitResult2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	/**
-	 * »ñµÃ²¡ÈËµÄÍ¿Æ¬¼ìÑéĞÅÏ¢
+	 * è·å¾—ç—…äººçš„æ¶‚ç‰‡æ£€éªŒä¿¡æ¯
 	 * @param PatientID
 	 * @param VisitID
 	 * @param srcQuery
@@ -316,7 +316,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchGermTestResult2CR(String PatientID, String VisitID, JDBCQueryImpl srcQuery) throws Exception;
 	public abstract List<TCommonRecord> fetchGermTestResult2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	/**
-	 * »ñµÃ²¡ÈËµÄ×¡Ôº´¦·½ĞÅÏ¢
+	 * è·å¾—ç—…äººçš„ä½é™¢å¤„æ–¹ä¿¡æ¯
 	 * @param PatientID
 	 * @param InpDate
 	 * @param OutDate
@@ -329,7 +329,7 @@ public interface ICaseHistoryHelper
 	
 	public abstract List<TCommonRecord> fetchDrugPrescDetail2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	/**
-	 * ²éÑ¯²¡ÈËµÄÒ½ÖöĞÅÏ¢
+	 * æŸ¥è¯¢ç—…äººçš„åŒ»å˜±ä¿¡æ¯
 	 * @param PatientID
 	 * @param VisitID
 	 * @param OrderClass
@@ -343,7 +343,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> queryOrders(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * ²éÑ¯Ò©Æ·×Öµä
+	 * æŸ¥è¯¢è¯å“å­—å…¸
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -355,7 +355,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchDrugDict2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * ²¡°¸Ë÷Òı
+	 * ç—…æ¡ˆç´¢å¼•
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -367,7 +367,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchMrIndex2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * ²¡ÀúÎÄ¼şË÷Òı
+	 * ç—…å†æ–‡ä»¶ç´¢å¼•
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -379,7 +379,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchMrFileIndex2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * Æµ´Î×Öµä
+	 * é¢‘æ¬¡å­—å…¸
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -391,7 +391,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchPerformFreqDict2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * Í¾¾¶×Öµä
+	 * é€”å¾„å­—å…¸
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -403,7 +403,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchAdministrationDict2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * Õï¶Ï×Öµä
+	 * è¯Šæ–­å­—å…¸
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -415,7 +415,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchDiagnosisDict2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * Ò©Æ·Àà±ğ×Öµä
+	 * è¯å“ç±»åˆ«å­—å…¸
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -427,7 +427,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchDrugClassDict2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * Ï¸¾úÒ©Ãô×Öµä
+	 * ç»†èŒè¯æ•å­—å…¸
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -439,7 +439,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchGermdrugsensitDict2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * Î¢ÉúÎï×Öµä±í
+	 * å¾®ç”Ÿç‰©å­—å…¸è¡¨
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -451,7 +451,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchGermCodeDict2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * ±ê±¾ĞÅÏ¢
+	 * æ ‡æœ¬ä¿¡æ¯
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -463,7 +463,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchSpecimanDict2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * Ò½ÉúĞÅÏ¢
+	 * åŒ»ç”Ÿä¿¡æ¯
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -475,7 +475,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchStaffDict2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * ²¿ÃÅĞÅÏ¢
+	 * éƒ¨é—¨ä¿¡æ¯
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -487,7 +487,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchDeptDict2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * ·Ñ±ğĞÅÏ¢
+	 * è´¹åˆ«ä¿¡æ¯
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -499,7 +499,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchChargeTypeDict2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * Éí·İĞÅÏ¢
+	 * èº«ä»½ä¿¡æ¯
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -511,7 +511,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchIdentityDict2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * ¼ÁĞÍĞÅÏ¢
+	 * å‰‚å‹ä¿¡æ¯
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -523,7 +523,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchDrugFormDict2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * ·ÖÒ³²éÑ¯
+	 * åˆ†é¡µæŸ¥è¯¢
 	 * @param maxresult
 	 * @param currentpage
 	 * @param fields
@@ -536,7 +536,7 @@ public interface ICaseHistoryHelper
 	public abstract PageView<TCommonRecord> fetchTable2PV(int maxresult, int currentpage, String strFields, String strTables, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery);
 	
 	/**
-	 * ²¡ÈË×´Ì¬±ä»¯×Öµä
+	 * ç—…äººçŠ¶æ€å˜åŒ–å­—å…¸
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -548,7 +548,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchPatientStatusChgDict2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * Ò©Æ·¹©Ó¦ÉÌÄ¿Â¼
+	 * è¯å“ä¾›åº”å•†ç›®å½•
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -560,7 +560,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchDrugSupplierCatalog2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * Ò©Æ·¶¾Àí·ÖÀà×Öµä
+	 * è¯å“æ¯’ç†åˆ†ç±»å­—å…¸
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -572,7 +572,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchDrugToxiPropertyDict2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * Ò©Æ·³ö¿âÖ÷±í
+	 * è¯å“å‡ºåº“ä¸»è¡¨
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -584,7 +584,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchDrugExportMaster2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * Ò©Æ·³ö¿âÃ÷Ï¸±í
+	 * è¯å“å‡ºåº“æ˜ç»†è¡¨
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -596,7 +596,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchDrugExportDetail2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * Ò©Æ·Èë¿âÖ÷±í
+	 * è¯å“å…¥åº“ä¸»è¡¨
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -608,7 +608,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchDrugImportMaster2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * Ò©Æ·Èë¿âÃ÷Ï¸±í
+	 * è¯å“å…¥åº“æ˜ç»†è¡¨
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -620,7 +620,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchDrugImportDetail2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * ÃÅÕï¾ÍÕï¼ÇÂ¼
+	 * é—¨è¯Šå°±è¯Šè®°å½•
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -632,7 +632,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchClinicMaster2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * ÃÅÕïÒ½ÖöÖ÷¼ÇÂ¼
+	 * é—¨è¯ŠåŒ»å˜±ä¸»è®°å½•
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -644,7 +644,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchOutpOrders2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * ´¦·½Ò½ÖöÃ÷Ï¸¼ÇÂ¼
+	 * å¤„æ–¹åŒ»å˜±æ˜ç»†è®°å½•
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -656,7 +656,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchOutpPresc2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * ÃÅÕï²¡Àú¼ÇÂ¼
+	 * é—¨è¯Šç—…å†è®°å½•
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -668,7 +668,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchOutpMr2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * ÃÅÕïÕï¶Ï¼ÇÂ¼
+	 * é—¨è¯Šè¯Šæ–­è®°å½•
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -680,7 +680,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchClinicDiagnosis2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * µÈ´²²¡ÈË¼ÇÂ¼
+	 * ç­‰åºŠç—…äººè®°å½•
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -692,7 +692,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchWaitBedPats2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * ²¡ÈËÈë³ö×ª¼°×´Ì¬±ä»¯ÈÕÖ¾
+	 * ç—…äººå…¥å‡ºè½¬åŠçŠ¶æ€å˜åŒ–æ—¥å¿—
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -704,7 +704,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchAdtLog2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * ×¼±¸³öÔº²¡ÈË¼ÇÂ¼
+	 * å‡†å¤‡å‡ºé™¢ç—…äººè®°å½•
 	 * @param strFields
 	 * @param lsWheres
 	 * @param lsGroups
@@ -716,7 +716,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> fetchPreDischgedPats2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * Ô¤±àÒë²éÑ¯ÁĞ±í
+	 * é¢„ç¼–è¯‘æŸ¥è¯¢åˆ—è¡¨
 	 * @param sql
 	 * @param objects
 	 * @param srcQuery
@@ -726,7 +726,7 @@ public interface ICaseHistoryHelper
 	public abstract List<TCommonRecord> queryForListByPS(String sql, JDBCQueryImpl srcQuery) throws Exception;
 	
 	/**
-	 * Ô¤±àÒë²éÑ¯¶ÔÏó
+	 * é¢„ç¼–è¯‘æŸ¥è¯¢å¯¹è±¡
 	 * @param sql
 	 * @param objects
 	 * @param srcQuery

@@ -5,30 +5,30 @@ import java.util.Map;
 
 public class SystemConsts 
 {
-	private static String ABCAS           = "¿¹¾úÒ©ÎïÁÙ´²Ó¦ÓÃ¹ÜÀíÏµÍ³";
-	private static String ACSS            = "¾üÈË·ÑÓÃÍ³¼ÆÆ½Ì¨";
-	private static String ADDM            = "¿¹¾úÒ©Êı¾İÉÏ±¨ÏµÍ³";
-	private static String ADR             = "²»Á¼·´Ó¦×Ô¶¯¼à¿ØÓë±¨±íÏµÍ³";
-	private static String Config          = "ĞÅÏ¢¿Æ¼¼ÊõÖ§³ÖÆ½Ì¨";
-	private static String CPMS            = "ÁÙ´²Ò©Ñ§¼à¹ÜÆ½Ì¨";
-	private static String DAMS            = "ÁÙ´²¿ÆÖ÷ÈÎ¼à¹ÜÆ½Ì¨";
-	private static String EMR             = "µç×ÓÒ©ÀúÓëÒ©Ê¦¹¤×÷Êı/ÖÊÁ¿Æ½Ì¨";
-	private static String HIMS            = "¸Ğ¿Ø¿Æ¿¹¾úÒ©ÎïÁÙ´²Ó¦ÓÃ¼à¹ÜÆ½Ì¨"; 
-	private static String IFMIX           = "Ò½Ò©ÖªÊ¶ÔÚÏß²éÑ¯Æ½Ì¨";
-	private static String MPSS            = "Ò½±£¼à¹ÜÆ½Ì¨";
-	private static String PH              = "²¡ÈË²¡Àú²é¿´Æ½Ì¨";
-	private static String PDSS            = "ºÏÀíÓÃÒ©°²È«ÉóºËÏµÍ³";
-	private static String PEAAS           = "Ò©Æ·Ê¹ÓÃÍ³¼Æ»ã×Ü·ÖÎöÏµÍ³";
+	private static String ABCAS           = "æŠ—èŒè¯ç‰©ä¸´åºŠåº”ç”¨ç®¡ç†ç³»ç»Ÿ";
+	private static String ACSS            = "å†›äººè´¹ç”¨ç»Ÿè®¡å¹³å°";
+	private static String ADDM            = "æŠ—èŒè¯æ•°æ®ä¸ŠæŠ¥ç³»ç»Ÿ";
+	private static String ADR             = "ä¸è‰¯ååº”è‡ªåŠ¨ç›‘æ§ä¸æŠ¥è¡¨ç³»ç»Ÿ";
+	private static String Config          = "ä¿¡æ¯ç§‘æŠ€æœ¯æ”¯æŒå¹³å°";
+	private static String CPMS            = "ä¸´åºŠè¯å­¦ç›‘ç®¡å¹³å°";
+	private static String DAMS            = "ä¸´åºŠç§‘ä¸»ä»»ç›‘ç®¡å¹³å°";
+	private static String EMR             = "ç”µå­è¯å†ä¸è¯å¸ˆå·¥ä½œæ•°/è´¨é‡å¹³å°";
+	private static String HIMS            = "æ„Ÿæ§ç§‘æŠ—èŒè¯ç‰©ä¸´åºŠåº”ç”¨ç›‘ç®¡å¹³å°"; 
+	private static String IFMIX           = "åŒ»è¯çŸ¥è¯†åœ¨çº¿æŸ¥è¯¢å¹³å°";
+	private static String MPSS            = "åŒ»ä¿ç›‘ç®¡å¹³å°";
+	private static String PH              = "ç—…äººç—…å†æŸ¥çœ‹å¹³å°";
+	private static String PDSS            = "åˆç†ç”¨è¯å®‰å…¨å®¡æ ¸ç³»ç»Ÿ";
+	private static String PEAAS           = "è¯å“ä½¿ç”¨ç»Ÿè®¡æ±‡æ€»åˆ†æç³»ç»Ÿ";
 	private static String Portal          = "";
-	private static String PrescEvaluate   = "ÃÅÕï´¦·½µãÆÀÔ¤¾¯ÏµÍ³";
-	private static String PrescReview     = "Ò½Éú¹¤×÷Õ¾Ò½Öö°²È«¼à¹ÜÆ½Ì¨";
-	private static String RDUM            = "ºÏÀíÓÃÒ©Êı¾İÉÏ±¨ÏµÍ³";
-	private static String WPAMS           = "×¡ÔºÒ©·¿¼à¹ÜÆ½Ì¨";
-	private static String BOSS            = "Ôº³¤(Ò½Îñ»ú¹Ø)¼à¹ÜÆ½Ì¨";
-	private static String GLMS            = "Î¢ÉúÎïÊÒÏ¸¾úÄÍÒ©¼à¹ÜÆ½Ì¨";
-	private static String DrugManager     = "Ò©Æ·°²È«ÓëÖªÊ¶ĞÅÏ¢Î¬»¤ÖĞĞÄ";
-	private static String DrugMatchWeb    = "ÍøÂçÒ©Æ·¶ÔÕÕ";
-	private static String MatcherIntranet = "Ò½ÔºÄÚÍøÅäÂë";
+	private static String PrescEvaluate   = "é—¨è¯Šå¤„æ–¹ç‚¹è¯„é¢„è­¦ç³»ç»Ÿ";
+	private static String PrescReview     = "åŒ»ç”Ÿå·¥ä½œç«™åŒ»å˜±å®‰å…¨ç›‘ç®¡å¹³å°";
+	private static String RDUM            = "åˆç†ç”¨è¯æ•°æ®ä¸ŠæŠ¥ç³»ç»Ÿ";
+	private static String WPAMS           = "ä½é™¢è¯æˆ¿ç›‘ç®¡å¹³å°";
+	private static String BOSS            = "é™¢é•¿(åŒ»åŠ¡æœºå…³)ç›‘ç®¡å¹³å°";
+	private static String GLMS            = "å¾®ç”Ÿç‰©å®¤ç»†èŒè€è¯ç›‘ç®¡å¹³å°";
+	private static String DrugManager     = "è¯å“å®‰å…¨ä¸çŸ¥è¯†ä¿¡æ¯ç»´æŠ¤ä¸­å¿ƒ";
+	private static String DrugMatchWeb    = "ç½‘ç»œè¯å“å¯¹ç…§";
+	private static String MatcherIntranet = "åŒ»é™¢å†…ç½‘é…ç ";
 	
 	public static List<Map<String, String>> getSystemCodeorName()
 	{
@@ -37,7 +37,7 @@ public class SystemConsts
 	}
 	
 	/**
-	 * ·µ»ØÆ½Ì¨Ãû³Æ 
+	 * è¿”å›å¹³å°åç§° 
 	 * @param URI
 	 * @return
 	 */
@@ -68,13 +68,13 @@ public class SystemConsts
 		if ("/DrugManager".equalsIgnoreCase(URI)) return DrugManager;
 		if ("/DrugMatchWeb".equalsIgnoreCase(URI)) return DrugMatchWeb;
 		if ("/MatcherIntranet".equalsIgnoreCase(URI)) return MatcherIntranet;
-		return "Ò½ÔºÒ©ÊÂ¹ÜÀíĞÅÏ¢»¯½â¾ö·½°¸";
+		return "åŒ»é™¢è¯äº‹ç®¡ç†ä¿¡æ¯åŒ–è§£å†³æ–¹æ¡ˆ";
 	}
 	
 	private static String PFURI = "/WebPage/MainFrame.jsp";
 	
 	/**
-	 * ·µ»Ø¿çÆ½Ì¨µØÖ·
+	 * è¿”å›è·¨å¹³å°åœ°å€
 	 * @param URI
 	 * @return
 	 */

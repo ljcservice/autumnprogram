@@ -16,7 +16,7 @@ import com.hitzd.his.tree.TreeNode;
 import com.hitzd.his.tree.Impl.TreeService;
 
 /**
- * 建立用户菜单
+ * 寤虹珛鐢ㄦ埛鑿滃崟
  */
 @Component("TreeServlet")
 public class TreeServlet extends HttpServlet 
@@ -66,7 +66,7 @@ public class TreeServlet extends HttpServlet
 		String ProgramID     = request.getContextPath().substring(1,  request.getContextPath().length());
 		ITreeService treeSrv = new TreeService();
 		TreeNode nodes       = treeSrv.getTrees(ProgramID, user.getUserID());
-		/* 用户过滤菜单 */
+		/* 鐢ㄦ埛杩囨护鑿滃崟 */
 		filterTree(user, nodes);
 		request.setAttribute("nodes", nodes);
 		String destPage = this.getInitParameter("MenuPage");

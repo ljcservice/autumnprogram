@@ -75,7 +75,7 @@ public class ReportDispatcher implements Filter
 	{
 		HttpServletRequest request = (HttpServletRequest)req;
 		HttpServletResponse response = (HttpServletResponse)res;
-		/*存放具体引用菜单之前的菜单id */
+		/*瀛樻斁鍏蜂綋寮曠敤鑿滃崟涔嬪墠鐨勮彍鍗昳d */
 		String treeNodeMenuId = CommonUtils.getRequestParameter(request, TreeNode.URLMenuID, "");
 		if("".equals(treeNodeMenuId)) treeNodeMenuId = (String)request.getSession().getAttribute(TreeNode.URLMenuID);
         request.getSession().setAttribute(TreeNode.URLMenuID, treeNodeMenuId);

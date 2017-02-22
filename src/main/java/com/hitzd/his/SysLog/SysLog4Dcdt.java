@@ -8,31 +8,31 @@ import java.util.Vector;
 import com.hitzd.his.Utils.DateUtils;
 
 /**
- * ÄÚ²¿ÄÚÈİÈÕÖ¾ 
+ * å†…éƒ¨å†…å®¹æ—¥å¿— 
  * @author jingcong
  *
  */
 public class SysLog4Dcdt
 {
     
-    /* µ¼ÈëÈÕÖ¾ */
+    /* å¯¼å…¥æ—¥å¿— */
     protected Vector<String> vctLog     = new Vector<String>();
     
     /**
      * 
-     * µ÷ÊÔ¼¶±ğ£¬ÓÃÀ´¿ØÖÆLogĞÅÏ¢µÄÊä³ö£¬¼¶±ğÔ½´ó£¬Êä³öĞÅÏ¢Ô½¼òµ¥
+     * è°ƒè¯•çº§åˆ«ï¼Œç”¨æ¥æ§åˆ¶Logä¿¡æ¯çš„è¾“å‡ºï¼Œçº§åˆ«è¶Šå¤§ï¼Œè¾“å‡ºä¿¡æ¯è¶Šç®€å•
      * 
      */
     private int DebugLevel = 0;
     public void setDebugLevel(int debugLevel)
     {
-        System.out.println(toString() + " ÉèÖÃµ÷ÊÔÊä³ö¼¶±ğÎª" + debugLevel);
+        System.out.println(toString() + " è®¾ç½®è°ƒè¯•è¾“å‡ºçº§åˆ«ä¸º" + debugLevel);
         DebugLevel = debugLevel;
     }
     
     /**
-     * ÊäÈëÈÕÖ¾
-     * @param info ÈÕÖ¾ÄÚÈİ 
+     * è¾“å…¥æ—¥å¿—
+     * @param info æ—¥å¿—å†…å®¹ 
      */
     protected void Log(String info)
     {
@@ -40,8 +40,8 @@ public class SysLog4Dcdt
     }
     
     /**
-     * ÊäÈëÈÕÖ¾
-     * @param level ÈÕÖ¾¼¶±ğ
+     * è¾“å…¥æ—¥å¿—
+     * @param level æ—¥å¿—çº§åˆ«
      * @param info  
      */
     protected void Log(int level, String info)
@@ -55,7 +55,7 @@ public class SysLog4Dcdt
     }
     
     /**
-     * ±£´æÈÕÖ¾ 
+     * ä¿å­˜æ—¥å¿— 
      * @param FileName
      * @return
      */
@@ -79,10 +79,10 @@ public class SysLog4Dcdt
         }
         catch (IOException e)
         {
-            System.out.print("±£´æÈÕÖ¾ÎÄ¼ş³öÏÖÒì³£");
+            System.out.print("ä¿å­˜æ—¥å¿—æ–‡ä»¶å‡ºç°å¼‚å¸¸");
             e.printStackTrace();
         }
-        System.out.println("ÈÕÖ¾±£´æÔÚ" + file.getAbsolutePath());
+        System.out.println("æ—¥å¿—ä¿å­˜åœ¨" + file.getAbsolutePath());
         vctLog.clear();
         return file.getAbsolutePath();
     }

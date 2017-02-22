@@ -6,50 +6,50 @@ import java.util.Map;
 import com.hitzd.his.Beans.Middle.TTableConfig;
 
 /**
- * ÖĞ¼ä²ãº¯Êı¿â
+ * ä¸­é—´å±‚å‡½æ•°åº“
  * @author Crystal
  */
 public class CaseHistoryFunction
 {
 	/**
-	 * ¼Ó:+
+	 * åŠ :+
 	 */
 	public static final String PLUS = "+";
 	/**
-	 * ¼õ:-
+	 * å‡:-
 	 */
 	public static final String MINUS = "-";
 	/**
-	 * ³Ë:*
+	 * ä¹˜:*
 	 */
 	public static final String MULTIPLY = "*";
 	/**
-	 * ³ı:/
+	 * é™¤:/
 	 */
 	public static final String DIVIDED = "/";
 	
 	/**
-	 * ÈÕÆÚ+Ê±¼ä¸ñÊ½£º2013-10-29 16:20:45
+	 * æ—¥æœŸ+æ—¶é—´æ ¼å¼ï¼š2013-10-29 16:20:45
 	 */
 	public static final String DATETIME = "yyyy-mm-dd hh24:mi:ss";
 	
 	/**
-	 * ÈÕÆÚ¸ñÊ½£º2013-10-29
+	 * æ—¥æœŸæ ¼å¼ï¼š2013-10-29
 	 */
 	public static final String DATE = "yyyy-mm-dd";
 	
 	/**
-	 * Ê±¼ä¸ñÊ½£º16:20:45
+	 * æ—¶é—´æ ¼å¼ï¼š16:20:45
 	 */
 	public static final String TIME = "hh24:mi:ss";
 	
 	/**
-	 * SQLServerÈÕÆÚ¸ñÊ½
+	 * SQLServeræ—¥æœŸæ ¼å¼
 	 */
 	private static Map<String, String> SQLServerDateFmt = null;
 	
 	/**
-	 * MySQLÈÕÆÚ¸ñÊ½
+	 * MySQLæ—¥æœŸæ ¼å¼
 	 */
 	private static Map<String, String> MySQLDateFmt = null;
 	
@@ -57,7 +57,7 @@ public class CaseHistoryFunction
 
 	static
 	{
-	    /* ³õÊ¼»¯²ÎÊı */
+	    /* åˆå§‹åŒ–å‚æ•° */
 		SQLServerDateFmt = new HashMap<String, String>();
 		SQLServerDateFmt.put(DATETIME, "20");
 		SQLServerDateFmt.put(DATE, "20");
@@ -69,17 +69,17 @@ public class CaseHistoryFunction
 	}
 	
 	/**
-	 * »ñÈ¡Ä¿±ê×Ö¶Î
-	 * @param tableName ±íÃû
-	 * @param fieldName Ô­Ê¼×Ö¶Î
-	 * @return Ä¿±ê×Ö¶Î
+	 * è·å–ç›®æ ‡å­—æ®µ
+	 * @param tableName è¡¨å
+	 * @param fieldName åŸå§‹å­—æ®µ
+	 * @return ç›®æ ‡å­—æ®µ
 	 */
 	private static String getTargetField(String tableName, String fieldName)
 	{
-		/* ³õÊ¼»¯²ÎÊı */
+		/* åˆå§‹åŒ–å‚æ•° */
 		tableName = tableName == null ? "" : tableName.trim();
 		fieldName = fieldName == null ? "" : fieldName.trim();
-		// Èç¹û´æÔÚ±íÃû£¬Ôò±íÊ¾¸Ã×ª»»Îª±ê×¼×ª»»£»·ñÔò£¬±»×ª»»µÄ×Ö¶ÎÎªÁÙÊ±×Ö¶Î
+		// å¦‚æœå­˜åœ¨è¡¨åï¼Œåˆ™è¡¨ç¤ºè¯¥è½¬æ¢ä¸ºæ ‡å‡†è½¬æ¢ï¼›å¦åˆ™ï¼Œè¢«è½¬æ¢çš„å­—æ®µä¸ºä¸´æ—¶å­—æ®µ
 		if (tableName != null && !"".equals(tableName))
 		{
 		    String[] f = depenTargetField(fieldName);
@@ -109,8 +109,8 @@ public class CaseHistoryFunction
 	}
 	
 	/**
-	 * »ñÈ¡±í¶ÔÓ¦µÄÊı¾İ¿â£ºOracle/SQLServer/MySQL
-	 * @param tableName ±ØĞë²ÎÊı£¬²»ÄÜÎª¿Õ
+	 * è·å–è¡¨å¯¹åº”çš„æ•°æ®åº“ï¼šOracle/SQLServer/MySQL
+	 * @param tableName å¿…é¡»å‚æ•°ï¼Œä¸èƒ½ä¸ºç©º
 	 * @return
 	 */
 	private static String getDBName(String tableName)
@@ -121,21 +121,21 @@ public class CaseHistoryFunction
 	}
 	
 	/**
-	 * ±í´ïÊ½£¬¿É·µ»Ø¼òµ¥¼Ó¼õ³Ë³ı±í´ïÊ½»òº¯Êı
-	 * @param tableName1  ±í1
-	 * @param fieldName1  ±í1µÄ×Ö¶Î
-	 * @param t1                        ±í1µÄ±ğÃû
-	 * @param tableName2  ±í2
-	 * @param fieldName2  ±í2µÄ×Ö¶Î
-	 * @param t2                       ±í2µÄ±ğÃû
-	 * @param operators  ÔËËã·û£¬¿ÉÒÔµ÷ÓÃ³£Á¿¼Ó¡¢¼õ¡¢³Ë¡¢³ı¡£×¢ÒâÊÇÔËËã·ûÇ°ÃæÊÇfieldName1£¬ÔËËã·ûºóÃæÊÇfieldName2
-	 * @param as         ±ğÃû£¬Èç¹ûÎªº¯Êı£¬¿ÉÒÔÔö¼Ó±ğÃû
-	 * @param isFunction ÊÇ·ñº¯Êı¸ñÊ½
-	 * @return           ¹æÔò£ºÈç¹ûisFunctionÎªtrue£¬·µ»ØÒÔfn:¿ªÍ·£¬:end½áÎ²µÄº¯ÊıĞÎÊ½£»·ñÔò£¬·µ»Ø±í´ïÊ½
+	 * è¡¨è¾¾å¼ï¼Œå¯è¿”å›ç®€å•åŠ å‡ä¹˜é™¤è¡¨è¾¾å¼æˆ–å‡½æ•°
+	 * @param tableName1  è¡¨1
+	 * @param fieldName1  è¡¨1çš„å­—æ®µ
+	 * @param t1                        è¡¨1çš„åˆ«å
+	 * @param tableName2  è¡¨2
+	 * @param fieldName2  è¡¨2çš„å­—æ®µ
+	 * @param t2                       è¡¨2çš„åˆ«å
+	 * @param operators  è¿ç®—ç¬¦ï¼Œå¯ä»¥è°ƒç”¨å¸¸é‡åŠ ã€å‡ã€ä¹˜ã€é™¤ã€‚æ³¨æ„æ˜¯è¿ç®—ç¬¦å‰é¢æ˜¯fieldName1ï¼Œè¿ç®—ç¬¦åé¢æ˜¯fieldName2
+	 * @param as         åˆ«åï¼Œå¦‚æœä¸ºå‡½æ•°ï¼Œå¯ä»¥å¢åŠ åˆ«å
+	 * @param isFunction æ˜¯å¦å‡½æ•°æ ¼å¼
+	 * @return           è§„åˆ™ï¼šå¦‚æœisFunctionä¸ºtrueï¼Œè¿”å›ä»¥fn:å¼€å¤´ï¼Œ:endç»“å°¾çš„å‡½æ•°å½¢å¼ï¼›å¦åˆ™ï¼Œè¿”å›è¡¨è¾¾å¼
 	 */
 	public static String genExpression(String tableName1, String fieldName1, String t1, String tableName2, String fieldName2, String t2, String operators, String as, boolean isFunction)
 	{
-		/* ³õÊ¼»¯²ÎÊı */
+		/* åˆå§‹åŒ–å‚æ•° */
 		t1 = t1 == null ? "" : t1.trim();
 		t2 = t2 == null ? "" : t2.trim();
 		as = as == null ? "" : as.trim();
@@ -151,16 +151,16 @@ public class CaseHistoryFunction
 	}
 	
 	/**
-	 * º¯Êı£ºto_char
-	 * @param tableName ×Ö¶ÎËùÊô±íÃû
-	 * @param fieldName ×Ö¶ÎÃû
-	 * @param fmt       ¸ñÊ½»¯¸ñÊ½£¬Èçyyyy-mm-dd
-	 * @param as        ±ğÃû£¬¿ÉÒÔÊÇÒÔÏÂÈıÖÖ¸ñÊ½£º
-	 *                  1. ±íÃû»ò±í±ğÃû.  ¼´fieldNameÈôÊÇ¶à±íÁªºÏ²éÑ¯ÖĞÄ³¸ö±íµÄ×Ö¶Î£¬ĞèÒªÒÔ±íÃû»òÁÙÊ±±íÃû¼Ó¡°.¡±À´ÒıÓÃ£¬¿ÉÒÔ·ÅÔÚas²ÎÊıÀï£¬
-	 *                                   Èçto_char(a.start_date_time, 'yyyy-mm-dd')£¬ÆäÖĞa.¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 *                  2. ×Ö¶Î±ğÃû                 ¼´¿ÉÒÔÎª×ª»»Îªº¯Êı¸ñÊ½ºóµÄĞÂ×Ö¶ÎÉùÃ÷±ğÃû£¬Èçto_char(start_date_time, 'yyyy-mm-dd') sdt£¬ÆäÖĞsdt¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 *                  3. ±íÃû.×Ö¶Î±ğÃû    ¼´¿ÉÒÔÍ¬Ê±´«Èë±íÃûºÍ×Ö¶Î±ğÃû£¬ÒÔÊ¾Òâ·½Ê½´«Èë£¬Èçto_char(a.start_date_time, 'yyyy-mm-dd') sdt£¬ÆäÖĞa.sdt¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 * @return          ¹æÔò£º·µ»ØÒÔfn:¿ªÍ·£¬:end½áÎ²µÄº¯ÊıĞÎÊ½
+	 * å‡½æ•°ï¼što_char
+	 * @param tableName å­—æ®µæ‰€å±è¡¨å
+	 * @param fieldName å­—æ®µå
+	 * @param fmt       æ ¼å¼åŒ–æ ¼å¼ï¼Œå¦‚yyyy-mm-dd
+	 * @param as        åˆ«åï¼Œå¯ä»¥æ˜¯ä»¥ä¸‹ä¸‰ç§æ ¼å¼ï¼š
+	 *                  1. è¡¨åæˆ–è¡¨åˆ«å.  å³fieldNameè‹¥æ˜¯å¤šè¡¨è”åˆæŸ¥è¯¢ä¸­æŸä¸ªè¡¨çš„å­—æ®µï¼Œéœ€è¦ä»¥è¡¨åæˆ–ä¸´æ—¶è¡¨ååŠ â€œ.â€æ¥å¼•ç”¨ï¼Œå¯ä»¥æ”¾åœ¨aså‚æ•°é‡Œï¼Œ
+	 *                                   å¦‚to_char(a.start_date_time, 'yyyy-mm-dd')ï¼Œå…¶ä¸­a.å³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 *                  2. å­—æ®µåˆ«å                 å³å¯ä»¥ä¸ºè½¬æ¢ä¸ºå‡½æ•°æ ¼å¼åçš„æ–°å­—æ®µå£°æ˜åˆ«åï¼Œå¦‚to_char(start_date_time, 'yyyy-mm-dd') sdtï¼Œå…¶ä¸­sdtå³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 *                  3. è¡¨å.å­—æ®µåˆ«å    å³å¯ä»¥åŒæ—¶ä¼ å…¥è¡¨åå’Œå­—æ®µåˆ«åï¼Œä»¥ç¤ºæ„æ–¹å¼ä¼ å…¥ï¼Œå¦‚to_char(a.start_date_time, 'yyyy-mm-dd') sdtï¼Œå…¶ä¸­a.sdtå³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 * @return          è§„åˆ™ï¼šè¿”å›ä»¥fn:å¼€å¤´ï¼Œ:endç»“å°¾çš„å‡½æ•°å½¢å¼
 	 */
 	public static String genToChar(String tableName, String fieldName, String fmt, String as)
 	{
@@ -172,17 +172,17 @@ public class CaseHistoryFunction
 		{
 			if (!"".equals(as))
 			{
-				// ×Ö¶Î±ğÃû
+				// å­—æ®µåˆ«å
 				if (as.indexOf(".") < 0)
 				{
 					return "fn:to_char(" + getTargetField(tableName, fieldName) + ", '" + fmt + "') as " + as + ":end";
 				}
 				else if (as.indexOf(".") > 0)
 				{
-					// ±íÃû.
+					// è¡¨å.
 					if (as.endsWith("."))
 						return "fn:to_char(" + as + getTargetField(tableName, fieldName) + ", '" + fmt + "'):end";
-					// ±íÃû.×Ö¶Î±ğÃû
+					// è¡¨å.å­—æ®µåˆ«å
 					else if (as.indexOf(".") < as.length())
 						return "fn:to_char(" + as.substring(0, as.indexOf(".") + 1) + getTargetField(tableName, fieldName) + 
 							   ", '" + fmt + "') as " + as.substring(as.indexOf(".") + 1, as.length()) + ":end";
@@ -194,17 +194,17 @@ public class CaseHistoryFunction
 		{
 			if (!"".equals(as))
 			{
-				// ×Ö¶Î±ğÃû
+				// å­—æ®µåˆ«å
 				if (as.indexOf(".") < 0)
 				{
 					return "fn:convert(char(" + fmt.length() + "), " + getTargetField(tableName, fieldName) + ", " + SQLServerDateFmt.get(fmt) + ") as " + as + ":end";
 				}
 				else if (as.indexOf(".") > 0)
 				{
-					// ±íÃû.
+					// è¡¨å.
 					if (as.endsWith("."))
 						return "fn:convert(char(" + fmt.length() + "), " + as + getTargetField(tableName, fieldName) + ", " + SQLServerDateFmt.get(fmt) + "):end";
-					// ±íÃû.×Ö¶Î±ğÃû
+					// è¡¨å.å­—æ®µåˆ«å
 					else if (as.indexOf(".") < as.length())
 						return "fn:convert(char(" + fmt.length() + "), " + as.substring(0, as.indexOf(".") + 1) + getTargetField(tableName, fieldName) + 
 							   ", " + SQLServerDateFmt.get(fmt) + ") as " + as.substring(as.indexOf(".") + 1, as.length()) + ":end";
@@ -216,17 +216,17 @@ public class CaseHistoryFunction
 		{
 			if (!"".equals(as))
 			{
-				// ×Ö¶Î±ğÃû
+				// å­—æ®µåˆ«å
 				if (as.indexOf(".") < 0)
 				{
 					return "fn:date_format(" + getTargetField(tableName, fieldName) + ", '" + MySQLDateFmt.get(fmt) + "') as " + as + ":end";
 				}
 				else if (as.indexOf(".") > 0)
 				{
-					// ±íÃû.
+					// è¡¨å.
 					if (as.endsWith("."))
 						return "fn:date_format(" + as + getTargetField(tableName, fieldName) + ", '" + MySQLDateFmt.get(fmt) + "'):end";
-					// ±íÃû.×Ö¶Î±ğÃû
+					// è¡¨å.å­—æ®µåˆ«å
 					else if (as.indexOf(".") < as.length())
 						return "fn:date_format(" + as.substring(0, as.indexOf(".") + 1) + getTargetField(tableName, fieldName) + 
 							   ", '" + MySQLDateFmt.get(fmt) + "') as " + as.substring(as.indexOf(".") + 1, as.length()) + ":end";
@@ -236,17 +236,17 @@ public class CaseHistoryFunction
 		}
 		if (!"".equals(as))
 		{
-			// ×Ö¶Î±ğÃû
+			// å­—æ®µåˆ«å
 			if (as.indexOf(".") < 0)
 			{
 				return "fn:" + getTargetField(tableName, fieldName) + " as " + as + ":end";
 			}
 			else if (as.indexOf(".") > 0)
 			{
-				// ±íÃû.
+				// è¡¨å.
 				if (as.endsWith("."))
 					return "fn:" + as + getTargetField(tableName, fieldName) + ":end";
-				// ±íÃû.×Ö¶Î±ğÃû
+				// è¡¨å.å­—æ®µåˆ«å
 				else
 					return "fn:" + as.substring(0, as.indexOf(".") + 1) + getTargetField(tableName, fieldName) + 
 						   " as " + as.substring(as.indexOf(".") + 1, as.length()) + ":end";
@@ -256,16 +256,16 @@ public class CaseHistoryFunction
 	}
 	
 	/**
-	 * º¯Êı£ºto_date
-	 * @param tableName ×Ö¶ÎËùÊô±íÃû
-	 * @param fieldName ×Ö¶ÎÃû
-	 * @param fmt       ¸ñÊ½»¯¸ñÊ½£¬Èçyyyy-mm-dd
-	 * @param as        ±ğÃû£¬¿ÉÒÔÊÇÒÔÏÂÈıÖÖ¸ñÊ½£º
-	 *                  1. ±íÃû»ò±í±ğÃû.  ¼´fieldNameÈôÊÇ¶à±íÁªºÏ²éÑ¯ÖĞÄ³¸ö±íµÄ×Ö¶Î£¬ĞèÒªÒÔ±íÃû»òÁÙÊ±±íÃû¼Ó¡°.¡±À´ÒıÓÃ£¬¿ÉÒÔ·ÅÔÚas²ÎÊıÀï£¬
-	 *                                   Èçto_char(a.start_date_time, 'yyyy-mm-dd')£¬ÆäÖĞa.¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 *                  2. ×Ö¶Î±ğÃû                 ¼´¿ÉÒÔÎª×ª»»Îªº¯Êı¸ñÊ½ºóµÄĞÂ×Ö¶ÎÉùÃ÷±ğÃû£¬Èçto_char(start_date_time, 'yyyy-mm-dd') sdt£¬ÆäÖĞsdt¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 *                  3. ±íÃû.×Ö¶Î±ğÃû    ¼´¿ÉÒÔÍ¬Ê±´«Èë±íÃûºÍ×Ö¶Î±ğÃû£¬ÒÔÊ¾Òâ·½Ê½´«Èë£¬Èçto_char(a.start_date_time, 'yyyy-mm-dd') sdt£¬ÆäÖĞa.sdt¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 * @return          ¹æÔò£º·µ»ØÒÔfn:¿ªÍ·£¬:end½áÎ²µÄº¯ÊıĞÎÊ½
+	 * å‡½æ•°ï¼što_date
+	 * @param tableName å­—æ®µæ‰€å±è¡¨å
+	 * @param fieldName å­—æ®µå
+	 * @param fmt       æ ¼å¼åŒ–æ ¼å¼ï¼Œå¦‚yyyy-mm-dd
+	 * @param as        åˆ«åï¼Œå¯ä»¥æ˜¯ä»¥ä¸‹ä¸‰ç§æ ¼å¼ï¼š
+	 *                  1. è¡¨åæˆ–è¡¨åˆ«å.  å³fieldNameè‹¥æ˜¯å¤šè¡¨è”åˆæŸ¥è¯¢ä¸­æŸä¸ªè¡¨çš„å­—æ®µï¼Œéœ€è¦ä»¥è¡¨åæˆ–ä¸´æ—¶è¡¨ååŠ â€œ.â€æ¥å¼•ç”¨ï¼Œå¯ä»¥æ”¾åœ¨aså‚æ•°é‡Œï¼Œ
+	 *                                   å¦‚to_char(a.start_date_time, 'yyyy-mm-dd')ï¼Œå…¶ä¸­a.å³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 *                  2. å­—æ®µåˆ«å                 å³å¯ä»¥ä¸ºè½¬æ¢ä¸ºå‡½æ•°æ ¼å¼åçš„æ–°å­—æ®µå£°æ˜åˆ«åï¼Œå¦‚to_char(start_date_time, 'yyyy-mm-dd') sdtï¼Œå…¶ä¸­sdtå³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 *                  3. è¡¨å.å­—æ®µåˆ«å    å³å¯ä»¥åŒæ—¶ä¼ å…¥è¡¨åå’Œå­—æ®µåˆ«åï¼Œä»¥ç¤ºæ„æ–¹å¼ä¼ å…¥ï¼Œå¦‚to_char(a.start_date_time, 'yyyy-mm-dd') sdtï¼Œå…¶ä¸­a.sdtå³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 * @return          è§„åˆ™ï¼šè¿”å›ä»¥fn:å¼€å¤´ï¼Œ:endç»“å°¾çš„å‡½æ•°å½¢å¼
 	 */
 	public static String genToDate(String tableName, String fieldName, String fmt, String as)
 	{
@@ -276,17 +276,17 @@ public class CaseHistoryFunction
 		{
 			if (!"".equals(as))
 			{
-				// ×Ö¶Î±ğÃû
+				// å­—æ®µåˆ«å
 				if (as.indexOf(".") < 0)
 				{
 					return "fn:to_date(" + getTargetField(tableName, fieldName) + ", '" + fmt + "') as " + as + ":end";
 				}
 				else if (as.indexOf(".") > 0)
 				{
-					// ±íÃû.
+					// è¡¨å.
 					if (as.endsWith("."))
 						return "fn:to_date(" + as + getTargetField(tableName, fieldName) + ", '" + fmt + "'):end";
-					// ±íÃû.×Ö¶Î±ğÃû
+					// è¡¨å.å­—æ®µåˆ«å
 					else
 						return "fn:to_date(" + as.substring(0, as.indexOf(".") + 1) + getTargetField(tableName, fieldName) + 
 							   ", '" + fmt + "') as " + as.substring(as.indexOf(".") + 1, as.length()) + ":end";
@@ -298,17 +298,17 @@ public class CaseHistoryFunction
 		{
 			if (!"".equals(as))
 			{
-				// ×Ö¶Î±ğÃû
+				// å­—æ®µåˆ«å
 				if (as.indexOf(".") < 0)
 				{
 					return "fn:convert(char(" + fmt.length() + "), " + getTargetField(tableName, fieldName) + ", " + SQLServerDateFmt.get(fmt) + ") as " + as + ":end";
 				}
 				else if (as.indexOf(".") > 0)
 				{
-					// ±íÃû.
+					// è¡¨å.
 					if (as.endsWith("."))
 						return "fn:convert(char(" + fmt.length() + "), " + as + getTargetField(tableName, fieldName) + ", " + SQLServerDateFmt.get(fmt) + "):end";
-					// ±íÃû.×Ö¶Î±ğÃû
+					// è¡¨å.å­—æ®µåˆ«å
 					else if (as.indexOf(".") < as.length())
 						return "fn:convert(char(" + fmt.length() + "), " + as.substring(0, as.indexOf(".") + 1) + getTargetField(tableName, fieldName) + 
 							   ", " + SQLServerDateFmt.get(fmt) + ") as " + as.substring(as.indexOf(".") + 1, as.length()) + ":end";
@@ -320,17 +320,17 @@ public class CaseHistoryFunction
 		{
 			if (!"".equals(as))
 			{
-				// ×Ö¶Î±ğÃû
+				// å­—æ®µåˆ«å
 				if (as.indexOf(".") < 0)
 				{
 					return "fn:str_to_date(" + getTargetField(tableName, fieldName) + ", '" + MySQLDateFmt.get(fmt) + "') as " + as + ":end";
 				}
 				else if (as.indexOf(".") > 0)
 				{
-					// ±íÃû.
+					// è¡¨å.
 					if (as.endsWith("."))
 						return "fn:str_to_date(" + as + getTargetField(tableName, fieldName) + ", '" + MySQLDateFmt.get(fmt) + "'):end";
-					// ±íÃû.×Ö¶Î±ğÃû
+					// è¡¨å.å­—æ®µåˆ«å
 					else
 						return "fn:str_to_date(" + as.substring(0, as.indexOf(".") + 1) + getTargetField(tableName, fieldName) + 
 							   ", '" + MySQLDateFmt.get(fmt) + "') as " + as.substring(as.indexOf(".") + 1, as.length()) + ":end";
@@ -340,17 +340,17 @@ public class CaseHistoryFunction
 		}
 		if (!"".equals(as))
 		{
-			// ×Ö¶Î±ğÃû
+			// å­—æ®µåˆ«å
 			if (as.indexOf(".") < 0)
 			{
 				return "fn:" + getTargetField(tableName, fieldName) + " as " + as + ":end";
 			}
 			else if (as.indexOf(".") > 0)
 			{
-				// ±íÃû.
+				// è¡¨å.
 				if (as.endsWith("."))
 					return "fn:" + as + getTargetField(tableName, fieldName) + ":end";
-				// ±íÃû.×Ö¶Î±ğÃû
+				// è¡¨å.å­—æ®µåˆ«å
 				else
 					return "fn:" + as.substring(0, as.indexOf(".") + 1) + getTargetField(tableName, fieldName) + 
 						   " as " + as.substring(as.indexOf(".") + 1, as.length()) + ":end";
@@ -360,36 +360,36 @@ public class CaseHistoryFunction
 	}
 	
 	/**
-	 * º¯Êı£ºto_number
-	 * @param tableName ×Ö¶ÎËùÊô±íÃû
-	 * @param fieldName ×Ö¶ÎÃû
-	 * @param as        ±ğÃû£¬¿ÉÒÔÊÇÒÔÏÂÈıÖÖ¸ñÊ½£º
-	 *                  1. ±íÃû»ò±í±ğÃû.  ¼´fieldNameÈôÊÇ¶à±íÁªºÏ²éÑ¯ÖĞÄ³¸ö±íµÄ×Ö¶Î£¬ĞèÒªÒÔ±íÃû»òÁÙÊ±±íÃû¼Ó¡°.¡±À´ÒıÓÃ£¬¿ÉÒÔ·ÅÔÚas²ÎÊıÀï£¬
-	 *                                   Èçto_char(a.start_date_time, 'yyyy-mm-dd')£¬ÆäÖĞa.¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 *                  2. ×Ö¶Î±ğÃû                 ¼´¿ÉÒÔÎª×ª»»Îªº¯Êı¸ñÊ½ºóµÄĞÂ×Ö¶ÎÉùÃ÷±ğÃû£¬Èçto_char(start_date_time, 'yyyy-mm-dd') sdt£¬ÆäÖĞsdt¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 *                  3. ±íÃû.×Ö¶Î±ğÃû    ¼´¿ÉÒÔÍ¬Ê±´«Èë±íÃûºÍ×Ö¶Î±ğÃû£¬ÒÔÊ¾Òâ·½Ê½´«Èë£¬Èçto_char(a.start_date_time, 'yyyy-mm-dd') sdt£¬ÆäÖĞa.sdt¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 * @return          ¹æÔò£º·µ»ØÒÔfn:¿ªÍ·£¬:end½áÎ²µÄº¯ÊıĞÎÊ½
+	 * å‡½æ•°ï¼što_number
+	 * @param tableName å­—æ®µæ‰€å±è¡¨å
+	 * @param fieldName å­—æ®µå
+	 * @param as        åˆ«åï¼Œå¯ä»¥æ˜¯ä»¥ä¸‹ä¸‰ç§æ ¼å¼ï¼š
+	 *                  1. è¡¨åæˆ–è¡¨åˆ«å.  å³fieldNameè‹¥æ˜¯å¤šè¡¨è”åˆæŸ¥è¯¢ä¸­æŸä¸ªè¡¨çš„å­—æ®µï¼Œéœ€è¦ä»¥è¡¨åæˆ–ä¸´æ—¶è¡¨ååŠ â€œ.â€æ¥å¼•ç”¨ï¼Œå¯ä»¥æ”¾åœ¨aså‚æ•°é‡Œï¼Œ
+	 *                                   å¦‚to_char(a.start_date_time, 'yyyy-mm-dd')ï¼Œå…¶ä¸­a.å³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 *                  2. å­—æ®µåˆ«å                 å³å¯ä»¥ä¸ºè½¬æ¢ä¸ºå‡½æ•°æ ¼å¼åçš„æ–°å­—æ®µå£°æ˜åˆ«åï¼Œå¦‚to_char(start_date_time, 'yyyy-mm-dd') sdtï¼Œå…¶ä¸­sdtå³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 *                  3. è¡¨å.å­—æ®µåˆ«å    å³å¯ä»¥åŒæ—¶ä¼ å…¥è¡¨åå’Œå­—æ®µåˆ«åï¼Œä»¥ç¤ºæ„æ–¹å¼ä¼ å…¥ï¼Œå¦‚to_char(a.start_date_time, 'yyyy-mm-dd') sdtï¼Œå…¶ä¸­a.sdtå³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 * @return          è§„åˆ™ï¼šè¿”å›ä»¥fn:å¼€å¤´ï¼Œ:endç»“å°¾çš„å‡½æ•°å½¢å¼
 	 */
 	public static String genToNumber(String tableName, String fieldName, String as)
 	{
-		/* ³õÊ¼»¯²ÎÊı */
+		/* åˆå§‹åŒ–å‚æ•° */
 		as = as == null ? "" : as.trim();
 		String db_name = getDBName(tableName);
 		if ("Oracle".equalsIgnoreCase(db_name))
 		{
 			if (!"".equals(as))
 			{
-				// ×Ö¶Î±ğÃû
+				// å­—æ®µåˆ«å
 				if (as.indexOf(".") < 0)
 				{
 					return "fn:to_number(" + getTargetField(tableName, fieldName) + ") as " + as + ":end";
 				}
 				else if (as.indexOf(".") > 0)
 				{
-					// ±íÃû.
+					// è¡¨å.
 					if (as.endsWith("."))
 						return "fn:to_number(" + as + getTargetField(tableName, fieldName) + "):end";
-					// ±íÃû.×Ö¶Î±ğÃû
+					// è¡¨å.å­—æ®µåˆ«å
 					else
 						return "fn:to_number(" + as.substring(0, as.indexOf(".") + 1) + getTargetField(tableName, fieldName) + 
 							   ") as " + as.substring(as.indexOf(".") + 1, as.length()) + ":end";
@@ -401,17 +401,17 @@ public class CaseHistoryFunction
 		{
 			if (!"".equals(as))
 			{
-				// ×Ö¶Î±ğÃû
+				// å­—æ®µåˆ«å
 				if (as.indexOf(".") < 0)
 				{
 					return "fn:cast(" + getTargetField(tableName, fieldName) + " as float) as " + as + ":end";
 				}
 				else if (as.indexOf(".") > 0)
 				{
-					// ±íÃû.
+					// è¡¨å.
 					if (as.endsWith("."))
 						return "fn:cast(" + as + getTargetField(tableName, fieldName) + " as float):end";
-					// ±íÃû.×Ö¶Î±ğÃû
+					// è¡¨å.å­—æ®µåˆ«å
 					else
 						return "fn:cast(" + as.substring(0, as.indexOf(".") + 1) + getTargetField(tableName, fieldName) + 
 							   " as float) as " + as.substring(as.indexOf(".") + 1, as.length()) + ":end";
@@ -423,17 +423,17 @@ public class CaseHistoryFunction
 		{
 			if (!"".equals(as))
 			{
-				// ×Ö¶Î±ğÃû
+				// å­—æ®µåˆ«å
 				if (as.indexOf(".") < 0)
 				{
 					return "fn:cast(" + getTargetField(tableName, fieldName) + " as DECIMAL(20,2)) as " + as + ":end";
 				}
 				else if (as.indexOf(".") > 0)
 				{
-					// ±íÃû.
+					// è¡¨å.
 					if (as.endsWith("."))
 						return "fn:cast(" + as + getTargetField(tableName, fieldName) + " as DECIMAL(20,2)):end";
-					// ±íÃû.×Ö¶Î±ğÃû
+					// è¡¨å.å­—æ®µåˆ«å
 					else
 						return "fn:cast(" + as.substring(0, as.indexOf(".") + 1) + getTargetField(tableName, fieldName) + 
 							   " as DECIMAL(20,2)) as " + as.substring(as.indexOf(".") + 1, as.length()) + ":end";
@@ -443,17 +443,17 @@ public class CaseHistoryFunction
 		}
 		if (!"".equals(as))
 		{
-			// ×Ö¶Î±ğÃû
+			// å­—æ®µåˆ«å
 			if (as.indexOf(".") < 0)
 			{
 				return "fn:" + getTargetField(tableName, fieldName) + " as " + as + ":end";
 			}
 			else if (as.indexOf(".") > 0)
 			{
-				// ±íÃû.
+				// è¡¨å.
 				if (as.endsWith("."))
 					return "fn:" + as + getTargetField(tableName, fieldName) + ":end";
-				// ±íÃû.×Ö¶Î±ğÃû
+				// è¡¨å.å­—æ®µåˆ«å
 				else
 					return "fn:" + as.substring(0, as.indexOf(".") + 1) + getTargetField(tableName, fieldName) + 
 						   " as " + as.substring(as.indexOf(".") + 1, as.length()) + ":end";
@@ -463,33 +463,33 @@ public class CaseHistoryFunction
 	}
 	
 	/**
-	 * º¯Êı£ºsum
-	 * @param tableName ×Ö¶ÎËùÊô±íÃû
-	 * @param fieldName ×Ö¶ÎÃû
-	 * @param as        ±ğÃû£¬¿ÉÒÔÊÇÒÔÏÂÈıÖÖ¸ñÊ½£º
-	 *                  1. ±íÃû»ò±í±ğÃû.  ¼´fieldNameÈôÊÇ¶à±íÁªºÏ²éÑ¯ÖĞÄ³¸ö±íµÄ×Ö¶Î£¬ĞèÒªÒÔ±íÃû»òÁÙÊ±±íÃû¼Ó¡°.¡±À´ÒıÓÃ£¬¿ÉÒÔ·ÅÔÚas²ÎÊıÀï£¬
-	 *                                   Èçto_char(a.start_date_time, 'yyyy-mm-dd')£¬ÆäÖĞa.¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 *                  2. ×Ö¶Î±ğÃû                 ¼´¿ÉÒÔÎª×ª»»Îªº¯Êı¸ñÊ½ºóµÄĞÂ×Ö¶ÎÉùÃ÷±ğÃû£¬Èçto_char(start_date_time, 'yyyy-mm-dd') sdt£¬ÆäÖĞsdt¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 *                  3. ±íÃû.×Ö¶Î±ğÃû    ¼´¿ÉÒÔÍ¬Ê±´«Èë±íÃûºÍ×Ö¶Î±ğÃû£¬ÒÔÊ¾Òâ·½Ê½´«Èë£¬Èçto_char(a.start_date_time, 'yyyy-mm-dd') sdt£¬ÆäÖĞa.sdt¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 * @return          ¹æÔò£º·µ»ØÒÔfn:¿ªÍ·£¬:end½áÎ²µÄº¯ÊıĞÎÊ½
+	 * å‡½æ•°ï¼šsum
+	 * @param tableName å­—æ®µæ‰€å±è¡¨å
+	 * @param fieldName å­—æ®µå
+	 * @param as        åˆ«åï¼Œå¯ä»¥æ˜¯ä»¥ä¸‹ä¸‰ç§æ ¼å¼ï¼š
+	 *                  1. è¡¨åæˆ–è¡¨åˆ«å.  å³fieldNameè‹¥æ˜¯å¤šè¡¨è”åˆæŸ¥è¯¢ä¸­æŸä¸ªè¡¨çš„å­—æ®µï¼Œéœ€è¦ä»¥è¡¨åæˆ–ä¸´æ—¶è¡¨ååŠ â€œ.â€æ¥å¼•ç”¨ï¼Œå¯ä»¥æ”¾åœ¨aså‚æ•°é‡Œï¼Œ
+	 *                                   å¦‚to_char(a.start_date_time, 'yyyy-mm-dd')ï¼Œå…¶ä¸­a.å³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 *                  2. å­—æ®µåˆ«å                 å³å¯ä»¥ä¸ºè½¬æ¢ä¸ºå‡½æ•°æ ¼å¼åçš„æ–°å­—æ®µå£°æ˜åˆ«åï¼Œå¦‚to_char(start_date_time, 'yyyy-mm-dd') sdtï¼Œå…¶ä¸­sdtå³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 *                  3. è¡¨å.å­—æ®µåˆ«å    å³å¯ä»¥åŒæ—¶ä¼ å…¥è¡¨åå’Œå­—æ®µåˆ«åï¼Œä»¥ç¤ºæ„æ–¹å¼ä¼ å…¥ï¼Œå¦‚to_char(a.start_date_time, 'yyyy-mm-dd') sdtï¼Œå…¶ä¸­a.sdtå³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 * @return          è§„åˆ™ï¼šè¿”å›ä»¥fn:å¼€å¤´ï¼Œ:endç»“å°¾çš„å‡½æ•°å½¢å¼
 	 */
 	public static String genSum(String tableName, String fieldName, String as)
 	{
-		/* ³õÊ¼»¯²ÎÊı */
+		/* åˆå§‹åŒ–å‚æ•° */
 		as = as == null ? "" : as.trim();
 		if (!"".equals(as))
 		{
-			// ×Ö¶Î±ğÃû
+			// å­—æ®µåˆ«å
 			if (as.indexOf(".") < 0)
 			{
 				return "fn:sum(" + getTargetField(tableName, fieldName) + ") as " + as + ":end";
 			}
 			else if (as.indexOf(".") > 0)
 			{
-				// ±íÃû.
+				// è¡¨å.
 				if (as.endsWith("."))
 					return "fn:sum(" + as + getTargetField(tableName, fieldName) + "):end";
-				// ±íÃû.×Ö¶Î±ğÃû
+				// è¡¨å.å­—æ®µåˆ«å
 				else
 					return "fn:sum(" + as.substring(0, as.indexOf(".") + 1) + getTargetField(tableName, fieldName) + 
 						   ") as " + as.substring(as.indexOf(".") + 1, as.length()) + ":end";
@@ -499,33 +499,33 @@ public class CaseHistoryFunction
 	}
 	
 	/**
-	 * º¯Êı£ºcount
-	 * @param tableName ×Ö¶ÎËùÊô±íÃû
-	 * @param fieldName ×Ö¶ÎÃû
-	 * @param as        ±ğÃû£¬¿ÉÒÔÊÇÒÔÏÂÈıÖÖ¸ñÊ½£º
-	 *                  1. ±íÃû»ò±í±ğÃû.  ¼´fieldNameÈôÊÇ¶à±íÁªºÏ²éÑ¯ÖĞÄ³¸ö±íµÄ×Ö¶Î£¬ĞèÒªÒÔ±íÃû»òÁÙÊ±±íÃû¼Ó¡°.¡±À´ÒıÓÃ£¬¿ÉÒÔ·ÅÔÚas²ÎÊıÀï£¬
-	 *                                   Èçto_char(a.start_date_time, 'yyyy-mm-dd')£¬ÆäÖĞa.¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 *                  2. ×Ö¶Î±ğÃû                 ¼´¿ÉÒÔÎª×ª»»Îªº¯Êı¸ñÊ½ºóµÄĞÂ×Ö¶ÎÉùÃ÷±ğÃû£¬Èçto_char(start_date_time, 'yyyy-mm-dd') sdt£¬ÆäÖĞsdt¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 *                  3. ±íÃû.×Ö¶Î±ğÃû    ¼´¿ÉÒÔÍ¬Ê±´«Èë±íÃûºÍ×Ö¶Î±ğÃû£¬ÒÔÊ¾Òâ·½Ê½´«Èë£¬Èçto_char(a.start_date_time, 'yyyy-mm-dd') sdt£¬ÆäÖĞa.sdt¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 * @return          ¹æÔò£º·µ»ØÒÔfn:¿ªÍ·£¬:end½áÎ²µÄº¯ÊıĞÎÊ½
+	 * å‡½æ•°ï¼šcount
+	 * @param tableName å­—æ®µæ‰€å±è¡¨å
+	 * @param fieldName å­—æ®µå
+	 * @param as        åˆ«åï¼Œå¯ä»¥æ˜¯ä»¥ä¸‹ä¸‰ç§æ ¼å¼ï¼š
+	 *                  1. è¡¨åæˆ–è¡¨åˆ«å.  å³fieldNameè‹¥æ˜¯å¤šè¡¨è”åˆæŸ¥è¯¢ä¸­æŸä¸ªè¡¨çš„å­—æ®µï¼Œéœ€è¦ä»¥è¡¨åæˆ–ä¸´æ—¶è¡¨ååŠ â€œ.â€æ¥å¼•ç”¨ï¼Œå¯ä»¥æ”¾åœ¨aså‚æ•°é‡Œï¼Œ
+	 *                                   å¦‚to_char(a.start_date_time, 'yyyy-mm-dd')ï¼Œå…¶ä¸­a.å³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 *                  2. å­—æ®µåˆ«å                 å³å¯ä»¥ä¸ºè½¬æ¢ä¸ºå‡½æ•°æ ¼å¼åçš„æ–°å­—æ®µå£°æ˜åˆ«åï¼Œå¦‚to_char(start_date_time, 'yyyy-mm-dd') sdtï¼Œå…¶ä¸­sdtå³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 *                  3. è¡¨å.å­—æ®µåˆ«å    å³å¯ä»¥åŒæ—¶ä¼ å…¥è¡¨åå’Œå­—æ®µåˆ«åï¼Œä»¥ç¤ºæ„æ–¹å¼ä¼ å…¥ï¼Œå¦‚to_char(a.start_date_time, 'yyyy-mm-dd') sdtï¼Œå…¶ä¸­a.sdtå³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 * @return          è§„åˆ™ï¼šè¿”å›ä»¥fn:å¼€å¤´ï¼Œ:endç»“å°¾çš„å‡½æ•°å½¢å¼
 	 */
 	public static String genCount(String tableName, String fieldName, String as)
 	{
-		/* ³õÊ¼»¯²ÎÊı */
+		/* åˆå§‹åŒ–å‚æ•° */
 		as = as == null ? "" : as.trim();
 		if (!"".equals(as))
 		{
-			// ×Ö¶Î±ğÃû
+			// å­—æ®µåˆ«å
 			if (as.indexOf(".") < 0)
 			{
 				return "fn:count(" + getTargetField(tableName, fieldName) + ") as " + as + ":end";
 			}
 			else if (as.indexOf(".") > 0)
 			{
-				// ±íÃû.
+				// è¡¨å.
 				if (as.endsWith("."))
 					return "fn:count(" + as + getTargetField(tableName, fieldName) + "):end";
-				// ±íÃû.×Ö¶Î±ğÃû
+				// è¡¨å.å­—æ®µåˆ«å
 				else
 					return "fn:count(" + as.substring(0, as.indexOf(".") + 1) + getTargetField(tableName, fieldName) + 
 						   ") as " + as.substring(as.indexOf(".") + 1, as.length()) + ":end";
@@ -535,33 +535,33 @@ public class CaseHistoryFunction
 	}
 	
 	/**
-	 * º¯Êı£ºfloor
-	 * @param tableName ×Ö¶ÎËùÊô±íÃû
-	 * @param fieldName ×Ö¶ÎÃû
-	 * @param as        ±ğÃû£¬¿ÉÒÔÊÇÒÔÏÂÈıÖÖ¸ñÊ½£º
-	 *                  1. ±íÃû»ò±í±ğÃû.  ¼´fieldNameÈôÊÇ¶à±íÁªºÏ²éÑ¯ÖĞÄ³¸ö±íµÄ×Ö¶Î£¬ĞèÒªÒÔ±íÃû»òÁÙÊ±±íÃû¼Ó¡°.¡±À´ÒıÓÃ£¬¿ÉÒÔ·ÅÔÚas²ÎÊıÀï£¬
-	 *                                   Èçto_char(a.start_date_time, 'yyyy-mm-dd')£¬ÆäÖĞa.¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 *                  2. ×Ö¶Î±ğÃû                 ¼´¿ÉÒÔÎª×ª»»Îªº¯Êı¸ñÊ½ºóµÄĞÂ×Ö¶ÎÉùÃ÷±ğÃû£¬Èçto_char(start_date_time, 'yyyy-mm-dd') sdt£¬ÆäÖĞsdt¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 *                  3. ±íÃû.×Ö¶Î±ğÃû    ¼´¿ÉÒÔÍ¬Ê±´«Èë±íÃûºÍ×Ö¶Î±ğÃû£¬ÒÔÊ¾Òâ·½Ê½´«Èë£¬Èçto_char(a.start_date_time, 'yyyy-mm-dd') sdt£¬ÆäÖĞa.sdt¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 * @return          ¹æÔò£º·µ»ØÒÔfn:¿ªÍ·£¬:end½áÎ²µÄº¯ÊıĞÎÊ½
+	 * å‡½æ•°ï¼šfloor
+	 * @param tableName å­—æ®µæ‰€å±è¡¨å
+	 * @param fieldName å­—æ®µå
+	 * @param as        åˆ«åï¼Œå¯ä»¥æ˜¯ä»¥ä¸‹ä¸‰ç§æ ¼å¼ï¼š
+	 *                  1. è¡¨åæˆ–è¡¨åˆ«å.  å³fieldNameè‹¥æ˜¯å¤šè¡¨è”åˆæŸ¥è¯¢ä¸­æŸä¸ªè¡¨çš„å­—æ®µï¼Œéœ€è¦ä»¥è¡¨åæˆ–ä¸´æ—¶è¡¨ååŠ â€œ.â€æ¥å¼•ç”¨ï¼Œå¯ä»¥æ”¾åœ¨aså‚æ•°é‡Œï¼Œ
+	 *                                   å¦‚to_char(a.start_date_time, 'yyyy-mm-dd')ï¼Œå…¶ä¸­a.å³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 *                  2. å­—æ®µåˆ«å                 å³å¯ä»¥ä¸ºè½¬æ¢ä¸ºå‡½æ•°æ ¼å¼åçš„æ–°å­—æ®µå£°æ˜åˆ«åï¼Œå¦‚to_char(start_date_time, 'yyyy-mm-dd') sdtï¼Œå…¶ä¸­sdtå³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 *                  3. è¡¨å.å­—æ®µåˆ«å    å³å¯ä»¥åŒæ—¶ä¼ å…¥è¡¨åå’Œå­—æ®µåˆ«åï¼Œä»¥ç¤ºæ„æ–¹å¼ä¼ å…¥ï¼Œå¦‚to_char(a.start_date_time, 'yyyy-mm-dd') sdtï¼Œå…¶ä¸­a.sdtå³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 * @return          è§„åˆ™ï¼šè¿”å›ä»¥fn:å¼€å¤´ï¼Œ:endç»“å°¾çš„å‡½æ•°å½¢å¼
 	 */
 	public static String genFloor(String tableName, String fieldName, String as)
 	{
-		/* ³õÊ¼»¯²ÎÊı */
+		/* åˆå§‹åŒ–å‚æ•° */
 		as = as == null ? "" : as.trim();
 		if (!"".equals(as))
 		{
-			// ×Ö¶Î±ğÃû
+			// å­—æ®µåˆ«å
 			if (as.indexOf(".") < 0)
 			{
 				return "fn:floor(" + getTargetField(tableName, fieldName) + ") as " + as + ":end";
 			}
 			else if (as.indexOf(".") > 0)
 			{
-				// ±íÃû.
+				// è¡¨å.
 				if (as.endsWith("."))
 					return "fn:floor(" + as + getTargetField(tableName, fieldName) + "):end";
-				// ±íÃû.×Ö¶Î±ğÃû
+				// è¡¨å.å­—æ®µåˆ«å
 				else
 					return "fn:floor(" + as.substring(0, as.indexOf(".") + 1) + getTargetField(tableName, fieldName) + 
 						   ") as " + as.substring(as.indexOf(".") + 1, as.length()) + ":end";
@@ -571,15 +571,15 @@ public class CaseHistoryFunction
 	}
 	
 	/**
-	 * º¯Êı£ºtrunc
-	 * @param tableName ×Ö¶ÎËùÊô±íÃû
-	 * @param fieldName ×Ö¶ÎÃû
-	 * @param as        ±ğÃû£¬¿ÉÒÔÊÇÒÔÏÂÈıÖÖ¸ñÊ½£º
-	 *                  1. ±íÃû»ò±í±ğÃû.  ¼´fieldNameÈôÊÇ¶à±íÁªºÏ²éÑ¯ÖĞÄ³¸ö±íµÄ×Ö¶Î£¬ĞèÒªÒÔ±íÃû»òÁÙÊ±±íÃû¼Ó¡°.¡±À´ÒıÓÃ£¬¿ÉÒÔ·ÅÔÚas²ÎÊıÀï£¬
-	 *                                   Èçto_char(a.start_date_time, 'yyyy-mm-dd')£¬ÆäÖĞa.¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 *                  2. ×Ö¶Î±ğÃû                 ¼´¿ÉÒÔÎª×ª»»Îªº¯Êı¸ñÊ½ºóµÄĞÂ×Ö¶ÎÉùÃ÷±ğÃû£¬Èçto_char(start_date_time, 'yyyy-mm-dd') sdt£¬ÆäÖĞsdt¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 *                  3. ±íÃû.×Ö¶Î±ğÃû    ¼´¿ÉÒÔÍ¬Ê±´«Èë±íÃûºÍ×Ö¶Î±ğÃû£¬ÒÔÊ¾Òâ·½Ê½´«Èë£¬Èçto_char(a.start_date_time, 'yyyy-mm-dd') sdt£¬ÆäÖĞa.sdt¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 * @return          ¹æÔò£º·µ»ØÒÔfn:¿ªÍ·£¬:end½áÎ²µÄº¯ÊıĞÎÊ½
+	 * å‡½æ•°ï¼štrunc
+	 * @param tableName å­—æ®µæ‰€å±è¡¨å
+	 * @param fieldName å­—æ®µå
+	 * @param as        åˆ«åï¼Œå¯ä»¥æ˜¯ä»¥ä¸‹ä¸‰ç§æ ¼å¼ï¼š
+	 *                  1. è¡¨åæˆ–è¡¨åˆ«å.  å³fieldNameè‹¥æ˜¯å¤šè¡¨è”åˆæŸ¥è¯¢ä¸­æŸä¸ªè¡¨çš„å­—æ®µï¼Œéœ€è¦ä»¥è¡¨åæˆ–ä¸´æ—¶è¡¨ååŠ â€œ.â€æ¥å¼•ç”¨ï¼Œå¯ä»¥æ”¾åœ¨aså‚æ•°é‡Œï¼Œ
+	 *                                   å¦‚to_char(a.start_date_time, 'yyyy-mm-dd')ï¼Œå…¶ä¸­a.å³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 *                  2. å­—æ®µåˆ«å                 å³å¯ä»¥ä¸ºè½¬æ¢ä¸ºå‡½æ•°æ ¼å¼åçš„æ–°å­—æ®µå£°æ˜åˆ«åï¼Œå¦‚to_char(start_date_time, 'yyyy-mm-dd') sdtï¼Œå…¶ä¸­sdtå³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 *                  3. è¡¨å.å­—æ®µåˆ«å    å³å¯ä»¥åŒæ—¶ä¼ å…¥è¡¨åå’Œå­—æ®µåˆ«åï¼Œä»¥ç¤ºæ„æ–¹å¼ä¼ å…¥ï¼Œå¦‚to_char(a.start_date_time, 'yyyy-mm-dd') sdtï¼Œå…¶ä¸­a.sdtå³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 * @return          è§„åˆ™ï¼šè¿”å›ä»¥fn:å¼€å¤´ï¼Œ:endç»“å°¾çš„å‡½æ•°å½¢å¼
 	 */
 	public static String genTrunc(String tableName, String fieldName, String as)
 	{
@@ -589,17 +589,17 @@ public class CaseHistoryFunction
 		{
 			if (!"".equals(as))
 			{
-				// ×Ö¶Î±ğÃû
+				// å­—æ®µåˆ«å
 				if (as.indexOf(".") < 0)
 				{
 					return "fn:trunc(" + getTargetField(tableName, fieldName) + ") as " + as + ":end";
 				}
 				else if (as.indexOf(".") > 0)
 				{
-					// ±íÃû.
+					// è¡¨å.
 					if (as.endsWith("."))
 						return "fn:trunc(" + as + getTargetField(tableName, fieldName) + "):end";
-					// ±íÃû.×Ö¶Î±ğÃû
+					// è¡¨å.å­—æ®µåˆ«å
 					else
 						return "fn:trunc(" + as.substring(0, as.indexOf(".") + 1) + getTargetField(tableName, fieldName) + 
 							   ") as " + as.substring(as.indexOf(".") + 1, as.length()) + ":end";
@@ -611,17 +611,17 @@ public class CaseHistoryFunction
 		{
 			if (!"".equals(as))
 			{
-				// ×Ö¶Î±ğÃû
+				// å­—æ®µåˆ«å
 				if (as.indexOf(".") < 0)
 				{
 					return "fn:convert(char(" + DATE.length() + "), " + getTargetField(tableName, fieldName) + ", " + SQLServerDateFmt.get(DATE) + ") as " + as + ":end";
 				}
 				else if (as.indexOf(".") > 0)
 				{
-					// ±íÃû.
+					// è¡¨å.
 					if (as.endsWith("."))
 						return "fn:convert(char(" + DATE.length() + "), " + as + getTargetField(tableName, fieldName) + ", " + SQLServerDateFmt.get(DATE) + "):end";
-					// ±íÃû.×Ö¶Î±ğÃû
+					// è¡¨å.å­—æ®µåˆ«å
 					else if (as.indexOf(".") < as.length())
 						return "fn:convert(char(" + DATE.length() + "), " + as.substring(0, as.indexOf(".") + 1) + getTargetField(tableName, fieldName) + 
 							   ", " + SQLServerDateFmt.get(DATE) + ") as " + as.substring(as.indexOf(".") + 1, as.length()) + ":end";
@@ -633,17 +633,17 @@ public class CaseHistoryFunction
 		{
 			if (!"".equals(as))
 			{
-				// ×Ö¶Î±ğÃû
+				// å­—æ®µåˆ«å
 				if (as.indexOf(".") < 0)
 				{
 					return "fn:str_to_date(" + getTargetField(tableName, fieldName) + ", '" + MySQLDateFmt.get(DATE) + "') as " + as + ":end";
 				}
 				else if (as.indexOf(".") > 0)
 				{
-					// ±íÃû.
+					// è¡¨å.
 					if (as.endsWith("."))
 						return "fn:str_to_date(" + as + getTargetField(tableName, fieldName) + ", '" + MySQLDateFmt.get(DATE) + "'):end";
-					// ±íÃû.×Ö¶Î±ğÃû
+					// è¡¨å.å­—æ®µåˆ«å
 					else
 						return "fn:str_to_date(" + as.substring(0, as.indexOf(".") + 1) + getTargetField(tableName, fieldName) + 
 							   ", '" + MySQLDateFmt.get(DATE) + "') as " + as.substring(as.indexOf(".") + 1, as.length()) + ":end";
@@ -653,17 +653,17 @@ public class CaseHistoryFunction
 		}
 		if (!"".equals(as))
 		{
-			// ×Ö¶Î±ğÃû
+			// å­—æ®µåˆ«å
 			if (as.indexOf(".") < 0)
 			{
 				return "fn:" + getTargetField(tableName, fieldName) + " as " + as + ":end";
 			}
 			else if (as.indexOf(".") > 0)
 			{
-				// ±íÃû.
+				// è¡¨å.
 				if (as.endsWith("."))
 					return "fn:" + as + getTargetField(tableName, fieldName) + ":end";
-				// ±íÃû.×Ö¶Î±ğÃû
+				// è¡¨å.å­—æ®µåˆ«å
 				else
 					return "fn:" + as.substring(0, as.indexOf(".") + 1) + getTargetField(tableName, fieldName) + 
 						   " as " + as.substring(as.indexOf(".") + 1, as.length()) + ":end";
@@ -673,33 +673,33 @@ public class CaseHistoryFunction
 	}
 	
 	/**
-	 * Oracleº¯Êı£ºmax
-	 * @param tableName ×Ö¶ÎËùÊô±íÃû
-	 * @param fieldName ×Ö¶ÎÃû
-	 * @param as        ±ğÃû£¬¿ÉÒÔÊÇÒÔÏÂÈıÖÖ¸ñÊ½£º
-	 *                  1. ±íÃû»ò±í±ğÃû.  ¼´fieldNameÈôÊÇ¶à±íÁªºÏ²éÑ¯ÖĞÄ³¸ö±íµÄ×Ö¶Î£¬ĞèÒªÒÔ±íÃû»òÁÙÊ±±íÃû¼Ó¡°.¡±À´ÒıÓÃ£¬¿ÉÒÔ·ÅÔÚas²ÎÊıÀï£¬
-	 *                                   Èçto_char(a.start_date_time, 'yyyy-mm-dd')£¬ÆäÖĞa.¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 *                  2. ×Ö¶Î±ğÃû                 ¼´¿ÉÒÔÎª×ª»»Îªº¯Êı¸ñÊ½ºóµÄĞÂ×Ö¶ÎÉùÃ÷±ğÃû£¬Èçto_char(start_date_time, 'yyyy-mm-dd') sdt£¬ÆäÖĞsdt¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 *                  3. ±íÃû.×Ö¶Î±ğÃû    ¼´¿ÉÒÔÍ¬Ê±´«Èë±íÃûºÍ×Ö¶Î±ğÃû£¬ÒÔÊ¾Òâ·½Ê½´«Èë£¬Èçto_char(a.start_date_time, 'yyyy-mm-dd') sdt£¬ÆäÖĞa.sdt¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 * @return          ¹æÔò£º·µ»ØÒÔfn:¿ªÍ·£¬:end½áÎ²µÄº¯ÊıĞÎÊ½
+	 * Oracleå‡½æ•°ï¼šmax
+	 * @param tableName å­—æ®µæ‰€å±è¡¨å
+	 * @param fieldName å­—æ®µå
+	 * @param as        åˆ«åï¼Œå¯ä»¥æ˜¯ä»¥ä¸‹ä¸‰ç§æ ¼å¼ï¼š
+	 *                  1. è¡¨åæˆ–è¡¨åˆ«å.  å³fieldNameè‹¥æ˜¯å¤šè¡¨è”åˆæŸ¥è¯¢ä¸­æŸä¸ªè¡¨çš„å­—æ®µï¼Œéœ€è¦ä»¥è¡¨åæˆ–ä¸´æ—¶è¡¨ååŠ â€œ.â€æ¥å¼•ç”¨ï¼Œå¯ä»¥æ”¾åœ¨aså‚æ•°é‡Œï¼Œ
+	 *                                   å¦‚to_char(a.start_date_time, 'yyyy-mm-dd')ï¼Œå…¶ä¸­a.å³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 *                  2. å­—æ®µåˆ«å                 å³å¯ä»¥ä¸ºè½¬æ¢ä¸ºå‡½æ•°æ ¼å¼åçš„æ–°å­—æ®µå£°æ˜åˆ«åï¼Œå¦‚to_char(start_date_time, 'yyyy-mm-dd') sdtï¼Œå…¶ä¸­sdtå³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 *                  3. è¡¨å.å­—æ®µåˆ«å    å³å¯ä»¥åŒæ—¶ä¼ å…¥è¡¨åå’Œå­—æ®µåˆ«åï¼Œä»¥ç¤ºæ„æ–¹å¼ä¼ å…¥ï¼Œå¦‚to_char(a.start_date_time, 'yyyy-mm-dd') sdtï¼Œå…¶ä¸­a.sdtå³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 * @return          è§„åˆ™ï¼šè¿”å›ä»¥fn:å¼€å¤´ï¼Œ:endç»“å°¾çš„å‡½æ•°å½¢å¼
 	 */
 	public static String genMax(String tableName, String fieldName, String as)
 	{
-		/* ³õÊ¼»¯²ÎÊı */
+		/* åˆå§‹åŒ–å‚æ•° */
 		as = as == null ? "" : as.trim();
 		if (!"".equals(as))
 		{
-			// ×Ö¶Î±ğÃû
+			// å­—æ®µåˆ«å
 			if (as.indexOf(".") < 0)
 			{
 				return "fn:max(" + getTargetField(tableName, fieldName) + ") as " + as + ":end";
 			}
 			else if (as.indexOf(".") > 0)
 			{
-				// ±íÃû.
+				// è¡¨å.
 				if (as.endsWith("."))
 					return "fn:max(" + as + getTargetField(tableName, fieldName) + "):end";
-				// ±íÃû.×Ö¶Î±ğÃû
+				// è¡¨å.å­—æ®µåˆ«å
 				else
 					return "fn:max(" + as.substring(0, as.indexOf(".") + 1) + getTargetField(tableName, fieldName) + 
 						   ") as " + as.substring(as.indexOf(".") + 1, as.length()) + ":end";
@@ -709,33 +709,33 @@ public class CaseHistoryFunction
 	}
 	
 	/**
-	 * Oracleº¯Êı£ºmin
-	 * @param tableName ×Ö¶ÎËùÊô±íÃû
-	 * @param fieldName ×Ö¶ÎÃû
-	 * @param as        ±ğÃû£¬¿ÉÒÔÊÇÒÔÏÂÈıÖÖ¸ñÊ½£º
-	 *                  1. ±íÃû»ò±í±ğÃû.  ¼´fieldNameÈôÊÇ¶à±íÁªºÏ²éÑ¯ÖĞÄ³¸ö±íµÄ×Ö¶Î£¬ĞèÒªÒÔ±íÃû»òÁÙÊ±±íÃû¼Ó¡°.¡±À´ÒıÓÃ£¬¿ÉÒÔ·ÅÔÚas²ÎÊıÀï£¬
-	 *                                   Èçto_char(a.start_date_time, 'yyyy-mm-dd')£¬ÆäÖĞa.¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 *                  2. ×Ö¶Î±ğÃû                 ¼´¿ÉÒÔÎª×ª»»Îªº¯Êı¸ñÊ½ºóµÄĞÂ×Ö¶ÎÉùÃ÷±ğÃû£¬Èçto_char(start_date_time, 'yyyy-mm-dd') sdt£¬ÆäÖĞsdt¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 *                  3. ±íÃû.×Ö¶Î±ğÃû    ¼´¿ÉÒÔÍ¬Ê±´«Èë±íÃûºÍ×Ö¶Î±ğÃû£¬ÒÔÊ¾Òâ·½Ê½´«Èë£¬Èçto_char(a.start_date_time, 'yyyy-mm-dd') sdt£¬ÆäÖĞa.sdt¼´¿É×÷Îªas²ÎÊı´«Èë£»
-	 * @return          ¹æÔò£º·µ»ØÒÔfn:¿ªÍ·£¬:end½áÎ²µÄº¯ÊıĞÎÊ½
+	 * Oracleå‡½æ•°ï¼šmin
+	 * @param tableName å­—æ®µæ‰€å±è¡¨å
+	 * @param fieldName å­—æ®µå
+	 * @param as        åˆ«åï¼Œå¯ä»¥æ˜¯ä»¥ä¸‹ä¸‰ç§æ ¼å¼ï¼š
+	 *                  1. è¡¨åæˆ–è¡¨åˆ«å.  å³fieldNameè‹¥æ˜¯å¤šè¡¨è”åˆæŸ¥è¯¢ä¸­æŸä¸ªè¡¨çš„å­—æ®µï¼Œéœ€è¦ä»¥è¡¨åæˆ–ä¸´æ—¶è¡¨ååŠ â€œ.â€æ¥å¼•ç”¨ï¼Œå¯ä»¥æ”¾åœ¨aså‚æ•°é‡Œï¼Œ
+	 *                                   å¦‚to_char(a.start_date_time, 'yyyy-mm-dd')ï¼Œå…¶ä¸­a.å³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 *                  2. å­—æ®µåˆ«å                 å³å¯ä»¥ä¸ºè½¬æ¢ä¸ºå‡½æ•°æ ¼å¼åçš„æ–°å­—æ®µå£°æ˜åˆ«åï¼Œå¦‚to_char(start_date_time, 'yyyy-mm-dd') sdtï¼Œå…¶ä¸­sdtå³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 *                  3. è¡¨å.å­—æ®µåˆ«å    å³å¯ä»¥åŒæ—¶ä¼ å…¥è¡¨åå’Œå­—æ®µåˆ«åï¼Œä»¥ç¤ºæ„æ–¹å¼ä¼ å…¥ï¼Œå¦‚to_char(a.start_date_time, 'yyyy-mm-dd') sdtï¼Œå…¶ä¸­a.sdtå³å¯ä½œä¸ºaså‚æ•°ä¼ å…¥ï¼›
+	 * @return          è§„åˆ™ï¼šè¿”å›ä»¥fn:å¼€å¤´ï¼Œ:endç»“å°¾çš„å‡½æ•°å½¢å¼
 	 */
 	public static String genMin(String tableName, String fieldName, String as)
 	{
-		/* ³õÊ¼»¯²ÎÊı */
+		/* åˆå§‹åŒ–å‚æ•° */
 		as = as == null ? "" : as.trim();
 		if (!"".equals(as))
 		{
-			// ×Ö¶Î±ğÃû
+			// å­—æ®µåˆ«å
 			if (as.indexOf(".") < 0)
 			{
 				return "fn:min(" + getTargetField(tableName, fieldName) + ") as " + as + ":end";
 			}
 			else if (as.indexOf(".") > 0)
 			{
-				// ±íÃû.
+				// è¡¨å.
 				if (as.endsWith("."))
 					return "fn:min(" + as + getTargetField(tableName, fieldName) + "):end";
-				// ±íÃû.×Ö¶Î±ğÃû
+				// è¡¨å.å­—æ®µåˆ«å
 				else
 					return "fn:min(" + as.substring(0, as.indexOf(".") + 1) + getTargetField(tableName, fieldName) + 
 						   ") as " + as.substring(as.indexOf(".") + 1, as.length()) + ":end";
@@ -745,7 +745,7 @@ public class CaseHistoryFunction
 	}
 	
 	/**
-	 * ¹ıÂË SqlÓï¾äÖĞ
+	 * è¿‡æ»¤ Sqlè¯­å¥ä¸­
 	 * @param tableName
 	 * @param fieldName
 	 * @return

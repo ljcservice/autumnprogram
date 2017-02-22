@@ -16,7 +16,7 @@ import com.hitzd.his.Web.Utils.CommonUtils;
 import com.hitzd.his.tree.TreeNode;
 
 /**
- * spring 代理发放
+ * spring 浠ｇ悊鍙戞斁
  * @author liujc
  *
  */
@@ -28,8 +28,8 @@ public class ServletProxy extends GenericServlet
     public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException
     {
         
-        /*2014-07-23 liujc 添加  存放具体引用菜单之前的菜单id 解决功能权限解耦合 */
-        /*存放具体引用菜单之前的菜单id */
+        /*2014-07-23 liujc 娣诲姞  瀛樻斁鍏蜂綋寮曠敤鑿滃崟涔嬪墠鐨勮彍鍗昳d 瑙ｅ喅鍔熻兘鏉冮檺瑙ｈ�﹀悎 */
+        /*瀛樻斁鍏蜂綋寮曠敤鑿滃崟涔嬪墠鐨勮彍鍗昳d */
         String treeNodeMenuId = CommonUtils.getRequestParameter(((HttpServletRequest)req), TreeNode.URLMenuID, "");
         if("".equals(treeNodeMenuId)) treeNodeMenuId = (String)((HttpServletRequest)req).getSession().getAttribute(TreeNode.URLMenuID);
         ((HttpServletRequest)req).getSession().setAttribute(TreeNode.URLMenuID, treeNodeMenuId);

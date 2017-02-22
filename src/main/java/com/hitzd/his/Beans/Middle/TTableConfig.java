@@ -4,31 +4,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * ±í¶¨ÒåÅäÖÃ
+ * è¡¨å®šä¹‰é…ç½®
  * @author Crystal
  */
 public class TTableConfig
 {
-	/* Î¨Ò»±êÊ¶ */
+	/* å”¯ä¸€æ ‡è¯† */
 	private String tableId;
-	/* ±íÃèÊö */
+	/* è¡¨æè¿° */
 	private String tableDesc;
-	/* Ô­Ê¼±í */
+	/* åŸå§‹è¡¨ */
 	private String originalTable;
-	/* Ä¿±ê±í */
+	/* ç›®æ ‡è¡¨ */
 	private String targetTable;
-	/* ±¸×¢ */
+	/* å¤‡æ³¨ */
 	private String remark;
-	/* HIS±ê×¼£¬Ä¬ÈÏJWYH-304 */
+	/* HISæ ‡å‡†ï¼Œé»˜è®¤JWYH-304 */
 	private String hisName;
-	/* Êı¾İÔ´±êÊ¶ */
+	/* æ•°æ®æºæ ‡è¯† */
 	private String dbUrl;
-	/* Êı¾İ¿âÀàĞÍ£ºOracle,MySQL,SQL Server */
+	/* æ•°æ®åº“ç±»å‹ï¼šOracle,MySQL,SQL Server */
 	private String dbName;
-	/* ¶ÔÓ¦×Ö¶Î */
+	/* å¯¹åº”å­—æ®µ */
 	private TFieldConfig[] fields;
 	private Map<String, TFieldConfig> fieldMap = null;
-	/* ¶ÔÓ¦²éÑ¯Ìõ¼ş */
+	/* å¯¹åº”æŸ¥è¯¢æ¡ä»¶ */
 	private TQueryConfig[] queries;
 	private Map<String, TQueryConfig> queryMap = null;
 

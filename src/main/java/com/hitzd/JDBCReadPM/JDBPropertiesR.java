@@ -9,7 +9,7 @@ import java.util.Properties;
 import org.springframework.stereotype.Component;
 
 /**
- * ¿ØÖÆ¶ÁÈ¡jdbc.properties
+ * æ§åˆ¶è¯»å–jdbc.properties
  * @author liujc
  */
 @Component("jdbc.Properties")
@@ -23,7 +23,7 @@ public class JDBPropertiesR extends Properties
         {
             if(!f.exists())
             {
-                throw new RuntimeException("Î´ÕÒµ½µÄ¸ÃÎÄ¼ş:\"" + f.getCanonicalPath() + "\"");
+                throw new RuntimeException("æœªæ‰¾åˆ°çš„è¯¥æ–‡ä»¶:\"" + f.getCanonicalPath() + "\"");
             }
             InputStream input = new BufferedInputStream(new FileInputStream(f));
             load(input);       

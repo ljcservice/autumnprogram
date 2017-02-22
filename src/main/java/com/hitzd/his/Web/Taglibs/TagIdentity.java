@@ -17,7 +17,7 @@ import com.hitzd.his.casehistory.helper.CaseHistoryFactory;
 import com.hitzd.his.casehistory.helper.ICaseHistoryHelper;
 
 /**
- * taglib Éí·İ²éÑ¯±êÇ© 
+ * taglib èº«ä»½æŸ¥è¯¢æ ‡ç­¾ 
  * @author jingcong
  *
  */
@@ -94,13 +94,13 @@ public class TagIdentity extends TagSupport
             }
             sbfr.append("<div id=\"popover-identity-box\" class=\"popover-box\" data-field=\"field-identity\">");
             sbfr.append("<div class=\"close-container\">");
-            sbfr.append("<a href=\"#\">¡¾¹Ø±Õ¡¿</a>");
+            sbfr.append("<a href=\"#\">ã€å…³é—­ã€‘</a>");
             sbfr.append("</div>");
             sbfr.append("<input type=\"hidden\" class=\"JUST_FOR_FIREFOX_DONT_REMOVE\"/>");
             sbfr.append("<div class=\"popover-body\" style=\"width:250px;\">");
             sbfr.append("<label class=\"chk-all\" style=\"width:200px;\">");
             sbfr.append("<input type=\"checkbox\" class=\"chk-all\"/>");
-            sbfr.append("  È«²¿");
+            sbfr.append("  å…¨éƒ¨");
             sbfr.append("</label>");
             for(TCommonRecord tcr:identitys)
             {                           

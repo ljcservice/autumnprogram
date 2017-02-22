@@ -11,17 +11,17 @@ import javax.servlet.jsp.tagext.TagSupport;
 /**
  * 
  * @author hershel
- * ÓÃÓÚ»­±ıÍ¼.
+ * ç”¨äºç”»é¥¼å›¾.
  *
  */
 
 public class TagPieGraph extends TagSupport 
 {
-	/*±êÌâ£¬¿ÉÑ¡*/	
+	/*æ ‡é¢˜ï¼Œå¯é€‰*/	
 	private String title = "";
-	/*XÖá*/
+	/*Xè½´*/
 	private List<String> x;
-	/*YÖá*/
+	/*Yè½´*/
 	private List<String> y;
 	
 	private String xLabel = "";
@@ -34,7 +34,7 @@ public class TagPieGraph extends TagSupport
 	private String startDate = "";
 	private String endDate = "";
 	
-	/*Ç°¶àÉÙ¸ö*/
+	/*å‰å¤šå°‘ä¸ª*/
 	private int number = 7;
 	
 	
@@ -83,7 +83,7 @@ public class TagPieGraph extends TagSupport
 	public void init()
 	{
 		if("".equals(height)){setHeight(((x.size()*26)>500?(x.size()*35):500) + "");}
-		if("".equals(width) ){setWidth("500");}//×Ô¶¨Òå¿í¶È
+		if("".equals(width) ){setWidth("500");}//è‡ªå®šä¹‰å®½åº¦
 	}
 	private void reset()
 	{
@@ -102,19 +102,19 @@ public class TagPieGraph extends TagSupport
 		String serialId = UUID.randomUUID().toString();
 		String aid = UUID.randomUUID().toString();
 		
-		//´¦ÀíÇ°¶àÉÙ¸ö
+		//å¤„ç†å‰å¤šå°‘ä¸ª
 		x = x.subList(0, number);
 		y = y.subList(0, number);
-		//×¼±¸±êÌâ
+		//å‡†å¤‡æ ‡é¢˜
 		if("".equals(title)){title = xLabel + "-" + yLabel ;}
 		String dateString = "\";";
 		if(!"".equals(startDate) && !"".equals(endDate))
 			dateString = "<div style='height:10px;'>&nbsp;</div><span style='font-size:12px;padding-top:30px;'>" +
-			"¿ªÊ¼Ê±¼ä£º" +startDate+ "&nbsp;&nbsp;½áÊøÊ±¼ä"+endDate+"</span>\";";
+			"å¼€å§‹æ—¶é—´ï¼š" +startDate+ "&nbsp;&nbsp;ç»“æŸæ—¶é—´"+endDate+"</span>\";";
 		try 
 		{
 			writer.append("<div><div id='"+serialId+ "' style='height:"+height+"px;width:"+width+"px;' /></div>\n");
-			writer.append("<a id="+aid+" href='javascript:void(0)' style='text-decoration: none;color: black;font-size: 12px;' >µã»÷ÏÂÔØÍ¼Æ¬</a>\n");
+			writer.append("<a id="+aid+" href='javascript:void(0)' style='text-decoration: none;color: black;font-size: 12px;' >ç‚¹å‡»ä¸‹è½½å›¾ç‰‡</a>\n");
 			writer.append("<script type=\"text/javascript\">\n");
 			writer.append("$(document).ready(function () {\n" +
 	"                    $.jqplot.config.enablePlugins = true;\n");
@@ -145,7 +145,7 @@ public class TagPieGraph extends TagSupport
 	"                                chart.jqplotSaveImage();\n" +
 	"                            };\n" +
 	"                        }else{\n" +
-	"                            $('#" +aid+ "').text('¶Ô²»Æğ£¬ÄúµÄä¯ÀÀÆ÷²»Ö§³ÖÍ¼Æ¬µ¼³ö,ÇëÉı¼¶µ½Ö§³ÖHTML5ä¯ÀÀÆ÷');\n"+
+	"                            $('#" +aid+ "').text('å¯¹ä¸èµ·ï¼Œæ‚¨çš„æµè§ˆå™¨ä¸æ”¯æŒå›¾ç‰‡å¯¼å‡º,è¯·å‡çº§åˆ°æ”¯æŒHTML5æµè§ˆå™¨');\n"+
 	"                        }      \n"+
 	"                    }catch(e){\n" +
 	"                         $('#" +aid+ "').hide();\n"+

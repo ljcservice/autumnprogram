@@ -16,7 +16,7 @@ import com.hitzd.his.sso.SSOController;
 
 
 /**
- * µÇÂ½¹¦ÄÜ   
+ * ç™»é™†åŠŸèƒ½   
  */
 @Component("VerifyLogin")
 public class VerifyLogin extends HttpServlet 
@@ -38,19 +38,19 @@ public class VerifyLogin extends HttpServlet
 	        response.sendRedirect("/AllLogin.jsp");
 	        return ;
 	    }
-	    /* ÅĞ¶ÏÊÇ·ñ´Óroot½øÀ´   */
+	    /* åˆ¤æ–­æ˜¯å¦ä»rootè¿›æ¥   */
 	    String root = CommonUtils.getRequestParameter(request, "root", "" );
 	    if("yes".equals(root))
 	    {
 	        this.rootLoginM(request, response);
 	        return ;
 	    }
-	    /* Æ½Ì¨Í¨ÓÃµÇÂ½·½·¨ */
+	    /* å¹³å°é€šç”¨ç™»é™†æ–¹æ³• */
 	    CommLoginM(request, response);
 	}
 
 	/**
-	 * ´Ó×ÜÆ½Ì¨½øÈë
+	 * ä»æ€»å¹³å°è¿›å…¥
 	 * @param request
 	 * @param response
 	 * @throws IOException
@@ -68,25 +68,25 @@ public class VerifyLogin extends HttpServlet
                 request.getSession().setAttribute(User.UserSessionCode, user);
                 String token = SSOController.loginUser(user, request.getContextPath());
                 request.getSession().setAttribute(SSOController.Token, token);
-                // 2014-04-28 Áõ­Z´Ï  Ôö¼Ó oken²ÎÊı ÓÃÓÚÓÃ»§µÇÂ¼Î¨Ò»±êÊ¾ 
+                // 2014-04-28 åˆ˜ç’Ÿèª  å¢åŠ  okenå‚æ•° ç”¨äºç”¨æˆ·ç™»å½•å”¯ä¸€æ ‡ç¤º 
                 
                 response.sendRedirect(request.getContextPath() + "/AllLogin.jsp?error=0&" + SSOController.getToken(request.getSession()));
             }
             else 
             {
-                // ÓÃ»§²»´æÔÚ»òÃÜÂë´íÎó
+                // ç”¨æˆ·ä¸å­˜åœ¨æˆ–å¯†ç é”™è¯¯
                 response.sendRedirect(request.getContextPath() + "/AllLogin.jsp?error=" + error);
             }
         }
         else
         {
-            // ÓÃ»§ÃûÃÜÂë²»È«
+            // ç”¨æˆ·åå¯†ç ä¸å…¨
             response.sendRedirect( request.getContextPath() + "/AllLogin.jsp?error=100");
         }
 	}
 	
 	/**
-	 * Æ½Ì¨Í¨ÓÃµÇÂ½·½·¨ 
+	 * å¹³å°é€šç”¨ç™»é™†æ–¹æ³• 
 	 * @param request
 	 * @param response
 	 * @throws IOException
@@ -108,13 +108,13 @@ public class VerifyLogin extends HttpServlet
             }
             else
             {
-                // ÓÃ»§²»´æÔÚ»òÃÜÂë´íÎó
+                // ç”¨æˆ·ä¸å­˜åœ¨æˆ–å¯†ç é”™è¯¯
                 response.sendRedirect(request.getContextPath() + "/index.jsp?error=" + error);
             }
         }
         else
         {
-            // ÓÃ»§ÃûÃÜÂë²»È«
+            // ç”¨æˆ·åå¯†ç ä¸å…¨
             response.sendRedirect( request.getContextPath() + "/index.jsp?error=100");
         }
     }

@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * »ñµÃ¹«¹²²ÎÊıÀà 
+ * è·å¾—å…¬å…±å‚æ•°ç±» 
  * @author Administrator
  */
 public class ReadCommPropHelper
@@ -23,7 +23,7 @@ public class ReadCommPropHelper
             File f = new File("commonConfig.properties");
             if(!f.exists())
             {
-                throw new RuntimeException("Î´ÕÒµ½µÄ¸ÃÎÄ¼ş:\"" + f.getCanonicalPath() + "\"");
+                throw new RuntimeException("æœªæ‰¾åˆ°çš„è¯¥æ–‡ä»¶:\"" + f.getCanonicalPath() + "\"");
             }
             InputStream input = new BufferedInputStream(new FileInputStream(f));
             prop.load(input);
@@ -39,7 +39,7 @@ public class ReadCommPropHelper
     }
     
     /**
-     * »ñµÃÖ¸¶¨²ÎÊı 
+     * è·å¾—æŒ‡å®šå‚æ•° 
      * @param key
      * @return
      */
@@ -49,7 +49,7 @@ public class ReadCommPropHelper
     }
     
     /**
-     * »ñµÃËùÓĞ²ÎÊı
+     * è·å¾—æ‰€æœ‰å‚æ•°
      * @return
      */
     public static  Map<String,String> getPropertiesAll()

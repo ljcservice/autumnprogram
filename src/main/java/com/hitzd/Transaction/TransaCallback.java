@@ -7,8 +7,8 @@ import org.springframework.transaction.support.TransactionCallback;
 import com.hitzd.DBUtils.TCommonRecord;
 
 /**
- * 事务回调方法  用于回滚 
- *  尽量添加数据连接 
+ * 浜嬪姟鍥炶皟鏂规硶  鐢ㄤ簬鍥炴粴 
+ *  灏介噺娣诲姞鏁版嵁杩炴帴 
  * @author Administrator
  *
  */
@@ -63,7 +63,7 @@ public abstract class TransaCallback implements TransactionCallback
     }
     
     /**
-     * 用户执行sql 方法  
+     * 鐢ㄦ埛鎵цsql 鏂规硶  
      * @return
      */
     abstract public void ExceuteSqlRecord();

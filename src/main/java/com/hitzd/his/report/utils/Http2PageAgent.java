@@ -4,7 +4,7 @@ import javax.servlet.http.*;
 import java.util.*;
 
 /**
- * 获得Request 中的信息
+ * 鑾峰緱Request 涓殑淇℃伅
  * @author jingcong
  *
  */

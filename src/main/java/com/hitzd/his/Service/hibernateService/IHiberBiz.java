@@ -11,23 +11,23 @@ import com.hitzd.DBUtils.TCommonRecord;
 public interface IHiberBiz {
 
 	/**
-	 * 查询
+	 * 鏌ヨ
 	 * @param sql
 	 * @return
 	 */
 	public List getList(String sql);
 	/**
-	 * 更新
+	 * 鏇存柊
 	 * @param sql
 	 */
 	public void update(String sql) ;
 	/**
-	 * 删除
+	 * 鍒犻櫎
 	 * @param sql
 	 */
 	public void delete(String sql);
 	/**
-	 * 插入
+	 * 鎻掑叆
 	 * @param sql
 	 */
 	public void insert(String sql);

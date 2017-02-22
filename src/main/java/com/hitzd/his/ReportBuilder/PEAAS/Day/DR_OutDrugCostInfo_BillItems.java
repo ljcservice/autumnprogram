@@ -23,7 +23,7 @@ import com.hitzd.his.task.Task;
 import com.hitzd.persistent.Persistent4DB;
 
 /**
- * Ò©Æ·Í³¼ÆÖ§³Ö²¿¶ÓÒ½Ôº ¾üÎ¯Ò»ºÅµÄÇé¿ö 
+ * è¯å“ç»Ÿè®¡æ”¯æŒéƒ¨é˜ŸåŒ»é™¢ å†›å§”ä¸€å·çš„æƒ…å†µ 
  * @author jingcong
  *
  */
@@ -35,7 +35,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
         // TODO Auto-generated method stub
         return null;
     }
-    /* ²ğ·Ö³§¼ÒÓë¹æ¸ñ */
+    /* æ‹†åˆ†å‚å®¶ä¸è§„æ ¼ */
     List<TCommonRecord> supplier = new ArrayList<TCommonRecord>();
     @Override
     public String BuildReport(String ADate, Task AOwner)
@@ -58,7 +58,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
     }
     
     /**
-     * °´Ììµ¥Ò©Æ··ÑÓÃÍ³¼Æ
+     * æŒ‰å¤©å•è¯å“è´¹ç”¨ç»Ÿè®¡
      * @param ADate
      */
     private void DrugDayCost(final String ADate)
@@ -116,7 +116,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                 gensql = ichr.genSQL(strFields, gensql, null, lsGroups, null);
                 List<TCommonRecord> listDDC = his.query(gensql, cmr);
                 query.update("delete dr_drugDayCost where dr_date = to_date('" + ADate + "','yyyy-mm-dd')");
-                System.out.println(" dr_drugDayCost-×ÜÌõÊı:" + listDDC.size());
+                System.out.println(" dr_drugDayCost-æ€»æ¡æ•°:" + listDDC.size());
                 int i = 0;
                 for(TCommonRecord t : listDDC)
                 {
@@ -142,7 +142,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                         + ",'" + t.get("units",true) + "'"
                         + " )";
                     query.update(sql);
-                    System.out.println("=====Ìí¼ÓÊıÁ¿Îª" + listDDC.size() + "/" + (++i) + "====");
+                    System.out.println("=====æ·»åŠ æ•°é‡ä¸º" + listDDC.size() + "/" + (++i) + "====");
                 }
                 cmr       = null;
                 query     = null;
@@ -152,7 +152,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
     }
     
     /**
-     * °´ÌìÒ½Éúµ¥Ò©Æ··ÑÓÃÍ³¼Æ
+     * æŒ‰å¤©åŒ»ç”Ÿå•è¯å“è´¹ç”¨ç»Ÿè®¡
      * @param ADate
      */
     private void DrugDoctorDeptCost(final String ADate)
@@ -211,7 +211,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                 gensql = ichr.genSQL(strFields, gensql, null, lsGroups, null);
                 List<TCommonRecord> listDDDC = his.query(gensql, cmr);
                 query.update("delete DR_DRUGDOCTORDEPTCOST where dr_date = to_date('" + ADate + "','yyyy-mm-dd')");
-                System.out.println(" DR_DRUGDOCTORDEPTCOST-×ÜÌõÊı:" + listDDDC.size());
+                System.out.println(" DR_DRUGDOCTORDEPTCOST-æ€»æ¡æ•°:" + listDDDC.size());
                 int i = 0;
                 for(TCommonRecord t : listDDDC)
                 {
@@ -242,7 +242,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                             ",'" + t.get("item_code",true)        + "'" +
                             ",'" + t.get("item_name",true)        + "'" +
                             ",'" + t.get("doctor_code",true)      + "'" +
-                            ",'" + (!"".equals(t.get("ordered_by_doctor"))?t.get("ordered_by_doctor",true):"ÎŞ") + "'" +
+                            ",'" + (!"".equals(t.get("ordered_by_doctor"))?t.get("ordered_by_doctor",true):"æ— ") + "'" +
                             ",'" + t.get("amount",true)           + "'" +
                             ",'" + t.get("costs",true)            + "'" +
                             ",'" + t.get("item_spec",true)     + "'" +
@@ -256,7 +256,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                             ",'" + t.get("units",true)            + "'" +
                             ")";
                     query.update(sql);
-                    System.out.println("=====Ìí¼ÓÊıÁ¿Îª" + listDDDC.size() + "/" + (++i) + "====");
+                    System.out.println("=====æ·»åŠ æ•°é‡ä¸º" + listDDDC.size() + "/" + (++i) + "====");
                 }
                 
                 cmr       = null;
@@ -267,7 +267,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
     }
     
     /**
-     * °´Ìì²¡ÈËµ¥Ò©Æ··Ñ
+     * æŒ‰å¤©ç—…äººå•è¯å“è´¹
      * @param ADate
      */
     private void DrugPatDDCost(final String ADate)
@@ -342,7 +342,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                 gensql = ichr.genSQL(strFields, gensql, null, lsGroups, null);
                 List<TCommonRecord> listDDDC = his.query(gensql, cmr);
                 query.update("delete DR_DRUGPATDDCOST where  dr_date = to_date('" + ADate + "','yyyy-mm-dd')");
-                System.out.println(" DR_DRUGPATDDCOST-×ÜÌõÊı:" + listDDDC.size());
+                System.out.println(" DR_DRUGPATDDCOST-æ€»æ¡æ•°:" + listDDDC.size());
                 int i = 0;
                 for(TCommonRecord t : listDDDC)
                 {
@@ -379,13 +379,13 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                             + "to_date('"  + ADate     + "','yyyy-mm-dd')"
                             + ",'" + t.get("item_code",true)      + "'"
                             + ",'" + t.get("item_name",true)      + "'"
-                            + ",'" + (!"".equals(t.get("patient_id"))?t.get("patient_id",true):"ÎŞ") + "'"
+                            + ",'" + (!"".equals(t.get("patient_id"))?t.get("patient_id",true):"æ— ") + "'"
                             + ",'" + t.get("name",true)   + "'"
                             + ",'" + t.get("sex",true)    + "'"
                             + ",'" + DateUtils.calcuateAgeByTwoDates(t.get("date_of_birth",true), null, "yyyy-MM-dd") + "'"
                             + ",'" + t.get("identity",true)       + "'"
                             + ",'" + t.get("doctor_code",true)    + "'"
-                            + ",'" + (!"".equals(t.get("ordered_by_doctor"))?t.get("ordered_by_doctor",true):"ÎŞ") + "'" 
+                            + ",'" + (!"".equals(t.get("ordered_by_doctor"))?t.get("ordered_by_doctor",true):"æ— ") + "'" 
                             + ",'" + t.get("amount",true)         + "'"
                             + ",'" + t.get("costs",true)          + "'"
                             + ",'" + t.get("item_spec",true)   + "'"
@@ -400,7 +400,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                             + ",'" + dc.getDeptName( t.get("performed_by")) + "'"
                             + ")";
                     query.update(sql);
-                    System.out.println("=====Ìí¼ÓÊıÁ¿Îª" + listDDDC.size() + "/" + (++i) + "====");
+                    System.out.println("=====æ·»åŠ æ•°é‡ä¸º" + listDDDC.size() + "/" + (++i) + "====");
                 }
                 cmr       = null;
                 query     = null;
@@ -410,7 +410,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
     }
     
     /**
-     *  Ñ¡Ôñ ×¥È¡ÃÅÕï´¦·½ ³öÈ¥Ò© Ò©·¿  
+     *  é€‰æ‹© æŠ“å–é—¨è¯Šå¤„æ–¹ å‡ºå»è¯ è¯æˆ¿  
      * @return
      
     private String getFetchDeptCode()

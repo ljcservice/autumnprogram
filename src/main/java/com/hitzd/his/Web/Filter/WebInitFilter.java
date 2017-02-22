@@ -19,14 +19,14 @@ import javax.servlet.http.HttpServletRequest;
 
 
 /**
- * ÓÃÀ´³õÊ¼»¯ ²¢ À¹½Ø»ù±¾ Ò³Ãæ
+ * ç”¨æ¥åˆå§‹åŒ– å¹¶ æ‹¦æˆªåŸºæœ¬ é¡µé¢
  * @author Administrator
  *
  */
 public class WebInitFilter implements Filter {
 	static{
 		Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.HOUR_OF_DAY, 23);//23µã³õÊ¼»¯
+		calendar.set(Calendar.HOUR_OF_DAY, 23);//23ç‚¹åˆå§‹åŒ–
 		long millisOfDay = 24*3600*1000;
 		long delayMillis = calendar.getTimeInMillis()-Calendar.getInstance().getTimeInMillis();		
 		ScheduledExecutorService  service = Executors.newScheduledThreadPool(1);
@@ -40,7 +40,7 @@ public class WebInitFilter implements Filter {
     }
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException
 	{
-		// TODO: Ôö¼Ó¼ÓÃÜ¹·ÑéÖ¤
+		// TODO: å¢åŠ åŠ å¯†ç‹—éªŒè¯
 	    HttpServletRequest request = (HttpServletRequest) req;
 	    if(request.getRequestURI().indexOf("/services/") == -1)
 	    {
@@ -52,10 +52,10 @@ public class WebInitFilter implements Filter {
 	@Override
 	public void destroy() {	}
 	/**
-	 * ÈÕÖ¾Êä³ö»Ø¼ÇÂ¼ËùÓĞ¿ØÖÆÌ¨Êä³öÈÕÖ¾
-	 * ³õÊ¼»¯ÈÕÖ¾Êä³ö
-	 * 1.Çå¿ÕÊ±¼äÎªÃ¿ÌìÍíÉÏ23:00~24:00
-	 * 2.ÎÄ¼şÃû³Æ£ºout.log; err.log
+	 * æ—¥å¿—è¾“å‡ºå›è®°å½•æ‰€æœ‰æ§åˆ¶å°è¾“å‡ºæ—¥å¿—
+	 * åˆå§‹åŒ–æ—¥å¿—è¾“å‡º
+	 * 1.æ¸…ç©ºæ—¶é—´ä¸ºæ¯å¤©æ™šä¸Š23:00~24:00
+	 * 2.æ–‡ä»¶åç§°ï¼šout.log; err.log
 	 */
 	@Override
 	public void init(FilterConfig arg0) throws ServletException 
@@ -94,7 +94,7 @@ class LogTask implements Runnable
 	{
 		try 
 		{			
-			System.out.println("===========================¿ØÖÆÌ¨Êä³öÈÕÖ¾¼ÇÂ¼Çå¿Õ==========================================");
+			System.out.println("===========================æ§åˆ¶å°è¾“å‡ºæ—¥å¿—è®°å½•æ¸…ç©º==========================================");
 	        PrintStream out = new PrintStream(new FileOutputStream("out.log"));
 	        PrintStream tee = new TeeStream(System.out, out);
 	        System.setOut(tee);
@@ -102,7 +102,7 @@ class LogTask implements Runnable
 	        PrintStream err = new PrintStream(new FileOutputStream("err.log"));
 	        tee = new TeeStream(System.err, err);
 	        System.setErr(tee);
-	        System.out.println("===========================¿ØÖÆÌ¨ÈÕÖ¾¼ÇÂ¼ÖĞ£¬ÎÄ¼ş[Êä³ö:out.log][´íÎó:err.log]==============================");
+	        System.out.println("===========================æ§åˆ¶å°æ—¥å¿—è®°å½•ä¸­ï¼Œæ–‡ä»¶[è¾“å‡º:out.log][é”™è¯¯:err.log]==============================");
 	    }
 		catch (FileNotFoundException e) 
 	    {

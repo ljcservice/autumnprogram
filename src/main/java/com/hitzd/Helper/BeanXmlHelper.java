@@ -21,7 +21,7 @@ import com.hitzd.Annotations.BeanPKProperty;
 
 public class BeanXmlHelper<T> 
 {
-	/* ±£´æµØÖ· */
+	/* ä¿å­˜åœ°å€ */
 	private static String path ; 
 
 	static
@@ -37,7 +37,7 @@ public class BeanXmlHelper<T>
 			if(!file.exists())
 			{
 				file.mkdirs();
-				throw new RuntimeException("Î´ÕÒµ½µÄ¸ÃÎÄ¼ş:\"" + file.getCanonicalPath() + "\"");
+				throw new RuntimeException("æœªæ‰¾åˆ°çš„è¯¥æ–‡ä»¶:\"" + file.getCanonicalPath() + "\"");
 			}
 			path = file.getCanonicalPath() + "/";
 		}
@@ -48,7 +48,7 @@ public class BeanXmlHelper<T>
 	}
 	
 	/**
-	 * ±£´æÒ»¸öbeanĞÅÏ¢Îªxml
+	 * ä¿å­˜ä¸€ä¸ªbeanä¿¡æ¯ä¸ºxml
 	 * @param bean
 	 */
 	public void Save(T bean)
@@ -69,7 +69,7 @@ public class BeanXmlHelper<T>
 	}
 	
 	/**
-	 * ±£´æ¶à¸öbeanĞÅÏ¢Îªxml
+	 * ä¿å­˜å¤šä¸ªbeanä¿¡æ¯ä¸ºxml
 	 * @param beans
 	 */
 	public void Save(T[] beans)
@@ -80,7 +80,7 @@ public class BeanXmlHelper<T>
 		}
 	}
 	/**
-	 * ·µ»ØÒ»¸öbean
+	 * è¿”å›ä¸€ä¸ªbean
 	 * @param path
 	 * @return
 	 */
@@ -108,7 +108,7 @@ public class BeanXmlHelper<T>
 	}
 	
 	/**
-	 * ·µ»ØÒ»¸öbean
+	 * è¿”å›ä¸€ä¸ªbean
 	 * @param bean
 	 * @return
 	 */
@@ -130,7 +130,7 @@ public class BeanXmlHelper<T>
 	}
 	
 	/**
-	 *  ·µ»Ø¶à¸öbean 
+	 *  è¿”å›å¤šä¸ªbean 
 	 * @param beans
 	 * @return
 	 */
@@ -151,7 +151,7 @@ public class BeanXmlHelper<T>
 	}
 	
 	/**
-	 * ²éÕÒÖ÷¼ü
+	 * æŸ¥æ‰¾ä¸»é”®
 	 * @param x
 	 * @return
 	 */

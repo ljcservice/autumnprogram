@@ -9,9 +9,9 @@ import java.util.List;
  * @param <T>
  */
 public class QueryResult<T> {
-    /** 结果记录 **/
+    /** 缁撴灉璁板綍 **/
     private List<T> resultlist;
-    /** 总记录数 **/
+    /** 鎬昏褰曟暟 **/
     private long totalrecord;
 
     public List<T> getResultlist() {

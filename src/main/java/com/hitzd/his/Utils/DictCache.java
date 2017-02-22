@@ -15,41 +15,41 @@ import com.hitzd.his.casehistory.helper.ICaseHistoryHelper;
 import com.hitzd.DBUtils.CommonMapper;
 
 /**
- * Êı¾İÀ´Ô´ his ÔËĞĞ×ÖµäÀà
+ * æ•°æ®æ¥æº his è¿è¡Œå­—å…¸ç±»
  * @author Administrator
  *
  */
 public final class DictCache
 {
-    /* Ò½Éú */
+    /* åŒ»ç”Ÿ */
     private static HashMap<String, TCommonRecord>   doctorMap = null;
-    /* ²¿ÃÅ  */
+    /* éƒ¨é—¨  */
     private static HashMap<String, TCommonRecord>     deptMap = null;
-    /* ´ó²¿ÃÅ */
+    /* å¤§éƒ¨é—¨ */
     private static HashMap<String, TCommonRecord>     mergeDeptMap = null;
-    /* ±ê±¾ */
+    /* æ ‡æœ¬ */
     private static HashMap<String, TCommonRecord>    speciMap = null;
-    /* Î¢ÉúÎï×Öµä±í*/
+    /* å¾®ç”Ÿç‰©å­—å…¸è¡¨*/
     private static HashMap<String, TCommonRecord> germCodeMap = null;
-    /* Ï¸¾úÒ©Ãô×Öµä */
+    /* ç»†èŒè¯æ•å­—å…¸ */
     private static HashMap<String, TCommonRecord> germSensMap = null;
-    /* Ò©Æ·×Öµä */
+    /* è¯å“å­—å…¸ */
     private static HashMap<String, TCommonRecord> drugCodeMap = null;
-    /* Ò©Æ·×Öµä  code + units + drug_spec */
+    /* è¯å“å­—å…¸  code + units + drug_spec */
     private static HashMap<String, TCommonRecord> drugdictMap = null;
-    /* Ò©Æ·Àà×Öµä */
+    /* è¯å“ç±»å­—å…¸ */
     private static HashMap<String, TCommonRecord> drugClassMap = null;
-    /* ÓÃÒ©Í¾¾¶×Öµä */
+    /* ç”¨è¯é€”å¾„å­—å…¸ */
     private static HashMap<String, TCommonRecord>     adminMap = null;
-    /* Õï¶Ï×Öµä*/
+    /* è¯Šæ–­å­—å…¸*/
     private static HashMap<String, TCommonRecord> diagnosisMap = null;
-    /* Æµ´Î×Öµä*/
+    /* é¢‘æ¬¡å­—å…¸*/
     private static HashMap<String, TCommonRecord>   performMap = null;
-    /* ·Ñ±ğ×Öµä*/
+    /* è´¹åˆ«å­—å…¸*/
     private static HashMap<String, TCommonRecord>   chargeMap = null;
-    /* Éí·İ×Öµä*/
+    /* èº«ä»½å­—å…¸*/
     private static HashMap<String, TCommonRecord>   identityMap = null;
-    /* ¼ÁĞÍ×Öµä*/
+    /* å‰‚å‹å­—å…¸*/
     private static HashMap<String, TCommonRecord>   formMap = null;
     private JDBCQueryImpl hisQuery   = null;
     private JDBCQueryImpl iasQuery   = null;
@@ -58,7 +58,7 @@ public final class DictCache
     private static DictCache singClass = null;
     private DictCache()
     {
-        System.out.println("---------------------¹¤³§´´½¨ ");
+        System.out.println("---------------------å·¥å‚åˆ›å»º ");
         doctorMap    = new HashMap<String, TCommonRecord>();
         deptMap      = new LinkedHashMap<String, TCommonRecord>();
         mergeDeptMap = new LinkedHashMap<String, TCommonRecord>();
@@ -77,42 +77,42 @@ public final class DictCache
         hisQuery     = DBQueryFactory.getQuery("HIS"); 
         //iasQuery     = DBQueryFactory.getQuery("IAS"); 
         peaasQuery   = DBQueryFactory.getQuery("PEAAS");
-        /* ²¿ÃÅ */
+        /* éƒ¨é—¨ */
         this.setDept(hisQuery);
-        /* ´ó²¿ÃÅ */
+        /* å¤§éƒ¨é—¨ */
         this.setMergeDept(hisQuery);
-        /* Ò½Éú»ù±¾ĞÅÏ¢£¬¹¹½¨Ê±À´Ô´ÎªÓÃ»§Î¬»¤±í£¬Ê¹ÓÃ¹ı³ÌÖĞÈçÃ»ÓĞ£¬Ôò×Ô¶¯»º´æ£¬µ«²»Ìí¼ÓÊı¾İ¿âÖĞ£¬ĞíÓÃ»§×Ô¼ºÎ¬»¤*/
+        /* åŒ»ç”ŸåŸºæœ¬ä¿¡æ¯ï¼Œæ„å»ºæ—¶æ¥æºä¸ºç”¨æˆ·ç»´æŠ¤è¡¨ï¼Œä½¿ç”¨è¿‡ç¨‹ä¸­å¦‚æ²¡æœ‰ï¼Œåˆ™è‡ªåŠ¨ç¼“å­˜ï¼Œä½†ä¸æ·»åŠ æ•°æ®åº“ä¸­ï¼Œè®¸ç”¨æˆ·è‡ªå·±ç»´æŠ¤*/
         this.setDoctorCode();
-        /* ±ê±¾ */
+        /* æ ‡æœ¬ */
         this.setSpeci(hisQuery);
-        /* Î¢ÉúÎï×Öµä±í */
+        /* å¾®ç”Ÿç‰©å­—å…¸è¡¨ */
         //this.setGermCode(hisQuery);
-        /* Ï¸¾úÒ©Ãô×Öµä  */
+        /* ç»†èŒè¯æ•å­—å…¸  */
         //this.setGermSens(hisQuery);
-        /* Ò©Æ·×Öµä±í */
+        /* è¯å“å­—å…¸è¡¨ */
         this.setDrugDict(hisQuery);
-        /* Ò©Æ·Àà×Öµä±í */
+        /* è¯å“ç±»å­—å…¸è¡¨ */
         this.setDrugClassDict(hisQuery);
-        /* ¸øÒ©Í¾¾¶ */
+        /* ç»™è¯é€”å¾„ */
         this.setAdmin(hisQuery);
-        /* Õï¶Ï×Öµä */
+        /* è¯Šæ–­å­—å…¸ */
         this.setDiagnosis(hisQuery);
-        /* ÆµÂÊ×Öµä */
+        /* é¢‘ç‡å­—å…¸ */
         this.setPerformMap(hisQuery);
-        /* ·Ñ±ğ×Öµä */
+        /* è´¹åˆ«å­—å…¸ */
         this.setChargeMap(hisQuery);
-        /* Éí·İ×Öµä */
+        /* èº«ä»½å­—å…¸ */
         this.setIdentityMap(hisQuery);
-        /* ¼ÁĞÍ×Öµä */
+        /* å‰‚å‹å­—å…¸ */
         this.setFormMap(hisQuery);
         hisQuery   = null;
         iasQuery   = null;
         peaasQuery = null;
-        System.out.println("---------------------¹¤³§´´½¨½áÊø ");
+        System.out.println("---------------------å·¥å‚åˆ›å»ºç»“æŸ ");
     }
 
     /**
-     *  µ¥Àı
+     *  å•ä¾‹
      * @return
      */
     public static synchronized DictCache getNewInstance()
@@ -224,8 +224,8 @@ public final class DictCache
     }
     
     /**
-     * Æµ´Î ×Öµä 
-     * ¸ù¾İÃû×Ö µÃµ½ ĞòºÅ 
+     * é¢‘æ¬¡ å­—å…¸ 
+     * æ ¹æ®åå­— å¾—åˆ° åºå· 
      * @param perFormName
      * @return
      */
@@ -240,8 +240,8 @@ public final class DictCache
     }
     
     /**
-     * Æµ´Î×Öµä±í 
-     * @param admin  £º serial_no
+     * é¢‘æ¬¡å­—å…¸è¡¨ 
+     * @param admin  ï¼š serial_no
      * @return
      */
     public TCommonRecord getPerForm(String serial_no)
@@ -252,7 +252,7 @@ public final class DictCache
     }
     
     /**
-     * ÓÃ Ãû×Ö¼ìË÷id Õï¶Ï
+     * ç”¨ åå­—æ£€ç´¢id è¯Šæ–­
      * @param diagName
      * @return
      */
@@ -269,7 +269,7 @@ public final class DictCache
     }
     
     /**
-     * his ÖĞÓÃcode ²éÑ¯³öÃû×Ö 
+     * his ä¸­ç”¨code æŸ¥è¯¢å‡ºåå­— 
      * @param diagID
      * @return
      */
@@ -282,7 +282,7 @@ public final class DictCache
     }
     
     /**
-     * ÓÃÃû×Ö¼ìË÷id ÓÃÒ©Í¾¾¶
+     * ç”¨åå­—æ£€ç´¢id ç”¨è¯é€”å¾„
      * @param adminName
      * @return
      */
@@ -297,8 +297,8 @@ public final class DictCache
     }
     
     /**
-     * ÓÃÒ©Í¾¾¶
-     * @param admin  £º serial_no
+     * ç”¨è¯é€”å¾„
+     * @param admin  ï¼š serial_no
      * @return
      */
     public TCommonRecord getAdmin(String admin)
@@ -309,7 +309,7 @@ public final class DictCache
     }
     
     /**
-     * Ò©Æ·×Öµä±í
+     * è¯å“å­—å…¸è¡¨
      * @param hisQuery
      */
     private void setDrugDict(JDBCQueryImpl hisQuery)
@@ -321,7 +321,7 @@ public final class DictCache
         List<TCommonRecord> lsOrder = new ArrayList<TCommonRecord>();
         try
         {
-        	//TODO ³¤º£ 
+        	//TODO é•¿æµ· 
             /*String sql = "select * from comm.pham_basic_info";
             List<TCommonRecord> list = hisQuery.query(sql, new CommonMapper());
             for(TCommonRecord t :list)
@@ -350,7 +350,7 @@ public final class DictCache
     }
     
     /**
-     * Ò©Æ·×Öµä±í
+     * è¯å“å­—å…¸è¡¨
      * @param hisQuery
      */
     private void setDrugClassDict(JDBCQueryImpl hisQuery)
@@ -391,7 +391,7 @@ public final class DictCache
     }
     
     /**
-     * Ï¸¾úÒ©Ãô×Öµä 
+     * ç»†èŒè¯æ•å­—å…¸ 
      * @param hisQuery
      */
     private void setGermSens(JDBCQueryImpl hisQuery)
@@ -429,7 +429,7 @@ public final class DictCache
     
     
     /**
-     * Î¢ÉúÎï×Öµä±í 
+     * å¾®ç”Ÿç‰©å­—å…¸è¡¨ 
      * @param hisQuery
      */
     private void setGermCode(JDBCQueryImpl hisQuery)
@@ -464,7 +464,7 @@ public final class DictCache
     
     
     /**
-     * ±ê±¾ĞÅÏ¢ 
+     * æ ‡æœ¬ä¿¡æ¯ 
      * @param hisQuery
      */
     private void setSpeci(JDBCQueryImpl hisQuery)
@@ -498,26 +498,26 @@ public final class DictCache
     }
     
     /**
-     * ·µ»Ø ×Ô¶¨ÒåµÄ¹æÔòÂë 
+     * è¿”å› è‡ªå®šä¹‰çš„è§„åˆ™ç  
      * @param typeCode
      */
     public String getDrugTypeCode(String typeCode)
     {
         String re = Config.getParamValue(typeCode);
         if(re == null)
-            new RuntimeException("Ã»ÕÒµ½Ïà¶ÔÓ¦µÄ¹æÔòºÅ£¡");
+            new RuntimeException("æ²¡æ‰¾åˆ°ç›¸å¯¹åº”çš„è§„åˆ™å·ï¼");
         return re;
     }
     
     /**
-     * ³õÊ¼»¯ 
-     * Ò½ÉúĞÅÏ¢
+     * åˆå§‹åŒ– 
+     * åŒ»ç”Ÿä¿¡æ¯
      * @param query
      */
     @SuppressWarnings ("unchecked")
     private void setDoctorCode()
     {
-        /*  2014-10-29 liujc ĞŞ¸Ä  ½«Ò½Éú»ù±¾ĞÅÏ¢ÈÃÓÃ»§×Ô¼ºÎ¬»¤*/
+        /*  2014-10-29 liujc ä¿®æ”¹  å°†åŒ»ç”ŸåŸºæœ¬ä¿¡æ¯è®©ç”¨æˆ·è‡ªå·±ç»´æŠ¤*/
         JDBCQueryImpl query = DBQueryFactory.getQuery("PEAAS");
         List<TCommonRecord> list = query.query("select * from PEAAS.staff_dict ", new CommonMapper());
         try
@@ -567,8 +567,8 @@ public final class DictCache
     }
     
     /**
-     * ³õÊ¼»¯  
-     * ²¿ÃÅĞÅÏ¢ 
+     * åˆå§‹åŒ–  
+     * éƒ¨é—¨ä¿¡æ¯ 
      * @param query
      */
     private void setDept(JDBCQueryImpl query)
@@ -603,8 +603,8 @@ public final class DictCache
     }
     
     /**
-     * ³õÊ¼»¯  
-     * ´ó²¿ÃÅĞÅÏ¢ 
+     * åˆå§‹åŒ–  
+     * å¤§éƒ¨é—¨ä¿¡æ¯ 
      * @param query
      */
     private void setMergeDept(JDBCQueryImpl query1)
@@ -627,8 +627,8 @@ public final class DictCache
     }
     
     /**
-     * ³õÊ¼»¯
-     * ·Ñ±ğĞÅÏ¢ 
+     * åˆå§‹åŒ–
+     * è´¹åˆ«ä¿¡æ¯ 
      * @param query
      */
     private void setChargeMap(JDBCQueryImpl query)
@@ -661,8 +661,8 @@ public final class DictCache
     }
     
     /**
-     * ³õÊ¼»¯
-     * Éí·İĞÅÏ¢ 
+     * åˆå§‹åŒ–
+     * èº«ä»½ä¿¡æ¯ 
      * @param query
      */
     private void setIdentityMap(JDBCQueryImpl query)
@@ -695,8 +695,8 @@ public final class DictCache
     }
     
     /**
-     * ³õÊ¼»¯
-     * ¼ÁĞÍĞÅÏ¢ 
+     * åˆå§‹åŒ–
+     * å‰‚å‹ä¿¡æ¯ 
      * @param query
      */
     private void setFormMap(JDBCQueryImpl query)
@@ -729,7 +729,7 @@ public final class DictCache
     }
     
     /**
-     * ¸ù¾İÒ½ÉúĞÕÃû»ñµÃÒ½Éú´úÂë
+     * æ ¹æ®åŒ»ç”Ÿå§“åè·å¾—åŒ»ç”Ÿä»£ç 
      * @param DoctorName
      * @return
      */
@@ -770,7 +770,7 @@ public final class DictCache
     }
     
     /**
-     *  ·µ»ØËùÓĞÒ½Éú¼ÇÂ¼
+     *  è¿”å›æ‰€æœ‰åŒ»ç”Ÿè®°å½•
      * @param hisQuery
      * @param DoctorName
      * @return
@@ -798,7 +798,7 @@ public final class DictCache
             }
             else
             {
-                System.out.println("¶ÁÈ¡hisÖ°³Æ±í ĞÕÃû : " + DoctorName + " Ã»ÓĞÅä±¸ÉÏµÄÊı¾İ");
+                System.out.println("è¯»å–hisèŒç§°è¡¨ å§“å : " + DoctorName + " æ²¡æœ‰é…å¤‡ä¸Šçš„æ•°æ®");
                 doctorInfo = new TCommonRecord();
             }
                 
@@ -820,7 +820,7 @@ public final class DictCache
     }
     
     /**
-     * ¸ù¾İ²¿ÃÅ´úÂë»ñµÃ²¿ÃÅÃû³Æ
+     * æ ¹æ®éƒ¨é—¨ä»£ç è·å¾—éƒ¨é—¨åç§°
      * @param DeptName
      * @return
      */
@@ -858,7 +858,7 @@ public final class DictCache
         return "";
     }
     /**
-     * ¸ù¾İ²¿ÃÅ´úÂë»ñµÃ²¿ÃÅÃû³Æ
+     * æ ¹æ®éƒ¨é—¨ä»£ç è·å¾—éƒ¨é—¨åç§°
      * @param DeptName
      * @return
      */
@@ -897,7 +897,7 @@ public final class DictCache
     }
     
     /**
-     * »ñµÃ´ó¿ÆÊÒÃû³Æ
+     * è·å¾—å¤§ç§‘å®¤åç§°
      * @param deptCode
      * @return
      */
@@ -931,7 +931,7 @@ public final class DictCache
     }
 
     /**
-     * ·µ»ØËùÓĞ²¿ÃÅĞÅÏ¢ 
+     * è¿”å›æ‰€æœ‰éƒ¨é—¨ä¿¡æ¯ 
      * @param hisQuery
      * @param deptCode
      * @return
@@ -970,7 +970,7 @@ public final class DictCache
     }
     
     /**
-     * ·µ»ØËùÓĞ²¿ÃÅ 
+     * è¿”å›æ‰€æœ‰éƒ¨é—¨ 
      * @return
      */
     @SuppressWarnings ("static-access")
@@ -985,7 +985,7 @@ public final class DictCache
     }
 
     /**
-     * ·µ»ØËùÓĞ²¿ÃÅ
+     * è¿”å›æ‰€æœ‰éƒ¨é—¨
      * 
      * @return
      */
@@ -1001,7 +1001,7 @@ public final class DictCache
     }
     
     /**
-     * ·µ»ØËùÓĞ·Ñ±ğ 
+     * è¿”å›æ‰€æœ‰è´¹åˆ« 
      * @return
      */
     @SuppressWarnings ("static-access")
@@ -1016,7 +1016,7 @@ public final class DictCache
     }
     
     /**
-     * ·µ»ØËùÓĞÉí·İ
+     * è¿”å›æ‰€æœ‰èº«ä»½
      * @return
      */
     @SuppressWarnings ("static-access")
@@ -1030,7 +1030,7 @@ public final class DictCache
         return list;
     }
     /**
-     * ·µ»ØËùÓĞ¼ÁĞÍ
+     * è¿”å›æ‰€æœ‰å‰‚å‹
      * @return
      */
     @SuppressWarnings ("static-access")
@@ -1044,8 +1044,8 @@ public final class DictCache
         return list;
     }
     /**
-     * °´Ìõ¼ş¹ıÈ¥Êı¾İ 
-     * Ä¿Ç°Ö»Õë¶Ôµ¥¶ÔÌõ¼ş 
+     * æŒ‰æ¡ä»¶è¿‡å»æ•°æ® 
+     * ç›®å‰åªé’ˆå¯¹å•å¯¹æ¡ä»¶ 
      * @return
      */
     @SuppressWarnings ("static-access")
@@ -1075,7 +1075,7 @@ public final class DictCache
 //    }
     
     /**
-     * ·µ»Ø±ê±¾ĞÅÏ¢ 
+     * è¿”å›æ ‡æœ¬ä¿¡æ¯ 
      * @param hisQuery
      * @param code
      * @return
@@ -1116,7 +1116,7 @@ public final class DictCache
     }
     
     /**
-     * ·µ»ØËùÓĞ±ê±¾ĞÅÏ¢
+     * è¿”å›æ‰€æœ‰æ ‡æœ¬ä¿¡æ¯
      * @return
      */
     @SuppressWarnings ("static-access")
@@ -1131,7 +1131,7 @@ public final class DictCache
     }
     
     /**
-     * Ï¸¾úÒ©Ãô×Öµä  
+     * ç»†èŒè¯æ•å­—å…¸  
      * @param hisQuery
      * @param code
      * @return
@@ -1176,7 +1176,7 @@ public final class DictCache
     }
     
     /**
-     * Î¢ÉúÎï×Öµä±í 
+     * å¾®ç”Ÿç‰©å­—å…¸è¡¨ 
      * @param hisQuery
      * @param code
      * @return
@@ -1214,7 +1214,7 @@ public final class DictCache
         return new TCommonRecord();
     }
     /**
-     * ·µ»ØËùÓĞÏ¸¾úÃû×Ö
+     * è¿”å›æ‰€æœ‰ç»†èŒåå­—
      * @return
      */
     /*public List<TCommonRecord>  getGermCodeAll()
@@ -1228,7 +1228,7 @@ public final class DictCache
     }
     
     /**
-     * °´±àºÅÈ¡µÃ Ò©Æ·ĞÅÏ¢
+     * æŒ‰ç¼–å·å–å¾— è¯å“ä¿¡æ¯
      * @param code
      * @return
      */
@@ -1270,7 +1270,7 @@ public final class DictCache
     }
     
     /**
-     * °´±àºÅÈ¡µÃ Ò©Æ·ĞÅÏ¢
+     * æŒ‰ç¼–å·å–å¾— è¯å“ä¿¡æ¯
      * @param code
      * @return
      */
@@ -1310,7 +1310,7 @@ public final class DictCache
     }
     
     /**
-     * °´±àºÅ °ü×°  ¹æ¸ñ 
+     * æŒ‰ç¼–å· åŒ…è£…  è§„æ ¼ 
      * @param key =  drug_code + units + drug_spec
      * @return
      */
@@ -1329,7 +1329,7 @@ public final class DictCache
     }
 
     /**
-     * °´±àºÅÄ£ºı²éÑ¯Ò©Æ·Ãû³Æ
+     * æŒ‰ç¼–å·æ¨¡ç³ŠæŸ¥è¯¢è¯å“åç§°
      * @param code
      * @return
      */
@@ -1367,7 +1367,7 @@ public final class DictCache
     }
     
     /**
-     * »ñµÃËùÓĞÒ©Æ·ĞÅÏ¢ 
+     * è·å¾—æ‰€æœ‰è¯å“ä¿¡æ¯ 
      * @return
      */
     public List<TCommonRecord> getDrugDictAll()
@@ -1380,7 +1380,7 @@ public final class DictCache
         return list;
     }
     
-    /* ²éÕÒºÏ´ó¿ÆÊÒÖĞµÄËùÓĞĞ¡¿ÆÊÒ */
+    /* æŸ¥æ‰¾åˆå¤§ç§‘å®¤ä¸­çš„æ‰€æœ‰å°ç§‘å®¤ */
     @SuppressWarnings ("unchecked")
     public String getSearchMergeDept(String parm)
     {

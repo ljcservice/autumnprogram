@@ -10,7 +10,7 @@ import com.hitzd.his.tree.ITreeService;
 import com.hitzd.his.tree.TreeNode;
 
 /**
- * ²Ëµ¥Ê÷¹¹Ôì 
+ * èœå•æ ‘æ„é€  
  * @author jingcong
  *
  */
@@ -38,7 +38,7 @@ public class TreeService implements ITreeService
 	}	
 	
 	/**
-	 * ¹¹½¨²Ëµ¥Ê÷
+	 * æ„å»ºèœå•æ ‘
 	 * @param pNode
 	 * @param query
 	 * @param ProgramID
@@ -61,7 +61,7 @@ public class TreeService implements ITreeService
 	}
 	
 	/**
-	 * ¼ìË÷²Ëµ¥  menuisview = 1  ¿ÉÏÔÊ¾²Ëµ¥
+	 * æ£€ç´¢èœå•  menuisview = 1  å¯æ˜¾ç¤ºèœå•
 	 * @param query
 	 * @param ParentID
 	 * @param ProgramID

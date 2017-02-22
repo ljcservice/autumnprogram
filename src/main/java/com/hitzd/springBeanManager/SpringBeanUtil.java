@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 /**
  * 
  * @author liujc
- * »ñµÃÒÑ¾­¼ÓÔØºÃµÄbean.
+ * è·å¾—å·²ç»åŠ è½½å¥½çš„bean.
  *
  */
 @Service
@@ -26,7 +26,7 @@ public class SpringBeanUtil implements ApplicationContextAware
     }
     
     /**
-     * »ñµÃspring ÉÏÏÂÎÄ
+     * è·å¾—spring ä¸Šä¸‹æ–‡
      * @return ApplicationContext
      */
      public static ApplicationContext getApplicationContext() {
@@ -34,7 +34,7 @@ public class SpringBeanUtil implements ApplicationContextAware
      }
     
      /**
-     * »ñÈ¡¶ÔÏó   
+     * è·å–å¯¹è±¡   
      * @param name
      * @return Object 
      * @throws BeansException
@@ -44,11 +44,11 @@ public class SpringBeanUtil implements ApplicationContextAware
      }
     
      /**
-     * »ñÈ¡ÀàĞÍÎªrequiredTypeµÄ¶ÔÏó
-     * Èç¹ûbean²»ÄÜ±»ÀàĞÍ×ª»»£¬ÏàÓ¦µÄÒì³£½«»á±»Å×³ö£¨BeanNotOfRequiredTypeException£©
-     * @param name       bean×¢²áÃû
-     * @param requiredType ·µ»Ø¶ÔÏóÀàĞÍ
-     * @return Object ·µ»ØrequiredTypeÀàĞÍ¶ÔÏó
+     * è·å–ç±»å‹ä¸ºrequiredTypeçš„å¯¹è±¡
+     * å¦‚æœbeanä¸èƒ½è¢«ç±»å‹è½¬æ¢ï¼Œç›¸åº”çš„å¼‚å¸¸å°†ä¼šè¢«æŠ›å‡ºï¼ˆBeanNotOfRequiredTypeExceptionï¼‰
+     * @param name       beanæ³¨å†Œå
+     * @param requiredType è¿”å›å¯¹è±¡ç±»å‹
+     * @return Object è¿”å›requiredTypeç±»å‹å¯¹è±¡
      * @throws BeansException
      */
      public static Object getBean(String name, Class requiredType) throws BeansException {
@@ -56,7 +56,7 @@ public class SpringBeanUtil implements ApplicationContextAware
      }
     
      /**
-     * Èç¹ûBeanFactory°üº¬Ò»¸öÓëËù¸øÃû³ÆÆ¥ÅäµÄbean¶¨Òå£¬Ôò·µ»Øtrue 
+     * å¦‚æœBeanFactoryåŒ…å«ä¸€ä¸ªä¸æ‰€ç»™åç§°åŒ¹é…çš„beanå®šä¹‰ï¼Œåˆ™è¿”å›true 
      * @param name
      * @return boolean
      */
@@ -65,7 +65,7 @@ public class SpringBeanUtil implements ApplicationContextAware
      }
     
      /**
-     * ÅĞ¶ÏÒÔ¸ø¶¨Ãû×Ö×¢²áµÄbean¶¨ÒåÊÇÒ»¸ösingleton»¹ÊÇÒ»¸öprototype¡£
+     * åˆ¤æ–­ä»¥ç»™å®šåå­—æ³¨å†Œçš„beanå®šä¹‰æ˜¯ä¸€ä¸ªsingletonè¿˜æ˜¯ä¸€ä¸ªprototypeã€‚
      * @param name
      * @return boolean
      * @throws NoSuchBeanDefinitionException
@@ -76,7 +76,7 @@ public class SpringBeanUtil implements ApplicationContextAware
     
      /**
      * @param name
-     * @return Class ×¢²á¶ÔÏóµÄÀàĞÍ
+     * @return Class æ³¨å†Œå¯¹è±¡çš„ç±»å‹
      * @throws NoSuchBeanDefinitionException
      */
      public static Class getType(String name) throws NoSuchBeanDefinitionException {
@@ -84,7 +84,7 @@ public class SpringBeanUtil implements ApplicationContextAware
      }
     
      /**
-     * Èç¹û¸ø¶¨µÄbeanÃû×ÖÔÚbean¶¨ÒåÖĞÓĞ±ğÃû£¬Ôò·µ»ØÕâĞ©±ğÃû   
+     * å¦‚æœç»™å®šçš„beanåå­—åœ¨beanå®šä¹‰ä¸­æœ‰åˆ«åï¼Œåˆ™è¿”å›è¿™äº›åˆ«å   
      * @param name
      * @return
      * @throws NoSuchBeanDefinitionException

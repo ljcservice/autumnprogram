@@ -9,7 +9,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 public class TagConditionGraph extends TagSupport
 {
-	private String title = "Í¼ĞÎ»æÖÆ";
+	private String title = "å›¾å½¢ç»˜åˆ¶";
 	private String url;
 	private List<String> shapes;
 	private List<String> x;
@@ -64,7 +64,7 @@ public class TagConditionGraph extends TagSupport
 		this.y2Default = y2Default;
 	}
 	private void reset(){
-		setTitle("Í¼ĞÎ»æÖÆ");
+		setTitle("å›¾å½¢ç»˜åˆ¶");
 		setUrl("");
 		setShapeDefault(1);
 		setxDefault(0);
@@ -77,7 +77,7 @@ public class TagConditionGraph extends TagSupport
 		JspWriter writer = this.pageContext.getOut();
 		if(x == null || y1 == null || y2 == null)
 		{
-			throw new JspException("²ÎÊı²»ÄÜÎª¿Õ");
+			throw new JspException("å‚æ•°ä¸èƒ½ä¸ºç©º");
 		}
 		try 
 		{
@@ -94,15 +94,15 @@ public class TagConditionGraph extends TagSupport
 			        "                //xy\n" +
 			        "                if (shapes.isXY($(this).val())) {\n" +
 			        "                    $('.y2').hide();\n" +
-			        "                    $('.y2').find(\"option[text='--ÇëÑ¡Ôñ--']\").attr(\"selected\", true);\n" +
+			        "                    $('.y2').find(\"option[text='--è¯·é€‰æ‹©--']\").attr(\"selected\", true);\n" +
 			        "                    $('.y2Label').hide();\n" +
-			        "                    $('.y1Label').text('YÖá:');\n" +
+			        "                    $('.y1Label').text('Yè½´:');\n" +
 			        "                }\n" +
 			        "                //xy2\n" +
 			        "                else if (shapes.isXY2($(this).val())) {\n" +
 			        "                    $('.y2').show();\n" +
 			        "                    $('.y2Label').show();\n" +
-			        "                    $('.y1Label').text('YÖá1:');\n" +
+			        "                    $('.y1Label').text('Yè½´1:');\n" +
 			        "                }\n" +
 			        "            })\n" +
 			        "                    .change();\n" +
@@ -111,8 +111,8 @@ public class TagConditionGraph extends TagSupport
 			        "        document.graphForm.submit(); "+
 			        "    });\n" +
 			        "    var shapes = {\n" +
-			        "        xy: [\"±ıÍ¼\", \"ÇúÏßÍ¼\", \"Öù×´Í¼\",, \"ÕÛÏßÍ¼\"],\n" +
-			        "        xy2: [\"Ë«ÖáÍ¼\"],\n" +
+			        "        xy: [\"é¥¼å›¾\", \"æ›²çº¿å›¾\", \"æŸ±çŠ¶å›¾\",, \"æŠ˜çº¿å›¾\"],\n" +
+			        "        xy2: [\"åŒè½´å›¾\"],\n" +
 			        "        isXY: function (shape) {\n" +
 			        "            for (var i = 0; i < this.xy.length; i++) {\n" +
 			        "                if (this.xy[i] == shape) {\n" +
@@ -134,7 +134,7 @@ public class TagConditionGraph extends TagSupport
 			        "<div class>\n" +
 			        "    <form name='graphForm' action=\""+url+"\" method=\"post\" target=\"detail\">\n" +
 			        "        <input type=\"hidden\" name=\"o\" value=\"GraphPanel\"/>\n" +
-			        "        <label>Í¼ĞÎÀàĞÍ:</label>\n" +
+			        "        <label>å›¾å½¢ç±»å‹:</label>\n" +
 			        "        <select name=\"graphType\" class=\"shapeType\">\n" );
 			
 			for (int i = 0; i < shapes.size(); i++) 
@@ -142,35 +142,35 @@ public class TagConditionGraph extends TagSupport
 				writer.write("<option value='"+shapes.get(i)+"' " +(i==shapeDefault?"selected":"") + ">"+shapes.get(i)+"</option>");
 			}
 			writer.write("</select>\n" +
-		            "    <label>XÖá:</label>\n" +
+		            "    <label>Xè½´:</label>\n" +
 		            "    <select name=\"x\">\n");
 			for (int i = 0; i < x.size(); i++) 
 			{
 				writer.write("<option value="+x.get(i)+" " +(i==xDefault?"selected":"") + ">"+x.get(i)+"</option>");
 			}
 			writer.write("</select>\n" +
-		            "        <label class=\"y1Label\">YÖá1:</label>\n" +
+		            "        <label class=\"y1Label\">Yè½´1:</label>\n" +
 		            "    <select name=\"y1\" class=\"y1\">\n");
 			for (int i = 0; i < y1.size(); i++) 
 			{
 				writer.write("<option value="+y1.get(i)+" " +(i==y1Default?"selected":"") + ">"+y1.get(i)+"</option>");
 			}
 			writer.write("</select>\n" +
-		            "        <label class=\"y2Label\">YÖá2:</label>\n" +
+		            "        <label class=\"y2Label\">Yè½´2:</label>\n" +
 		            "    <select name=\"y2\" class=\"y2\">\n");
 			for (int i = 0; i < y2.size(); i++) 
 			{
 				writer.write("<option value="+y2.get(i)+" " +(i==y2Default?"selected":"") + ">"+y2.get(i)+"</option>");
 			}
 			writer.write("</select>\n" +
-		            "        <input type=\"submit\" value=\"Éú³ÉÍ¼ĞÎ\"/>\n" +
+		            "        <input type=\"submit\" value=\"ç”Ÿæˆå›¾å½¢\"/>\n" +
 		            "        <hr/>\n" +
 		            "    </form>\n" +
 		            "</div>\n" +
 		            "<div>\n" +
 		            "    <iframe id=\"detail\" name=\"detail\" scrolling=\"auto\" src='' " +
 		            "            frameborder=\"0\" width='100%' height='550'></iframe>\n" +
-		            "</div><hr/><center>@ËÕÖİ¶¦Ø©´óÍ¨Ò½ÁÆ¿Æ¼¼ÓĞÏŞ¹«Ë¾</center>\n" +
+		            "</div><hr/><center>@è‹å·é¼ä¸å¤§é€šåŒ»ç–—ç§‘æŠ€æœ‰é™å…¬å¸</center>\n" +
 		            "</body>\n" +
 		            "</html>");
 		} 

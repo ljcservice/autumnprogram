@@ -10,10 +10,10 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface MHPerformProp
 {
-    /* ·½·¨²ÎÊıÃû */
+    /* æ–¹æ³•å‚æ•°å */
     @SuppressWarnings ("rawtypes")
     public Class[] MethodParam() default {} ; 
-    /* ·½·¨·µ»ØÀà */
+    /* æ–¹æ³•è¿”å›ç±» */
     @SuppressWarnings ("rawtypes")
     public Class ReturnType() default Object.class; 
 }

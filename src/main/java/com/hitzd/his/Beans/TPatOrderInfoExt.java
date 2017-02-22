@@ -5,42 +5,42 @@ import java.io.Serializable;
 public class TPatOrderInfoExt implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    /* ÊÇ·ñ²¸ÈéÆÚ */
+    /* æ˜¯å¦å“ºä¹³æœŸ */
 	private String isLact;
 	
-	/* ÊÇ·ñÔĞ¸¾  */
+	/* æ˜¯å¦å­•å¦‡  */
 	private String isPregnant;
 	
-	/* Ò½±£Àà±ğ  */
+	/* åŒ»ä¿ç±»åˆ«  */
 	private String insureanceType;
 	
-	/* Ò½ÁÆ±£ÏÕºÅ  */
+	/* åŒ»ç–—ä¿é™©å·  */
 	private String insuranceNo;
 	
-	/* ¸Î¹¦ÄÜ²»ÍêÈ«±êÖ¾  */
+	/* è‚åŠŸèƒ½ä¸å®Œå…¨æ ‡å¿—  */
 	private String isLiverWhole;
 	
-	/* Éö¹¦ÄÜ²»ÍêÈ«±êÖ¾  */
+	/* è‚¾åŠŸèƒ½ä¸å®Œå…¨æ ‡å¿—  */
 	private String isKidneyWhole;
 	
-	/* ÔÚÖ°±êÖ¾  */
+	/* åœ¨èŒæ ‡å¿—  */
 	//private String isWorking;
 	
-	/* Éí¸ß  */
+	/* èº«é«˜  */
 	private String height;
 	
-	/* ÌåÖØ  */
+	/* ä½“é‡  */
 	private String weight;
 
 	/**
-	 * ·µ»ØÊÇ·ñÎªÉö¹¦²»È«
+	 * è¿”å›æ˜¯å¦ä¸ºè‚¾åŠŸä¸å…¨
 	 * @return
 	 */
 	public boolean TheIsKidneyWhole()
 	{
 	    if(this.isKidneyWhole != null)
         {
-            if("ÊÇ".equals(this.isKidneyWhole)||"Y".equals(this.isKidneyWhole.toUpperCase())
+            if("æ˜¯".equals(this.isKidneyWhole)||"Y".equals(this.isKidneyWhole.toUpperCase())
                     ||"YES".equals(this.isKidneyWhole.toUpperCase())||"TRUE".equals(this.isKidneyWhole.toUpperCase())
                     ||"1".equals(this.isKidneyWhole))
             {
@@ -51,14 +51,14 @@ public class TPatOrderInfoExt implements Serializable {
 	}
 	
 	/**
-	 * ·µ»ØÊÇ·ñÎª¸Î¹¦²»È«
+	 * è¿”å›æ˜¯å¦ä¸ºè‚åŠŸä¸å…¨
 	 * @return
 	 */
 	public boolean TheIsLiverWhole()
 	{
 	    if(this.isLiverWhole != null)
         {
-            if("ÊÇ".equals(this.isLiverWhole)||"Y".equals(this.isLiverWhole.toUpperCase())
+            if("æ˜¯".equals(this.isLiverWhole)||"Y".equals(this.isLiverWhole.toUpperCase())
                     ||"YES".equals(this.isLiverWhole.toUpperCase())||"TRUE".equals(this.isLiverWhole.toUpperCase())
                     ||"1".equals(this.isLiverWhole))
             {
@@ -69,13 +69,13 @@ public class TPatOrderInfoExt implements Serializable {
 	}
 	
 	/**
-	 * ·µ»ØÊÇ·ñÎª²¸ÈéÆÚ
+	 * è¿”å›æ˜¯å¦ä¸ºå“ºä¹³æœŸ
 	 */
 	public boolean TheIsLact()
 	{
 	    if(this.isLact != null)
 	    {
-    	    if("ÊÇ".equals(this.isLact)||"Y".equals(this.isLact.toUpperCase())
+    	    if("æ˜¯".equals(this.isLact)||"Y".equals(this.isLact.toUpperCase())
     	            ||"YES".equals(this.isLact.toUpperCase())||"TRUE".equals(this.isLact.toUpperCase())
     	            ||"1".equals(this.isLact))
     	    {
@@ -87,14 +87,14 @@ public class TPatOrderInfoExt implements Serializable {
 	
 	
 	/**
-	 * ·µ»ØÊÇ·ñÎªÔĞ¸¾
+	 * è¿”å›æ˜¯å¦ä¸ºå­•å¦‡
 	 * @return
 	 */
 	public boolean TheIsPregnant()
 	{
 	    if(this.isPregnant != null)
         {
-            if("ÊÇ".equals(this.isPregnant)||"Y".equals(this.isPregnant.toUpperCase())
+            if("æ˜¯".equals(this.isPregnant)||"Y".equals(this.isPregnant.toUpperCase())
                     ||"YES".equals(this.isPregnant.toUpperCase())||"TRUE".equals(this.isPregnant.toUpperCase())
                     ||"1".equals(this.isPregnant))
             {

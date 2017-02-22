@@ -1,7 +1,7 @@
 package com.hitzd.his.Beans;
 
 /**
- * ¼ìÑéÏîÄ¿
+ * æ£€éªŒé¡¹ç›®
  * @author Administrator
  *
  */

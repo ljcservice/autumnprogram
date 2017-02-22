@@ -57,7 +57,7 @@ public class testDemo
             
             LobCreatingPSCallBeck fx = new LobCreatingPSCallBeck("");
             fx.LobCreatingPreparedSCallback();
-            System.out.println("¡æ");
+            System.out.println("â„ƒ");
             String date1 = "2013-01-04";
             String date2 = "2013-01-04";
             System.out.println(DateUtils.getDateFromString(date1).getTime());
@@ -110,7 +110,7 @@ public class testDemo
             if(!f.exists())
             {
                 f.mkdirs();
-                //throw new RuntimeException("Î´ÕÒµ½µÄ¸ÃÎÄ¼þ:\"" + f.getCanonicalPath() + "\"");
+                //throw new RuntimeException("æœªæ‰¾åˆ°çš„è¯¥æ–‡ä»¶:\"" + f.getCanonicalPath() + "\"");
             }
             FileWriter o = new FileWriter(new File(s));
             for (String x: new String[]{"3434","2323423dsf","dfsdf","sdfsdfsd","sdfsdf","sdfsdf","sdfsd","sdfsdf","sdfsdf"})

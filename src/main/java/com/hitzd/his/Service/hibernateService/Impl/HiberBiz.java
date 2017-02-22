@@ -11,7 +11,7 @@ import com.hitzd.his.Service.hibernateService.IHiberBiz;
 import com.hitzd.DBUtils.CommonMapper;
 
 /**
- * ÓÃÓÚÆÕÍ¨±í²Ù×÷¡£
+ * ç”¨äºæ™®é€šè¡¨æ“ä½œã€‚
  * @author tyl
  *
  */

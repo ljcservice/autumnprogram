@@ -17,7 +17,7 @@ import com.hitzd.his.task.Task;
 import com.hitzd.persistent.Persistent4DB;
 
 /**
- *  ÃÅÕïÒ©Æ·Ê¹ÓÃ ·ÑÓÃÇé¿ö ÈÕ±¨ 
+ *  é—¨è¯Šè¯å“ä½¿ç”¨ è´¹ç”¨æƒ…å†µ æ—¥æŠ¥ 
  * @author Administrator
  *
  */
@@ -47,7 +47,7 @@ public class DR_OutDrugCostInfo extends Persistent4DB implements IReportBuilder
     }
     
     /**
-     * °´Ììµ¥Ò©Æ··ÑÓÃÍ³¼Æ
+     * æŒ‰å¤©å•è¯å“è´¹ç”¨ç»Ÿè®¡
      * @param ADate
      */
     private void DrugDayCost(final String ADate)
@@ -127,7 +127,7 @@ public class DR_OutDrugCostInfo extends Persistent4DB implements IReportBuilder
     }
     
     /**
-     * °´ÌìÒ½Éúµ¥Ò©Æ··ÑÓÃÍ³¼Æ
+     * æŒ‰å¤©åŒ»ç”Ÿå•è¯å“è´¹ç”¨ç»Ÿè®¡
      * @param ADate
      */
     private void DrugDoctorDeptCost(final String ADate)
@@ -203,7 +203,7 @@ public class DR_OutDrugCostInfo extends Persistent4DB implements IReportBuilder
                     sqlParams.add(t.get("drug_code")        );
                     sqlParams.add(t.get("drug_name")        );
                     sqlParams.add(t.get("doctor_code")      );
-                    sqlParams.add((!"".equals(t.get("doctor_name"))?t.get("doctor_name"):"ÎŞ") );
+                    sqlParams.add((!"".equals(t.get("doctor_name"))?t.get("doctor_name"):"æ— ") );
                     sqlParams.add(t.get("amouts")           );
                     sqlParams.add(t.get("costs")            );
                     sqlParams.add(t.get("package_spec")     );
@@ -227,7 +227,7 @@ public class DR_OutDrugCostInfo extends Persistent4DB implements IReportBuilder
     }
     
     /**
-     * °´Ìì²¡ÈËµ¥Ò©Æ··Ñ
+     * æŒ‰å¤©ç—…äººå•è¯å“è´¹
      * @param ADate
      */
     private void DrugPatDDCost(final String ADate)
@@ -322,13 +322,13 @@ public class DR_OutDrugCostInfo extends Persistent4DB implements IReportBuilder
 					sqlParams.add(dateTime);
                     sqlParams.add(t.get("drug_code")      );
                     sqlParams.add(t.get("drug_name")      );
-                    sqlParams.add((!"".equals(t.get("patient_id"))?t.get("patient_id"):"ÎŞ") );
+                    sqlParams.add((!"".equals(t.get("patient_id"))?t.get("patient_id"):"æ— ") );
                     sqlParams.add(t.get("patient_name")   );
                     sqlParams.add(t.get("patient_sex")    );
                     sqlParams.add(t.get("patient_age")    );
                     sqlParams.add(t.get("identity")       );
                     sqlParams.add(t.get("doctor_code")    );
-                    sqlParams.add((!"".equals(t.get("doctor_name"))?t.get("doctor_name"):"ÎŞ") ); 
+                    sqlParams.add((!"".equals(t.get("doctor_name"))?t.get("doctor_name"):"æ— ") ); 
                     sqlParams.add(t.get("amouts")         );
                     sqlParams.add(t.get("costs")          );
                     sqlParams.add(t.get("package_spec")   );

@@ -1,18 +1,18 @@
 package com.hitzd.his.Beans.frame;
 
 /**
- * ÓÃ»§È¨ÏŞ±í 
+ * ç”¨æˆ·æƒé™è¡¨ 
  * @author jingcong
  */
 public class UserRolePower
 {
-    /* ÓÃ»§id*/
+    /* ç”¨æˆ·id*/
     private String roleid ;
-    /* ²Ëµ¥id */
+    /* èœå•id */
     private String progid;
-    /* ²Ëµ¥ÔÊĞíµÄ·½·¨ */
+    /* èœå•å…è®¸çš„æ–¹æ³• */
     private String progfunc;
-    /* ²Ëµ¥ËùÊôÏµÍ³ */
+    /* èœå•æ‰€å±ç³»ç»Ÿ */
     private String sysid ;
     
     public String getRoleid()

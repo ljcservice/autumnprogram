@@ -18,28 +18,28 @@ import com.hitzd.his.RowMapperBeans.Middle.TableConfigMapper;
 import com.hitzd.DBUtils.CommonMapper;
 
 /**
- *  ÅäÖÃ²ÎÊı 
+ *  é…ç½®å‚æ•° 
  * @author Administrator
  *
  */
 public class Config 
 {
-    /* ¹æÔò */
+    /* è§„åˆ™ */
     private static HashMap<String, String>            paramMap = null;
-    /* ¶ÔÕÕ±íÅäÖÃ */
+    /* å¯¹ç…§è¡¨é…ç½® */
     private static HashMap<String, TTableConfig> tableMap = null;
     private static HashMap<String,TDBUrlConfig>  dbUrlMap = null; 
     public static boolean paramLoaded = false;
     public static boolean tableConfigLoaded = false;
     
     /**
-     * ²ÎÊı³õÊ¼»¯
+     * å‚æ•°åˆå§‹åŒ–
      */
     public static void initParam()
     {
-    	System.out.println("Config²ÎÊı³õÊ¼»¯¿ªÊ¼£¡");
+    	System.out.println("Configå‚æ•°åˆå§‹åŒ–å¼€å§‹ï¼");
     	JDBCQueryImpl peaasQuery = DBQueryFactory.getQuery("PEAAS");
-    	// ³õÊ¼»¯²ÎÊıĞÅÏ¢
+    	// åˆå§‹åŒ–å‚æ•°ä¿¡æ¯
     	paramMap = new HashMap<String, String>(); 
         @SuppressWarnings("unchecked")
 		List<TCommonRecord> list = peaasQuery.query("select rulecode,rulevalue from ruleparameter", new CommonMapper());
@@ -47,18 +47,18 @@ public class Config
         	paramMap.put(cr.get("rulecode").toUpperCase(), cr.get("rulevalue"));
         peaasQuery = null;
         paramLoaded = true;
-    	System.out.println("Config²ÎÊı³õÊ¼»¯½áÊø£¡");
+    	System.out.println("Configå‚æ•°åˆå§‹åŒ–ç»“æŸï¼");
     }
     
     /**
-     * ±íºÍ×Ö¶ÎÅäÖÃ³õÊ¼»¯
+     * è¡¨å’Œå­—æ®µé…ç½®åˆå§‹åŒ–
      */
     @SuppressWarnings ("unchecked")
     public static void initTableConfig()
     {
-    	System.out.println("Config±íºÍ×Ö¶ÎÅäÖÃ³õÊ¼»¯¿ªÊ¼£¡");
+    	System.out.println("Configè¡¨å’Œå­—æ®µé…ç½®åˆå§‹åŒ–å¼€å§‹ï¼");
     	JDBCQueryImpl peaasQuery = DBQueryFactory.getQuery("PEAAS");
-        // ³õÊ¼»¯¶ÔÕÕ±íÅäÖÃĞÅÏ¢
+        // åˆå§‹åŒ–å¯¹ç…§è¡¨é…ç½®ä¿¡æ¯
         tableMap = new HashMap<String, TTableConfig>();
         @SuppressWarnings("unchecked")
 		List<TTableConfig> tableList = peaasQuery.query("select * from table_config", new TableConfigMapper());
@@ -105,11 +105,11 @@ public class Config
         }
         peaasQuery = null;
         tableConfigLoaded = true;
-    	System.out.println("Config±íºÍ×Ö¶ÎÅäÖÃ³õÊ¼»¯½áÊø£¡");
+    	System.out.println("Configè¡¨å’Œå­—æ®µé…ç½®åˆå§‹åŒ–ç»“æŸï¼");
     }
     
     /**
-     *  ÖØÖÃ²ÎÊı 
+     *  é‡ç½®å‚æ•° 
      */
     public static void ReSetParam()
     {
@@ -117,7 +117,7 @@ public class Config
     }
     
     /**
-     * ÖØÖÃ±íºÍ×Ö¶ÎÅäÖÃ
+     * é‡ç½®è¡¨å’Œå­—æ®µé…ç½®
      */
     public static void ReSetTableConfig()
     {
@@ -125,7 +125,7 @@ public class Config
     }
     
     /**
-     * ÖØÖÃÕû¸öConfig
+     * é‡ç½®æ•´ä¸ªConfig
      */
     public static void ReSetConfig()
     {
@@ -134,14 +134,14 @@ public class Config
     }
     
     /**
-     * ÖØĞÂÉèÖÃÏµÍ³²ÎÊı
+     * é‡æ–°è®¾ç½®ç³»ç»Ÿå‚æ•°
      * @param key
      * @param value
      */
     public static void setParamValue(String key ,String value)
     {
         
-         // 2014-09-02 liujc ĞŞ¸Ä£¬   
+         // 2014-09-02 liujc ä¿®æ”¹ï¼Œ   
         if (!paramLoaded) initParam();
         if (paramMap.containsKey(key.toUpperCase()))
         {
@@ -149,7 +149,7 @@ public class Config
         }
         else
         {
-            System.out.println("²ÎÊıÖĞÃ»ÓĞ¸Ã²ÎÊı£º" + key);
+            System.out.println("å‚æ•°ä¸­æ²¡æœ‰è¯¥å‚æ•°ï¼š" + key);
         }
     }
     
@@ -160,13 +160,13 @@ public class Config
      */
     private static String getSelectParamValue(String paraCode)
     {
-//        System.out.println("Config »ñÈ¡²ÎÊı " + paraCode ); 
+//        System.out.println("Config è·å–å‚æ•° " + paraCode ); 
         JDBCQueryImpl query =  DBQueryFactory.getQuery("PEAAS");
         CommonMapper  cmr   = new CommonMapper();
         TCommonRecord  rs   = new TCommonRecord();
         try
         {
-            rs = (TCommonRecord) query.queryForObject("select RULEVALUE from ruleparameter t where upper(t.RULECODE) = ?¡¡", new Object[]{paraCode}, cmr);
+            rs = (TCommonRecord) query.queryForObject("select RULEVALUE from ruleparameter t where upper(t.RULECODE) = ?ã€€", new Object[]{paraCode}, cmr);
         }
         catch(Exception e)
         {
@@ -177,13 +177,13 @@ public class Config
             //query = null;
             cmr   = null;
         }
-        if(rs == null) new RuntimeException("¸Ã²ÎÊı" + paraCode + " ÎªËãÊı±íÖĞ²»´æÔÚ ");
-//        System.out.println("Config »ñÈ¡²ÎÊı³É¹¦ " + paraCode + ":" + rs.get("RULEVALUE")); 
+        if(rs == null) new RuntimeException("è¯¥å‚æ•°" + paraCode + " ä¸ºç®—æ•°è¡¨ä¸­ä¸å­˜åœ¨ ");
+//        System.out.println("Config è·å–å‚æ•°æˆåŠŸ " + paraCode + ":" + rs.get("RULEVALUE")); 
         return rs.get("RULEVALUE");
     }
     
     /**
-     * »ñµÃÏµÍ³²ÎÊı
+     * è·å¾—ç³»ç»Ÿå‚æ•°
      * @param name
      * @return
      */
@@ -206,13 +206,13 @@ public class Config
    		}
    		catch (Exception ex)
    		{
-   			System.out.println("»ñÈ¡ÏµÍ³²ÎÊıÕûĞÍÖµ´íÎó£¡" + name);
+   			System.out.println("è·å–ç³»ç»Ÿå‚æ•°æ•´å‹å€¼é”™è¯¯ï¼" + name);
    			return 0;
    		}
     }
 
     /**
-     * ¹¹½¨ÖĞ¼ä²ã¶ÔÕÕ±í
+     * æ„å»ºä¸­é—´å±‚å¯¹ç…§è¡¨
      * @return
      */
 	public static HashMap<String, TTableConfig> getTableMap()
@@ -222,7 +222,7 @@ public class Config
 	}
 	
 	/**
-	 * »ñµÃÖĞ¼ä²ã²ÎÕÕ±í
+	 * è·å¾—ä¸­é—´å±‚å‚ç…§è¡¨
 	 * @param key
 	 * @return
 	 */
@@ -231,13 +231,13 @@ public class Config
 	    if (!tableConfigLoaded) initTableConfig();
 	    if(!tableMap.containsKey(key.toUpperCase()))
 	    {
-	        new RuntimeException("ÖĞ¼ä²ã table_Config ÖĞÃ»ÓĞÕÒµ½Ä¿±ê¡°" + key + "¡±±í");
+	        new RuntimeException("ä¸­é—´å±‚ table_Config ä¸­æ²¡æœ‰æ‰¾åˆ°ç›®æ ‡â€œ" + key + "â€è¡¨");
 	    }
 	    return tableMap.get(key.toUpperCase());
 	}
 	
 	/**
-	 * Êı¾İÔª±í
+	 * æ•°æ®å…ƒè¡¨
 	 * @return
 	 */
 	public static HashMap<String, TDBUrlConfig> getDBUrlMap()
@@ -247,7 +247,7 @@ public class Config
 	}
 	
 	/**
-     * »ñµÃÊı¾İÔª±í
+     * è·å¾—æ•°æ®å…ƒè¡¨
      * @param key
      * @return
      */
@@ -256,7 +256,7 @@ public class Config
         if (!tableConfigLoaded) initTableConfig();
         if(!dbUrlMap.containsKey(key))
         {
-            new RuntimeException("ÖĞ¼ä²ã db_url_config ÖĞÃ»ÓĞÕÒµ½Ä¿±ê¡°" + key + "¡±±í");
+            new RuntimeException("ä¸­é—´å±‚ db_url_config ä¸­æ²¡æœ‰æ‰¾åˆ°ç›®æ ‡â€œ" + key + "â€è¡¨");
         }
         return dbUrlMap.get(key);
     }

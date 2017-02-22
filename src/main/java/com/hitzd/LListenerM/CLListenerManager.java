@@ -17,7 +17,7 @@ public class CLListenerManager extends ContextLoaderListener
     }
 
     /**
-     * 可以将所有启动后就执行的方法 放在里面 
+     * 鍙互灏嗘墍鏈夊惎鍔ㄥ悗灏辨墽琛岀殑鏂规硶 鏀惧湪閲岄潰 
      */
     protected void ProgInit()
     {

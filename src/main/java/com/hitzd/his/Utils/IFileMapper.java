@@ -4,7 +4,7 @@ import com.hitzd.DBUtils.JDBCQueryImpl;
 import com.hitzd.DBUtils.TCommonRecord;
 
 /**
- * 添加生成已经生成文件 
+ * 娣诲姞鐢熸垚宸茬粡鐢熸垚鏂囦欢 
  * @author Administrator
  *
  */

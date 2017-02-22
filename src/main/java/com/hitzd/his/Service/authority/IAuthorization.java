@@ -3,14 +3,14 @@ package com.hitzd.his.Service.authority;
 import com.hitzd.his.Beans.frame.User;
 
 /**
- * µÇÂ½ÑéÖ¤ 
+ * ç™»é™†éªŒè¯ 
  * @author liujc
  *
  */
 public interface IAuthorization
 {
     /**
-     *  Æ½Ì¨Ö÷µÇÂ½Èë¿Ú
+     *  å¹³å°ä¸»ç™»é™†å…¥å£
      * @param UserName
      * @param Password
      * @param ProgramID
@@ -19,7 +19,7 @@ public interface IAuthorization
      */
     public User VerifyLogin(String UserName, String Password, String ProgramID,boolean is_pf);
     /**
-     * Æ½Ì¨¹«¹²µÇÂ½Èë¿Ú
+     * å¹³å°å…¬å…±ç™»é™†å…¥å£
      * @param UserName
      * @param Password
      * @param ProgramID
@@ -27,7 +27,7 @@ public interface IAuthorization
      */
     public User VerifyLogin(String UserName, String Password, String ProgramID);
     /**
-     * ·µ»Ø×´Ì¬code 
+     * è¿”å›çŠ¶æ€code 
      * @return
      */
     public int getErrorCode();

@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import com.hitzd.his.Beans.Middle.TDBUrlConfig;
 
 /**
- * his Á¬½Ó×Ö¶Î±í 
+ * his è¿æ¥å­—æ®µè¡¨ 
  * @author jingcong
  *
  */
@@ -20,17 +20,17 @@ public class DBUrlConfigMapper implements RowMapper
         TDBUrlConfig entity = new TDBUrlConfig();
         entity.setId(rs.getString("id"));
         entity.setDb_url(rs.getString("Db_url"));
-        /* Êı¾İ¿âÀàĞÍ */
+        /* æ•°æ®åº“ç±»å‹ */
         entity.setDb_base(rs.getString("db_base"));
-        /* ±¸×¢ */
+        /* å¤‡æ³¨ */
         entity.setRemark(rs.getString("remark"));
-        /* Êı¾İ¿âÓÃ»§Ãû×Ö */
+        /* æ•°æ®åº“ç”¨æˆ·åå­— */
         entity.setDb_user(rs.getString("db_user"));
-        /* Êı¾İ¿âÃÜÂë */
+        /* æ•°æ®åº“å¯†ç  */
         entity.setDb_pwd(rs.getString("db_pwd")); 
-        /* Êı¾İ¿âÁ¬½ÓµØÖ· */
+        /* æ•°æ®åº“è¿æ¥åœ°å€ */
         entity.setConn_url(rs.getString("Conn_url"));
-        /* ÅäÖÃÎÄ¼şÊÇ·ñ´æÔÚÁ¬½Ó  */
+        /* é…ç½®æ–‡ä»¶æ˜¯å¦å­˜åœ¨è¿æ¥  */
         entity.setFlag(rs.getString("flag"));    
         return entity;
     }

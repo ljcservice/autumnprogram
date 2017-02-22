@@ -2,54 +2,54 @@ package com.hitzd.his.Beans;
 
 /**
  * 
- * ÖÎÁÆÓÃÒ©ĞÅÏ¢
+ * æ²»ç–—ç”¨è¯ä¿¡æ¯
  * 
  * @author Administrator
  * 
  */
 public class TTreatUseDrug
 {
-    /* ÖÎÁÆÓÃÒ©id */
+    /* æ²»ç–—ç”¨è¯id */
     private String ZL_ID;
-    /* ²¡ÈËidºÅ(×¡ÔººÅ) */
+    /* ç—…äººidå·(ä½é™¢å·) */
     private String PATIENT_ID;
-    /* ³öÔº´ÎÊı */
+    /* å‡ºé™¢æ¬¡æ•° */
     private String VISIT_ID;
-    /* ¿ÆÊÒ´úÂë */
+    /* ç§‘å®¤ä»£ç  */
     private String DEPT_CODE;
-    /* ¿ÆÊÒÃû³Æ */
+    /* ç§‘å®¤åç§° */
     private String DEPT_NAME;
-    /* Ò½ÉúÃû³Æ */
+    /* åŒ»ç”Ÿåç§° */
     private String DOCTOR_NAME;
-    /* ĞÕÃû */
+    /* å§“å */
     private String NAME;
-    /* ĞÔ±ğ */
+    /* æ€§åˆ« */
     private String SEX;
-    /* ÄêÁä */
+    /* å¹´é¾„ */
     private String AGE;
-    /* ÌåÖØ */
+    /* ä½“é‡ */
     private String WEIGHT;
-    /* ÓÃÒ©ÀíÓÉ */
+    /* ç”¨è¯ç†ç”± */
     private String YYLY;
-    /* ÖÎÁÆ·ÖÀà */
+    /* æ²»ç–—åˆ†ç±» */
     private String ZLFL;
-    /* ¸ĞÈ¾²¿Î» */
+    /* æ„ŸæŸ“éƒ¨ä½ */
     private String GRBW;
-    /* Õï¶ÏÒÀ¾İ */
+    /* è¯Šæ–­ä¾æ® */
     private String ZDYJ;
-    /* ¿ÉÄÜµÄÖÂ²¡¾ú */
+    /* å¯èƒ½çš„è‡´ç—…èŒ */
     private String KNDZBJ;
-    /* ±¾µØÒ©Æ·Âë */
+    /* æœ¬åœ°è¯å“ç  */
     private String DRUG_CODE;
-    /* ±¾µØÒ©Æ·Ãû³Æ */
+    /* æœ¬åœ°è¯å“åç§° */
     private String DRUG_NAME;
-    /* ×îĞ¡¼ÁÁ¿ */
+    /* æœ€å°å‰‚é‡ */
     private String DOSAGE;
-    /* ×îĞ¡µ¥Î» */
+    /* æœ€å°å•ä½ */
     private String DOSAGE_UNITS;
-    /* ÓÃÒ©Í¾¾¶ */
+    /* ç”¨è¯é€”å¾„ */
     private String ADMINISTRATION;
-    /* ¼ÇÂ¼Ê±¼ä */
+    /* è®°å½•æ—¶é—´ */
     private String REC_DATE;
     /* */
     private String TWDATE;

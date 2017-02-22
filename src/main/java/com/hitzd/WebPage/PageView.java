@@ -10,19 +10,19 @@ import java.util.List;
  */
 public class PageView<T> {
     
-    /** ·ÖÒ³Êı¾İ **/
+    /** åˆ†é¡µæ•°æ® **/
     private List<T> records;
-    /** Ò³Âë¿ªÊ¼Ë÷ÒıºÍ½áÊøË÷Òı **/
+    /** é¡µç å¼€å§‹ç´¢å¼•å’Œç»“æŸç´¢å¼• **/
     private PageIndex pageindex;
-    /** ×ÜÒ³Êı **/
+    /** æ€»é¡µæ•° **/
     private long totalpage = 1;
-    /** Ã¿Ò³ÏÔÊ¾¼ÇÂ¼Êı **/
+    /** æ¯é¡µæ˜¾ç¤ºè®°å½•æ•° **/
     private int maxresult = 12;
-    /** µ±Ç°Ò³ **/
+    /** å½“å‰é¡µ **/
     private int currentpage = 1;
-    /** ×Ü¼ÇÂ¼Êı **/
+    /** æ€»è®°å½•æ•° **/
     private long totalrecord;
-    /** Ò³ÂëÊıÁ¿ **/
+    /** é¡µç æ•°é‡ **/
     private int pagecode = 10;
     
     public PageView() {
@@ -30,9 +30,9 @@ public class PageView<T> {
 
     /**
      * @param maxresult
-     * Ã¿Ò³ÏÔÊ¾¼ÇÂ¼Êı
+     * æ¯é¡µæ˜¾ç¤ºè®°å½•æ•°
      * @param currentpage
-     * µ±Ç°Ò³
+     * å½“å‰é¡µ
      */
     public PageView(int maxresult, int currentpage) {
         this.maxresult = maxresult;
@@ -40,7 +40,7 @@ public class PageView<T> {
     }
     /**
      * @param qr
-     * ·µ»Ø×Ô¶¨ÒåµÄ½á¹û¼¯
+     * è¿”å›è‡ªå®šä¹‰çš„ç»“æœé›†
      */
     public void setQueryResult(QueryResult<T> qr){
         setTotalrecord(qr.getTotalrecord());
@@ -96,11 +96,11 @@ public class PageView<T> {
         setTotalpage(this.totalrecord%this.maxresult==0? this.totalrecord/this.maxresult : this.totalrecord/this.maxresult+1);
     }
     
-    /** Ò³ÂëÊıÁ¿ **/
+    /** é¡µç æ•°é‡ **/
     public int getPagecode() {
         return pagecode;
     }
-    /** Ò³ÂëÊıÁ¿ **/
+    /** é¡µç æ•°é‡ **/
     public void setPagecode(int pagecode) {
         this.pagecode = pagecode;
     }

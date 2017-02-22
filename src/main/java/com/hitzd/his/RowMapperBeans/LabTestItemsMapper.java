@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 import com.hitzd.his.Beans.TLabTestItems;
 
 /**
- * ¼ìÑéÏîÄ¿ 
+ * æ£€éªŒé¡¹ç›® 
  * @author Administrator
  *
  */

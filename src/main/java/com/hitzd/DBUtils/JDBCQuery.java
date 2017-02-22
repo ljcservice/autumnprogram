@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.jdbc.core.RowMapper;
 
 /**
- * ·â×°spring jdbcTeplate
+ * å°è£…spring jdbcTeplate
  * @author liujc
  * 
  */
@@ -13,20 +13,20 @@ public interface JDBCQuery
 {
 
     /**
-     * sql Ö´ĞĞ ÎŞ·µ»Ø£»
+     * sql æ‰§è¡Œ æ— è¿”å›ï¼›
      * 
      * @param sql
      */
     public void execute(String sql);
     /**
-     * Ö´ĞĞ´ó×Ö·û
+     * æ‰§è¡Œå¤§å­—ç¬¦
      * @param sql
      * @param lobCreater
      */
     public void execute(String sql , LobCreatingPSCallBeck lobCreater );
    
     /**
-     * ·µ»ØÒ»¸öÕûĞÎ
+     * è¿”å›ä¸€ä¸ªæ•´å½¢
      * 
      * @param sql
      * @return
@@ -34,11 +34,11 @@ public interface JDBCQuery
     public int queryForInt(String sql);
 
     /**
-     * ·µ»ØÒ»¸öÕûĞÎ
+     * è¿”å›ä¸€ä¸ªæ•´å½¢
      * 
      * @param sql
      * @param _Values
-     *            ²ÎÊıÊı×é
+     *            å‚æ•°æ•°ç»„
      * @return
      */
     public int queryForInt(String sql, Object[] _Values);

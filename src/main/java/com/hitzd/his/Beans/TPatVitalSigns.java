@@ -1,7 +1,7 @@
 package com.hitzd.his.Beans;
 
 /**
- * hisÖĞ ordadm.Vital_Signs_Rec±í Êı¾İ 
+ * hisä¸­ ordadm.Vital_Signs_Recè¡¨ æ•°æ® 
  * @author Administrator
  *
  */
@@ -9,19 +9,19 @@ public class TPatVitalSigns extends TBaseBean
 {
     private String patid ;
     private String visitid ;
-    /* Âö²« */
+    /* è„‰æ */
     private String pulse;
     private String pulseValue;
-    /* ÌåÎÂ */
+    /* ä½“æ¸© */
     private String temperature;
     private String temperatureValue;
-    /* µÍÑªÑ¹ */
+    /* ä½è¡€å‹ */
     private String bloodLow;
     private String bloodLowValue;
-    /* ¸ßÑªÑ¹ */
+    /* é«˜è¡€å‹ */
     private String bloodhigh;
     private String bloodhighValue;
-    /* ÈÕÆÚ */
+    /* æ—¥æœŸ */
     private String SVDate;
     
     public String getPatid()

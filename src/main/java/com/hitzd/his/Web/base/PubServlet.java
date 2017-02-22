@@ -15,7 +15,7 @@ import com.hitzd.his.Program.Web.Utils.CommonUtils;
 import com.hitzd.his.Program.Web.Utils.ICharStrategy;
 
 /**
- * servletµÄ¸¸Àà£¬¸ù¾İÒ³Ãæ²ÎÊıoµÄÖµÖ´ĞĞÏàÓ¦µÄ·½·¨
+ * servletçš„çˆ¶ç±»ï¼Œæ ¹æ®é¡µé¢å‚æ•°oçš„å€¼æ‰§è¡Œç›¸åº”çš„æ–¹æ³•
  * @author tyl
  *
  */
@@ -23,18 +23,18 @@ public  class PubServlet extends HttpServlet
 {
 
 	private static final long serialVersionUID = 1L;
-	/* Ä¬ÈÏ×ªÏòÒ³ */
+	/* é»˜è®¤è½¬å‘é¡µ */
 	protected String        forword = "/index.jsp";
 	/**/
 	protected String childClassName = "";
 	
-	/* ÓÃÓÚÅĞ¶ÏÊÇ·ñÎª Òì²½Ìá½» */
+	/* ç”¨äºåˆ¤æ–­æ˜¯å¦ä¸º å¼‚æ­¥æäº¤ */
     protected boolean AjaxFlag = false;
     
 	public PubServlet(){}
 	
 	/**
-	 *  Í¨ÓÃ´¦Àí 
+	 *  é€šç”¨å¤„ç† 
 	 */
 	@SuppressWarnings("rawtypes")
     protected void doGet(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException 
@@ -99,7 +99,7 @@ public  class PubServlet extends HttpServlet
 			}
 			if(list != null)
 			    request.setAttribute("List",list);
-			/* ÅĞ¶Ï ÊÇ·ñÊÇÒì²½Ìá½»  */
+			/* åˆ¤æ–­ æ˜¯å¦æ˜¯å¼‚æ­¥æäº¤  */
             if(this.AjaxFlag)
             {
                 this.forword = "";
@@ -114,7 +114,7 @@ public  class PubServlet extends HttpServlet
 	}
 
 	/**
-	 * »ñµÃ Êı¾İĞÅÏ¢ 
+	 * è·å¾— æ•°æ®ä¿¡æ¯ 
 	 * @param request
 	 */
 	private void getSessionObj(HttpServletRequest request)
@@ -122,7 +122,7 @@ public  class PubServlet extends HttpServlet
 	    List<Object>  objs = CommonUtils.getSessionObject(request, getCurClassName());
         if(objs == null)
         {
-            //TODO  ÔÚsession ÕÒ²»µ½Êı¾İ¼¯Ê± ĞèÒªÒ»¸ö´íÎóÒ³Ãæ ÔöÏîÓÃ»§ÌåÑé ¡£
+            //TODO  åœ¨session æ‰¾ä¸åˆ°æ•°æ®é›†æ—¶ éœ€è¦ä¸€ä¸ªé”™è¯¯é¡µé¢ å¢é¡¹ç”¨æˆ·ä½“éªŒ ã€‚
             if("".equals(this.forword)) this.forword = "/index.jsp" ;
         }
         else
@@ -131,7 +131,7 @@ public  class PubServlet extends HttpServlet
         }
 	}
 	/**
-	 * »ñµÃµ±Ç°ÀàÃû×Ö ×öÎª session key ´æ·ÅÊı¾İ¼¯
+	 * è·å¾—å½“å‰ç±»åå­— åšä¸º session key å­˜æ”¾æ•°æ®é›†
 	 * @return
 	 */
 	protected String getCurClassName()
@@ -140,7 +140,7 @@ public  class PubServlet extends HttpServlet
 	}
 	
 	/**
-	 * ´æ·ÅÊı¾İ¼¯ ÓÃÓÚ´òÓ¡ £¬µ¼³ö£¬pdf ±ÜÃâÖØ¸´ÖØĞÂ 
+	 * å­˜æ”¾æ•°æ®é›† ç”¨äºæ‰“å° ï¼Œå¯¼å‡ºï¼Œpdf é¿å…é‡å¤é‡æ–° 
 	 * @param request
 	 * @param objs
 	 */
@@ -151,7 +151,7 @@ public  class PubServlet extends HttpServlet
 	
 	
 	/**
-	 * »æÍ¼°æ  
+	 * ç»˜å›¾ç‰ˆ  
 	 * @param request
 	 * @param response
 	 */
@@ -160,12 +160,12 @@ public  class PubServlet extends HttpServlet
 	    String graphPanel = CommonUtils.getRequestParameter(request, "graphPanel", "");
 	    if(graphPanel.equals(""))
 	    {
-	            System.out.println("µ¼³öµØÖ·²»ÄÜÎª¿Õ!");
+	            System.out.println("å¯¼å‡ºåœ°å€ä¸èƒ½ä¸ºç©º!");
 	    }
 	    this.forword = graphPanel;
 	}
 	/**
-	 * Í¼ĞÎ  
+	 * å›¾å½¢  
 	 * @param request
 	 * @param response
 	 */
@@ -174,12 +174,12 @@ public  class PubServlet extends HttpServlet
 	    String graph = CommonUtils.getRequestParameter(request, "graph", "");
 	    if(graph.equals(""))
 	    {
-	            System.out.println("µ¼³öµØÖ·²»ÄÜÎª¿Õ!");
+	            System.out.println("å¯¼å‡ºåœ°å€ä¸èƒ½ä¸ºç©º!");
 	    }
 	    this.forword = graph ;
 	}
 	/**
-	 * µ¼³öexcel  
+	 * å¯¼å‡ºexcel  
 	 * @param request
 	 * @param response
 	 */
@@ -188,13 +188,13 @@ public  class PubServlet extends HttpServlet
 	    String excelPrint = CommonUtils.getRequestParameter(request, "excelPrint", "");
 	    if(excelPrint.equals(""))
 	    {
-	            System.out.println("µ¼³öµØÖ·²»ÄÜÎª¿Õ!");
+	            System.out.println("å¯¼å‡ºåœ°å€ä¸èƒ½ä¸ºç©º!");
 	    }
 	    this.forword = excelPrint;
 	}
 	
 	 /**
-     * ´òÓ¡ 
+     * æ‰“å° 
      * @param request
      * @param response
      */
@@ -203,13 +203,13 @@ public  class PubServlet extends HttpServlet
         String Print = CommonUtils.getRequestParameter(request, "Print", "");
         if(Print.equals(""))
         {
-                System.out.println("´òÓ¡µØÖ·²»ÄÜÎª¿Õ!");
+                System.out.println("æ‰“å°åœ°å€ä¸èƒ½ä¸ºç©º!");
         }
         this.forword = Print;
     }
     
     /**
-     * pdfµ¼³ö 
+     * pdfå¯¼å‡º 
      * @param request
      * @param response
      */
@@ -217,25 +217,25 @@ public  class PubServlet extends HttpServlet
 	
 	
     /**
-     * ÏÔÊ¾Í¼ĞÎµÄ»ù±¾·½·¨
-     * Ê¹ÓÃÕßÊµÏÖÕâÑùµÄ½Ó¿Ú·½·¨ charBaseData.setCharBaseData() À´×éÖ¯ºÃÊı¾İ   
+     * æ˜¾ç¤ºå›¾å½¢çš„åŸºæœ¬æ–¹æ³•
+     * ä½¿ç”¨è€…å®ç°è¿™æ ·çš„æ¥å£æ–¹æ³• charBaseData.setCharBaseData() æ¥ç»„ç»‡å¥½æ•°æ®   
      * @param request
      * @return
      */
     protected String chartView(HttpServletRequest request,ICharStrategy charBaseData)
     {
-        String graphtype = CommonUtils.getRequestParameter(request,"graphtype","");  // Í¼ĞÎ¸ñÊ½
+        String graphtype = CommonUtils.getRequestParameter(request,"graphtype","");  // å›¾å½¢æ ¼å¼
         LinkedHashMap<String, String> chart  = charBaseData.setCharBaseData();
         String strChar = "";
         switch(Integer.parseInt(graphtype))
         {
-            case 1:                     //ÖùĞÎÍ¼
+            case 1:                     //æŸ±å½¢å›¾
                 strChar = ChartUtils.ColumnChart(chart);
                 break;
-            case 3:                     //ÕÛÏßÍ¼
+            case 3:                     //æŠ˜çº¿å›¾
                 strChar = ChartUtils.LineChart(chart);
                 break;
-            case 6:                     //±ıÍ¼
+            case 6:                     //é¥¼å›¾
                 strChar = ChartUtils.PieChart(chart);
                 break;
         }
@@ -248,7 +248,7 @@ public  class PubServlet extends HttpServlet
 		this.doGet(request, response);
 	}
 	/**
-	 * Ö´ĞĞ²åÈëÊı¾İ
+	 * æ‰§è¡Œæ’å…¥æ•°æ®
 	 * @param request
 	 * @param response
 	 * @return
@@ -257,7 +257,7 @@ public  class PubServlet extends HttpServlet
 		return null;
 	}
 	/**
-	 * Ö´ĞĞ²é¿´»òÕß×ªÏòĞŞ¸ÄÒ³Ãæ
+	 * æ‰§è¡ŒæŸ¥çœ‹æˆ–è€…è½¬å‘ä¿®æ”¹é¡µé¢
 	 * @param request
 	 * @param response
 	 * @return
@@ -266,7 +266,7 @@ public  class PubServlet extends HttpServlet
 		return null;
 	}
 	/**
-	 * Ö´ĞĞ¸üĞÂ
+	 * æ‰§è¡Œæ›´æ–°
 	 * @param request
 	 * @param response
 	 * @return
@@ -275,7 +275,7 @@ public  class PubServlet extends HttpServlet
 		return null;
 	}
 	/**
-	 * Ö´ĞĞÉ¾³ı
+	 * æ‰§è¡Œåˆ é™¤
 	 * @param request
 	 * @param response
 	 * @return
@@ -284,7 +284,7 @@ public  class PubServlet extends HttpServlet
 		return null;
 	}
 	/**
-	 * Ö´ĞĞ×ªÏòÌí¼ÓÒ³Ãæ
+	 * æ‰§è¡Œè½¬å‘æ·»åŠ é¡µé¢
 	 * @param request
 	 * @param response
 	 * @return
@@ -294,7 +294,7 @@ public  class PubServlet extends HttpServlet
 	}
 	
 	/**
-	 * Ö´ĞĞ²éÑ¯
+	 * æ‰§è¡ŒæŸ¥è¯¢
 	 * @param request
 	 * @param response
 	 * @return
@@ -304,7 +304,7 @@ public  class PubServlet extends HttpServlet
 	}
 	
 	/**
-	 * ÓÃ»§×Ô¶¨Òå·½·¨
+	 * ç”¨æˆ·è‡ªå®šä¹‰æ–¹æ³•
 	 * @param o
 	 * @param request
 	 * @param response

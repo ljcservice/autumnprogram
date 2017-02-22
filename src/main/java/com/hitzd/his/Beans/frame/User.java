@@ -11,35 +11,35 @@ import java.util.regex.Pattern;
 import com.hitzd.DBUtils.TCommonRecord;
 
 /**
- * ÓÃ»§ĞÅÏ¢×Ö¶Î
+ * ç”¨æˆ·ä¿¡æ¯å­—æ®µ
  * @author jingcong
  *
  */
 public class User
 {
-    /* sessionÖĞÃû×Ö */
+    /* sessionä¸­åå­— */
     public final static String UserSessionCode = "Customer";
-    /* ÓÃ»§id */
+    /* ç”¨æˆ·id */
     private String             UserID          = "";
-    /* ÓÃ»§Ãû×Ö*/
+    /* ç”¨æˆ·åå­—*/
     private String             UserName        = "";
-    /* ·ÃÎÊÈ¨ÏŞ  */
+    /* è®¿é—®æƒé™  */
     private String             UserPower       = "";
-    /* Ä£¿é¾ßÌå¹¦ÄÜ·ÃÎÊÈ¨ÏŞ  */
+    /* æ¨¡å—å…·ä½“åŠŸèƒ½è®¿é—®æƒé™  */
     private HashMap<String, List<String>>  userPowerFunc = new HashMap<String, List<String>>();
-    /* ÓÃ»§½éÉÜ */
+    /* ç”¨æˆ·ä»‹ç» */
     private String             UserDesc        = "";
-    /* ÓÃ»§µ¥Î» */
+    /* ç”¨æˆ·å•ä½ */
     private String             UserUnit        = "";
     /* */
     private String             UserDuty        = "";
-    /* ÓÃ»§ÔÊĞí½øÈëµÄÆ½Ì¨  */
+    /* ç”¨æˆ·å…è®¸è¿›å…¥çš„å¹³å°  */
     private String             UserProgram     = "";
-    /* ÓÃ»§½ÇÉ« Ä¿Ç° 000 Ö÷ÈÎÒ©Ê¦  £¬ 001 £¬Ò©Ê¦ */
+    /* ç”¨æˆ·è§’è‰² ç›®å‰ 000 ä¸»ä»»è¯å¸ˆ  ï¼Œ 001 ï¼Œè¯å¸ˆ */
     private String             UserRole        = "";
-    /* ÓÃ»§token £¬×¢£ºÒ»´ÎÓÃ»§µÇÂ¼Æ½Ì¨ºó½öÊ¹ÓÃÒ»¸ö Token±àÂë  */
+    /* ç”¨æˆ·token ï¼Œæ³¨ï¼šä¸€æ¬¡ç”¨æˆ·ç™»å½•å¹³å°åä»…ä½¿ç”¨ä¸€ä¸ª Tokenç¼–ç   */
     private String             UserToken       = "";
-    /* ÓÃ»§ÄÜ¿´µ½²¿ÃÅ */
+    /* ç”¨æˆ·èƒ½çœ‹åˆ°éƒ¨é—¨ */
     private TCommonRecord UserDept = new TCommonRecord();
     
     public String getUserRole()
@@ -120,22 +120,22 @@ public class User
             StringBuffer sb = new StringBuffer();
             for(UserRolePower e : userPowers)
             {
-                /* ÓÃ»§µÄÄ£¿é¾ßÌåÈ¨ÏŞ     Ä£¿éÃû×Ö[¹¦ÄÜµã1,¹¦ÄÜµã2,¹¦ÄÜµã3] */
+                /* ç”¨æˆ·çš„æ¨¡å—å…·ä½“æƒé™     æ¨¡å—åå­—[åŠŸèƒ½ç‚¹1,åŠŸèƒ½ç‚¹2,åŠŸèƒ½ç‚¹3] */
                 String roleFunc = e.getProgfunc(); //tcr.get("progfunc");
                 if(roleFunc != null && !"".equals(roleFunc))
                 {
-                    /* ÕıÔò²ğ·Ö  */
+                    /* æ­£åˆ™æ‹†åˆ†  */
                     Pattern pt = Pattern.compile("(\\[)(.*?)(\\])");
                     Matcher mr = pt.matcher(roleFunc); 
                     while(mr.find())
                     {
                         String key   = roleFunc.replace(mr.group(0), "");
                         String value = mr.group(2);
-                        /* ¼ÓÄ£¿é¹¦ÄÜÈ¨ÏŞ */
+                        /* åŠ æ¨¡å—åŠŸèƒ½æƒé™ */
                         addUserPowerFunc(e.getProgid() + key, "".equals(value) ? null : Arrays.asList(value.split(",")));
                     }
                 }
-                //×éÖ¯Ä£¿é·ÃÎÊÈ¨ÏŞ 
+                //ç»„ç»‡æ¨¡å—è®¿é—®æƒé™ 
                 sb.append("{").append(e.getProgid()).append("}");
             }
             UserPower = sb.toString();
@@ -163,10 +163,10 @@ public class User
     }
     
     /**
-     * ·µ»Ø¸ÃÓÃ»§ÊÇ·ñÓĞÖ¸¶¨Ä£¿éµÄ·ÃÎÊÈ¨ÏŞ
+     * è¿”å›è¯¥ç”¨æˆ·æ˜¯å¦æœ‰æŒ‡å®šæ¨¡å—çš„è®¿é—®æƒé™
      * 
      * @param modelName
-     *            Ö¸¶¨µÄÄ£¿é
+     *            æŒ‡å®šçš„æ¨¡å—
      * @return
      */
     public boolean hasPower(String modelName)
@@ -177,7 +177,7 @@ public class User
     }
     
     /**
-     * ·µ»Ø¸ÃÓÃ»§ÊÇ·ñ¾ßÓĞÄ³Ä£¿éÄ³¸ö¹¦ÄÜµÄÊ¹ÓÃÈ¨ÏŞ
+     * è¿”å›è¯¥ç”¨æˆ·æ˜¯å¦å…·æœ‰æŸæ¨¡å—æŸä¸ªåŠŸèƒ½çš„ä½¿ç”¨æƒé™
      * @param menuid
      * @param mFunc
      * @return

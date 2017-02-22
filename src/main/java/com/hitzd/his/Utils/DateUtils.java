@@ -9,31 +9,31 @@ import java.util.Date;
 
 
 /**
- * ´¦ÀíËùÓĞºÍÈÕÆÚÏà¹ØµÄ´¦Àí
+ * å¤„ç†æ‰€æœ‰å’Œæ—¥æœŸç›¸å…³çš„å¤„ç†
  */
 public class DateUtils extends Object {
-    /** ÏµÍ³×ÜµÄÊ§Ğ§ÈÕÆÚ */
+    /** ç³»ç»Ÿæ€»çš„å¤±æ•ˆæ—¥æœŸ */
     public static final String DATE_FOREVER = "9999-12-31";
-    /** Ê±¼ä¸ñÊ½ */
+    /** æ—¶é—´æ ¼å¼ */
     public static final String FORMAT_DATETIME = "yyyy-MM-dd HH:mm:ss";
     
 
-    /** È«Ê±¼ä¸ñÊ½ */
+    /** å…¨æ—¶é—´æ ¼å¼ */
     private static final String FORMAT_FULLTIME = "yyMMddHHmmssSSS";
-    /** ÈÕÆÚ¸ñÊ½ */
+    /** æ—¥æœŸæ ¼å¼ */
     private static final String FORMAT_DATE = "yyyy-MM-dd";
-    /** ÈÕÆÚ¸ñÊ½ */
+    /** æ—¥æœŸæ ¼å¼ */
     private static final String FORMAT_YEARMONTH = "yyyy-MM";
-    /** ´¿Ê±¼ä¸ñÊ½ */
+    /** çº¯æ—¶é—´æ ¼å¼ */
     private static final String FORMAT_TIME = "HH:mm:ss";
-    /**ÕûµãÊ±¼ä¸ñÊ½*/
+    /**æ•´ç‚¹æ—¶é—´æ ¼å¼*/
     private static final String FORMAT_DATETIMEZD = "yyyy-MM-dd HH:00:00";
-    /**ÕûµãÊ±¼ä¸ñÊ½*/
+    /**æ•´ç‚¹æ—¶é—´æ ¼å¼*/
     private static final String NULL_DATE = "1000-01-01 00:00:00";
 
     /**
-     * µÃµ½µ±Ç°µÄÈÕÆÚÊ±¼ä×Ö·û´®
-     * @return ÈÕÆÚÊ±¼ä×Ö·û´®
+     * å¾—åˆ°å½“å‰çš„æ—¥æœŸæ—¶é—´å­—ç¬¦ä¸²
+     * @return æ—¥æœŸæ—¶é—´å­—ç¬¦ä¸²
      */
     public static String getDateTime() {
         Calendar calendar = Calendar.getInstance();
@@ -42,8 +42,8 @@ public class DateUtils extends Object {
 
 
     /**
-     * µÃµ½µ±Ç°µÄÈ«Ê±¼ä×Ö·û´®£¬°üº¬ºÁÃë
-     * @return ÈÕÆÚÊ±¼ä×Ö·û´®
+     * å¾—åˆ°å½“å‰çš„å…¨æ—¶é—´å­—ç¬¦ä¸²ï¼ŒåŒ…å«æ¯«ç§’
+     * @return æ—¥æœŸæ—¶é—´å­—ç¬¦ä¸²
      */
     public static String getFulltime() {
         Calendar calendar = Calendar.getInstance();
@@ -51,16 +51,16 @@ public class DateUtils extends Object {
     }
     
     /**
-     * µÃµ½µ±Ç°µÄÈÕÆÚÊ±¼ä×Ö·û´®
-     * @return ÈÕÆÚÊ±¼ä×Ö·û´®
+     * å¾—åˆ°å½“å‰çš„æ—¥æœŸæ—¶é—´å­—ç¬¦ä¸²
+     * @return æ—¥æœŸæ—¶é—´å­—ç¬¦ä¸²
      */
     public static String getDatetimeW3C() {
         return getDate() + "T" + getTime();
     }
     
     /**
-     * µÃµ½µ±Ç°µÄÈÕÆÚÊ±¼ä×Ö·û´®
-     * @return ÈÕÆÚÊ±¼ä×Ö·û´®
+     * å¾—åˆ°å½“å‰çš„æ—¥æœŸæ—¶é—´å­—ç¬¦ä¸²
+     * @return æ—¥æœŸæ—¶é—´å­—ç¬¦ä¸²
      */
     public static String getDatetimeZd() {
         Calendar calendar = Calendar.getInstance();
@@ -70,8 +70,8 @@ public class DateUtils extends Object {
     }
 
     /**
-     * µÃµ½µ±Ç°µÄÄêÔÂÈÕÆÚ×Ö·û´®
-     * @return ÄêÔÂÈÕÆÚ×Ö·û´®
+     * å¾—åˆ°å½“å‰çš„å¹´æœˆæ—¥æœŸå­—ç¬¦ä¸²
+     * @return å¹´æœˆæ—¥æœŸå­—ç¬¦ä¸²
      */
     public static String getYearMonth() {
         Calendar calendar = Calendar.getInstance();
@@ -79,25 +79,25 @@ public class DateUtils extends Object {
     }
     
     /**
-     * µÃµ½µ±Ç°µÄÈÕÆÚ×Ö·û´®
-     * @return ÈÕÆÚ×Ö·û´®
+     * å¾—åˆ°å½“å‰çš„æ—¥æœŸå­—ç¬¦ä¸²
+     * @return æ—¥æœŸå­—ç¬¦ä¸²
      */
     public static String getDate() {
         return getDate(Calendar.getInstance());
     }
 
     /**
-     * µÃµ½Ö¸¶¨ÈÕÆÚµÄ×Ö·û´®
-     * @param calendar  Ö¸¶¨µÄÈÕÆÚ
-     * @return ÈÕÆÚ×Ö·û´®
+     * å¾—åˆ°æŒ‡å®šæ—¥æœŸçš„å­—ç¬¦ä¸²
+     * @param calendar  æŒ‡å®šçš„æ—¥æœŸ
+     * @return æ—¥æœŸå­—ç¬¦ä¸²
      */
     public static String getDate(Calendar calendar) {
         return getStringFromDate(calendar.getTime(), FORMAT_DATE);
     }
     
     /**
-     * µÃµ½µ±Ç°µÄ´¿Ê±¼ä×Ö·û´®
-     * @return Ê±¼ä×Ö·û´®
+     * å¾—åˆ°å½“å‰çš„çº¯æ—¶é—´å­—ç¬¦ä¸²
+     * @return æ—¶é—´å­—ç¬¦ä¸²
      */
     public static String getTime() {
         Calendar calendar = Calendar.getInstance();
@@ -105,9 +105,9 @@ public class DateUtils extends Object {
     }
 
     /**
-     * ¸ù¾İÊı×ÖµÃµ½ÖĞÎÄÊı×Ö¡£
-     * @param number    Êı×Ö
-     * @return  ÖĞÎÄÊı×Ö
+     * æ ¹æ®æ•°å­—å¾—åˆ°ä¸­æ–‡æ•°å­—ã€‚
+     * @param number    æ•°å­—
+     * @return  ä¸­æ–‡æ•°å­—
      */
     public static String getChineseNum(String number) {
         String chinese = "";
@@ -115,66 +115,66 @@ public class DateUtils extends Object {
     
         switch (x) {
             case 0:
-                chinese = "¡ğ";
+                chinese = "â—‹";
                 break;
             case 1:
-                chinese = "Ò»";
+                chinese = "ä¸€";
                 break;
             case 2:
-                chinese = "¶ş";
+                chinese = "äºŒ";
                 break;
             case 3:
-                chinese = "Èı";
+                chinese = "ä¸‰";
                 break;
             case 4:
-                chinese = "ËÄ";
+                chinese = "å››";
                 break;
             case 5:
-                chinese = "Îå";
+                chinese = "äº”";
                 break;
             case 6:
-                chinese = "Áù";
+                chinese = "å…­";
                 break;
             case 7:
-                chinese = "Æß";
+                chinese = "ä¸ƒ";
                 break;
             case 8:
-                chinese = "°Ë";
+                chinese = "å…«";
                 break;
             case 9:
-                chinese = "¾Å";
+                chinese = "ä¹";
                     break;
                 default:
         }
         return chinese;
     }
     /**
-     * µÃµ½µ±Ç°ÈÕÆÚµÄÖĞÎÄÈÕÆÚ×Ö·û´®
-     * @return  ÖĞÎÄÈÕÆÚ×Ö·û´®
+     * å¾—åˆ°å½“å‰æ—¥æœŸçš„ä¸­æ–‡æ—¥æœŸå­—ç¬¦ä¸²
+     * @return  ä¸­æ–‡æ—¥æœŸå­—ç¬¦ä¸²
      */
     public static String getChineseDate() {
         return getChineseDate(getDate());
     }
     
     /**
-     * ¸ù¾İÈÕÆÚÖµµÃµ½ÖĞÎÄÈÕÆÚ×Ö·û´®
-     * @param date  ÈÕÆÚÖµ
-     * @return  ÖĞÎÄÈÕÆÚ×Ö·û´®
+     * æ ¹æ®æ—¥æœŸå€¼å¾—åˆ°ä¸­æ–‡æ—¥æœŸå­—ç¬¦ä¸²
+     * @param date  æ—¥æœŸå€¼
+     * @return  ä¸­æ–‡æ—¥æœŸå­—ç¬¦ä¸²
      */
     public static String getChineseDate(String date) {
         if (date.length() < 10) {
             return "";
         } else {
-            String year = date.substring(0, 4); // Äê
-            String month = date.substring(5, 7); // ÔÂ
-            String day = date.substring(8, 10); // ÈÕ
-            String y1 = year.substring(0, 1); //Äê ×Ö·û1
-            String y2 = year.substring(1, 2); //Äê ×Ö·û1
-            String y3 = year.substring(2, 3); //Äê ×Ö·û3
-            String y4 = year.substring(3, 4); //Äê ×Ö·û4
-            String m2 = month.substring(1, 2); // ÔÂ ×Ö·û2
-            String d1 = day.substring(0, 1); // ÈÕ 1
-            String d2 = day.substring(1, 2); // ÈÕ 2
+            String year = date.substring(0, 4); // å¹´
+            String month = date.substring(5, 7); // æœˆ
+            String day = date.substring(8, 10); // æ—¥
+            String y1 = year.substring(0, 1); //å¹´ å­—ç¬¦1
+            String y2 = year.substring(1, 2); //å¹´ å­—ç¬¦1
+            String y3 = year.substring(2, 3); //å¹´ å­—ç¬¦3
+            String y4 = year.substring(3, 4); //å¹´ å­—ç¬¦4
+            String m2 = month.substring(1, 2); // æœˆ å­—ç¬¦2
+            String d1 = day.substring(0, 1); // æ—¥ 1
+            String d2 = day.substring(1, 2); // æ—¥ 2
             String cy1 = getChineseNum(y1);
             String cy2 = getChineseNum(y2);
             String cy3 = getChineseNum(y3);
@@ -182,19 +182,19 @@ public class DateUtils extends Object {
             String cm2 = getChineseNum(m2);
             String cd1 = getChineseNum(d1);
             String cd2 = getChineseNum(d2);
-            String cYear = cy1 + cy2 + cy3 + cy4 + "Äê";
-            String cMonth = "ÔÂ";
+            String cYear = cy1 + cy2 + cy3 + cy4 + "å¹´";
+            String cMonth = "æœˆ";
     
             if (Integer.parseInt(month) > 9) {
-                cMonth = "Ê®" + cm2 + cMonth;
+                cMonth = "å" + cm2 + cMonth;
             } else {
                 cMonth = cm2 + cMonth;
             }
     
-            String cDay = "ÈÕ";
+            String cDay = "æ—¥";
     
             if (Integer.parseInt(day) > 9) {
-                cDay = cd1 + "Ê®" + cd2 + cDay;
+                cDay = cd1 + "å" + cd2 + cDay;
             } else {
                 cDay = cd2 + cDay;
             }
@@ -204,33 +204,33 @@ public class DateUtils extends Object {
         }
     }
     /**
-     * ¸ù¾İÈÕÆÚÖµµÃµ½ÖĞÎÄÈÕÆÚ×Ö·û´®
-     * @param date ¸ø¶¨ÈÕÆÚ
-     * @return 2005Äê09ÔÂ23ÈÕ¸ñÊ½µÄÈÕÆÚ
+     * æ ¹æ®æ—¥æœŸå€¼å¾—åˆ°ä¸­æ–‡æ—¥æœŸå­—ç¬¦ä¸²
+     * @param date ç»™å®šæ—¥æœŸ
+     * @return 2005å¹´09æœˆ23æ—¥æ ¼å¼çš„æ—¥æœŸ
      */
     public static String getChineseTwoDate(String date) {
         if (date.length() < 10) {
             return "";
         } else {
-            String year = date.substring(0, 4); // Äê
-            String month = date.substring(5, 7); // ÔÂ
-            String day = date.substring(8, 10); // ÈÕ
+            String year = date.substring(0, 4); // å¹´
+            String month = date.substring(5, 7); // æœˆ
+            String day = date.substring(8, 10); // æ—¥
         
-            return year + "Äê" + month + "ÔÂ" + day + "ÈÕ";
+            return year + "å¹´" + month + "æœˆ" + day + "æ—¥";
         }
     }
     /**
-     * µÃµ½µ±Ç°ÈÕÆÚµÄĞÇÆÚÊı : ÀıÈç 'ĞÇÆÚÒ»',  'ĞÇÆÚ¶ş'µÈ
-     * @return  µ±Ç°ÈÕÆÚµÄĞÇÆÚÊı
+     * å¾—åˆ°å½“å‰æ—¥æœŸçš„æ˜ŸæœŸæ•° : ä¾‹å¦‚ 'æ˜ŸæœŸä¸€',  'æ˜ŸæœŸäºŒ'ç­‰
+     * @return  å½“å‰æ—¥æœŸçš„æ˜ŸæœŸæ•°
      */
     public static String getChineseDayOfWeek() {
         return getChineseDayOfWeek(getDate());
     }
 
     /**
-     * µÃµ½Ö¸¶¨ÈÕÆÚµÄĞÇÆÚÊı
-     * @param strDate Ö¸¶¨ÈÕÆÚ×Ö·û´®
-     * @return  Ö¸¶¨ÈÕÆÚµÄĞÇÆÚÊı
+     * å¾—åˆ°æŒ‡å®šæ—¥æœŸçš„æ˜ŸæœŸæ•°
+     * @param strDate æŒ‡å®šæ—¥æœŸå­—ç¬¦ä¸²
+     * @return  æŒ‡å®šæ—¥æœŸçš„æ˜ŸæœŸæ•°
      */
     public static String getChineseDayOfWeek(String strDate) {
         Calendar calendar = getCalendar(strDate);
@@ -240,28 +240,28 @@ public class DateUtils extends Object {
 
         switch (week) {
             case Calendar.SUNDAY:
-                strWeek = "ĞÇÆÚÈÕ";
+                strWeek = "æ˜ŸæœŸæ—¥";
                 break;
             case Calendar.MONDAY:
-                strWeek = "ĞÇÆÚÒ»";
+                strWeek = "æ˜ŸæœŸä¸€";
                 break;
             case Calendar.TUESDAY:
-                strWeek = "ĞÇÆÚ¶ş";
+                strWeek = "æ˜ŸæœŸäºŒ";
                 break;
             case Calendar.WEDNESDAY:
-                strWeek = "ĞÇÆÚÈı";
+                strWeek = "æ˜ŸæœŸä¸‰";
                 break;
             case Calendar.THURSDAY:
-                strWeek = "ĞÇÆÚËÄ";
+                strWeek = "æ˜ŸæœŸå››";
                 break;
             case Calendar.FRIDAY:
-                strWeek = "ĞÇÆÚÎå";
+                strWeek = "æ˜ŸæœŸäº”";
                 break;
             case Calendar.SATURDAY:
-                strWeek = "ĞÇÆÚÁù";
+                strWeek = "æ˜ŸæœŸå…­";
                 break;
             default:
-                strWeek = "ĞÇÆÚÒ»";
+                strWeek = "æ˜ŸæœŸä¸€";
                 break;
         }
 
@@ -320,9 +320,9 @@ public class DateUtils extends Object {
     }
 
     /**
-     * µÃµ½Óëµ±Ç°ÈÕÆÚÏà²îÖ¸¶¨ÌìÊıµÄÈÕÆÚ×Ö·û´®
-     * @param days Ç°ºóµÄÌìÊı£¬ÕıÖµÎªºó£¬ ¸ºÖµÎªÇ°
-     * @return ÈÕÆÚ×Ö·û´®
+     * å¾—åˆ°ä¸å½“å‰æ—¥æœŸç›¸å·®æŒ‡å®šå¤©æ•°çš„æ—¥æœŸå­—ç¬¦ä¸²
+     * @param days å‰åçš„å¤©æ•°ï¼Œæ­£å€¼ä¸ºåï¼Œ è´Ÿå€¼ä¸ºå‰
+     * @return æ—¥æœŸå­—ç¬¦ä¸²
      */
     public static String getCertainDate(int days) {
         Calendar calendar = Calendar.getInstance();
@@ -331,9 +331,9 @@ public class DateUtils extends Object {
     }
 
     /**
-     * µÃµ½Óëµ±Ç°ÈÕÆÚÏà²îÖ¸¶¨ÔÂÊıµÄÈÕÆÚ×Ö·û´®
-     * @param dif Ç°ºóµÄÔÂÊı£¬ÕıÖµÎªºó£¬ ¸ºÖµÎªÇ°
-     * @return ÈÕÆÚ×Ö·û´®
+     * å¾—åˆ°ä¸å½“å‰æ—¥æœŸç›¸å·®æŒ‡å®šæœˆæ•°çš„æ—¥æœŸå­—ç¬¦ä¸²
+     * @param dif å‰åçš„æœˆæ•°ï¼Œæ­£å€¼ä¸ºåï¼Œ è´Ÿå€¼ä¸ºå‰
+     * @return æ—¥æœŸå­—ç¬¦ä¸²
      */
     public static String getCertainMonth(int dif) {
         Calendar calendar = Calendar.getInstance();
@@ -342,10 +342,10 @@ public class DateUtils extends Object {
     }
     
     /**
-     * µÃµ½ÓëÖ¸¶¨ÈÕÆÚÏà²îÖ¸¶¨ÌìÊıµÄÈÕÆÚ×Ö·û´®
-     * @param dateString Ö¸¶¨µÄÈÕÆÚ
-     * @param days Ç°ºóµÄÌìÊı£¬ÕıÖµÎªºó£¬ ¸ºÖµÎªÇ°
-     * @return ÈÕÆÚ×Ö·û´®
+     * å¾—åˆ°ä¸æŒ‡å®šæ—¥æœŸç›¸å·®æŒ‡å®šå¤©æ•°çš„æ—¥æœŸå­—ç¬¦ä¸²
+     * @param dateString æŒ‡å®šçš„æ—¥æœŸ
+     * @param days å‰åçš„å¤©æ•°ï¼Œæ­£å€¼ä¸ºåï¼Œ è´Ÿå€¼ä¸ºå‰
+     * @return æ—¥æœŸå­—ç¬¦ä¸²
      */
     public static String  getCertainDate(String dateString, int days) {
         Calendar calendar = getCalendar(dateString);
@@ -354,23 +354,23 @@ public class DateUtils extends Object {
     }
 
     /**
-     * µÃµ½ÓëÖ¸¶¨ÈÕÆÚÏà²îÖ¸¶¨ÌìÊıµÄÈÕÆÚ×Ö·û´®
-     * @param dateString Ö¸¶¨µÄÈÕÆÚ
-     * @param period Ç°ºóµÄÌìÊı£¬ÕıÖµÎªºó£¬ ¸ºÖµÎªÇ°
-     * @param periodType ÖÜÆÚÀà±ğ ¿ÉÒÔÊÇÌì¡¢ÔÂ¡¢Äê
-     * @return ÈÕÆÚ×Ö·û´®
+     * å¾—åˆ°ä¸æŒ‡å®šæ—¥æœŸç›¸å·®æŒ‡å®šå¤©æ•°çš„æ—¥æœŸå­—ç¬¦ä¸²
+     * @param dateString æŒ‡å®šçš„æ—¥æœŸ
+     * @param period å‰åçš„å¤©æ•°ï¼Œæ­£å€¼ä¸ºåï¼Œ è´Ÿå€¼ä¸ºå‰
+     * @param periodType å‘¨æœŸç±»åˆ« å¯ä»¥æ˜¯å¤©ã€æœˆã€å¹´
+     * @return æ—¥æœŸå­—ç¬¦ä¸²
      */
     public static String  getCertainDate(String dateString, int period, int periodType) {
         Calendar calendar = getCalendar(dateString);
         
         switch (periodType) { 
-            case 1: //Ìì
+            case 1: //å¤©
                 calendar.add(Calendar.DATE, period);
                 break;
-            case 2: //ÔÂ
+            case 2: //æœˆ
                 calendar.add(Calendar.MONTH, period);
                 break;
-            case 3: //Äê
+            case 3: //å¹´
                 calendar.add(Calendar.MONTH, period * 12);
                 break;
             default:
@@ -379,9 +379,9 @@ public class DateUtils extends Object {
     }
     
     /**
-     * ¸ù¾İ¹æ¶¨¸ñÊ½µÄ×Ö·û´®µÃµ½Calendar
-     * @param dateString    ÈÕÆÚ´®
-     * @return  ¶ÔÓ¦Calendar
+     * æ ¹æ®è§„å®šæ ¼å¼çš„å­—ç¬¦ä¸²å¾—åˆ°Calendar
+     * @param dateString    æ—¥æœŸä¸²
+     * @return  å¯¹åº”Calendar
      */
     public static Calendar getCalendar(String dateString) {
         Calendar calendar = Calendar.getInstance();
@@ -391,17 +391,17 @@ public class DateUtils extends Object {
     }
     
     /**
-     * µÃµ½±¾ÖÜĞÇÆÚÒ»µÄÈÕÆÚ
-     * @return  ÈÕÆÚ×Ö·û´®
+     * å¾—åˆ°æœ¬å‘¨æ˜ŸæœŸä¸€çš„æ—¥æœŸ
+     * @return  æ—¥æœŸå­—ç¬¦ä¸²
      */
     public static String getFirstDateOfWeek() {
         return getFirstDateOfWeek(getDate());
     }
 
     /**
-     * µÃµ½Ö¸¶¨ÈÕÆÚµÄĞÇÆÚÒ»µÄÈÕÆÚ
-     * @param dateString ÈÕÆÚ×Ö·û´®
-     * @return  ±¾ÖÜĞÇÆÚÒ»µÄÈÕÆÚ
+     * å¾—åˆ°æŒ‡å®šæ—¥æœŸçš„æ˜ŸæœŸä¸€çš„æ—¥æœŸ
+     * @param dateString æ—¥æœŸå­—ç¬¦ä¸²
+     * @return  æœ¬å‘¨æ˜ŸæœŸä¸€çš„æ—¥æœŸ
      */
     public static String getFirstDateOfWeek(String dateString) {
         Calendar calendar = getCalendar(dateString);
@@ -416,19 +416,19 @@ public class DateUtils extends Object {
     }
     
     /**
-     * ½«Ö¸¶¨¸ñÊ½µÄ×Ö·û´®¸ñÊ½»¯ÎªÈÕÆÚ
-     * @param s ×Ö·û´®ÄÚÈİ
-     * @return ÈÕÆÚ
+     * å°†æŒ‡å®šæ ¼å¼çš„å­—ç¬¦ä¸²æ ¼å¼åŒ–ä¸ºæ—¥æœŸ
+     * @param s å­—ç¬¦ä¸²å†…å®¹
+     * @return æ—¥æœŸ
      */
     public static Date getDateFromString(String s) {
         return getDateFromString(s, FORMAT_DATE);
     }
     
     /**
-     * ½«Ö¸¶¨¸ñÊ½µÄ×Ö·û´®¸ñÊ½»¯ÎªÈÕÆÚ
-     * @param s ×Ö·û´®ÄÚÈİ
-     * @param format    ×Ö·û´®¸ñÊ½
-     * @return ÈÕÆÚ
+     * å°†æŒ‡å®šæ ¼å¼çš„å­—ç¬¦ä¸²æ ¼å¼åŒ–ä¸ºæ—¥æœŸ
+     * @param s å­—ç¬¦ä¸²å†…å®¹
+     * @param format    å­—ç¬¦ä¸²æ ¼å¼
+     * @return æ—¥æœŸ
      */
     public static Date getDateFromString(String s, String format) {
         try {
@@ -443,10 +443,10 @@ public class DateUtils extends Object {
     }
     
     /**
-     * ½«ÈÕÆÚ¸ñÊ½»¯ÎªÖ¸¶¨µÄ×Ö·û´®
-     * @param d ÈÕÆÚ
-     * @param format    Êä³ö×Ö·û´®¸ñÊ½
-     * @return ÈÕÆÚ×Ö·û´®
+     * å°†æ—¥æœŸæ ¼å¼åŒ–ä¸ºæŒ‡å®šçš„å­—ç¬¦ä¸²
+     * @param d æ—¥æœŸ
+     * @param format    è¾“å‡ºå­—ç¬¦ä¸²æ ¼å¼
+     * @return æ—¥æœŸå­—ç¬¦ä¸²
      */
     public static String getStringFromDate(Date d, String format) {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
@@ -454,8 +454,8 @@ public class DateUtils extends Object {
     }
 
     /**
-     * µÃµ½µ±Ç°µÄÄê·İ
-     * @return  µ±Ç°Äê·İ
+     * å¾—åˆ°å½“å‰çš„å¹´ä»½
+     * @return  å½“å‰å¹´ä»½
      */
     public static int getYear() {
         Calendar calendar = Calendar.getInstance();
@@ -463,8 +463,8 @@ public class DateUtils extends Object {
     }
 
     /**
-     * µÃµ½µ±Ç°µÄÔÂ·İ
-     * @return  µ±Ç°ÔÂ·İ
+     * å¾—åˆ°å½“å‰çš„æœˆä»½
+     * @return  å½“å‰æœˆä»½
      */
     public static int getMonth() {
         Calendar calendar = Calendar.getInstance();
@@ -472,8 +472,8 @@ public class DateUtils extends Object {
     }
 
     /**
-     * µÃµ½µ±Ç°µÄÈÕÆÚ
-     * @return  µ±Ç°ÈÕÆÚ
+     * å¾—åˆ°å½“å‰çš„æ—¥æœŸ
+     * @return  å½“å‰æ—¥æœŸ
      */
     public static int getDay() {
         Calendar calendar = Calendar.getInstance();
@@ -481,11 +481,11 @@ public class DateUtils extends Object {
     }
         
     /**
-     * µ±µÃµ½Á½¸öÈÕÆÚÏà²îÌìÊı¡£
+     * å½“å¾—åˆ°ä¸¤ä¸ªæ—¥æœŸç›¸å·®å¤©æ•°ã€‚
      *
-     * @param first     µÚÒ»¸öÈÕÆÚ
-     * @param second    µÚ¶ş¸öÈÕÆÚ      
-     * @return          Ïà²îµÄÌìÊı
+     * @param first     ç¬¬ä¸€ä¸ªæ—¥æœŸ
+     * @param second    ç¬¬äºŒä¸ªæ—¥æœŸ      
+     * @return          ç›¸å·®çš„å¤©æ•°
      */
     public static int selectDateDiff(String first, String second) {
         int dif = 0;
@@ -500,32 +500,32 @@ public class DateUtils extends Object {
     }
     
     /**
-     * µ±Ç°ÈÕÆÚÓë²ÎÊı´«µİµÄÈÕÆÚµÄÏà²îÌìÊı
+     * å½“å‰æ—¥æœŸä¸å‚æ•°ä¼ é€’çš„æ—¥æœŸçš„ç›¸å·®å¤©æ•°
      *
-     * @param dateinfo      Ö¸¶¨µÄÈÕÆÚ
-     * @return              Ïà²îµÄÌìÊı
+     * @param dateinfo      æŒ‡å®šçš„æ—¥æœŸ
+     * @return              ç›¸å·®çš„å¤©æ•°
      */
     public static int selectDateDiff(String dateinfo) {
         return selectDateDiff(dateinfo, getDate());
     }
 
     /**
-     * Ä³ÈÕÆÚ¼ÓÉÏ¼¸ÌìµÃµ½ÁíÍâÒ»¸öÈÕÆÚ 
+     * æŸæ—¥æœŸåŠ ä¸Šå‡ å¤©å¾—åˆ°å¦å¤–ä¸€ä¸ªæ—¥æœŸ 
      *
-     * @param addNum      ÒªÔö¼ÓµÄÌìÊı
-     * @param getDate     Ä³ÈÕÆÚ
-     * @return            ÓëÄ³ÈÕÆÚÏà²îaddNumÌìµÄÈÕÆÚ
+     * @param addNum      è¦å¢åŠ çš„å¤©æ•°
+     * @param getDate     æŸæ—¥æœŸ
+     * @return            ä¸æŸæ—¥æœŸç›¸å·®addNumå¤©çš„æ—¥æœŸ
      */
     public static String getDateAdded(int addNum, String getDate) {
         return getCertainDate(getDate, addNum);
     }
 
     /**
-     * Ä³ÈÕÆÚ£¨´øÊ±¼ä£©¼ÓÉÏ¼¸ÌìµÃµ½ÁíÍâÒ»¸öÈÕÆÚ £¨´øÊ±¼ä£©
+     * æŸæ—¥æœŸï¼ˆå¸¦æ—¶é—´ï¼‰åŠ ä¸Šå‡ å¤©å¾—åˆ°å¦å¤–ä¸€ä¸ªæ—¥æœŸ ï¼ˆå¸¦æ—¶é—´ï¼‰
      *
-     * @param datetime      ĞèÒªµ÷ÕûµÄÈÕÆÚ£¨´øÊ±¼ä£©
-     * @param days          µ÷ÕûÌìÊı
-     * @return              µ÷ÕûºóµÄÈÕÆÚ£¨´øÊ±¼ä£©
+     * @param datetime      éœ€è¦è°ƒæ•´çš„æ—¥æœŸï¼ˆå¸¦æ—¶é—´ï¼‰
+     * @param days          è°ƒæ•´å¤©æ•°
+     * @return              è°ƒæ•´åçš„æ—¥æœŸï¼ˆå¸¦æ—¶é—´ï¼‰
      */
     public static String getCertainDatetime(String datetime, int days) {
         Date curDate = getDateFromString(datetime, FORMAT_DATETIME);
@@ -536,9 +536,9 @@ public class DateUtils extends Object {
     }
     
     /**
-     * µÃµ½µ±Ç°ÈÕÆÚµÄËùÔÚÔÂµÄµÚÒ»ÌìµÄÈÕÆÚ
-     * @param date µ±Ç°ÈÕÆÚ
-     * @return String ·µ»ØµÄÈÕÆÚ
+     * å¾—åˆ°å½“å‰æ—¥æœŸçš„æ‰€åœ¨æœˆçš„ç¬¬ä¸€å¤©çš„æ—¥æœŸ
+     * @param date å½“å‰æ—¥æœŸ
+     * @return String è¿”å›çš„æ—¥æœŸ
      * 
      */
     public static String getMonthFirstDay(String date) { 
@@ -552,9 +552,9 @@ public class DateUtils extends Object {
     }
 
     /**
-     * µÃµ½µ±Ç°ÈÕÆÚµÄËùÔÚÔÂµÄ×îºóÒ»ÌìµÄÈÕÆÚ
-     * @param date µ±Ç°ÈÕÆÚ
-     * @return String ·µ»ØµÄÈÕÆÚ
+     * å¾—åˆ°å½“å‰æ—¥æœŸçš„æ‰€åœ¨æœˆçš„æœ€åä¸€å¤©çš„æ—¥æœŸ
+     * @param date å½“å‰æ—¥æœŸ
+     * @return String è¿”å›çš„æ—¥æœŸ
      * 
      */
     public static String getMonthLastDay(String date) {  
@@ -572,10 +572,10 @@ public class DateUtils extends Object {
     }
     
     /**
-     * È¡µÃÁ½ÈÕÆÚ¼äµÄÔÂ·İ²îÊı
-     * @param startDate ÆğÊ¼ÈÕÆÚ
-     * @param endDate   ½áÊøÈÕÆÚ
-     * @return          ÔÂ·İ²îÊı
+     * å–å¾—ä¸¤æ—¥æœŸé—´çš„æœˆä»½å·®æ•°
+     * @param startDate èµ·å§‹æ—¥æœŸ
+     * @param endDate   ç»“æŸæ—¥æœŸ
+     * @return          æœˆä»½å·®æ•°
      */
     public static int getMonthDiff(String startDate, String endDate) {
         String[] startArray = startDate.split("-");
@@ -588,9 +588,9 @@ public class DateUtils extends Object {
     }
     
     /**
-     * Èç¹ûµ±Ç°ÈÕÆÚÊÇÖÜÁù»òÕßÖÜÈÕ£¬Ôò·µ»ØÏÂÖÜÒ»µÄÈÕÆÚ
-     * @param date µ±Ç°ÈÕÆÚ
-     * @return String ÏÂÖÜÒ»ÈÕÆÚ
+     * å¦‚æœå½“å‰æ—¥æœŸæ˜¯å‘¨å…­æˆ–è€…å‘¨æ—¥ï¼Œåˆ™è¿”å›ä¸‹å‘¨ä¸€çš„æ—¥æœŸ
+     * @param date å½“å‰æ—¥æœŸ
+     * @return String ä¸‹å‘¨ä¸€æ—¥æœŸ
      */
     public static String getWorkDate(String date) {
         Date curDate = getDateFromString(date);
@@ -608,15 +608,15 @@ public class DateUtils extends Object {
     }
     
     /**
-     * ¸Ã·½·¨ÓÃÓÚ¶ÔÊäÈëµÄ¿ªÊ¼£¬½áÊøÈÕÆÚ½øĞĞ³£¹æĞ£Ñé
-     * @param stime      request¶ÔÏó
-     * @param etime     Êı¾İbean
-     * @throws Exception µ±´íÎó·¢ÉúÊ±
-     * @throws Exception ÌáÊ¾ĞÅÏ¢
-     * @throws ParseException ½âÎöÒì³£·¢ÉúÊ±
+     * è¯¥æ–¹æ³•ç”¨äºå¯¹è¾“å…¥çš„å¼€å§‹ï¼Œç»“æŸæ—¥æœŸè¿›è¡Œå¸¸è§„æ ¡éªŒ
+     * @param stime      requestå¯¹è±¡
+     * @param etime     æ•°æ®bean
+     * @throws Exception å½“é”™è¯¯å‘ç”Ÿæ—¶
+     * @throws Exception æç¤ºä¿¡æ¯
+     * @throws ParseException è§£æå¼‚å¸¸å‘ç”Ÿæ—¶
      */
     public static  void seTimeVerify(String stime, String etime) {
-        //×ª»¯³ÉÈÕÆÚÀàĞÍ±äÁ¿
+        //è½¬åŒ–æˆæ—¥æœŸç±»å‹å˜é‡
         Date starttime =  getDateFromString(stime, FORMAT_DATETIMEZD);
         Date endtime = getDateFromString(etime, FORMAT_DATETIMEZD);
 
@@ -626,12 +626,12 @@ public class DateUtils extends Object {
      }
     
     /**
-     * ·µ»ØÁ½¸öÊ±¼äÏà²îµÄĞ¡Ê±Êı
-     * @param beginTime                  ¿ªÊ¼Ê±¼ä
-     * @param endTime                    ½áÊøÊ±¼ä
-     * @return                           ·µ»ØÖµ
-     * @throws Exception               ·¢Éú´íÎó£¨ÏµÍ³£©
-     * @throws Exception              ·¢Éú´íÎó£¨ÒµÎñ£©
+     * è¿”å›ä¸¤ä¸ªæ—¶é—´ç›¸å·®çš„å°æ—¶æ•°
+     * @param beginTime                  å¼€å§‹æ—¶é—´
+     * @param endTime                    ç»“æŸæ—¶é—´
+     * @return                           è¿”å›å€¼
+     * @throws Exception               å‘ç”Ÿé”™è¯¯ï¼ˆç³»ç»Ÿï¼‰
+     * @throws Exception              å‘ç”Ÿé”™è¯¯ï¼ˆä¸šåŠ¡ï¼‰
      */
     public static double getDiffHoure(String beginTime, String endTime) {
         //
@@ -646,12 +646,12 @@ public class DateUtils extends Object {
         return dif;
     }
     /**
-     * ·µ»ØÁ½¸öÊ±¼äÏà²îµÄĞ¡Ê±Êı ·µ»ØÁ½Î»Ğ¡Êı
-     * @param beginTime                  ¿ªÊ¼Ê±¼ä
-     * @param endTime                    ½áÊøÊ±¼ä
-     * @return                           ·µ»ØÖµ
-     * @throws Exception               ·¢Éú´íÎó£¨ÏµÍ³£©
-     * @throws Exception              ·¢Éú´íÎó£¨ÒµÎñ£©
+     * è¿”å›ä¸¤ä¸ªæ—¶é—´ç›¸å·®çš„å°æ—¶æ•° è¿”å›ä¸¤ä½å°æ•°
+     * @param beginTime                  å¼€å§‹æ—¶é—´
+     * @param endTime                    ç»“æŸæ—¶é—´
+     * @return                           è¿”å›å€¼
+     * @throws Exception               å‘ç”Ÿé”™è¯¯ï¼ˆç³»ç»Ÿï¼‰
+     * @throws Exception              å‘ç”Ÿé”™è¯¯ï¼ˆä¸šåŠ¡ï¼‰
      */
     public static double getDiffHoureFormatDateTime(String beginTime, String endTime) {
         //
@@ -667,10 +667,10 @@ public class DateUtils extends Object {
         }
     }
     /**
-     * ·µ»Ø½áÊøÈÕÆÚÓë¿ªÊ¼ÈÕÆÚÖ®¼äÏà²îµÄÌìÊı
-     * @param beginDate ¿ªÊ¼ÈÕÆÚ
-     * @param endDate ½áÊøÈÕÆÚ
-     * @return Ïà²îÌìÊı
+     * è¿”å›ç»“æŸæ—¥æœŸä¸å¼€å§‹æ—¥æœŸä¹‹é—´ç›¸å·®çš„å¤©æ•°
+     * @param beginDate å¼€å§‹æ—¥æœŸ
+     * @param endDate ç»“æŸæ—¥æœŸ
+     * @return ç›¸å·®å¤©æ•°
      */
     
     public static long getDiffDay(String beginDate, String endDate) {
@@ -684,10 +684,10 @@ public class DateUtils extends Object {
        
     }
     /**
-     * ·µ»ØÄ³ÔÂµÄÌìÊı
-     * @param year Äê
-     * @param month ÔÂ
-     * @return ÌìÊı
+     * è¿”å›æŸæœˆçš„å¤©æ•°
+     * @param year å¹´
+     * @param month æœˆ
+     * @return å¤©æ•°
      */
     
     public static int getMonthDays(String year, String month) {
@@ -703,8 +703,8 @@ public class DateUtils extends Object {
        
     }
     /**
-     * ·µ»ØÊ±¼äºÁÃë²îµÄÈÕÆÚ¸ñÊ½
-     * @param mills Ê±¼äºÁÃë²î 
+     * è¿”å›æ—¶é—´æ¯«ç§’å·®çš„æ—¥æœŸæ ¼å¼
+     * @param mills æ—¶é—´æ¯«ç§’å·® 
      */
     public static String getFormattedDuration(long mills)
     {
@@ -718,10 +718,10 @@ public class DateUtils extends Object {
         mills = mills - (secs * 1000);
 
         StringBuffer bf = new StringBuffer(60);
-        bf.append(days).append("Ìì");
-        bf.append(hours).append("Ğ¡Ê±");
-        bf.append(mins).append("·ÖÖÓ");
-        bf.append(secs).append("Ãë");
+        bf.append(days).append("å¤©");
+        bf.append(hours).append("å°æ—¶");
+        bf.append(mins).append("åˆ†é’Ÿ");
+        bf.append(secs).append("ç§’");
         return bf.toString();
     }
     public static boolean compareTo(String t1, String t2)
@@ -929,7 +929,7 @@ public class DateUtils extends Object {
       String sYear = localDate.substring(0, 4);
       String sMonth = delFrontZero(localDate.substring(5, 7));
       String sDay = delFrontZero(localDate.substring(8, 10));
-      return sYear + "Äê" + sMonth + "ÔÂ" + sDay + "ÈÕ";
+      return sYear + "å¹´" + sMonth + "æœˆ" + sDay + "æ—¥";
     }
 
     public static String parsePointDate(String localDate)
@@ -953,7 +953,7 @@ public class DateUtils extends Object {
     }
     
     /**
-     * »ñµÃÖ¸¶¨ÈÕÆÚµÄÇ°Ò»¸öÔÂ 
+     * è·å¾—æŒ‡å®šæ—¥æœŸçš„å‰ä¸€ä¸ªæœˆ 
      * @param aDate
      * @return
      */
@@ -971,7 +971,7 @@ public class DateUtils extends Object {
     }
 	
 	/**
-     * ¼ÆËã»¼ÕßÄêÁäÄêÁä
+     * è®¡ç®—æ‚£è€…å¹´é¾„å¹´é¾„
      * @param birthDate
      * @param someDate
      * @param strFormat

@@ -11,7 +11,7 @@ import com.hitzd.his.sso.SSOController;
 import com.hitzd.his.tree.TreeNode;
 
 /**
- * ¹²Í¨µÄ·½·¨
+ * å…±é€šçš„æ–¹æ³•
  * @author liujc
  *
  */
@@ -20,7 +20,7 @@ public final class CommonUtils
     private CommonUtils() {}
     
     /**
-     * ÉèÖÃ ÏîÄ¿Â·¾¶  
+     * è®¾ç½® é¡¹ç›®è·¯å¾„  
      */
     public static String  getWebRoot(HttpServletRequest request) {
         return request.getContextPath();
@@ -47,7 +47,7 @@ public final class CommonUtils
 		return url;
     }
     /**
-     * µÃµ½sessionÖĞµÄÓÃ»§ĞÅÏ¢
+     * å¾—åˆ°sessionä¸­çš„ç”¨æˆ·ä¿¡æ¯
      * @param request
      * @return
      */
@@ -58,7 +58,7 @@ public final class CommonUtils
     }
 
     /**
-     *  µÃµ½request²ÎÊıÖµ
+     *  å¾—åˆ°requestå‚æ•°å€¼
      * @param request
      * @param parameterName
      * @param defual
@@ -67,12 +67,12 @@ public final class CommonUtils
     public static String getRequestParameter(HttpServletRequest request,String parameterName,String defaultValue)
     {
         if("".equals(parameterName))
-            new RuntimeException("²ÎÊıÃû×Ö²»ÄÜÎª¿Õ");
+            new RuntimeException("å‚æ•°åå­—ä¸èƒ½ä¸ºç©º");
         return (request.getParameter(parameterName)!= null && !"".equals(request.getParameter(parameterName)))? request.getParameter(parameterName).trim(): defaultValue;
     }
     
     /**
-     * ·µ»Øµ±ÏÈÈÕÆÚ 
+     * è¿”å›å½“å…ˆæ—¥æœŸ 
      * @return
      */
     public static String getNowDate()
@@ -83,12 +83,12 @@ public final class CommonUtils
     }
     
     /**
-    * Ìá¹©£¨Ïà¶Ô£©¾«È·µÄ³ı·¨ÔËËã¡£µ±·¢Éú³ı²»¾¡µÄÇé¿öÊ±£¬ÓÉscale²ÎÊıÖ¸
-    * ¶¨¾«¶È£¬ÒÔºóµÄÊı×ÖËÄÉáÎåÈë¡£
-    * @param v1 ±»³ıÊı
-    * @param v2 ³ıÊı
-    * @param scale ±íÊ¾±íÊ¾ĞèÒª¾«È·µ½Ğ¡ÊıµãÒÔºó¼¸Î»¡£
-    * @return Á½¸ö²ÎÊıµÄÉÌ
+    * æä¾›ï¼ˆç›¸å¯¹ï¼‰ç²¾ç¡®çš„é™¤æ³•è¿ç®—ã€‚å½“å‘ç”Ÿé™¤ä¸å°½çš„æƒ…å†µæ—¶ï¼Œç”±scaleå‚æ•°æŒ‡
+    * å®šç²¾åº¦ï¼Œä»¥åçš„æ•°å­—å››èˆäº”å…¥ã€‚
+    * @param v1 è¢«é™¤æ•°
+    * @param v2 é™¤æ•°
+    * @param scale è¡¨ç¤ºè¡¨ç¤ºéœ€è¦ç²¾ç¡®åˆ°å°æ•°ç‚¹ä»¥åå‡ ä½ã€‚
+    * @return ä¸¤ä¸ªå‚æ•°çš„å•†
     */
     public static double div(double v1, double v2, int scale) {
        if (scale < 0) {

@@ -130,7 +130,7 @@ public class CaseHistoryHelperBase implements ICaseHistoryHelper
 		TCommonRecord crWheres1 = new TCommonRecord();
 		crWheres1.set("FieldName", "Name");
 		crWheres1.set("FieldType", "Char");
-		crWheres1.set("FieldValue", "Áõ%");
+		crWheres1.set("FieldValue", "åˆ˜%");
 		lsWheres.add(crWheres1);
 		
 		crWheres1 = new TCommonRecord();
@@ -164,12 +164,12 @@ public class CaseHistoryHelperBase implements ICaseHistoryHelper
 	}
 	
 	/**
-	 * Éú³Ésql
-	 * strFields: ×Ö¶ÎÁĞ±í£¬¿ÉÒÔÊÇ"*"
-	 * strTables: ±íÃû
-	 * lsWheres : WhereÌõ¼şÁĞ±í
-	 * strGroup : Group by ÁĞ±í
-	 * lsOrders  : Order by ÁĞ±í
+	 * ç”Ÿæˆsql
+	 * strFields: å­—æ®µåˆ—è¡¨ï¼Œå¯ä»¥æ˜¯"*"
+	 * strTables: è¡¨å
+	 * lsWheres : Whereæ¡ä»¶åˆ—è¡¨
+	 * strGroup : Group by åˆ—è¡¨
+	 * lsOrders  : Order by åˆ—è¡¨
 	 */
 	@Override
 	public String genSQL(String strFields, String strTables, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders) 

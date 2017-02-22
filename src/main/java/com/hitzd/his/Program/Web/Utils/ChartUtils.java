@@ -8,9 +8,9 @@ public class ChartUtils
 {
 
 	/**
-     * ÖùĞÎÍ¼×éÖ¯Êı¾İ ºÍÍ¼ĞÎ
+     * æŸ±å½¢å›¾ç»„ç»‡æ•°æ® å’Œå›¾å½¢
      * @param request
-     * @param value  key £º ÒªÏÔÊ¾µÄÃû×Ö  ,value £ºÏÔÊ¾ÊıÖµ 
+     * @param value  key ï¼š è¦æ˜¾ç¤ºçš„åå­—  ,value ï¼šæ˜¾ç¤ºæ•°å€¼ 
      */
     public static String ColumnChart(IPage page, LinkedHashMap<String, String> value)
     {
@@ -20,12 +20,12 @@ public class ChartUtils
         sb.append("{");
         sb.append("var line1 = ").append(getMapValue(value)).append(";"); 
         sb.append("var plot1b = $.jqplot('chart1b', [line1], {");
-        sb.append(" title: 'Öù×´Í¼',");
+        sb.append(" title: 'æŸ±çŠ¶å›¾',");
         sb.append(" series:[{renderer:$.jqplot.BarRenderer}],");
         sb.append(" axesDefaults: {");
         sb.append(" tickRenderer: $.jqplot.CanvasAxisTickRenderer ,");
         sb.append(" tickOptions: {");
-        sb.append(" fontFamily: 'ËÎÌå',");
+        sb.append(" fontFamily: 'å®‹ä½“',");
         sb.append(" fontSize: '10pt',");
         sb.append(" textColor: 'blue',");
         sb.append(" angle: -30");
@@ -50,12 +50,12 @@ public class ChartUtils
         sb.append("{");
         sb.append("var line1 = ").append(getMapValue(value)).append(";"); 
         sb.append("var plot1b = $.jqplot('chart1b', [line1], {");
-        sb.append(" title: 'Öù×´Í¼',");
+        sb.append(" title: 'æŸ±çŠ¶å›¾',");
         sb.append(" series:[{renderer:$.jqplot.BarRenderer}],");
         sb.append(" axesDefaults: {");
         sb.append(" tickRenderer: $.jqplot.CanvasAxisTickRenderer ,");
         sb.append(" tickOptions: {");
-        sb.append(" fontFamily: 'ËÎÌå',");
+        sb.append(" fontFamily: 'å®‹ä½“',");
         sb.append(" fontSize: '10pt',");
         sb.append(" textColor: 'blue',");
         sb.append(" angle: -30");
@@ -73,9 +73,9 @@ public class ChartUtils
     }
     
     /**
-     * ±ıÍ¼×éÖ¯Êı¾İºÍÍ¼ĞÎ
+     * é¥¼å›¾ç»„ç»‡æ•°æ®å’Œå›¾å½¢
      * @param request
-     * @param value key £º ÒªÏÔÊ¾µÄÃû×Ö  ,value £ºÏÔÊ¾ÊıÖµ
+     * @param value key ï¼š è¦æ˜¾ç¤ºçš„åå­—  ,value ï¼šæ˜¾ç¤ºæ•°å€¼
      */
     public static String PieChart(IPage page, LinkedHashMap<String, String> value)
     {
@@ -136,9 +136,9 @@ public class ChartUtils
     }
 
     /**
-     * ÕÛÏßÍ¼×éÖ¯Êı¾İºÍÍ¼ĞÎ
+     * æŠ˜çº¿å›¾ç»„ç»‡æ•°æ®å’Œå›¾å½¢
      * @param request
-     * @param value key £º ÒªÏÔÊ¾µÄÃû×Ö  ,value £ºÏÔÊ¾ÊıÖµ
+     * @param value key ï¼š è¦æ˜¾ç¤ºçš„åå­—  ,value ï¼šæ˜¾ç¤ºæ•°å€¼
      */
 
     public static String LineChart(IPage page, LinkedHashMap<String, String> value)

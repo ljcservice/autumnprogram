@@ -10,7 +10,7 @@ public class Ready4Graph extends TagSupport
 {
 	/**
 	 * 
-	 * ×¼±¸»­Í¼
+	 * å‡†å¤‡ç”»å›¾
 	 * 
 	 * 	 */
 	@Override

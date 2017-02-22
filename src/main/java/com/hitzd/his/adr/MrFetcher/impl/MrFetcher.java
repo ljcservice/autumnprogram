@@ -12,7 +12,7 @@ import com.hitzd.Factory.DBQueryFactory;
 import com.hitzd.his.adr.mr.MrAgent;
 
 /**
- * 获取军卫一号，基于word的病程记录的Fetcher
+ * 鑾峰彇鍐涘崼涓�鍙凤紝鍩轰簬word鐨勭梾绋嬭褰曠殑Fetcher
  * @author Administrator
  *
  */

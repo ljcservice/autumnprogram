@@ -24,7 +24,7 @@ public class GraphTagUtil
 		return sb.toString();
     }
 	/**
-	 * Í¨¹ıÁ½¸öListÆ´×°jsÊı×é
+	 * é€šè¿‡ä¸¤ä¸ªListæ‹¼è£…jsæ•°ç»„
 	 * @param key
 	 * @param value
 	 * @return
@@ -52,7 +52,7 @@ public class GraphTagUtil
 		for(String str: list){
 			s.append("'" + str + "',");
 		}
-		if(list.size()>0)s.deleteCharAt(s.length()-1);//É¾³ı×îºóÒ»¸ö
+		if(list.size()>0)s.deleteCharAt(s.length()-1);//åˆ é™¤æœ€åä¸€ä¸ª
 		s.append("]");
 		return s.toString();
 	}
@@ -64,7 +64,7 @@ public class GraphTagUtil
 		for(String str: list){
 			s.append("" + str + ",");
 		}
-		if(list.size()>0)s.deleteCharAt(s.length()-1);//É¾³ı×îºóÒ»¸ö
+		if(list.size()>0)s.deleteCharAt(s.length()-1);//åˆ é™¤æœ€åä¸€ä¸ª
 		s.append("]");
 		return s.toString();
 	}
@@ -87,9 +87,9 @@ public class GraphTagUtil
 		orderMap2.put("5","8");
 		
 		List<String> test = new ArrayList<String>();
-		test.add("Äã");
-		test.add("ÎÒ");
-		test.add("Ëû");
+		test.add("ä½ ");
+		test.add("æˆ‘");
+		test.add("ä»–");
 		System.out.println(convertList2JsArray(test));
 		
 		List<String> test1 = new ArrayList<String>();

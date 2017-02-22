@@ -6,7 +6,7 @@ import com.hitzd.Factory.DBQueryFactory;
 import com.hitzd.Transaction.TransactionTemp;
 
 /**
- * 系统数据库源管理
+ * 绯荤粺鏁版嵁搴撴簮绠＄悊
  * @author Administrator
  */
 public class Persistent4DB 

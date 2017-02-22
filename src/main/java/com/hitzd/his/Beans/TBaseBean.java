@@ -4,11 +4,11 @@ import java.io.Serializable;
 
 public class TBaseBean implements Serializable
 {
-    /* Ê¹ÓÃ´ÎÊı */
+    /* ä½¿ç”¨æ¬¡æ•° */
     private long usrCount = 0l ;
-    /* ´´½¨Ê±¼ä  */
+    /* åˆ›å»ºæ—¶é—´  */
     private String createDate = "";
-    /* ×îºóÒ»´ÎÊ¹ÓÃÊ±¼ä   */
+    /* æœ€åä¸€æ¬¡ä½¿ç”¨æ—¶é—´   */
     private String lastUseDate = "";
     
     public long getUsrCount()
@@ -16,7 +16,7 @@ public class TBaseBean implements Serializable
         return usrCount;
     }
     /**
-     * Ìí¼Ó´ÎÊı
+     * æ·»åŠ æ¬¡æ•°
      */
     public void addUsrCount()
     {

@@ -11,19 +11,19 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 public class TagBarGraph extends TagSupport 
 {
-	/*±êÌâ£¬¿ÉÑ¡*/	
+	/*æ ‡é¢˜ï¼Œå¯é€‰*/	
 	private String title = "";
-	/*XÖá*/
+	/*Xè½´*/
 	private List<String> x;
-	/*YÖá*/
+	/*Yè½´*/
 	private List<String> y;
 	
 	private String xLabel = "";
 	private String yLabel = "";
 	private String startDate = "";
 	private String endDate = "";
-	private String width = "";//³õÊ¼»¯Öµ
-	private String height = "";//³õÊ¼»¯Öµ
+	private String width = "";//åˆå§‹åŒ–å€¼
+	private String height = "";//åˆå§‹åŒ–å€¼
 	
 	
 	public void setWidth(String width) 
@@ -64,7 +64,7 @@ public class TagBarGraph extends TagSupport
 	private void init()
 	{
 		if("".equals(height)){setHeight("500");}
-		//×Ô¶¨Òå¿í¶È
+		//è‡ªå®šä¹‰å®½åº¦
 		if("".equals(width) ){setWidth(((x.size()*35)>500?(x.size()*35):500) + "");}
 	}
 	private void reset()
@@ -84,16 +84,16 @@ public class TagBarGraph extends TagSupport
 		JspWriter writer = this.pageContext.getOut();
 		String serialId = UUID.randomUUID().toString();
 		String aid = UUID.randomUUID().toString();
-		//×¼±¸±êÌâ
+		//å‡†å¤‡æ ‡é¢˜
 		if("".equals(title)){title = xLabel + "-" + yLabel ;}
 		String dateString = "\";";
 		if(!"".equals(startDate) && !"".equals(endDate))
 			dateString = "<div style='height:10px;'>&nbsp;</div><span style='font-size:12px;padding-top:30px;'>" +
-			"¿ªÊ¼Ê±¼ä£º" +startDate+ "&nbsp;&nbsp;½áÊøÊ±¼ä"+endDate+"</span>\";";
+			"å¼€å§‹æ—¶é—´ï¼š" +startDate+ "&nbsp;&nbsp;ç»“æŸæ—¶é—´"+endDate+"</span>\";";
 		try 
 		{
 			writer.append("<div><div id='"+serialId+ "' style='height:"+height+"px;width:"+width+"px;' /></div>\n");
-			writer.append("<a id="+aid+" href='javascript:void(0)' style='text-decoration: none;color: black;font-size: 12px;'>µã»÷ÏÂÔØÍ¼Æ¬</a>\n");
+			writer.append("<a id="+aid+" href='javascript:void(0)' style='text-decoration: none;color: black;font-size: 12px;'>ç‚¹å‡»ä¸‹è½½å›¾ç‰‡</a>\n");
 			writer.append("<script type=\"text/javascript\">\n");
 			writer.append("$(document).ready(function () {\n" +
 	"                    $.jqplot.config.enablePlugins = true;\n");
@@ -129,7 +129,7 @@ public class TagBarGraph extends TagSupport
 	"                                chart.jqplotSaveImage();\n" +
 	"                            };\n" +
 	"                        }else{\n" +
-	"                            $('#" +aid+ "').text('¶Ô²»Æğ£¬ÄúµÄä¯ÀÀÆ÷²»Ö§³ÖÍ¼Æ¬µ¼³ö,ÇëÉı¼¶µ½Ö§³ÖHTML5ä¯ÀÀÆ÷');\n"+
+	"                            $('#" +aid+ "').text('å¯¹ä¸èµ·ï¼Œæ‚¨çš„æµè§ˆå™¨ä¸æ”¯æŒå›¾ç‰‡å¯¼å‡º,è¯·å‡çº§åˆ°æ”¯æŒHTML5æµè§ˆå™¨');\n"+
 	"                        }      \n"+
 	"                    }catch(e){\n" +
 	"                         $('#" +aid+ "').hide();\n"+

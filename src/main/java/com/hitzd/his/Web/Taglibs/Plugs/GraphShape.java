@@ -2,9 +2,9 @@ package com.hitzd.his.Web.Taglibs.Plugs;
 
 public class GraphShape 
 {
-	public final static String ÇúÏßÍ¼  = "ÇúÏßÍ¼";
-	public final static String ÖùĞÎÍ¼  = "ÖùĞÎÍ¼";
-	public final static String ±ıÍ¼ = "±ıÍ¼";
-	public final static String Ë«ÖáÍ¼ = "Ë«ÖáÍ¼";
+	public final static String æ›²çº¿å›¾  = "æ›²çº¿å›¾";
+	public final static String æŸ±å½¢å›¾  = "æŸ±å½¢å›¾";
+	public final static String é¥¼å›¾ = "é¥¼å›¾";
+	public final static String åŒè½´å›¾ = "åŒè½´å›¾";
 	
 }

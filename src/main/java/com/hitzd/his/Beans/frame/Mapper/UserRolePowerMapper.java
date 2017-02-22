@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import com.hitzd.his.Beans.frame.UserRolePower;
 
 /**
- * 用户菜单权限 
+ * 鐢ㄦ埛鑿滃崟鏉冮檺 
  * @author jingcong
  *
  */

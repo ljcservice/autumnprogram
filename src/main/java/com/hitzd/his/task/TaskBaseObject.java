@@ -9,8 +9,8 @@ import com.hitzd.his.Scheduler.SchedulerFactory;
 import com.hitzd.his.Utils.DateUtils;
 
 /**
- * ÈÎÎñ¶ÔÏó»ùÀà£¬ÈÎÎñ¶ÔÏó°üº¬Ò»¸öIScheduler½Ó¿ÚµÄ×ÓÀà¶ÔÏó£¬
- * ¾ßÌåÈÎÎñÓÉ×ÓÀà¶ÔÏóÍê³É£¬ÈÎÎñ»ùÀà¶ÔÏóÖ»¸ºÔğ¼ÇÂ¼×ÓÀà¶ÔÏóµÄÖ´ĞĞ×´Ì¬µÈĞÅÏ¢
+ * ä»»åŠ¡å¯¹è±¡åŸºç±»ï¼Œä»»åŠ¡å¯¹è±¡åŒ…å«ä¸€ä¸ªIScheduleræ¥å£çš„å­ç±»å¯¹è±¡ï¼Œ
+ * å…·ä½“ä»»åŠ¡ç”±å­ç±»å¯¹è±¡å®Œæˆï¼Œä»»åŠ¡åŸºç±»å¯¹è±¡åªè´Ÿè´£è®°å½•å­ç±»å¯¹è±¡çš„æ‰§è¡ŒçŠ¶æ€ç­‰ä¿¡æ¯
  * 
  * @author Administrator
  *
@@ -37,31 +37,31 @@ public class TaskBaseObject
 		this.taskID = taskID;
 	}
 
-	// ÈÎÎñ±àºÅ
+	// ä»»åŠ¡ç¼–å·
 	private String taskID             = "";
-	// ÈÎÎñ¿ªÊ¼Ê±¼ä
+	// ä»»åŠ¡å¼€å§‹æ—¶é—´
 	private String startTime          = "";
-	// ÈÎÎñ½áÊøÊ±¼ä
+	// ä»»åŠ¡ç»“æŸæ—¶é—´
 	private String endTime            = "";
-	// ÈÎÎñÏà¹ØµÄ²ÎÊı
+	// ä»»åŠ¡ç›¸å…³çš„å‚æ•°
 	private Map<String, String> param = new HashMap<String, String>();
-	// ÈÎÎñµ±Ç°×´Ì¬
+	// ä»»åŠ¡å½“å‰çŠ¶æ€
 	private String status             = "";
-	// ÈÎÎñĞèÒª´¦ÀíµÄÊı¾İ×ÜÊıÁ¿
+	// ä»»åŠ¡éœ€è¦å¤„ç†çš„æ•°æ®æ€»æ•°é‡
 	private int TotalCount            = 0;
-	// ÈÎÎñ´¦ÀíµÄµ±Ç°ÊıÁ¿
+	// ä»»åŠ¡å¤„ç†çš„å½“å‰æ•°é‡
 	private int CurCount              = 0;
-	// Ö´ĞĞÈÎÎñµÄ¾ßÌåÀàÃû³Æ
+	// æ‰§è¡Œä»»åŠ¡çš„å…·ä½“ç±»åç§°
 	private String clazz              = "";
-	// ÈÎÎñµ±Ç°×´Ì¬
+	// ä»»åŠ¡å½“å‰çŠ¶æ€
 	private String taskStatus         = "";
-	// ´íÎóĞÅÏ¢
+	// é”™è¯¯ä¿¡æ¯
 	private String ErrorInfo          = "";
-	// ÈÎÎñ±êÌâ
+	// ä»»åŠ¡æ ‡é¢˜
 	private String taskTitle          = "";
-	// ÈÎÎñÃèÊö
+	// ä»»åŠ¡æè¿°
 	private String taskDesc           = "";
-	// ÈÎÎñµ±Ç°×´Ì¬ÃèÊö
+	// ä»»åŠ¡å½“å‰çŠ¶æ€æè¿°
 	private String taskStatusDesc     = "";
 	
 	public void taskOver()

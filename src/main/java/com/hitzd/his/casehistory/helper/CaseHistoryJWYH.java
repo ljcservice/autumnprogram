@@ -23,7 +23,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 	@Override
 	public TCommonRecord fetchCaseHistory2CR(String PatientID, String VisitID, JDBCQueryImpl srcQuery) 
 	{
-		// ²¡ÈË»ù±¾ĞÅÏ¢
+		// ç—…äººåŸºæœ¬ä¿¡æ¯
 		TCommonRecord crPatMasterIndex = null;
 		String ErrorInfo = "";
 		try
@@ -45,7 +45,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 			} 
 			catch (Exception e) 
 			{
-				ErrorInfo += "\n¾ÍÕïĞÅÏ¢£º" + e.getMessage();
+				ErrorInfo += "\nå°±è¯Šä¿¡æ¯ï¼š" + e.getMessage();
 				e.printStackTrace();
 			}
 			crPatMasterIndex.setObj(Key_PatVisit, crPatVisit);
@@ -94,7 +94,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 				} 
 				catch (Exception e8) 
 				{
-					ErrorInfo += "\n°ÚÒ©¼ÇÂ¼: " + e8.getMessage();
+					ErrorInfo += "\næ‘†è¯è®°å½•: " + e8.getMessage();
 					e8.printStackTrace();
 				}
 				crPatVisit.setObj(Key_DrugDispenseRec, DrugDispenseRec);
@@ -108,7 +108,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 				} 
 				catch (Exception e7) 
 				{
-					ErrorInfo += "\nÒ½Öö: " + e7.getMessage();
+					ErrorInfo += "\nåŒ»å˜±: " + e7.getMessage();
 					e7.printStackTrace();
 				}
 		    	crPatVisit.setObj(Key_Orders, orders);
@@ -120,7 +120,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 				} 
 				catch (Exception e6) 
 				{
-					ErrorInfo += "\nÕï¶Ï: " + e6.getMessage();
+					ErrorInfo += "\nè¯Šæ–­: " + e6.getMessage();
 					e6.printStackTrace();
 				}
 		    	crPatVisit.setObj(Key_Diagnosis, diagnosis);
@@ -132,7 +132,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 				} 
 				catch (Exception e5) 
 				{
-					ErrorInfo += "\n×¡ÔºÕËµ¥: " + e5.getMessage();
+					ErrorInfo += "\nä½é™¢è´¦å•: " + e5.getMessage();
 					e5.printStackTrace();
 				}
 		    	crPatVisit.setObj(Key_InpBillDetail, InpBillDetail);
@@ -144,7 +144,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 				} 
 				catch (Exception e4) 
 				{
-					ErrorInfo += "\n¼ì²é¼ÇÂ¼: " + e4.getMessage();
+					ErrorInfo += "\næ£€æŸ¥è®°å½•: " + e4.getMessage();
 					e4.printStackTrace();
 				}
 		    	crPatVisit.setObj(Key_LabTestMaster, LabTestMaster);
@@ -156,7 +156,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 				} 
 				catch (Exception e3) 
 				{
-					ErrorInfo += "\nÌåÕ÷ĞÅÏ¢: " + e3.getMessage();
+					ErrorInfo += "\nä½“å¾ä¿¡æ¯: " + e3.getMessage();
 					e3.printStackTrace();
 				}
 		    	crPatVisit.setObj(Key_VitalSignsRec, VitalSignsRec);
@@ -168,7 +168,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 				} 
 				catch (Exception e2) 
 				{
-					ErrorInfo += "\n¼ìÑé¼ÇÂ¼: " + e2.getMessage();
+					ErrorInfo += "\næ£€éªŒè®°å½•: " + e2.getMessage();
 					e2.printStackTrace();
 				}
 		    	crPatVisit.setObj(Key_ExamMaster, ExamMaster);
@@ -180,7 +180,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 				} 
 				catch (Exception e1) 
 				{
-					ErrorInfo += "\nÎ¢ÉúÎï: " + e1.getMessage();
+					ErrorInfo += "\nå¾®ç”Ÿç‰©: " + e1.getMessage();
 					e1.printStackTrace();
 				}
 		    	crPatVisit.setObj(Key_GermTest, GermTest);
@@ -192,7 +192,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 				} 
 				catch (Exception e)
 				{
-					ErrorInfo += "\nÍ¿Æ¬¼ìÑé: " + e.getMessage();
+					ErrorInfo += "\næ¶‚ç‰‡æ£€éªŒ: " + e.getMessage();
 					e.printStackTrace();
 				}
 		    	crPatVisit.setObj(Key_GermTestResult, GermTestResult);
@@ -203,7 +203,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 		    	}
 		    	catch(Exception e)
 		    	{
-		    		ErrorInfo += "\n´¦·½ĞÅÏ¢£º" + e.getMessage();
+		    		ErrorInfo += "\nå¤„æ–¹ä¿¡æ¯ï¼š" + e.getMessage();
 		    		e.printStackTrace();
 		    	}
 		    	crPatVisit.setObj(Key_DrugPrescMaster, DrugPrescMaster);
@@ -217,7 +217,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 	
 	public TCommonRecord fetchPatInfo2CR(String PatientID, JDBCQueryImpl srcQuery) throws Exception
 	{
-		// ²¡ÈË»ù±¾ĞÅÏ¢
+		// ç—…äººåŸºæœ¬ä¿¡æ¯
 		String sql = "Select * from MedRec.Pat_Master_Index where Patient_ID=?";
 		String strFields = "*"; 
 		List<TCommonRecord> lsWheres = new ArrayList<TCommonRecord>();
@@ -239,19 +239,19 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 	
 	public List<TCommonRecord> fetchPatVisit2CR(String PatientID, JDBCQueryImpl srcQuery) throws Exception
 	{
-		// ²¡ÈË¾ÍÕïĞÅÏ¢
+		// ç—…äººå°±è¯Šä¿¡æ¯
 		String sql = "select * from MedRec.pat_visit  where Patient_ID = '" + PatientID + "'";
 		@SuppressWarnings("unchecked")
 		List<TCommonRecord> list = srcQuery.query(sql, new CommonMapper());
 		for (TCommonRecord crPatVisit : list)
 		{
-			// ÈëÔº¿ÆÊÒĞÅÏ¢
+			// å…¥é™¢ç§‘å®¤ä¿¡æ¯
 	    	TCommonRecord crDept = DictCache.getNewInstance().getDeptInfo(srcQuery, crPatVisit.get("DEPT_ADMISSION_TO"));
 	    	crPatVisit.set("IN_DEPT_NAME",            crDept.get("DEPT_NAME"));
 	    	crPatVisit.set("IN_INTERNAL_OR_SERGERY",  crDept.get("INTERNAL_OR_SERGERY"));
 	    	crPatVisit.set("IN_CLINIC_ATTR",          crDept.get("CLINIC_ATTR"));
 	    	crPatVisit.set("IN_OUTP_OR_INP",          crDept.get("OUTP_OR_INP"));
-	    	// ³öÔº¿ÆÊÒĞÅÏ¢
+	    	// å‡ºé™¢ç§‘å®¤ä¿¡æ¯
 	    	crDept = DictCache.getNewInstance().getDeptInfo(srcQuery, crPatVisit.get("DEPT_DISCHARGE_FROM"));
 	    	crPatVisit.set("OUT_DEPT_NAME",           crDept.get("DEPT_NAME"));
 	    	crPatVisit.set("OUT_INTERNAL_OR_SERGERY", crDept.get("INTERNAL_OR_SERGERY"));
@@ -263,19 +263,19 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 	
 	public TCommonRecord fetchPatVisit2CR(String PatientID, String VisitID, JDBCQueryImpl srcQuery) throws Exception
 	{
-		// ²¡ÈË¾ÍÕïĞÅÏ¢
+		// ç—…äººå°±è¯Šä¿¡æ¯
 		String sql = "select * from MedRec.pat_visit  where Patient_ID = '" + PatientID + "' and visit_id = " + VisitID;
 		TCommonRecord crPatVisit = null;
 		crPatVisit = (TCommonRecord)srcQuery.queryForObject(sql, new CommonMapper());
 		if (crPatVisit != null)
 		{
-			// ÈëÔº¿ÆÊÒĞÅÏ¢
+			// å…¥é™¢ç§‘å®¤ä¿¡æ¯
 	    	TCommonRecord crDept = DictCache.getNewInstance().getDeptInfo(srcQuery, crPatVisit.get("DEPT_ADMISSION_TO"));
 	    	crPatVisit.set("IN_DEPT_NAME",           crDept.get("DEPT_NAME"));
 	    	crPatVisit.set("IN_INTERNAL_OR_SERGERY", crDept.get("INTERNAL_OR_SERGERY"));
 	    	crPatVisit.set("IN_CLINIC_ATTR",         crDept.get("CLINIC_ATTR"));
 	    	crPatVisit.set("IN_OUTP_OR_INP",         crDept.get("OUTP_OR_INP"));
-	    	// ³öÔº¿ÆÊÒĞÅÏ¢
+	    	// å‡ºé™¢ç§‘å®¤ä¿¡æ¯
 	    	crDept = DictCache.getNewInstance().getDeptInfo(srcQuery, crPatVisit.get("DEPT_DISCHARGE_FROM"));
 	    	crPatVisit.set("OUT_DEPT_NAME",           crDept.get("DEPT_NAME"));
 	    	crPatVisit.set("OUT_INTERNAL_OR_SERGERY", crDept.get("INTERNAL_OR_SERGERY"));
@@ -287,7 +287,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 	
 	public List<TCommonRecord> fetchOperation2CR(String PatientID, String VisitID, JDBCQueryImpl srcQuery) throws Exception
 	{
-		//²¡ÈËÊÖÊõĞÅÏ¢
+		//ç—…äººæ‰‹æœ¯ä¿¡æ¯
 		/*
 		String sql = "Select * from medrec.Operation  where Patient_ID = '" + PatientID + "' and visit_id = " + VisitID;
 		List<TCommonRecord> Operation = srcQuery.query(sql, new CommonMapper());
@@ -316,7 +316,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 	@SuppressWarnings("unchecked")
 	public List<TCommonRecord> fetchOperationName2CR(String PatientID, String VisitID, JDBCQueryImpl srcQuery) throws Exception
 	{
-		//²¡ÈËÊÖÊõĞÅÏ¢
+		//ç—…äººæ‰‹æœ¯ä¿¡æ¯
 		//String sql = "Select * from surgery.Operation_Name  where Patient_ID = '" + PatientID + "' and visit_id = " + VisitID;
 		String strFields = "*"; 
 		List<TCommonRecord> lsWheres = new ArrayList<TCommonRecord>();
@@ -331,7 +331,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 	
 	public List<TCommonRecord> fetchOperationName2CR(String strFields, List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroup, List<TCommonRecord> lsOrder, JDBCQueryImpl srcQuery) throws Exception
 	{
-		//²¡ÈËÊÖÊõĞÅÏ¢
+		//ç—…äººæ‰‹æœ¯ä¿¡æ¯
 		String sql = this.genSQL(strFields, " surgery.Operation_Name ", lsWheres, lsGroup, lsOrder);
 		if (srcQuery == null)
 			srcQuery = DBQueryFactory.getQuery("HIS");
@@ -342,7 +342,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 	
 	public List<TCommonRecord>  fetchDrugDispenseRec2CR(String PatientID, String VisitID,  JDBCQueryImpl srcQuery) throws Exception
 	{
-		//°ÚÒ©¼ÇÂ¼
+		//æ‘†è¯è®°å½•
 		String strFields = "*"; 
 		List<TCommonRecord> lsWheres = new ArrayList<TCommonRecord>();
 		TCommonRecord crWheres = CaseHistoryHelperUtils.genWhereCR("Patient_ID", PatientID, "Char", "", "", "");
@@ -375,7 +375,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 	@SuppressWarnings("unchecked")
 	public List<TCommonRecord>  fetchPatsInHospital2CR(String PatientID, String VisitID,  JDBCQueryImpl srcQuery) throws Exception
 	{
-		//×¡Ôº¼ÇÂ¼
+		//ä½é™¢è®°å½•
 		String sql = "Select * from inpadm.Pats_In_Hospital  where Patient_ID = '" + PatientID + "' and visit_id = " + VisitID;
     	List<TCommonRecord> PatsInHospital = srcQuery.query(sql, new CommonMapper());
     	//crPatVisit.setObj(Key_PatsInHospital, PatsInHospital);
@@ -437,7 +437,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 	
 	public List<TCommonRecord>  fetchDiagnosis2CR(String PatientID, String VisitID, JDBCQueryImpl srcQuery) throws Exception
 	{
-    	//Õï¶Ï¼ÇÂ¼
+    	//è¯Šæ–­è®°å½•
 		//String sql = "Select * from medrec.Diagnosis  where Patient_ID = '" + PatientID + "' and visit_id = " + VisitID;
 
 		String strFields = "*";
@@ -462,7 +462,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 	
 	public List<TCommonRecord>  fetchInpBillDetail2CR(String PatientID, String VisitID, JDBCQueryImpl srcQuery) throws Exception
 	{
-    	//·ÑÓÃÃ÷Ï¸
+    	//è´¹ç”¨æ˜ç»†
     	//String sql = "Select * from inpbill.Inp_Bill_Detail  where Patient_ID = '" + PatientID + "' and visit_id = " + VisitID;
     	String strFields = "*";
 		List<TCommonRecord> lsWheres = new ArrayList<TCommonRecord>();
@@ -487,7 +487,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 	@SuppressWarnings("unchecked")
 	public List<TCommonRecord>  fetchLabTestMaster2CR(String PatientID, String VisitID, JDBCQueryImpl srcQuery) throws Exception
 	{
-    	//¼ì²é¼ÇÂ¼ 
+    	//æ£€æŸ¥è®°å½• 
     	//String sql = "Select * from lab.Lab_Test_Master  where Patient_ID = '" + PatientID + "' and visit_id = " + VisitID;
 		String strFields = "*";
 		List<TCommonRecord> lsWheres = new ArrayList<TCommonRecord>();
@@ -555,7 +555,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 	
 	public List<TCommonRecord>  fetchVitalSignsRec2CR(String PatientID, String VisitID, JDBCQueryImpl srcQuery) throws Exception
 	{
-    	//ÌåÕ÷ĞÅÏ¢
+    	//ä½“å¾ä¿¡æ¯
     	//String sql = "Select * from ordadm.Vital_Signs_Rec where Patient_ID=? and VISIT_ID=?";
 		String strFields = "*";
 		List<TCommonRecord> lsWheres = new ArrayList<TCommonRecord>();
@@ -580,7 +580,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 	
 	public List<TCommonRecord>  fetchExamMaster2CR(String PatientID, String VisitID, JDBCQueryImpl srcQuery) throws Exception
 	{
-    	//¼ìÑé¼ÇÂ¼
+    	//æ£€éªŒè®°å½•
 		//String sql = "Select * from exam.Exam_Master where Patient_ID=? and VISIT_ID=?";
 		String strFields = "*";
 		List<TCommonRecord> lsWheres = new ArrayList<TCommonRecord>();
@@ -647,7 +647,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 	
 	public List<TCommonRecord>  fetchGermTest2CR(String PatientID, String VisitID, JDBCQueryImpl srcQuery) throws Exception
 	{
-    	//Î¢ÉúÎï¼ìÑé
+    	//å¾®ç”Ÿç‰©æ£€éªŒ
     	//String srcSQL = "Select * from infect.germ_test where Patient_ID=? and VISIT_ID=?";
 		String strFields = "*";
 		List<TCommonRecord> lsWheres = new ArrayList<TCommonRecord>();
@@ -697,7 +697,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 	
 	public List<TCommonRecord>  fetchGermTestResult2CR(String PatientID, String VisitID, JDBCQueryImpl srcQuery) throws Exception
 	{
-    	//Î¢ÉúÎï¼ìÑé
+    	//å¾®ç”Ÿç‰©æ£€éªŒ
     	/*
     	String srcSQL = "Select * from infect.GERM_TEST_RESULT where PATIENT_ID=? AND VISIT_ID=?";
     	List<TCommonRecord> GermTestResult = srcQuery.query(srcSQL, new Object[]{PatientID, VisitID}, new CommonMapper());
@@ -740,7 +740,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 	@SuppressWarnings("unchecked")
 	public List<TCommonRecord>  fetchOperationMaster2CR(String PatientID, String VisitID, JDBCQueryImpl srcQuery) throws Exception
 	{
-		//²¡ÈËÊÖÊõĞÅÏ¢
+		//ç—…äººæ‰‹æœ¯ä¿¡æ¯
 		String strFields = "*";
 		List<TCommonRecord> lsWheres = new ArrayList<TCommonRecord>();
 		TCommonRecord crWheres = CaseHistoryHelperUtils.genWhereCR("Patient_ID", PatientID, "Char", "", "", "");

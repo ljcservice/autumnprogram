@@ -9,7 +9,7 @@ public class SessionLLM implements HttpSessionListener
     @Override
     public void sessionCreated(HttpSessionEvent arg0)
     {
-        System.out.println("构建的了session");
+        System.out.println("鏋勫缓鐨勪簡session");
         // TODO Auto-generated method stub
         counter++;
 
@@ -18,7 +18,7 @@ public class SessionLLM implements HttpSessionListener
     @Override
     public void sessionDestroyed(HttpSessionEvent arg0)
     {
-        System.out.println("销毁了的session");
+        System.out.println("閿�姣佷簡鐨剆ession");
         // TODO Auto-generated method stub
         counter--;
 

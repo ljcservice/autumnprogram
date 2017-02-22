@@ -13,17 +13,17 @@ import com.hitzd.his.SysLog.SysLog4Dcdt;
 import com.hitzd.his.report.utils.JillClassLoader;
 
 /**
- * ×é¼ş¹ÜÀíÕß
+ * ç»„ä»¶ç®¡ç†è€…
  * 
  * @author jingcong
  * 
  */
 final public class ModelHandler extends SysLog4Dcdt implements Runnable
 {
-    /* ×é¼ş×éºÅ */
+    /* ç»„ä»¶ç»„å· */
     private String       mhGroupCode = "";
 
-    /* ¿ÉÑ¡Ğ´Èë²ÎÊı */
+    /* å¯é€‰å†™å…¥å‚æ•° */
     private List<Object> writerParam = new ArrayList<Object>();
 
     public List<Object> getWriterParam()
@@ -37,7 +37,7 @@ final public class ModelHandler extends SysLog4Dcdt implements Runnable
     }
 
     /**
-     * ×é¼şºÅ¡£
+     * ç»„ä»¶å·ã€‚
      */
     public ModelHandler(String aMHGroupCode)
     {
@@ -51,7 +51,7 @@ final public class ModelHandler extends SysLog4Dcdt implements Runnable
     }
 
     /**
-     * Ö´ĞĞ´¦Àí¸Ã·½·¨
+     * æ‰§è¡Œå¤„ç†è¯¥æ–¹æ³•
      */
     @SuppressWarnings ({ "unchecked", "unused" })
     public Object PerformIt()
@@ -61,27 +61,27 @@ final public class ModelHandler extends SysLog4Dcdt implements Runnable
         try
         {
             if ("".equals(this.mhGroupCode))
-                throw new RuntimeException("×éºÅÎª¿Õ£¡ÎŞ·¨ÕÒµ½¿ÉÓÃ×é¼ş ");
+                throw new RuntimeException("ç»„å·ä¸ºç©ºï¼æ— æ³•æ‰¾åˆ°å¯ç”¨ç»„ä»¶ ");
             String sql = "select * from modelHandler t where t.mh_action = 1 and t.mh_groupCode = '"
                     + this.mhGroupCode + "'";
             List<TCommonRecord> list = (List<TCommonRecord>) query.query(sql,
                     cmr);
             if (list == null || list.size() == 0)
-                throw new RuntimeException("[" + sql + "]¸ÃsqlÎ´ÄÜ¼ìË÷¿ÉÓÃµÄ×é¼ş");
+                throw new RuntimeException("[" + sql + "]è¯¥sqlæœªèƒ½æ£€ç´¢å¯ç”¨çš„ç»„ä»¶");
             for (TCommonRecord t : list)
             {
-                /* ²ÎÊı */
+                /* å‚æ•° */
                 Object[] param = new Object[] {};
-                // ×é¼şÀàÂ·¾¶
+                // ç»„ä»¶ç±»è·¯å¾„
                 String mhClassPath = t.get("mh_ClassPath");
-                // ×é¼şCode
+                // ç»„ä»¶Code
                 String mhCode = t.get("mh_Code");
-                // ×é¼şÃû³Æ
+                // ç»„ä»¶åç§°
                 String mhCaption = t.get("mh_Caption");
-                // ×é¼ş¼¶±ğ
+                // ç»„ä»¶çº§åˆ«
                 String mhLevel = t.get("mh_Level");
                 if ("".equals(mhClassPath))
-                    throw new RuntimeException(mhCode + "," + mhCaption + ":Ã»ÓĞµÇ¼Ç×é¼şÂ·¾¶!");
+                    throw new RuntimeException(mhCode + "," + mhCaption + ":æ²¡æœ‰ç™»è®°ç»„ä»¶è·¯å¾„!");
 
                 Class clazz = JillClassLoader.loadClass(mhClassPath);
                 Method performMethod = null;
@@ -90,9 +90,9 @@ final public class ModelHandler extends SysLog4Dcdt implements Runnable
                     if (m.isAnnotationPresent(MHPerformProp.class))
                     {
                         performMethod = m;
-                        /* ´¦ÀíÒÑ¾­×¢²áºÃµÄ²ÎÊı */
+                        /* å¤„ç†å·²ç»æ³¨å†Œå¥½çš„å‚æ•° */
                         MHPerformProp mh = m.getAnnotation(MHPerformProp.class);
-                        // »ñµÃ×¢²á²ÎÊı 
+                        // è·å¾—æ³¨å†Œå‚æ•° 
                         Class[] clazzParam = mh.MethodParam();
                         if (this.writerParam != null && this.writerParam.size() > 0 && clazzParam != null &&  this.writerParam.size() == clazzParam.length )
                         {
@@ -100,7 +100,7 @@ final public class ModelHandler extends SysLog4Dcdt implements Runnable
                         }
                         else
                         {
-                            new RuntimeException("ÊäÈë²ÎÊıÓëÊµÏÖÀà²ÎÊı¸öÊı²»Ò»ÖÂ£¡");
+                            new RuntimeException("è¾“å…¥å‚æ•°ä¸å®ç°ç±»å‚æ•°ä¸ªæ•°ä¸ä¸€è‡´ï¼");
                             if(clazzParam != null &&  clazzParam.length > 0 )
                             {
                                 param = new Object[clazzParam.length];

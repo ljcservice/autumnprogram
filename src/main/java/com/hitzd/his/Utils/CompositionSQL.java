@@ -9,13 +9,13 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class CompositionSQL {
 	/**
-	 * Ö´ĞĞ¸üĞÂ²Ù×÷£¬ĞèÒªÌá¹©query¶ÔÏó¡¢request¶ÔÏó¡¢±íÃ÷¡¢×Ö¶ÎÁĞ±í
+	 * æ‰§è¡Œæ›´æ–°æ“ä½œï¼Œéœ€è¦æä¾›queryå¯¹è±¡ã€requestå¯¹è±¡ã€è¡¨æ˜ã€å­—æ®µåˆ—è¡¨
 	 * 
 	 * @param query
 	 * @param request
 	 * @param table
 	 * @param fileList
-	 * @return ¸üĞÂ×´Ì¬
+	 * @return æ›´æ–°çŠ¶æ€
 	 */
 	public static String update(HttpServletRequest request, String tableName,
 			String fileList, String identity) {
@@ -47,14 +47,14 @@ public class CompositionSQL {
 	}
 
 	/**
-	 * Ö´ĞĞ²åÈë²Ù×÷£¬ĞèÒªÌá¹©query¶ÔÏó¡¢request¶ÔÏó¡¢±íÃ÷¡¢×Ö¶ÎÁĞ±í(²»°üº¬ID)¡¢ĞòÁĞÃû
+	 * æ‰§è¡Œæ’å…¥æ“ä½œï¼Œéœ€è¦æä¾›queryå¯¹è±¡ã€requestå¯¹è±¡ã€è¡¨æ˜ã€å­—æ®µåˆ—è¡¨(ä¸åŒ…å«ID)ã€åºåˆ—å
 	 * 
 	 * @param query
 	 * @param request
 	 * @param table
 	 * @param fileList
 	 * @param xuLeiName
-	 * @return ²åÈë×´Ì¬
+	 * @return æ’å…¥çŠ¶æ€
 	 */
 	public static String insert(HttpServletRequest request, String table,
 			String fileList) {
@@ -81,13 +81,13 @@ public class CompositionSQL {
 	}
 
 	/***
-	 * ¸ù¾İ×é³É²éÑ¯Óï¾ä¡¢Ìá¹©±íÃ÷¡¢request¡¢×Ö¶ÎÁĞ±í¡¢Ìõ¼ş×Ö·û´®Êı×é
+	 * æ ¹æ®ç»„æˆæŸ¥è¯¢è¯­å¥ã€æä¾›è¡¨æ˜ã€requestã€å­—æ®µåˆ—è¡¨ã€æ¡ä»¶å­—ç¬¦ä¸²æ•°ç»„
 	 * 
 	 * @param request
 	 * @param tableName
 	 * @param fieldsList
 	 * @param idName
-	 * @return ²éÑ¯ËùÓÃ×Ö·û´®
+	 * @return æŸ¥è¯¢æ‰€ç”¨å­—ç¬¦ä¸²
 	 */
 	public static String query(HttpServletRequest request, String tableName,String fieldsList, String fieldsWheres) {
 		StringBuilder sb = new StringBuilder();
@@ -108,12 +108,12 @@ public class CompositionSQL {
 	}
 
 	/**
-	 * ¸ù¾İID×é³ÉÉ¾³ıÓï¾ä£¬Ìá¹©±íÃ÷¡¢request¡¢Ö÷¼üÃû×Ö
+	 * æ ¹æ®IDç»„æˆåˆ é™¤è¯­å¥ï¼Œæä¾›è¡¨æ˜ã€requestã€ä¸»é”®åå­—
 	 * 
 	 * @param query
 	 * @param request
 	 * @param table
-	 * @return É¾³ıËùÓÃ×Ö·û´®
+	 * @return åˆ é™¤æ‰€ç”¨å­—ç¬¦ä¸²
 	 */
 	public static String delete(HttpServletRequest request, String tableName,
 			String idName) {
@@ -134,7 +134,7 @@ public class CompositionSQL {
 	}
 
 	/***
-	 * ¸ù¾İ±íidentityµÄÖµ ×é³ÉsqlÓï¾ä£¬ÀıÈçidentity=userid Ôò where userid=Ò³Ãæ²ÎÊıuseridµÄÖµ
+	 * æ ¹æ®è¡¨identityçš„å€¼ ç»„æˆsqlè¯­å¥ï¼Œä¾‹å¦‚identity=userid åˆ™ where userid=é¡µé¢å‚æ•°useridçš„å€¼
 	 * 
 	 * @param request
 	 * @param tableName

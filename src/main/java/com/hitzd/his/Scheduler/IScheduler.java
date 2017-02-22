@@ -6,8 +6,8 @@ import com.hitzd.his.task.Task;
 
 public interface IScheduler 
 {
-	// ÈÎÎñ¿ªÊ¼Ö´ĞĞ
+	// ä»»åŠ¡å¼€å§‹æ‰§è¡Œ
 	public void performTask(Map<String, String> param, Task owner);
-	// ÉÏ±¨ÈÎÎñ×´Ì¬
+	// ä¸ŠæŠ¥ä»»åŠ¡çŠ¶æ€
 	public void reportStatus(Task owner);
 }

@@ -3,7 +3,7 @@ package com.hitzd.his.Program.Web.Utils;
 import java.util.LinkedHashMap;
 
 /**
- * Íê³ÉÍ¼ĞÎÊı¾İ×é³ÉµÄ»ù±¾Êı¾İ
+ * å®Œæˆå›¾å½¢æ•°æ®ç»„æˆçš„åŸºæœ¬æ•°æ®
  * @author Administrator
  *
  */

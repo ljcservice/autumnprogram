@@ -5,39 +5,39 @@ import com.hitzd.DBUtils.TCommonRecord;
 import com.hitzd.WebPage.PageView;
 
 /**
- * ±¨±í¼ÆËã»ã×Ü
+ * æŠ¥è¡¨è®¡ç®—æ±‡æ€»
  * @author Administrator
  *
  */
 public interface BuildReportService
 {
     /**
-     * ¼ìË÷³öËùÓĞ¼ÇÂ¼
+     * æ£€ç´¢å‡ºæ‰€æœ‰è®°å½•
      * @param pram
      * @return
      */
     public PageView<TCommonRecord> getList(TCommonRecord parm);
     
     /**
-     *  Ìí¼Ó¼ÇÂ¼ 
+     *  æ·»åŠ è®°å½• 
      * @param pram
      */
     public void addOper(TCommonRecord parm);
     
     /**
-     * ¸üĞÂ¼ÇÂ¼
+     * æ›´æ–°è®°å½•
      * @param parm
      */
     public void updateOper(TCommonRecord parm);
     
     /**
-     * É¾³ı¼ÇÂ¼ 
+     * åˆ é™¤è®°å½• 
      * @param id
      */
     public void deleteOper(String id);
     
     /**
-     *  id¼ìË÷Êı¾İ
+     *  idæ£€ç´¢æ•°æ®
      * @param id
      * @return
      */

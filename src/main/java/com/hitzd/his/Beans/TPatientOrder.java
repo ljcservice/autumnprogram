@@ -1,7 +1,7 @@
 package com.hitzd.his.Beans;
 
 /**
- * Ò½Öö¶ÔÏó
+ * åŒ»å˜±å¯¹è±¡
  * 
  * @author Administrator
  * 
@@ -10,43 +10,43 @@ public class TPatientOrder implements java.io.Serializable
 {
 
     private static final long        serialVersionUID        = 1L;
-    /* ²¡ÈËID */
+    /* ç—…äººID */
     private String                   patientID               = null;
-    /* ²¡ÈËÖ÷ÒªĞÅÏ¢ */
+    /* ç—…äººä¸»è¦ä¿¡æ¯ */
     private TPatient                 patient                 = null;
-    /* ²¡ÈË¾ÍÕïÀ©Õ¹ĞÅÏ¢ */
+    /* ç—…äººå°±è¯Šæ‰©å±•ä¿¡æ¯ */
     private TPatOrderInfoExt         patInfoExt              = null;
-    /* ²¡ÈË×¡ÔºĞÅÏ¢ */
+    /* ç—…äººä½é™¢ä¿¡æ¯ */
     private TPatOrderVisitInfo       patVisitInfo            = null;
-    /* ²¡ÈËÓÃÒ©¼ÇÂ¼ */
+    /* ç—…äººç”¨è¯è®°å½• */
     private TPatOrderDrug[]          patOrderDrugs           = null;
-    /* ²¡ÈËÌåÕ÷ĞÅÏ¢ */
+    /* ç—…äººä½“å¾ä¿¡æ¯ */
     private TPatSigns[]              patSigns                = null;
-    /* Ò½ÖöÕï¶ÏĞÅÏ¢ */
+    /* åŒ»å˜±è¯Šæ–­ä¿¡æ¯ */
     private TPatOrderDiagnosis[]     patOrderDiagnosiss      = null;
-    /* Ò½ÖöÒ©Îï¹ıÃôĞÅÏ¢ */
+    /* åŒ»å˜±è¯ç‰©è¿‡æ•ä¿¡æ¯ */
     private TPatOrderDrugSensitive[] patOrderDrugSensitives  = null;
-    /* ¿ª¾ßÒ½ÖöÒ½ÉúID */
+    /* å¼€å…·åŒ»å˜±åŒ»ç”ŸID */
     private String                   doctorID                = null;
-    /* ¿ª¾ßÒ½ÖöÒ½Éú */
+    /* å¼€å…·åŒ»å˜±åŒ»ç”Ÿ */
     private String                   doctorName              = null;
-    /* ¿ª¾ßÒ½Öö¿ÆÊÒ */
+    /* å¼€å…·åŒ»å˜±ç§‘å®¤ */
     private String                   doctorDeptID            = null;
-    /* ¿ª¾ßÒ½Öö¿ÆÊÒ */
+    /* å¼€å…·åŒ»å˜±ç§‘å®¤ */
     private String                   doctorDeptName          = null;
-    /* ¿ª¾ßÒ½ÖöÖ°³Æ */
+    /* å¼€å…·åŒ»å˜±èŒç§° */
     private String                   doctorTitleID           = null;
-    /* ¿ª¾ßÒ½ÖöÖ°³Æ */
+    /* å¼€å…·åŒ»å˜±èŒç§° */
     private String                   doctorTitleName         = null;
-    /* ºìÉ«ÎÊÌâÒ½Öö±ä¶¯Êı */
+    /* çº¢è‰²é—®é¢˜åŒ»å˜±å˜åŠ¨æ•° */
     private String                   redQuestionChangeNum    = null;
-    /* »ÆÉ«ÎÊÌâÒ½Öö±ä¶¯Êı */
+    /* é»„è‰²é—®é¢˜åŒ»å˜±å˜åŠ¨æ•° */
     private String                   yellowQuestionChangeNum = null;
-    /* ÊÖÊõ¼ÇÂ¼ */
+    /* æ‰‹æœ¯è®°å½• */
     private TPatOperation[]          patOperation           = null;
-    /* Ô¤·ÀÓÃÒ©ĞÅÏ¢  */
+    /* é¢„é˜²ç”¨è¯ä¿¡æ¯  */
     private TPreveUseDrug[]          preveUseDrug           = null;
-    /* ÖÎÁÆÓÃÒ©ĞÅÏ¢  */
+    /* æ²»ç–—ç”¨è¯ä¿¡æ¯  */
     private TTreatUseDrug[]          treatUseDrug           = null;
     
     public TPatOperation[] getPatOperation()

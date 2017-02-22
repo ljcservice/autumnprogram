@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import com.hitzd.his.Beans.TLabTest;
 
 /**
- * 检验主记录
+ * 妫�楠屼富璁板綍
  * @author Administrator
  *
  */
