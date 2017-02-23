@@ -593,24 +593,33 @@
 			<version>3.4.6</version>
 		</dependency>
 		<!-- solr end -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.apache.cxf</groupId> -->
-<!-- 			<artifactId>cxf-api</artifactId> -->
-<!-- 			<version>2.7.14</version> -->
-<!-- 		</dependency> -->
-        <!-- CXF -->
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-frontend-jaxws</artifactId>
-            <version>${cxf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-transports-http</artifactId>
-            <version>${cxf.version}</version>
-        </dependency>
-        
-	
+		<!-- <dependency> -->
+		<!-- <groupId>org.apache.cxf</groupId> -->
+		<!-- <artifactId>cxf-api</artifactId> -->
+		<!-- <version>2.7.14</version> -->
+		<!-- </dependency> -->
+		<!-- CXF -->
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-frontend-jaxws</artifactId>
+			<version>${cxf.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-transports-http</artifactId>
+			<version>${cxf.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-ws-security</artifactId>
+			<version>${cxf.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.ws.security</groupId>
+			<artifactId>wss4j</artifactId>
+			<version>1.6.14</version>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<finalName>autumn</finalName>
@@ -627,29 +636,6 @@
 						<verbose />
 						<bootclasspath>${java.home}\jre\lib\rt.jar;${java.home}\jre\lib\jce.jar</bootclasspath>
 					</compilerArguments>
-<!-- 					       <transformers>   -->
-<!--                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">   -->
-<!--                                     <manifestEntries>   -->
-<!--                                         <Main-Class>util.Process</Main-Class>   -->
-<!--                                     </manifestEntries>   -->
-<!--                                 </transformer>   -->
-<!--                                 <transformer   -->
-<!--                                     implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">   -->
-<!--                                     <resource>META-INF/cxf/bus-extensions.txt</resource>   -->
-<!--                                 </transformer>   -->
-<!--                                 <transformer   -->
-<!--                                     implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">   -->
-<!--                                     <resource>META-INF/spring.handlers</resource>   -->
-<!--                                 </transformer>   -->
-<!--                                 <transformer   -->
-<!--                                     implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">   -->
-<!--                                     <resource>META-INF/spring.tooling</resource>   -->
-<!--                                 </transformer>   -->
-<!--                                 <transformer   -->
-<!--                                     implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">   -->
-<!--                                     <resource>META-INF/spring.schemas</resource>   -->
-<!--                                 </transformer>   -->
-<!--                             </transformers>   -->
 				</configuration>
 			</plugin>
 		</plugins>
