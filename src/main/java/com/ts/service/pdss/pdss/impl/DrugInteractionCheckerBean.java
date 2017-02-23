@@ -248,7 +248,11 @@ public class DrugInteractionCheckerBean extends Persistent4DB implements  IDrugI
             }
      */
     
-    public TDrugSecurityRslt Check(String[] ids)
+    /**
+     * 改造完成
+     * @throws Exception 
+     */
+    public TDrugSecurityRslt Check(String[] ids) throws Exception
     {
         /* 药品组合情况*/
         TDrugSecurityRslt dsr = new TDrugSecurityRslt();

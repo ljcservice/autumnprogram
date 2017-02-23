@@ -877,7 +877,12 @@ public class HisAuditor implements IHisAuditor
      */
     public TDrugSecurityRslt DrugInteractionCheckS(String[] Drugs)
     {
-        return drugsecuity.DrugInteractionCheckS(Drugs);
+        try {
+			return drugsecuity.DrugInteractionCheckS(Drugs);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return null;
     }
 
     /**
@@ -900,7 +905,7 @@ public class HisAuditor implements IHisAuditor
     }
 
     /**
-     * TODO 无具体实现
+     * 无具体实现
      */
     public TDrugSecurityRslt DrugIvEffectCheckS(String[] DrugIds, String[] RecMainIds, String[] AdministrationIds)
     {
@@ -913,12 +918,25 @@ public class HisAuditor implements IHisAuditor
      */
     public TDrugSecurityRslt DrugDiagCheck(TPatientOrder po)
     {
-        return drugsecuity.DrugDiagCheck(po);
+        try {
+        	return drugsecuity.DrugDiagCheck(po);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return null;
     }
-    
+    /**
+     *  改造完成
+     */
     public TDrugSecurityRslt DrugDiagCheckS(String[] drugs, String[] diagnosis)
     {
-        return drugsecuity.DrugDiagCheckS(drugs, diagnosis);
+        try {
+			return drugsecuity.DrugDiagCheckS(drugs, diagnosis);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return null;
     }
     
     /* 特殊人群审查 */
@@ -935,7 +953,9 @@ public class HisAuditor implements IHisAuditor
     }
     
     /**
-     *多个本地药品码，出生日期，病人类别（孕妇、哺乳、普通），肝功能不全标志，肾功能不全标志
+     * 多个本地药品码，出生日期，病人类别（孕妇、哺乳、普通），肝功能不全标志，肾功能不全标志
+     * 
+     * 无具体实现
      **/
     public TDrugSecurityRslt DrugSpecPeopleCheckS(String[] DrugIds, String BirthDay, String patType, String isLiverWhole, String isKidneyWhole)
     {
@@ -952,6 +972,9 @@ public class HisAuditor implements IHisAuditor
         return DrugIngredientCheckS(Drugs);
     }
 
+    /**
+     * 无具体实现
+     */
     public TDrugSecurityRslt DrugIngredientCheckS(String[] DrugIds)
     {
         return drugsecuity.DrugIngredientCheckS(DrugIds);
@@ -972,6 +995,9 @@ public class HisAuditor implements IHisAuditor
         return DrugAdministrationCheckS(DrugIds, AdminIds);
     }
     
+    /**
+     * 无具体实现
+     */
     public TDrugSecurityRslt DrugAdministrationCheckS(String[] DrugIds, String[] AdminIds)
     {
         return drugsecuity.DrugAdministrationCheckS(DrugIds, AdminIds);
@@ -996,6 +1022,9 @@ public class HisAuditor implements IHisAuditor
         return DrugAllergenCheckS(DrugIds, SensitIds);
     }
 
+    /**
+     * 无具体实现
+     */
     public TDrugSecurityRslt DrugAllergenCheckS(String[] DrugIds, String[] SensitIds)
     {
         return drugsecuity.DrugAllergenCheckS(DrugIds, SensitIds);
@@ -1024,7 +1053,10 @@ public class HisAuditor implements IHisAuditor
         		po.getPatient().getDateOfBirth());
     }
     
-    /**多个本地药品码，剂量，x次/天，用药起始时间，用药中止时间（若为空，则按当天计算）,体重，身高，出生日期*/
+    /**
+     * 无具体实现
+     * 多个本地药品码，剂量，x次/天，用药起始时间，用药中止时间（若为空，则按当天计算）,体重，身高，出生日期
+     */
     public TDrugSecurityRslt DrugDosageCheckS(String[] DrugIds, String[] Dosages, String[] PerformFreqDictIds, 
     		String[] StartDates, String[] StopDates, 
     		String Weight, String Height, String BirthDay)
@@ -1053,6 +1085,9 @@ public class HisAuditor implements IHisAuditor
         return DrugSideCheckS(DrugIds, AdminIds, SensitIds);
     }
     
+    /**
+     * 无具体实现
+     */
     public TDrugSecurityRslt DrugSideCheckS(String[] DrugIds, String[] AdminIds, String[] SensitIds)
     {
     	return drugsecuity.DrugSideCheckS(DrugIds, AdminIds, SensitIds);
@@ -1096,7 +1131,7 @@ public class HisAuditor implements IHisAuditor
     
     /**
      * 药物安全审查 全局检查函数，可以一次性检查所有的检查项目 PatientOrder (医嘱对象)
-     * 
+     * 改造完成
      * @return
      */
     public TDrugSecurityRslt DrugSecurityCheck(final TPatientOrder po)
@@ -1104,6 +1139,9 @@ public class HisAuditor implements IHisAuditor
          return drugsecuity.DrugSecurityCheck(po);
     }
     
+    /**
+     * 审核方面无具体实现
+     */
     @Override
     public TDrugSecurityRslt DrugIvEffectCheckA(String[] doctorInfo,
             String[] patientInfo, String[][] drugInfo,
@@ -1115,7 +1153,9 @@ public class HisAuditor implements IHisAuditor
     	this.patientSavaBean.saveDrugIvEffectCheckInfo(dsr);
         return dsr;
     }
-
+    /**
+     * 审核方面无具体实现
+     */
     @Override
     public TDrugSecurityRslt DrugSpecPeopleCheckA(String[] doctorInfo,
             String[] patientInfo, String[][] drugInfo,
@@ -1127,7 +1167,10 @@ public class HisAuditor implements IHisAuditor
     	this.patientSavaBean.saveDrugSpecPeopleCheckInfo(dsr);
     	return dsr; 
     }
-
+    
+    /**
+     * 审核方面无具体实现
+     */
     @Override
     public TDrugSecurityRslt DrugIngredientCheckA(String[] doctorInfo,
             String[] patientInfo, String[][] drugInfo,
@@ -1140,6 +1183,9 @@ public class HisAuditor implements IHisAuditor
     	return dsr; 
     }
 
+    /**
+     * 审核方面无具体实现
+     */
     @Override
     public TDrugSecurityRslt DrugAdministrationCheckA(String[] doctorInfo,
             String[] patientInfo, String[][] drugInfo,
@@ -1152,6 +1198,9 @@ public class HisAuditor implements IHisAuditor
     	return dsr;
     }
 
+    /**
+     * 审核方面无具体实现
+     */
     @Override
     public TDrugSecurityRslt DrugAllergenCheckA(String[] doctorInfo,
             String[] patientInfo, String[][] drugInfo,
@@ -1164,6 +1213,9 @@ public class HisAuditor implements IHisAuditor
     	return dsr;
     }
 
+    /**
+     * 审核方面无具体实现
+     */
     @Override
     public TDrugSecurityRslt DrugDosageCheckA(String[] doctorInfo,
             String[] patientInfo, String[][] drugInfo,
@@ -1176,6 +1228,9 @@ public class HisAuditor implements IHisAuditor
     	return dsr;
     }
 
+    /**
+     * 审核方面无具体实现
+     */
     @Override
     public TDrugSecurityRslt DrugSideCheckA(String[] doctorInfo,
             String[] patientInfo, String[][] drugInfo,
@@ -1188,6 +1243,9 @@ public class HisAuditor implements IHisAuditor
     	return dsr;
     }
     
+    /**
+     * 审核方面改造完成
+     */
     @Override
     public TDrugSecurityRslt DrugInteractionCheckA(String[] doctorInfo,
             String[] patientInfo, String[][] drugInfo,
@@ -1200,24 +1258,36 @@ public class HisAuditor implements IHisAuditor
     	return dsr;
     }
     
+    /**
+     * 审核方面改造完成
+     */
     @Override
     public TDrugSecurityRslt DrugDiagCheckA(String[] doctorInfo,
             String[] patientInfo, String[][] drugInfo,
             String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation)
     {
-    	TPatientOrder      po = CommonUtils.getPatientOrder(doctorInfo, patientInfo, drugInfo, diagnosisInfo, sensitiveInfo, patSigns,patOperation);
-    	TDrugSecurityRslt dsr = drugsecuity.DrugDiagCheck(po);
+    	TPatientOrder po = CommonUtils.getPatientOrder(doctorInfo, patientInfo, drugInfo, diagnosisInfo, sensitiveInfo, patSigns,patOperation);
+    	TDrugSecurityRslt dsr;
+		try {
+			dsr = drugsecuity.DrugDiagCheck(po);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
     	this.patientSavaBean.savePatientCheckInfo(po, dsr);
     	this.patientSavaBean.saveDrugDiagCheckInfo(dsr);
     	return dsr;
     }
     
+    /**
+     * 无具体实现
+     */
 	@Override
 	public TDrugSecurityRslt MedicareCheckerA(String[] doctorInfo,
 			String[] patientInfo, String[][] drugInfo,
 			String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation)
 	{
-		TPatientOrder      po = CommonUtils.getPatientOrder(doctorInfo, patientInfo, drugInfo, diagnosisInfo, sensitiveInfo, patSigns,patOperation);
+		TPatientOrder po = CommonUtils.getPatientOrder(doctorInfo, patientInfo, drugInfo, diagnosisInfo, sensitiveInfo, patSigns,patOperation);
     	TDrugSecurityRslt dsr = drugsecuity.MedicareChecker(po);
     	return dsr;
 	}

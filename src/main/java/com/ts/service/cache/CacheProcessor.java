@@ -7,5 +7,5 @@ public interface CacheProcessor<T> {
 	 * 
 	 * @return
 	 */
-	T handle();
+	T handle() throws Exception;
 }

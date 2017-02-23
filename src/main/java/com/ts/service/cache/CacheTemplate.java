@@ -16,11 +16,11 @@ public class CacheTemplate {
     
 	private static final Logger log = Logger.getLogger(CacheTemplate.class);
 
-	public <T> T cache(String keyV, boolean useCache,int seconds, CacheProcessor<T> proccessor) {
+	public <T> T cache(String keyV, boolean useCache,int seconds, CacheProcessor<T> proccessor) throws Exception {
 		return this.cache(keyV, useCache,null, seconds, proccessor);
 	}
 
-	public <T> T cache(String keyV, boolean useCache,String keyAppend, CacheProcessor<T> proccessor) {
+	public <T> T cache(String keyV, boolean useCache,String keyAppend, CacheProcessor<T> proccessor) throws Exception {
 		return this.cache(keyV,useCache, keyAppend, 1 * 24 * 60 * 60, proccessor);
 	}
 	
@@ -29,8 +29,9 @@ public class CacheTemplate {
 	 * @param keyV
 	 * @param proccessor
 	 * @return
+	 * @throws Exception 
 	 */
-	public <T> T cache(String keyV, CacheProcessor<T> proccessor) {
+	public <T> T cache(String keyV, CacheProcessor<T> proccessor) throws Exception {
 		return this.cache(keyV,true, null, 1 * 24 * 60 * 60, proccessor);
 	}
 	/**
@@ -39,17 +40,18 @@ public class CacheTemplate {
 	 * @param keyAppend
 	 * @param proccessor
 	 * @return
+	 * @throws Exception 
 	 */
-	public <T> T cache(String keyV, String keyAppend ,CacheProcessor<T> proccessor) {
+	public <T> T cache(String keyV, String keyAppend ,CacheProcessor<T> proccessor) throws Exception {
 		return this.cache(keyV,true, keyAppend, 1 * 24 * 60 * 60, proccessor);
 	}
 	
-	public <T> T cache(String keyV,boolean useCache, CacheProcessor<T> proccessor) {
+	public <T> T cache(String keyV,boolean useCache, CacheProcessor<T> proccessor) throws Exception {
 		return this.cache(keyV,useCache, null, 1 * 24 * 60 * 60, proccessor);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T cache(String key,boolean useCache, String keyAppend, int seconds, CacheProcessor<T> proccessor) {
+	public <T> T cache(String key,boolean useCache, String keyAppend, int seconds, CacheProcessor<T> proccessor) throws Exception {
 		String keyName = "KEY: # " + key + (keyAppend == null ? "" : ("," + keyAppend)) + " #";
 		boolean cacheFrt = false;
 		if( useCache ){

@@ -46,7 +46,7 @@ public class DrugSecurityChecker implements IDrugSecurityChecker
     {
         return drugInteractionCheckerBean.Check( po);
     }
-    public TDrugSecurityRslt DrugInteractionCheckS(String[] Drugs)
+    public TDrugSecurityRslt DrugInteractionCheckS(String[] Drugs) throws Exception
     {
         return drugInteractionCheckerBean.Check(Drugs);
     }
@@ -79,12 +79,10 @@ public class DrugSecurityChecker implements IDrugSecurityChecker
     /* 禁忌症审查 */
     @Resource(name = "drugDiagCheckerBean")
     private IDrugDiagChecker drugDiagCheckerBean;
-    public TDrugSecurityRslt DrugDiagCheck( TPatientOrder po)
-    {
+    public TDrugSecurityRslt DrugDiagCheck( TPatientOrder po) throws Exception{
         return this.drugDiagCheckerBean.Check( po);
     }
-    public TDrugSecurityRslt DrugDiagCheckS(String[] drugs, String[] diagnosis)
-    {
+    public TDrugSecurityRslt DrugDiagCheckS(String[] drugs, String[] diagnosis)throws Exception{
         return drugDiagCheckerBean.Check(drugs, diagnosis);
     }
     /* 特殊人群审查 */

@@ -16,8 +16,9 @@ public interface IDrugInteractionChecker
     /**
      *  审查
      * @return
+     * @throws Exception 
      */
-    public TDrugSecurityRslt Check(String[] ids);
+    public TDrugSecurityRslt Check(String[] ids) throws Exception;
     
     /**
      * 医嘱对象

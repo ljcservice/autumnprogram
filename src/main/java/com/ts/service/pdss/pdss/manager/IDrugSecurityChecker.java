@@ -34,8 +34,9 @@ public interface IDrugSecurityChecker
     public TDrugSecurityRslt DrugInteractionCheck(TPatientOrder  po);
     /**
      *  互动信息
+     * @throws Exception 
      */
-    public TDrugSecurityRslt DrugInteractionCheckS(String[] Drugs);
+    public TDrugSecurityRslt DrugInteractionCheckS(String[] Drugs) throws Exception;
     public TDrugSecurityRslt DrugInteractionCheckA(String[] doctorInfo, String[] patientInfo, String[][] drugInfo, String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation);
 
     /**
@@ -58,7 +59,7 @@ public interface IDrugSecurityChecker
      * @param diagnosis
      * @return
      */
-    public TDrugSecurityRslt DrugDiagCheck( TPatientOrder po);
+    public TDrugSecurityRslt DrugDiagCheck( TPatientOrder po)throws Exception;
     /**
      * 禁忌症审查
      * 
@@ -66,7 +67,7 @@ public interface IDrugSecurityChecker
      * @param diagnosis
      * @return
      */
-    public TDrugSecurityRslt DrugDiagCheckS(String[] drugs, String[] diagnosis);
+    public TDrugSecurityRslt DrugDiagCheckS(String[] drugs, String[] diagnosis)throws Exception;
     public TDrugSecurityRslt DrugDiagCheckA(String[] doctorInfo, String[] patientInfo, String[][] drugInfo, String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation);
     /**
      * 特殊人群

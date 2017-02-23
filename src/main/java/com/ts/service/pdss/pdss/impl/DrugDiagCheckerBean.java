@@ -53,8 +53,11 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
 	@Resource(name = "pdssCache")
 	private PdssCache pdssCache;
    
-    @SuppressWarnings("unchecked")
-    @Override
+    /**
+     * 改造完成
+     */
+	@SuppressWarnings("unchecked")
+	@Override
     public TDrugSecurityRslt Check( TPatientOrder po)//TPatientOrder po
     {
     	try
@@ -218,24 +221,18 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
     }
 
     
-    
-    
-//    做到此处
-    
-    
-    
-    
-    @SuppressWarnings({ "unchecked", "static-access" })
+	/**
+	 * 改造完成
+	 */
     @Override
-    public TDrugSecurityRslt Check(String[] drugs, String[] diagnosis)
-    {
+    public TDrugSecurityRslt Check(String[] drugs, String[] diagnosis) throws Exception{
         /* 设置访问数据库代码 */
         this.setQueryCode("PDSS");
         /* 疾病诊断码sql组装 */
-        String diagnosi       = CommonUtils.makeWheres(diagnosis);
         /* 所有药品信息 */
         QueryUtils queryUtils = new QueryUtils();
-        List<TDrug> drugslist  = queryUtils.queryDrug(drugs, null, query);
+//        List<TDrug> drugslist  = queryUtils.queryDrug(drugs, null, query);
+        List<TDrug> drugslist = pdssCache.queryDrugListByIds(drugs);
         /* 药品类吗  组装 */
         String[] drugClassID  = new String[drugslist.size()];
         for(int i = 0 ;i<drugslist.size();i++)
@@ -252,21 +249,18 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
 //            drugDiagRels = queryUtils.queryDrugDiagRel(drugClassID, null, query);
         }
         /*  药物禁忌症对应id 组装sql*/
-        StringBuffer drugDiagRelIds = new StringBuffer();
+        List<String> drugDiagRelIds = new ArrayList<String>();
         for(TDrugDiagRel entry : drugDiagRels)
         {
-            drugDiagRelIds.append(entry.getDRUG_DIAG_REL_ID()).append(",");
+            drugDiagRelIds.add(entry.getDRUG_DIAG_REL_ID());
         }
         /* 药物禁忌症信息 */
-        String strSql = "select DRUG_DIAG_INFO_ID,DIAGNOSIS_DICT_ID,DRUG_DIAG_REL_ID,SEQ_ID,INTER_INDI,DIAG_DESC,DRUG_REF_SOURCE,CONTRAIND_ID from DRUG_DIAG_INFO where " +
-        " DIAGNOSIS_DICT_ID in (" + diagnosi.toString() + ") ";
-        if(drugDiagRelIds.length() > 0)
-        {
-            drugDiagRelIds.deleteCharAt(drugDiagRelIds.length()-1);
-            strSql += " and DRUG_DIAG_REL_ID in (" + drugDiagRelIds.toString() + ")";
-        }
-        List<TDrugDiagInfo> drugDiagInfos = (List<TDrugDiagInfo>) query.query(strSql                
-                , new DrugDiagInfoMapper());
+      	PageData pd = new PageData();
+      	pd.put("DIAGNOSIS_DICT_ID", diagnosis);
+      	pd.put("DRUG_DIAG_REL_ID", drugDiagRelIds);
+        List<TDrugDiagInfo> drugDiagInfos = (List<TDrugDiagInfo>) dao.findForList("DrugMapper.drugDiagInfosByRel",pd);
+        //  List<TDrugDiagInfo> drugDiagInfos = (List<TDrugDiagInfo>) query.query(strSql , new DrugDiagInfoMapper());
+        
         TDrugSecurityRslt result = new TDrugSecurityRslt();
         /* 整理数据结果返回  */
         for(TDrugDiagInfo entity : drugDiagInfos)

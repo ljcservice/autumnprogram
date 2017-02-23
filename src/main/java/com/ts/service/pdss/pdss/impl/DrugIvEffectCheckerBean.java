@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,11 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.hitzd.his.Beans.TPatOrderDrug;
 import com.hitzd.his.Beans.TPatientOrder;
 import com.hitzd.persistent.Persistent4DB;
+import com.ts.dao.DaoSupportPdss;
 import com.ts.entity.pdss.pdss.Beans.TAdministration;
 import com.ts.entity.pdss.pdss.Beans.TDrug;
+import com.ts.entity.pdss.pdss.Beans.TDrugIvEffect;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugIvEffectRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
 import com.ts.service.pdss.pdss.Cache.BeanRSCache;
+import com.ts.service.pdss.pdss.Cache.PdssCache;
 import com.ts.service.pdss.pdss.Utils.QuerySingleUtils;
 import com.ts.service.pdss.pdss.Utils.QueryUtils;
 import com.ts.service.pdss.pdss.manager.IDrugIvEffectChecker;
@@ -29,8 +34,13 @@ import com.ts.service.pdss.pdss.manager.IDrugIvEffectChecker;
  */
 @Service
 @Transactional
-public class DrugIvEffectCheckerBean extends Persistent4DB implements  IDrugIvEffectChecker
-{
+public class DrugIvEffectCheckerBean extends Persistent4DB implements  IDrugIvEffectChecker{
+
+	@Resource(name = "daoSupportPdss")
+	private DaoSupportPdss dao;
+	
+	@Resource(name = "pdssCache")
+	private PdssCache pdssCache;
 
 	private final static Logger log = Logger.getLogger(DrugIvEffectCheckerBean.class);
 	
@@ -48,7 +58,9 @@ public class DrugIvEffectCheckerBean extends Persistent4DB implements  IDrugIvEf
 	    	{
 	    		TPatOrderDrug pod = pods[i];
 	    		//经过 用药途径标准码转换 只有用药途径为3的保留下来 
-	    		TAdministration adm = QuerySingleUtils.queryAdministration(pod.getAdministrationID(), query);
+	    		//TAdministration adm = QuerySingleUtils.queryAdministration(pod.getAdministrationID(), query);
+	    		TAdministration adm = pdssCache.queryAdministration(pod.getAdministrationID());
+	    		
 	    		if(adm == null)
 	    		    continue;
 	    		// TODO: 此处用3代表了注射的用药途径，正确的做法是调用DrugUtils.isZSDrug(adm.getADMINISTRATION_ID)或者
@@ -76,7 +88,9 @@ public class DrugIvEffectCheckerBean extends Persistent4DB implements  IDrugIvEf
 	    		}
 
 	    		// 找出药品信息
-		        List<TDrug> drugs  = QueryUtils.queryDrug(Drugs, null, query);
+//		        List<TDrug> drugs  = QueryUtils.queryDrug(Drugs, null, query);
+	    		List<TDrug> drugs = pdssCache.queryDrugListByIds(Drugs);
+	    		
 		        //Map<String, TDrug> drugs  = QueryUtils.queryDrug(pods, null, query);
 	            //TDrug[] arrDrugs = drugs.values().toArray(new TDrug[0]);
 	            
@@ -88,38 +102,19 @@ public class DrugIvEffectCheckerBean extends Persistent4DB implements  IDrugIvEf
 		        	for (int j = i + 1; j < drugs.size(); j++)
 		        	{
 		        		TDrug drugB = drugs.get(j);
-		        		/* 数据集缓存中寻找*/
-		        		TDrugIvEffectRslt cacheInfo = BeanRSCache.getDrugIvEffectRslt(drugA.getDRUG_NO_LOCAL(), drugB.getDRUG_NO_LOCAL());
-		        		if(cacheInfo != null)
-		                {
-		        		    if(cacheInfo.getTDrugIvEffect().length > 0 )
-		        		    {
-		        		    	/* 对每一个返回的药品标注上 医嘱序号 */
-		        		    	drugA.setRecMainNo(podsMap.get(drugA.getDRUG_NO_LOCAL()).getRecMainNo());
-		        		    	drugA.setRecSubNo(podsMap.get(drugA.getDRUG_NO_LOCAL()).getRecSubNo());
-		        		    	drugB.setRecMainNo(podsMap.get(drugB.getDRUG_NO_LOCAL()).getRecMainNo());
-		        		    	drugB.setRecSubNo(podsMap.get(drugB.getDRUG_NO_LOCAL()).getRecSubNo());
-
-		        		    	TDrugIvEffectRslt copyCacheIvE = new TDrugIvEffectRslt();
-		        		    	copyCacheIvE.addIvEffect(podsMap.get(drugA.getDRUG_NO_LOCAL()), podsMap.get(drugB.getDRUG_NO_LOCAL()), cacheInfo.getTDrugIvEffevtList());
-		        		    	copyCacheIvE.setRecMainNo(podsMap.get(drugA.getDRUG_NO_LOCAL()).getRecMainNo());
-		        		    	copyCacheIvE.setRecSubNo(podsMap.get(drugA.getDRUG_NO_LOCAL()).getRecSubNo());
-		        		    	copyCacheIvE.setRecMainNo2(podsMap.get(drugB.getDRUG_NO_LOCAL()).getRecMainNo());
-		        		    	copyCacheIvE.setRecSubNo2(podsMap.get(drugB.getDRUG_NO_LOCAL()).getRecSubNo());
-	                		    
-	                		    Result.regIvEffectCheckResult(drugA,drugB,copyCacheIvE);
-		        		    }
-	            		    continue;
-		                }
 		        		String drugIvCode2 = drugB.getIV_CLASS_CODE();
-		        		TDrugIvEffectRslt drugiveff = new TDrugIvEffectRslt();
+		        		/* 数据集缓存中寻找*/
+		        		//TDrugIvEffectRslt cacheInfo = BeanRSCache.getDrugIvEffectRslt(drugA.getDRUG_NO_LOCAL(), drugB.getDRUG_NO_LOCAL());
 		        		/* 配伍信息*/
-		        		List list = QueryUtils.queryDrugIvEffect(drugIvCode1, drugIvCode2, "", query);
-		        		/* 放入缓存  */
-	                    BeanRSCache.setDrugIvEffectRslt(drugA.getDRUG_NO_LOCAL(), drugB.getDRUG_NO_LOCAL(), drugiveff);
+		        		List<TDrugIvEffect> list = pdssCache.queryDrugIvEffect(drugIvCode1, drugIvCode2);
+		        		
+		        		/* 配伍信息*/
+		        		//List list = QueryUtils.queryDrugIvEffect(drugIvCode1, drugIvCode2, "", query);
+		        		
 		        		/* 配伍数据集 */
 		        		if(list != null && list.size()>0)
 		        		{
+		        			TDrugIvEffectRslt drugiveff = new TDrugIvEffectRslt();
 		        			/* 对每一个返回的药品标注上 医嘱序号 */
 	        		    	drugA.setRecMainNo(podsMap.get(drugA.getDRUG_NO_LOCAL()).getRecMainNo());
 	        		    	drugA.setRecSubNo(podsMap.get(drugA.getDRUG_NO_LOCAL()).getRecSubNo());
