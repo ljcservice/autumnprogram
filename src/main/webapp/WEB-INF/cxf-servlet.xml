@@ -13,4 +13,28 @@
 <!-- 	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" /> -->
 	
   	<jaxws:endpoint id="pdssServicePoint"  implementor="#hisAuditor"   address="/pdssService" />
+
+	<!-- CXF 服务端输出拦截器  -->
+<!-- 	<bean id="clientPasswordCallback" class="com.ts.interceptor.webservice.ClientPasswordCallback" /> -->
+<!-- 	<bean id="wsS4JOutInterceptor" class="org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor"> -->
+<!-- 		<constructor-arg> -->
+<!-- 			<map> -->
+<!-- 				<entry key="action" value="UsernameToken" /> -->
+<!-- 				<entry key="passwordType" value="PasswordText" /> -->
+<!-- 				<entry key="user" value="aghit" /> -->
+<!-- 				<entry key="passwordCallbackRef"> -->
+<!-- 					<ref bean="clientPasswordCallback" /> -->
+<!-- 				</entry> -->
+<!-- 			</map> -->
+<!-- 		</constructor-arg> -->
+<!-- 	</bean>  -->
+
+	<!-- CXF 服务端输入拦截器  -->
+<!--  	<bean id="clientPasswordCheck" class="com.ts.interceptor.webservice.ClientPasswordCheck" />  -->
+<!--  	<bean id="wsS4JInInterceptor" class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">  -->
+<!--  		<constructor-arg> -->
+ 			
+ 		
+<!--  		</constructor-arg> -->
+<!--  	</bean> -->
 </beans>
