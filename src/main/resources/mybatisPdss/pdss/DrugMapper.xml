@@ -3,8 +3,7 @@
 <mapper namespace="DrugMapper">
 
 	<!-- 诊断名称同义词-本体 关联查询 -->
-	<select id="diagOsynWidgetlistPage" parameterType="pd"
-		resultType="pd">
+	<select id="diagOsynWidgetlistPage" parameterType="pd"	resultType="pd">
 		select * from dual t
 		<!-- where -->
 
@@ -17,10 +16,11 @@
 		where drug_no_local =#{id}
 	</select>
 	<!-- 查询单2个成分是否药理冲突 -->
-	<select id="getDrugInteraction" parameterType="pd" resultType="TDrug">
-		select EFFECT_ID, IV_CLASS_CODE1, FIRM_ID1, IV_CLASS_CODE2, FIRM_ID2,RESULT_ID, REFER_INFO, REF_SOURCE from DRUG_IV_EFFECT 
-        where (IV_CLASS_CODE1 = #{code1} and IV_CLASS_CODE2 =#{code2}) 
-        	or (IV_CLASS_CODE1 = #{code2} and IV_CLASS_CODE2 = #{code1})
+	<select id="getDrugInteraction" parameterType="pd" resultType="TDrugInteractionInfo">
+		select DRUG_INTERACTION_INFO_ID,INGR_CLASS_ID1,INGR_CLASS_ID2,INTER_INDI,WAR_INFO,MEC_INFO,MAN_INFO,DIS_INFO,REF_SOURCE 
+		from DRUG_INTERACTION_INFO 
+		where (INGR_CLASS_ID1 = #{code1} and INGR_CLASS_ID2 = #{code2}) 
+			or (INGR_CLASS_ID1 = #{code2} and INGR_CLASS_ID2 = #{code1}) 
 　	</select>
 	<!-- 诊断信息转换 -->
 	<select id="queryDiagDictMap" parameterType="pd" resultType="String">
@@ -74,4 +74,42 @@
 	 			</foreach> 
 	        </if>
 	</select>
+	
+	<!-- 	 配伍信息 -->
+	<select id="queryDrugIvEffect" parameterType="pd" resultType="TDrugIvEffect">
+		select EFFECT_ID, IV_CLASS_CODE1, FIRM_ID1, IV_CLASS_CODE2, FIRM_ID2,RESULT_ID, REFER_INFO, REF_SOURCE 
+		from DRUG_IV_EFFECT 
+        where (IV_CLASS_CODE1 = #{code1} and IV_CLASS_CODE2 =#{code2}) 
+        	or (IV_CLASS_CODE1 = #{code2} and IV_CLASS_CODE2 = #{code1})
+	</select>
+	
+	<!-- 不良反应 所有信息 -->
+	<select id="getTDrugSideDictList" parameterType="pd" resultType="TDrugSideDict">
+		select SIDE_ID,DIAGNOSIS_DICT_ID,SEQ_NO,DIAGNOSIS_DESC,SIDE_GROUP_ID,SEVERITY,DRUG_CLASS_ID,ADMINISTRATION_ID  
+		from view_side 
+		where 1==1 
+			<if test="DRUG_CLASS_ID != null and DRUG_CLASS_ID != ''">
+	 			and DRUG_CLASS_ID in  
+	 			<foreach item="item" index="index" collection="DRUG_CLASS_ID" open="(" separator="," close=")">  
+	 			 	#{item}  
+	 			</foreach> 
+	        </if>
+			<if test="DIAGNOSIS_DICT_ID != null and DIAGNOSIS_DICT_ID != ''">
+	 			and DIAGNOSIS_DICT_ID in  
+	 			<foreach item="item" index="index" collection="DIAGNOSIS_DICT_ID" open="(" separator="," close=")">  
+	 			 	#{item}  
+	 			</foreach> 
+	        </if>
+	        <if test="ADMINISTRATION_ID != null and DRUG_CLASS_ID != ''">
+	 			and ADMINISTRATION_ID in  
+	 			<foreach item="item" index="index" collection="ADMINISTRATION_ID" open="(" separator="," close=")">  
+	 			 	#{item}  
+	 			</foreach> 
+	        </if>
+	</select>
+	
+	
+	
+	
+
 </mapper>
