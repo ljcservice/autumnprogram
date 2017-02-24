@@ -125,7 +125,6 @@ public class HisAuditor implements IHisAuditor
 	/**
 	 * 返回体检信息 
 	 */
-	@SuppressWarnings ("unchecked")
 	@WebMethod
     public TPatVitalSigns[] getpatVsVisitSigns(@WebParam(name = "patID")String patID ,@WebParam(name = "Visitid") String Visitid)
 	{
@@ -144,13 +143,11 @@ public class HisAuditor implements IHisAuditor
 	   return antiDrugscr.getPatLabTest(patid, visitid);
 	}
 	
-    @SuppressWarnings ("unchecked")
     public TLabTest[] getpatLabTestNoDetail(String patid , String visitid)
     {
         return antiDrugscr.getpatLabTestNoDetail(patid, visitid);
     }
     
-    @SuppressWarnings ("unchecked")
     public TLabTest getpatLabTestDetail(String TestNO)
     {
         return antiDrugscr.getpatLabTestDetail(TestNO);
@@ -162,7 +159,6 @@ public class HisAuditor implements IHisAuditor
 	 * @param visitid
 	 * @return
 	 */
-	@SuppressWarnings ("unchecked")
     public TPatOperation[] getPatVsVisitOperation(String patid , String visitid)
 	{
 	    return antiDrugscr.getPatVsVisitOperation(patid, visitid);
@@ -933,7 +929,6 @@ public class HisAuditor implements IHisAuditor
         try {
 			return drugsecuity.DrugDiagCheckS(drugs, diagnosis);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         return null;
@@ -1316,86 +1311,8 @@ public class HisAuditor implements IHisAuditor
 	{
 		return antiDrugAuditorBean.getAntiDrugCheckRule(DrugDoctorInfo);
 	}
-	private Object getObject(String param, Class class1,int type) throws Exception {
-    	Field[] fs =class1.getDeclaredFields();
-    	if(type==1){
-    		Object result = class1.newInstance();
-    		JSONObject obj = JSONObject.fromObject(param);
-    		for(Object o : obj.keySet()){
-    			for(Field f:fs){
-    				Class<?> clsType = f.getType();
-    				String name = f.getName();
-    				if(o instanceof String && name.equals((String)o)){
-    					String strSet = "set" + name.substring(0, 1).toUpperCase() + name.substring(1, name.length());
-    					Method methodSet = class1.getDeclaredMethod(strSet,	clsType);
-						Object objValue = typeConversion(clsType,obj.get(o).toString());
-						methodSet.invoke(result, objValue);
-    				}
-    			}
-    		}
-    		return result;
-    	}else if(type==2){
-    		List<Object> s = new ArrayList<Object>();
-    		JSONArray arrys = JSONArray.fromObject(param);
-			for(int i=0;i<arrys.size();i++){
-				JSONObject obj= (JSONObject) arrys.get(i);
-				Object result = class1.newInstance();
-	    		for(Object o : obj.keySet()){
-	    			for(Field f:fs){
-	    				String name = f.getName();
-	    				if(o instanceof String && name.equals((String)o)){
-	    					Class<?> clsType = f.getType();
-	    					String strSet = "set" + name.substring(0, 1).toUpperCase() + name.substring(1, name.length());
-	    					Method methodSet = class1.getDeclaredMethod(strSet,	clsType);
-							Object objValue = typeConversion(clsType,obj.get(o).toString());
-							methodSet.invoke(result, objValue);
-							break;
-	    				}
-	    			}
-	    		}
-	    		s.add(result) ;
-    		}
-
-    		return s.toArray();
-    	}
-		return null;
-	}
-
-    /**
-     * 得到类型值
-     */
-	public static Object typeConversion(Class<?> cls, String str) {
-	    Object obj = null;
-	    if("".equals(str)||str==null)
-	    	return null;
-	    String nameType = cls.getSimpleName();
-	    if ("Integer".equals(nameType)) {
-	        obj = Integer.valueOf(str);
-	    }else if ("String".equals(nameType)) {
-	        obj = str;
-	    }else if ("Float".equals(nameType)) {
-	        obj = Float.valueOf(str);
-	    }else if ("Double".equals(nameType)) {
-	        obj = Double.valueOf(str);
-	    }else if ("Boolean".equals(nameType)) {
-	        obj = Boolean.valueOf(str.equals("1")?true:false);
-	    }else if ("Long".equals(nameType)) {
-	        obj = Long.valueOf(str);
-	    }else if ("Short".equals(nameType)) {
-	        obj = Short.valueOf(str);
-	    }else if ("Character".equals(nameType)) {
-	        obj = str.charAt(1);
-	    }else if ("Date".equals(nameType)) {
-	        try {
-				obj = new SimpleDateFormat("yyyy-MM-dd").parse(str) ;
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    }
 	
-	    return obj;
-	}
+
 	public static void main(String[] args) {
 //		Integer[] s =new Integer[]{1,-33,2,4,3,3,5,666,77};
 //		JSONArray j=JSONArray.fromObject(s);
