@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,7 @@ import com.ts.entity.pdss.pdss.Beans.TDrug;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TMedicareRslt;
 import com.ts.service.pdss.pdss.Cache.BeanRSCache;
+import com.ts.service.pdss.pdss.Cache.PdssCache;
 import com.ts.service.pdss.pdss.Utils.QuerySingleUtils;
 import com.ts.service.pdss.pdss.Utils.QueryUtils;
 import com.ts.service.pdss.pdss.manager.IMedicareChecker;
@@ -31,13 +34,17 @@ import com.ts.service.pdss.pdss.manager.IMedicareChecker;
 @Transactional
 public class MedicareChecker extends Persistent4DB implements IMedicareChecker
 {
+	@Resource(name = "pdssCache")
+	private PdssCache pdssCache;
+	
     private final static Logger log = Logger.getLogger(MedicareChecker.class);
     /**
      * 医保药品审查
+     * 改造完成
      */
     public TDrugSecurityRslt Check(TPatientOrder po)
     {
-        setQueryCode("PDSS");
+        //setQueryCode("PDSS");
         try
         {
             TDrugSecurityRslt result = new TDrugSecurityRslt();
@@ -45,34 +52,15 @@ public class MedicareChecker extends Persistent4DB implements IMedicareChecker
             TPatOrderDrug[] pods     =  po.getPatOrderDrugs();
             /* 诊断信息 */
             TPatOrderDiagnosis[] patoderids = po.getPatOrderDiagnosiss();
-            Map<String, TDrug> drugMap = (Map<String, TDrug>)QueryUtils.queryDrug(pods, null, query);
+//            Map<String, TDrug> drugMap = (Map<String, TDrug>)QueryUtils.queryDrug(pods, null, query);
             for(int i = 0 ;i<pods.length;i++)
             {
+            	TDrug drug = pdssCache.queryDrugById(pods[i].getDrugID());//drugMap.get(pods[i].getDrugID());//QuerySingleUtils.queryDrug(pods[i].getDrugID(),query);
+            	if(drug == null) continue;
                 /* 业务结果缓存中去数据*/
-                TMedicareRslt mdrsl = BeanRSCache.getDrugMedicareRslt(pods[i].getDrugID());
-                TDrug drug = drugMap.get(pods[i].getDrugID());//QuerySingleUtils.queryDrug(pods[i].getDrugID(),query);
-                if(drug == null) continue;
-                if(mdrsl == null)
-                {
-                    mdrsl = new TMedicareRslt();
-                    TMedicareCatalog  mcare = QuerySingleUtils.queryMedicareCatalog(drug.getDRUG_NO_LOCAL(),null, query);
-                    if(mcare == null)
-                    {
-                        mdrsl.setFlag(false);
-                        mdrsl.setAlertInfo("该药为医保外用药");
-                        mdrsl.setMemo(new ArrayList<TMemo>());
-                    }
-                    else
-                    {
-                        mdrsl.setFlag(true);
-                        List<TMemo> memos = QuerySingleUtils.queryMemo(mcare.getDRUG_ID(), query);
-                        mdrsl.setMemo(memos);
-                    }
-                    mdrsl.setDrug(drug);
-                    mdrsl.setMedicareCatalog(mcare);
-                    /* 添加到缓存 */
-                    BeanRSCache.setDrugMedicareRslt(pods[i].getDrugID(), mdrsl);
-                }
+                //TMedicareRslt mdrsl = BeanRSCache.getDrugMedicareRslt(pods[i].getDrugID());
+                TMedicareRslt mdrsl = pdssCache.getDrugMedicareRslt(pods[i].getDrugID());
+                
                 /* 根据诊断整理数据  */
                 TMedicareRslt tmResult = DataArrange(patoderids, mdrsl);
                 tmResult.setRecMainNo(pods[i].getRecMainNo());
@@ -83,9 +71,7 @@ public class MedicareChecker extends Persistent4DB implements IMedicareChecker
                 result.regMedicareCheckResult(drug, tmResult);
             }
             return result;
-        }
-        catch(Exception e)
-        {
+        } catch(Exception e) {
             e.printStackTrace();
             log.warn(e.getMessage());
             return new TDrugSecurityRslt();

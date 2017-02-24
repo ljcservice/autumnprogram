@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,7 @@ import com.hitzd.his.Beans.TPreveUseDrug;
 import com.hitzd.his.Beans.TTreatUseDrug;
 import com.hitzd.his.Utils.DateUtils;
 import com.hitzd.persistent.Persistent4DB;
+import com.ts.dao.DaoSupportPdss;
 import com.ts.entity.pdss.ias.RSBeans.TAntiDrugResult;
 import com.ts.entity.pdss.ias.RSBeans.TAntiDrugSecurityCheckResult;
 import com.ts.entity.pdss.ias.RSBeans.TAntiDrugSecurityResult;
@@ -39,6 +42,8 @@ import com.ts.entity.pdss.pdss.RSBeans.TDrugIvEffectRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSpecPeopleRslt;
 import com.ts.service.pdss.pdss.manager.IPatientSaveCheckResult;
+import com.ts.util.DateUtil;
+import com.ts.util.PageData;
 
 @Service
 @Transactional
@@ -47,7 +52,9 @@ import com.ts.service.pdss.pdss.manager.IPatientSaveCheckResult;
  */
 public class PatientSaveCheckResult extends Persistent4DB implements IPatientSaveCheckResult
 {
-
+	@Resource(name = "daoSupportPdss")
+	private DaoSupportPdss dao;
+	
     /* 每次批次号 */
     private String ngroupnum = "";
     String CheckTime  = "";
@@ -80,60 +87,64 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
     {
         try
         {
-            setQueryCode("HisSysManager");
+//            setQueryCode("HisSysManager");
             StringBuffer patient = new StringBuffer();
             /* 病人信息 
              *   姓名 性别 出生日期 出生地 民族 病人ID 检查组序号
              * */
-            List<TCommonRecord> cr = query.query("select count(*)c  from check_patient where patient_id='" + po.getPatientID() + "'", new CommonMapper());
+            List<TCommonRecord> cr = null;//query.query("select count(*)c  from check_patient where patient_id='" + po.getPatientID() + "'", new CommonMapper());
+            PageData pd =  (PageData) dao.findForObject("InfoMapper.getCheckPatient", po.getPatientID());
+            
             String patient_id =  po.getPatientID();
-            if(cr == null || cr.get(0).getInt("c") == 0)
+            if(pd == null || pd.getInt("c") == 0)
             {
-                patient.append("insert into check_patient(NAME,SEX,DATE_OF_BIRTH,BIRTH_PLACE,NATION,PATIENT_ID, NGROUPNUM,checkDate ) ")
-                   .append(" values(")
-                   .append("'").append(po.getPatient().getName()).append("'")
-                   .append(",'").append(po.getPatient().getSex()).append("'")
-                   .append(",to_date('").append(po.getPatient().getDateOfBirth().length() > 10 ? po.getPatient().getDateOfBirth().substring(0,10):po.getPatient().getDateOfBirth()).append("','yyyy-mm-dd')")
-                   .append(",'").append(po.getPatient().getBirthPlace().length()> 10 ? po.getPatient().getBirthPlace().substring(0,9):po.getPatient().getBirthPlace() ).append("'")
-                   .append(",'").append(po.getPatient().getNation()).append("'")
-                   .append(",'").append(patient_id).append("'")
-                   .append(",'").append(this.ngroupnum).append("'")
-                   .append(",'").append(CheckTime).append("'")
-                   .append(")");
+            	PageData param = new PageData();
+            	param.put("NAME", po.getPatient().getName());
+            	param.put("SEX", po.getPatient().getSex());
+            	param.put("DATE_OF_BIRTH", DateUtil.fomatDate(po.getPatient().getDateOfBirth().length() > 10 ? po.getPatient().getDateOfBirth().substring(0,10):po.getPatient().getDateOfBirth()));
+            	param.put("BIRTH_PLACE", po.getPatient().getBirthPlace().length()> 10 ? po.getPatient().getBirthPlace().substring(0,9):po.getPatient().getBirthPlace() );
+            	param.put("NATION", po.getPatient().getNation());
+            	param.put("PATIENT_ID", patient_id);
+            	param.put("NGROUPNUM", this.ngroupnum);
+            	param.put("checkDate", CheckTime);
+            	dao.save("InfoMapper.insertCheckPatient", param);
                 /* 病人信息 CHECK_PATIENT */
-                query.update(patient.toString());
-            }
-            else
-            {
-                query.execute(" update check_patient set checkDate='" + CheckTime + "',NGROUPNUM='" + this.ngroupnum + "' where patient_id='" + patient_id + "'");
+                //query.update(patient.toString());
+            }else {
+            	PageData pp = new PageData();
+            	pp.put("CheckTime", CheckTime);
+            	pp.put("ngroupnum", this.ngroupnum);
+            	pp.put("patient_id", patient_id);
+            	dao.save("InfoMapper.updateCheckPatient", pp);
+                //query.execute(" update check_patient set checkDate='" + CheckTime + "',NGROUPNUM='" + this.ngroupnum + "' where patient_id='" + patient_id + "'");
             }
             patient = new StringBuffer(); 
             String visit_id =  po.getPatVisitInfo().getVisitID();
-            cr = query.query("select count(*)c  from CHECK_PAT_ORDER_VISITINFO where patient_id='" + po.getPatientID() + "' and visit_id='" + visit_id + "'", new CommonMapper());
+            //cr = query.query("select count(*) c  from CHECK_PAT_ORDER_VISITINFO where patient_id='" + po.getPatientID() + "' and visit_id='" + visit_id + "'", new CommonMapper());
+            PageData pm = new PageData();
+            pm.put("patient_id", patient_id);
+            pm.put("visit_id", visit_id);
+            pm.put("patient_id", patient_id);
+            PageData pw =  (PageData) dao.findForObject("InfoMapper.getCheckPtaOrderVisi", pm);
+            
             /* 审查病人住院信息表  */
-            if(cr == null || cr.get(0).getInt("c") == 0)
+            if(pw == null || pw.getInt("c") == 0)
             {
-                patient.append("insert into CHECK_PAT_ORDER_VISITINFO(VISIT_ID,IN_DEPT,IN_DATE,IN_MODE,PAT_ADM_CONDITION,OUT_DEPT,NGROUPNUM,checkDate,patient_id)")
-                        .append(" values(")
-                        .append("'").append(po.getPatVisitInfo().getVisitID()).append("'")
-                        .append(",'").append(po.getPatVisitInfo().getInDept()).append("'");
+            	pw.put("VISIT_ID", po.getPatVisitInfo().getVisitID());
+            	pw.put("IN_DEPT",po.getPatVisitInfo().getInDept());
+            	pw.put("IN_MODE",po.getPatVisitInfo().getInMode());
+            	pw.put("PAT_ADM_CONDITION",po.getPatVisitInfo().getPatAdmCondition());
+            	pw.put("OUT_DEPT",po.getPatVisitInfo().getOutDept());
+            	pw.put("NGROUPNUM",this.ngroupnum);
+            	pw.put("checkDate",CheckTime);
+            	pw.put("patient_id",patient_id);
                 if(!"".equals(po.getPatVisitInfo().getInDate())&&po.getPatVisitInfo().getInDate()!= null)
                 {
-                	patient.append(",to_date('").append(po.getPatVisitInfo().getInDate().length()>19?po.getPatVisitInfo().getInDate().substring(0, 19):po.getPatVisitInfo().getInDate()).append("','yyyy-mm-dd hh24:mi:ss')");
+                	pw.put("IN_DATE",DateUtil.fomatDate2( po.getPatVisitInfo().getInDate().length()>19?po.getPatVisitInfo().getInDate().substring(0, 19):po.getPatVisitInfo().getInDate()));
                 }
-                else
-                {
-                	patient.append(",''");
-                }
-                patient.append(",'").append(po.getPatVisitInfo().getInMode()).append("'")
-                        .append(",'").append(po.getPatVisitInfo().getPatAdmCondition()).append("'")
-                        .append(",'").append(po.getPatVisitInfo().getOutDept()).append("'")
-                        .append(",'").append(this.ngroupnum).append("'")
-                        .append(",'").append(CheckTime).append("'")
-                        .append(",'").append(patient_id).append("'")
-                        .append(")");
+                dao.save("InfoMapper.insertCheckPtaOrderVisi", pw);
                 /* 审查病人住院信息表 CHECK_PAT_ORDER_VISITINFO */
-                query.update(patient.toString());
+                //query.update(patient.toString());
                 patient = new StringBuffer();
                 /* 审查病人扩展信息表 */
                 patient.append("insert into check_pat_order_info_ext(is_lact,is_pregnant,insureance_type,insurance_no,is_liverwhole,is_kidneywhole,height,weight,ngroupnum,checkdate,patient_id,visit_id)")

@@ -2,6 +2,8 @@ package com.ts.service.pdss.pdss.impl;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,8 +16,8 @@ import com.ts.entity.pdss.pdss.Beans.TAllergIngrDrug;
 import com.ts.entity.pdss.pdss.Beans.TDrug;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugAllergenRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
+import com.ts.service.pdss.pdss.Cache.PdssCache;
 import com.ts.service.pdss.pdss.Utils.CommonUtils;
-import com.ts.service.pdss.pdss.Utils.QueryUtils;
 import com.ts.service.pdss.pdss.manager.IDrugAllergenChecker;
 
 /**
@@ -29,6 +31,8 @@ import com.ts.service.pdss.pdss.manager.IDrugAllergenChecker;
 public class DrugAllergenCheckerBean extends Persistent4DB implements IDrugAllergenChecker
 {
 	private final static Logger log = Logger.getLogger(DrugAllergenCheckerBean.class);
+	@Resource(name = "pdssCache")
+	private PdssCache pdssCache;
 	
     /**
      * 过敏药物审查
@@ -38,7 +42,7 @@ public class DrugAllergenCheckerBean extends Persistent4DB implements IDrugAller
     {
     	try
     	{
-	        this.setQueryCode("PDSS");
+	        //this.setQueryCode("PDSS");
 	        TDrugSecurityRslt result = new TDrugSecurityRslt();
 	        /* 医嘱药物所有过敏信息类 */
 	        TPatOrderDrugSensitive[] podsensitive = po.getPatOrderDrugSensitives();
@@ -51,7 +55,9 @@ public class DrugAllergenCheckerBean extends Persistent4DB implements IDrugAller
 	            drugIDs[i] = po.getPatOrderDrugs()[i].getDrugID();
 	        }
 	        /* 获得医嘱中所有药物信息 */
-	        List<TDrug> drugs = (List<TDrug>) QueryUtils.queryDrug(drugIDs, null,query);
+	        //List<TDrug> drugs = (List<TDrug>) QueryUtils.queryDrug(drugIDs, null,query);
+	        List<TDrug> drugs = pdssCache.queryDrugListByIds(drugIDs);
+	        
 	        /* 
 	         * TODO 得到的过敏信息数据 放入得字段是否有误？ getDrugAllergenID 或 getPatOrderDrugSensitiveID
 	         * 所有过敏信息 
@@ -68,8 +74,10 @@ public class DrugAllergenCheckerBean extends Persistent4DB implements IDrugAller
 	            TDrug drug = CommonUtils.getDrugInfoOne(drugs, pod);
 	            if(drug == null)
 	                continue;
-	//            List<TAllergIngrDrug> aids = (List<TAllergIngrDrug>) QueryUtils.queryAllergen(drugAllergenIDs,new String[]{drug.getDRUG_CLASS_ID()}, null, query);
-	            List<TAllergIngrDrug> aids = (List<TAllergIngrDrug>) QueryUtils.queryAllergen(drugAllergenIDs,drug.getDRUG_CLASS_ID(), query);
+	            //List<TAllergIngrDrug> aids = (List<TAllergIngrDrug>) QueryUtils.queryAllergen(drugAllergenIDs,new String[]{drug.getDRUG_CLASS_ID()}, null, query);
+	            //List<TAllergIngrDrug> aids = (List<TAllergIngrDrug>) QueryUtils.queryAllergen(drugAllergenIDs,drug.getDRUG_CLASS_ID(), query);
+	            List<TAllergIngrDrug> aids =  pdssCache.queryAllergen(drugAllergenIDs,drug.getDRUG_CLASS_ID());
+	            
 	            if(aids != null && aids.size() > 0 )
 	            {
 	                TDrugAllergenRslt dart  = new TDrugAllergenRslt();
@@ -98,5 +106,5 @@ public class DrugAllergenCheckerBean extends Persistent4DB implements IDrugAller
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 }

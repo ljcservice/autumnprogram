@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,7 @@ import com.ts.entity.pdss.pdss.Beans.TDrugDosage;
 import com.ts.entity.pdss.pdss.Beans.TDrugPerformFreqDict;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugDosageRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
+import com.ts.service.pdss.pdss.Cache.PdssCache;
 import com.ts.service.pdss.pdss.Utils.QueryUtils;
 import com.ts.service.pdss.pdss.manager.IDrugDosageChecker;
 
@@ -34,6 +37,9 @@ public class DrugDosageCheckerBean extends Persistent4DB implements IDrugDosageC
 {
 	private final static Logger log = Logger.getLogger(DrugDosageCheckerBean.class);
 	
+	@Resource(name = "pdssCache")
+	private PdssCache pdssCache;
+	
     /**
      * 药物剂量审查
      */
@@ -42,7 +48,7 @@ public class DrugDosageCheckerBean extends Persistent4DB implements IDrugDosageC
     {
     	try
     	{
-	        this.setQueryCode("PDSS");
+	        //this.setQueryCode("PDSS");
 	        TDrugSecurityRslt result = new TDrugSecurityRslt();
 	        TPatOrderInfoExt patInfoExt = po.getPatInfoExt();
 	        if(patInfoExt == null)
@@ -60,23 +66,30 @@ public class DrugDosageCheckerBean extends Persistent4DB implements IDrugDosageC
 	        /* 如果检测参数为空 则不进行检查  */
 	        if(weight == 0 && height == 0 && day == 0)
 	        	return new TDrugSecurityRslt();
-            Map<String, TDrug> drugMap = QueryUtils.queryDrug(po.getPatOrderDrugs(), null, query);
+           // Map<String, TDrug> drugMap = QueryUtils.queryDrug(po.getPatOrderDrugs(), null, query);
+            
+            
 	        for(int i = 0 ;i<po.getPatOrderDrugs().length;i++)
 	        {
 	            TPatOrderDrug pod = po.getPatOrderDrugs()[i];
 	            /* 每次使用剂量 */
 	            Double dosage = new Double((Double) (pod.getDosage()==null || "".equals(pod.getDosage())?0d:Double.parseDouble(pod.getDosage())));
 	            /* 药品*/
-	            TDrug drug = drugMap.get(pod.getDrugID());
+//	            TDrug drug = drugMap.get(pod.getDrugID());
+	            TDrug drug = pdssCache.queryDrugById(pod.getDrugID());
+	            		
 	            if(drug == null)
 	            	continue;
-	            List<TAdministration> administr = QueryUtils.queryAdministration(new String[]{pod.getAdministrationID()}, null, query);
-	            if(administr.size() <= 0)
+	            TAdministration administr = pdssCache.queryAdministration(pod.getAdministrationID()) ;//(new String[]{pod.getAdministrationID()}, null, query);
+	            if(administr== null)
 	                continue;
 	            if(drug.getDOSE_CLASS_ID() == null)
 	                continue;
 	            /* 将剂量也加入到缓存中  */
-	            List<TDrugDosage> ddgs = QueryUtils.queryDrugDosage(drug.getDOSE_CLASS_ID(), administr.get(0).getADMINISTRATION_ID(), query);
+	            //List<TDrugDosage> ddgs = QueryUtils.queryDrugDosage(drug.getDOSE_CLASS_ID(), administr.getADMINISTRATION_ID(), query);
+	            List<TDrugDosage> ddgs = pdssCache.getDdg(drug.getDOSE_CLASS_ID(), administr.getADMINISTRATION_ID());
+	            
+	            
 	            if(ddgs.size() <= 0)
 	                continue;
 	            TDrugDosage ddg = null;
@@ -124,13 +137,12 @@ public class DrugDosageCheckerBean extends Persistent4DB implements IDrugDosageC
                 }
 
 	            /* 频率标准码 次数 */
-	            List<TDrugPerformFreqDict> drugperform = QueryUtils.queryDrugPerfom(new String[]{pod.getPerformFreqDictID()}, null, query);
-	            TDrugPerformFreqDict perform = null;
-	            if(drugperform.size() > 0)
-	                perform = drugperform.get(0);
-	            if(perform == null)
+//	            List<TDrugPerformFreqDict> drugperform = QueryUtils.queryDrugPerfom(new String[]{pod.getPerformFreqDictID()}, null, query);
+	            TDrugPerformFreqDict drugperform = pdssCache.queryDrugPerfom(pod.getPerformFreqDictID());
+	            
+	            if(drugperform == null)
 	                continue;
-	            Double frequency = Double.parseDouble(perform.getFREQ_COUNTER());
+	            Double frequency = Double.parseDouble(drugperform.getFREQ_COUNTER());
 	            /* 每天剂量 */
 	            int eachDayDoseResult = checkDoseDay(ddg, dosage, frequency);
 	            if(eachDayDoseResult < 0)

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +16,7 @@ import com.hitzd.persistent.Persistent4DB;
 import com.ts.entity.pdss.pdss.Beans.TDrug;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugIngredientRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
+import com.ts.service.pdss.pdss.Cache.PdssCache;
 import com.ts.service.pdss.pdss.Utils.QueryUtils;
 import com.ts.service.pdss.pdss.manager.IDrugIngredientChecker;
 
@@ -28,16 +31,20 @@ public class DrugIngredientCheckerBean extends Persistent4DB implements IDrugIng
 {
 	private final static Logger log = Logger.getLogger(DrugIngredientCheckerBean.class);
 	
+	@Resource(name = "pdssCache")
+	private PdssCache pdssCache;
+	
     @Override
     /**
      *  审查方法
      *  po 医嘱
+     *  改造完毕
      */
     public TDrugSecurityRslt check(TPatientOrder po)
     {
     	try
     	{
-	        setQueryCode("PDSS");
+	        //setQueryCode("PDSS");
 	        TDrugSecurityRslt result = new TDrugSecurityRslt();
 	        TPatOrderDrug[] pods = po.getPatOrderDrugs();
 	        String[] drugIDS   = new String[pods.length];
@@ -47,7 +54,9 @@ public class DrugIngredientCheckerBean extends Persistent4DB implements IDrugIng
 	            drugIDS[i] = pod.getDrugID();
 	        }
 	        //List<TDrug> drugs = (List<TDrug>)QueryUtils.queryDrug(drugIDS, null, query);
-	        Map<String, TDrug> drugMap = (Map<String, TDrug>)QueryUtils.queryDrug(pods, null, query);
+	        //Map<String, TDrug> drugMap = (Map<String, TDrug>)QueryUtils.queryDrug(pods, null, query);
+	        Map<String, TDrug> drugMap = pdssCache.queryDrugMap(pods);
+	        
 	        //for(TPatOrderDrug pod :pods)
 	        for (int i = 0; i < pods.length; i++)
 	        {

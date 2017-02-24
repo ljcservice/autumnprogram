@@ -2,6 +2,8 @@ package com.ts.service.pdss.pdss.impl;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +16,7 @@ import com.ts.entity.pdss.pdss.Beans.TDrug;
 import com.ts.entity.pdss.pdss.Beans.TDrugUseDetail;
 import com.ts.entity.pdss.pdss.RSBeans.TAdministrationRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
+import com.ts.service.pdss.pdss.Cache.PdssCache;
 import com.ts.service.pdss.pdss.Utils.QueryUtils;
 import com.ts.service.pdss.pdss.manager.IDrugAdministrationChecker;
 
@@ -28,12 +31,19 @@ public class DrugAdministrationCheckerBean extends Persistent4DB implements IDru
 {
 	private final static Logger log = Logger.getLogger(PatientSaveCheckResult.class);
 	
+	@Resource(name = "pdssCache")
+	private PdssCache pdssCache;
+	
+	/**
+	 * 
+	 * 改造完毕
+	 */
     @Override
     public TDrugSecurityRslt Check(TPatientOrder po)
     {
     	try
     	{
-	        setQueryCode("PDSS");
+	        //setQueryCode("PDSS");
 	        TDrugSecurityRslt result = new TDrugSecurityRslt();
 	        TPatOrderDrug[] pods = po.getPatOrderDrugs();
 	        String[] drugids = new String[pods.length];
@@ -41,15 +51,20 @@ public class DrugAdministrationCheckerBean extends Persistent4DB implements IDru
 	        {
 	            drugids[i] = pods[i].getDrugID();
 	        }
-	        List<TDrug> drugs         = QueryUtils.queryDrug(drugids, null, query);
-	        List<TDrugUseDetail> duds = QueryUtils.queryDrugDud(drugs, query);
+	        //List<TDrug> drugs = QueryUtils.queryDrug(drugids, null, query);
+	        List<TDrug> drugs = pdssCache.queryDrugListByIds(drugids);
+	        
+	        List<TDrugUseDetail> duds = pdssCache.queryDrugDudList(drugs);
+	        
 	        /* 进行用药途径比对 */
 	        for (int i = 0; i < pods.length; i++)
 	        {
 	            TPatOrderDrug pod = pods[i];
 	            /* 用途径标准码*/
 	            String administandid = "";
-	            List<TAdministration> administandids = QueryUtils.queryAdministration(new String[]{pod.getAdministrationID()}, null, query);
+	            //List<TAdministration> administandids = QueryUtils.queryAdministration(new String[]{pod.getAdministrationID()}, null, query);
+	            List<TAdministration> administandids = pdssCache.queryAdministrations(new String[]{pod.getAdministrationID()});
+	       	 
 	            if (administandids == null || administandids.size() <= 0)
 	                continue;
 	            administandid        = administandids.get(0).getADMINISTRATION_ID();
@@ -58,12 +73,9 @@ public class DrugAdministrationCheckerBean extends Persistent4DB implements IDru
 	            String inforLevelRs  = "";
 	            String drugid        = pod.getDrugID();
 	            String drugClassCode = "";
-	            List<TDrug> drug = QueryUtils.queryDrug(new String[]{drugid},null, query);
-	            if (drug.size() > 0)
-	            {
-	                drugRs = drug.get(0);
-	                drugClassCode = drug.get(0).getDRUG_CLASS_ID();
-	            }
+	            drugRs = pdssCache.queryDrugById(drugid);
+	            drugClassCode = drugRs.getDRUG_CLASS_ID();
+	            
 	            for (TDrugUseDetail dud : duds)
 	            {
 	                dudRs = dud;

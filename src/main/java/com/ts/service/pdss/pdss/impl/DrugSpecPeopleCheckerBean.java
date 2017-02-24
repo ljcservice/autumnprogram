@@ -2,6 +2,8 @@ package com.ts.service.pdss.pdss.impl;
 
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,7 @@ import com.ts.entity.pdss.pdss.Beans.TDrug;
 import com.ts.entity.pdss.pdss.Beans.TDrugUseDetail;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSpecPeopleRslt;
+import com.ts.service.pdss.pdss.Cache.PdssCache;
 import com.ts.service.pdss.pdss.Utils.QueryUtils;
 import com.ts.service.pdss.pdss.manager.IDrugSpecPeopleChecker;
 
@@ -28,15 +31,20 @@ import com.ts.service.pdss.pdss.manager.IDrugSpecPeopleChecker;
 public class DrugSpecPeopleCheckerBean extends Persistent4DB implements IDrugSpecPeopleChecker
 {
 	private final static Logger log = Logger.getLogger(DrugSpecPeopleCheckerBean.class);
+	
+	@Resource(name = "pdssCache")
+	private PdssCache pdssCache;
+	
     /**
      *  特殊人群审查
+     *  改造完毕
      */
     @Override
     public TDrugSecurityRslt Check(TPatientOrder po)
     {
     	try
     	{
-	        this.setQueryCode("PDSS");
+	        //this.setQueryCode("PDSS");
 	        TDrugSecurityRslt result = new TDrugSecurityRslt();
 	        /*  病人主要信息 */
 	        TPatient patient = po.getPatient();
@@ -52,9 +60,12 @@ public class DrugSpecPeopleCheckerBean extends Persistent4DB implements IDrugSpe
 //	        String[] drugids = CommonUtils.getPoDrugIDs(po);
 	        // List<TDrug> drugs = QueryUtils.queryDrug(drugids, null, query);
 	        // 利用map去掉重复的药品
-	        Map<String, TDrug> drugMap = QueryUtils.queryDrug(po.getPatOrderDrugs(), null, query);
-	        //List<TDrug> drugs = new ArrayList<TDrug>();
-	        Map<String, TDrugUseDetail> duds = QueryUtils.queryDrugDud(drugMap, query);
+	        //Map<String, TDrug> drugMap = QueryUtils.queryDrug(po.getPatOrderDrugs(), null, query);
+	        Map<String, TDrug> drugMap = pdssCache.queryDrugMap(po.getPatOrderDrugs());
+	        
+	        //Map<String, TDrugUseDetail> duds = QueryUtils.queryDrugDud(drugMap, query);
+	        Map<String, TDrugUseDetail> duds = pdssCache.queryDrugDudMap(drugMap);
+	        
 	        for(TPatOrderDrug pod : po.getPatOrderDrugs())
 	        {
 	            /* 得到药品*/

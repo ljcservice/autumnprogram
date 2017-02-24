@@ -44,6 +44,10 @@ public class DrugIvEffectCheckerBean extends Persistent4DB implements  IDrugIvEf
 
 	private final static Logger log = Logger.getLogger(DrugIvEffectCheckerBean.class);
 	
+	/**
+	 * 
+	 * 改造完成
+	 */
     @Override
     public TDrugSecurityRslt Check(TPatientOrder po)
     {

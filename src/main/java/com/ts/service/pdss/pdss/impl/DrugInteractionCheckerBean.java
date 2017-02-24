@@ -70,17 +70,17 @@ public class DrugInteractionCheckerBean extends Persistent4DB implements  IDrugI
             // 将配对结果放入缓存中
             // 后面所有的审查结果从缓存中取出来
             // 只有这个循环读取数据库
-            for (int i = 0; i < drugs.size(); i++)
-            {
-            	TDrug drugA = drugs.get(i);
-            	for (int j = i + 1; j < drugs.size(); j++)
-            	{
-            		TDrug drugB = drugs.get(j);
-            		// 此处从缓存中取结果=====================================
-            		pdssCache.queryDrugInteraction(drugA,drugB);
-                    
-            	}
-            }
+//            for (int i = 0; i < drugs.size(); i++)
+//            {
+//            	TDrug drugA = drugs.get(i);
+//            	for (int j = i + 1; j < drugs.size(); j++)
+//            	{
+//            		TDrug drugB = drugs.get(j);
+//            		// 此处从缓存中取结果=====================================
+//            		pdssCache.queryDrugInteraction(drugA,drugB);
+//                    
+//            	}
+//            }
             for (int i = 0; i < pods.length; i++)
             {
             	TPatOrderDrug podA = pods[i];
