@@ -70,6 +70,11 @@ public class PageData extends HashMap implements Map{
 		if(rs == null || "".equals(rs)) rs = "";
 		return rs ;
 	}
+	public Integer getInt(Object key) {
+		Object rs =  get(key);
+		if(rs == null ) return null;
+		return Integer.parseInt(rs.toString()) ;
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override

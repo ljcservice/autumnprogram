@@ -19,7 +19,7 @@ public class DateUtil {
 	private final static SimpleDateFormat sdfDays = new SimpleDateFormat("yyyyMMdd");
 	private final static SimpleDateFormat sdfTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private final static SimpleDateFormat sdfTimes = new SimpleDateFormat("yyyyMMddHHmmss");
-
+	private final static SimpleDateFormat sdfTimes2 = new SimpleDateFormat("yyyy-mm-dd hh24:mi:ss");
 	/**
 	 * 获取YYYY格式
 	 * @return
@@ -94,6 +94,19 @@ public class DateUtil {
 		DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 		try {
 			return fmt.parse(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
+	 * 格式化日期
+	 * @return
+	 */
+	public static Date fomatDate2(String date) {
+		try {
+			return sdfTimes2.parse(date);
 		} catch (ParseException e) {
 			e.printStackTrace();
 			return null;
