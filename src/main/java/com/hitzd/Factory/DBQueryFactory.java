@@ -19,6 +19,7 @@ import javax.sql.DataSource;
 @Service
 public final class DBQueryFactory
 {
+	
     private DBQueryFactory()
     {
     }
@@ -28,15 +29,16 @@ public final class DBQueryFactory
      * @param resourceID
      * @return
      */
+    
     public static DataSource getDataSource(String resourceID)
     {
         DataSource ds = null;
         try
         {
             //2014-10-21 liujc 修改 使用tomcat  数据连接池
-            Context  initContext = new InitialContext();
-            Context envContext = (Context)initContext.lookup("java:/comp/env");
-            ds = (DataSource)envContext.lookup(resourceID);
+//            Context  initContext = new InitialContext();
+//            Context envContext = (Context)initContext.lookup("java:/comp/env");
+//            ds = (DataSource)envContext.lookup(resourceID);
         }
         catch(Exception e )
         {
@@ -58,10 +60,10 @@ public final class DBQueryFactory
             try
             {
                 //2014-10-21 liujc 修改 使用tomcat  数据连接池
-                ds = getDataSource(resourceID);
+//                ds = getDataSource(resourceID);
                 
                 // 2014-10-21 liujc 修改   将数据连接池不托管在spring容器中
-                //ds = (DataSource) SpringBeanUtil.getBean(resourceID);    
+                ds = (DataSource) SpringBeanUtil.getBean("dataSource_Pdss");    
             }
             catch(NullPointerException nullPoiE)
             {
