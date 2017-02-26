@@ -23,8 +23,8 @@
 		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TDrugUseDetail" alias="TDrugUseDetail"/>
 		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TDrugDosage" alias="TDrugDosage"/>
 		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TDrugSideDict" alias="TDrugSideDict"/>
-		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TDrugSideDict" alias="TDrugSideDict"/>
-		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TMedicareCatalog" alias="TMedicareCatalog"/>
+		<typeAlias type="com.ts.entity.pdss.mas.Beans.TMedicareCatalog" alias="TMedicareCatalog"/>
+		<typeAlias type="com.ts.entity.pdss.mas.Beans.TMemo" alias="TMemo"/>
 		
 		
 	</typeAliases>
