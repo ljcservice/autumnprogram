@@ -159,7 +159,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
             	param.put("checkdate", CheckTime);
             	param.put("patient_id", patient_id);
             	param.put("visit_id", visit_id);
-                dao.save("InfoMapper.insertCheckPatOrderInfo", pw);
+                dao.save("InfoMapper.insertCheckPtaOrderInfoExt", pw);
             }
             /*保存医生信息*/
             PageData param = new PageData();
