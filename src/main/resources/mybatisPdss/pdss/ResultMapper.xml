@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ResultMapper">
+
+	<!-- 互动信息 -->
+	<insert id="saveDrugCheckInfo" parameterType="pd"	resultType="pd">
+		insert into RS_DRUG_CHECKRSLT(ID,DRUG_ID1,REC_MAIN_NO1,REC_SUB_NO1,DRUG_ID2,REC_MAIN_NO2,REC_SUB_NO2
+			,NGROUPNUM,ALERT_HINT,ALERT_LEVEL,ALERT_CAUSE,CHECK_ITEM,checkDate,type)
+		values(#{ID},#{DRUG_ID1},#{REC_MAIN_NO1},#{REC_SUB_NO1,jdbcType=VARCHAR},#{DRUG_ID2,jdbcType=VARCHAR},#{REC_MAIN_NO2,jdbcType=VARCHAR}
+			,#{REC_SUB_NO2,jdbcType=VARCHAR},#{NGROUPNUM,jdbcType=VARCHAR},#{ALERT_HINT,jdbcType=VARCHAR},#{ALERT_LEVEL,jdbcType=VARCHAR}
+			,#{ALERT_CAUSE,jdbcType=VARCHAR},#{CHECK_ITEM,jdbcType=VARCHAR},#{checkDate},#{type})
+	</insert>
+	
+	
+	
+	
+	
+	
+
+</mapper>

@@ -20,9 +20,55 @@
 			(VISIT_ID,IN_DEPT,IN_DATE,IN_MODE,PAT_ADM_CONDITION,OUT_DEPT,NGROUPNUM,checkDate,patient_id)
         values(#{VISIT_ID},#{IN_DEPT},#{IN_DATE,jdbcType=TIMESTAMP},#{IN_MODE},#{PAT_ADM_CONDITION},#{OUT_DEPT}, #{NGROUPNUM},#{checkDate},#{patient_id})
 	</insert>
+<!-- 	审查病人住院信息表 -->
 	<select id="getCheckPtaOrderVisi" parameterType="pd"	resultType="Integer">
 		select count(*) c  from CHECK_PAT_ORDER_VISITINFO where patient_id=#{patient_id} and visit_id=#{visit_id}
 	</select>
+<!-- 	审查病人扩展信息表 -->
+	<insert id="insertCheckPtaOrderVisi" parameterType="pd"	>
+		insert into check_pat_order_info_ext(is_lact,is_pregnant,insureance_type,insurance_no,is_liverwhole,is_kidneywhole,height,weight,ngroupnum,checkdate,patient_id,visit_id)
+		values(#{is_lact},#{is_pregnant},#{insureance_type},#{insurance_no},#{is_liverwhole},#{is_kidneywhole},#{height},#{weight},#{ngroupnum},#{checkdate},#{patient_id},#{visit_id});
+	</insert>
+<!-- 	保存医生信息 -->
+	<insert id="insertCheckDoctorInfo"  parameterType="pd"	>
+		insert into CHECK_DOCTOR_INFO(NGROUPNUM,DOCTOR_NAME,DOCTOR_CODE,DEPT_NAME,DEPT_CODE,DOCTOR_TITLE, Doctor_Title_id,patient_id,visit_id)
+		values(#{NGROUPNUM},#{DOCTOR_NAME},#{DOCTOR_CODE},#{DEPT_NAME},#{DEPT_CODE},#{DOCTOR_TITLE}, #{Doctor_Title_id},#{patient_id},#{visit_id})
+	</insert>
+	
+	<insert id="insertCheckSerialList"  parameterType="pd"	>
+	 insert into CHECK_SERIAL_LIST (patient_id, visit_id, check_date, ngroupnum) 
+	 values (#{patient_id}, #{visit_id}, #{check_date}, #{ngroupnum})
+	</insert>
+<!-- 	 病人用药记录 -->
+	<insert id="insertCheckPatOrderDrug"  parameterType="pd"	>
+		insert into check_pat_order_drug
+				(DOCTOR_DEPT,IS_GROUP,ADMINISTRATION_ID,PERFORM_FREQ_DICT_ID
+				,DRUG_ID,REC_MAIN_NO,REC_SUB_NO,PERFORM_FREQ_DICT_NAME
+				,DOSAGE,DOSE_UNITS,START_DATE_TIME,STOP_DATE_TIME,DOCTOR
+				,NGROUPNUM,checkDate,USETYPE,USECAUSE,DRUG_NAME,check_Result)
+     	values (#{DOCTOR_DEPT},#{IS_GROUP},#{ADMINISTRATION_ID},#{PERFORM_FREQ_DICT_ID}
+				,#{DRUG_ID},#{REC_MAIN_NO},#{REC_SUB_NO},#{PERFORM_FREQ_DICT_NAME}
+				,#{DOSAGE},#{DOSE_UNITS},#{START_DATE_TIME,jdbcType=TIMESTAMP},#{STOP_DATE_TIME,jdbcType=TIMESTAMP},#{DOCTOR}
+				,#{NGROUPNUM},#{checkDate},#{USETYPE,jdbcType=VARCHAR},#{USECAUSE,jdbcType=VARCHAR},#{DRUG_NAME},#{check_Result})
+	</insert>
+<!-- 	 审查医嘱诊断表 -->
+	<insert id="insertCheckPatOrderDiagnosis"  parameterType="pd"	>
+		insert into check_pat_order_diagnosis(DIAGNOSIS_DICT_ID,NGROUPNUM,DIAGNOSIS_NAME,checkDate)
+		values (#{DIAGNOSIS_DICT_ID},#{NGROUPNUM},#{DIAGNOSIS_NAME},#{checkDate})
+	</insert>
+	
+	<!-- 审查医嘱过敏表 -->
+	<insert id="insertCheckPatOrderDrugSensitive"  parameterType="pd"	>
+		insert into CHECK_PAT_ORDER_DRUG_SENSITIVE(DRUG_ALLERGEN_ID,NGROUPNUM,checkDate)
+    	values(#{DRUG_ALLERGEN_ID},#{NGROUPNUM},#{checkDate});
+	</insert>
+	
+	<!-- 体征信息保存  -->
+	<insert id="insertCheckPatSigns"  parameterType="pd"	>
+		insert into check_pat_signs(ngroupnum,twdate, twvalue, twok, xxdate, xxvalue, cvalue, xxok) 
+		values (#{ngroupnum},#{twdate}, #{twvalue}, #{twok}, #{xxdate}, #{xxvalue}, #{cvalue}, #{xxok})
+	</insert>
+	
 	<!-- 特殊人群 -->
 	<select id="getDudInfoById" parameterType="pd"	resultType="TDrugUseDetail">
 		select drug_use_detail_id, drug_class_id, last_date_time, pregnant_indi, pregnant_info, pregnant_info_ref, lact_indi, lact_info, lact_info_ref, kid_indi, kid_low, kid_high, kid_info, kid_info_ref, old_indi, old_info, old_info_ref, hepatical_indi, renal_indi, forbid_ruid, forbid_cause, inadvis_rtid, inadvis_cause, advert_rtid, advert_cause 
