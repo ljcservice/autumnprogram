@@ -852,7 +852,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
     {
         try
         {
-            setQueryCode("HisSysManager");
+            //setQueryCode("HisSysManager");
             TCheckResult[] tcrs = dsr.getCheckResults();
             int admRedCount     = 0, admYellowCount = 0;            //给药途径审查结果                  前面是红灯  后面是黄灯
             int dagRedCount     = 0, dagYellowCount = 0;            //过敏审查结果    
@@ -949,53 +949,61 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                                 didRedCount + NOLDRED + NKIDRED + NPREGNANTRED + NLACTATIONRED + NRENALRED + NHEPATICALRED;
             int yellowCount  =  dagYellowCount + dieYellowCount + ddiYellowCount + diaYellowCount + admYellowCount + ddgYellowCount +
                                 didYellowCount + NOLDYELLOW + NKIDYELLOW + NPREGNANTYELLOW + NLACTATIONYELLOW + NRENALYELLOW + NHEPATICALYELLOW;    
-            StringBuffer sql = new StringBuffer();
-            sql.append(" insert into DRUG_CHECKINFO_COLLECT(NGROUPNUM,NADVICENUM,NREDADVICEQUESSUM,NYELLOWADVICEQUESSUM");//批次号、医嘱数、红色问题医嘱数、黄色问题医嘱数
-            sql.append(",VDOCTORCODE,VDOCTORNAME");                                         //医生编码、医生姓名
-            sql.append(",VORGCODE,VORGNAME");                                               //组织编码、组织名称
-            sql.append(",NALLERGENRED,NALLERGENYELLOW");                                    //过敏红色、过敏黄色
-            sql.append(",NIVEFFECTRED,NIVEFFECTYELLOW");                                    //配伍红色、配伍黄色
-            sql.append(",NDIAGINFORED,NDIAGINFOYELLOW");                                    //禁忌红色、禁忌黄色
-            sql.append(",NINTERACTIONRED,NINTERACTIONYELLOW");                              //相互作用红色、相互作用黄色
-            sql.append(",NADMINISTRATIONRED,NADMINISTRATIONYELLOW");                        //用药途径红色，用药途径黄色
-            sql.append(",NDOSAGECHECKRED,NDOSAGECHECKYELLOW");                              //剂量红色,剂量黄色
-            sql.append(",NINGREDIENTRED,NINGREDIENTYELLOW");                                //重复成份红色,重复成分黄色
-            sql.append(",NOLDRED,NOLDYELLOW");                                              //老人红色,老人黄色 
-            sql.append(",NKIDRED,NKIDYELLOW");                                              //小孩红色,小孩黄色
-            sql.append(",NPREGNANTRED,NPREGNANTYELLOW");                                    //孕妇红色,孕妇黄色
-            sql.append(",NLACTATIONRED,NLACTATIONYELLOW");                                  //哺乳红色,哺乳黄色
-            sql.append(",NRENALRED,NRENALYELLOW");                                          //肾红色,肾黄色
-            sql.append(",NHEPATICALRED,NHEPATICALYELLOW");                                  //肝红色,肝黄色
+//            sql.append(" insert into DRUG_CHECKINFO_COLLECT(NGROUPNUM,NADVICENUM,NREDADVICEQUESSUM,NYELLOWADVICEQUESSUM");//批次号、医嘱数、红色问题医嘱数、黄色问题医嘱数
+//            sql.append(",VDOCTORCODE,VDOCTORNAME");                                         //医生编码、医生姓名
+//            sql.append(",VORGCODE,VORGNAME");                                               //组织编码、组织名称
+//            sql.append(",NALLERGENRED,NALLERGENYELLOW");                                    //过敏红色、过敏黄色
+//            sql.append(",NIVEFFECTRED,NIVEFFECTYELLOW");                                    //配伍红色、配伍黄色
+//            sql.append(",NDIAGINFORED,NDIAGINFOYELLOW");                                    //禁忌红色、禁忌黄色
+//            sql.append(",NINTERACTIONRED,NINTERACTIONYELLOW");                              //相互作用红色、相互作用黄色
+//            sql.append(",NADMINISTRATIONRED,NADMINISTRATIONYELLOW");                        //用药途径红色，用药途径黄色
+//            sql.append(",NDOSAGECHECKRED,NDOSAGECHECKYELLOW");                              //剂量红色,剂量黄色
+//            sql.append(",NINGREDIENTRED,NINGREDIENTYELLOW");                                //重复成份红色,重复成分黄色
+//            sql.append(",NOLDRED,NOLDYELLOW");                                              //老人红色,老人黄色 
+//            sql.append(",NKIDRED,NKIDYELLOW");                                              //小孩红色,小孩黄色
+//            sql.append(",NPREGNANTRED,NPREGNANTYELLOW");                                    //孕妇红色,孕妇黄色
+//            sql.append(",NLACTATIONRED,NLACTATIONYELLOW");                                  //哺乳红色,哺乳黄色
+//            sql.append(",NRENALRED,NRENALYELLOW");                                          //肾红色,肾黄色
+//            sql.append(",NHEPATICALRED,NHEPATICALYELLOW");                                  //肝红色,肝黄色
             //sql.append(",NSIDERED,NSIDEYELLOW");                                          //异常信号红色,异常信号黄色
             
-            sql.append(",CHECKDATE");
-            sql.append(" ) values ( ");
-            sql.append("'").append(this.ngroupnum).append("',");
-            sql.append(i).append(",");
-            sql.append(redCount).append(",").append(yellowCount).append(",");
-            sql.append("'").append(po.getDoctorID()).append("',").append("'").append(po.getDoctorName()).append("',");
-            sql.append("'").append(po.getDoctorDeptID()).append("',").append("'").append(po.getDoctorDeptName()).append("',");
-            
-            sql.append(dagRedCount).append(",").append(dagYellowCount).append(",");
-            sql.append(dieRedCount).append(",").append(dieYellowCount).append(",");
-            sql.append(ddiRedCount).append(",").append(ddiYellowCount).append(",");
-            sql.append(diaRedCount).append(",").append(diaYellowCount).append(",");
-            sql.append(admRedCount).append(",").append(admYellowCount).append(",");
-            sql.append(ddgRedCount).append(",").append(ddgYellowCount).append(",");
-            sql.append(didRedCount).append(",").append(didYellowCount).append(",");
-            
-            sql.append(NOLDRED).append(",").append(NOLDYELLOW).append(",");     
-            sql.append(NKIDRED).append(",").append(NKIDYELLOW).append(",");
-            sql.append(NPREGNANTRED).append(",").append(NPREGNANTYELLOW).append(",");
-            sql.append(NLACTATIONRED).append(",").append(NLACTATIONYELLOW).append(",");
-            sql.append(NRENALRED).append(",").append(NRENALYELLOW).append(",");
-            sql.append(NHEPATICALRED).append(",").append(NHEPATICALYELLOW).append(","); 
-            
-            //sql.append(diaRedCount).append(",");
-            //sql.append(diaYellowCount).append(",");
-            
-            sql.append("to_date('").append(CheckTime).append("','yyyy-mm-dd hh24:mi:ss')").append(")");
-            query.execute(sql.toString());
+            PageData param = new PageData();
+            param.put("NGROUPNUM", this.ngroupnum); 
+            param.put("NADVICENUM", i); 
+            param.put("NREDADVICEQUESSUM", redCount); 
+            param.put("NYELLOWADVICEQUESSUM", yellowCount); 
+            param.put("VDOCTORCODE", po.getDoctorID()); 
+            param.put("VDOCTORNAME", po.getDoctorName()); 
+            param.put("VORGCODE", po.getDoctorDeptID()); 
+            param.put("VORGNAME", po.getDoctorDeptName()); 
+            param.put("dagRedCount", dagRedCount); 
+            param.put("dagYellowCount",dagYellowCount );
+            param.put("dieRedCount",dieRedCount );
+            param.put("dieYellowCount", dieYellowCount);
+            param.put("ddiRedCount", ddiRedCount);
+            param.put("ddiYellowCount", ddiYellowCount);
+            param.put("diaRedCount", diaRedCount);
+            param.put("diaYellowCount", diaYellowCount);
+            param.put("admRedCount", admRedCount);
+            param.put("admYellowCount", admYellowCount);
+            param.put("ddgRedCount", ddgRedCount);
+            param.put("ddgYellowCount", ddgYellowCount);
+            param.put("didRedCount", didRedCount);
+        	param.put("didYellowCount", didYellowCount);
+        	param.put("NOLDRED", NOLDRED);
+        	param.put("NOLDYELLOW", NOLDYELLOW);
+        	param.put("NKIDRED",NKIDRED );
+        	param.put("NKIDYELLOW",NKIDYELLOW );
+        	param.put("NPREGNANTRED", NPREGNANTRED);
+        	param.put("NPREGNANTYELLOW", NPREGNANTYELLOW);
+        	param.put("NLACTATIONRED", NLACTATIONRED);
+        	param.put("NLACTATIONYELLOW", NLACTATIONYELLOW);
+        	param.put("NRENALRED", NRENALRED);
+        	param.put("NRENALYELLOW", NRENALYELLOW);
+        	param.put("NHEPATICALRED", NHEPATICALRED);
+        	param.put("NHEPATICALYELLOW", NHEPATICALYELLOW);
+        	param.put("CHECKDATE", DateUtil.fomatDate2(CheckTime));
+            dao.save("InfoMapper.saveDrugCheckInfoCollection", param);
         }
         catch (Exception e) 
         {
