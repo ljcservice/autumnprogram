@@ -88,7 +88,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
         try
         {
 //            setQueryCode("HisSysManager");
-            StringBuffer patient = new StringBuffer();
+            //StringBuffer patient = new StringBuffer();
             /* 病人信息 
              *   姓名 性别 出生日期 出生地 民族 病人ID 检查组序号
              * */
@@ -118,7 +118,6 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
             	dao.save("InfoMapper.updateCheckPatient", pp);
                 //query.execute(" update check_patient set checkDate='" + CheckTime + "',NGROUPNUM='" + this.ngroupnum + "' where patient_id='" + patient_id + "'");
             }
-            patient = new StringBuffer(); 
             String visit_id =  po.getPatVisitInfo().getVisitID();
             //cr = query.query("select count(*) c  from CHECK_PAT_ORDER_VISITINFO where patient_id='" + po.getPatientID() + "' and visit_id='" + visit_id + "'", new CommonMapper());
             PageData pm = new PageData();
@@ -142,58 +141,58 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                 {
                 	pw.put("IN_DATE",DateUtil.fomatDate2( po.getPatVisitInfo().getInDate().length()>19?po.getPatVisitInfo().getInDate().substring(0, 19):po.getPatVisitInfo().getInDate()));
                 }
-                dao.save("InfoMapper.insertCheckPtaOrderVisi", pw);
                 /* 审查病人住院信息表 CHECK_PAT_ORDER_VISITINFO */
-                //query.update(patient.toString());
-                patient = new StringBuffer();
+                dao.save("InfoMapper.insertCheckPtaOrderVisi", pw);
                 /* 审查病人扩展信息表 */
-                patient.append("insert into check_pat_order_info_ext(is_lact,is_pregnant,insureance_type,insurance_no,is_liverwhole,is_kidneywhole,height,weight,ngroupnum,checkdate,patient_id,visit_id)")
-                        .append(" values(")
-                        .append("'").append(po.getPatInfoExt().getIsLact()).append("'")
-                        .append(",'").append(po.getPatInfoExt().getIsPregnant()).append("'")
-                        .append(",'").append(po.getPatInfoExt().getInsureanceType()).append("'")
-                        .append(",'").append(po.getPatInfoExt().getInsuranceNo()).append("'")
-                        .append(",'").append(po.getPatInfoExt().getIsLiverWhole()).append("'")
-                        .append(",'").append(po.getPatInfoExt().getIsKidneyWhole()).append("'")
-                        .append(",'").append(po.getPatInfoExt().getHeight()).append("'")
-                        .append(",'").append(po.getPatInfoExt().getWeight()).append("'")
-                        .append(",'").append(this.ngroupnum).append("'")
-                        .append(",'").append(CheckTime).append("'")
-                        .append(",'").append(patient_id).append("'")
-                        .append(",").append(visit_id)
-                        .append(")");
                 /* 审查病人扩展信息表  CHECK_PAT_ORDER_INFO_EXT */
-                query.update(patient.toString());
+                PageData param = new PageData();
+            	param.put("is_lact", po.getPatInfoExt().getIsLact());
+            	param.put("is_pregnant", po.getPatInfoExt().getIsPregnant());
+            	param.put("insureance_type", po.getPatInfoExt().getInsureanceType());
+            	param.put("insurance_no", po.getPatInfoExt().getInsuranceNo());
+            	param.put("is_liverwhole", po.getPatInfoExt().getIsLiverWhole());
+            	param.put("is_kidneywhole", po.getPatInfoExt().getIsKidneyWhole());
+            	param.put("height", po.getPatInfoExt().getHeight());
+            	param.put("weight", po.getPatInfoExt().getWeight());
+            	param.put("ngroupnum", this.ngroupnum);
+            	param.put("checkdate", CheckTime);
+            	param.put("patient_id", patient_id);
+            	param.put("visit_id", visit_id);
+                dao.save("InfoMapper.insertCheckPatOrderInfo", pw);
             }
             /*保存医生信息*/
-            patient = new StringBuffer(); 
-            patient.append("insert into CHECK_DOCTOR_INFO(NGROUPNUM,DOCTOR_NAME,DOCTOR_CODE,DEPT_NAME,DEPT_CODE,DOCTOR_TITLE, Doctor_Title_id,patient_id,visit_id)")
-                    .append(" values(")
-                    .append("'").append(this.ngroupnum).append("'")
-                    .append(",'").append(po.getDoctorName()).append("'")
-                    .append(",'").append(po.getDoctorID()).append("'")
-                    .append(",'").append(po.getDoctorDeptName()).append("'")
-                    .append(",'").append(po.getDoctorDeptID()).append("'")
-                    .append(",'").append(po.getDoctorTitleName()).append("'")
-                    .append(",'").append(po.getDoctorTitleID()).append("'")
-                    .append(",'").append(patient_id).append("'")
-                    .append(",").append(visit_id)
-                    .append(")");
-            query.update(patient.toString());
+            PageData param = new PageData();
+        	param.put("NGROUPNUM", this.ngroupnum);
+        	param.put("DOCTOR_NAME", po.getDoctorName());
+        	param.put("DOCTOR_CODE", po.getDoctorID());
+        	param.put("DEPT_NAME", po.getDoctorDeptName());
+        	param.put("DEPT_CODE", po.getDoctorDeptID());
+        	param.put("DOCTOR_TITLE", po.getDoctorTitleName());
+        	param.put("Doctor_Title_id", po.getDoctorTitleID());
+        	param.put("patient_id", patient_id);
+        	param.put("visit_id", visit_id);
+            dao.save("InfoMapper.insertCheckDoctorInfo", pw);
             
-            query.update(" insert into CHECK_SERIAL_LIST (patient_id, visit_id, check_date, ngroupnum) values ("+
-                    "'"+patient_id+"',"+
-                    visit_id+","+
-                    "to_date('" + CheckTime + "','yyyy-mm-dd hh24:mi:ss'),"+
-                    "'" + this.ngroupnum + "'" + 
-                    ")");
+            
+            param = new PageData();
+        	param.put("ngroupnum", this.ngroupnum);
+        	param.put("check_date", DateUtil.fomatDate2(CheckTime));
+        	param.put("patient_id", patient_id);
+        	param.put("visit_id", visit_id);
+            dao.save("InfoMapper.insertCheckSerialList", pw);
+//            query.update(" insert into CHECK_SERIAL_LIST (patient_id, visit_id, check_date, ngroupnum) values ("+
+//                    "'"+patient_id+"',"+
+//                    visit_id+","+
+//                    "to_date('" + CheckTime + "','yyyy-mm-dd hh24:mi:ss'),"+
+//                    "'" + this.ngroupnum + "'" + 
+//                    ")");
             
             //String[] sql = new String[po.getPatOrderDrugs().length];
+            
             List<String> sqlList = new ArrayList<String>();
             for(int i = 0 ; i<po.getPatOrderDrugs().length ; i++)
             {
                 TPatOrderDrug pod = po.getPatOrderDrugs()[i];
-                patient = new StringBuffer();
                 TDrug drug = new TDrug();
                 drug.setDRUG_NO_LOCAL(pod.getDrugID());
                 drug.setRecMainNo(pod.getRecMainNo());
@@ -202,55 +201,39 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                 if (cres != null)
                 {
                     String checkResult = cres.getAlertLevel();
+                    param = new PageData();
+                	param.put("DOCTOR_DEPT", pod.getDoctorDept());
+                	param.put("IS_GROUP", "0");
+                	param.put("ADMINISTRATION_ID", pod.getAdministrationID());
+                	param.put("PERFORM_FREQ_DICT_ID", pod.getPerformFreqDictID());
+                	param.put("DRUG_ID", pod.getDrugID());
+                	param.put("REC_MAIN_NO", pod.getRecMainNo());
+                	param.put("REC_SUB_NO", pod.getRecSubNo());
+                	param.put("PERFORM_FREQ_DICT_NAME", pod.getPerformFreqDictText());
+                	param.put("DOSAGE", pod.getDosage());
+                	param.put("DOSE_UNITS", pod.getDoseUnits());
+                	param.put("DOCTOR", pod.getDoctorName());
+                	param.put("NGROUPNUM", this.ngroupnum);
+                	param.put("checkDate", CheckTime);
+                	param.put("USETYPE", "");
+                	param.put("USECAUSE", "");
+                	param.put("DRUG_NAME", pod.getDrugName());
+                	param.put("check_Result", checkResult);
+             		String start = pod.getStartDateTime();
+            		String stop  = pod.getStartDateTime();
+                    if(start != null && !"".equals(start))
+                    {
+                    	if(start.length()>19){
+                    		start = start.substring(0, 19);
+                    		param.put("START_DATE_TIME",DateUtil.fomatDate2(start));
+                    	}
+                    	if(stop.length()>19)
+                    		stop = stop.substring(0, 19);
+                    	param.put("STOP_DATE_TIME",DateUtil.fomatDate2(stop));
+                    }
                     /* 病人用药记录 */
-                    patient.append("insert into check_pat_order_drug(DOCTOR_DEPT,IS_GROUP,ADMINISTRATION_ID,PERFORM_FREQ_DICT_ID,DRUG_ID,REC_MAIN_NO,REC_SUB_NO")
-                            .append(",PERFORM_FREQ_DICT_NAME,DOSAGE,DOSE_UNITS,START_DATE_TIME,STOP_DATE_TIME,DOCTOR,NGROUPNUM,checkDate,USETYPE,USECAUSE,DRUG_NAME,check_Result )")
-                            .append(" values (")
-                            .append("'").append(pod.getDoctorDept()).append("'")
-                            .append(",'").append("0").append("'")
-                            .append(",'").append(pod.getAdministrationID()).append("'")
-                            .append(",'").append(pod.getPerformFreqDictID()).append("'")
-                            .append(",'").append(pod.getDrugID()).append("'")
-                            .append(",'").append(pod.getRecMainNo()).append("'")
-                            .append(",'").append(pod.getRecSubNo()).append("'")
-                            .append(",'").append(pod.getPerformFreqDictText()).append("'")
-                            .append(",'").append(pod.getDosage()).append("'")
-                            .append(",'").append(pod.getDoseUnits()).append("'");
-                    		String start = pod.getStartDateTime();
-                    		String stop  = pod.getStartDateTime();
-                            if(start != null && !"".equals(start))
-                            {
-                            	if(start.length()>19)
-                            		start = start.substring(0, 19);
-                            	patient.append(",to_date('").append(start).append("','yyyy-mm-dd hh24:mi:ss')");
-                            }
-                            else
-                            {
-                            	patient.append(",''");
-                            }
-                            if(stop != null && !"".equals(stop))
-                            {
-                            	if(stop.length()>19)
-                            		stop = stop.substring(0, 19);
-                            	patient.append(",to_date('").append(stop).append("','yyyy-mm-dd hh24:mi:ss')");
-                            }
-                            else
-                            {
-                            	patient.append(",''");
-                            }
-                            
-                            patient.append(",'").append(pod.getDoctorName()).append("'")
-                            .append(",'").append(this.ngroupnum).append("'")
-                            .append(",'").append(CheckTime).append("'")
-//                            .append(",'").append(pod.getUseType()).append("'")
-//                            .append(",'").append(pod.getUseCause()).append("'")
-                            .append(",''")
-                            .append(",''")
-                            .append(",'").append(pod.getDrugName()).append("'")
-                            .append(",'").append(checkResult).append("'")
-                            .append(" )");
-                    query.update(patient.toString());
-                    patient.setLength(0);
+                    dao.save("InfoMapper.insertCheckPatOrderDrug", pw);
+                    
                     //sqlList.add(patient.toString());
                 }
             }
@@ -263,19 +246,15 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
             for(int i = 0 ; i < po.getPatOrderDiagnosiss().length ; i++)
             {
                 TPatOrderDiagnosis pod = po.getPatOrderDiagnosiss()[i];
-                patient = new StringBuffer();
+                param = new PageData();
+            	param.put("DIAGNOSIS_DICT_ID", pod.getDiagnosisDictID());
+            	param.put("NGROUPNUM", this.ngroupnum);
+            	param.put("DIAGNOSIS_NAME", pod.getDiagnosisName());
+            	param.put("checkDate", CheckTime);
                 /*  审查医嘱诊断表 */
-                patient.append("insert into check_pat_order_diagnosis(DIAGNOSIS_DICT_ID,NGROUPNUM,DIAGNOSIS_NAME,checkDate)")
-                        .append(" values (")
-                        .append("'").append(pod.getDiagnosisDictID()).append("'")
-                        .append(",'").append(this.ngroupnum).append("'")
-                        .append(",'").append(pod.getDiagnosisName()).append("'")
-                        .append(",'").append(CheckTime).append("'")
-                        .append(")");
-                query.update(patient.toString());
-                patient.setLength(0);
-                //sql[i] = patient.toString();
+                dao.save("InfoMapper.insertCheckPatOrderDiagnosis", param);
             }
+            
             /* 审查医嘱诊断表 CHECK_PAT_ORDER_DIAGNOSIS  */
 //            if(sql.length > 0)
 //              query.batchUpdate(sql);
@@ -283,16 +262,13 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
             for(int i = 0 ; i< po.getPatOrderDrugSensitives().length; i++)
             {
                 TPatOrderDrugSensitive pods = po.getPatOrderDrugSensitives()[i];
-                patient = new StringBuffer();
                 /* 审查医嘱过敏表 */
-                patient.append("insert into CHECK_PAT_ORDER_DRUG_SENSITIVE(DRUG_ALLERGEN_ID,NGROUPNUM,checkDate)")
-                        .append(" values(")
-                        .append("'").append(pods.getPatOrderDrugSensitiveID()).append("'")
-                        .append(",'").append(this.ngroupnum).append("'")
-                        .append(",'").append(CheckTime).append("'")
-                        .append(")");
-                query.update(patient.toString());
-                patient.setLength(0);
+                param = new PageData();
+            	param.put("DRUG_ALLERGEN_ID", pods.getPatOrderDrugSensitiveID());
+            	param.put("NGROUPNUM", this.ngroupnum);
+            	param.put("checkDate", CheckTime);
+                /*  审查医嘱诊断表 */
+                dao.save("InfoMapper.insertCheckPatOrderDrugSensitive", param);
 //                sql[i] = patient.toString();
             }
             /* 审查医嘱过敏表 CHECK_PAT_ORDER_DRUG_SENSITIVE*/
@@ -305,21 +281,18 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                 for(int i = 0 ; i < po.getPatSigns().length ; i++)
                 {
                     TPatSigns ps = po.getPatSigns()[i];
-                    patient = new StringBuffer();
                     if((ps.getTWOK() + ps.getTWValue() + ps.getXXOK() + ps.getCValue()).length() > 0)
                     {
-                        patient.append("insert into check_pat_signs(ngroupnum,twdate, twvalue, twok, xxdate, xxvalue, cvalue, xxok) values (")
-                                .append("'").append(this.ngroupnum).append("'")
-                                .append(",'").append(ps.getTWDate()).append("'")
-                                .append(",'").append(ps.getTWValue()).append("'")
-                                .append(",'").append(ps.getTWOK()).append("'")
-                                .append(",'").append(ps.getXXDate()).append("'")
-                                .append(",'").append(ps.getXXValue()).append("'")
-                                .append(",'").append(ps.getCValue()).append("'")
-                                .append(",'").append(ps.getXXOK()).append("'")
-                                .append(")");
-                        query.update(patient.toString());
-                        patient.setLength(0);
+                        param = new PageData();
+                    	param.put("ngroupnum", this.ngroupnum);
+                    	param.put("twdate", ps.getTWDate());
+                    	param.put("twvalue", ps.getTWValue());
+                    	param.put("twok", ps.getTWOK());
+                    	param.put("xxdate", ps.getXXDate());
+                    	param.put("xxvalue", ps.getXXValue());
+                    	param.put("cvalue", ps.getCValue());
+                    	param.put("xxok", ps.getXXOK());
+                        dao.save("InfoMapper.insertCheckPatSigns", param);
 //                      sqlList.add(patient.toString());
                     }
                 }
@@ -397,7 +370,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                 return ;
             if(dsr.getCheckResults() == null)
                 return ;
-            setQueryCode("HisSysManager");
+            //setQueryCode("HisSysManager");
             TCheckResult[] tcrs = dsr.getCheckResults();
             for(int i = 0 ; i<tcrs.length ;i++)
             {
