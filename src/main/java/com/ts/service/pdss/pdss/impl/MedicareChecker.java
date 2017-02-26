@@ -20,7 +20,6 @@ import com.ts.entity.pdss.mas.Beans.TMemo;
 import com.ts.entity.pdss.pdss.Beans.TDrug;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TMedicareRslt;
-import com.ts.service.pdss.pdss.Cache.BeanRSCache;
 import com.ts.service.pdss.pdss.Cache.PdssCache;
 import com.ts.service.pdss.pdss.Utils.QuerySingleUtils;
 import com.ts.service.pdss.pdss.Utils.QueryUtils;

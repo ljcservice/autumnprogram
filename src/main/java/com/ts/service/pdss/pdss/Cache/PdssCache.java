@@ -43,9 +43,9 @@ import com.ts.util.PageData;
 @Service
 @Transactional
 public class PdssCache {
-	private static String DRUG_ID = "DRUG_ID";//单个药品信息kEY
-	private static String DRUG_INTERACTION = "DRUG_INTERACTION";//药品本地ID冲突KEY
-	private static String DRUG_CODE_INTERACTION = "DRUG_CODE_INTERACTION";//药品成分冲突Key
+	private static String drugCacheByLocal = "drugCacheByLocal";//单个药品信息kEY，以本地药品码为主键的药品Bean 
+	private static String drugInteraction = "drugInteraction";//互动信息结果缓存
+	private static String diiCache = "diiCache";//药品成分冲突Key
 	private static String DiseageVsDiag = "DiseageVsDiag";//诊断对应的疾病key
 	private static String drugadmini = "drugadmini";//用药途径key
 	private static String ddrCache = "ddrCache";//药物禁忌症对应key
@@ -167,7 +167,7 @@ public class PdssCache {
         	key1 = drugB.getDRUG_NO_LOCAL();
             key2 = drugA.getDRUG_NO_LOCAL();
         }
-    	TDrugInteractionRslt t = cacheTemplate.cache(DRUG_INTERACTION+key1+key2, new CacheProcessor<TDrugInteractionRslt>() {
+    	TDrugInteractionRslt t = cacheTemplate.cache(drugInteraction+key1+key2, new CacheProcessor<TDrugInteractionRslt>() {
 			@Override
 			public TDrugInteractionRslt handle() {
 				TDrugInteractionRslt res=null;
@@ -237,7 +237,7 @@ public class PdssCache {
      * @throws Exception 
      */
     public TDrugInteractionInfo getDrugInteractionInfo(final String code1, final String code2) throws Exception{
-    	TDrugInteractionInfo t = cacheTemplate.cache(DRUG_CODE_INTERACTION+code1+"_"+code2, new CacheProcessor<TDrugInteractionInfo>() {
+    	TDrugInteractionInfo t = cacheTemplate.cache(diiCache+code1+"_"+code2, new CacheProcessor<TDrugInteractionInfo>() {
 			@Override
 			public TDrugInteractionInfo handle() throws Exception {
 				PageData pd = new PageData();
@@ -258,7 +258,7 @@ public class PdssCache {
      * @throws Exception 
      */
     public TDrug queryDrugById(final String id) throws Exception{
-    	TDrug t = cacheTemplate.cache(DRUG_ID+id, new CacheProcessor<TDrug>() {
+    	TDrug t = cacheTemplate.cache(drugCacheByLocal+id, new CacheProcessor<TDrug>() {
 			@Override
 			public TDrug handle() throws Exception {
 				TDrug res = (TDrug) dao.findForObject("DrugMapper.queryDrugById",id);
@@ -589,11 +589,11 @@ public class PdssCache {
 		});
     	return t;
 	}
-	public TMedicareRslt getDrugMedicareRslt(String drugID) throws Exception {
-		TMedicareRslt t = cacheTemplate.cache(commonCache, DRUG_ID , new CacheProcessor<TMedicareRslt>() {
+	public TMedicareRslt getDrugMedicareRslt(final String drugID) throws Exception {
+		TMedicareRslt t = cacheTemplate.cache(commonCache, drugID , new CacheProcessor<TMedicareRslt>() {
 			@Override
 			public TMedicareRslt handle() throws Exception {
-				TDrug drug = queryDrugById(DRUG_ID);
+				TDrug drug = queryDrugById(drugID);
                 if(drug == null) return null;
             	TMedicareRslt mdrsl = new TMedicareRslt();
                 TMedicareCatalog  mcare = queryTMedicareCatalog(drug.getDRUG_NO_LOCAL());

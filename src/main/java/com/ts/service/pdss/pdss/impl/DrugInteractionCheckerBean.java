@@ -22,7 +22,6 @@ import com.ts.entity.pdss.pdss.RSBeans.TDrugInteractionRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
 import com.ts.service.cache.CacheProcessor;
 import com.ts.service.cache.CacheTemplate;
-import com.ts.service.pdss.pdss.Cache.BeanRSCache;
 import com.ts.service.pdss.pdss.Cache.DBSnapshot;
 import com.ts.service.pdss.pdss.Cache.PdssCache;
 import com.ts.service.pdss.pdss.Utils.QueryUtils;
