@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.bind.annotation.XmlElement;
+
 import com.ts.entity.pdss.pdss.Beans.TDrug;
 import com.ts.entity.pdss.pdss.Beans.TDrugCheckInfoCollet;
 
@@ -18,6 +20,7 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
     private static final long        serialVersionUID = 1L;
     private Map<TDrug, TCheckResult> chkRslt          = new HashMap<TDrug, TCheckResult>();
 
+    @XmlElement(name="getAlertLevel")
     public String getAlertLevel()
     {
         String Result = "";
@@ -46,6 +49,7 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
      * 医保药品审查
      * @param dsr
      */
+    @XmlElement(name="CopyMedicareCheckResultTo")
     public void CopyMedicareCheckResultTo(TDrugSecurityRslt dsr)
     {
         TDrug[] drugs = getDrugs();
@@ -61,6 +65,7 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
     }
     
     /** 相互作用审查结果复制 */
+    @XmlElement(name="CopyInteractionCheckResultTo")
     public void CopyInteractionCheckResultTo(TDrugSecurityRslt dsr)
     {
         TDrug[] drugs = getDrugs();
@@ -76,6 +81,7 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
     }
 
     /** 配伍审查结果复制 */
+    @XmlElement(name="CopyIvEffectCheckResultTo")
     public void CopyIvEffectCheckResultTo(TDrugSecurityRslt dsr)
     {
         TDrug[] drugs = getDrugs();
@@ -91,6 +97,7 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
     }
 
     /** 禁忌症审查结果复制 */
+    @XmlElement(name="CopyDrugDiagInfoRsltTo")
     public void CopyDrugDiagInfoRsltTo(TDrugSecurityRslt dsr)
     {
         TDrug[] drugs = getDrugs();
@@ -107,6 +114,7 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
     }
 
     /** 特殊人群审查结果复制 */
+    @XmlElement(name="CopyDrugSpecPeopleRsltTo")
     public void CopyDrugSpecPeopleRsltTo(TDrugSecurityRslt dsr)
     {
         TDrug[] drugs = getDrugs();
@@ -122,6 +130,7 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
     }
 
     /** 重复成份审查结果复制 */
+    @XmlElement(name="CopyDrugIngreDientCheckRsltTo")
     public void CopyDrugIngreDientCheckRsltTo(TDrugSecurityRslt dsr)
     {
         TDrug[] drugs = getDrugs();
@@ -138,6 +147,7 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
     }
 
     /** 用药途径审查结果复制 */
+    @XmlElement(name="CopyAdministrationCheckRsltTo")
     public void CopyAdministrationCheckRsltTo(TDrugSecurityRslt dsr)
     {
         TDrug[] drugs = getDrugs();
@@ -154,6 +164,7 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
     }
 
     /** 过敏药物审查结果复制 */
+    @XmlElement(name="CopyDrugAllergenCheckRsltTo")
     public void CopyDrugAllergenCheckRsltTo(TDrugSecurityRslt dsr)
     {
         TDrug[] drugs = getDrugs();
@@ -170,6 +181,7 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
     }
 
     /** 药物剂量审查结果复制 */
+    @XmlElement(name="CopyDrugDosageCheckRsltTo")
     public void CopyDrugDosageCheckRsltTo(TDrugSecurityRslt dsr)
     {
         TDrug[] drugs = getDrugs();
@@ -185,6 +197,7 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
     }
 
     /** 异常信号审查结果复制 */
+    @XmlElement(name="CopySideCheckRsltTo")
     public void CopySideCheckRsltTo(TDrugSecurityRslt dsr)
     {
         TDrug[] drugs = getDrugs();
@@ -209,6 +222,7 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
      * @param dir
      *            检查结果
      */
+    @XmlElement(name="regInteractionCheckResult")
     public void regInteractionCheckResult(TDrug da, TDrug db,
             TDrugInteractionRslt dir)
     {
@@ -227,6 +241,7 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
      * @param drug
      * @param dar
      */
+    @XmlElement(name="regAllergenCheckResult")
     public void regAllergenCheckResult(TDrug drug, TDrugAllergenRslt dar)
     {
         TCheckResult cr = chkRslt.get(drug);
@@ -244,6 +259,7 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
      * @param drug
      * @param sdr
      */
+    @XmlElement(name="regAdministrationCheckResult")
     public void regAdministrationCheckResult(TDrug drug, TAdministrationRslt sdr)
     {
         TCheckResult cr = chkRslt.get(drug);
@@ -261,6 +277,7 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
      * @param drug
      * @param ddr
      */
+    @XmlElement(name="regDiagCheckResult")
     public void regDiagCheckResult(TDrug drug, TDrugDiagRslt ddr)
     {
         TCheckResult cr = chkRslt.get(drug);
@@ -278,6 +295,7 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
      * @param drug
      * @param ddr
      */
+    @XmlElement(name="regDosageCheckResult")
     public void regDosageCheckResult(TDrug drug, TDrugDosageRslt ddr)
     {
         TCheckResult cr = chkRslt.get(drug);
@@ -295,6 +313,7 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
      * @param drug
      * @param didr
      */
+    @XmlElement(name="regIngredientCheckResult")
     public void regIngredientCheckResult(TDrug drug, TDrugIngredientRslt didr)
     {
         TCheckResult cr = chkRslt.get(drug);
@@ -316,6 +335,7 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
      * @param dir
      *            检查结果
      */
+    @XmlElement(name="regIvEffectCheckResult")
     public void regIvEffectCheckResult(TDrug da, TDrug db, TDrugIvEffectRslt dir)
     {
         TCheckResult cr = chkRslt.get(da);
@@ -341,6 +361,7 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
      * @param drug
      * @param didr
      */
+    @XmlElement(name="regDrugHarmfulCheckResult")
     public void regDrugHarmfulCheckResult(TDrug drug, TDrugHarmfulRslt dhf)
     {
         TCheckResult cr = chkRslt.get(drug);
@@ -358,6 +379,7 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
      * @param drug
      * @param dspr
      */
+    @XmlElement(name="regDrugSpecPeopleCheckResult")
     public void regDrugSpecPeopleCheckResult(TDrug drug,
             TDrugSpecPeopleRslt dspr)
     {
@@ -375,6 +397,7 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
      * @param drug
      * @param mcare
      */
+    @XmlElement(name="regMedicareCheckResult")
     public void regMedicareCheckResult(TDrug drug , TMedicareRslt mcare)
     {
         TCheckResult cr = chkRslt.get(drug);
@@ -385,13 +408,15 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
         }
         cr.addMedicareRslt(mcare);
     }
-    
+
+    @XmlElement(name="getDrugs")
     public TDrug[] getDrugs()
     {
         TDrug[] drugs = chkRslt.keySet().toArray(new TDrug[0]);
         return drugs;
     }
 
+    @XmlElement(name="getCheckResults")
     public TCheckResult[] getCheckResults()
     {
         TDrug[] drugs = getDrugs();
@@ -401,6 +426,7 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
         return crs;
     }
 
+    @XmlElement(name="getCheckResult")
     public TCheckResult getCheckResult(TDrug drug)
     {
     	return chkRslt.get(drug);
@@ -414,10 +440,13 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
      * 返回结果列表
      * @return
      */
+
     public String getCheckResult()
     {
     	return FetchCheckResult("");
     }
+
+    @XmlElement(name="FetchCheckResult")
     public String FetchCheckResult(String DrugCodeFlag)
     {
     	checkResult = "";
@@ -454,6 +483,8 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
     /**
      * 返回 所有结果 红灯 黄灯信息  
      */
+
+    @XmlElement(name="getResultInfo")
 	public String getResultInfo()
 	{
 		RedCount = 0;
@@ -477,6 +508,8 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
 	 * @param drug
 	 * @return
 	 */
+
+    @XmlElement(name="setSingleCheckResult")
 	public void setSingleCheckResult(TDrug drug , TCheckResult cr)
 	{
 	    chkRslt.put(drug, cr);
