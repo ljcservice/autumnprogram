@@ -63,7 +63,7 @@ public final class DBQueryFactory
 //                ds = getDataSource(resourceID);
                 
                 // 2014-10-21 liujc 修改   将数据连接池不托管在spring容器中
-                ds = (DataSource) SpringBeanUtil.getBean("dataSource_Pdss");    
+                ds = (DataSource) SpringBeanUtil.getBean("dataSource_" + resourceID );    
             }
             catch(NullPointerException nullPoiE)
             {
