@@ -25,7 +25,7 @@
 		select count(*) c  from CHECK_PAT_ORDER_VISITINFO where patient_id=#{patient_id} and visit_id=#{visit_id}
 	</select>
 <!-- 	审查病人扩展信息表 -->
-	<insert id="insertCheckPtaOrderVisi" parameterType="pd"	>
+	<insert id="insertCheckPtaOrderInfoExt" parameterType="pd"	>
 		insert into check_pat_order_info_ext(is_lact,is_pregnant,insureance_type,insurance_no,is_liverwhole,is_kidneywhole,height,weight,ngroupnum,checkdate,patient_id,visit_id)
 		values(#{is_lact},#{is_pregnant},#{insureance_type},#{insurance_no},#{is_liverwhole},#{is_kidneywhole},#{height},#{weight},#{ngroupnum},#{checkdate},#{patient_id},#{visit_id});
 	</insert>
