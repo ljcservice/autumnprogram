@@ -108,8 +108,48 @@
 	        </if>
 	</select>
 	
+	<!-- 此后迁移过来  特殊人群 -->
+	<select id="getDudInfoById" parameterType="pd"	resultType="TDrugUseDetail">
+		select drug_use_detail_id, drug_class_id, last_date_time, pregnant_indi, pregnant_info, pregnant_info_ref, lact_indi, lact_info, lact_info_ref, kid_indi, kid_low, kid_high, kid_info, kid_info_ref, old_indi, old_info, old_info_ref, hepatical_indi, renal_indi, forbid_ruid, forbid_cause, inadvis_rtid, inadvis_cause, advert_rtid, advert_cause 
+    	from DRUG_USE_DETAIL 
+    	where DRUG_CLASS_ID = #{DRUG_CLASS_ID}
+	</select>
+
+	<!-- 药物成分、药敏、药物分类与药物对 -->
+	<select id="getAidInfoById" parameterType="pd"	resultType="TAllergIngrDrug">
+		select drug_allergen_id,input_code,drug_allergen_name,allerg_ingr_drug_id,drug_class_id 
+		from view_allergen 
+		where drug_allergen_id =#{drug_allergen_id}
+	</select>
 	
+	<!--  药品剂量使用 -->
+	<select id="getDdgInfoById" parameterType="pd"	resultType="TDrugDosage">
+		select drug_dosage_id, dose_class_id, administration_id, drug_form, dose_units, age_indi, age_low, 
+			age_high, weight_indi, weight_low, weight_high, cal_indi, dose_each_low, dose_each_high, 
+			dose_each_unit, dose_day_low, dose_day_high, dose_day_unit, dose_max_high, dose_max_unit, 
+			dose_freq_low, dose_freq_high, dur_low, dur_high, special_desc, reference_info 
+		from DRUG_DOSAGE 
+		where DOSE_CLASS_ID = #{DOSE_CLASS_ID} and ADMINISTRATION_ID = #{ADMINISTRATION_ID} 
+	</select>
 	
+	<!-- 医嘱执行频率 -->
+	<select id="queryDrugPerfom" parameterType="pd"	resultType="TDrugDosage">
+		select PERFORM_FREQ_DICT_ID,PERFORM_FREQ_DICT_NAME,FREQ_COUNTER,FREQ_INTERVAL,FREQ_INTERVAL_UNITS,PERFORM_FREQ_DICT_NO_LOCAL,PERFORM_FREQ_DICT_NAME_LOCAL,PERFORM_FREQ_DICT_ID,OPER_USER,OPER_TIME
+   		from view_perform 
+   		where perform_freq_dict_no_local = #{performID} 
+	</select>
 	
+	<!-- 	医保内容 -->
+	<select id="queryMemoList" parameterType="pd"	resultType="TMemo">
+		select ID, DRUG_ID, CHECK_ITEM_NAME, CHECK_ITEM_CODE, CHECK_TYPE 
+		from memo 
+		where DRUG_ID = #{DRUG_ID}
+	</select>
+	<!-- 	医保目录 -->
+	<select id="queryTMedicareCatalog" parameterType="pd"	resultType="TMedicareCatalog">
+		select DRUG_ID, DRUG_NAME, REMARK, APPLY_TYPE, FEE_TYPE 
+		from Medicare_catalog 
+		where DRUG_ID = #{DRUG_ID}
+	</select>
 
 </mapper>
