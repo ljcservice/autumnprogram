@@ -11,6 +11,13 @@
 			,#{ALERT_CAUSE,jdbcType=VARCHAR},#{CHECK_ITEM,jdbcType=VARCHAR},#{checkDate},#{type})
 	</insert>
 	
+	<insert id="saveAntidrugCheckrslt" parameterType="pd"	>
+		insert into ANTIDRUG_CHECKRSLT(drug_id,rec_main_no,rec_sub_no ,ngroupnum,checkdate
+	           ,checktype,memo,dept_code,dept_name,doctor_code,doctor_name,result)
+	    values(#{drug_id},#{rec_main_no},#{rec_sub_no},#{ngroupnum},#{checkdate}
+	           ,#{checktype},#{memo},#{dept_code},#{dept_name},#{doctor_code},#{doctor_name},#{result})       
+	</insert>
+	
 	<insert id="saveDrugCheckInfoCollection" parameterType="pd"	>
 		insert into DRUG_CHECKINFO_COLLECT(NGROUPNUM,NADVICENUM,NREDADVICEQUESSUM,NYELLOWADVICEQUESSUM
             ,VDOCTORCODE,VDOCTORNAME ,VORGCODE,VORGNAME ,NALLERGENRED,NALLERGENYELLOW ,NIVEFFECTRED
@@ -28,5 +35,25 @@
             ,#{NHEPATICALRED},#{NHEPATICALYELLOW},#{NSIDERED},#{NSIDEYELLOW},#{CHECKDATE})
 	</insert>
 	
+	<insert id="saveAntiDrugUseRecYf" parameterType="pd"	>
+		insert into ANTI_DRUG_USE_REC_YF(yf_id, patient_id, visit_id, dept_code, dept_name, doctor_name
+			, name, sex, age, weight, drug_code, drug_name, dosage, dosage_units, administration
+			, opertor_date, opertor_name, opertor_type, opertor_use_time, drug_use_time, gms, btgms
+			, wxys, kndzbj, kljlanjl, yf_use_drug_yj, REC_DATE,tsyq) 
+		values (#{yf_id}, #{patient_id}, #{visit_id}, #{dept_code}, #{dept_name}, #{doctor_name}
+			,#{name},#{sex}, #{age},#{weight},#{drug_code},#{drug_name},#{dosage},#{dosage_units}, #{administration}
+			,#{opertor_date},#{opertor_name},#{opertor_type},#{opertor_use_time},#{drug_use_time},#{gms},#{btgms}
+			,#{wxys},#{kndzbj},#{kljlanjl},#{yf_use_drug_yj},#{REC_DATE},#{tsyq})
+	</insert>
+
+
+	<insert id="saveAntiDrugUseRecZl" parameterType="pd" >
+		insert into ANTI_DRUG_USE_REC_ZL(zl_id, patient_id, visit_id, dept_code, dept_name, doctor_name
+			, name, sex, age, weight, yyly, zlfl, grbw, zdyj, kndzbj, drug_code, drug_name, dosage
+			, dosage_units, administration, rec_date, twdate, twvalue, twok, xxdate, xxvalue, cvalue, xxok) 
+		values (#{zl_id}, #{patient_id},#{visit_id},#{dept_code},#{dept_name},#{doctor_name}
+			,#{name},#{sex},#{age},#{weight},#{yyly},#{zlfl},#{grbw},#{zdyj},#{kndzbj},#{drug_code},#{drug_name},#{dosage}
+			,#{dosage_units},#{administration},#{rec_date},#{twdate},#{twvalue},#{twok},#{xxdate},#{xxvalue},#{cvalue},#{xxok})
+	</insert>
 	
 </mapper>
