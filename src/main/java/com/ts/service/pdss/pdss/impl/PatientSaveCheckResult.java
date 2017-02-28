@@ -350,7 +350,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                     	param.put("ALERT_CAUSE", "");
                     	param.put("checkDate", CheckTime);
                     	param.put("type", 1);//互动信息的类型
-                        dao.save("InfoMapper.saveDrugCheckInfo", param);
+                        dao.save("ResultMapper.saveDrugCheckInfo", param);
                     }
                 }
             }
@@ -404,7 +404,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                     	param.put("ALERT_CAUSE", "");
                     	param.put("checkDate", CheckTime);
                     	param.put("type", 2);//配伍信息的类型
-                        dao.save("InfoMapper.saveDrugCheckInfo", param);
+                        dao.save("ResultMapper.saveDrugCheckInfo", param);
                     }
                 }
             }
@@ -454,7 +454,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                     	param.put("ALERT_CAUSE", ddr[j].getAlertCause());
                     	param.put("checkDate", CheckTime);
                     	param.put("type", 3);//禁忌症审查的类型
-                        dao.save("InfoMapper.saveDrugCheckInfo", param);
+                        dao.save("ResultMapper.saveDrugCheckInfo", param);
                 }
             }
         }
@@ -549,7 +549,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                 	param.put("ALERT_CAUSE", "");
                 	param.put("checkDate", CheckTime);
                 	param.put("type", 4);//人群信息的类型
-                    dao.save("InfoMapper.saveDrugCheckInfo", param);
+                    dao.save("ResultMapper.saveDrugCheckInfo", param);
                 }
             }
             
@@ -606,7 +606,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                     	param.put("ALERT_CAUSE", did[j].getAlertCause());
                     	param.put("checkDate", CheckTime);
                     	param.put("type", 5);//类型
-                        dao.save("InfoMapper.saveDrugCheckInfo", param);
+                        dao.save("ResultMapper.saveDrugCheckInfo", param);
                     }
                 }
             }
@@ -661,7 +661,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                 	param.put("ALERT_CAUSE", dud.getFORBID_CAUSE() + "," + dud.getADVERT_CAUSE() + "," + dud.getINADVIS_CAUSE());
                 	param.put("checkDate", CheckTime);
                 	param.put("type", 6);//类型
-                    dao.save("InfoMapper.saveDrugCheckInfo", param);
+                    dao.save("ResultMapper.saveDrugCheckInfo", param);
                 }
             }
         }
@@ -717,7 +717,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                     	param.put("ALERT_CAUSE", null);
                     	param.put("checkDate", CheckTime);
                     	param.put("type", 7);//类型
-                        dao.save("InfoMapper.saveDrugCheckInfo", param);
+                        dao.save("ResultMapper.saveDrugCheckInfo", param);
                     }
                 }
             }
@@ -777,7 +777,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                 	param.put("ALERT_CAUSE", values.toString());
                 	param.put("checkDate", CheckTime);
                 	param.put("type", 8);//类型
-                    dao.save("InfoMapper.saveDrugCheckInfo", param);
+                    dao.save("ResultMapper.saveDrugCheckInfo", param);
                 }
             }
         }
@@ -831,7 +831,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                 	param.put("ALERT_CAUSE", dhf[j].getDrugSide().getDIAGNOSIS_DESC());
                 	param.put("checkDate", CheckTime);
                 	param.put("type", 9);//类型
-                    dao.save("InfoMapper.saveDrugCheckInfo", param);
+                    dao.save("ResultMapper.saveDrugCheckInfo", param);
                  }
             }
         }
@@ -1003,7 +1003,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
         	param.put("NHEPATICALRED", NHEPATICALRED);
         	param.put("NHEPATICALYELLOW", NHEPATICALYELLOW);
         	param.put("CHECKDATE", DateUtil.fomatDate2(CheckTime));
-            dao.save("InfoMapper.saveDrugCheckInfoCollection", param);
+            dao.save("ResultMapper.saveDrugCheckInfoCollection", param);
         }
         catch (Exception e) 
         {
@@ -1015,7 +1015,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
     @Override
     public void saveAntiDrugSecutity(TPatientOrder po,TAntiDrugSecurityResult[] adsr)
     {
-        setQueryCode("HisSysManager");
+        //setQueryCode("HisSysManager");
         try
         {
             for(TAntiDrugSecurityResult ad : adsr)
@@ -1025,24 +1025,22 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                 {
                     for(TAntiDrugResult a :ascr.getAntiDrugResult())
                     {
-                        StringBuffer sql = new StringBuffer();
-                        sql.append("insert into ANTIDRUG_CHECKRSLT(drug_id,rec_main_no,rec_sub_no ,ngroupnum,checkdate,checktype,memo,dept_code,dept_name,doctor_code,doctor_name,result")
-                               .append(" ) values (")
-                               .append(" '").append(ascr.getDrug_ID()).append("'")
-                               .append(",'").append(ascr.getOrder_No()).append("'")
-                               .append(",'").append(ascr.getOrder_Sub_No()).append("'")
-                               .append(",'").append(this.ngroupnum).append("'")
-                               .append(",'").append(CheckTime).append("'")
-                               .append(",'").append(a.getCheckType()).append("'")
-                               .append(",'").append(a.getMemo()).append("'")                          
-                               .append(",'").append(po.getDoctorDeptID()).append("'")
-                               .append(",'").append(po.getDoctorDeptName()).append("'")
-                               .append(",'").append(po.getDoctorID()).append("'")
-                               .append(",'").append(po.getDoctorName()).append("'")
-                               .append(",'").append( a.isResult()).append("'")
-                               .append(")");
-                        query.update(sql.toString());
-                        sql.setLength(0);
+//                        sql.append("insert into ANTIDRUG_CHECKRSLT(drug_id,rec_main_no,rec_sub_no ,ngroupnum,checkdate" +
+//                        		",checktype,memo,dept_code,dept_name,doctor_code,doctor_name,result")
+                        PageData param = new PageData();
+                        param.put("drug_id", ascr.getDrug_ID()); 
+                        param.put("rec_main_no", ascr.getOrder_No()); 
+                        param.put("rec_sub_no", ascr.getOrder_Sub_No()); 
+                        param.put("ngroupnum", this.ngroupnum); 
+                        param.put("checkdate", CheckTime);
+                        param.put("checktype", a.getCheckType());
+                    	param.put("memo",a.getMemo() );
+                    	param.put("dept_code", po.getDoctorDeptID());
+                    	param.put("dept_name", po.getDoctorDeptName());
+                    	param.put("doctor_code", po.getDoctorID());
+                    	param.put("doctor_name", po.getDoctorName());
+                    	param.put("result", a.isResult());
+                        dao.save("ResultMapper.saveAntidrugCheckrslt", param);
                     }
                 }
                 
@@ -1081,50 +1079,51 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
     @Override
     public void savePreveUseDrug(TPatientOrder po)
     {
-        setQueryCode("IAS");
+        //setQueryCode("IAS");
         try
         {
             if(po.getPreveUseDrug() == null || po.getPreveUseDrug().length == 0 ) return ;
             for(TPreveUseDrug p : po.getPreveUseDrug())
             {
-                String sql = " insert into ANTI_DRUG_USE_REC_YF(yf_id, patient_id, visit_id, dept_code, dept_name, doctor_name, name, sex, age, weight, drug_code, drug_name, dosage, dosage_units, administration, opertor_date, opertor_name, opertor_type, opertor_use_time, drug_use_time, gms, btgms, wxys, kndzbj, kljlanjl, yf_use_drug_yj, REC_DATE,tsyq) values (" +
-                "'" + this.ngroupnum          + "'," +                        
-                "'" + p.getPATIENT_ID()       + "'," +
-                "'" + p.getVISIT_ID()         + "'," +
-                "'" + p.getDEPT_CODE()        + "'," +
-                "'" + p.getDEPT_NAME()        + "'," +
-                "'" + p.getDOCTOR_NAME()      + "'," +
-                "'" + p.getNAME()             + "'," +
-                "'" + p.getSEX()              + "'," +
-                "'" + p.getAGE()              + "'," +
-                "'" + p.getWEIGHT()           + "'," +
-                "'" + p.getDRUG_CODE()        + "'," +
-                "'" + p.getDRUG_NAME()        + "'," +
-                "'" + p.getDOSAGE()           + "'," +
-                "'" + p.getDOSAGE_UNITS()     + "'," +
-                "'" + p.getADMINISTRATION()   + "'," +
-                " to_date('" + p.getOPERTOR_DATE() + "','yyyy-mm-dd hh24:mi:ss') ,"  +
-                "'" + p.getOPERTOR_NAME()     + "',"  +
-                "'" + p.getOPERTOR_TYPE()     + "',"  +
-                "'" + p.getOPERTOR_USE_TIME() + "',"  +
-                "'" + p.getDRUG_USE_TIME()    + "',"  +
-                "'" + p.getGMS()              + "',"  +
-                "'" + p.getBTGMS()            + "',"  +
-                "'" + p.getWXYS()             + "',"  +
-                "'" + p.getKNDZBJ()           + "',"  +
-                "'" + p.getKLJLANJL()         + "',"  +
-                "'" + p.getYF_USE_DRUG_YJ()   + "',"  +
-                "'" + p.getREC_DATE()         + "',"  +
-                "'" + p.getTSYQ()             + "'"  +
-                ")";
+            	PageData param = new PageData();
                 try
                 {
-                    query.update(sql);
+                //String sql = " insert into ANTI_DRUG_USE_REC_YF(yf_id, patient_id, visit_id, dept_code, dept_name, doctor_name, name, sex, age, weight, drug_code, drug_name, dosage, dosage_units, administration, opertor_date, opertor_name, opertor_type, opertor_use_time, drug_use_time, gms, btgms, wxys, kndzbj, kljlanjl, yf_use_drug_yj, REC_DATE,tsyq) values (" +
+                param.put("yf_id", this.ngroupnum); 
+                param.put("patient_id", p.getPATIENT_ID()); 
+                param.put("visit_id", p.getVISIT_ID()); 
+                param.put("dept_code", p.getDEPT_CODE()); 
+                param.put("dept_name", p.getDEPT_NAME());
+                param.put("doctor_name", p.getDOCTOR_NAME());
+            	param.put("name",p.getNAME());
+            	param.put("sex", p.getSEX() );
+            	param.put("age", p.getAGE());
+            	param.put("weight", p.getWEIGHT() );
+            	param.put("drug_code", p.getDRUG_CODE() );
+            	param.put("drug_name", p.getDRUG_NAME() );
+            	param.put("dosage", p.getDOSAGE());
+            	param.put("dosage_units", p.getDOSAGE_UNITS());
+            	param.put("administration", p.getADMINISTRATION());
+            	param.put("opertor_date", DateUtil.fomatDate2(p.getOPERTOR_DATE()));
+            	param.put("opertor_name", p.getOPERTOR_NAME());
+            	param.put("opertor_type", p.getOPERTOR_TYPE());
+            	param.put("opertor_use_time", p.getOPERTOR_USE_TIME());
+            	param.put("drug_use_time", p.getDRUG_USE_TIME());
+            	param.put("gms", p.getGMS()  );
+            	param.put("btgms", p.getBTGMS());
+            	param.put("wxys", p.getWXYS());
+            	param.put("kndzbj", p.getKNDZBJ());
+            	param.put("kljlanjl", p.getKLJLANJL() );
+            	param.put("yf_use_drug_yj",p.getYF_USE_DRUG_YJ());
+            	param.put("REC_DATE", p.getREC_DATE() );
+            	param.put("tsyq", p.getTSYQ()  );
+                dao.save("ResultMapper.saveAntiDrugUseRecYf", param);
+                
                 }
                 catch(Exception e)
                 {
                     e.printStackTrace();
-                    log.warn("[" + this.ngroupnum + "] -----预防用药信息保存----[" + sql + "]");
+                    log.warn("[" + this.ngroupnum + "] -----预防用药信息保存----[ResultMapper.saveAntiDrugUseRecYf]");
                 }
             }
         }
@@ -1138,50 +1137,49 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
     @Override
     public void saveTreatUseDrug(TPatientOrder po)
     {
-        setQueryCode("IAS");
+        //setQueryCode("IAS");
         try
         {
             if(po.getTreatUseDrug() == null || po.getTreatUseDrug().length == 0 ) return ;
             for(TTreatUseDrug p : po.getTreatUseDrug())
             {
-                String sql = " insert into ANTI_DRUG_USE_REC_ZL(zl_id, patient_id, visit_id, dept_code, dept_name, doctor_name, name, sex, age, weight, yyly, zlfl, grbw, zdyj, kndzbj, drug_code, drug_name, dosage, dosage_units, administration, rec_date, twdate, twvalue, twok, xxdate, xxvalue, cvalue, xxok) values (" +
-                "'" + this.ngroupnum        + "'," +
-                "'" + p.getPATIENT_ID()     + "'," +
-                "'" + p.getVISIT_ID()       + "'," +
-                "'" + p.getDEPT_CODE()      + "'," +
-                "'" + p.getDEPT_NAME()      + "'," +
-                "'" + p.getDOCTOR_NAME()    + "'," +
-                "'" + p.getNAME()           + "'," +
-                "'" + p.getSEX()            + "'," +
-                "'" + p.getAGE()            + "'," +
-                "'" + p.getWEIGHT()         + "'," +
-                "'" + p.getYYLY()           + "'," +
-                "'" + p.getZLFL()           + "'," +
-                "'" + p.getGRBW()           + "'," +
-                "'" + p.getZDYJ()           + "'," +
-                "'" + p.getKNDZBJ()         + "'," +
-                "'" + p.getDRUG_CODE()      + "'," +
-                "'" + p.getDRUG_NAME()      + "'," +
-                "'" + p.getDOSAGE()         + "'," +
-                "'" + p.getDOSAGE_UNITS()   + "'," +
-                "'" + p.getADMINISTRATION() + "'," +
-                "'" + p.getREC_DATE()       + "'," +
-                "'" + p.getTWDATE()         + "'," +
-                "'" + p.getTWVALUE()        + "'," +
-                "'" + p.getTWOK()           + "'," +
-                "'" + p.getXXDATE()         + "'," +
-                "'" + p.getXXVALUE()        + "'," +
-                "'" + p.getCVALUE()         + "'," +
-                "'" + p.getXXOK()           + "'" +
-                ") ";
-                try
-                {
-                   query.update(sql);
+            	PageData param = new PageData();
+            	try{
+            		//String sql = " insert into ANTI_DRUG_USE_REC_ZL(zl_id, patient_id, visit_id, dept_code, dept_name, doctor_name, name, sex, age, weight, yyly, zlfl, grbw, zdyj, kndzbj, drug_code, drug_name, dosage, dosage_units, administration, rec_date, twdate, twvalue, twok, xxdate, xxvalue, cvalue, xxok) values (" +
+	                param.put("zl_id", this.ngroupnum  );
+	                param.put("patient_id", p.getPATIENT_ID()  );
+	                param.put("visit_id", p.getVISIT_ID()  );
+	                param.put("dept_code", p.getDEPT_CODE() );
+	                param.put("dept_name",  p.getDEPT_NAME()   );
+	                param.put("doctor_name", p.getDOCTOR_NAME()  );
+	                param.put("name", p.getNAME()   );
+	                param.put("sex", p.getSEX()  );
+	                param.put("age", p.getAGE()   );
+	                param.put("weight", p.getWEIGHT() );
+	                param.put("yyly", p.getYYLY()   );
+	                param.put("zlfl", p.getZLFL()  );
+	                param.put("grbw", p.getGRBW()  );
+	                param.put("zdyj", p.getZDYJ()  );
+	                param.put("kndzbj", p.getKNDZBJ()   );
+	                param.put("drug_code", p.getDRUG_CODE() );
+	                param.put("drug_name", p.getDRUG_NAME()   );
+	                param.put("dosage", p.getDOSAGE() );
+	                param.put("dosage_units", p.getDOSAGE_UNITS()  );
+	                param.put("administration", p.getADMINISTRATION() );
+	                param.put("rec_date", p.getREC_DATE() );
+	                param.put("twdate", p.getTWDATE()   );
+	                param.put("twvalue", p.getTWVALUE() );
+	                param.put("twok", p.getTWOK()   );
+	            	param.put("xxdate", p.getXXDATE()   );
+	            	param.put("xxvalue", p.getXXVALUE()  );
+	            	param.put("cvalue", p.getCVALUE()   );
+	            	param.put("xxok", p.getXXOK()  );
+	                dao.save("ResultMapper.saveAntiDrugUseRecZl", param);
                 }
                 catch(Exception e )
                 {
                     e.printStackTrace();
-                    log.warn("[" + this.ngroupnum + "] -----治疗用药信息保存----[" + sql + "]");
+                    log.warn("[" + this.ngroupnum + "] -----治疗用药信息保存----[ResultMapper.saveAntiDrugUseRecZl]");
                 }
             }
         }

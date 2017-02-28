@@ -59,8 +59,8 @@ import com.ts.service.pdss.peaas.manager.IPrescSecurityChecker;
  */
 @WebService(
         endpointInterface = "com.ts.service.pdss.IHisAuditor",
-        portName = "pdssServicePort",
-        serviceName = "pdssService",
+        portName = "PdssServicePort",
+        serviceName = "PdssService",
         targetNamespace = "http://www.tmp.com/services/pdssService"
     )
 @Service("hisAuditor")
