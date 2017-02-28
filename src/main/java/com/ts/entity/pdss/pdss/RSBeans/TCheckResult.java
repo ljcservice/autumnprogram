@@ -214,10 +214,13 @@ public class TCheckResult
 	}
 	private int diaRedCount = 0;
 	private int diaYellowCount = 0;
+	@XmlElement(name="getDiaRedCount")
 	public int getDiaRedCount() 
 	{
 		return diaRedCount;
 	}
+	
+	@XmlElement(name="getDiaYellowCount")
 	public int getDiaYellowCount() 
 	{
 		return diaYellowCount;
