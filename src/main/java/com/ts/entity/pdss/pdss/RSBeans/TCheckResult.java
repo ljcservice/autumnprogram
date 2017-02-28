@@ -3,6 +3,8 @@ package com.ts.entity.pdss.pdss.RSBeans;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
+
 public class TCheckResult 
 {
 	private String enter = "#A#D";
@@ -58,6 +60,7 @@ public class TCheckResult
 	 * 药物给药途径审查结果对象
 	 * @return
 	 */
+	@XmlElement(name="getAdministrationRslt")
 	public TAdministrationRslt[] getAdministrationRslt()
 	{
 		return admList.toArray(new TAdministrationRslt[0]);
@@ -88,6 +91,7 @@ public class TCheckResult
 	 * 药物过敏审查结果对象
 	 * @return
 	 */
+	@XmlElement(name="getDrugAllergenRslt")
 	public TDrugAllergenRslt[] getDrugAllergenRslt()
 	{
 		return dagList.toArray(new TDrugAllergenRslt[0]);
@@ -117,6 +121,7 @@ public class TCheckResult
 	 * 药品禁忌审查结果对象
 	 * @return
 	 */
+	@XmlElement(name="getDrugDiagRslt")
 	public TDrugDiagRslt[] getDrugDiagRslt()
 	{
 		return ddiList.toArray(new TDrugDiagRslt[0]);
@@ -146,6 +151,7 @@ public class TCheckResult
 	 * 药物剂量审查结果对象
 	 * @return
 	 */
+	@XmlElement(name="getDrugDosageRslt")
 	public TDrugDosageRslt[] getDrugDosageRslt()
 	{
 		return ddgList.toArray(new TDrugDosageRslt[0]);
@@ -174,6 +180,7 @@ public class TCheckResult
 	 * 药物重复成份审查结果对象
 	 * @return
 	 */
+	@XmlElement(name="getDrugIngredientRslt")
 	public TDrugIngredientRslt[] getDrugIngredientRslt()
 	{
 		return didList.toArray(new TDrugIngredientRslt[0]);
@@ -200,6 +207,7 @@ public class TCheckResult
 	 * 药品相互作用审查结果对象
 	 * @return
 	 */
+	@XmlElement(name="getDrugInteractionRslt")
 	public TDrugInteractionRslt[] getDrugInteractionRslt()
 	{
 		return diaList.toArray(new TDrugInteractionRslt[0]);
@@ -238,6 +246,7 @@ public class TCheckResult
 	 * 药品配伍审查结果对象
 	 * @return
 	 */
+	@XmlElement(name="getDrugIvEffectRslt")
 	public TDrugIvEffectRslt[] getDrugIvEffectRslt()
 	{
 		return dieList.toArray(new TDrugIvEffectRslt[0]);
@@ -266,6 +275,7 @@ public class TCheckResult
 	 * 特殊人群审查结果对象
 	 * @return
 	 */
+	@XmlElement(name="getDrugSpecPeopleRslt")
 	public TDrugSpecPeopleRslt[] getDrugSpecPeopleRslt()
 	{
 		return dspList.toArray(new TDrugSpecPeopleRslt[0]);
@@ -295,6 +305,7 @@ public class TCheckResult
 	 * 不良反应审查结果对象
 	 * @return
 	 */
+	@XmlElement(name="getSideRslt")
 	public TDrugHarmfulRslt[] getSideRslt()
 	{
 		return dhfList.toArray(new TDrugHarmfulRslt[0]);
@@ -315,6 +326,7 @@ public class TCheckResult
 	 * 医保审查
 	 * @return
 	 */
+	@XmlElement(name="getMedicareRslt")
 	public TMedicareRslt[] getMedicareRslt()
 	{
 	    return (TMedicareRslt[])mcareList.toArray(new TMedicareRslt[0]);
