@@ -332,67 +332,82 @@ public class TCheckResult
 	    return (TMedicareRslt[])mcareList.toArray(new TMedicareRslt[0]);
 	}
 	
-	
+	@XmlElement(name="getAdmRedCount")
 	public int getAdmRedCount() {
 		return admRedCount;
 	}
 	
+	@XmlElement(name="getAdmYellowCount")
 	public int getAdmYellowCount() {
 		return admYellowCount;
 	}
 
+	@XmlElement(name="getDagRedCount")
 	public int getDagRedCount() {
 		return dagRedCount;
 	}
 
+	@XmlElement(name="getDagYellowCount")
 	public int getDagYellowCount() {
 		return dagYellowCount;
 	}
-
+	
+	@XmlElement(name="getDdiRedCount")
 	public int getDdiRedCount() {
 		return ddiRedCount;
 	}
 
+	@XmlElement(name="getDdiYellowCount")
 	public int getDdiYellowCount() {
 		return ddiYellowCount;
 	}
 
+	@XmlElement(name="getDdgRedCount")
 	public int getDdgRedCount() {
 		return ddgRedCount;
 	}
 
+	@XmlElement(name="getDdgYellowCount")
 	public int getDdgYellowCount() {
 		return ddgYellowCount;
 	}
 
+	@XmlElement(name="getDidRedCount")
 	public int getDidRedCount() {
 		return didRedCount;
 	}
 
+	@XmlElement(name="getDidYellowCount")
 	public int getDidYellowCount() {
 		return didYellowCount;
 	}
 
+	@XmlElement(name="getDieRedCount")
 	public int getDieRedCount() {
 		return dieRedCount;
 	}
 
+	@XmlElement(name="getDieYellowCount")
 	public int getDieYellowCount() {
 		return dieYellowCount;
 	}
 
+	@XmlElement(name="getDspRedCount")
 	public int getDspRedCount() {
 		return dspRedCount;
 	}
 
+	@XmlElement(name="getDspYellowCount")
 	public int getDspYellowCount() {
 		return dspYellowCount;
 	}
 
+	@XmlElement(name="getDhfRedCount")
 	public int getDhfRedCount() {
 		return dhfRedCount;
 	}
 
+	@XmlElement(name="getDhfYellowCount")
 	public int getDhfYellowCount() {
 		return dhfYellowCount;
 	}
