@@ -1,7 +1,7 @@
 package com.ts.entity.pdss.pdss.Beans;
 
-import com.hitzd.his.Utils.DrugUtils;
 import com.hitzd.his.Beans.TBaseBean;
+import com.hitzd.his.Utils.DrugUtils;
 
 /**
  * 药品字典
@@ -59,7 +59,6 @@ public class TDrug extends TBaseBean
 	private String recSubNo   = "";
 	/* 药敏代码 */
 	private String SENSIT_CODE = "";
-	
 	private boolean isAnti    = false;     
 
 	private String UseType    = "";
