@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hitzd.DBUtils.JDBCQueryImpl;
 import com.hitzd.DBUtils.TCommonRecord;
 import com.hitzd.his.Beans.TPatOrderDrug;
 import com.hitzd.his.Utils.Config;
@@ -36,8 +35,6 @@ import com.ts.entity.pdss.pdss.RSBeans.TDrugInteractionRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TMedicareRslt;
 import com.ts.service.cache.CacheProcessor;
 import com.ts.service.cache.CacheTemplate;
-import com.ts.service.pdss.pdss.RowMapper.DrugAllergIngrMapper;
-import com.ts.service.pdss.pdss.RowMapper.DrugPerfromMapper;
 import com.ts.util.PageData;
 
 @Service
@@ -55,7 +52,7 @@ public class PdssCache {
     private static String ddgCache = "ddgCache"; //药品剂量使用字典
     private static String drugPerform ="drugPerform";/* 医嘱执行频率字典 */
     private static String commonCache = "commonCache";// 公用缓存
-	
+    private static String drugMedicareRslt = "drugMedicareRslt";// 公用缓存
 	@Autowired
 	private CacheTemplate cacheTemplate;
 	
@@ -237,7 +234,7 @@ public class PdssCache {
      * @throws Exception 
      */
     public TDrugInteractionInfo getDrugInteractionInfo(final String code1, final String code2) throws Exception{
-    	TDrugInteractionInfo t = cacheTemplate.cache(diiCache+code1+"_"+code2, new CacheProcessor<TDrugInteractionInfo>() {
+    	TDrugInteractionInfo t = cacheTemplate.cache(diiCache,code1+"_"+code2, new CacheProcessor<TDrugInteractionInfo>() {
 			@Override
 			public TDrugInteractionInfo handle() throws Exception {
 				PageData pd = new PageData();
@@ -313,7 +310,7 @@ public class PdssCache {
      * @throws Exception 
      */
     public List<TCommonRecord> getDiseageVsDiag(final String Diag_Code) throws Exception{
-    	List<TCommonRecord> t = cacheTemplate.cache(DiseageVsDiag+Diag_Code, new CacheProcessor<List<TCommonRecord>>() {
+    	List<TCommonRecord> t = cacheTemplate.cache(DiseageVsDiag,Diag_Code, new CacheProcessor<List<TCommonRecord>>() {
 			@Override
 			public List<TCommonRecord> handle() throws Exception {
 				List<TCommonRecord> r = (List<TCommonRecord>) dao.findForObject("DrugMapper.getDiseageVsDiag",Diag_Code);
@@ -330,7 +327,7 @@ public class PdssCache {
      * @throws Exception 
      */
 	public List<TDrugIvEffect> queryDrugIvEffect(final String drugIvCode1,final String drugIvCode2) throws Exception {
-    	List<TDrugIvEffect> t = cacheTemplate.cache(drugIvEffect,drugIvCode1+drugIvCode2, new CacheProcessor<List<TDrugIvEffect>>() {
+    	List<TDrugIvEffect> t = cacheTemplate.cache(drugIvEffect,drugIvCode1+"_"+drugIvCode2, new CacheProcessor<List<TDrugIvEffect>>() {
 			@Override
 			public List<TDrugIvEffect> handle() throws Exception {
 				PageData pd = new PageData();
@@ -496,7 +493,7 @@ public class PdssCache {
      */
     public  List<TDrugDosage> getDdg(final String drugClass ,final String administation ) throws Exception
     {
-    	List<TDrugDosage> t = cacheTemplate.cache(ddgCache, drugClass + administation , new CacheProcessor<List<TDrugDosage>>() {
+    	List<TDrugDosage> t = cacheTemplate.cache(ddgCache, drugClass+"_"+ administation , new CacheProcessor<List<TDrugDosage>>() {
 			@Override
 			public List<TDrugDosage> handle() throws Exception {
 				PageData pd = new PageData();
@@ -582,7 +579,7 @@ public class PdssCache {
 			public TMedicareCatalog handle() throws Exception {
 				PageData pd = new PageData();
 				pd.put("DRUG_ID", DRUG_ID);
-				TMedicareCatalog r = (TMedicareCatalog) dao.findForObject("InfoMapper.queryTMedicareCatalog",pd);
+				TMedicareCatalog r = (TMedicareCatalog) dao.findForObject("DrugMapper.queryTMedicareCatalog",pd);
 				pd = null;
 				return r;
 			}
@@ -590,7 +587,7 @@ public class PdssCache {
     	return t;
 	}
 	public TMedicareRslt getDrugMedicareRslt(final String drugID) throws Exception {
-		TMedicareRslt t = cacheTemplate.cache(commonCache, drugID , new CacheProcessor<TMedicareRslt>() {
+		TMedicareRslt t = cacheTemplate.cache(drugMedicareRslt, drugID , new CacheProcessor<TMedicareRslt>() {
 			@Override
 			public TMedicareRslt handle() throws Exception {
 				TDrug drug = queryDrugById(drugID);
