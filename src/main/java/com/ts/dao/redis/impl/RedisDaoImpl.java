@@ -25,6 +25,11 @@ import com.ts.util.DbFH;
 import com.ts.util.ObjectBytesExchange;
 import com.ts.util.PageData;
 
+/** 
+ * 请不要直接调用该类，请使用CacheTemplate类操作redis
+ * @author silong.xing
+ *
+ */
 @Repository("redisDao")
 public class RedisDaoImpl extends AbstractBaseRedisDao<String, PageData> implements RedisDao{
 	

@@ -6,10 +6,9 @@ import java.util.Set;
 
 
 /** 
- * 说明： 第2数据源例子接口
- * 创建人：
- * 创建时间：2016-05-2
- * @version
+ * 请不要直接调用该类，请使用CacheTemplate类操作redis
+ * @author silong.xing
+ *
  */
 public interface RedisDao {
 	
