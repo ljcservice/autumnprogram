@@ -19,8 +19,10 @@
 	<select id="getDrugInteraction" parameterType="pd" resultType="TDrugInteractionInfo">
 		select DRUG_INTERACTION_INFO_ID,INGR_CLASS_ID1,INGR_CLASS_ID2,INTER_INDI,WAR_INFO,MEC_INFO,MAN_INFO,DIS_INFO,REF_SOURCE 
 		from DRUG_INTERACTION_INFO 
+		<if test="code1 != null and code1 != '' and code2 != null and code2 != ''">
 		where (INGR_CLASS_ID1 = #{code1} and INGR_CLASS_ID2 = #{code2}) 
 			or (INGR_CLASS_ID1 = #{code2} and INGR_CLASS_ID2 = #{code1}) 
+		</if>
 　	</select>
 	<!-- 诊断信息转换 -->
 	<select id="queryDiagDictMap" parameterType="pd" resultType="String">
@@ -42,22 +44,31 @@
 		select ADMINISTRATION_ID,ADMINISTRATION_NAME,INPUT_CODE,ADMINISTRATION_CLASS,ROUTE_METHOD,ROUTE_CLASS,
  			ADMINISTRATION_NO_LOCAL,ADMINISTRATION_NAME_LOCAL,ADMINISTRATION_ID,OPER_USER,OPER_TIME 
  			from view_administration 
- 			where ADMINISTRATION_ID = #{id}
+ 			<if test="id != null and id != ''">
+ 				where
+ 				ADMINISTRATION_ID = #{id}
+ 			</if>
 	</select>
 	<!-- 	用药途径 -->
 	<select id="getAdministrationLocal" parameterType="String" resultType="TAdministration">
 		select ADMINISTRATION_ID,ADMINISTRATION_NAME,INPUT_CODE,ADMINISTRATION_CLASS,ROUTE_METHOD,ROUTE_CLASS,
 			ADMINISTRATION_NO_LOCAL,ADMINISTRATION_NAME_LOCAL,ADMINISTRATION_ID,OPER_USER,OPER_TIME 
 			from view_administration 
-			where ADMINISTRATION_NO_LOCAL = #{id}
-    
+			<if test="id != null and id != ''">
+				where ADMINISTRATION_NO_LOCAL = #{id}
+    		</if>
 	</select>
 	<!-- 	药物禁忌症对应信息 -->
 	<select id="queryDrugDiagRel" parameterType="pd" resultType="TDrugDiagRel">
 		select DRUG_DIAG_REL_ID,CONTRAIND_ID,DRUG_CLASS_ID,ADMINISTRATION_ID,INDEX_ID 
 		from DRUG_DIAG_REL
-        where DRUG_CLASS_ID = #{drugClassId} 
-        	and ADMINISTRATION_ID = #{drugAdmini}
+        where 1=1
+        	<if test="drugClassId != null and drugClassId != ''">
+		       and  DRUG_CLASS_ID = #{drugClassId} 
+        	</if>
+        	<if test="drugAdmini != null and drugAdmini != ''">
+        		and ADMINISTRATION_ID = #{drugAdmini}
+        	</if>
 	</select>
 	<!-- 	药物禁忌症对应CONTRAIND_ID -->
 	<select id="getDrugDiagInfos" parameterType="pd" resultType="TDrugDiagInfo">
