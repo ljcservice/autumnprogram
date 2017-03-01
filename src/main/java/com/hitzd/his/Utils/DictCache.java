@@ -76,7 +76,7 @@ public final class DictCache
         formMap      = new HashMap<String, TCommonRecord>();
         hisQuery     = DBQueryFactory.getQuery("HIS"); 
         //iasQuery     = DBQueryFactory.getQuery("IAS"); 
-        peaasQuery   = DBQueryFactory.getQuery("PEAAS");
+//        peaasQuery   = DBQueryFactory.getQuery("PEAAS");
         /* 部门 */
         this.setDept(hisQuery);
         /* 大部门 */
@@ -518,8 +518,8 @@ public final class DictCache
     private void setDoctorCode()
     {
         /*  2014-10-29 liujc 修改  将医生基本信息让用户自己维护*/
-        JDBCQueryImpl query = DBQueryFactory.getQuery("PEAAS");
-        List<TCommonRecord> list = query.query("select * from PEAAS.staff_dict ", new CommonMapper());
+        JDBCQueryImpl query = DBQueryFactory.getQuery("ph");
+        List<TCommonRecord> list = query.query("select * from staff_dict ", new CommonMapper());
         try
         {
             for(TCommonRecord ds : list)

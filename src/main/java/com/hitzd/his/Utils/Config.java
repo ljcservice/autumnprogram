@@ -37,17 +37,24 @@ public class Config
      */
     public static void initParam()
     {
-    	System.out.println("Config参数初始化开始！");
-    	JDBCQueryImpl peaasQuery = DBQueryFactory.getQuery("PEAAS");
-    	// 初始化参数信息
-    	paramMap = new HashMap<String, String>(); 
-        @SuppressWarnings("unchecked")
-		List<TCommonRecord> list = peaasQuery.query("select rulecode,rulevalue from ruleparameter", new CommonMapper());
-        for (TCommonRecord cr: list)
-        	paramMap.put(cr.get("rulecode").toUpperCase(), cr.get("rulevalue"));
-        peaasQuery = null;
-        paramLoaded = true;
-    	System.out.println("Config参数初始化结束！");
+    	try
+    	{
+    		System.out.println("Config参数初始化开始！");
+        	JDBCQueryImpl peaasQuery = DBQueryFactory.getQuery("");
+        	// 初始化参数信息
+        	paramMap = new HashMap<String, String>(); 
+            @SuppressWarnings("unchecked")
+    		List<TCommonRecord> list = peaasQuery.query("select rulecode,rulevalue from ruleparameter", new CommonMapper());
+            for (TCommonRecord cr: list)
+            	paramMap.put(cr.get("rulecode").toUpperCase(), cr.get("rulevalue"));
+            peaasQuery = null;
+            paramLoaded = true;
+        	System.out.println("Config参数初始化结束！");
+    	}
+    	catch(Exception e )
+    	{
+    		e.printStackTrace();
+    	}
     }
     
     /**
@@ -56,56 +63,63 @@ public class Config
     @SuppressWarnings ("unchecked")
     public static void initTableConfig()
     {
-    	System.out.println("Config表和字段配置初始化开始！");
-    	JDBCQueryImpl peaasQuery = DBQueryFactory.getQuery("PEAAS");
-        // 初始化对照表配置信息
-        tableMap = new HashMap<String, TTableConfig>();
-        @SuppressWarnings("unchecked")
-		List<TTableConfig> tableList = peaasQuery.query("select * from table_config", new TableConfigMapper());
-        if (tableList != null && tableList.size() > 0)
-        {
-	        for (TTableConfig table : tableList)
-	        {
-	        	@SuppressWarnings("unchecked")
-				List<TFieldConfig> fieldList = peaasQuery.query("select * from field_config where table_id='" + table.getTableId() + "'", new FieldConfigMapper());
-	        	if (fieldList != null && fieldList.size() > 0)
-	        	{
-		        	TFieldConfig[] fields = new TFieldConfig[fieldList.size()];
-		        	Map<String, TFieldConfig> fieldMap = new HashMap<String, TFieldConfig>();
-		        	for (int i = 0; i < fieldList.size(); i++)
-		        	{
-		        		fields[i] = fieldList.get(i);
-		        		fieldMap.put(fieldList.get(i).getOriginalField(), fieldList.get(i));
-		        	}
-		        	table.setFields(fields);
-		        	table.setFieldMap(fieldMap);
-	        	}
-	        	@SuppressWarnings("unchecked")
-				List<TQueryConfig> queryList = peaasQuery.query("select * from query_config where table_id='" + table.getTableId() + "'", new QueryConfigMapper());
-	        	if (queryList != null && queryList.size() > 0)
-	        	{
-	        		TQueryConfig[] queries = new TQueryConfig[queryList.size()];
-		        	Map<String, TQueryConfig> queryMap = new HashMap<String, TQueryConfig>();
-	        		for (int i = 0; i < queryList.size(); i++)
-	        		{
-	        			queries[i] = queryList.get(i);
-	        			queryMap.put(queryList.get(i).getQueryId(), queryList.get(i));
-	        		}
-	        		table.setQueries(queries);
-	        		table.setQueryMap(queryMap);
-	        	}
-	        	tableMap.put(table.getTableId(), table);
-	        }
-        }
-        dbUrlMap = new HashMap<String, TDBUrlConfig>();
-        List<TDBUrlConfig>  list = peaasQuery.query("select * from db_url_config ", new DBUrlConfigMapper());
-        for(TDBUrlConfig t : list)
-        {
-            dbUrlMap.put(t.getDb_url(), t);
-        }
-        peaasQuery = null;
-        tableConfigLoaded = true;
-    	System.out.println("Config表和字段配置初始化结束！");
+    	try
+    	{
+    		System.out.println("Config表和字段配置初始化开始！");
+        	JDBCQueryImpl peaasQuery = DBQueryFactory.getQuery("");
+            // 初始化对照表配置信息
+            tableMap = new HashMap<String, TTableConfig>();
+            @SuppressWarnings("unchecked")
+    		List<TTableConfig> tableList = peaasQuery.query("select * from table_config", new TableConfigMapper());
+            if (tableList != null && tableList.size() > 0)
+            {
+    	        for (TTableConfig table : tableList)
+    	        {
+    	        	@SuppressWarnings("unchecked")
+    				List<TFieldConfig> fieldList = peaasQuery.query("select * from field_config where table_id='" + table.getTableId() + "'", new FieldConfigMapper());
+    	        	if (fieldList != null && fieldList.size() > 0)
+    	        	{
+    		        	TFieldConfig[] fields = new TFieldConfig[fieldList.size()];
+    		        	Map<String, TFieldConfig> fieldMap = new HashMap<String, TFieldConfig>();
+    		        	for (int i = 0; i < fieldList.size(); i++)
+    		        	{
+    		        		fields[i] = fieldList.get(i);
+    		        		fieldMap.put(fieldList.get(i).getOriginalField(), fieldList.get(i));
+    		        	}
+    		        	table.setFields(fields);
+    		        	table.setFieldMap(fieldMap);
+    	        	}
+    	        	@SuppressWarnings("unchecked")
+    				List<TQueryConfig> queryList = peaasQuery.query("select * from query_config where table_id='" + table.getTableId() + "'", new QueryConfigMapper());
+    	        	if (queryList != null && queryList.size() > 0)
+    	        	{
+    	        		TQueryConfig[] queries = new TQueryConfig[queryList.size()];
+    		        	Map<String, TQueryConfig> queryMap = new HashMap<String, TQueryConfig>();
+    	        		for (int i = 0; i < queryList.size(); i++)
+    	        		{
+    	        			queries[i] = queryList.get(i);
+    	        			queryMap.put(queryList.get(i).getQueryId(), queryList.get(i));
+    	        		}
+    	        		table.setQueries(queries);
+    	        		table.setQueryMap(queryMap);
+    	        	}
+    	        	tableMap.put(table.getTableId(), table);
+    	        }
+            }
+            dbUrlMap = new HashMap<String, TDBUrlConfig>();
+            List<TDBUrlConfig>  list = peaasQuery.query("select * from db_url_config ", new DBUrlConfigMapper());
+            for(TDBUrlConfig t : list)
+            {
+                dbUrlMap.put(t.getDb_url(), t);
+            }
+            peaasQuery = null;
+            tableConfigLoaded = true;
+        	System.out.println("Config表和字段配置初始化结束！");
+    	}
+    	catch(Exception e )
+    	{
+    		e.printStackTrace();
+    	}
     }
     
     /**
@@ -161,7 +175,7 @@ public class Config
     private static String getSelectParamValue(String paraCode)
     {
 //        System.out.println("Config 获取参数 " + paraCode ); 
-        JDBCQueryImpl query =  DBQueryFactory.getQuery("PEAAS");
+    	JDBCQueryImpl query =  DBQueryFactory.getQuery("");
         CommonMapper  cmr   = new CommonMapper();
         TCommonRecord  rs   = new TCommonRecord();
         try
@@ -191,7 +205,7 @@ public class Config
     {
     	
         if (!paramLoaded) initParam();
-    	if (paramMap.containsKey(name.toUpperCase()))
+    	if (paramMap != null && paramMap.containsKey(name.toUpperCase()))
     	{
     		return paramMap.get(name.toUpperCase());
     	}

@@ -63,7 +63,7 @@ public final class DBQueryFactory
 //                ds = getDataSource(resourceID);
                 
                 // 2014-10-21 liujc 修改   将数据连接池不托管在spring容器中
-                ds = (DataSource) SpringBeanUtil.getBean("dataSource_" + resourceID );    
+                ds = (DataSource) SpringBeanUtil.getBean("dataSource" + ("".equals(resourceID) ? "":"_" + resourceID ));    
             }
             catch(NullPointerException nullPoiE)
             {
@@ -79,7 +79,7 @@ public final class DBQueryFactory
     
     /**
      * 直接获得数据库访问对象
-     * @param resourceID
+     * @param resourceID 如果是空字符串 则为plat 用户
      * @return
      */
     @SuppressWarnings ("unused")

@@ -18,19 +18,19 @@ public class JDBPropertiesR extends Properties
     private static final long serialVersionUID = 1L;
     public JDBPropertiesR()
     {
-        File f = new File("jdbc.properties");
-        try
-        {
-            if(!f.exists())
-            {
-                throw new RuntimeException("未找到的该文件:\"" + f.getCanonicalPath() + "\"");
-            }
-            InputStream input = new BufferedInputStream(new FileInputStream(f));
-            load(input);       
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
+//        File f = new File("jdbc.properties");
+//        try
+//        {
+//            if(!f.exists())
+//            {
+//                throw new RuntimeException("未找到的该文件:\"" + f.getCanonicalPath() + "\"");
+//            }
+//            InputStream input = new BufferedInputStream(new FileInputStream(f));
+//            load(input);       
+//        }
+//        catch(Exception e)
+//        {
+//            e.printStackTrace();
+//        }
     }
 }
