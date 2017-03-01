@@ -14,7 +14,7 @@ import com.ts.util.PageData;
 @Service
 public class OrderWorkServiceBean implements IOrderWorkService {
 
-	@Resource(name="daoSupport_PH")
+	@Resource(name="daoSupportPH")
 	private DAO daoph;
 	
 	@SuppressWarnings("unchecked")
