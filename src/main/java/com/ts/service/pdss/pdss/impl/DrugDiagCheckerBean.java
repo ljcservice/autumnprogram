@@ -102,12 +102,12 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
 	        for(String str : diagnosis)
 	        {
 //	            List<TCommonRecord> list = QueryUtils.queryDiseageVsdiag(str, query);
-	        	List<TCommonRecord> list = pdssCache.getDiseageVsDiag(str);
+	        	List<PageData> list = pdssCache.getDiseageVsDiag(str);
 //	            diseVsdiagMap.put(str, list);
 	            if(list == null || list.size() == 0 ){ 
 	            	continue;
 	            }
-	            for(TCommonRecord t : list)
+	            for(PageData t : list)
 	            {
 	            	diaeVsDiags.add(t.get("disease_id").toString()) ;
 	            }

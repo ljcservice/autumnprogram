@@ -40,19 +40,20 @@ import com.ts.util.PageData;
 @Service
 @Transactional
 public class PdssCache {
-	private static String drugCacheByLocal = "drugCacheByLocal";//单个药品信息kEY，以本地药品码为主键的药品Bean 
-	private static String drugInteraction = "drugInteraction";//互动信息结果缓存
-	private static String diiCache = "diiCache";//药品成分冲突Key
-	private static String DiseageVsDiag = "DiseageVsDiag";//诊断对应的疾病key
-	private static String drugadmini = "drugadmini";//用药途径key
-	private static String ddrCache = "ddrCache";//药物禁忌症对应key
-	private static String drugIvEffect = "drugIvEffect";//配伍信息
-	private static String dudCache = "dudCache";//特殊人群
-    private static String aidCache  =  "aidCache"; /* 药物成分、药敏、药物分类与药物对照字典 */
-    private static String ddgCache = "ddgCache"; //药品剂量使用字典
-    private static String drugPerform ="drugPerform";/* 医嘱执行频率字典 */
-    private static String commonCache = "commonCache";// 公用缓存
-    private static String drugMedicareRslt = "drugMedicareRslt";// 公用缓存
+	public static String drugCacheByLocal = "drugCacheByLocal";//单个药品信息kEY，以本地药品码为主键的药品Bean 
+	public static String drugInteraction = "drugInteraction";//互动信息结果缓存
+	public static String diiCache = "diiCache";//药品成分冲突Key
+	public static String DiseageVsDiag = "DiseageVsDiag";//诊断对应的疾病key
+	public static String drugadmini = "drugadmini";//用药途径key
+	public static String ddrCache = "ddrCache";//药物禁忌症对应key
+	public static String drugIvEffect = "drugIvEffect";//配伍信息
+	public static String dudCache = "dudCache";//特殊人群
+    public static String aidCache  =  "aidCache"; /* 药物成分、药敏、药物分类与药物对照字典 */
+    public static String ddgCache = "ddgCache"; //药品剂量使用字典
+    public static String drugPerform ="drugPerform";/* 医嘱执行频率字典 */
+    public static String commonCache = "commonCache";// 公用缓存
+    public static String drugMedicareRslt = "drugMedicareRslt";// 公用缓存
+    public static String drugMedicare = "drugMedicare";// 公用缓存
 	@Autowired
 	private CacheTemplate cacheTemplate;
 	
@@ -70,7 +71,6 @@ public class PdssCache {
     {
         final List<TDrugDiagRel> list = new ArrayList<TDrugDiagRel>();
         List<String> param = new ArrayList<String>();
-        
         for (int i = 0; i < drugClassIDs.length; i++){
             for (int j = 0; j < drugAdmini.length; j++){
 	        	if(param.contains(drugClassIDs[i]+"_"+drugAdmini[j])){
@@ -101,7 +101,7 @@ public class PdssCache {
             	PageData pd = new PageData();
             	pd.put("drugClassId", drugClassId);
             	pd.put("drugAdmini", drugAdmini);
-            	TDrugDiagRel	res = (TDrugDiagRel) dao.findForObject("DrugMapper.queryDrugDiagRel",pd);
+            	TDrugDiagRel res = (TDrugDiagRel) dao.findForObject("DrugMapper.queryDrugDiagRel",pd);
             	pd = null;
             	return res;
   			}
@@ -143,11 +143,13 @@ public class PdssCache {
 			@Override
 			public TAdministration handle() throws Exception {
 				TAdministration res=null;
+				PageData pd = new PageData();
+				pd.put("ADMINISTRATION_ID", administrationID);
 		    	/* 用来区分 his 系统 传入 的是 本地码 或是 标准码 */
 		    	if(Config.getParamValue("admin_conv_flag").equals("0")){
-		    		res = (TAdministration) dao.findForObject("DrugMapper.getAdministration",administrationID);
+		    		res = (TAdministration) dao.findForObject("DrugMapper.getAdministration",pd);
 		    	}else {
-		    		res = (TAdministration) dao.findForObject("DrugMapper.getAdministrationLocal",administrationID);
+		    		res = (TAdministration) dao.findForObject("DrugMapper.getAdministrationLocal",pd);
 		    	}
 				return res;
 			}
@@ -258,7 +260,9 @@ public class PdssCache {
     	TDrug t = cacheTemplate.cache(drugCacheByLocal+id, new CacheProcessor<TDrug>() {
 			@Override
 			public TDrug handle() throws Exception {
-				TDrug res = (TDrug) dao.findForObject("DrugMapper.queryDrugById",id);
+				PageData pd = new PageData();
+				pd.put("id", id);
+				TDrug res = (TDrug) dao.findForObject("DrugMapper.queryDrugById",pd);
 				return res;
 			}
 		});
@@ -309,11 +313,13 @@ public class PdssCache {
      * @return
      * @throws Exception 
      */
-    public List<TCommonRecord> getDiseageVsDiag(final String Diag_Code) throws Exception{
-    	List<TCommonRecord> t = cacheTemplate.cache(DiseageVsDiag,Diag_Code, new CacheProcessor<List<TCommonRecord>>() {
+    public List<PageData> getDiseageVsDiag(final String Diag_Code) throws Exception{
+    	List<PageData> t = cacheTemplate.cache(DiseageVsDiag,Diag_Code, new CacheProcessor<List<PageData>>() {
 			@Override
-			public List<TCommonRecord> handle() throws Exception {
-				List<TCommonRecord> r = (List<TCommonRecord>) dao.findForObject("DrugMapper.getDiseageVsDiag",Diag_Code);
+			public List<PageData> handle() throws Exception {
+				PageData pd = new PageData();
+				pd.put("diagnosis_code",Diag_Code);
+				List<PageData> r = (List<PageData>) dao.findForObject("DrugMapper.getDiseageVsDiag",pd);
 				return r;
 			}
 		});
@@ -417,7 +423,7 @@ public class PdssCache {
 			public TDrugUseDetail handle() throws Exception {
 				PageData pd = new PageData();
 				pd.put("DRUG_CLASS_ID", drugClass);
-				TDrugUseDetail r = (TDrugUseDetail) dao.findForObject("InfoMapper.getDudInfoById",drugClass);
+				TDrugUseDetail r = (TDrugUseDetail) dao.findForObject("DrugMapper.getDudInfoById",drugClass);
 				pd = null;
 				return r;
 			}
@@ -574,7 +580,7 @@ public class PdssCache {
      * @throws Exception 
      */
 	public TMedicareCatalog queryTMedicareCatalog(final String DRUG_ID) throws Exception {
-    	TMedicareCatalog t = cacheTemplate.cache(commonCache, DRUG_ID , new CacheProcessor<TMedicareCatalog>() {
+    	TMedicareCatalog t = cacheTemplate.cache(drugMedicare, DRUG_ID , new CacheProcessor<TMedicareCatalog>() {
 			@Override
 			public TMedicareCatalog handle() throws Exception {
 				PageData pd = new PageData();
