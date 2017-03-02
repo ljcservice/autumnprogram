@@ -96,15 +96,16 @@ public class DBSnapshot
 	
 	static
 	{
-		loadSnapshot();
-		Timer timer = new Timer();
-		timer.schedule(new TimerTask() {
-
-			@Override
-			public void run() {
-				DBSnapshot.RefreshSnapshot();
-			}
-		}, 0, 3600000);
+//		 
+//		loadSnapshot();
+//		Timer timer = new Timer();
+//		timer.schedule(new TimerTask() {
+//
+//			@Override
+//			public void run() {
+//				DBSnapshot.RefreshSnapshot();
+//			}
+//		}, 0, 3600000);
 
 	}
     public static boolean canRun()
