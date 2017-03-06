@@ -1,5 +1,7 @@
-//package com.ts.service.pdss;
-//
+package com.ts.service.pdss;
+
+import org.springframework.stereotype.Component;
+
 //import java.util.HashMap;
 //import java.util.LinkedHashMap;
 //import java.util.LinkedList;
@@ -18,8 +20,8 @@
 // * @author Administrator
 // *
 // */
-//public class DictCacheService
-//{
+@Component
+public class DictCacheService {
 //    /* 医生 */
 //    public static HashMap<String, PageData>   doctorMap = null;
 //    /* 部门  */
@@ -58,8 +60,8 @@
 //	@Resource(name = "daoSupportPH")
 //	private DaoSupportPH daoPH;
 //    
-//    public void initCache()
-//    {
+    public void initCache()
+    {
 //        System.out.println("---------------------工厂创建 ");
 //        doctorMap    = new HashMap<String, PageData>();
 //        deptMap      = new LinkedHashMap<String, PageData>();
@@ -107,9 +109,9 @@
 //        /* 剂型字典 */
 //        this.setFormMap();
 //        System.out.println("---------------------工厂创建结束 ");
-//    }
-//
-//
+    }
+
+
 //    private void setPerformMap()
 //    {
 //        try
@@ -1176,4 +1178,4 @@
 //        }
 //        return searchmergeDeptMap;
 //    }
-//}
+}
