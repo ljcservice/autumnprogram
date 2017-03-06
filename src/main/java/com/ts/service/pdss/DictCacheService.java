@@ -62,6 +62,7 @@ public class DictCacheService {
 //    
     public void initCache()
     {
+    	
 //        System.out.println("---------------------工厂创建 ");
 //        doctorMap    = new HashMap<String, PageData>();
 //        deptMap      = new LinkedHashMap<String, PageData>();
