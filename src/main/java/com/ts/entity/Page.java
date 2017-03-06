@@ -31,6 +31,12 @@ public class Page {
 		}
 	}
 	
+	public Page(int pagNum,int showCount){
+		this.currentPage = pagNum;
+		this.showCount = 15;
+		this.totalPage = 1;
+	}
+	
 	public int getTotalPage() {
 		if(totalResult%showCount==0)
 			totalPage = totalResult/showCount;
