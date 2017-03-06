@@ -76,6 +76,12 @@ public class PageData extends HashMap implements Map{
 		return Integer.parseInt(rs.toString()) ;
 	}
 	
+	public Double getDouble(Object key) {
+		Object rs =  get(key);
+		if(rs == null ) return null;
+		return Double.parseDouble(rs.toString()) ;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object put(Object key, Object value) {
@@ -134,5 +140,11 @@ public class PageData extends HashMap implements Map{
 	public Collection values() {
 		// TODO Auto-generated method stub
 		return map.values();
+	}
+	
+	public static void main(String[] args) {
+		PageData w = new PageData();
+		Set<String> s =w.keySet(); 
+		System.out.println(s.contains("22"));
 	}
 }
