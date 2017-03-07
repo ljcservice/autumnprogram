@@ -4,64 +4,61 @@
 
 	<!-- 诊断名称同义词-本体 关联查询 -->
 	<select id="findChargeTypeDict" parameterType="pd" resultType="pd">
-		select * from comm.charge_type_dict
+		select * from charge_type_dict
 	</select>
 
 	<select id="findDeptDictHis" parameterType="pd" resultType="pd">
-		select * from comm.DEPT_DICT 
+		select * from DEPT_DICT 
 		<if test="dept_code!=null and dept_code!=''">
 			where dept_code = #{dept_code}
 		</if>
 	</select>
 
 	<select id="findIdentityDictHis" parameterType="pd" resultType="pd">
-		select * from comm.identity_dict
+		select * from identity_dict
 	</select>
 	<select id="findDrugFormDict" parameterType="pd" resultType="pd">
-		select * from comm.drug_form_dict
+		select * from drug_form_dict
 	</select>
 
 	<select id="findStaffDict" parameterType="pd" resultType="pd">
-		select * from comm.STAFF_DICT 
+		select * from STAFF_DICT 
 		where name = #{name}
 	</select>
 
 	<select id="findSpecimanDict" parameterType="pd" resultType="pd">
-		select * from COMM.SPECIMAN_DICT
+		select * from SPECIMAN_DICT
 		<if test="SPECIMAN_CODE!=null and SPECIMAN_CODE!=''">
 			where SPECIMAN_CODE = #{SPECIMAN_CODE}
 		</if>
 	</select>
 
 	<select id="findGermdrugsensitDict" parameterType="pd" resultType="pd">
-		select item_code,item_name from comm.germdrugsensit_dict
+		select item_code,item_name from germdrugsensit_dict
 		<if test="Item_Code!=null and Item_Code!=''">
 			where Item_Code = #{Item_Code}
 		</if>
 		group by item_code,item_name
 	</select>
 	<select id="findGermCodeDict" parameterType="pd" resultType="pd">
-		select * from comm.GERM_CODE_DICT
+		select * from GERM_CODE_DICT
 		<if test="Germ_code !=null and Germ_code !=''">
 			where Germ_code = #{Germ_code}
 		</if>
 	</select>
 	
 	<select id="findDrugDict" parameterType="pd" resultType="pd">
-		select * from comm.drug_dict
+		select * from drug_dict
 		<if test="drug_code !=null and drug_code !=''">
 			where drug_code = #{drug_code}
 		</if>
 	</select>
 	
 	<select id="findDrugDictLike" parameterType="pd" resultType="pd">
-		select * from comm.drug_dict
+		select * from drug_dict
 		<if test="drug_code !=null and drug_code !=''">
 			where drug_code = #{drug_code}
 		</if>
-	</select>
-		<select id="findGermCodeDict" parameterType="pd" resultType="pd">
-		select * from GERM_CODE_DICT
 	</select>
 	
 	<select id="findDrugClassDict" parameterType="pd" resultType="pd">
