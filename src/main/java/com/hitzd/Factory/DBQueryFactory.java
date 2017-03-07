@@ -1,13 +1,15 @@
 package com.hitzd.Factory;
 
-import javax.sql.DataSource;
-
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.hitzd.DBUtils.JDBCQueryImpl;
 import com.hitzd.DBUtils.JdbcTemplateHander;
 import com.hitzd.springBeanManager.SpringBeanUtil;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
 
 /**
  * 数据源工厂
