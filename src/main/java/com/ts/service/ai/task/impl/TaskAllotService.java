@@ -31,7 +31,7 @@ import com.ts.util.ai.AIConst;
 @Service("taskAllotService")
 public class TaskAllotService implements TaskAllotManager{
 
-	@Resource(name = "sqlSessionTemplate_Pdss")
+	@Resource(name = "sqlSessionTemplate_PDSS")
 	private SqlSessionTemplate sqlSessionTemplate;
 	
 	@Resource(name = "daoSupportAi")

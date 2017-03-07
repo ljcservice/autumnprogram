@@ -23,10 +23,10 @@ public class HisSubCheckTime
      */
     public static void setSubCheckTime(String CheckTimeInfo)
     {
-    	HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+    	HttpServletRequest request = null;// ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
     	if(request != null)
     	{
-	        String ip      = request.getRemoteAddr();
+	        String ip  = request.getRemoteAddr();
 	        if(ip != null)
 	        {
 	            String content = SubCheckTime.get(ip);

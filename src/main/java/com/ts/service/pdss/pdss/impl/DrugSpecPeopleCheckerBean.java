@@ -44,7 +44,6 @@ public class DrugSpecPeopleCheckerBean extends Persistent4DB implements IDrugSpe
     {
     	try
     	{
-	        //this.setQueryCode("PDSS");
 	        TDrugSecurityRslt result = new TDrugSecurityRslt();
 	        /*  病人主要信息 */
 	        TPatient patient = po.getPatient();
@@ -68,7 +67,7 @@ public class DrugSpecPeopleCheckerBean extends Persistent4DB implements IDrugSpe
 	        
 	        for(TPatOrderDrug pod : po.getPatOrderDrugs())
 	        {
-	            /* 得到药品*/
+	            /* 得到药品*/ 
 	            TDrug drug = drugMap.get(pod.getDrugID()); // CommonUtils.getDrugInfoOne(drugs, pod);
 	            if(drug == null)
 	                continue;

@@ -40,9 +40,9 @@ public class DrugMapMapper extends MapperBase implements RowMapper
         dm.setDRUG_NO_LOCAL(rs.getString("DRUG_NO_LOCAL"));
         dm.setDRUG_NAME_LOCAL(rs.getString("DRUG_NAME_LOCAL"));
         dm.setDRUG_ID(rs.getString("DRUG_ID"));        
-        dm.setOPER_USER(rs.getString("OPER_USER"));      
-        dm.setOPER_DATE(rs.getString("OPER_DATE"));      
-        dm.setOPER_TYPE(rs.getString("OPER_TYPE"));      
+//        dm.setOPER_USER(rs.getString("OPER_USER"));      
+//        dm.setOPER_DATE(rs.getString("OPER_DATE"));      
+//        dm.setOPER_TYPE(rs.getString("OPER_TYPE"));      
         dm.setIS_ANTI(rs.getString("IS_ANTI"));        
         dm.setIS_MEDCARE(rs.getString("IS_MEDCARE"));     
         dm.setIS_BASEDRUG(rs.getString("IS_BASEDRUG"));    
@@ -58,8 +58,8 @@ public class DrugMapMapper extends MapperBase implements RowMapper
         dm.setDRUG_CATALOG(rs.getString("DRUG_CATALOG"));   
         dm.setIS_PREDRUG(rs.getString("IS_PREDRUG"));     
         dm.setDRUG_SPEC(rs.getString("DRUG_SPEC"));      
-        dm.setUSE_DEPT(rs.getString("USE_DEPT"));       
-        dm.setDIRECT_ID(rs.getString("DIRECT_ID"));      
+        //dm.setUSE_DEPT(rs.getString("USE_DEPT"));       
+        //dm.setDIRECT_ID(rs.getString("DIRECT_ID"));      
         BeanCache.setDrugMap(dm);
         CacheIt(dm);
         return dm;

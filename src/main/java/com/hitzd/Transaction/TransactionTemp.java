@@ -27,7 +27,7 @@ public class TransactionTemp extends TransactionTemplate
 //        ts = "txManager" + TransactionSource;
 //        if(ts == null || "".equals(ts))
 //            throw new RuntimeException();
-        this.setTransactionManager((PlatformTransactionManager)SpringBeanUtil.getBean("transactionManager_Pdss"));
+        this.setTransactionManager((PlatformTransactionManager)SpringBeanUtil.getBean("transactionManager_PDSS"));
 //        this.setTransactionManager(d);
     }
     

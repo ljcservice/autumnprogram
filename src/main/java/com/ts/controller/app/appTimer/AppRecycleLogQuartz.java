@@ -27,7 +27,7 @@ public class AppRecycleLogQuartz extends BaseController {
 	private AppRecycleLogManager appRecycleLogService;
 
 	// 需要注意@Scheduled这个注解，它可配置多个属性：cron = "0 0/1 15,* * * ?"\fixedRate\fixedDelay = 5000 表示每隔5秒执行
-	@Scheduled(cron = "0 0/1 * * * ?")
+//	@Scheduled(cron = "0 0/1 * * * ?")
 	public void RecycleQuartz() {
 		PageData pd = new PageData();
 		logBefore(logger, "日志队列数>>>:"+AppUserQueue.getQueueSysRecycleLogSize() );

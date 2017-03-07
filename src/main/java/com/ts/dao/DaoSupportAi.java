@@ -22,7 +22,7 @@ import com.ts.util.DbFH;
 @Repository("daoSupportAi")
 public class DaoSupportAi implements DAO {
 
-	@Resource(name = "sqlSessionTemplate_Pdss")
+	@Resource(name = "sqlSessionTemplate_PDSS")
 	private SqlSessionTemplate sqlSessionTemplate;
 	
 	/**

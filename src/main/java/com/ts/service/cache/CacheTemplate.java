@@ -8,6 +8,7 @@ import org.apache.commons.lang.time.StopWatch;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ts.dao.redis.RedisDao;
 import com.ts.util.Tools;
@@ -19,6 +20,7 @@ import com.ts.util.Tools;
  *
  */
 @Component
+
 public class CacheTemplate {
     @Autowired
     private RedisDao redisDao;
@@ -62,8 +64,8 @@ public class CacheTemplate {
 		if (cacheFrt) {
 			try {
 				Object cacheObj = null;
-				if (!Tools.isEmpty(key)) {
-					cacheObj = redisDao.getObject(key);
+				if (!Tools.isEmpty(keyName)) {
+					cacheObj = redisDao.getObject(keyName);
 				}
 				if (cacheObj != null) {
 					log.info(" from cache, key:"+key + ",query cache cost => " + watch.getTime() + "ms");
@@ -79,10 +81,10 @@ public class CacheTemplate {
 		log.debug(keyName + ",query cost => " + watch.getTime() + "ms");
 		if (cacheFrt) {
 			try {
-				if (!Tools.isEmpty(key)) {
+				if (!Tools.isEmpty(keyName)) {
 					Object obj = ret;
 //					DiamondJedisManager.setObject(key, seconds, obj);
-					redisDao.setObject(key,  seconds, obj);
+					redisDao.setObject(keyName,  seconds, obj);
 				}
 			} catch (Exception e) {
 				log.error(keyName + ",set cache is error", e);
@@ -104,7 +106,7 @@ public class CacheTemplate {
 		return redisDao.setObject(keyName, seconds, obj);
 	}
 	public String setObject(String key, int seconds, Object obj) {
-		return redisDao.setObject(key, seconds, obj);
+		return setObject(key,null, seconds, obj);
 	}
 	/**
 	 * 从缓存获取数据，存放什么类型取出时强转什么类型
@@ -116,6 +118,6 @@ public class CacheTemplate {
 		return redisDao.getObject(keyName);
 	}
 	public Object getObject(String key) {
-		return redisDao.getObject(key);
+		return getObject(key,null) ;
 	}
 }

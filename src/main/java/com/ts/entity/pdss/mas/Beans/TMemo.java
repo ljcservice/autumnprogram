@@ -1,14 +1,17 @@
 package com.ts.entity.pdss.mas.Beans;
 
+import java.io.Serializable;
 
 /**
  * 医保审核字典表
  * @author liujc
  *
  */
-public class TMemo 
+public class TMemo implements Serializable
 {
-    // ID
+	private static final long serialVersionUID = 1L;
+	
+	// ID
     private String        ID;
     // 医保用药ID
     private String        DRUG_ID;

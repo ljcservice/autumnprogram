@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hitzd.his.Beans.TPatOrderDrug;
 import com.hitzd.his.Beans.TPatientOrder;
+import com.hitzd.his.Utils.Config;
 import com.hitzd.persistent.Persistent4DB;
 import com.ts.dao.DaoSupportPdss;
 import com.ts.entity.pdss.pdss.Beans.TAdministration;
@@ -21,8 +22,6 @@ import com.ts.entity.pdss.pdss.Beans.TDrugIvEffect;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugIvEffectRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
 import com.ts.service.pdss.pdss.Cache.PdssCache;
-import com.ts.service.pdss.pdss.Utils.QuerySingleUtils;
-import com.ts.service.pdss.pdss.Utils.QueryUtils;
 import com.ts.service.pdss.pdss.manager.IDrugIvEffectChecker;
 
 
@@ -60,15 +59,13 @@ public class DrugIvEffectCheckerBean extends Persistent4DB implements  IDrugIvEf
 	    	for (int i = 0; i < pods.length; i++)
 	    	{
 	    		TPatOrderDrug pod = pods[i];
-	    		//经过 用药途径标准码转换 只有用药途径为3的保留下来 
-	    		//TAdministration adm = QuerySingleUtils.queryAdministration(pod.getAdministrationID(), query);
 	    		TAdministration adm = pdssCache.queryAdministration(pod.getAdministrationID());
-	    		
-	    		if(adm == null)
-	    		    continue;
+	    		if(adm == null)  continue;
+	    		//经过 用药途径标准码转换  用药途径为  Config中获得 参数  的保留下来 
 	    		// TODO: 此处用3代表了注射的用药途径，正确的做法是调用DrugUtils.isZSDrug(adm.getADMINISTRATION_ID)或者
 	    		// DrugUtils.isZSDrug(pod.getAdministrationID())，根据isZSDrug的数据来源来确定，来源为His选第二个，来源为param选第一个
-	    		if ("3".equals(adm.getADMINISTRATION_ID()))
+	    		String configAdmin = Config.getParamValue("DrugIvEffectAdmin") + ",";
+	    		if (configAdmin.equals(adm.getADMINISTRATION_ID() + ","))
 	    		{
 	    			List<TPatOrderDrug> list = group.get(pod.getRecMainNo());
 	    			if (list == null)
@@ -80,58 +77,54 @@ public class DrugIvEffectCheckerBean extends Persistent4DB implements  IDrugIvEf
 	    	for (List<TPatOrderDrug> indexList : group.values())
 	    	{
 	    		if (indexList.size() == 1) continue;
-	    		
-	    		Map<String, TPatOrderDrug> podsMap = new HashMap<String, TPatOrderDrug>();
-	    		String[] Drugs = new String[indexList.size()];
-	    		for (int i = 0; i < indexList.size(); i++)
-	    		{
-	    			TPatOrderDrug pd = indexList.get(i);
-	    			Drugs[i] = pd.getDrugID();
-	    			podsMap.put(Drugs[i], pd);
-	    		}
-
+//	    		Map<String, TPatOrderDrug> podsMap = new HashMap<String, TPatOrderDrug>();
+//	    		String[] Drugs = new String[indexList.size()];
+//	    		for (int i = 0; i < indexList.size(); i++)
+//	    		{
+//	    			TPatOrderDrug pd = indexList.get(i);
+//	    			Drugs[i] = pd.getDrugID();
+//	    			podsMap.put(Drugs[i], pd);
+//	    		}
 	    		// 找出药品信息
 //		        List<TDrug> drugs  = QueryUtils.queryDrug(Drugs, null, query);
-	    		List<TDrug> drugs = pdssCache.queryDrugListByIds(Drugs);
+//	    		List<TDrug> drugs = pdssCache.queryDrugListByIds(Drugs);
 	    		
 		        //Map<String, TDrug> drugs  = QueryUtils.queryDrug(pods, null, query);
 	            //TDrug[] arrDrugs = drugs.values().toArray(new TDrug[0]);
-	            
 		        // 药品分组配对
-		        for (int i = 0; i < drugs.size(); i++)
+		        for (int i = 0; i < indexList.size(); i++)
 		        {
-		        	TDrug drugA        = drugs.get(i);
+		        	TPatOrderDrug podDrugA = indexList.get(i);
+		        	TDrug drugA        = pdssCache.queryDrugById(podDrugA.getDrugID());
 		        	String drugIvCode1 = drugA.getIV_CLASS_CODE();
-		        	for (int j = i + 1; j < drugs.size(); j++)
+		        	for (int j = i + 1; j < indexList.size(); j++)
 		        	{
-		        		TDrug drugB = drugs.get(j);
+		        		TPatOrderDrug podDrugB = indexList.get(j);
+		        		TDrug drugB = pdssCache.queryDrugById(podDrugB.getDrugID());
 		        		String drugIvCode2 = drugB.getIV_CLASS_CODE();
 		        		/* 数据集缓存中寻找*/
 		        		//TDrugIvEffectRslt cacheInfo = BeanRSCache.getDrugIvEffectRslt(drugA.getDRUG_NO_LOCAL(), drugB.getDRUG_NO_LOCAL());
 		        		/* 配伍信息*/
 		        		List<TDrugIvEffect> list = pdssCache.queryDrugIvEffect(drugIvCode1, drugIvCode2);
-		        		
 		        		/* 配伍信息*/
 		        		//List list = QueryUtils.queryDrugIvEffect(drugIvCode1, drugIvCode2, "", query);
-		        		
 		        		/* 配伍数据集 */
 		        		if(list != null && list.size()>0)
 		        		{
 		        			TDrugIvEffectRslt drugiveff = new TDrugIvEffectRslt();
 		        			/* 对每一个返回的药品标注上 医嘱序号 */
-	        		    	drugA.setRecMainNo(podsMap.get(drugA.getDRUG_NO_LOCAL()).getRecMainNo());
-	        		    	drugA.setRecSubNo(podsMap.get(drugA.getDRUG_NO_LOCAL()).getRecSubNo());
-	        		    	drugB.setRecMainNo(podsMap.get(drugB.getDRUG_NO_LOCAL()).getRecMainNo());
-	        		    	drugB.setRecSubNo(podsMap.get(drugB.getDRUG_NO_LOCAL()).getRecSubNo());
+	        		    	drugA.setRecMainNo(podDrugA.getRecMainNo());
+	        		    	drugA.setRecSubNo(podDrugA.getRecSubNo());
+	        		    	drugB.setRecMainNo(podDrugB.getRecMainNo());
+	        		    	drugB.setRecSubNo(podDrugB.getRecSubNo());
 	        		    	
-		                    drugiveff.addIvEffect(podsMap.get(drugA.getDRUG_NO_LOCAL()), podsMap.get(drugB.getDRUG_NO_LOCAL()), list);
-		                    drugiveff.setRecMainNo(podsMap.get(drugA.getDRUG_NO_LOCAL()).getRecMainNo());
-		                    drugiveff.setRecSubNo(podsMap.get(drugA.getDRUG_NO_LOCAL()).getRecSubNo());
-		                    drugiveff.setRecMainNo2(podsMap.get(drugB.getDRUG_NO_LOCAL()).getRecMainNo());
-		                    drugiveff.setRecSubNo2(podsMap.get(drugB.getDRUG_NO_LOCAL()).getRecSubNo());
+		                    drugiveff.addIvEffect(podDrugA,podDrugB, list);
+		                    drugiveff.setRecMainNo(podDrugA.getRecMainNo());
+		                    drugiveff.setRecSubNo(podDrugA.getRecSubNo());
+		                    drugiveff.setRecMainNo2(podDrugB.getRecMainNo());
+		                    drugiveff.setRecSubNo2(podDrugB.getRecSubNo());
 		                    Result.regIvEffectCheckResult(drugA,drugB,drugiveff);    
 		        		}
-		        		
 		        	}
 		        }
 		        

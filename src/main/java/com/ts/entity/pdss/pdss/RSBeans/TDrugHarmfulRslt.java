@@ -11,7 +11,7 @@ public class TDrugHarmfulRslt extends TBaseResult implements
         java.io.Serializable
 {
     private static final long serialVersionUID = 1L;
-    /* 用品 */
+    /* 药品  */
     private TDrug drug ;
     /* 不良反应信息 */
     private TDrugSideDict     drugside;

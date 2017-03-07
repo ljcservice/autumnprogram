@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 @Repository("daoSupportPdss")
 public class DaoSupportPdss implements DAO {
 
-	@Resource(name = "sqlSessionTemplate_Pdss")
+	@Resource(name = "sqlSessionTemplate_PDSS")
 	private SqlSessionTemplate sqlSessionTemplate;
 	
 	public DaoSupportPdss()

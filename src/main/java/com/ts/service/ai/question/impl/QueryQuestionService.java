@@ -28,7 +28,7 @@ import com.ts.util.ai.AIConst;
 @Service("queryQuestionService")
 public class QueryQuestionService implements QueryQuestionManager{
 
-	@Resource(name = "sqlSessionTemplate_Pdss")
+	@Resource(name = "sqlSessionTemplate_PDSS")
 	private SqlSessionTemplate sqlSessionTemplate;
 	
 	@Resource(name = "daoSupportAi")

@@ -29,7 +29,7 @@ public class AppTimingScanQuartz extends BaseController{
 	@Resource(name = "appTokenService")
 	private AppTokenManager appTokenService;
 	// 需要注意@Scheduled这个注解，它可配置多个属性：cron = "0 0/1 15,* * * ?"\fixedRate\fixedDelay = 5000 表示每隔5秒执行
-	@Scheduled(cron = "0 0/1 * * * ?")
+//	@Scheduled(cron = "0 0/1 * * * ?")
 	public void Quartz(){
 		PageData pd = new PageData();
 		SysTokenInfo sti = new SysTokenInfo();

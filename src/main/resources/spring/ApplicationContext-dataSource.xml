@@ -140,15 +140,15 @@
  
 	<!-- ====================数据源 3 Pdss 使用==================== -->
 	
-	<bean id="sqlSessionTemplate_Pdss" class="org.mybatis.spring.SqlSessionTemplate">
-		<constructor-arg ref="sqlSessionFactory_Pdss" />
+	<bean id="sqlSessionTemplate_PDSS" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactory_PDSS" />
 	</bean>
-	<bean id="sqlSessionFactory_Pdss" class="org.mybatis.spring.SqlSessionFactoryBean">
-    	<property name="dataSource" ref="dataSource_Pdss" />
+	<bean id="sqlSessionFactory_PDSS" class="org.mybatis.spring.SqlSessionFactoryBean">
+    	<property name="dataSource" ref="dataSource_PDSS" />
         <property name="configLocation" value="classpath:mybatisPdss/mybatis-config.xml"></property>
         <property name="mapperLocations" value="classpath:mybatisPdss/*/*.xml"></property>
     </bean>
-	<bean id="dataSource_Pdss" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">  
+	<bean id="dataSource_PDSS" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">  
          <property name="url" value="${url_Pdss}" />  
          <property name="username" value="${username_Pdss}" />  
          <property name="password" value="${password_Pdss}" />  
@@ -170,10 +170,10 @@
          <property name="logAbandoned" value="${logAbandoned_Pdss}" />
 	</bean>  
 	<aop:config>
-		<aop:pointcut id="pc_Pdss" expression="execution(* com.ts.service..*(..))" />
-		<aop:advisor pointcut-ref="pc_Pdss" advice-ref="txAdvice_Pdss" />
+		<aop:pointcut id="pc_PDSS" expression="execution(* com.ts.service..*(..))" />
+		<aop:advisor pointcut-ref="pc_PDSS" advice-ref="txAdvice_PDSS" />
 	</aop:config>
-	<tx:advice id="txAdvice_Pdss" transaction-manager="transactionManager_Pdss">
+	<tx:advice id="txAdvice_PDSS" transaction-manager="transactionManager_PDSS">
 		<tx:attributes>
 			<tx:method name="delete*" propagation="REQUIRED" read-only="false" 
 			           rollback-for="java.lang.Exception"/>
@@ -185,8 +185,8 @@
 			           rollback-for="java.lang.Exception" />
 		</tx:attributes>
 	</tx:advice>
-	<bean name="transactionManager_Pdss" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">   
-    	<property name="dataSource" ref="dataSource_Pdss"></property>
+	<bean name="transactionManager_PDSS" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">   
+    	<property name="dataSource" ref="dataSource_PDSS"></property>
  	</bean>
  
  	<!-- ====================数据源HIS 医院信息  ==================== -->

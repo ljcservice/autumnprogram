@@ -22,7 +22,7 @@ import com.ts.service.pdss.pdss.manager.IDrugAllergenChecker;
 
 /**
  * 过敏药物审查
- * 
+ * 此审核  规则不明确 ，目前放弃 
  * @author liujc
  * 
  */

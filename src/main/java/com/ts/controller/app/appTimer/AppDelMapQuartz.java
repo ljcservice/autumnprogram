@@ -23,7 +23,7 @@ public class AppDelMapQuartz extends BaseController {
 	private AppTokenManager appTokenService;
 
 	// 需要注意@Scheduled这个注解，它可配置多个属性：cron = "0 0/3 15 * * * ?"\fixedRate\fixedDelay = 5000 表示每隔5秒执行
-	@Scheduled(cron = "0 0/59 * * * ?")
+//	@Scheduled(cron = "0 0/59 * * * ?")
 	public void Quartz() {
 		logBefore(logger, "进入删除过期MapToken！！！");
 		SessionAppMap.reMovetimeOut();

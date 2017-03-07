@@ -232,10 +232,12 @@ public class RedisDaoImpl extends AbstractBaseRedisDao<String, PageData> impleme
 		String host = pros.getProperty("redis.host");		//地址
 		String port = pros.getProperty("redis.port");		//端口
 		String pass = pros.getProperty("redis.pass");		//密码
+		if(this.jedis != null ) return  this.jedis;
 		if("yes".equals(isopen)){
 			Jedis jedis = new Jedis(host,Integer.parseInt(port));
 			jedis.auth(pass);
-			return jedis;
+			this.jedis = jedis;
+			return this.jedis;
 		}else{
 			return null;
 		}
@@ -303,10 +305,12 @@ public class RedisDaoImpl extends AbstractBaseRedisDao<String, PageData> impleme
 		return setBytes(key.getBytes(), seconds, byteObj);
 	}
 	
+	private  Jedis jedis = null;
 	private String setBytes(byte[] key, int seconds, byte[] bytes) {
 		String ret = null;
 		if ((key == null) || (bytes == null))
 			return ret;
+		
 		try {
 			Jedis jedis = getJedis();
 			jedis.del(key);

@@ -1,6 +1,7 @@
 package com.ts.entity.pdss.pdss.RSBeans;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.ts.entity.pdss.pdss.Beans.TDrug;
 import com.ts.entity.pdss.pdss.Beans.TDrugDiagInfo;
@@ -20,16 +21,26 @@ public class TDrugDiagRslt extends TBaseResult implements Serializable
     private TDrugDiagRel  drugDiaRel;
     /* 药物禁忌症信息 */
     private TDrugDiagInfo drugDiaInfo ;
+    
+    /* 诊断名称 */
+    private String   diagName ;
 
-    public TDrugDiagRslt()
+    public String getDiagName() {
+		return diagName;
+	}
+	public void setDiagName(String diagName) {
+		this.diagName = diagName;
+	}
+	public TDrugDiagRslt()
     {
         setVersion(2);
     }
-    public void addDrugDiag(TDrug _drug , TDrugDiagRel _ddr , TDrugDiagInfo _ddi )
+    public void addDrugDiag(TDrug _drug , TDrugDiagRel _ddr , TDrugDiagInfo _ddi , String diagname  )
     {
         this.drug = _drug;
         this.drugDiaRel = _ddr;
         this.drugDiaInfo = _ddi;
+        this.diagName = diagname;
         if("1".equals(_ddi.getINTER_INDI())||"2".equals(_ddi.getINTER_INDI()))
         {
             this.alertLevel = "R";

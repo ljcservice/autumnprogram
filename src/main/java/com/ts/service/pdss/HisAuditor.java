@@ -626,9 +626,11 @@ public class HisAuditor implements IHisAuditor
     				drug.setDRUG_NO_LOCAL(pod.getDrugID());
     				drug.setRecMainNo(pod.getRecMainNo());
     				drug.setRecSubNo(pod.getRecSubNo());
-    				adsr.setDspList(drugsr1.getCheckResult(drug).getDrugSpecPeopleRslt());
-    				adsr.setAllergenRslt(drugsr1.getCheckResult(drug).getDrugAllergenRslt());
-    				adsr.setDosageRslt(drugsr1.getCheckResult(drug).getDrugDosageRslt());
+    				if(drugsr1.getCheckResult(drug) != null){
+	    				adsr.setDspList(drugsr1.getCheckResult(drug).getDrugSpecPeopleRslt());
+	    				adsr.setAllergenRslt(drugsr1.getCheckResult(drug).getDrugAllergenRslt());
+	    				adsr.setDosageRslt(drugsr1.getCheckResult(drug).getDrugDosageRslt());
+	    			}
     			}
     			list.add(adsr);
     		}
@@ -669,7 +671,8 @@ public class HisAuditor implements IHisAuditor
 		tcr.set("DOCTOR_NAME", po.getDoctorName());                                               //医生名称
 		tcr.set("DEPT_NAME", po.getDoctorDeptName());                                             //部门名称
 		tcr.set("OPERATION_DATE",DateUtils.getDateTime());                                        //操作时间
-		tcr.set("AllSingleCheckTime", HisSubCheckTime.getSubCheckTimeInfo());                     //单项审查时间总汇
+		tcr.set("AllSingleCheckTime","0");                     //单项审查时间总汇
+//		tcr.set("AllSingleCheckTime", HisSubCheckTime.getSubCheckTimeInfo());                     //单项审查时间总汇
 		
 		/* 审查信息列队中 */
 		QueueBeanTCR.setSaveBeanRS(tcr);
