@@ -19,7 +19,6 @@ public class DateUtil {
 	private final static SimpleDateFormat sdfDays = new SimpleDateFormat("yyyyMMdd");
 	private final static SimpleDateFormat sdfTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private final static SimpleDateFormat sdfTimes = new SimpleDateFormat("yyyyMMddHHmmss");
-	private final static SimpleDateFormat sdfTimes2 = new SimpleDateFormat("yyyy-mm-dd hh24:mi:ss");
 	/**
 	 * 获取YYYY格式
 	 * @return
@@ -105,12 +104,7 @@ public class DateUtil {
 	 * @return
 	 */
 	public static Date fomatDate2(String date) {
-		try {
-			return sdfTimes2.parse(date);
-		} catch (ParseException e) {
-			e.printStackTrace();
-			return null;
-		}
+		return fomatDate(date);
 	}
 
 	/**
@@ -204,7 +198,7 @@ public class DateUtil {
         return dateStr;
     }
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException {
     	System.out.println(getDays());
     	System.out.println(getAfterDayWeek("3"));
     }
