@@ -72,7 +72,7 @@ public class PageData extends HashMap implements Map{
 	}
 	public Integer getInt(Object key) {
 		Object rs =  get(key);
-		if(rs == null ) return null;
+		if(rs == null || "".equals(rs.toString())) return null;
 		return Integer.parseInt(rs.toString()) ;
 	}
 	
