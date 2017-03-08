@@ -32,6 +32,8 @@
 							<input type="hidden" name="order_class" value="${page.pd.order_class}" id="order_class"/>
 							<input type="hidden" name="order_class_name" value="${page.pd.order_class_name}" id="order_class_name"/>
 							<input type="hidden" name="ngroupnum" value="${page.pd.ngroupnum }" id="ngroupnum"/>
+							<input type="hidden" name="show_type" value="${page.pd.show_type }" id="show_type"/>
+							<input type="hidden" name="show_type_name" value="${page.pd.show_type_name }" id="show_type_name"/>
 							<!-- 快捷审核名字  -->
 							<input type="hidden" name="shortcutName" value="${page.pd.shortcutName}" id="shortcutName"/>
 							<!-- 点评结果之一 -->
@@ -43,22 +45,24 @@
 									<div class="btn-toolbar" style="float: right;">
 									
 									<div class="btn-group">
-										<button id="orderViewType" class="btn btn-sm btn-yellow">医嘱查看切换</button>
+										<button id="orderViewType" class="btn btn-sm btn-yellow">
+											${page.pd.show_type_name != null && page.pd.show_type_name !=''?page.pd.show_type_name:"医嘱查看切换"}
+										</button>
 										<button data-toggle="dropdown" class="btn btn-sm btn-yellow dropdown-toggle">
 											<i class="ace-icon fa fa-angle-down icon-only"></i>
 										</button>
 										<ul class="dropdown-menu dropdown-yellow">
 											<li>
-												<a href="#">常规查看</a>
+												<a href="javascript:show_type(0,'常规查看');">常规查看</a>
 											</li>
 											<li>
-												<a href="#">按日分解查看</a>
+												<a href="javascript:show_type(1,'按日分解查看');">按日分解查看</a>
 											</li>
 											<li>
-												<a href="#">按日图分解查看</a>
+												<a href="javascript:show_type(2,'按日图分解查看');">按日图分解查看</a>
 											</li>
 											<li>
-												<a href="#">手后医嘱</a>
+												<a href="javascript:show_type(3,'术后医嘱');">术后医嘱</a>
 											</li>
 											<li class="divider"></li>
 											<li>
@@ -166,7 +170,9 @@
 								</div>
 							</div>
 						</div>
-						<div>
+						<div >
+						<!-- 	常规查看 -->
+						<c:if test="${page.pd.show_type== null || page.pd.show_type=='' || page.pd.show_type==0}">
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:10px;">
 							<thead>
 								<tr>
@@ -243,6 +249,90 @@
 							</c:choose>
 							</tbody>
 						</table>
+						</c:if>
+						<!-- 	按日分解查看						 -->
+						<c:if test="${page.pd.show_type!= null && page.pd.show_type==1}">		
+						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:10px;">
+							<thead>
+								<tr>
+									<th class="center" nowrap>日期</th>
+									<th class="center" nowrap> </th>
+									<th class="center" nowrap>医嘱名称</th>
+									<th class="center" nowrap>医嘱类型</th>
+									<th class="center" nowrap>医嘱科室</th>
+									<th class="center" nowrap>用法</th>
+									<th class="center" nowrap>用量</th>
+									<th class="center" nowrap>途径</th>
+								</tr>
+							</thead>
+							<tbody>
+							<!-- 开始循环 -->	
+							<c:choose>
+								<c:when test="${not empty datestrMap and not empty DoctOrders}">
+									<c:forEach items="${datestrMap}" var="dateMap" varStatus="vs">
+											<c:set var="myindex">0</c:set>
+											<c:forEach items="${DoctOrders}" var="order" varStatus="vs">
+											<c:if test="${order.datestr == dateMap.key}">
+											<tr ondblclick="orderCheck(this)"  id="tr${order.order_no}${order.order_sub_no}" 
+												order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_name="${order.order_Text }" >
+											<c:if test="${myindex==0}">
+												<td class="center mydateclass" rowspan="${dateMap.value}">${dateMap.key }</td>
+											</c:if>
+											<c:set var="myindex">${myindex+1}</c:set>
+											<td class='center' style="padding-bottom: 0px;">
+												<c:set var="key1" >
+													${order.order_no.toString()}_${order.order_sub_no.toString()}
+												</c:set>
+												<c:if test="${CheckRss.containsKey(key1)}">
+														<a class="fa fa-flag red bigger-130"
+															data-rel="popover" 
+															data-placement="right" 
+															title="<i class='ace-icon fa fa-check red'></i>   ${order.order_Text}" 
+															data-content="<font size='0'>
+																<c:forEach items="${CheckRss.get(key1)}" var="rs">
+																	<b>${rsTypeDict.get(rs.IN_RS_TYPE).rs_type_name }:  
+																	<c:if test="${rs.drug_id1_name != order.order_Text }"> 
+																		${rs.drug_id1_name }</b>
+																	</c:if>
+																	<c:if test="${rs.drug_id2_name != order.order_Text }"> 
+																		${rs.drug_id2_name }</b>
+																	</c:if>
+																	 <br>
+																	${rs.ALERT_HINT }<br>
+																</c:forEach>	
+															</font>"
+														></a>
+												</c:if>
+											</td>
+											
+											<td class='center' >
+												${order.order_Text }
+											</td>
+											<td class="center ">
+												${order.order_class}
+											</td>
+											<td class="center " >${order.dept_name}</td>
+											<td class="center " >${order.frequency }</td>
+											<td class="center ">
+												<fmt:formatNumber value="${order.dosage }" pattern="#0.00"></fmt:formatNumber>
+												${order.dosage_units }
+											</td>
+											<td class="center " >${order.administration } </td>
+										</tr>
+										</c:if>
+									</c:forEach>
+								</c:forEach>
+								</c:when>
+								<c:otherwise>
+									<tr class="main_info">
+										<td colspan="8" class="center">没有相关数据</td>
+									</tr>
+								</c:otherwise>
+							</c:choose>
+							</tbody>
+						</table>
+						
+						</c:if>	
 						</div>
 						<div class="page-header position-relative">
 							<table style="width:100%;">
@@ -524,6 +614,9 @@
 		}
 		var myColor = _trObj.style.backgroundColor;
 		_trObj.style.backgroundColor = "red";
+		if($("#show_type").val()==1){
+			$(".mydateclass").css("background-Color","white");
+		}
 		if(setCount == 1)
 		{
 			var drug1 = $("#checkDrug1");
@@ -562,6 +655,14 @@
 		var myform = window.document.forms[0];
 		myform.order_class.value = _type;
 		myform.order_class_name.value = _name;
+		myform.submit();
+	}
+	//医嘱查看切换
+	function show_type(_type,_name){
+		showBG();
+		var myform = window.document.forms[0];
+		myform.show_type.value = _type;
+		myform.show_type_name.value = _name;
 		myform.submit();
 	}
 	
