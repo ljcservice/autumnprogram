@@ -21,6 +21,8 @@ import com.ts.util.DateUtil;
 import com.ts.util.PageData;
 import com.ts.util.app.AppUtil;
 
+import net.sf.json.JSONArray;
+
 
 /**
  * 医嘱点评工作表
@@ -153,6 +155,50 @@ public class OrderWork extends BaseController
 		PageData pd = this.getPageData();
 		page.setPd(pd);
 		page.setCurrentjztsFlag(1);
+		Integer show_type = page.getPd().getInt("show_type");
+		//常规查看 获取医嘱信息
+		List<PageData> pdOrders =null;
+		if(show_type==null || show_type==0){
+			pdOrders = this.orderWorkService.orderList(page);
+		}else if( show_type==1){
+			//按日分解查看
+			pdOrders = this.orderWorkService.ordersPageByDate(page); 
+			Map<String,Integer> datestrMap = new HashMap<String,Integer>();
+			//分组统计
+			for(PageData pp:pdOrders){
+				if(datestrMap.containsKey(pp.getString("datestr"))){
+					datestrMap.put(pp.getString("datestr"), datestrMap.get(pp.getString("datestr"))+1);
+				}else{
+					datestrMap.put(pp.getString("datestr"), 1);
+				}
+			}
+			mv.addObject("datestrMap",datestrMap);
+		}else if( show_type==2){
+			Map<Integer,String> classmap = new HashMap<Integer,String>();
+			classmap.put(0, "label-grey");
+			classmap.put(1, "label-success");
+			classmap.put(2, "label-danger");
+			classmap.put(3, "label-purple");
+			classmap.put(4, "label-yellow");
+			classmap.put(5, "label-pink");
+			classmap.put(6, "label-info");
+			List<PageData> treeList = orderWorkService.OrdersPicture(pd);
+			int  i = 0;
+			for(PageData pp:treeList){
+				pp.put("CLASSNAME", classmap.get(i));
+				if(i>=6){
+					i=0;
+				}else{
+					i++;
+				}
+			}
+			JSONArray arr = JSONArray.fromObject(treeList);
+			String json = arr.toString();
+			json = json.replaceAll("TITLE", "title").replaceAll("STARTDATE", "start").replaceAll("ENDDATE", "end").replaceAll("CLASSNAME", "className");
+			mv.addObject("dateNodes",json);
+			mv.setViewName("DoctOrder/OrderWork/calendar");
+			return mv;
+		}
 		//查询结果ByNgroupnum
 		List<PageData> checkRss = this.orderWorkService.findByCheckResultsByNgroupnum(page);
 		Map<String, List<PageData>> map = new HashMap<String , List<PageData>>();
@@ -165,26 +211,6 @@ public class OrderWork extends BaseController
 			String key2 = d.getString("rec_main_no2") + "_" + d.getString("rec_sub_no2");
 			if(!map.containsKey(key2)) map.put(key2, new ArrayList<PageData>()); 
 			map.get(key2).add(d);
-		}
-		
-		Integer show_type = page.getPd().getInt("show_type");
-		//常规查看 获取医嘱信息
-		List<PageData> pdOrders =null;
-		if(show_type==null || show_type==0){
-			pdOrders = this.orderWorkService.orderList(page);
-		}else if( show_type==1){
-			//按日分解查看
-			pdOrders = this.orderWorkService.OrdersByIdPageByDate(page); 
-			Map<String,Integer> datestrMap = new HashMap<String,Integer>();
-			//分组统计
-			for(PageData pp:pdOrders){
-				if(datestrMap.containsKey(pp.getString("datestr"))){
-					datestrMap.put(pp.getString("datestr"), datestrMap.get(pp.getString("datestr"))+1);
-				}else{
-					datestrMap.put(pp.getString("datestr"), 1);
-				}
-			}
-			mv.addObject("datestrMap",datestrMap);
 		}
 		
 		mv.addObject("CheckRss",map);
