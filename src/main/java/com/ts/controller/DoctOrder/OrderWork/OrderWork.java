@@ -175,13 +175,13 @@ public class OrderWork extends BaseController
 			mv.addObject("datestrMap",datestrMap);
 		}else if( show_type==2){
 			Map<Integer,String> classmap = new HashMap<Integer,String>();
-			classmap.put(0, "label-grey");
+			classmap.put(0, "label-info");
 			classmap.put(1, "label-success");
 			classmap.put(2, "label-danger");
 			classmap.put(3, "label-purple");
 			classmap.put(4, "label-yellow");
 			classmap.put(5, "label-pink");
-			classmap.put(6, "label-info");
+			classmap.put(6, "label-grey");
 			List<PageData> treeList = orderWorkService.OrdersPicture(pd);
 			int  i = 0;
 			for(PageData pp:treeList){
