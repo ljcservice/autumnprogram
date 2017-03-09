@@ -161,7 +161,7 @@
 
 
 	<select id="ordersByPicture" parameterType="pd" resultType="pd">
-		select order_Text||'['||order_class||']'  title,to_char(start_date_time,'yyyy-MM-dd') startdate ,to_char(stop_date_time+1,'yyyy-MM-dd') enddate , 'label-info' className
+		select order_Text||'['||order_class||']'  title,to_char(start_date_time,'yyyy-MM-dd hh24:mi:ss') startdate ,to_char(stop_date_time+1,'yyyy-MM-dd hh24:mi:ss') enddate 
 		from  orders 
 		where 	patient_id  = #{patient_id} and visit_id = #{visit_id}
 	</select>
