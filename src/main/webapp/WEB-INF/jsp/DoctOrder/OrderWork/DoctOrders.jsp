@@ -676,6 +676,8 @@
 		diag.Height = $(top.window).height();
 		diag.CancelEvent = function(){ //关闭事件
 			diag.close();
+			//遮罩层控制，第三层弹窗使用
+			parent.$("#_DialogBGDiv").css("z-index",900).css("display","block");
 		};
 		diag.show();
 		
