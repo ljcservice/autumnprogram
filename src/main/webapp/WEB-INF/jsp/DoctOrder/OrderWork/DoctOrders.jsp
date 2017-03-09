@@ -59,7 +59,7 @@
 												<a href="javascript:show_type(1,'按日分解查看');">按日分解查看</a>
 											</li>
 											<li>
-												<a href="javascript:show_type(2,'按日图分解查看');">按日图分解查看</a>
+												<a href="javascript:show_picture(2,'按日图分解查看');">按日图分解查看</a>
 											</li>
 											<li>
 												<a href="javascript:show_type(3,'术后医嘱');">术后医嘱</a>
@@ -331,8 +331,7 @@
 							</c:choose>
 							</tbody>
 						</table>
-						
-						</c:if>	
+						</c:if>
 						</div>
 						<div class="page-header position-relative">
 							<table style="width:100%;">
@@ -665,7 +664,22 @@
 		myform.show_type_name.value = _name;
 		myform.submit();
 	}
-	
+	function show_picture(_type,name){
+		var url = path + "/DoctOrder/DoctOrdersDetail.do?show_type="+_type+"&patient_id="+$("#patient_id").val()+"&visit_id="+$("#visit_id").val();
+		url+="&order_class="+$(order_class).val()+"&repeat_indicator"+$("#repeat_indicator").val();
+		top.jzts();
+		var diag = new top.Dialog();
+		diag.Drag=true;
+		diag.Title ="按日图分解查看";
+		diag.URL = url;
+		diag.Width = $(top.window).width();
+		diag.Height = $(top.window).height();
+		diag.CancelEvent = function(){ //关闭事件
+			diag.close();
+		};
+		diag.show();
+		
+	}
 	// 处理医嘱类型
 	function orderViewType(_type,_name)
 	{
