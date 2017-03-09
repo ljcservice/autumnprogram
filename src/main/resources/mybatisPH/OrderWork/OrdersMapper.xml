@@ -104,7 +104,7 @@
 	
 	
 	<!--查询病人信息  (常规查看 )-->
-	<select id="OrdersByIdlistPage" parameterType="page" resultType="pd">
+	<select id="ordersByIdlistPage" parameterType="page" resultType="pd">
 		select  
 			<include refid="Field"></include>
 		from 
@@ -125,15 +125,15 @@
 		Order by ORDER_NO,order_sub_no 
 	</select>
 	<!--查询病人信息  (按日分解查看)-->
-	<select id="OrdersByIdPageByDate" parameterType="page" resultType="pd">
+	<select id="ordersPageByDate" parameterType="page" resultType="pd">
 		with myDateTable as (
 			select to_char(min_date+rownum-1,'yyyy-mm-dd') datestr
 			from
 				(
 				select   to_date(to_char(min(start_date_time),'yyyy-MM-dd') ,'yyyy-MM-dd') as  min_date,
-				          to_date(to_char(max(start_date_time),'yyyy-MM-dd') ,'yyyy-MM-dd') as max_date
+				          to_date(to_char(max(stop_date_time),'yyyy-MM-dd') ,'yyyy-MM-dd') as max_date
 					from  orders 
-				     
+				    where patient_id  = #{pd.patient_id} and visit_id = #{pd.visit_id}
 				)
 			connect by rownum &lt;=(max_date-min_date)+1
 		 )
@@ -147,7 +147,7 @@
 			stop_nurse,stop_order_date_time,dept_name,clinic_attr,outp_or_inp,
 			internal_or_sergery,link_date,ddd_value
 	from myDateTable a
-	left join orders b on(a.datestr &gt;=to_char(b.start_date_time,'yyyy-MM-dd') and a.datestr &lt;=to_char(b.stop_date_time,'yyyy-MM-dd'))
+	inner join orders b on(a.datestr &gt;=to_char(b.start_date_time,'yyyy-MM-dd') and a.datestr &lt;=to_char(b.stop_date_time,'yyyy-MM-dd'))
 	
 	where 	patient_id  = #{pd.patient_id} and visit_id = #{pd.visit_id}
 		<if test="pd.REPEAT_INDICATOR != null and pd.REPEAT_INDICATOR != ''"> <!-- 医嘱标示 1 长期 0 临时-->  
@@ -159,4 +159,10 @@
 		Order by datestr,ORDER_NO,order_sub_no 
 	</select>
 
+
+	<select id="ordersByPicture" parameterType="pd" resultType="pd">
+		select order_Text||'['||order_class||']'  title,to_char(start_date_time,'yyyy-MM-dd') startdate ,to_char(stop_date_time+1,'yyyy-MM-dd') enddate , 'label-info' className
+		from  orders 
+		where 	patient_id  = #{patient_id} and visit_id = #{visit_id}
+	</select>
 </mapper>
