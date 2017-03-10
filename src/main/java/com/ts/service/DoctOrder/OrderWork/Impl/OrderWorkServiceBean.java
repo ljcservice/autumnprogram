@@ -57,9 +57,27 @@ public class OrderWorkServiceBean implements IOrderWorkService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PageData> orderList(Page page)throws Exception {
-		
-		return (List<PageData>) daoph.findForList("OrdersMapper.OrdersByIdlistPage", page);
+		List<PageData> pdOrders  = (List<PageData>) daoph.findForList("OrdersMapper.ordersByIdlistPage", page);
+		return pdOrders;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PageData> ordersPageByDate(Page page)throws Exception {
+		List<PageData> pdOrders  = (List<PageData>) daoph.findForList("OrdersMapper.ordersPageByDate", page);
+		return pdOrders;
+	}
+	
+	/**
+	 * 按日图查看医嘱
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> OrdersPicture(PageData pd) throws Exception{
+		return (List<PageData>) daoph.findForList("OrdersMapper.ordersByPicture", pd);
+	}
+	
 
 	@Override
 	public List<PageData> orderWhereList(PageData pd)throws Exception {

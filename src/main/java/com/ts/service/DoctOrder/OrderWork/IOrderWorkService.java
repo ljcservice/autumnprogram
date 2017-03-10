@@ -71,7 +71,13 @@ public interface IOrderWorkService {
 	 * @return
 	 */
 	public List<PageData> orderList(Page page) throws Exception ;
-	
+	/**
+	 * 查询患者医嘱信息,按照日期查看
+	 * @param pid
+	 * @param vid
+	 * @return
+	 */
+	public List<PageData> ordersPageByDate(Page page)throws Exception ;
 	/**
 	 *  根据过滤条件查询患者医嘱信息
 	 * @param pd
@@ -92,6 +98,14 @@ public interface IOrderWorkService {
 	 * @throws Exception
 	 */
 	public List<PageData> selectRsTypeDict() throws Exception;
+
+	/**
+	 * 按日图查看医嘱
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> OrdersPicture(PageData pd) throws Exception;
 	
 	
 }

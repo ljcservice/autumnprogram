@@ -49,7 +49,7 @@
 												<span class="lbl"></span>
 											</label>
 												&nbsp;&nbsp;&nbsp;
-											<button class="btn btn-minier btn-yellow"  title="批量删除" onclick="delCheckRs('delBatch');">
+											<button class="btn btn-minier btn-yellow"  title="批量删除" onclick="delCheckRsBatch();">
 												<i class="ace-icon fa fa-trash-o bigger-120 "></i>
 											</button>
 											<button class="btn btn-minier btn-danger"  title="添加点评" onclick="addCheckRs('${page.pd.ngroupnum}');">
@@ -94,7 +94,7 @@
 												<tr>
 													<td class='center' style="width:30px;vertical-align: middle;" rowspan="2" >
 													<label>
-														<input type="checkbox" name="del"  class="ace" value="${rs.rs_id }"  >
+														<input type="checkbox" name="rs_ids"  class="ace" value="${rs.rs_id }"  >
 														<span class="lbl"></span>
 													</label>
 													</td>
@@ -105,7 +105,7 @@
 														 </c:if>
 													</td>
 													<td style="width: 300px;">
-														<button class="btn btn-minier btn-yellow"  title="删除" onclick="delCheckRs('del');">
+														<button class="btn btn-minier btn-yellow"  title="删除" onclick="delCheckRs('${rs.rs_id }');">
 															<i class="ace-icon fa fa-trash-o bigger-120 "></i>
 														</button>
 														<button class="btn btn-minier btn-info"  title="修改" onclick="editCheckRs('${rs.rs_id}');">
