@@ -26,7 +26,6 @@
 </style>
 </head>
 <body class="no-skin">
-
 	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container" >
 		<!-- /section:basics/sidebar -->
@@ -49,39 +48,39 @@
 												<span class="lbl"></span>
 											</label>
 												&nbsp;&nbsp;&nbsp;
-											<button class="btn btn-minier btn-yellow"  title="批量删除" onclick="delCheckRsBatch();">
-												<i class="ace-icon fa fa-trash-o bigger-120 "></i>
-											</button>
-											<button class="btn btn-minier btn-danger"  title="添加点评" onclick="addCheckRs('${page.pd.ngroupnum}');">
+											<a class="btn btn-minier btn-danger"  title="批量删除"  onclick="delCheckRsBatch();">
+												<i class="ace-icon fa fa-trash-o bigger-120"></i> 
+											</a>
+											<a class="btn btn-minier btn-danger"  title="添加点评" onclick="toAddCheckRs('${page.pd.ngroupnum}');">
 												<i class="ace-icon fa fa-pencil bigger-120 "></i>
-											</button>
-											<button  class="btn btn-minier btn-success" title="刷新点评结果" onclick="document.form[0].submit();">
+											</a>
+											<a  class="btn btn-minier btn-success" title="刷新点评结果" onclick="self.location.href = self.location.href;">
 												<i class="ace-icon fa fa-refresh bigger-120"></i>
-											</button>
+											</a>
 											
 											&nbsp;
 											|
 											&nbsp;
 											
-											<button class="btn btn-minier btn-info"  title="专家点评" onclick="expertCheckRs('${page.pd.ngroupnum}');">
+											<a class="btn btn-minier btn-info"  title="专家点评" onclick="expertCheckRs('${page.pd.ngroupnum}');">
 												<i class="ace-icon fa fa-users bigger-120 "></i>
-											</button>
+											</a>
 											&nbsp;
 											|
 											&nbsp;
 											<span style="text-align: left;vertical-align: middle;">
 											是否合理：
 												<label style="padding-top: 0px;padding-bottom: 0px;margin-top: 0px;margin-bottom: 0px;">
-													<input name="isCheckTrueInput" 
-														<c:if test="${empty checkRss || checkRss.size() ==0 }"> checked="checked" </c:if>	 
+													<input name="isCheck" id="isCheck"
+														<c:if test="${check_status==0 }"> checked="checked" </c:if>	 
 														class="ace ace-switch ace-switch-6" type="checkbox" style="size:5;"  />
 													<span class="lbl" ></span>
 												</label>
 											</span>
 											
-											<button class="btn btn-minier btn-grey" title="保存" onclick="saveIsCheckTrue()">
+											<a class="btn btn-minier btn-grey" title="保存" onclick="saveIsCheckTrue()">
 												<i class="ace-icon fa fa-floppy-o bigger-120"></i>
-											</button>
+											</a>
 										</th>
 									</tr>
 								</thead>
@@ -98,19 +97,19 @@
 														<span class="lbl"></span>
 													</label>
 													</td>
-													<td style="width: 80px;" class='center' > ${rsTypeDict.get(rs.IN_RS_TYPE).rs_type_name }</td>
+													<td style="width: 80px;" class='center' > ${rsTypeDict.get(rs.RS_DRUG_TYPE).rs_type_name }</td>
 													<td >${rs.drug_id1_name } 
 														<c:if test="${rsTypeDict.get(rs.RS_COUNT) == 2}"> 
 														<font color="red">与</font> ${rs.drug_id2_name } 
 														 </c:if>
 													</td>
 													<td style="width: 300px;">
-														<button class="btn btn-minier btn-yellow"  title="删除" onclick="delCheckRs('${rs.rs_id }');">
-															<i class="ace-icon fa fa-trash-o bigger-120 "></i>
-														</button>
-														<button class="btn btn-minier btn-info"  title="修改" onclick="editCheckRs('${rs.rs_id}');">
+														<a class="btn btn-minier btn-danger"  onclick="delCheckRs('${rs.rs_id }');">
+															<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
+														</a>
+														<a class="btn btn-minier btn-info"  onclick="editCheckRs('${rs.rs_id }');">
 															<i class="ace-icon fa fa-pencil-square-o bigger-100 "></i> 
-														</button>
+														</a>
 													</td>
 												</tr>
 												<tr>
@@ -165,7 +164,6 @@ $(function() {
 	//日期框
 	$('.date-picker').datepicker({autoclose: true,todayHighlight: true});
 	
-	
 	$('[data-rel=tooltip]').tooltip();
 	$('[data-rel=popover]').popover({html:true});
 	
@@ -207,6 +205,159 @@ function searchs(){
 	$("#searchForm").submit();
 	
 }
-
+//单个删除
+function delCheckRs(id){
+	bootbox.confirm("确定删除该点评结果吗?", function(result) {
+		if(result) {
+			var url = path+"/DoctOrder/delCheckRs.do?RS_ID="+id;
+			$.get(url,function(data){
+				if(data.result=="success"){
+					self.location.href = self.location.href ;
+				}else{
+					bootbox.dialog({
+						message: "<span class='bigger-110'>"+data.result+"</span>",
+						buttons: 			
+						{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+					});
+				}
+			});
+		};
+	});	
+}
+//批量通过   批量拒绝
+function delCheckRsBatch(){
+	var str = '';
+	for(var i=0;i < document.getElementsByName('rs_ids').length;i++)
+	{
+		  if(document.getElementsByName('rs_ids')[i].checked){
+		  	if(str=='') str += document.getElementsByName('rs_ids')[i].value;
+		  	else str += ';' + document.getElementsByName('rs_ids')[i].value;
+		  }
+	}
+	if(str==''){
+		bootbox.dialog({
+			message: "<span class='bigger-110'>您没有选择任何内容!</span>",
+			buttons: 			
+			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+		});
+		$("#zcheckbox").tips({
+			side:3,
+            msg:'点这里全选',
+            bg:'#AE81FF',
+            time:3
+        });
+		
+		return;
+	}
+	var url = path+"/DoctOrder/delCheckRsAll.do";
+	var msg = "确定删除全部选中的数据吗?";
+	bootbox.confirm(msg,function(result) {
+		if(result) {
+			top.jzts();
+			$.ajax({
+				type: "POST",
+				url: url,
+			   	data: {rs_ids:str},
+				dataType:'json',
+				//beforeSend: validateData,
+				cache: false,
+				success: function(data){
+					if(data.result=="success"){
+						self.location.href = self.location.href ;
+					}else{
+						$(top.hangge());
+						var msg = data.result;
+						if(msg=="failed"){msg="操作失败！";}
+						bootbox.dialog({
+							message: "<span class='bigger-110'>"+msg+"</span>",
+							buttons: 			
+							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+						});
+					}
+				}
+			});
+		}
+	});
+}
+function toAddCheckRs(ngroupnum){
+	var url = path + "/DoctOrder/toAddCheckRs.do?ngroupnum="+ngroupnum+"&patient_id="+$("#patient_id").val()+"&visit_id="+$("#visit_id").val();
+	//top.jzts();
+	var diag = new top.Dialog();
+	diag.Drag=true;
+	diag.Title ="编辑点评";
+	diag.URL = url;
+	diag.Width = 650;
+	diag.Height =500;
+	diag.CancelEvent = function(){ //关闭事件
+		diag.close();
+		//遮罩层控制，第三层弹窗使用
+		top.$("#_DialogBGDiv").css("z-index",900).css("display","block");
+		self.location.href = self.location.href ;
+	};
+	diag.show();
+}
+function editCheckRs(rs_id){
+	var url = path + "/DoctOrder/toEditCheckRs.do?rs_id="+rs_id;
+	//top.jzts();
+	var diag = new top.Dialog();
+	diag.Drag=true;
+	diag.Title ="编辑点评";
+	diag.URL = url;
+	diag.Width = 650;
+	diag.Height =500;
+	diag.CancelEvent = function(){ //关闭事件
+		diag.close();
+		//遮罩层控制，第三层弹窗使用
+		top.$("#_DialogBGDiv").css("z-index",900).css("display","block");
+		self.location.href = self.location.href ;
+	};
+	diag.show();
+	
+}
+function saveIsCheckTrue(){
+	var checkstats = '${check_status}';
+	var msg = "";
+	if($("#isCheck").attr("checked")){
+		msg= "选择合理将清空所有点评结果，请确认？";
+		//合理
+		if(checkstats==0){
+			$("#isCheck").tips({ side:3, msg:'已经为合理，无需再次保存', bg:'#AE81FF',  time:3   });
+			return;
+		}else{
+			
+		}
+	}else{
+		msg= "确定设置为不合理吗，请确认？";
+		//不合理
+		if(checkstats==0){
+			
+		}else{
+			$("#isCheck").tips({ side:3, msg:'已经为不合理，无需再次保存', bg:'#AE81FF',  time:3   });
+			return;
+		}
+	}
+	
+	bootbox.confirm(msg, function(result) {
+		if(result) {
+			var CHECK_STATUS = 1;//不合理
+			if($("#isCheck").attr("checked")){
+				CHECK_STATUS = 0;//合理
+			}
+			var url = path+"/DoctOrder/setCheckRsStatus.do?CHECK_STATUS="+CHECK_STATUS+"&"+$("#checkForm").serialize();
+			$.get(url,function(data){
+				if(data.result=="success"){
+					self.location.href = self.location.href ;
+				}else{
+					bootbox.dialog({
+						message: "<span class='bigger-110'>"+data.result+"</span>",
+						buttons: 			
+						{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+					});
+				}
+			});
+		};
+	});	
+	
+}
 </script>
 </html>
