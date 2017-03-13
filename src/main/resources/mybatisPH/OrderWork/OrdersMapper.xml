@@ -165,4 +165,11 @@
 		from  orders 
 		where 	patient_id  = #{patient_id} and visit_id = #{visit_id}
 	</select>
+	
+	<select id="ordersListSpecial" parameterType="pd" resultType="pd">
+		select ORDER_NO||'@;@'||ORDER_SUB_NO||'@;@'||ORDER_CODE||'@;@'||ORDER_TEXT as key
+			, ORDER_TEXT as value
+		from  orders 
+	</select>
+	
 </mapper>

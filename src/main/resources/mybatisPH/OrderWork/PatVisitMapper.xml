@@ -370,12 +370,18 @@
 		update
 			<include refid="tableName">	</include>
 		set
-			ngroupnum = #{NGROUPNUM},
+			ngroupnum = #{NGROUPNUM,jdbcType=VARCHAR},
 			ISORDERCHECK = #{ISORDERCHECK}, 
 			ISCHECKTRUE  = #{ISCHECKTRUE} 
+			<if test="check_status !=null and check_status !=''">
+				,check_status = #{check_status} 
+			</if>
 		where 
 			 patient_id =#{patient_id} and visit_id = #{visit_id}
 	
 	</update>
-
+	<select id="queryPatVisit" parameterType="pd" resultType="pd">
+		select * from  pat_visit t
+		 where  t.patient_id =#{patient_id} and t.visit_id = #{visit_id}
+	</select>
 </mapper>
