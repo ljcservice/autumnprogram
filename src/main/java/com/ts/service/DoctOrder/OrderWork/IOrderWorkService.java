@@ -1,6 +1,7 @@
 package com.ts.service.DoctOrder.OrderWork;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ts.entity.Page;
 import com.ts.util.PageData;
@@ -44,6 +45,12 @@ public interface IOrderWorkService {
 	public List<PageData> findByCheckResultsByNgroupnum(Page page) throws Exception ;
 	
 	/**
+	 * 删除点评信息
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void deleteCheckRsById(PageData pd) throws Exception ;
+	/**
 	 * 添加点评结果信息
 	 * @param pd
 	 * @return
@@ -58,11 +65,11 @@ public interface IOrderWorkService {
 	public int updateChecResult(PageData pd) throws Exception ;
 	
 	/**
-	 * 删除点评结果信息
+	 * 批量删除点评结果信息
 	 * @param crid
 	 * @return
 	 */
-	public int deleteCheckReulst(String crid) throws Exception ;
+	public void delCheckRsAll(PageData pd)throws Exception;
 	
 	/**
 	 * 查询患者医嘱信息
@@ -106,6 +113,51 @@ public interface IOrderWorkService {
 	 * @throws Exception
 	 */
 	public List<PageData> OrdersPicture(PageData pd) throws Exception;
+
+	/**
+	 * 查询医嘱单，特殊查询
+	 * @return
+	 * @throws Exception
+	 */
+	public Map ordersListSpecial() throws Exception;
+
+	/**
+	 * 查询单个点评结果
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData getCheckRsById(PageData pd)throws Exception;
+
+	/**
+	 * 更新单个点评结果
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public void updateCheckResult(PageData pd) throws Exception;
+
+	/**
+	 * 病人住院 记录医嘱是否合理
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void setCheckRsStatus(PageData pd) throws Exception;
+
+	/**
+	 * 删除滴啊弄结果,根据组号
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void delCheckRsByNgroupnum(PageData pd) throws Exception ;
+
+	/**
+	 * 查询单个病人住院记录
+	 * @param pd
+	 * @return
+	 */
+	public PageData queryPatVisit(PageData pd) throws Exception ;
+
 	
 	
 }
