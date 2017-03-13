@@ -3,6 +3,7 @@ package com.ts.controller.DoctOrder.OrderWork;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,9 +17,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ts.controller.base.BaseController;
 import com.ts.entity.Page;
+import com.ts.entity.system.User;
 import com.ts.service.DoctOrder.OrderWork.IOrderWorkService;
 import com.ts.util.DateUtil;
 import com.ts.util.PageData;
+import com.ts.util.Tools;
 import com.ts.util.app.AppUtil;
 
 import net.sf.json.JSONArray;
@@ -108,10 +111,10 @@ public class OrderWork extends BaseController
 		List<PageData> pdOper  = this.orderWorkService.operationList(page);
 		//查询结果ByNgroupnum
 		List<PageData> checkRss = this.orderWorkService.findByCheckResultsByNgroupnum(page);
+		mv.addObject("checkRss", checkRss);
 		mv.setViewName("DoctOrder/OrderWork/OrderWorkDetail");
 		mv.addObject("pat", pdPat);
 		mv.addObject("oper",pdOper);
-		mv.addObject("checkRss", checkRss);
 		return mv;
 	}
 	
@@ -128,6 +131,8 @@ public class OrderWork extends BaseController
 		PageData pd = this.getPageData();
 		page.setPd(pd);
 		List<PageData> checkRss = this.orderWorkService.findByCheckResultsByNgroupnum(page);
+		PageData PatVisit = orderWorkService.queryPatVisit(pd);
+		mv.addObject("check_status", PatVisit.get("check_status"));
 		mv.addObject("checkRss", checkRss);
 		mv.setViewName("DoctOrder/OrderWork/CheckRsView");
 		mv.addObject("rsTypeDict",getCheckTypeDict());
@@ -304,5 +309,204 @@ public class OrderWork extends BaseController
 			rs.put(pd.getString("RS_TYPE_CODE"), pd);
 		}
 		return rs;
+	}
+	
+	/**
+	 * 删除单个快捷点评结果
+	 * @param pid
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/delCheckRs")
+	@ResponseBody
+	public Object delCheckRs() throws Exception {
+		String errInfo = null;
+		PageData pd = new PageData();
+		Map<String,Object> map = new HashMap<String,Object>();
+		try{
+			// 当前登录用户
+			User user = getCurrentUser();
+			pd = this.getPageData();
+			pd.put("CHECK_USER", user.getUSERNAME());
+			pd.put("CHECK_TIME", new Date());
+			orderWorkService.deleteCheckRsById(pd);
+			errInfo="success";
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+			errInfo = "操作失败！";
+		}
+		map.put("result",errInfo);
+		return map;
+	}
+	/**
+	 * 删除单个快捷点评结果
+	 * @param pid
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/delCheckRsAll")
+	@ResponseBody
+	public Object delCheckRsAll() throws Exception {
+		String errInfo = null;
+		PageData pd = new PageData();
+		Map<String,Object> map = new HashMap<String,Object>();
+		try{
+			// 当前登录用户
+			User user = getCurrentUser();
+			pd = this.getPageData();
+			orderWorkService.delCheckRsAll(pd);
+			errInfo="success";
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+			errInfo = "操作失败！";
+		}
+		map.put("result",errInfo);
+		return map;
+	}
+	
+	/**
+	 * 新增点评页面
+	 * @return
+	 */
+	@RequestMapping(value="/toAddCheckRs")
+	public ModelAndView toAddCheckRs(){
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		try{
+			mv.addObject("pd", pd);
+			mv.addObject("checkType", getCheckTypeDict());
+			Map orderMap = orderWorkService.ordersListSpecial();
+			mv.addObject("orderMap", orderMap);
+			mv.setViewName("DoctOrder/OrderWork/checkRsAdd");
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
+	/**
+	 * 新增点评
+	 * @return
+	 */
+	@RequestMapping(value="/addCheckRs")
+	@ResponseBody
+	public Object addCheckRs() throws Exception {
+		String errInfo = null;
+		PageData pd = new PageData();
+		Map<String,Object> map = new HashMap<String,Object>();
+		try{
+			// 当前登录用户
+			User user = getCurrentUser();
+			pd = this.getPageData();
+			String ngroupnum = pd.getString("ngroupnum");
+			//人工是否点评
+			pd.put("ISORDERCHECK", "1");
+			// 是否为正确医嘱
+			pd.put("ISCHECKTRUE", "0");
+			pd.put("CHECKPEOPLE", this.getCurrentUser().getUSER_ID());
+			if("".equals(ngroupnum)) {
+				pd.put("ngroupnum", this.get32UUID());
+				this.orderWorkService.updatePatVisitNgroupnum(pd);
+			}
+			pd.put("rs_id", this.get32UUID());
+			pd.put("in_rs_type", 4);
+			pd.put("alert_level", pd.getString("r"));
+//			String ALERT_HINT =  new String(pd.getString("alert_hint").getBytes("ISO-8859-1"),"UTF-8");
+			pd.put("alert_hint", pd.getString("alert_hint"));
+			pd.put("alert_cause", "药师自审");
+			pd.put("alert_level", "r");
+			pd.put("checkdate", DateUtil.getDay());
+			String orderDrug1 = pd.getString("orderDrug1");
+			String[] drug1 = orderDrug1.split("@;@");
+			pd.put("drug_id1", drug1[2]);
+			pd.put("drug_id1_name", drug1[3]);
+			pd.put("rec_main_no1", drug1[0]);
+			pd.put("rec_sub_no1", drug1[1]);
+			String orderDrug2 = pd.getString("orderDrug1");
+			if(!Tools.isEmpty(orderDrug2))
+			{
+				pd.put("drug_id2", drug1[2]);
+				pd.put("drug_id2_name", drug1[3]);
+				pd.put("rec_main_no2", drug1[0]);
+				pd.put("rec_sub_no2", drug1[1]);
+			}
+			int i = orderWorkService.saveCheckResult(pd);
+			errInfo="success";
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+			errInfo = "操作失败！";
+		}
+		map.put("result",errInfo);
+		return map;
+	}
+	/**
+	 * 编辑点评页面
+	 * @return
+	 */
+	@RequestMapping(value="/toEditCheckRs")
+	public ModelAndView toEditCheckRs(){
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		try{
+			mv.addObject("checkType", getCheckTypeDict());
+			PageData order = orderWorkService.getCheckRsById(pd);
+			order.putAll(pd);
+			mv.setViewName("DoctOrder/OrderWork/checkRsEdit");
+			mv.addObject("pd", order);
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
+
+	/**
+	 * 新增点评
+	 * @return
+	 */
+	@RequestMapping(value="/editCheckRs")
+	@ResponseBody
+	public Object editCheckRs() throws Exception {
+		String errInfo = null;
+		PageData pd = new PageData();
+		Map<String,Object> map = new HashMap<String,Object>();
+		try{
+			// 当前登录用户
+			User user = getCurrentUser();
+			pd = this.getPageData();
+			//String ALERT_HINT =  new String(pd.getString("alert_hint").getBytes("ISO-8859-1"),"UTF-8");
+			//pd.put("alert_hint", ALERT_HINT);
+			orderWorkService.updateCheckResult(pd);
+			errInfo="success";
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+			errInfo = "操作失败！";
+		}
+		map.put("result",errInfo);
+		return map;
+	}
+	
+	/**
+	 * 确定住院记录是否合理
+	 * @return
+	 */
+	@RequestMapping(value="/setCheckRsStatus")
+	@ResponseBody
+	public Object setCheckRsStatus(){
+		String errInfo = null;
+		PageData pd = new PageData();
+		Map<String,Object> map = new HashMap<String,Object>();
+		try{
+			// 当前登录用户
+			User user = getCurrentUser();
+			pd = this.getPageData();
+			orderWorkService.setCheckRsStatus(pd);
+			errInfo="success";
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+			errInfo = "操作失败！";
+		}
+		map.put("result",errInfo);
+		return map;
 	}
 }
