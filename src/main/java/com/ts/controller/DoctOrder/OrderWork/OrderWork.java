@@ -179,6 +179,7 @@ public class OrderWork extends BaseController
 			}
 			mv.addObject("datestrMap",datestrMap);
 		}else if( show_type==2){
+			//按日图分解查看
 			Map<Integer,String> classmap = new HashMap<Integer,String>();
 			classmap.put(0, "label-info");
 			classmap.put(1, "label-success");
@@ -190,6 +191,7 @@ public class OrderWork extends BaseController
 			List<PageData> treeList = orderWorkService.OrdersPicture(pd);
 			int  i = 0;
 			for(PageData pp:treeList){
+				pp.put("titile",pp.getString("order_Text")+"["+orderClassMap.get( pp.getString("order_class"))+"]");
 				pp.put("CLASSNAME", classmap.get(i));
 				if(i>=6){
 					i=0;
@@ -201,6 +203,8 @@ public class OrderWork extends BaseController
 			String json = arr.toString();
 			json = json.replaceAll("TITLE", "title").replaceAll("STARTDATE", "start").replaceAll("ENDDATE", "end").replaceAll("CLASSNAME", "className");
 			mv.addObject("dateNodes",json);
+			String dateStart = orderWorkService.queryOrdersStartDate(pd);
+			mv.addObject("dateStart",dateStart);
 			mv.setViewName("DoctOrder/OrderWork/calendar");
 			return mv;
 		}
@@ -217,7 +221,7 @@ public class OrderWork extends BaseController
 			if(!map.containsKey(key2)) map.put(key2, new ArrayList<PageData>()); 
 			map.get(key2).add(d);
 		}
-		
+		mv.addObject("orderClassMap",orderClassMap);
 		mv.addObject("CheckRss",map);
 		mv.addObject("DoctOrders", pdOrders);
 		mv.addObject("rsTypeDict",getCheckTypeDict());
@@ -508,5 +512,17 @@ public class OrderWork extends BaseController
 		}
 		map.put("result",errInfo);
 		return map;
+	}
+	
+	private static Map<String,String> orderClassMap = new HashMap<String,String>(); 
+	static{
+		orderClassMap.put("A","药疗");
+		orderClassMap.put("1","处置");
+		orderClassMap.put("2","检查");
+		orderClassMap.put("3","化验");
+		orderClassMap.put("4","手术");
+		orderClassMap.put("5","护理");
+		orderClassMap.put("6","膳食");
+		orderClassMap.put("7","其他");
 	}
 }
