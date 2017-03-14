@@ -161,15 +161,35 @@
 
 
 	<select id="ordersByPicture" parameterType="pd" resultType="pd">
-		select order_Text||'['||order_class||']'  title,to_char(start_date_time,'yyyy-MM-dd hh24:mi:ss') startdate ,to_char(stop_date_time+1,'yyyy-MM-dd hh24:mi:ss') enddate 
+		select order_Text,order_class,to_char(start_date_time,'yyyy-MM-dd hh24:mi:ss') startdate ,to_char(stop_date_time+1,'yyyy-MM-dd hh24:mi:ss') enddate 
 		from  orders 
 		where 	patient_id  = #{patient_id} and visit_id = #{visit_id}
+		<if test="REPEAT_INDICATOR != null and REPEAT_INDICATOR != ''"> <!-- 医嘱标示 1 长期 0 临时-->  
+			and REPEAT_INDICATOR = #{REPEAT_INDICATOR} 
+		</if>
+		<if test="order_class != null and order_class != '' ">
+			and order_class = #{order_class}
+		</if>
 	</select>
 	
 	<select id="ordersListSpecial" parameterType="pd" resultType="pd">
 		select ORDER_NO||'@;@'||ORDER_SUB_NO||'@;@'||ORDER_CODE||'@;@'||ORDER_TEXT as key
 			, ORDER_TEXT as value
 		from  orders 
+	</select>
+	
+	
+	<select id="queryOrdersStartDate" parameterType="pd" resultType="String">
+		select to_char(min(start_date_time),'yyyy-MM-dd hh:mm:ss') datestart
+		from  orders 
+		where 	patient_id  = #{patient_id} and visit_id = #{visit_id}
+		<!-- 医嘱标示 1 长期 0 临时-->  
+		<if test="REPEAT_INDICATOR != null and REPEAT_INDICATOR != ''"> 
+			and REPEAT_INDICATOR = #{REPEAT_INDICATOR} 
+		</if>
+		<if test="order_class != null and order_class != '' ">
+			and order_class = #{order_class}
+		</if>
 	</select>
 	
 </mapper>
