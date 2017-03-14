@@ -415,18 +415,18 @@ public class OrderWork extends BaseController
 			pd.put("rs_id", this.get32UUID());
 			pd.put("in_rs_type", 4);
 			pd.put("alert_level", pd.getString("r"));
-//			String ALERT_HINT =  new String(pd.getString("alert_hint").getBytes("ISO-8859-1"),"UTF-8");
-			pd.put("alert_hint", pd.getString("alert_hint"));
+			String ALERT_HINT =  new String(pd.getString("alert_hint").getBytes("ISO-8859-1"),"UTF-8");
+			pd.put("alert_hint", ALERT_HINT);
 			pd.put("alert_cause", "药师自审");
 			pd.put("alert_level", "r");
 			pd.put("checkdate", DateUtil.getDay());
-			String orderDrug1 = pd.getString("orderDrug1");
+			String orderDrug1 = new String(pd.getString("orderDrug1").getBytes("ISO-8859-1"),"UTF-8");
 			String[] drug1 = orderDrug1.split("@;@");
 			pd.put("drug_id1", drug1[2]);
 			pd.put("drug_id1_name", drug1[3]);
 			pd.put("rec_main_no1", drug1[0]);
 			pd.put("rec_sub_no1", drug1[1]);
-			String orderDrug2 = pd.getString("orderDrug1");
+			String orderDrug2 = new String(pd.getString("orderDrug2").getBytes("ISO-8859-1"),"UTF-8");
 			if(!Tools.isEmpty(orderDrug2))
 			{
 				pd.put("drug_id2", drug1[2]);
@@ -478,8 +478,8 @@ public class OrderWork extends BaseController
 			// 当前登录用户
 			User user = getCurrentUser();
 			pd = this.getPageData();
-			//String ALERT_HINT =  new String(pd.getString("alert_hint").getBytes("ISO-8859-1"),"UTF-8");
-			//pd.put("alert_hint", ALERT_HINT);
+//			String ALERT_HINT =  new String(pd.getString("alert_hint").getBytes("ISO-8859-1"),"UTF-8");
+			pd.put("alert_hint", new String(pd.getString("alert_hint").getBytes("ISO-8859-1"),"UTF-8"));
 			orderWorkService.updateCheckResult(pd);
 			errInfo="success";
 		} catch(Exception e){
