@@ -1,5 +1,6 @@
 package com.ts.service.DoctOrder.OrderWork.Impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -154,8 +155,13 @@ public class OrderWorkServiceBean implements IOrderWorkService {
 	public void delCheckRsByNgroupnum(PageData pd) throws Exception {
 		daoph.delete("rsDrugCheckRsltMapper.delCheckRsByNgroupnum", pd);
 	}
-	
+	@Override
 	public PageData queryPatVisit(PageData pd) throws Exception {
 		return (PageData) daoph.findForObject("PatVisitMapper.queryPatVisit" ,pd);
+	}
+	
+	@Override
+	public String queryOrdersStartDate(PageData pd) throws Exception {
+		return  (String) daoph.findForObject("OrdersMapper.queryOrdersStartDate" ,pd);
 	}
 }

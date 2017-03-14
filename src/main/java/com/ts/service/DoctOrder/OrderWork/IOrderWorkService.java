@@ -1,5 +1,6 @@
 package com.ts.service.DoctOrder.OrderWork;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -157,6 +158,14 @@ public interface IOrderWorkService {
 	 * @return
 	 */
 	public PageData queryPatVisit(PageData pd) throws Exception ;
+
+	/**
+	 * 查询单个医嘱开始日期
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public String queryOrdersStartDate(PageData pd) throws Exception ;
 
 	
 	
