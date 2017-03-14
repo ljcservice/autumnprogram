@@ -87,35 +87,6 @@
 				</div>
 			</div><!-- /.main-content -->
 
-			<div class="footer">
-				<div class="footer-inner">
-					<!-- #section:basics/footer -->
-					<div class="footer-content">
-						<span class="bigger-120">
-							<span class="blue bolder">Ace</span>
-							Application &copy; 2013-2014
-						</span>
-
-						&nbsp; &nbsp;
-						<span class="action-buttons">
-							<a href="#">
-								<i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
-							</a>
-
-							<a href="#">
-								<i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
-							</a>
-
-							<a href="#">
-								<i class="ace-icon fa fa-rss-square orange bigger-150"></i>
-							</a>
-						</span>
-					</div>
-
-					<!-- /section:basics/footer -->
-				</div>
-			</div>
-
 			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
 				<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
 			</a>
@@ -198,13 +169,18 @@
 	});
 
 
-
-
 	/* initialize the calendar
 	-----------------------------------------------------------------*/
 	var zn = '${dateNodes}';
 	var dateNodes = eval(zn);
+	var dateStart = '${dateStart}';
 	var date = new Date();
+	if(dateStart!=null && dateStart!=""){
+		var dateStr = dateStart.split(" ")[0].split("-");
+		date.setFullYear(Number(dateStr[0]));
+		date.setMonth(Number(dateStr[1]+1));
+		date.setDate(Number(dateStr[2]));
+	}
 	var d = date.getDate();
 	var m = date.getMonth();
 	var y = date.getFullYear();
@@ -343,5 +319,10 @@
 		<script src="static/html_UI/docs/assets/js/language/html.js"></script>
 		<script src="static/html_UI/docs/assets/js/language/css.js"></script>
 		<script src="static/html_UI/docs/assets/js/language/javascript.js"></script>
+		<style rel="stylesheet">
+		.fc-time-grid-container{
+			height: auto;
+		}
+		</style>
 	</body>
 </html>

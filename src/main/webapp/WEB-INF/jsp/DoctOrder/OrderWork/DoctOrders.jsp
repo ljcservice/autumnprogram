@@ -45,11 +45,11 @@
 									<div class="btn-toolbar" style="float: right;">
 									
 									<div class="btn-group">
-										<button id="orderViewType" class="btn btn-sm btn-yellow">
-											${page.pd.show_type_name != null && page.pd.show_type_name !=''?page.pd.show_type_name:"医嘱查看切换"}
-										</button>
-										<button data-toggle="dropdown" class="btn btn-sm btn-yellow dropdown-toggle">
-											<i class="ace-icon fa fa-angle-down icon-only"></i>
+										<button data-toggle="dropdown" class="btn btn-sm btn-yellow">
+											<span id="resetShowTypeSpan" >
+												${page.pd.show_type_name != null && page.pd.show_type_name !=''?page.pd.show_type_name:"医嘱查看切换"}
+											</span>
+											<span class="ace-icon fa fa-angle-down icon-only"></span>
 										</button>
 										<ul class="dropdown-menu dropdown-yellow">
 											<li>
@@ -61,63 +61,58 @@
 											<li>
 												<a href="javascript:show_picture(2,'按日图分解查看');">按日图分解查看</a>
 											</li>
-											<li>
-												<a href="javascript:show_type(3,'术后医嘱');">术后医嘱</a>
-											</li>
+<!-- 											<li> -->
+<!-- 												<a href="javascript:show_type(3,'术后医嘱');">术后医嘱</a> -->
+<!-- 											</li> -->
 											<li class="divider"></li>
 											<li>
-												<a href="#">Separated link</a>
+													<a href="javascript:reSetShowType();" id="resetShowTypeId">
+														<c:if test="${page.pd.show_type_name != null && page.pd.show_type_name !=''}">
+															已经选中：${page.pd.show_type_name }
+														</c:if>
+														<c:if test="${page.pd.show_type_name == null || page.pd.show_type_name ==''}">
+															未选择医嘱类型
+														</c:if>
+													</a>
 											</li>
 										</ul>
 									</div><!-- /.btn-group -->
 									
 									
 									<div class="btn-group">
-										<button id="orderViewClass" class="btn btn-sm btn-info">
-											${page.pd.order_class_name != null && page.pd.order_class_name !=''?page.pd.order_class_name:"医嘱类别"}
-										</button>
-										<button data-toggle="dropdown" class="btn btn-sm btn-info dropdown-toggle">
-											<i class="ace-icon fa fa-angle-down icon-only"></i>
+										<button data-toggle="dropdown" class="btn btn-sm btn-info">
+											<span id="resetOrderViewSpan" >
+												${page.pd.order_class_name != null && page.pd.order_class_name !=''?page.pd.order_class_name:"医嘱类别"}
+											</span>
+											<span class="ace-icon fa fa-angle-down icon-only"></span>
 										</button>
 										<ul class="dropdown-menu dropdown-info">
 <!-- 										此处可以使用参数的方式进行设置 -->
-											<li>
-												<a href="javascript:orderViewClass('A','药疗');"> 药疗</a>
-											</li>
-											<li>
-												<a href="">处置</a>
-											</li>
-											<li>
-												<a href="">检查</a>
-											</li>
-											<li>
-												<a href="#">化验</a>
-											</li>
-											<li>
-												<a href="#">手术</a>
-											</li>
-											<li>
-												<a href="#">护理</a>
-											</li>
-											<li>
-												<a href="#">膳食</a>
-											</li>
-											<li>
-												<a href="#">其他</a>
-											</li>
+											<c:forEach items="${orderClassMap}" var="rs" varStatus="vs" >
+												<li>
+													<a href="javascript:orderViewClass('${rs.key}','${rs.value}');"> ${rs.value}</a>
+												</li>
+											</c:forEach>
 											<li class="divider"></li>
 											<li>
-												<a href="#"> 未选择</a>
+													<a href="javascript:reSetOrderView()" id="resetOrderViewId">
+														<c:if test="${page.pd.order_class_name != null && page.pd.order_class_name !=''}">
+															已经选中：${page.pd.order_class_name }
+														</c:if>
+														<c:if test="${page.pd.order_class_name == null || page.pd.order_class_name ==''}">
+															未选择医嘱类型
+														</c:if>
+													</a>
 											</li>
 										</ul>
 									</div><!-- /.btn-group -->
 									
 									<div class="btn-group">
-										<button id="orderViewType" class="btn btn-sm btn-yellow">
-											${page.pd.repeat_indicator_name != null && page.pd.repeat_indicator_name !=''?page.pd.repeat_indicator_name:"医嘱类型"}
-										</button>
-										<button data-toggle="dropdown" class="btn btn-sm btn-yellow dropdown-toggle">
-											<i class="ace-icon fa fa-angle-down icon-only"></i>
+										<button data-toggle="dropdown" class="btn btn-sm btn-yellow">
+											<span id="resetViewTypeSpan" >
+												${page.pd.repeat_indicator_name != null && page.pd.repeat_indicator_name !=''?page.pd.repeat_indicator_name:"医嘱类型"}
+											</span>
+											<span class="ace-icon fa fa-caret-down icon-on-right"></span>
 										</button>
 										<ul class="dropdown-menu dropdown-yellow">
 											<li>
@@ -130,11 +125,18 @@
 												<a href="javascript:orderViewType('0','临时医嘱');">临时医嘱</a>
 											</li>
 											<li>
-												<a href="javascript:orderViewType('operation','手后医嘱');">手后医嘱</a>
+												<a href="javascript:orderViewType('operation','术后医嘱');">术后医嘱</a>
 											</li>
 											<li class="divider"></li>
 											<li>
-												<a href="#">Separated link</a>
+													<a href="javascript:reSetViewType()" id="resetViewTypeId">
+														<c:if test="${page.pd.repeat_indicator_name != null && page.pd.repeat_indicator_name !=''}">
+															已经选中：${page.pd.repeat_indicator_name }
+														</c:if>
+														<c:if test="${page.pd.repeat_indicator_name == null || page.pd.repeat_indicator_name ==''}">
+															未选择医嘱类型
+														</c:if>
+													</a>
 											</li>
 										</ul>
 									</div><!-- /.btn-group -->
@@ -494,7 +496,6 @@
 		var checkText = $("#checkText").val();
 		var patId     = $("#patient_id").val();
 		var visitId   = $("#visit_id").val();
-		alert("");
 		$.ajax({
 			type: "POST",
 			url: basePath + 'DoctOrder/SaveShortcut.do', 
@@ -566,7 +567,27 @@
 		$("#shortcutName").val(_CheckName);
 		setCheckJsonInfo();
 	}
-	
+	function reSetViewType(){
+		$("#resetViewTypeId").text("未选择医嘱类型");
+		$("#resetViewTypeSpan").text("医嘱类型");
+		var myform = window.document.forms[0];
+		myform.repeat_indicator.value = "";
+		myform.repeat_indicator_name.value = "";
+	}
+	function reSetOrderView(){
+		$("#resetOrderViewId").text("未选择医嘱类别");
+		$("#resetOrderViewSpan").text("医嘱类别");
+		var myform = window.document.forms[0];
+		myform.order_class.value = "";
+		myform.order_class_name.value = "";
+	}
+	function reSetShowType(){
+		$("#reSetShowTypeId").text("未选择");
+		$("#reSetShowTypeSpan").text("医嘱查看切换");
+		var myform = window.document.forms[0];
+		myform.show_type.value = "";
+		myform.show_type_name.value = "";
+	}
 	// 重置审核项
 	function reSetCheck(){
 		if(!checkFlag) return ;
