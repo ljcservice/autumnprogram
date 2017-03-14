@@ -39,7 +39,7 @@
 													<td width="75%;">
 														<select class="chosen-select form-control" style="vertical-align:top;width: 80px;" name="RS_DRUG_TYPE" id="RS_DRUG_TYPE" onchange="changeType(this);">
 															<c:forEach items="${checkType.entrySet()}" var="partTyp" varStatus="vs">
-																<option value="${partTyp.key}" <c:if test="${partTyp.key == pd.RS_DRUG_TYPE }">selected</c:if>>${partTyp.value.rs_type_name}</option>
+																<option value="${partTyp.key}" <c:if test="${partTyp.key == 'iv_effect' }">selected</c:if>>${partTyp.value.rs_type_name}</option>
 															</c:forEach>
 														</select>
 													</td>
@@ -50,14 +50,14 @@
 														<div>
 															<select class="chosen-select form-control" name="orderDrug1" id="orderDrug1">
 																<c:forEach items="${orderMap.entrySet()}" var="partTyp" varStatus="vs">
-																	<option value="${partTyp.key}" <c:if test="${partTyp.key == pd.RS_DRUG_TYPE }">selected</c:if>>${partTyp.value}</option>
+																	<option value="${partTyp.key}" <c:if test="${vs.index ==0 }">selected</c:if>>${partTyp.value}</option>
 																</c:forEach>
 															</select>
 														</div>
-														<div id="divorderMap2" style="padding-top: 5px;display: none;">
-															<select class="chosen-select form-control" name="orderDrug2" id="orderDrug2" disabled="disabled">
+														<div id="divorderMap2" style="padding-top: 5px;">
+															<select class="chosen-select form-control" name="orderDrug2" id="orderDrug2" >
 																<c:forEach items="${orderMap.entrySet()}" var="partTyp" varStatus="vs">
-																	<option value="${partTyp.key}" <c:if test="${partTyp.key == pd.RS_DRUG_TYPE }">selected</c:if>>${partTyp.value}</option>
+																	<option value="${partTyp.key}" <c:if test="${vs.index ==0}">selected</c:if>>${partTyp.value}</option>
 																</c:forEach>
 															</select>
 														</div>
@@ -136,7 +136,7 @@ function save(){
 			$("#orderDrug2_chosen").tips({ side:3, msg:'请选择第二个药品', bg:'#AE81FF',  time:3   });
 			flag = false;
 		}
-		if(orderDrug1==orderDrug2){
+		if(orderDrug1!=null &&orderDrug1!="" && orderDrug1==orderDrug2){
 			$("#orderDrug2_chosen").tips({ side:3, msg:'第二个药品不能与第一个药品相同', bg:'#AE81FF',  time:3   });
 			flag = false;
 		}
