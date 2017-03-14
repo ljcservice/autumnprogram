@@ -2465,7 +2465,7 @@ function matchCellWidths(els) {
 // Returns true if the element is now a scroller, false otherwise.
 // NOTE: this method is best because it takes weird zooming dimensions into account
 function setPotentialScroller(containerEl, height) {
-	containerEl.height(height).addClass('fc-scroller');
+	containerEl.height(height);//.addClass('fc-scroller');
 
 	// are scrollbars needed?
 	if (containerEl[0].scrollHeight - 1 > containerEl[0].clientHeight) { // !!! -1 because IE is often off-by-one :(
@@ -2479,7 +2479,7 @@ function setPotentialScroller(containerEl, height) {
 
 // Takes an element that might have been a scroller, and turns it back into a normal element.
 function unsetScroller(containerEl) {
-	containerEl.height('').removeClass('fc-scroller');
+	containerEl.height('auto').removeClass('fc-scroller');
 }
 
 
@@ -9036,7 +9036,7 @@ $.extend(AgendaView.prototype, {
 			}
 			else { // no scrollbars
 				// still, force a height and display the bottom rule (marks the end of day)
-				this.scrollerEl.height(scrollerHeight).css('overflow', 'hidden'); // in case <hr> goes outside
+				this.scrollerEl.height(scrollerHeight);//.css('overflow', 'hidden'); // in case <hr> goes outside
 				this.bottomRuleEl.show();
 			}
 		}
