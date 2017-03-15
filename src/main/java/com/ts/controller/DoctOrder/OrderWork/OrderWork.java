@@ -87,6 +87,15 @@ public class OrderWork extends BaseController
 			} 
 			page.setPd(pd);
 			List<PageData> entity =  this.orderWorkService.patientList(page);
+			for(PageData pp:entity){
+				String RS_DRUG_TYPES = pp.getString("RS_DRUG_TYPES");
+				if(!Tools.isEmpty(RS_DRUG_TYPES)){
+					String[] RS_DRUG_TYPE = RS_DRUG_TYPES.split("@;@");
+					pp.put("RS_DRUG_TYPES", RS_DRUG_TYPE);
+				}
+			}
+			mv.addObject("rstypeMap", rstypeMap); 
+			mv.addObject("checktypeMap", getCheckTypeDict()); 
 			mv.addObject("patVisits", entity);
 		}catch(Exception e )
 		{
@@ -132,7 +141,7 @@ public class OrderWork extends BaseController
 		page.setPd(pd);
 		List<PageData> checkRss = this.orderWorkService.findByCheckResultsByNgroupnum(page);
 		PageData PatVisit = orderWorkService.queryPatVisit(pd);
-		mv.addObject("check_status", PatVisit.get("check_status"));
+		mv.addObject("check_status", PatVisit.get("check_status")==null?0:PatVisit.get("check_status"));
 		mv.addObject("checkRss", checkRss);
 		mv.setViewName("DoctOrder/OrderWork/CheckRsView");
 		mv.addObject("rsTypeDict",getCheckTypeDict());
@@ -524,5 +533,16 @@ public class OrderWork extends BaseController
 		orderClassMap.put("5","护理");
 		orderClassMap.put("6","膳食");
 		orderClassMap.put("7","其他");
+	}
+	private static Map<String,String> rstypeMap = new HashMap<String,String>(); 
+	static{
+		rstypeMap.put("diaginfo","禁");
+		rstypeMap.put("dosage","法");
+		rstypeMap.put("ingredien","重");
+		rstypeMap.put("interaction","相");
+		rstypeMap.put("iv_effect","配");
+		rstypeMap.put("side","反");
+		rstypeMap.put("administrator","途");
+		rstypeMap.put("specpeople","特");
 	}
 }
