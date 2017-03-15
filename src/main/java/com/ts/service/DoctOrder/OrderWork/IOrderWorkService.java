@@ -167,6 +167,8 @@ public interface IOrderWorkService {
 	 */
 	public String queryOrdersStartDate(PageData pd) throws Exception ;
 
+	public List<PageData> getOrderClassDict()throws Exception ;
+
 	
 	
 }

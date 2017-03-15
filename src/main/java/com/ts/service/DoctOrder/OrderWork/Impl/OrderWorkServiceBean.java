@@ -117,6 +117,10 @@ public class OrderWorkServiceBean implements IOrderWorkService {
 		
 		return (List<PageData>) daoph.findForList("RS_TYPE_DICTMapper.reTypeDcit","");
 	}
+	@Override
+	public List<PageData> getOrderClassDict()throws Exception {
+		return (List<PageData>) daoph.findForList("RS_TYPE_DICTMapper.getOrderClassDict","");
+	}
 	
 	public Map ordersListSpecial() throws Exception{
 		Map<String,String> map = new HashMap<String,String>();
