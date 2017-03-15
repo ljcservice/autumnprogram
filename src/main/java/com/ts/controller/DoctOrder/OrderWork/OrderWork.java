@@ -201,7 +201,7 @@ public class OrderWork extends BaseController
 			List<PageData> treeList = orderWorkService.OrdersPicture(pd);
 			int  i = 0;
 			for(PageData pp:treeList){
-				pp.put("titile",pp.getString("order_Text")+"["+orderClassMap.get( pp.getString("order_class"))+"]");
+				pp.put("title",pp.getString("order_Text")+"["+getOrderClassDict().get( pp.getString("order_class"))+"]");
 				pp.put("CLASSNAME", classmap.get(i));
 				if(i>=6){
 					i=0;
@@ -231,7 +231,7 @@ public class OrderWork extends BaseController
 			if(!map.containsKey(key2)) map.put(key2, new ArrayList<PageData>()); 
 			map.get(key2).add(d);
 		}
-		mv.addObject("orderClassMap",orderClassMap);
+		mv.addObject("orderClassMap",getOrderClassDict());
 		mv.addObject("CheckRss",map);
 		mv.addObject("DoctOrders", pdOrders);
 		mv.addObject("rsTypeDict",getCheckTypeDict());
@@ -325,6 +325,20 @@ public class OrderWork extends BaseController
 		return rs;
 	}
 	
+	/**
+	 * 获得字段数据
+	 * @return
+	 * @throws Exception
+	 */
+	private Map<String, String> getOrderClassDict() throws Exception {
+		Map<String, String> rs = new HashMap<>();
+		// 审核字典
+		List<PageData> rsTypeDict = this.orderWorkService.getOrderClassDict();
+		for(PageData pd : rsTypeDict){
+			rs.put(pd.getString("ORDER_CLASS_CODE"), pd.getString("ORDER_CLASS_NAME"));
+		}
+		return rs;
+	}
 	/**
 	 * 删除单个快捷点评结果
 	 * @param pid
@@ -525,17 +539,17 @@ public class OrderWork extends BaseController
 		return map;
 	}
 	
-	private static Map<String,String> orderClassMap = new HashMap<String,String>(); 
-	static{
-		orderClassMap.put("A","药疗");
-		orderClassMap.put("1","处置");
-		orderClassMap.put("2","检查");
-		orderClassMap.put("3","化验");
-		orderClassMap.put("4","手术");
-		orderClassMap.put("5","护理");
-		orderClassMap.put("6","膳食");
-		orderClassMap.put("7","其他");
-	}
+//	private static Map<String,String> orderClassMap = new HashMap<String,String>(); 
+//	static{
+//		orderClassMap.put("A","药疗");
+//		orderClassMap.put("1","处置");
+//		orderClassMap.put("2","检查");
+//		orderClassMap.put("3","化验");
+//		orderClassMap.put("4","手术");
+//		orderClassMap.put("5","护理");
+//		orderClassMap.put("6","膳食");
+//		orderClassMap.put("7","其他");
+//	}
 	private static Map<String,String> rstypeMap = new HashMap<String,String>(); 
 	static{
 		rstypeMap.put("diaginfo","禁");
