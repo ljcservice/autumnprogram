@@ -445,6 +445,7 @@ public class OrderWork extends BaseController
 				pd.put("rec_sub_no2", drug1[1]);
 			}
 			int i = orderWorkService.saveCheckResult(pd);
+			map.put("ngroupnum", pd.get("ngroupnum"));
 			errInfo="success";
 		} catch(Exception e){
 			logger.error(e.toString(), e);
