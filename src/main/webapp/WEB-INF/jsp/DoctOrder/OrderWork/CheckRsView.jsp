@@ -34,7 +34,7 @@
 				<div class="page-content">
 					<div class="row">
 						<div >
-							<form name="checkForm" id="checkForm" action="DoctOrder/CheckRsViewUI.do?patient_id=${page.pd.patient_id}&visit_id=${page.pd.visit_id}&ngroupnum=${page.pd.ngroupnum}" method="post">
+							<form name="checkForm" id="checkForm" action="DoctOrder/CheckRsViewUI.do" method="post">
 							<input type="hidden" value="${page.pd.patient_id}" name="patient_id" id="patient_id"/>
 							<input type="hidden" value="${page.pd.visit_id}"   name="visit_id"   id="visit_id"/>
 							<input type="hidden" value="${page.pd.ngroupnum}"  name="ngroupnum"  id="ngroupnum"/>
@@ -289,10 +289,12 @@ function toAddCheckRs(ngroupnum){
 	diag.Width = 650;
 	diag.Height =500;
 	diag.CancelEvent = function(){ //关闭事件
+		var ngroupnum = diag.innerFrame.contentWindow.document.getElementById('ngroupnum').value;
+		$("#ngroupnum").val(ngroupnum);
 		diag.close();
 		//遮罩层控制，第三层弹窗使用
 		top.$("#_DialogBGDiv").css("z-index",900).css("display","block");
-		self.location.href = self.location.href ;
+		$("#checkForm").submit();
 	};
 	diag.show();
 }

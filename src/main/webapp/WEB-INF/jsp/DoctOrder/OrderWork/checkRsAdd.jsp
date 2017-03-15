@@ -147,6 +147,10 @@ function save(){
 	var url = path+"/DoctOrder/addCheckRs.do?"+$("#userForm").serialize();
 	$.get(url,function(data){
 		if(data.result=="success"){
+			var ngroupnum =data.ngroupnum;
+			if(ngroupnum!=null&&ngroupnum!=""){
+				$("#ngroupnum").val(ngroupnum);
+			}
 			top.Dialog.close();
 		}else{
 			$("#zhongxin").show();
