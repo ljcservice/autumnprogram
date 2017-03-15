@@ -279,9 +279,12 @@
 			t.NGROUPNUM,
 			t.ISORDERCHECK,
 			t.ISCHECKTRUE
-		from   
-			pat_visit t
-		left join pat_master_index p on t.patient_id = p.patient_id
+      		,RS_DRUG_TYPES
+	    from pat_visit t
+	    left join pat_master_index p on t.patient_id = p.patient_id 
+	    left join ( select NGROUPNUM,listagg( RS_DRUG_TYPE ,'@;@') within GROUP (order by NGROUPNUM) RS_DRUG_TYPES 
+	         from RS_DRUG_CHECKRSLT group by NGROUPNUM
+	    ) m on t.NGROUPNUM=m.NGROUPNUM
 		where 1=1 
 		<if test="pd.keywords != null and pd.keywords != ''"><!-- 关键词检索 -->
 			and
