@@ -31,4 +31,7 @@
 		from 
 			<include refid="tableName"></include>
 	</select>
+	<select id="getOrderClassDict" parameterType="String" resultType="pd">
+		select * from DICT_ORDER_CLASS
+	</select>
 </mapper>
