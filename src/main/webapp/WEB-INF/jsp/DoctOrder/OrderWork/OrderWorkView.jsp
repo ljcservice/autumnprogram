@@ -147,31 +147,11 @@
 											</td>
 											<td class="center">
 												<div class="hidden-sm hidden-xs btn-group">
-													<a class="btn btn-xs btn-purple"  title="配伍禁忌" onclick="editRoles('${user.USER_ID }');">
-														配
-													</a>
-													<a class="btn btn-xs btn-warning"  title="禁忌症" onclick="editRoles('${user.USER_ID }');">
-														禁
-													</a>
-													<a class="btn btn-xs btn-success"  title="相互作用" onclick="editRoles('${user.USER_ID }');">
-														相
-													</a>
-													<a class="btn btn-xs btn-danger"  title="重复用药" onclick="editRoles('${user.USER_ID }');">
-														重
-													</a>
-													<a class="btn btn-xs btn-grey"  title="不良反应" onclick="editRoles('${user.USER_ID }');">
-														反
-													</a>
-													<a class="btn btn-xs btn-info"  title="用法" onclick="editRoles('${user.USER_ID }');">
-														法
-													</a>
-													<a class="btn btn-xs btn-pink "  title="用量" onclick="editRoles('${user.USER_ID }');">
-														量
-													</a>
-													<a class="btn btn-xs btn-yellow"  title="特使人群" onclick="editRoles('${user.USER_ID }');">
-														特
-													</a>
-												
+													<c:forEach items="${patVisit.RS_DRUG_TYPES}" var="rs_type" varStatus="vs" >
+														<a class="btn btn-xs btn-purple"  title="${checktypeMap.get(rs_type).RS_TYPE_NAME}" >
+															${rstypeMap.get(rs_type)}
+														</a>
+													</c:forEach>
 													<a class="btn btn-xs"  title="医院管理" onclick="editRoles('${user.USER_ID }');">
 														管
 													</a>
