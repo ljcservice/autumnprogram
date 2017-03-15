@@ -548,13 +548,13 @@ public class OrderWork extends BaseController
 	}
 	private static Map<String,String> rstypeColorMap = new HashMap<String,String>(); 
 	static{
-		rstypeColorMap.put("diaginfo","btn-purple");
+		rstypeColorMap.put("diaginfo","btn-pink");
 		rstypeColorMap.put("dosage","btn-warning");
 		rstypeColorMap.put("ingredien","btn-success");
 		rstypeColorMap.put("interaction","btn-yellow");
 		rstypeColorMap.put("iv_effect","btn-grey");
 		rstypeColorMap.put("side","btn-danger");
 		rstypeColorMap.put("administrator","btn-info");
-		rstypeColorMap.put("specpeople","btn-pink");
+		rstypeColorMap.put("specpeople","btn-purple");
 	}
 }
