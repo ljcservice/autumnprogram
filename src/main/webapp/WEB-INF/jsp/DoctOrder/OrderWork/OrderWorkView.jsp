@@ -148,7 +148,7 @@
 											<td class="center">
 												<div class="hidden-sm hidden-xs btn-group">
 													<c:forEach items="${patVisit.RS_DRUG_TYPES}" var="rs_type" varStatus="vs" >
-														<a class="btn btn-xs btn-purple"  title="${checktypeMap.get(rs_type).RS_TYPE_NAME}" >
+														<a class="btn btn-xs ${rstypeColorMap.get(rs_type)}"  title="${checktypeMap.get(rs_type).RS_TYPE_NAME}" >
 															${rstypeMap.get(rs_type)}
 														</a>
 													</c:forEach>

@@ -95,6 +95,7 @@ public class OrderWork extends BaseController
 				}
 			}
 			mv.addObject("rstypeMap", rstypeMap); 
+			mv.addObject("rstypeColorMap", rstypeColorMap); 
 			mv.addObject("checktypeMap", getCheckTypeDict()); 
 			mv.addObject("patVisits", entity);
 		}catch(Exception e )
@@ -544,5 +545,16 @@ public class OrderWork extends BaseController
 		rstypeMap.put("side","反");
 		rstypeMap.put("administrator","途");
 		rstypeMap.put("specpeople","特");
+	}
+	private static Map<String,String> rstypeColorMap = new HashMap<String,String>(); 
+	static{
+		rstypeColorMap.put("diaginfo","btn-purple");
+		rstypeColorMap.put("dosage","btn-warning");
+		rstypeColorMap.put("ingredien","btn-success");
+		rstypeColorMap.put("interaction","btn-yellow");
+		rstypeColorMap.put("iv_effect","btn-grey");
+		rstypeColorMap.put("side","btn-danger");
+		rstypeColorMap.put("administrator","btn-info");
+		rstypeColorMap.put("specpeople","btn-pink");
 	}
 }
