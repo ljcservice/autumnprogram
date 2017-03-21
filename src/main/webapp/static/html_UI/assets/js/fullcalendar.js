@@ -2585,7 +2585,7 @@ function smartProperty(obj, name) { // get a camel-cased/namespaced property of 
 ----------------------------------------------------------------------------------------------------------------------*/
 
 var dayIDs = [ 'sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat' ];
-//[ '星期天', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六' ];
+
 
 // Diffs the two moments into a Duration where full-days are recorded first, then the remaining time.
 // Moments will have their timezones normalized.
