@@ -114,7 +114,7 @@
 		<script src="static/html_UI/assets/js/jquery-ui.custom.js"></script>
 		<script src="static/html_UI/assets/js/jquery.ui.touch-punch.js"></script>
 		<script src="static/html_UI/assets/js/date-time/moment.js"></script>
-		<script src="static/html_UI/assets/js/fullcalendar.js"></script>
+		<script src="static/html_UI/assets/js/fullcalendar.js?v=12"></script>
 		<script src="static/html_UI/assets/js/bootbox.js"></script>
 
 		<!-- ace scripts -->

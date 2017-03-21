@@ -61,9 +61,9 @@
 											<li>
 												<a href="javascript:show_picture(2,'按日图分解查看');">按日图分解查看</a>
 											</li>
-<!-- 											<li> -->
-<!-- 												<a href="javascript:show_type(3,'术后医嘱');">术后医嘱</a> -->
-<!-- 											</li> -->
+											<li>
+												<a href="javascript:show_type(3,'术后医嘱');">术后医嘱</a>
+											</li>
 											<li class="divider"></li>
 											<li>
 													<a href="javascript:reSetShowType();" id="resetShowTypeId">
@@ -123,9 +123,6 @@
 											</li>
 											<li>
 												<a href="javascript:orderViewType('0','临时医嘱');">临时医嘱</a>
-											</li>
-											<li>
-												<a href="javascript:orderViewType('operation','术后医嘱');">术后医嘱</a>
 											</li>
 											<li class="divider"></li>
 											<li>
