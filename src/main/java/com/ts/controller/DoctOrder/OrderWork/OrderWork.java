@@ -217,6 +217,9 @@ public class OrderWork extends BaseController
 			mv.addObject("dateStart",dateStart);
 			mv.setViewName("DoctOrder/OrderWork/calendar");
 			return mv;
+		}else  if( show_type==3){
+			//术后医嘱日期查看
+			pdOrders = this.orderWorkService.orderList(page);
 		}
 		//查询结果ByNgroupnum
 		List<PageData> checkRss = this.orderWorkService.findByCheckResultsByNgroupnum(page);
