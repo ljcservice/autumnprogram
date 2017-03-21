@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -178,7 +179,7 @@ public class OrderWork extends BaseController
 		}else if( show_type==1){
 			//按日分解查看
 			pdOrders = this.orderWorkService.ordersPageByDate(page); 
-			Map<String,Integer> datestrMap = new HashMap<String,Integer>();
+			Map<String,Integer> datestrMap = new LinkedHashMap<String,Integer>();
 			//分组统计
 			for(PageData pp:pdOrders){
 				if(datestrMap.containsKey(pp.getString("datestr"))){
@@ -219,7 +220,17 @@ public class OrderWork extends BaseController
 			return mv;
 		}else  if( show_type==3){
 			//术后医嘱日期查看
-			pdOrders = this.orderWorkService.orderList(page);
+			pdOrders = this.orderWorkService.ordersPageByOpDate(page);
+			Map<String,Integer> datestrMap = new LinkedHashMap<String,Integer>();
+			//分组统计
+			for(PageData pp:pdOrders){
+				if(datestrMap.containsKey(pp.getString("datestr"))){
+					datestrMap.put(pp.getString("datestr"), datestrMap.get(pp.getString("datestr"))+1);
+				}else{
+					datestrMap.put(pp.getString("datestr"), 1);
+				}
+			}
+			mv.addObject("datestrMap",datestrMap);
 		}
 		//查询结果ByNgroupnum
 		List<PageData> checkRss = this.orderWorkService.findByCheckResultsByNgroupnum(page);
@@ -407,7 +418,7 @@ public class OrderWork extends BaseController
 		try{
 			mv.addObject("pd", pd);
 			mv.addObject("checkType", getCheckTypeDict());
-			Map orderMap = orderWorkService.ordersListSpecial();
+			Map orderMap = orderWorkService.ordersListSpecial(pd);
 			mv.addObject("orderMap", orderMap);
 			mv.setViewName("DoctOrder/OrderWork/checkRsAdd");
 		} catch(Exception e){
