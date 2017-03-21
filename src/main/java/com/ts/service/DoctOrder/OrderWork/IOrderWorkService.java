@@ -120,7 +120,7 @@ public interface IOrderWorkService {
 	 * @return
 	 * @throws Exception
 	 */
-	public Map ordersListSpecial() throws Exception;
+	public Map ordersListSpecial(PageData pd) throws Exception;
 
 	/**
 	 * 查询单个点评结果
@@ -168,6 +168,13 @@ public interface IOrderWorkService {
 	public String queryOrdersStartDate(PageData pd) throws Exception ;
 
 	public List<PageData> getOrderClassDict()throws Exception ;
+
+	/**
+	 * 手后医嘱查询
+	 * @param page
+	 * @return
+	 */
+	public List<PageData> ordersPageByOpDate(Page page)throws Exception ;
 
 	
 	

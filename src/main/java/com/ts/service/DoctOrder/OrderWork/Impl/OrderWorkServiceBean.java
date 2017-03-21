@@ -92,6 +92,10 @@ public class OrderWorkServiceBean implements IOrderWorkService {
 		return (List<PageData>) daoph.findForList("OrdersMapper.ordersByPicture", pd);
 	}
 	
+	public List<PageData> ordersPageByOpDate(Page page)throws Exception {
+		return (List<PageData>) daoph.findForList("OrdersMapper.ordersPageByOpDate", page);
+	}
+	
 
 	@Override
 	public List<PageData> orderWhereList(PageData pd)throws Exception {
@@ -122,9 +126,9 @@ public class OrderWorkServiceBean implements IOrderWorkService {
 		return (List<PageData>) daoph.findForList("RS_TYPE_DICTMapper.getOrderClassDict","");
 	}
 	
-	public Map ordersListSpecial() throws Exception{
+	public Map ordersListSpecial(PageData pd) throws Exception{
 		Map<String,String> map = new HashMap<String,String>();
-		List<PageData>	list =	(List<PageData>) daoph.findForList("OrdersMapper.ordersListSpecial",new PageData());
+		List<PageData>	list =	(List<PageData>) daoph.findForList("OrdersMapper.ordersListSpecial",pd);
 		if(list!=null){
 			for(PageData p:list){
 				map.put(p.getString("key"), p.getString("value"));
