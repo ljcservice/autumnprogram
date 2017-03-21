@@ -78,10 +78,10 @@ var defaults = {
 		next: "next",
 		prevYear: "prev year",
 		nextYear: "next year",
-		today: 'today',
-		month: 'month',
-		week: 'week',
-		day: 'day'
+		today: '今天',
+		month: '月',
+		week: '周',
+		day: '天'
 	},
 
 	buttonIcons: {
@@ -1242,7 +1242,7 @@ function Header(calendar, options) {
 	
 	
 	function updateTitle(text) {
-		el.find('h2').text(text);
+		el.find('h2').text(replaceAllText(text));
 	}
 	
 	
@@ -2585,7 +2585,7 @@ function smartProperty(obj, name) { // get a camel-cased/namespaced property of 
 ----------------------------------------------------------------------------------------------------------------------*/
 
 var dayIDs = [ 'sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat' ];
-
+//[ '星期天', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六' ];
 
 // Diffs the two moments into a Duration where full-days are recorded first, then the remaining time.
 // Moments will have their timezones normalized.
@@ -4767,10 +4767,10 @@ $.extend(Grid.prototype, {
 		var view = this.view;
 		var calendar = view.calendar;
 		var colFormat = view.opt('columnFormat');
-
+		var str = replaceAllxingqi(""+calendar.formatDate(date, colFormat));
 		return '' +
 			'<th class="fc-day-header ' + view.widgetHeaderClass + ' fc-' + dayIDs[date.day()] + '">' +
-				htmlEscape(calendar.formatDate(date, colFormat)) +
+				htmlEscape(str) +
 			'</th>';
 	},
 
@@ -8755,7 +8755,7 @@ $.extend(BasicDayView.prototype, {
 
 setDefaults({
 	allDaySlot: true,
-	allDayText: 'all-day',
+	allDayText: '全天',
 
 	scrollTime: '06:00:00',
 
@@ -9262,3 +9262,42 @@ $.extend(AgendaDayView.prototype, {
 ;;
 
 });
+function replaceAllText(text){
+text = text.replace("January","1月");
+text = text.replace("Jan","1月");
+text = text.replace("February","2月");
+text = text.replace("Feb","2月");
+text = text.replace("March","3月");
+text = text.replace("Mar","3月");
+text = text.replace("April","4月");
+text = text.replace("Apr","4月");
+text = text.replace("May","5月");
+text = text.replace("June","6月");
+text = text.replace("Jun","6月");
+text = text.replace("July","7月");
+text = text.replace("Jul","7月");
+text = text.replace("August","8月");
+text = text.replace("Aug","8月");
+text = text.replace("September","9月");
+text = text.replace("October","10月");
+text = text.replace("November","11月");
+text = text.replace("December","12月");
+return text;
+}
+function replaceAllxingqi(text){
+	text = text.replace("Sunday","星期天");
+	text = text.replace("Monday","星期一");
+	text = text.replace("Tuesday","星期二");
+	text = text.replace("Wednesday","星期三");
+	text = text.replace("Thursday","星期四");
+	text = text.replace("Friday","星期五");
+	text = text.replace("Saturday","星期六");
+	text = text.replace("Sun","星期天");
+	text = text.replace("Mon","星期一");
+	text = text.replace("Tue","星期二");
+	text = text.replace("Wed","星期三");
+	text = text.replace("Thu","星期四");
+	text = text.replace("Fri","星期五");
+	text = text.replace("Sat","星期六");
+	return text;
+}
