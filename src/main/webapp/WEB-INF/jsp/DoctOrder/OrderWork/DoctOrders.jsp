@@ -170,13 +170,12 @@
 							</div>
 						</div>
 						<div >
-						<!-- 	常规查看 -->
-						<c:if test="${page.pd.show_type== null || page.pd.show_type=='' || page.pd.show_type==0}">
+						<!-- 	常规查看  -->
+						<c:if test="${page.pd.show_type== null || page.pd.show_type=='' || page.pd.show_type==0 }">
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:10px;">
 							<thead>
 								<tr>
-									<th class="center" nowrap>
-									</th>
+									<th class="center" nowrap></th>
 									<th class="center" nowrap>医嘱名称</th>
 									<th class="center" nowrap>医嘱类型</th>
 									<th class="center" nowrap>医嘱科室</th>
@@ -225,7 +224,7 @@
 												${order.order_Text }
 											</td>
 											<td class="center ">
-												${order.order_class}
+												${orderClassMap.get(order.order_class.toString())}
 											</td>
 											<td class="center " >${order.dept_name}</td>
 											<td class="center " >${order.frequency }</td>
@@ -250,7 +249,7 @@
 						</table>
 						</c:if>
 						<!-- 	按日分解查看						 -->
-						<c:if test="${page.pd.show_type!= null && page.pd.show_type==1}">		
+						<c:if test="${page.pd.show_type!= null && (page.pd.show_type==1 || page.pd.show_type==3)}">		
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:10px;">
 							<thead>
 								<tr>
@@ -308,7 +307,7 @@
 												${order.order_Text }
 											</td>
 											<td class="center ">
-												${order.order_class}
+												${orderClassMap.get(order.order_class.toString())}
 											</td>
 											<td class="center " >${order.dept_name}</td>
 											<td class="center " >${order.frequency }</td>
