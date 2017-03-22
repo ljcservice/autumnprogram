@@ -442,14 +442,16 @@ public class OrderWork extends BaseController
 			pd = this.getPageData();
 			String ngroupnum = pd.getString("ngroupnum");
 			//人工是否点评
-			pd.put("ISORDERCHECK", "1");
+			pd.put("ISORDERCHECK", 1);
 			// 是否为正确医嘱
-			pd.put("ISCHECKTRUE", "0");
+			pd.put("ISCHECKTRUE", 0);
+			//设置为不合理
+			pd.put("CHECK_STATUS", 1);
 			pd.put("CHECKPEOPLE", this.getCurrentUser().getUSER_ID());
 			if("".equals(ngroupnum)) {
 				pd.put("ngroupnum", this.get32UUID());
-				this.orderWorkService.updatePatVisitNgroupnum(pd);
 			}
+			this.orderWorkService.updatePatVisitNgroupnum(pd);
 			pd.put("rs_id", this.get32UUID());
 			pd.put("in_rs_type", 4);
 			pd.put("alert_level", pd.getString("r"));
@@ -574,6 +576,7 @@ public class OrderWork extends BaseController
 		rstypeMap.put("side","反");
 		rstypeMap.put("administrator","途");
 		rstypeMap.put("specpeople","特");
+		rstypeMap.put("manager","管");
 	}
 	private static Map<String,String> rstypeColorMap = new HashMap<String,String>(); 
 	static{
@@ -585,5 +588,6 @@ public class OrderWork extends BaseController
 		rstypeColorMap.put("side","btn-danger");
 		rstypeColorMap.put("administrator","btn-info");
 		rstypeColorMap.put("specpeople","btn-purple");
+		rstypeColorMap.put("manager","btn-success");
 	}
 }
