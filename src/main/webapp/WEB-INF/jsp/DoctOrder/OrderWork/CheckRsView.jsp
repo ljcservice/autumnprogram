@@ -311,7 +311,7 @@ function editCheckRs(rs_id){
 		diag.close();
 		//遮罩层控制，第三层弹窗使用
 		top.$("#_DialogBGDiv").css("z-index",900).css("display","block");
-		self.location.href = self.location.href ;
+		$("#checkForm").submit();
 	};
 	diag.show();
 	
