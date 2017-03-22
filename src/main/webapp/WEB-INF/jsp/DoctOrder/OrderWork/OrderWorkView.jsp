@@ -152,9 +152,6 @@
 															${rstypeMap.get(rs_type)}
 														</a>
 													</c:forEach>
-													<a class="btn btn-xs"  title="医院管理" onclick="editRoles('${user.USER_ID }');">
-														管
-													</a>
 												
 <!-- 														<span class="btn btn-sm" data-rel="tooltip" title="Default">Default</span> -->
 <!-- 														<span class="btn btn-warning btn-sm tooltip-warning" data-rel="tooltip" data-placement="left" title="Left Warning">Left</span> -->
