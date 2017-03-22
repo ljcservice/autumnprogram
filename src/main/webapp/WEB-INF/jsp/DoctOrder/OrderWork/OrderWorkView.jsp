@@ -68,8 +68,8 @@
 										是否点评：
 									 	<select class="chosen-select form-control" name="orderRemark" id="orderRemark" data-placeholder="医嘱是否点评" style="vertical-align:top;width: 80px;" onchange="changeTree();">
 											<option value="">全部</option>
-											<option <c:if test="${page.pd.orderRemark == '1' }">selected</c:if> value="1" >已点评</option>
-											<option <c:if test="${page.pd.orderRemark == '0' }">selected</c:if> value="0" >未点评</option>
+											<option <c:if test="${page.pd.ISORDERCHECK == 1}">selected</c:if> value="1" >已点评</option>
+											<option <c:if test="${page.pd.ISORDERCHECK == 0}">selected</c:if> value="0" >未点评</option>
 										</select>
 									</td>
 									
@@ -77,8 +77,8 @@
 										是否合理：
 									 	<select class="chosen-select form-control" name="OrderIsTrue" id="OrderIsTrue" data-placeholder="医嘱是否合理" style="vertical-align:top;width: 120px;">
 									 		<option value="">全部</option>
-											<option <c:if test="${page.pd.OrderIsTrue == '1' }">selected</c:if> value="1" >合理</option>
-											<option <c:if test="${page.pd.OrderIsTrue == '0' }">selected</c:if> value="0" >不合理</option>
+											<option <c:if test="${page.pd.CHECK_STATUS == 1 }">selected</c:if> value="1" >不合理</option>
+											<option <c:if test="${page.pd.CHECK_STATUS == 0 }">selected</c:if> value="0" >合理</option>
 										</select>
 									</td>
 									<td style="vertical-align:top;padding-left:2px;padding-right:8px;" nowrap>
@@ -123,22 +123,22 @@
 											<td class="center"><fmt:formatDate value="${patVisit.discharge_date_time}" pattern="yyyy-MM-dd"/> </td> 
 											<td class="center">
 												<c:choose>
-													<c:when test="${patVisit.ISORDERCHECK == 1 }">
-													是
+													<c:when test="${patVisit.ISORDERCHECK == 0 }">
+													否
 													</c:when>
 													<c:otherwise>
-													否
+													是
 													</c:otherwise>
 												</c:choose>
 											</td>
 											<td style="width: 60px;" class="center">
 												
 												<c:choose>
-													<c:when test="${patVisit.ISCHECKTRUE == 0 }">
-													否
+													<c:when test="${patVisit.CHECK_STATUS == 0 }">
+													合理
 													</c:when>
 													<c:otherwise>
-													是
+													不合理
 													</c:otherwise>
 												</c:choose>
 												
