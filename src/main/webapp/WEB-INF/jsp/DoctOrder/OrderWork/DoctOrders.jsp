@@ -253,7 +253,7 @@
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:10px;">
 							<thead>
 								<tr>
-									<th class="center" nowrap>日期</th>
+									<th class="center" nowrap><c:if test="${page.pd.show_type==3}">手术</c:if>日期</th>
 									<th class="center" nowrap> </th>
 									<th class="center" nowrap>医嘱名称</th>
 									<th class="center" nowrap>医嘱类型</th>
@@ -261,6 +261,10 @@
 									<th class="center" nowrap>用法</th>
 									<th class="center" nowrap>用量</th>
 									<th class="center" nowrap>途径</th>
+									<c:if test="${page.pd.show_type==3}">
+									<th class="center" nowrap>开始时间</th>
+									<th class="center" nowrap>结束时间</th>
+									</c:if>
 								</tr>
 							</thead>
 							<tbody>
@@ -316,6 +320,10 @@
 												${order.dosage_units }
 											</td>
 											<td class="center " >${order.administration } </td>
+											<c:if test="${page.pd.show_type==3}">
+											<td class="center " >${order.start_date_time }</td>
+											<td class="center " >${order.stop_date_time }</td>
+											</c:if>
 										</tr>
 										</c:if>
 									</c:forEach>
