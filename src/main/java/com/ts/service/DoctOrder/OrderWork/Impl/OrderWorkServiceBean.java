@@ -153,7 +153,6 @@ public class OrderWorkServiceBean implements IOrderWorkService {
 		}
 		//更新病人住院记录pat_visit的状态为0合理1不合理
 		//pd.put("NGROUPNUM", "");
-		pd.put("ISCHECKTRUE", 1);
 		pd.put("ISORDERCHECK", 0);
 		pd.put("CHECK_STATUS", pd.getString("CHECK_STATUS"));
 		updatePatVisitNgroupnum(pd);
