@@ -447,7 +447,7 @@ public class OrderWork extends BaseController
 			pd.put("ISCHECKTRUE", 0);
 			//设置为不合理
 			pd.put("CHECK_STATUS", 1);
-			pd.put("CHECKPEOPLE", this.getCurrentUser().getUSER_ID());
+			pd.put("CHECKPEOPLE", user.getUSER_ID());
 			if("".equals(ngroupnum)) {
 				pd.put("ngroupnum", this.get32UUID());
 			}

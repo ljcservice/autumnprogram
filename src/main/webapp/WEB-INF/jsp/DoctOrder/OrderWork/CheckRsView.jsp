@@ -359,7 +359,24 @@ function saveIsCheckTrue(){
 			});
 		};
 	});	
-	
+	// 	专家点评
+	function expertOrders(){
+		//top.jzts();
+		var url = path + "/expert/expertList.do?IS_ORDERS=1"+"&patient_id="+$("#patient_id").val()+"&visit_id="+$("#visit_id").val();//医嘱专家列表
+		var diag = new top.Dialog();
+		diag.Drag=true;
+		diag.Title ="编辑点评";
+		diag.URL = url;
+		diag.Width = $(top.window).width();
+		diag.Height = $(top.window).height();
+		diag.CancelEvent = function(){ //关闭事件
+			diag.close();
+			//遮罩层控制，第三层弹窗使用
+			top.$("#_DialogBGDiv").css("z-index",900).css("display","block");
+			$("#checkForm").submit();
+		};
+		diag.show();
+	}
 }
 </script>
 </html>
