@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ExpertMapper">
+	<!-- 专家列表 -->
+	<select id="expertListPage" parameterType="page" resultType="pd" >
+		select a.user_id,b.username,b.name,a.IS_ORDERS,a.IS_RECIPE,a.UPDATE_TIME,a.UPDATE_USER,a.REMARK
+		from expert a,plat.sys_user b
+		where a.USER_ID = b.USER_ID 
+		<!-- 		关键词检索 -->
+		<if test="pd.keywords!= null and pd.keywords != ''">
+			and
+				(
+					 USERNAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or
+					 NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+		</if>
+		<if test="pd.IS_ORDERS!= null and pd.IS_ORDERS!= ''">
+			and IS_ORDERS =#{pd.IS_ORDERS}
+		</if>
+		<if test="pd.IS_RECIPE!= null and pd.IS_RECIPE!= ''">
+			and IS_RECIPE =#{pd.IS_RECIPE}
+		</if>
+	</select>
+
+	<!-- 通过user_id获取数据 -->
+	<select id="findExpertById" parameterType="pd" resultType="pd" >
+		select a.user_id,b.username,b.name,a.IS_ORDERS,a.IS_RECIPE,a.UPDATE_TIME,a.UPDATE_USER,a.REMARK
+		from expert a,plat.sys_user b
+		where a.USER_ID = b.USER_ID 
+			and a.USER_ID = #{USER_ID}
+	</select>
+	
+	<!-- 新增专家 -->
+	<insert id="saveExpert" parameterType="pd" >
+		insert into expert (
+			USER_ID,IS_ORDERS,IS_RECIPE,UPDATE_TIME,UPDATE_USER,REMARK
+		) values (
+			#{USER_ID},	#{IS_ORDERS},#{IS_RECIPE},#{UPDATE_TIME},#{UPDATE_USER},#{REMARK}
+		)
+	</insert>
+	
+	<!-- 删除专家 -->
+	<delete id="deleteExpert" parameterType="pd">
+		delete from expert
+		where 
+			USER_ID = #{USER_ID}
+	</delete>
+	<update id="updateExpert" parameterType="pd">
+		update expert set IS_ORDERS=#{IS_ORDERS},IS_RECIPE=#{IS_RECIPE},REMARK=#{REMARK},UPDATE_USER=#{UPDATE_USER},UPDATE_TIME=#{UPDATE_TIME}
+		where USER_ID=#{USER_ID}
+	</update>
+</mapper>

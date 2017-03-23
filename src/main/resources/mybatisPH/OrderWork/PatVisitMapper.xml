@@ -110,7 +110,8 @@
 		link_date,
 		NGROUPNUM,
 		ISORDERCHECK,
-		ISCHECKTRUE
+		check_status,
+		expert_id
 	</sql>
 	
 	<!-- 字段值 -->
@@ -215,8 +216,8 @@
 		#{link_date},
 		#{NGROUPNUM},
 		#{ISORDERCHECK},
-		#{ISCHECKTRUE}
-
+		#{check_status},
+		#{expert_id}
 	</sql>
 	
 	
@@ -278,8 +279,9 @@
 			t.link_date,
 			t.NGROUPNUM,
 			t.ISORDERCHECK,
-			t.ISCHECKTRUE
-      		,RS_DRUG_TYPES
+			t.expert_id,
+			t.CHECK_STATUS
+      		,m.RS_DRUG_TYPES
 	    from pat_visit t
 	    left join pat_master_index p on t.patient_id = p.patient_id 
 	    left join ( select NGROUPNUM,listagg( RS_DRUG_TYPE ,'@;@') within GROUP (order by NGROUPNUM) RS_DRUG_TYPES 
@@ -364,7 +366,8 @@
 			t.link_date,
 			t.NGROUPNUM,
 			t.ISORDERCHECK,
-			t.ISCHECKTRUE
+			t.check_status,
+			t.expert_id
 		from 
 			pat_visit t 
 		left join pat_master_index p on t.patient_id = p.patient_id
@@ -377,10 +380,7 @@
 		set
 			ngroupnum = #{NGROUPNUM,jdbcType=VARCHAR},
 			ISORDERCHECK = #{ISORDERCHECK}, 
-			ISCHECKTRUE  = #{ISCHECKTRUE} 
-			<if test="check_status !=null and check_status !=''">
-				,check_status = #{check_status} 
-			</if>
+			CHECK_STATUS = #{CHECK_STATUS} 
 		where 
 			 patient_id =#{patient_id} and visit_id = #{visit_id}
 	
@@ -389,4 +389,8 @@
 		select * from  pat_visit t
 		 where  t.patient_id =#{patient_id} and t.visit_id = #{visit_id}
 	</select>
+	<update id="updateExpertPatVisit">
+		update pat_visit t set expert_id=#{expert_id} 
+ 		where  t.patient_id =#{patient_id} and t.visit_id = #{visit_id}
+	</update>
 </mapper>

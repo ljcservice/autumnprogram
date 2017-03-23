@@ -138,14 +138,7 @@
 			connect by rownum &lt;=(max_date-min_date)+1
 		 )
  
- 	select datestr,patient_id,visit_id,order_no,order_sub_no,repeat_indicator,order_class,
-			order_text,order_code,dosage,dosage_units,administration,duration,duration_units,
-			start_date_time,stop_date_time,frequency,freq_counter,freq_interval,freq_interval_unit,
-			freq_detail,perform_schedule,perform_result,ordering_dept,doctor,stop_doctor,
-			nurse,enter_date_time,order_status,billing_attr,last_perform_date_time,
-			last_accting_date_time,treat_sheet_flag,pham_std_code,amount,drug_billing_attr,
-			stop_nurse,stop_order_date_time,dept_name,clinic_attr,outp_or_inp,
-			internal_or_sergery,link_date,ddd_value
+ 	select datestr,<include refid="Field"></include>
 	from myDateTable a
 	inner join orders b on(a.datestr &gt;=to_char(b.start_date_time,'yyyy-MM-dd') and a.datestr &lt;=to_char(b.stop_date_time,'yyyy-MM-dd'))
 	
@@ -159,7 +152,7 @@
 		Order by datestr,ORDER_NO,order_sub_no 
 	</select>
 
-
+	<!-- 日图查看 -->
 	<select id="ordersByPicture" parameterType="pd" resultType="pd">
 		select order_Text,order_class,to_char(start_date_time,'yyyy-MM-dd hh24:mi:ss') startdate ,to_char(stop_date_time+1,'yyyy-MM-dd hh24:mi:ss') enddate 
 		from  orders 
@@ -171,14 +164,38 @@
 			and order_class = #{order_class}
 		</if>
 	</select>
+	<!-- 术后日期查询医嘱 -->
+	<select id="ordersPageByOpDate" parameterType="page" resultType="pd">
+ 		select to_char(a.startDate,'yyyy-MM-dd') datestr,<include refid="Field"></include>
+		from 
+		  (select mydate startDate,nvl(lead(mydate,1) over (order by mydate) ,to_date('2099-12-31','yyyy-MM-dd'))endDate from
+		  	(
+		  		select distinct OPERATING_DATE mydate from  operation 
+		  		where patient_id  = #{pd.patient_id} and visit_id = #{pd.visit_id}
+		  		order by OPERATING_DATE
+		  	)
+		  ) a
+		inner join orders b on(a.startDate &lt;=b.start_date_time and a.endDate &gt; b.stop_date_time)
 	
+		where 	patient_id  = #{pd.patient_id} and visit_id = #{pd.visit_id}
+		<if test="pd.REPEAT_INDICATOR != null and pd.REPEAT_INDICATOR != ''"> <!-- 医嘱标示 1 长期 0 临时-->  
+			and REPEAT_INDICATOR = #{pd.REPEAT_INDICATOR} 
+		</if>
+		<if test="pd.order_class != null and pd.order_class != '' ">
+			and order_class = #{pd.order_class}
+		</if>
+		Order by a.startDate,ORDER_NO,order_sub_no 
+	</select>
+	
+	<!-- 	查询医嘱单 -->
 	<select id="ordersListSpecial" parameterType="pd" resultType="pd">
 		select ORDER_NO||'@;@'||ORDER_SUB_NO||'@;@'||ORDER_CODE||'@;@'||ORDER_TEXT as key
 			, ORDER_TEXT as value
 		from  orders 
+		where 	patient_id  = #{patient_id} and visit_id = #{visit_id}
 	</select>
 	
-	
+	<!-- 查询医嘱单开始日期 -->
 	<select id="queryOrdersStartDate" parameterType="pd" resultType="String">
 		select to_char(min(start_date_time),'yyyy-MM-dd hh:mm:ss') datestart
 		from  orders 
