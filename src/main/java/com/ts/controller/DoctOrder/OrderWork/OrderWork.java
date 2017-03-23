@@ -147,6 +147,15 @@ public class OrderWork extends BaseController
 		mv.addObject("checkRss", checkRss);
 		mv.setViewName("DoctOrder/OrderWork/CheckRsView");
 		mv.addObject("rsTypeDict",getCheckTypeDict());
+		// 当前登录专家
+		User user = getCurrentUser();
+		String expert_id = PatVisit.getString("expert_id");
+		mv.addObject("modifyFlag", 1);
+		//
+		if(!Tools.isEmpty(expert_id) &&!user.getUSER_ID().equals(expert_id)){
+			//专家点评则只有专家能修改
+			mv.addObject("modifyFlag", 0);
+		}
 		return mv;
 	}
 	
@@ -271,8 +280,8 @@ public class OrderWork extends BaseController
 		String ngroupnum = pd.getString("ngroupnum");
 		//人工是否点评
 		pd.put("ISORDERCHECK", "1");
-		// 是否为正确医嘱
-		pd.put("ISCHECKTRUE", "0");
+		// 是否为正确医嘱,1为不合理
+		pd.put("check_status", "1");
 		pd.put("CHECKPEOPLE", this.getCurrentUser().getUSER_ID());
 		if("".equals(ngroupnum)) {
 			pd.put("ngroupnum", this.get32UUID());
@@ -443,8 +452,6 @@ public class OrderWork extends BaseController
 			String ngroupnum = pd.getString("ngroupnum");
 			//人工是否点评
 			pd.put("ISORDERCHECK", 1);
-			// 是否为正确医嘱
-			pd.put("ISCHECKTRUE", 0);
 			//设置为不合理
 			pd.put("CHECK_STATUS", 1);
 			pd.put("CHECKPEOPLE", user.getUSER_ID());

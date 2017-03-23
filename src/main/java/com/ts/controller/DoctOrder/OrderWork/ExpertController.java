@@ -36,7 +36,7 @@ public class ExpertController extends BaseController{
 	private UserManager userService;
 	
 	/**
-	 * 专家点评列表，查询自己的
+	 * 专家点评列表
 	 * @return
 	 * @throws Exception
 	 */
@@ -50,6 +50,8 @@ public class ExpertController extends BaseController{
 			List<PageData>	expertList = expertService.listExperts(page);	//列出专家列表
 			mv.addObject("expertList", expertList);
 			mv.setViewName("DoctOrder/expert/selectExpertList");
+			mv.addObject("pd", pd);
+			
 		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
@@ -106,6 +108,8 @@ public class ExpertController extends BaseController{
 		PageData pd =  this.getPageData();
 		Page pp = new Page();
 		pp.setShowCount(9999);
+		pd.put("showAdmin", 1);
+		pp.setPd(pd);
 		List<PageData>	userList = userService.listUsers(pp);	//列出用户列表
 		mv.addObject("userList", userList);
 		mv.setViewName("DoctOrder/expert/expertEdit");
