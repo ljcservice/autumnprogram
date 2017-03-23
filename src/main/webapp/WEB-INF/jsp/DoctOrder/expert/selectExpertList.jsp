@@ -25,7 +25,7 @@
 				<div class="page-content">
 					<div class="row">
 						<div class="col-xs-12">
-						<form action="osyn/osynStand.do" method="post">
+						<form action="" method="post">
 						<input type="hidden" name="patient_id" value="${pd.patient_id}" id="patient_id"/>
 						<input type="hidden" name="visit_id" value="${pd.visit_id}" id="visit_id"/>
 						<div id="zhongxin" style="padding-top: 13px;">
@@ -144,12 +144,11 @@ function selectCont(){
 	}
 	var mydocument = parent.$("#_DialogFrame_0")[0].contentWindow.document;
 	//设置为专家点评
-	var url =  = path + "/expert/setExpertPatVisit.do?expert_id="+osyn.eq(0).val()+"patient_id="+$("#patient_id").val()+"&visit_id="+$("#visit_id").val();
+	var url  = path + "/expert/setExpertPatVisit.do?expert_id="+osyn.eq(0).val()+"&patient_id="+$("#patient_id").val()+"&visit_id="+$("#visit_id").val();
 	$.ajax({ url: url, success: function(){
-		
+		top.Dialog.close();
    	}});
 	
-	top.Dialog.close();
 }
 </script>
 </html>
