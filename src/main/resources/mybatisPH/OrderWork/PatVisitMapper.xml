@@ -110,7 +110,7 @@
 		link_date,
 		NGROUPNUM,
 		ISORDERCHECK,
-		check_status,
+		ISCHECKTRUE,
 		expert_id
 	</sql>
 	
@@ -216,7 +216,7 @@
 		#{link_date},
 		#{NGROUPNUM},
 		#{ISORDERCHECK},
-		#{check_status},
+		#{ISCHECKTRUE},
 		#{expert_id}
 	</sql>
 	
@@ -280,7 +280,7 @@
 			t.NGROUPNUM,
 			t.ISORDERCHECK,
 			t.expert_id,
-			t.CHECK_STATUS
+			t.ISCHECKTRUE
       		,m.RS_DRUG_TYPES
 	    from pat_visit t
 	    left join pat_master_index p on t.patient_id = p.patient_id 
@@ -366,7 +366,7 @@
 			t.link_date,
 			t.NGROUPNUM,
 			t.ISORDERCHECK,
-			t.check_status,
+			t.ISCHECKTRUE,
 			t.expert_id
 		from 
 			pat_visit t 
@@ -378,9 +378,10 @@
 		update
 			<include refid="tableName">	</include>
 		set
-			ngroupnum = #{NGROUPNUM,jdbcType=VARCHAR},
-			ISORDERCHECK = #{ISORDERCHECK}, 
-			CHECK_STATUS = #{CHECK_STATUS} 
+			ngroupnum = #{NGROUPNUM,jdbcType=VARCHAR},ISCHECKTRUE = #{ISCHECKTRUE}
+			<if test="ISORDERCHECK !=null and ISORDERCHECK!='' ">
+				,ISORDERCHECK = #{ISORDERCHECK}
+			</if>
 		where 
 			 patient_id =#{patient_id} and visit_id = #{visit_id}
 	

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PrescMapper">
+	<!-- 专家列表 -->
+	<select id="prescListPage" parameterType="page" resultType="pd" >
+		select a.*,m.RS_DRUG_TYPES
+		from presc a
+		left join ( select NGROUPNUM,listagg( RS_DRUG_TYPE ,'@;@') within GROUP (order by NGROUPNUM) RS_DRUG_TYPES 
+	         from  (
+	         		select NGROUPNUM,RS_DRUG_TYPE  from RS_DRUG_CHECKRSLT group by NGROUPNUM,RS_DRUG_TYPE 
+           			) group by NGROUPNUM
+	    ) m on a.NGROUPNUM=m.NGROUPNUM
+		where 1=1 
+		<!-- 		关键词检索 -->
+		<if test="pd.keywords!= null and pd.keywords != ''">
+			and
+				(
+					 USERNAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or
+					 NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+		</if>
+		order by ORDER_DATE desc
+	</select>
+	<!-- 单个处方主要信息 -->
+	<select id="findPrescById" parameterType="pd" resultType="pd" >
+		select * from presc where id = #{id}
+	</select>
+	<!-- 	处方详情 -->
+	<select id="prescDetailList" parameterType="pd" resultType="pd" >
+		select * from presc_detail where presc_id = #{id}
+	</select>
+	
+	
+</mapper>
