@@ -35,8 +35,7 @@
 					<div class="row">
 						<div >
 							<form name="checkForm" id="checkForm" action="DoctOrder/CheckRsViewUI.do" method="post">
-							<input type="hidden" value="${page.pd.patient_id}" name="patient_id" id="patient_id"/>
-							<input type="hidden" value="${page.pd.visit_id}"   name="visit_id"   id="visit_id"/>
+							<input type="hidden" value="${page.pd.id}" name="id" id="id"/>
 							<input type="hidden" value="${page.pd.ngroupnum}"  name="ngroupnum"  id="ngroupnum"/>
 							<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
 								<thead>
