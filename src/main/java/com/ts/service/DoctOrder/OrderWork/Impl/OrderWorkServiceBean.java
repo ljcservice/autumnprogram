@@ -148,13 +148,14 @@ public class OrderWorkServiceBean implements IOrderWorkService {
 	@Override
 	public void setCheckRsStatus(PageData pd) throws Exception {
 		//如果为合理，删除点评
-		if("0".equals(pd.getString("CHECK_STATUS"))){
+		if("0".equals(pd.getString("ISCHECKTRUE"))){
 			delCheckRsByNgroupnum(pd);
+			//无人工点评记录
+			pd.put("ISORDERCHECK", 0);
 		}
-		//更新病人住院记录pat_visit的状态为0合理1不合理
-		//pd.put("NGROUPNUM", "");
-		pd.put("ISORDERCHECK", 0);
-		pd.put("CHECK_STATUS", pd.getString("CHECK_STATUS"));
+		//pd.put("NGROUPNUM", "");问题组号
+		//更新病人住院记录pat_visit的状态为0合理1不合理2待定
+		//pd.put("ISCHECKTRUE", pd.getString("ISCHECKTRUE"));
 		updatePatVisitNgroupnum(pd);
 	}
 
