@@ -11,6 +11,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import net.sf.json.JSONArray;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,8 +26,7 @@ import com.ts.util.DateUtil;
 import com.ts.util.PageData;
 import com.ts.util.Tools;
 import com.ts.util.app.AppUtil;
-
-import net.sf.json.JSONArray;
+import com.ts.util.doctor.DoctorConst;
 
 
 /**
@@ -95,8 +96,8 @@ public class OrderWork extends BaseController
 					pp.put("RS_DRUG_TYPES", RS_DRUG_TYPE);
 				}
 			}
-			mv.addObject("rstypeMap", rstypeMap); 
-			mv.addObject("rstypeColorMap", rstypeColorMap); 
+			mv.addObject("rstypeMap", DoctorConst.rstypeMap); 
+			mv.addObject("rstypeColorMap", DoctorConst.rstypeColorMap); 
 			mv.addObject("checktypeMap", getCheckTypeDict()); 
 			mv.addObject("patVisits", entity);
 		}catch(Exception e )
@@ -143,7 +144,8 @@ public class OrderWork extends BaseController
 		page.setPd(pd);
 		List<PageData> checkRss = this.orderWorkService.findByCheckResultsByNgroupnum(page);
 		PageData PatVisit = orderWorkService.queryPatVisit(pd);
-		mv.addObject("check_status", PatVisit.get("check_status")==null?0:PatVisit.get("check_status"));
+		//默认待定
+		mv.addObject("ISCHECKTRUE", PatVisit.get("ISCHECKTRUE")==null?2:PatVisit.get("ISCHECKTRUE"));
 		mv.addObject("checkRss", checkRss);
 		mv.setViewName("DoctOrder/OrderWork/CheckRsView");
 		mv.addObject("rsTypeDict",getCheckTypeDict());
@@ -158,15 +160,6 @@ public class OrderWork extends BaseController
 		}
 		return mv;
 	}
-	
-	public ModelAndView CheckRsDelete(Page page) throws Exception{
-		
-		PageData pd = this.getPageData();
-		
-		
-		return null;
-	}
-	
 	
 	/**
 	 * 医嘱信息
@@ -281,7 +274,7 @@ public class OrderWork extends BaseController
 		//人工是否点评
 		pd.put("ISORDERCHECK", "1");
 		// 是否为正确医嘱,1为不合理
-		pd.put("check_status", "1");
+		pd.put("ISCHECKTRUE", "1");
 		pd.put("CHECKPEOPLE", this.getCurrentUser().getUSER_ID());
 		if("".equals(ngroupnum)) {
 			pd.put("ngroupnum", this.get32UUID());
@@ -453,7 +446,7 @@ public class OrderWork extends BaseController
 			//人工是否点评
 			pd.put("ISORDERCHECK", 1);
 			//设置为不合理
-			pd.put("CHECK_STATUS", 1);
+			pd.put("ISCHECKTRUE", 1);
 			pd.put("CHECKPEOPLE", user.getUSER_ID());
 			if("".equals(ngroupnum)) {
 				pd.put("ngroupnum", this.get32UUID());
@@ -573,28 +566,5 @@ public class OrderWork extends BaseController
 //		orderClassMap.put("6","膳食");
 //		orderClassMap.put("7","其他");
 //	}
-	private static Map<String,String> rstypeMap = new HashMap<String,String>(); 
-	static{
-		rstypeMap.put("diaginfo","禁");
-		rstypeMap.put("dosage","法");
-		rstypeMap.put("ingredien","重");
-		rstypeMap.put("interaction","相");
-		rstypeMap.put("iv_effect","配");
-		rstypeMap.put("side","反");
-		rstypeMap.put("administrator","途");
-		rstypeMap.put("specpeople","特");
-		rstypeMap.put("manager","管");
-	}
-	private static Map<String,String> rstypeColorMap = new HashMap<String,String>(); 
-	static{
-		rstypeColorMap.put("diaginfo","btn-pink");
-		rstypeColorMap.put("dosage","btn-warning");
-		rstypeColorMap.put("ingredien","btn-success");
-		rstypeColorMap.put("interaction","btn-yellow");
-		rstypeColorMap.put("iv_effect","btn-grey");
-		rstypeColorMap.put("side","btn-danger");
-		rstypeColorMap.put("administrator","btn-info");
-		rstypeColorMap.put("specpeople","btn-purple");
-		rstypeColorMap.put("manager","btn-success");
-	}
+
 }
