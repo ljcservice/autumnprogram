@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 
 import net.sf.json.JSONArray;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,6 +23,7 @@ import com.ts.controller.base.BaseController;
 import com.ts.entity.Page;
 import com.ts.entity.system.User;
 import com.ts.service.DoctOrder.OrderWork.IOrderWorkService;
+import com.ts.service.DoctOrder.OrderWork.PrescService;
 import com.ts.util.DateUtil;
 import com.ts.util.PageData;
 import com.ts.util.Tools;
@@ -40,6 +42,9 @@ public class OrderWork extends BaseController
 {
 	@Resource(name="orderWorkServiceBean")
 	private IOrderWorkService orderWorkService;
+
+	@Autowired
+	private PrescService prescService;
 	
 	/**
 	 * 检索医嘱点评工作信息
@@ -252,13 +257,24 @@ public class OrderWork extends BaseController
 		mv.addObject("DoctOrders", pdOrders);
 		mv.addObject("rsTypeDict",getCheckTypeDict());
 		mv.setViewName("DoctOrder/OrderWork/DoctOrders");
+		//权限控制
+		// 当前登录专家
+		User user = getCurrentUser();
+		PageData PatVisit = orderWorkService.queryPatVisit(pd);
+		String expert_id = PatVisit.getString("expert_id");
+		mv.addObject("modifyFlag", 1);
+		//
+		if(!Tools.isEmpty(expert_id) &&!user.getUSER_ID().equals(expert_id)){
+			//专家点评则只有专家能修改
+			mv.addObject("modifyFlag", 0);
+		}
 		
 		return mv ; 
 		
 	}
 	
 	/**
-	 * 保存快捷点评结果
+	 * 医嘱保存快捷点评结果
 	 * @param pid
 	 * @return
 	 * @throws Exception
@@ -266,7 +282,6 @@ public class OrderWork extends BaseController
 	@RequestMapping(value="/SaveShortcut")
 	@ResponseBody
 	public Object saveShortcutChehck() throws Exception {
-		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
 		Map<String, Object> map = new HashMap<String , Object>();
 		String count = pd.getString("count");
@@ -276,9 +291,17 @@ public class OrderWork extends BaseController
 		// 是否为正确医嘱,1为不合理
 		pd.put("ISCHECKTRUE", "1");
 		pd.put("CHECKPEOPLE", this.getCurrentUser().getUSER_ID());
-		if("".equals(ngroupnum)) {
-			pd.put("ngroupnum", this.get32UUID());
-			this.orderWorkService.updatePatVisitNgroupnum(pd);
+		if(Tools.isEmpty(ngroupnum)) {
+			//查询住院记录，找到ngroupnum，此值一定要一致
+			Page p = new Page();
+			p.setPd(pd);
+			PageData patient = orderWorkService.findByPatient(p);
+			if(Tools.isEmpty(patient.getString("ngroupnum"))) {
+				pd.put("ngroupnum", this.get32UUID());
+				this.orderWorkService.updatePatVisitNgroupnum(pd);
+			}else{
+				pd.put("ngroupnum", patient.getString("ngroupnum"));
+			}
 		}
 		pd.put("rs_id", this.get32UUID());
 		pd.put("in_rs_type", pd.getString("checkType"));
@@ -286,10 +309,11 @@ public class OrderWork extends BaseController
 		pd.put("alert_hint", pd.getString("checkText"));
 		pd.put("alert_cause", "药师自审");
 		pd.put("alert_level", "r");
-		pd.put("rs_drug_type", "");
+//		pd.put("rs_drug_type", "");
+		pd.put("RS_DRUG_TYPE", pd.get("checkType"));
 		pd.put("checkdate", DateUtil.getDay());
 		if("1".equals(count)){
-			pd.put("drug_id1", "");
+			pd.put("drug_id1", pd.getString("order_code"));
 			pd.put("drug_id1_name", pd.getString("tmpOrder_Name"));
 			pd.put("rec_main_no1", pd.getString("tmpOrder_no"));
 			pd.put("rec_sub_no1", pd.getString("tmpOrder_sub_no"));
@@ -422,7 +446,7 @@ public class OrderWork extends BaseController
 			mv.addObject("checkType", getCheckTypeDict());
 			Map orderMap = orderWorkService.ordersListSpecial(pd);
 			mv.addObject("orderMap", orderMap);
-			mv.setViewName("DoctOrder/OrderWork/checkRsAdd");
+			mv.setViewName("DoctOrder/checkRsAdd");
 		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
@@ -448,8 +472,27 @@ public class OrderWork extends BaseController
 			//设置为不合理
 			pd.put("ISCHECKTRUE", 1);
 			pd.put("CHECKPEOPLE", user.getUSER_ID());
-			if("".equals(ngroupnum)) {
-				pd.put("ngroupnum", this.get32UUID());
+			//查询住院记录，找到ngroupnum，此值一定要一致
+			if("0".equals(pd.getString("business_type"))){
+				Page p = new Page();
+				p.setPd(pd);
+				PageData patient = orderWorkService.findByPatient(p);
+				if(Tools.isEmpty(patient.getString("ngroupnum"))) {
+					pd.put("ngroupnum", this.get32UUID());
+					this.orderWorkService.updatePatVisitNgroupnum(pd);
+				}else{
+					pd.put("ngroupnum", patient.getString("ngroupnum"));
+				}
+			}else if("1".equals(pd.getString("business_type"))){
+				//查询处方记录，找到ngroupnum
+				PageData Presc = prescService.findPrescById(pd);
+				if(Tools.isEmpty(Presc.getString("ngroupnum"))){
+					pd.put("ngroupnum", this.get32UUID());
+					//更新处方的关联问题字段
+					this.prescService.updatePrescNgroupnum(pd);
+				}else{
+					pd.put("ngroupnum", Presc.getString("ngroupnum"));
+				}
 			}
 			this.orderWorkService.updatePatVisitNgroupnum(pd);
 			pd.put("rs_id", this.get32UUID());
@@ -497,7 +540,7 @@ public class OrderWork extends BaseController
 			mv.addObject("checkType", getCheckTypeDict());
 			PageData order = orderWorkService.getCheckRsById(pd);
 			order.putAll(pd);
-			mv.setViewName("DoctOrder/OrderWork/checkRsEdit");
+			mv.setViewName("DoctOrder/checkRsEdit");
 			mv.addObject("pd", order);
 		} catch(Exception e){
 			logger.error(e.toString(), e);

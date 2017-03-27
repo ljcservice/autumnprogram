@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ts.controller.base.BaseController;
@@ -18,8 +19,10 @@ import com.ts.entity.system.User;
 import com.ts.service.DoctOrder.OrderWork.IOrderWorkService;
 import com.ts.service.DoctOrder.OrderWork.PrescService;
 import com.ts.service.system.user.UserManager;
+import com.ts.util.DateUtil;
 import com.ts.util.PageData;
 import com.ts.util.Tools;
+import com.ts.util.app.AppUtil;
 import com.ts.util.doctor.DoctorConst;
 
 @Controller
@@ -106,23 +109,36 @@ public class PrescController extends BaseController{
 		//其他人开具的处方详情
 		
 		if(!Tools.isEmpty(pd.getString("ngroupnum"))){
-		//查询结果ByNgroupnum
-		List<PageData> checkRss = this.orderWorkService.findByCheckResultsByNgroupnum(page);
-		Map<String, List<PageData>> map = new HashMap<String , List<PageData>>();
-		for(PageData d : checkRss){
-			String key1 = d.getString("rec_main_no1") + "_" + d.getString("rec_sub_no1");
-			if(!map.containsKey(key1)) map.put(key1, new ArrayList<PageData>()); 
-			map.get(key1).add(d);
-			//增加第二个药品的识别
-			if("".equals(d.getString("rec_main_no2"))) continue;
-			String key2 = d.getString("rec_main_no2") + "_" + d.getString("rec_sub_no2");
-			if(!map.containsKey(key2)) map.put(key2, new ArrayList<PageData>()); 
-			map.get(key2).add(d);
+			//查询结果ByNgroupnum
+			List<PageData> checkRss = this.orderWorkService.findByCheckResultsByNgroupnum(page);
+			Map<String, List<PageData>> map = new HashMap<String , List<PageData>>();
+			for(PageData d : checkRss){
+				String key1 = d.getString("rec_main_no1") + "_" + d.getString("rec_sub_no1");
+				if(!map.containsKey(key1)) map.put(key1, new ArrayList<PageData>()); 
+				map.get(key1).add(d);
+				//增加第二个药品的识别
+				if("".equals(d.getString("rec_main_no2"))) continue;
+				String key2 = d.getString("rec_main_no2") + "_" + d.getString("rec_sub_no2");
+				if(!map.containsKey(key2)) map.put(key2, new ArrayList<PageData>()); 
+				map.get(key2).add(d);
+			}
+			mv.addObject("CheckRss",map);
 		}
-		mv.addObject("CheckRss",map);
-		}
+		mv.addObject("rsTypeDict",getCheckTypeDict());
 		mv.addObject("pd", pd);
 		mv.setViewName("DoctOrder/presc/prescDetailList");
+		
+		//权限控制
+		// 当前登录专家
+		User user = getCurrentUser();
+		PageData presc = prescService.findPrescById(pd);
+		String expert_id = presc.getString("expert_id");
+		mv.addObject("modifyFlag", 1);
+		//
+		if(!Tools.isEmpty(expert_id) &&!user.getUSER_ID().equals(expert_id)){
+			//专家点评则只有专家能修改
+			mv.addObject("modifyFlag", 0);
+		}
 		return mv;
 	}
 	
@@ -172,5 +188,69 @@ public class PrescController extends BaseController{
 			rs.put(pd.getString("RS_TYPE_CODE"), pd);
 		}
 		return rs;
+	}
+	
+	/**
+	 * 医嘱保存快捷点评结果
+	 * @param pid
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/SaveShortcut")
+	@ResponseBody
+	public Object saveShortcutChehck() throws Exception {
+		PageData pd = this.getPageData();
+		Map<String, Object> map = new HashMap<String , Object>();
+		String count = pd.getString("count");
+		String ngroupnum = pd.getString("ngroupnum");
+		//人工是否点评
+		pd.put("ISORDERCHECK", "1");
+		// 是否为正确医嘱,1为不合理
+		pd.put("ISCHECKTRUE", "1");
+		pd.put("CHECKPEOPLE", this.getCurrentUser().getUSER_ID());
+		if(Tools.isEmpty(ngroupnum)) {
+			//查询住院记录，找到ngroupnum
+			PageData Presc = prescService.findPrescById(pd);
+			if(Tools.isEmpty(Presc.getString("ngroupnum"))){
+				pd.put("ngroupnum", this.get32UUID());
+				//更新处方的关联问题字段
+				this.prescService.updatePrescNgroupnum(pd);
+			}else{
+				pd.put("ngroupnum", Presc.getString("ngroupnum"));
+			}
+		}
+		pd.put("rs_id", this.get32UUID());
+		pd.put("in_rs_type", pd.getString("checkType"));
+		pd.put("alert_level", pd.getString("r"));
+		pd.put("alert_hint", pd.getString("checkText"));
+		pd.put("alert_cause", "药师自审");
+		pd.put("alert_level", "r");
+//		pd.put("rs_drug_type", "");
+		pd.put("checkdate", DateUtil.getDay());
+		pd.put("RS_DRUG_TYPE", pd.get("checkType"));
+		if("1".equals(count)){
+			pd.put("drug_id1", pd.getString("order_code"));
+			pd.put("drug_id1_name", pd.getString("tmpOrder_Name"));
+			pd.put("rec_main_no1", pd.getString("tmpOrder_no"));
+			pd.put("rec_sub_no1", pd.getString("tmpOrder_sub_no"));
+			pd.put("drug_id2", "");
+			pd.put("drug_id2_name", "");
+			pd.put("rec_main_no2", "");
+			pd.put("rec_sub_no2", "");
+		}
+		else if("2".equals(count))
+		{
+			pd.put("drug_id1", pd.getString("order_code"));
+			pd.put("drug_id1_name", pd.getString("order_name"));
+			pd.put("rec_main_no1", pd.getString("order_no"));
+			pd.put("rec_sub_no1", pd.getString("order_sub_no"));
+			pd.put("drug_id2", pd.getString("tmpOrder_Code"));
+			pd.put("drug_id2_name", pd.getString("tmpOrder_Name"));
+			pd.put("rec_main_no2", pd.getString("tmpOrder_no"));
+			pd.put("rec_sub_no2", pd.getString("tmpOrder_sub_no"));
+		}
+		int i = orderWorkService.saveCheckResult(pd);
+		map.put("result", "ok");
+		return  AppUtil.returnObject(pd, map);
 	}
 }
