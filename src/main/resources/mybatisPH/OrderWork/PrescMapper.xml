@@ -31,6 +31,9 @@
 	<select id="prescDetailList" parameterType="pd" resultType="pd" >
 		select * from presc_detail where presc_id = #{id}
 	</select>
-	
+	<!-- 	更新处方的关联问题字段 -->
+	<update id="updatePrescNgroupnum" parameterType="pd" >
+		update presc set NGROUPNUM = #{Ngroupnum} where id=#{id}
+	</update>
 	
 </mapper>
