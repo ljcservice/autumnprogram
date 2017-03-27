@@ -93,7 +93,7 @@
 							<c:choose>
 								<c:when test="${not empty prescList}">
 									<c:forEach items="${prescList}" var="presc" varStatus="vs">
-										<tr ondblclick="detailPresc(${presc.id},${presc.NGROUPNUM})">
+										<tr ondblclick="detailPresc('${presc.id}','${presc.NGROUPNUM}')">
 											<td class="center">${presc.PRESC_NO}</td>
 											<td class="center">${presc.ORDER_DATE}</td>
 											<td class="center">${presc.PATIENT_NAME}</td>

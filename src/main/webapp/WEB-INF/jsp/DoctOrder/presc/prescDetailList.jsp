@@ -24,16 +24,26 @@
 				<div class="page-content">
 					<div class="row">
 						<div >
-						<form action="DoctOrder/DoctOrdersDetail.do?patient_id=${page.pd.patient_id}&visit_id=${page.pd.visit_id}" method="post">
-							<input type="hidden" name="id" value="${pd.id}" id="id"/>
+						<form action="presc/prescDetailList.do?id=${page.pd.id}" method="post">
+							<input type="hidden" name="patient_id" value="${page.pd.patient_id}" id="patient_id"/>
+							<input type="hidden" name="visit_id" value="${page.pd.visit_id}" id="visit_id"/>
+							<input type="hidden" name="repeat_indicator" value="${page.pd.repeat_indicator}" id="repeat_indicator"/>
+							<input type="hidden" name="repeat_indicator_name" value="${page.pd.repeat_indicator_name}" id="repeat_indicator_name"/>
+							<input type="hidden" name="order_class" value="${page.pd.order_class}" id="order_class"/>
+							<input type="hidden" name="order_class_name" value="${page.pd.order_class_name}" id="order_class_name"/>
+							<input type="hidden" name="ngroupnum" value="${page.pd.ngroupnum }" id="ngroupnum"/>
+							<input type="hidden" name="show_type" value="${page.pd.show_type }" id="show_type"/>
+							<input type="hidden" name="show_type_name" value="${page.pd.show_type_name }" id="show_type_name"/>
+							<!-- 快捷审核名字  -->
 							<input type="hidden" name="shortcutName" value="${page.pd.shortcutName}" id="shortcutName"/>
+							<!-- 点评结果之一 -->
 							<input type="hidden" name="checkJsonInfo" value='${page.pd.checkJsonInfo}' id="checkJsonInfo"/>
 						<div style="vertical-align:bottom;padding-top: 5px;padding-bottom: 5px;">
 							<div style="margin-top: 5px;margin-bottom: 5px;">
-								<span><b> <font color="blue" >处方详细信息</font></b></span>
+								<span><b> <font color="blue" >医嘱信息</font></b></span>
 								<div style="float: right;margin-bottom: 5px;">
 									<div class="btn-toolbar" style="float: right;">
-									
+									<c:if test="${modifyFlag==1 }">
 										<div class="btn-group">
 											<button data-toggle="dropdown" class="btn btn-info btn-sm dropdown-toggle">
 												<span id="shortcutNameSpan" >
@@ -61,25 +71,27 @@
 												</li>
 											</ul>
 										</div><!-- /.btn-group -->
+									</c:if>
+										
 									</div>
 								</div>
 							</div>
 						</div>
 						<div >
 						<!-- 	常规查看  -->
+						<c:if test="${page.pd.show_type== null || page.pd.show_type=='' || page.pd.show_type==0 }">
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:10px;">
 							<thead>
 								<tr>
 									<th class="center" nowrap></th>
-									<th class="center" nowrap>药品名称规格</th>
-									<th class="center" nowrap>单次计量</th>
+									<th class="center" nowrap>医嘱名称</th>
+									<th class="center" nowrap>医嘱类型</th>
+									<th class="center" nowrap>医嘱科室</th>
 									<th class="center" nowrap>用法</th>
-									<th class="center" nowrap>频次</th>
-									<th class="center" nowrap>用药天数</th>
-									<th class="center" nowrap>单价</th>
-									<th class="center" nowrap>数量</th>
-									<th class="center" nowrap>单位</th>
-									<th class="center" nowrap>药费</th>
+									<th class="center" nowrap>用量</th>
+									<th class="center" nowrap>途径</th>
+									<th class="center" nowrap>开始时间</th>
+									<th class="center" nowrap>结束时间</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -88,7 +100,7 @@
 								<c:when test="${not empty prescDetailList}">
 									<c:forEach items="${prescDetailList}" var="order" varStatus="vs">
 										<tr ondblclick="orderCheck(this)"  id="tr${order.order_no}${order.order_sub_no}" 
-											order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_name="${order.order_Text }" >
+											order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_name="${order.drug_name }" >
 											<c:set var="key1" >
 											${order.order_no.toString()}_${order.order_sub_no.toString()}
 											</c:set>
@@ -120,6 +132,7 @@
 												${order.DRUG_NAME } ${order.DRUG_SPEC }
 											</td>
 											<td class="center ">${order.DOSAGE }</td>
+											<td class="center ">不知道</td>
 											<td class="center " >${order.FREQUENCY}</td>
 											<td class="center " >${order.DRUG_USE_DAYS }</td>
 											<td class="center " >${order.COSTS } </td>
@@ -138,6 +151,7 @@
 							</c:choose>
 							</tbody>
 						</table>
+						</c:if>
 						</div>
 						<div class="page-header position-relative">
 							<table style="width:100%;">
@@ -187,7 +201,7 @@
 													</div>
 													<div style="vertical-align: text-top;">
 														<div> <b>问题说明:</b></div>
-														<textarea rows="4" cols="50" id="checkText"></textarea>
+														<textarea rows="4" cols="40" id="checkText"></textarea>
 													</div>
 												</div>
 											</div>
@@ -285,7 +299,6 @@
 	
 	function buildJson(){
 		checkJson = "{\"setCount\":" + setCount + ",\"checkName\":\"" + checkName + "\",\"checkFlag\":" + checkFlag + ",\"checkType\":\"" 
-			+ checkType + "\",\"oldColor\":\"" + oldColor + "\",\"order_no\":\"" + order_no + "\",\"order_sub_no\":\"" + order_sub_no + "\",\"order_name\":\"" + order_name + "\",\"count\":\"" + count + "\"}";
 		return checkJson;
 	}
 	
@@ -302,7 +315,7 @@
 		var visitId   = $("#visit_id").val();
 		$.ajax({
 			type: "POST",
-			url: basePath + 'DoctOrder/SaveShortcut.do', 
+			url: basePath + 'presc/SaveShortcut.do', 
 	    	data: {checkType:checkType,order_no:order_no,order_sub_no:order_sub_no
 	    		,order_name:order_name,tmpOrder_Name:tmpOrder_Name,tmpOrder_sub_no:tmpOrder_sub_no
 	    		,tmpOrder_no:tmpOrder_no,count:count,checkText:checkText,ngroupnum:ngroupnum,patient_id:patId,visit_id:visitId},
@@ -488,24 +501,6 @@
 		myform.show_type.value = _type;
 		myform.show_type_name.value = _name;
 		myform.submit();
-	}
-	function show_picture(_type,name){
-		var url = path + "/DoctOrder/DoctOrdersDetail.do?show_type="+_type+"&patient_id="+$("#patient_id").val()+"&visit_id="+$("#visit_id").val();
-		url+="&order_class="+$(order_class).val()+"&repeat_indicator"+$("#repeat_indicator").val();
-		//top.jzts();
-		var diag = new top.Dialog();
-		diag.Drag=true;
-		diag.Title ="按日图分解查看";
-		diag.URL = url;
-		diag.Width = $(top.window).width();
-		diag.Height = $(top.window).height();
-		diag.CancelEvent = function(){ //关闭事件
-			diag.close();
-			//遮罩层控制，第三层弹窗使用
-			top.$("#_DialogBGDiv").css("z-index",900).css("display","block");
-		};
-		diag.show();
-		
 	}
 	// 处理医嘱类型
 	function orderViewType(_type,_name)

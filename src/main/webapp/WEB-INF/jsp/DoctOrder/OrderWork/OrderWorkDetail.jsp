@@ -184,21 +184,6 @@
 												</table>
 												</div>
 
-<!-- 												<div id="examination" class="tab-pane fade"> -->
-<!-- 													<p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade.</p> -->
-<!-- 												</div> -->
-
-<!-- 												<div id="nurse" class="tab-pane fade"> -->
-<!-- 													<p>Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin.</p> -->
-<!-- 												</div> -->
-												
-<!-- 												<div id="ICUInfo" class="tab-pane fade"> -->
-<!-- 													<p>Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin.</p> -->
-<!-- 												</div> -->
-												
-<!-- 												<div id="inspection" class="tab-pane fade"> -->
-<!-- 													dfdsfd -->
-<!-- 												</div> -->
 												<div id="orderCheck" class="tab-pane fade" >
 													<iframe  name="CheckRsFrame" id="CheckRsFrame" scrolling ="auto"" frameborder="0"
 														src="DoctOrder/CheckRsViewUI.do?patient_id=${page.pd.patient_id}&visit_id=${page.pd.visit_id}&ngroupnum=${page.pd.ngroupnum}" style="margin:0px 0px 0px 0px;width:100%;height: 135px;">

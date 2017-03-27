@@ -282,7 +282,7 @@ function delCheckRsBatch(){
 	});
 }
 function toAddCheckRs(ngroupnum){
-	var url = path + "/DoctOrder/toAddCheckRs.do?ngroupnum="+ngroupnum+"&patient_id="+$("#patient_id").val()+"&visit_id="+$("#visit_id").val();
+	var url = path + "/DoctOrder/toAddCheckRs.do?business_type=0&ngroupnum="+ngroupnum+"&patient_id="+$("#patient_id").val()+"&visit_id="+$("#visit_id").val();
 	//top.jzts();
 	var diag = new top.Dialog();
 	diag.Drag=true;

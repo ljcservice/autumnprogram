@@ -34,7 +34,7 @@
 				<div class="page-content">
 					<div class="row">
 						<div >
-							<form name="checkForm" id="checkForm" action="DoctOrder/CheckRsViewUI.do" method="post">
+							<form name="checkForm" id="checkForm" action="presc/checkRsView.do" method="post">
 							<input type="hidden" value="${page.pd.id}" name="id" id="id"/>
 							<input type="hidden" value="${page.pd.ngroupnum}"  name="ngroupnum"  id="ngroupnum"/>
 							<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
@@ -281,7 +281,7 @@ function delCheckRsBatch(){
 	});
 }
 function toAddCheckRs(ngroupnum){
-	var url = path + "/DoctOrder/toAddCheckRs.do?ngroupnum="+ngroupnum+"&patient_id="+$("#patient_id").val()+"&visit_id="+$("#visit_id").val();
+	var url = path + "/DoctOrder/toAddCheckRs.do?business_type=1&ngroupnum="+ngroupnum+"&patient_id="+$("#patient_id").val()+"&visit_id="+$("#visit_id").val();
 	//top.jzts();
 	var diag = new top.Dialog();
 	diag.Drag=true;

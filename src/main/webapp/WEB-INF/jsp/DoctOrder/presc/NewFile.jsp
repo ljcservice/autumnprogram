@@ -24,121 +24,16 @@
 				<div class="page-content">
 					<div class="row">
 						<div >
-						<form action="DoctOrder/DoctOrdersDetail.do?patient_id=${page.pd.patient_id}&visit_id=${page.pd.visit_id}" method="post">
-							<input type="hidden" name="patient_id" value="${page.pd.patient_id}" id="patient_id"/>
-							<input type="hidden" name="visit_id" value="${page.pd.visit_id}" id="visit_id"/>
-							<input type="hidden" name="repeat_indicator" value="${page.pd.repeat_indicator}" id="repeat_indicator"/>
-							<input type="hidden" name="repeat_indicator_name" value="${page.pd.repeat_indicator_name}" id="repeat_indicator_name"/>
-							<input type="hidden" name="order_class" value="${page.pd.order_class}" id="order_class"/>
-							<input type="hidden" name="order_class_name" value="${page.pd.order_class_name}" id="order_class_name"/>
-							<input type="hidden" name="ngroupnum" value="${page.pd.ngroupnum }" id="ngroupnum"/>
-							<input type="hidden" name="show_type" value="${page.pd.show_type }" id="show_type"/>
-							<input type="hidden" name="show_type_name" value="${page.pd.show_type_name }" id="show_type_name"/>
-							<!-- 快捷审核名字  -->
+						<form action="presc/prescDetailList.do?id=${page.pd.id}" method="post">
+							<input type="hidden" name="id" value="${pd.id}" id="id"/>
 							<input type="hidden" name="shortcutName" value="${page.pd.shortcutName}" id="shortcutName"/>
-							<!-- 点评结果之一 -->
 							<input type="hidden" name="checkJsonInfo" value='${page.pd.checkJsonInfo}' id="checkJsonInfo"/>
 						<div style="vertical-align:bottom;padding-top: 5px;padding-bottom: 5px;">
 							<div style="margin-top: 5px;margin-bottom: 5px;">
-								<span><b> <font color="blue" >医嘱信息</font></b></span>
+								<span><b> <font color="blue" >处方详细信息</font></b></span>
 								<div style="float: right;margin-bottom: 5px;">
 									<div class="btn-toolbar" style="float: right;">
 									
-									<div class="btn-group">
-										<button data-toggle="dropdown" class="btn btn-sm btn-yellow">
-											<span id="resetShowTypeSpan" >
-												${page.pd.show_type_name != null && page.pd.show_type_name !=''?page.pd.show_type_name:"医嘱查看切换"}
-											</span>
-											<span class="ace-icon fa fa-angle-down icon-only"></span>
-										</button>
-										<ul class="dropdown-menu dropdown-yellow">
-											<li>
-												<a href="javascript:show_type(0,'常规查看');">常规查看</a>
-											</li>
-											<li>
-												<a href="javascript:show_type(1,'按日分解查看');">按日分解查看</a>
-											</li>
-											<li>
-												<a href="javascript:show_picture(2,'按日图分解查看');">按日图分解查看</a>
-											</li>
-											<li>
-												<a href="javascript:show_type(3,'术后医嘱');">术后医嘱</a>
-											</li>
-											<li class="divider"></li>
-											<li>
-													<a href="javascript:reSetShowType();" id="resetShowTypeId">
-														<c:if test="${page.pd.show_type_name != null && page.pd.show_type_name !=''}">
-															已经选中：${page.pd.show_type_name }
-														</c:if>
-														<c:if test="${page.pd.show_type_name == null || page.pd.show_type_name ==''}">
-															未选择医嘱类型
-														</c:if>
-													</a>
-											</li>
-										</ul>
-									</div><!-- /.btn-group -->
-									
-									
-									<div class="btn-group">
-										<button data-toggle="dropdown" class="btn btn-sm btn-info">
-											<span id="resetOrderViewSpan" >
-												${page.pd.order_class_name != null && page.pd.order_class_name !=''?page.pd.order_class_name:"医嘱类别"}
-											</span>
-											<span class="ace-icon fa fa-angle-down icon-only"></span>
-										</button>
-										<ul class="dropdown-menu dropdown-info">
-<!-- 										此处可以使用参数的方式进行设置 -->
-											<c:forEach items="${orderClassMap}" var="rs" varStatus="vs" >
-												<li>
-													<a href="javascript:orderViewClass('${rs.key}','${rs.value}');"> ${rs.value}</a>
-												</li>
-											</c:forEach>
-											<li class="divider"></li>
-											<li>
-													<a href="javascript:reSetOrderView()" id="resetOrderViewId">
-														<c:if test="${page.pd.order_class_name != null && page.pd.order_class_name !=''}">
-															已经选中：${page.pd.order_class_name }
-														</c:if>
-														<c:if test="${page.pd.order_class_name == null || page.pd.order_class_name ==''}">
-															未选择医嘱类型
-														</c:if>
-													</a>
-											</li>
-										</ul>
-									</div><!-- /.btn-group -->
-									
-									<div class="btn-group">
-										<button data-toggle="dropdown" class="btn btn-sm btn-yellow">
-											<span id="resetViewTypeSpan" >
-												${page.pd.repeat_indicator_name != null && page.pd.repeat_indicator_name !=''?page.pd.repeat_indicator_name:"医嘱类型"}
-											</span>
-											<span class="ace-icon fa fa-caret-down icon-on-right"></span>
-										</button>
-										<ul class="dropdown-menu dropdown-yellow">
-											<li>
-												<a href="javascript:orderViewType('','全部医嘱');">全部医嘱</a>
-											</li>
-											<li>
-												<a href="javascript:orderViewType('1','长期医嘱');">长期医嘱</a>
-											</li>
-											<li>
-												<a href="javascript:orderViewType('0','临时医嘱');">临时医嘱</a>
-											</li>
-											<li class="divider"></li>
-											<li>
-													<a href="javascript:reSetViewType()" id="resetViewTypeId">
-														<c:if test="${page.pd.repeat_indicator_name != null && page.pd.repeat_indicator_name !=''}">
-															已经选中：${page.pd.repeat_indicator_name }
-														</c:if>
-														<c:if test="${page.pd.repeat_indicator_name == null || page.pd.repeat_indicator_name ==''}">
-															未选择医嘱类型
-														</c:if>
-													</a>
-											</li>
-										</ul>
-									</div><!-- /.btn-group -->
-									
-									<c:if test="${modifyFlag==1 }">
 										<div class="btn-group">
 											<button data-toggle="dropdown" class="btn btn-info btn-sm dropdown-toggle">
 												<span id="shortcutNameSpan" >
@@ -166,34 +61,32 @@
 												</li>
 											</ul>
 										</div><!-- /.btn-group -->
-									</c:if>
-										
 									</div>
 								</div>
 							</div>
 						</div>
 						<div >
 						<!-- 	常规查看  -->
-						<c:if test="${page.pd.show_type== null || page.pd.show_type=='' || page.pd.show_type==0 }">
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:10px;">
 							<thead>
 								<tr>
 									<th class="center" nowrap></th>
-									<th class="center" nowrap>医嘱名称</th>
-									<th class="center" nowrap>医嘱类型</th>
-									<th class="center" nowrap>医嘱科室</th>
+									<th class="center" nowrap>药品名称规格</th>
+									<th class="center" nowrap>单次计量</th>
 									<th class="center" nowrap>用法</th>
-									<th class="center" nowrap>用量</th>
-									<th class="center" nowrap>途径</th>
-									<th class="center" nowrap>开始时间</th>
-									<th class="center" nowrap>结束时间</th>
+									<th class="center" nowrap>频次</th>
+									<th class="center" nowrap>用药天数</th>
+									<th class="center" nowrap>单价</th>
+									<th class="center" nowrap>数量</th>
+									<th class="center" nowrap>单位</th>
+									<th class="center" nowrap>药费</th>
 								</tr>
 							</thead>
 							<tbody>
 							<!-- 开始循环 -->	
 							<c:choose>
-								<c:when test="${not empty DoctOrders}">
-									<c:forEach items="${DoctOrders}" var="order" varStatus="vs">
+								<c:when test="${not empty prescDetailList}">
+									<c:forEach items="${prescDetailList}" var="order" varStatus="vs">
 										<tr ondblclick="orderCheck(this)"  id="tr${order.order_no}${order.order_sub_no}" 
 											order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_name="${order.order_Text }" >
 											<c:set var="key1" >
@@ -208,7 +101,7 @@
 															title="<i class='ace-icon fa fa-check red'></i>   ${order.order_Text}" 
 															data-content="<font size='0'>
 																<c:forEach items="${CheckRss.get(key1)}" var="rs">
-																	<b>${rsTypeDict.get(rs.RS_DRUG_TYPE).rs_type_name }:  
+																	<b>${rsTypeDict.get(rs.IN_RS_TYPE).rs_type_name }:  
 																	<c:if test="${rs.drug_id1_name != order.order_Text }"> 
 																		${rs.drug_id1_name }</b>
 																	</c:if>
@@ -224,123 +117,28 @@
 											</td>
 											
 											<td class='center' >
-												${order.order_Text }
+												${order.DRUG_NAME } ${order.DRUG_SPEC }
 											</td>
-											<td class="center ">
-												${orderClassMap.get(order.order_class.toString())}
-											</td>
-											<td class="center " >${order.dept_name}</td>
-											<td class="center " >${order.frequency }</td>
-											<td class="center ">
-												<fmt:formatNumber value="${order.dosage }" pattern="#0.00"></fmt:formatNumber>
-												${order.dosage_units }
-											</td>
-											<td class="center " >${order.administration } </td>
-											<td class="center " >${order.start_date_time }</td>
-											<td class="center " >${order.stop_date_time }</td>
+											<td class="center ">${order.DOSAGE }</td>
+											<td class="center ">不知道</td>
+											<td class="center " >${order.FREQUENCY}</td>
+											<td class="center " >${order.DRUG_USE_DAYS }</td>
+											<td class="center " >${order.COSTS } </td>
+											<td class="center " >${order.AMOUNT } </td>
+											<td class="center " >${order.PACKAGE_SPEC}</td>
+											<td class="center " >${order.COSTS * order.AMOUNT}</td>
 										</tr>
 									
 									</c:forEach>
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
-										<td colspan="8" class="center">没有相关数据</td>
+										<td colspan="10" class="center">没有相关数据</td>
 									</tr>
 								</c:otherwise>
 							</c:choose>
 							</tbody>
 						</table>
-						</c:if>
-						<!-- 	按日分解查看						 -->
-						<c:if test="${page.pd.show_type!= null && (page.pd.show_type==1 || page.pd.show_type==3)}">		
-						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:10px;">
-							<thead>
-								<tr>
-									<th class="center" nowrap><c:if test="${page.pd.show_type==3}">手术</c:if>日期</th>
-									<th class="center" nowrap> </th>
-									<th class="center" nowrap>医嘱名称</th>
-									<th class="center" nowrap>医嘱类型</th>
-									<th class="center" nowrap>医嘱科室</th>
-									<th class="center" nowrap>用法</th>
-									<th class="center" nowrap>用量</th>
-									<th class="center" nowrap>途径</th>
-									<c:if test="${page.pd.show_type==3}">
-									<th class="center" nowrap>开始时间</th>
-									<th class="center" nowrap>结束时间</th>
-									</c:if>
-								</tr>
-							</thead>
-							<tbody>
-							<!-- 开始循环 -->	
-							<c:choose>
-								<c:when test="${not empty datestrMap and not empty DoctOrders}">
-									<c:forEach items="${datestrMap}" var="dateMap" varStatus="vs">
-											<c:set var="myindex">0</c:set>
-											<c:forEach items="${DoctOrders}" var="order" varStatus="vs">
-											<c:if test="${order.datestr == dateMap.key}">
-											<tr ondblclick="orderCheck(this)"  id="tr${order.order_no}${order.order_sub_no}" 
-												order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_name="${order.order_Text }" >
-											<c:if test="${myindex==0}">
-												<td class="center mydateclass" rowspan="${dateMap.value}">${dateMap.key }</td>
-											</c:if>
-											<c:set var="myindex">${myindex+1}</c:set>
-											<td class='center' style="padding-bottom: 0px;">
-												<c:set var="key1" >
-													${order.order_no.toString()}_${order.order_sub_no.toString()}
-												</c:set>
-												<c:if test="${CheckRss.containsKey(key1)}">
-														<a class="fa fa-flag red bigger-130"
-															data-rel="popover" 
-															data-placement="right" 
-															title="<i class='ace-icon fa fa-check red'></i>   ${order.order_Text}" 
-															data-content="<font size='0'>
-																<c:forEach items="${CheckRss.get(key1)}" var="rs">
-																	<b>${rsTypeDict.get(rs.RS_DRUG_TYPE).rs_type_name }:  
-																	<c:if test="${rs.drug_id1_name != order.order_Text }"> 
-																		${rs.drug_id1_name }</b>
-																	</c:if>
-																	<c:if test="${rs.drug_id2_name != order.order_Text }"> 
-																		${rs.drug_id2_name }</b>
-																	</c:if>
-																	 <br>
-																	${rs.ALERT_HINT }<br>
-																</c:forEach>	
-															</font>"
-														></a>
-												</c:if>
-											</td>
-											
-											<td class='center' >
-												${order.order_Text }
-											</td>
-											<td class="center ">
-												${orderClassMap.get(order.order_class.toString())}
-											</td>
-											<td class="center " >${order.dept_name}</td>
-											<td class="center " >${order.frequency }</td>
-											<td class="center ">
-												<fmt:formatNumber value="${order.dosage }" pattern="#0.00"></fmt:formatNumber>
-												${order.dosage_units }
-											</td>
-											<td class="center " >${order.administration } </td>
-											<c:if test="${page.pd.show_type==3}">
-											<td class="center " >${order.start_date_time }</td>
-											<td class="center " >${order.stop_date_time }</td>
-											</c:if>
-										</tr>
-										</c:if>
-									</c:forEach>
-								</c:forEach>
-								</c:when>
-								<c:otherwise>
-									<tr class="main_info">
-										<td colspan="8" class="center">没有相关数据</td>
-									</tr>
-								</c:otherwise>
-							</c:choose>
-							</tbody>
-						</table>
-						</c:if>
 						</div>
 						<div class="page-header position-relative">
 							<table style="width:100%;">
@@ -501,14 +299,13 @@
 		
 		var ngroupnum = $("#ngroupnum").val();
 		var checkText = $("#checkText").val();
-		var patId     = $("#patient_id").val();
-		var visitId   = $("#visit_id").val();
+		var id     = $("#id").val();
 		$.ajax({
 			type: "POST",
-			url: basePath + 'DoctOrder/SaveShortcut.do', 
+			url: basePath + 'presc/SaveShortcut.do', 
 	    	data: {checkType:checkType,order_no:order_no,order_sub_no:order_sub_no
 	    		,order_name:order_name,tmpOrder_Name:tmpOrder_Name,tmpOrder_sub_no:tmpOrder_sub_no
-	    		,tmpOrder_no:tmpOrder_no,count:count,checkText:checkText,ngroupnum:ngroupnum,patient_id:patId,visit_id:visitId},
+	    		,tmpOrder_no:tmpOrder_no,count:count,checkText:checkText,ngroupnum:ngroupnum,id:id},
 			dataType:'json',
 			async:false,
 			cache: false,
@@ -675,48 +472,13 @@
 			setCheckJsonInfo();
 		}
 	}
-	//处理医嘱类别
-	function orderViewClass(_type,_name)
-	{
-		showBG();
-		var myform = window.document.forms[0];
-		myform.order_class.value = _type;
-		myform.order_class_name.value = _name;
-		myform.submit();
-	}
+
 	//医嘱查看切换
 	function show_type(_type,_name){
 		showBG();
 		var myform = window.document.forms[0];
 		myform.show_type.value = _type;
 		myform.show_type_name.value = _name;
-		myform.submit();
-	}
-	function show_picture(_type,name){
-		var url = path + "/DoctOrder/DoctOrdersDetail.do?show_type="+_type+"&patient_id="+$("#patient_id").val()+"&visit_id="+$("#visit_id").val();
-		url+="&order_class="+$(order_class).val()+"&repeat_indicator"+$("#repeat_indicator").val();
-		//top.jzts();
-		var diag = new top.Dialog();
-		diag.Drag=true;
-		diag.Title ="按日图分解查看";
-		diag.URL = url;
-		diag.Width = $(top.window).width();
-		diag.Height = $(top.window).height();
-		diag.CancelEvent = function(){ //关闭事件
-			diag.close();
-			//遮罩层控制，第三层弹窗使用
-			top.$("#_DialogBGDiv").css("z-index",900).css("display","block");
-		};
-		diag.show();
-		
-	}
-	// 处理医嘱类型
-	function orderViewType(_type,_name)
-	{
-		showBG();
-		var myform = window.document.forms[0];
-		myform.repeat_indicator.value = _type;
-		myform.repeat_indicator_name.value = _name;
 		myform.submit();
 	}
 	

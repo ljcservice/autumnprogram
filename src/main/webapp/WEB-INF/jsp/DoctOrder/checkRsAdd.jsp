@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="static/ace/css/chosen.css" />
 <!-- jsp文件头和头部 -->
 <%@ include file="/WEB-INF/jsp/system/index/top.jsp"%>
-<link type="text/css" rel="stylesheet" href="static/css/ontology.css"/>
+<link type="text/css" rel="stylesheet" href="static/css/ontology.css?v=2016"/>
 </head>
 <body class="no-skin" style="background-color: white;">
 	<!-- /section:basics/navbar.layout -->
@@ -26,40 +26,54 @@
 				<div class="page-content">
 					<div class="row">
 						<div class="col-xs-12">
-							<table style="width:100%;" border="0">
-								<tr>
-									<td style="" valign="top" >
-										<form action="" name="userForm" id="userForm" method="post">
-											<div id="zhongxin" style="padding-top: 10px;">
+										<form action="ontology/${MSG }.do" name="userForm" id="userForm" method="post">
+											<div id="zhongxin" style="padding-top: 10px;height:auto;max-height: 533px;min-height: 500px;overflow:auto;">
 											<input type="hidden" name="patient_id" value="${pd.patient_id}" id="patient_id"/>
 											<input type="hidden" name="visit_id" value="${pd.visit_id}" id="visit_id"/>
+											<input type="hidden" name="id" value="${pd.id}" id="id"/>
+											<input type="hidden" name="business_type" value="${pd.business_type}" id="business_type"/>
 											<input type="hidden" name="ngroupnum" value="${pd.ngroupnum}" id="ngroupnum"/>
-											<input type="hidden" name="RS_ID" id="RS_ID" value="${pd.RS_ID}" />
-											<div style="height:auto;min-height:200px;max-height: 533px;overflow:auto;">
+											<div >
 											<div>
 											<table id="table_report" class="table table-bordered table-hover">
 												<tr>
-													<td style="text-align: right;padding-top: 10px;">点评类型:</td>
-													<td rowspan="1">${checkType.get(pd.RS_DRUG_TYPE.toString()).RS_TYPE_NAME} </td>
+													<td width="25%;" style="text-align: right;padding-top: 10px;">点评类型:</td>
+													<td width="75%;">
+														<select class="chosen-select form-control" style="vertical-align:top;width: 80px;" name="RS_DRUG_TYPE" id="RS_DRUG_TYPE" onchange="changeType(this);">
+															<c:forEach items="${checkType.entrySet()}" var="partTyp" varStatus="vs">
+																<option value="${partTyp.key}" <c:if test="${partTyp.key == 'iv_effect' }">selected</c:if>>${partTyp.value.rs_type_name}</option>
+															</c:forEach>
+														</select>
+													</td>
 												</tr>
 												<tr>
-													<td width="15%;" style="text-align: right;padding-top: 10px;">医嘱名称:</td>
-													<td width="35%;">
+													<td style="text-align: right;padding-top: 10px;">医嘱名称:</td>
+													<td >
 														<div>
-															${pd.DRUG_ID1_NAME}
+															<select class="chosen-select form-control" name="orderDrug1" id="orderDrug1">
+																<c:forEach items="${orderMap.entrySet()}" var="partTyp" varStatus="vs">
+																	<option value="${partTyp.key}" <c:if test="${vs.index ==0 }">selected</c:if>>${partTyp.value}</option>
+																</c:forEach>
+															</select>
 														</div>
-														<div id="divorderMap2">
-															${pd.DRUG_ID2_NAME}
+														<div id="divorderMap2" style="padding-top: 5px;">
+															<select class="chosen-select form-control" name="orderDrug2" id="orderDrug2" >
+																<c:forEach items="${orderMap.entrySet()}" var="partTyp" varStatus="vs">
+																	<option value="${partTyp.key}" <c:if test="${vs.index ==0}">selected</c:if>>${partTyp.value}</option>
+																</c:forEach>
+															</select>
 														</div>
 													</td>
 												</tr>
 												<tr>
 													<td style="text-align: right;padding-top: 10px;">问题说明:</td>
-													<td rowspan="1">
+													<td >
 														<textarea name="ALERT_HINT" id="ALERT_HINT" rows="5" cols="48">${pd.ALERT_HINT}</textarea>
 													</td>
 												</tr>
 											</table>
+											</div>
+											
 											</div>
 											<div class="position-relative" id="osynPageParam" style="padding-bottom:4px;">
 												<table style="width:100%;">
@@ -71,12 +85,9 @@
 													</tr>
 												</table>
 											</div>
+											</div>
 											<div id="zhongxin2" class="center" style="display:none"><br/><br/><br/><br/><img src="static/images/jiazai.gif" /><br/><h4 class="lighter block green"></h4></div>
 										</form>
-									</td>
-								</tr>
-							</table>
-								
 								
 						</div>
 						<!-- /.col -->
@@ -104,22 +115,44 @@
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 </body>
-<script type="text/javascript" src="static/js/ontology/tree.fixer.js"></script>
-<script type="text/javascript" src="static/js/ontology/edit.js?v=2018"></script>
+<script type="text/javascript" src="static/js/ontology/tree.fixer.js?v=2008"></script>
+<script type="text/javascript" src="static/js/ontology/tree.js?v=2018008"></script>
+<script type="text/javascript" src="static/js/ontology/edit.js?v=2018009"></script>
 <script type="text/javascript">
 //保存本体
 function save(){
 	var flag = true;
 	if($("#ALERT_HINT").val()==null ||$.trim($("#ALERT_HINT").val())=="" ){
-		$("#ALERT_HINT").tips({ side:3, msg:'请输入问题描述', bg:'#AE81FF',  time:3   });
+		$("#ALERT_HINT").tips({ side:3, msg:'请输入问题说明', bg:'#AE81FF',  time:3   });
 		flag = false;
 	}
-	if(!flag){return;}
+	var val = $("#RS_DRUG_TYPE").val();
+	var orderDrug1 = $("#orderDrug1").val();
+	if(orderDrug1==null||orderDrug1==""||$.trim(orderDrug1)==""){
+		$("#orderDrug1_chosen").tips({ side:3, msg:'请选择第一个药品', bg:'#AE81FF',  time:3   });
+		flag = false;
+	}
+	if(val=="ingredien" || val=="interaction" || val=="iv_effect"){
+		var orderDrug2 = $("#orderDrug2").val();
+		if(orderDrug2==null||orderDrug2==""||$.trim(orderDrug2)==""){
+			$("#orderDrug2_chosen").tips({ side:3, msg:'请选择第二个药品', bg:'#AE81FF',  time:3   });
+			flag = false;
+		}
+		if(orderDrug1!=null &&orderDrug1!="" && orderDrug1==orderDrug2){
+			$("#orderDrug2_chosen").tips({ side:3, msg:'第二个药品不能与第一个药品相同', bg:'#AE81FF',  time:3   });
+			flag = false;
+		}
+	}
+	if(!flag){ return; }
 	$("#zhongxin").hide();
 	$("#zhongxin2").show();
-	var url = path+"/DoctOrder/editCheckRs.do?"+$("#userForm").serialize();
+	var url = path+"/DoctOrder/addCheckRs.do?"+$("#userForm").serialize();
 	$.get(url,function(data){
 		if(data.result=="success"){
+			var ngroupnum =data.ngroupnum;
+			if(ngroupnum!=null&&ngroupnum!=""){
+				$("#ngroupnum").val(ngroupnum);
+			}
 			top.Dialog.close();
 		}else{
 			$("#zhongxin").show();
@@ -137,10 +170,14 @@ function changeType(obj){
 	var val = $(obj).val();
 	if(val=="ingredien" || val=="interaction" || val=="iv_effect"){
 		$("#divorderMap2").show();
-		$("#orderMap2").attr("disabled","");
+		$("#orderDrug2").removeAttr("disabled");
+		$("#orderDrug2").chosen('destroy');
+		$("#orderDrug2").chosen({allow_single_deselect:true});
 	}else{
 		$("#divorderMap2").hide();
-		$("#orderMap2").attr("disabled","disabled");
+		$("#orderDrug2").attr("disabled","disabled");
+		$("#orderDrug2").chosen('destroy');
+		$("#orderDrug2").chosen({allow_single_deselect:true});
 	}
 }
 </script>
