@@ -20,6 +20,16 @@
 <%@ include file="/WEB-INF/jsp/system/index/top.jsp"%>
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
+<style>
+.ztree li a.curSelectedNode {
+/* 	background-color: #ffb951;	 */
+ }
+ .check-search{
+	float: left;
+	margin-top: 2px;
+	margin-bottom: 5px;
+}
+</style>
 </head>
 <body class="no-skin">
 
@@ -47,25 +57,25 @@
 										</span>
 									</div>
 									<div class="check-search" style="width: 77px;">
-									<a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
-									<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i></a>
+										<a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
+										<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i></a>
 									</div>
-									<div class="check-search" style="width: 250px;" >
-									是否点评：
-								 	<select class="chosen-select form-control" name="ISORDERCHECK" id="ISORDERCHECK" data-placeholder="医嘱是否点评" style="vertical-align:top;width: 80px;" onchange="changeTree();">
-										<option value="">全部</option>
-										<option <c:if test="${page.pd.ISORDERCHECK == '0'}">selected</c:if> value="0" >未点评</option>
-										<option <c:if test="${page.pd.ISORDERCHECK == '1'}">selected</c:if> value="1" >已点评</option>
-									</select>
+									<div class="check-search" style="width: 155px;" >
+										是否点评：
+									 	<select class="chosen-select form-control" name="ISORDERCHECK" id="ISORDERCHECK" data-placeholder="处方是否点评" style="vertical-align:top;width: 80px;" >
+											<option value="">全部</option>
+											<option <c:if test="${page.pd.ISORDERCHECK == '0'}">selected</c:if> value="0" >未点评</option>
+											<option <c:if test="${page.pd.ISORDERCHECK == '1'}">selected</c:if> value="1" >已点评</option>
+										</select>
 									</div>
-									<div class="check-search" style="width: 250px;" >
-									是否合理：
-								 	<select class="chosen-select form-control" name="ISCHECKTRUE" id="ISCHECKTRUE" data-placeholder="医嘱是否合理" style="vertical-align:top;width: 120px;">
-								 		<option value="">全部</option>
-										<option <c:if test="${page.pd.ISCHECKTRUE == '0' }">selected</c:if> value="0" >合理</option>
-										<option <c:if test="${page.pd.ISCHECKTRUE == '1' }">selected</c:if> value="1" >不合理</option>
-										<option <c:if test="${page.pd.ISCHECKTRUE == '2' }">selected</c:if> value="2" >待定</option>
-									</select>
+									<div class="check-search" style="width: 155px;" >
+										是否合理：
+									 	<select class="chosen-select form-control" name="ISCHECKTRUE" id="ISCHECKTRUE" data-placeholder="处方是否合理" style="vertical-align:top;width: 80px;">
+									 		<option value="">全部</option>
+											<option <c:if test="${page.pd.ISCHECKTRUE == '0' }">selected</c:if> value="0" >合理</option>
+											<option <c:if test="${page.pd.ISCHECKTRUE == '1' }">selected</c:if> value="1" >不合理</option>
+											<option <c:if test="${page.pd.ISCHECKTRUE == '2' }">selected</c:if> value="2" >待定</option>
+										</select>
 									</div>
 								</div>
 						<!-- 检索  -->
@@ -195,14 +205,6 @@ $(function() {
 	//下拉框
 	if(!ace.vars['touch']) {
 		$('.chosen-select').chosen({allow_single_deselect:true}); 
-		$(window)
-		.off('resize.chosen')
-		.on('resize.chosen', function() {
-			$('.chosen-select').each(function() {
-				 var $this = $(this);
-				 $this.next().css({'width': $this.parent().width()});
-			});
-		}).trigger('resize.chosen');
 		$(document).on('settings.ace.chosen', function(e, event_name, event_val) {
 			if(event_name != 'sidebar_collapsed') return;
 			$('.chosen-select').each(function() {
