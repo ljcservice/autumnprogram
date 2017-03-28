@@ -69,6 +69,7 @@
 		where 
 		 <!-- 审核结果组号 -->  
 		ngroupnum = #{pd.ngroupnum} 
+		order by CHECKDATE
 	</select>
 	<delete id="delCheckRsByNgroupnum" parameterType="pd" >
 		delete from RS_DRUG_CHECKRSLT
