@@ -450,12 +450,17 @@ public class OrderWork extends BaseController
 			mv.addObject("checkType", getCheckTypeDict());
 			if("0".equals(pd.getString("business_type"))){
 				Map orderMap = orderWorkService.ordersListSpecial(pd);
-				mv.addObject("orderMap", orderMap);
+				mv.addObject("orderMap1", orderMap);
+				mv.addObject("orderMap2", orderMap);
 			}else if("1".equals(pd.getString("business_type"))){
 				//处方列表，供给选择
 				pd.put("PRESC_ID", pd.get("id"));
 				Map orderMap = prescService.prescListSpecial(pd);
-				mv.addObject("orderMap", orderMap);
+				mv.addObject("orderMap1", orderMap);
+//				Map orderMap2 = new HashMap();
+//				orderMap2.putAll(orderMap);
+				Map otherPescMap = prescService.otherPrescListSpecial(pd);
+				mv.addObject("orderMap2", otherPescMap);
 			}
 			mv.setViewName("DoctOrder/checkRsAdd");
 		} catch(Exception e){
@@ -488,6 +493,14 @@ public class OrderWork extends BaseController
 				Page p = new Page();
 				p.setPd(pd);
 				PageData patient = orderWorkService.findByPatient(p);
+				//校验是否为专家点评，如果有专家则校验是否为当前人
+				String expert_id = patient.getString("expert_id");
+				if(!Tools.isEmpty(expert_id)){
+					if(!user.getUSER_ID().equals(expert_id)){
+						map.put("result","该信息只能由专家进行点评，当前操作人无权限点评。");
+						return map;
+					}
+				}
 				if(Tools.isEmpty(patient.getString("ngroupnum"))) {
 					pd.put("ngroupnum", this.get32UUID());
 				}else{
@@ -497,6 +510,14 @@ public class OrderWork extends BaseController
 			}else if("1".equals(pd.getString("business_type"))){
 				//查询处方记录，找到ngroupnum
 				PageData Presc = prescService.findPrescById(pd);
+				//校验是否为专家点评，如果有专家则校验是否为当前人
+				String expert_id = Presc.getString("expert_id");
+				if(!Tools.isEmpty(expert_id)){
+					if(!user.getUSER_ID().equals(expert_id)){
+						map.put("result","该信息只能由专家进行点评，当前操作人无权限点评。");
+						return map;
+					}
+				}
 				if(Tools.isEmpty(Presc.getString("ngroupnum"))){
 					pd.put("ngroupnum", this.get32UUID());
 				}else{
@@ -572,8 +593,7 @@ public class OrderWork extends BaseController
 			// 当前登录用户
 			User user = getCurrentUser();
 			pd = this.getPageData();
-//			String ALERT_HINT =  new String(pd.getString("alert_hint").getBytes("ISO-8859-1"),"UTF-8");
-			pd.put("alert_hint", new String(pd.getString("alert_hint").getBytes("ISO-8859-1"),"UTF-8"));
+			
 			orderWorkService.updateCheckResult(pd);
 			errInfo="success";
 		} catch(Exception e){
@@ -619,5 +639,28 @@ public class OrderWork extends BaseController
 //		orderClassMap.put("6","膳食");
 //		orderClassMap.put("7","其他");
 //	}
-
+	private String checkRights(PageData pd,User user) throws Exception{
+		if("0".equals(pd.getString("business_type"))){
+			Page p = new Page();
+			p.setPd(pd);
+			PageData patient = orderWorkService.findByPatient(p);
+			//校验是否为专家点评，如果有专家则校验是否为当前人
+			String expert_id = patient.getString("expert_id");
+			if(!Tools.isEmpty(expert_id)){
+				if(!user.getUSER_ID().equals(expert_id)){
+					return "该信息只能由专家进行点评，当前操作人无权限点评。";
+				}
+			}
+		}else if("1".equals(pd.getString("business_type"))){
+			PageData Presc = prescService.findPrescById(pd);
+			//校验是否为专家点评，如果有专家则校验是否为当前人
+			String expert_id = Presc.getString("expert_id");
+			if(!Tools.isEmpty(expert_id)){
+				if(!user.getUSER_ID().equals(expert_id)){
+					return "该信息只能由专家进行点评，当前操作人无权限点评。";
+				}
+			}
+		}
+		return null;
+	}
 }

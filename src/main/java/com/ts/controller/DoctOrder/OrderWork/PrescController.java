@@ -106,7 +106,9 @@ public class PrescController extends BaseController{
 		//处方详情
 		List<PageData> prescDetailList = prescService.prescDetailList(pd);
 		mv.addObject("prescDetailList", prescDetailList);
-		//其他人开具的处方详情
+		//当日其他人开具的处方详情
+		List<PageData> otherPrescDetailList = prescService.otherPrescDetailList(pd);
+		mv.addObject("otherPrescDetailList",otherPrescDetailList);
 		
 		if(!Tools.isEmpty(pd.getString("ngroupnum"))){
 			//查询结果ByNgroupnum
