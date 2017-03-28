@@ -33,7 +33,22 @@
 	</select>
 	<!-- 	更新处方的关联问题字段 -->
 	<update id="updatePrescNgroupnum" parameterType="pd" >
-		update presc set NGROUPNUM = #{Ngroupnum} where id=#{id}
+		update presc set NGROUPNUM = #{Ngroupnum} ,ISCHECKTRUE = #{ISCHECKTRUE}
+			<if test="ISORDERCHECK !=null and ISORDERCHECK!='' ">
+				,ISORDERCHECK = #{ISORDERCHECK}
+			</if>
+		where id=#{id}
 	</update>
-	
+	<!-- 	查询处方，为新增点评使用 -->
+	<select id="prescListSpecial" parameterType="pd" resultType="pd">
+		select ORDER_NO||'@;@'||ORDER_SUB_NO||'@;@'||DRUG_CODE||'@;@'||drug_name as key
+			, drug_name as value
+		from  presc_detail
+		where PRESC_ID= #{PRESC_ID}
+	</select>
+<!-- 	设置为专家点评 -->
+	<update id="updateExpertPresc">
+		update presc  set expert_id=#{expert_id} 
+ 		where  id =#{id} 
+	</update>
 </mapper>
