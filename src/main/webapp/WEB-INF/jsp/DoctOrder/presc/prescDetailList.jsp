@@ -24,16 +24,9 @@
 				<div class="page-content">
 					<div class="row">
 						<div >
-						<form action="presc/prescDetailList.do?id=${page.pd.id}" method="post">
-							<input type="hidden" name="patient_id" value="${page.pd.patient_id}" id="patient_id"/>
-							<input type="hidden" name="visit_id" value="${page.pd.visit_id}" id="visit_id"/>
-							<input type="hidden" name="repeat_indicator" value="${page.pd.repeat_indicator}" id="repeat_indicator"/>
-							<input type="hidden" name="repeat_indicator_name" value="${page.pd.repeat_indicator_name}" id="repeat_indicator_name"/>
-							<input type="hidden" name="order_class" value="${page.pd.order_class}" id="order_class"/>
-							<input type="hidden" name="order_class_name" value="${page.pd.order_class_name}" id="order_class_name"/>
+						<form action="presc/prescDetailList.do?id=${page.pd.id}" method="post" id="myForm" name="myForm">
+							<input type="hidden" name="id" value="${page.pd.id}" id="id"/>
 							<input type="hidden" name="ngroupnum" value="${page.pd.ngroupnum }" id="ngroupnum"/>
-							<input type="hidden" name="show_type" value="${page.pd.show_type }" id="show_type"/>
-							<input type="hidden" name="show_type_name" value="${page.pd.show_type_name }" id="show_type_name"/>
 							<!-- 快捷审核名字  -->
 							<input type="hidden" name="shortcutName" value="${page.pd.shortcutName}" id="shortcutName"/>
 							<!-- 点评结果之一 -->
@@ -78,20 +71,19 @@
 							</div>
 						</div>
 						<div >
-						<!-- 	常规查看  -->
-						<c:if test="${page.pd.show_type== null || page.pd.show_type=='' || page.pd.show_type==0 }">
-						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:10px;">
+<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:10px;">
 							<thead>
 								<tr>
 									<th class="center" nowrap></th>
-									<th class="center" nowrap>医嘱名称</th>
-									<th class="center" nowrap>医嘱类型</th>
-									<th class="center" nowrap>医嘱科室</th>
+									<th class="center" nowrap>药品名称规格</th>
+									<th class="center" nowrap>单次计量</th>
 									<th class="center" nowrap>用法</th>
-									<th class="center" nowrap>用量</th>
-									<th class="center" nowrap>途径</th>
-									<th class="center" nowrap>开始时间</th>
-									<th class="center" nowrap>结束时间</th>
+									<th class="center" nowrap>频次</th>
+									<th class="center" nowrap>用药天数</th>
+									<th class="center" nowrap>单价</th>
+									<th class="center" nowrap>数量</th>
+									<th class="center" nowrap>单位</th>
+									<th class="center" nowrap>药费</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -151,7 +143,6 @@
 							</c:choose>
 							</tbody>
 						</table>
-						</c:if>
 						</div>
 						<div class="page-header position-relative">
 							<table style="width:100%;">
@@ -311,14 +302,13 @@
 		
 		var ngroupnum = $("#ngroupnum").val();
 		var checkText = $("#checkText").val();
-		var patId     = $("#patient_id").val();
-		var visitId   = $("#visit_id").val();
+		var id     = $("#id").val();
 		$.ajax({
 			type: "POST",
-			url: basePath + 'presc/SaveShortcut.do', 
+			url: basePath + 'presc/saveShortcut.do', 
 	    	data: {checkType:checkType,order_no:order_no,order_sub_no:order_sub_no
 	    		,order_name:order_name,tmpOrder_Name:tmpOrder_Name,tmpOrder_sub_no:tmpOrder_sub_no
-	    		,tmpOrder_no:tmpOrder_no,count:count,checkText:checkText,ngroupnum:ngroupnum,patient_id:patId,visit_id:visitId},
+	    		,tmpOrder_no:tmpOrder_no,count:count,checkText:checkText,ngroupnum:ngroupnum,id:id},
 			dataType:'json',
 			async:false,
 			cache: false,
@@ -327,8 +317,8 @@
 				if(data.result=="ok"){
 					$("#dragCheck").hide(500); 
 					reSetCheck();
-					
-					nextPage(${page.currentPage});
+					$("#myForm").submit();
+// 					nextPage(${page.currentPage});
 					// 如果成功设置旗子
 					
 					//var trFirst = $("#tr" + order_no + order_sub_no);

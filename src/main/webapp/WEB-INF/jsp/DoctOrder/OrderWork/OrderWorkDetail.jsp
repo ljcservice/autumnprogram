@@ -89,7 +89,10 @@
 													<a data-toggle="tab" href="#orderCheck" >
 														点评结果
 														<c:if test="${not empty checkRss}">
-															<span class="badge badge-danger">${checkRss.size()}</span>
+															<span class="badge badge-danger" id="checkSize">${checkRss.size()}</span>
+														</c:if>
+														<c:if test="${empty checkRss}">
+															<span class="badge badge-danger" id="checkSize">0</span>
 														</c:if>
 													</a>
 												</li>

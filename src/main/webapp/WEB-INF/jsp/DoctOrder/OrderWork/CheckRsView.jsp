@@ -162,6 +162,10 @@
 <script type="text/javascript">
 $(top.hangge());
 $(function() {
+	var w = '${checkRss==null?null:checkRss.size()}';
+	if(w!=null){
+		parent.$("#checkSize").text(w);
+	}
 	//changeTree();
 	//日期框
 	$('.date-picker').datepicker({autoclose: true,todayHighlight: true});
@@ -199,14 +203,17 @@ $(function() {
 			 else $('#form-field-select-4').removeClass('tag-input-style');
 		});
 	}
-
+	//复选框全选控制
+	var active_class = 'active';
+	$('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
+		var th_checked = this.checked;//checkbox inside "TH" table header
+		$(this).closest('table').find('tbody > tr').each(function(){
+			var row = this;
+			if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true);
+			else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
+		});
+	});
 });
-// 查询
-function searchs(){
-	top.jzts();
-	$("#searchForm").submit();
-	
-}
 //单个删除
 function delCheckRs(id){
 	bootbox.confirm("确定删除该点评结果吗?", function(result) {
@@ -214,7 +221,7 @@ function delCheckRs(id){
 			var url = path+"/DoctOrder/delCheckRs.do?RS_ID="+id;
 			$.get(url,function(data){
 				if(data.result=="success"){
-					self.location.href = self.location.href ;
+					$("#checkForm").submit();
 				}else{
 					bootbox.dialog({
 						message: "<span class='bigger-110'>"+data.result+"</span>",
@@ -265,7 +272,7 @@ function delCheckRsBatch(){
 				cache: false,
 				success: function(data){
 					if(data.result=="success"){
-						self.location.href = self.location.href ;
+						$("#checkForm").submit();
 					}else{
 						$(top.hangge());
 						var msg = data.result;
@@ -354,7 +361,7 @@ function saveIsCheckTrue(){
 			var url = path+"/DoctOrder/setCheckRsStatus.do?"+$("#checkForm").serialize();
 			$.get(url,function(data){
 				if(data.result=="success"){
-					self.location.href = self.location.href ;
+					$("#checkForm").submit();
 				}else{
 					bootbox.dialog({
 						message: "<span class='bigger-110'>"+data.result+"</span>",
@@ -369,7 +376,8 @@ function saveIsCheckTrue(){
 // 	专家点评
 function expertOrders(){
 	//top.jzts();
-	var url = path + "/expert/selectExpertList.do?IS_ORDERS=1"+"&patient_id="+$("#patient_id").val()+"&visit_id="+$("#visit_id").val();//医嘱专家列表
+	//医嘱专家列表
+	var url = path + "/expert/selectExpertList.do?business_type=0&IS_ORDERS=1"+"&patient_id="+$("#patient_id").val()+"&visit_id="+$("#visit_id").val();
 	var diag = new top.Dialog();
 	diag.Drag=true;
 	diag.Title ="编辑点评";
@@ -380,6 +388,8 @@ function expertOrders(){
 		diag.close();
 		//遮罩层控制，第三层弹窗使用
 		top.$("#_DialogBGDiv").css("z-index",900).css("display","block");
+		//刷新下方iframe列表
+		parent.DoctFrame.location.href = parent.$("#DoctFrame").attr("src");
 		$("#checkForm").submit();
 	};
 	diag.show();

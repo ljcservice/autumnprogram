@@ -25,9 +25,11 @@
 				<div class="page-content">
 					<div class="row">
 						<div class="col-xs-12">
-						<form action="" method="post">
+						<form action="" method="post" id="myForm">
 						<input type="hidden" name="patient_id" value="${pd.patient_id}" id="patient_id"/>
 						<input type="hidden" name="visit_id" value="${pd.visit_id}" id="visit_id"/>
+						<input type="hidden" name="id" value="${pd.id}" id="id"/>
+						<input type="hidden" name="business_type" value="${pd.business_type}" id="business_type"/>
 						<div id="zhongxin" style="padding-top: 13px;">
 							<input type="hidden" name="osynType" value="${osynType}" id="osynType"/>
 							<table style="margin-top:5px;">
@@ -144,7 +146,7 @@ function selectCont(){
 	}
 	var mydocument = parent.$("#_DialogFrame_0")[0].contentWindow.document;
 	//设置为专家点评
-	var url  = path + "/expert/setExpertPatVisit.do?expert_id="+osyn.eq(0).val()+"&patient_id="+$("#patient_id").val()+"&visit_id="+$("#visit_id").val();
+	var url  = path + "/expert/setExpertPatVisit.do?expert_id="+osyn.eq(0).val()+"&"+$("#myForm").serialize();
 	$.ajax({ url: url, success: function(){
 		top.Dialog.close();
    	}});
