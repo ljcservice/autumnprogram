@@ -15,10 +15,7 @@ import com.ts.util.PageData;
  */
 
 public interface ExpertService {
-	/**
-	 * 设置住院病历为专家点评
-	 */
-	public void updateExpertPatVisit(PageData pd) throws Exception ;
+
 
 	public List<PageData> listExperts(Page page)throws Exception ;
 	

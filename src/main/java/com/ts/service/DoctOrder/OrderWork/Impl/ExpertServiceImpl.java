@@ -16,13 +16,6 @@ public class ExpertServiceImpl implements ExpertService{
 	@Resource(name="daoSupportPH")
 	private DAO daoph;
 
-	/**
-	 * 设置住院病历为专家点评
-	 */
-	@Override
-	public void updateExpertPatVisit(PageData pd) throws Exception {
-		daoph.update("PatVisitMapper.updateExpertPatVisit", pd);
-	}
 	@Override
 	public List<PageData> listExperts(Page page)throws Exception {
 		return (List<PageData>) daoph.findForList("ExpertMapper.expertListPage", page);

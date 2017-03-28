@@ -33,7 +33,7 @@ public class PrescController extends BaseController{
 	private PrescService prescService;
 	@Autowired
 	private UserManager userService;
-	@Resource(name="orderWorkServiceBean")
+	@Autowired
 	private IOrderWorkService orderWorkService;
 	
 	/**
@@ -196,7 +196,7 @@ public class PrescController extends BaseController{
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/SaveShortcut")
+	@RequestMapping(value="/saveShortcut")
 	@ResponseBody
 	public Object saveShortcutChehck() throws Exception {
 		PageData pd = this.getPageData();
@@ -213,12 +213,12 @@ public class PrescController extends BaseController{
 			PageData Presc = prescService.findPrescById(pd);
 			if(Tools.isEmpty(Presc.getString("ngroupnum"))){
 				pd.put("ngroupnum", this.get32UUID());
-				//更新处方的关联问题字段
-				this.prescService.updatePrescNgroupnum(pd);
 			}else{
 				pd.put("ngroupnum", Presc.getString("ngroupnum"));
 			}
 		}
+		//更新处方的关联问题字段
+		this.prescService.updatePrescNgroupnum(pd);
 		pd.put("rs_id", this.get32UUID());
 		pd.put("in_rs_type", pd.getString("checkType"));
 		pd.put("alert_level", pd.getString("r"));
@@ -253,4 +253,29 @@ public class PrescController extends BaseController{
 		map.put("result", "ok");
 		return  AppUtil.returnObject(pd, map);
 	}
+	
+	/**
+	 * 确定处方录是否合理
+	 * @return
+	 */
+	@RequestMapping(value="/setCheckRsStatus")
+	@ResponseBody
+	public Object setCheckRsStatus(){
+		String errInfo = null;
+		PageData pd = new PageData();
+		Map<String,Object> map = new HashMap<String,Object>();
+		try{
+			// 当前登录用户
+			User user = getCurrentUser();
+			pd = this.getPageData();
+			prescService.setCheckRsStatus(pd);
+			errInfo="success";
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+			errInfo = "操作失败！";
+		}
+		map.put("result",errInfo);
+		return map;
+	}
+	
 }

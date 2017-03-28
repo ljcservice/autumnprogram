@@ -176,6 +176,9 @@ public interface IOrderWorkService {
 	 */
 	public List<PageData> ordersPageByOpDate(Page page)throws Exception ;
 
-	
+	/**
+	 * 设置住院病历为专家点评
+	 */
+	public void updateExpertPatVisit(PageData pd) throws Exception ;
 	
 }

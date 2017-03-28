@@ -40,7 +40,7 @@ import com.ts.util.doctor.DoctorConst;
 @RequestMapping(value="/DoctOrder")
 public class OrderWork extends BaseController
 {
-	@Resource(name="orderWorkServiceBean")
+	@Autowired
 	private IOrderWorkService orderWorkService;
 
 	@Autowired
@@ -444,8 +444,15 @@ public class OrderWork extends BaseController
 		try{
 			mv.addObject("pd", pd);
 			mv.addObject("checkType", getCheckTypeDict());
-			Map orderMap = orderWorkService.ordersListSpecial(pd);
-			mv.addObject("orderMap", orderMap);
+			if("0".equals(pd.getString("business_type"))){
+				Map orderMap = orderWorkService.ordersListSpecial(pd);
+				mv.addObject("orderMap", orderMap);
+			}else if("1".equals(pd.getString("business_type"))){
+				//处方列表，供给选择
+				pd.put("PRESC_ID", pd.get("id"));
+				Map orderMap = prescService.prescListSpecial(pd);
+				mv.addObject("orderMap", orderMap);
+			}
 			mv.setViewName("DoctOrder/checkRsAdd");
 		} catch(Exception e){
 			logger.error(e.toString(), e);
@@ -479,22 +486,21 @@ public class OrderWork extends BaseController
 				PageData patient = orderWorkService.findByPatient(p);
 				if(Tools.isEmpty(patient.getString("ngroupnum"))) {
 					pd.put("ngroupnum", this.get32UUID());
-					this.orderWorkService.updatePatVisitNgroupnum(pd);
 				}else{
 					pd.put("ngroupnum", patient.getString("ngroupnum"));
 				}
+				this.orderWorkService.updatePatVisitNgroupnum(pd);
 			}else if("1".equals(pd.getString("business_type"))){
 				//查询处方记录，找到ngroupnum
 				PageData Presc = prescService.findPrescById(pd);
 				if(Tools.isEmpty(Presc.getString("ngroupnum"))){
 					pd.put("ngroupnum", this.get32UUID());
-					//更新处方的关联问题字段
-					this.prescService.updatePrescNgroupnum(pd);
 				}else{
 					pd.put("ngroupnum", Presc.getString("ngroupnum"));
 				}
+				//更新处方的关联问题字段
+				this.prescService.updatePrescNgroupnum(pd);
 			}
-			this.orderWorkService.updatePatVisitNgroupnum(pd);
 			pd.put("rs_id", this.get32UUID());
 			pd.put("in_rs_type", 4);
 			pd.put("alert_level", pd.getString("r"));

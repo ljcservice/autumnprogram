@@ -1,6 +1,5 @@
 package com.ts.service.DoctOrder.OrderWork.Impl;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,7 @@ import com.ts.entity.Page;
 import com.ts.service.DoctOrder.OrderWork.IOrderWorkService;
 import com.ts.util.PageData;
 
-@Service
+@Service("orderWorkServiceBean")
 public class OrderWorkServiceBean implements IOrderWorkService {
 
 	@Resource(name="daoSupportPH")
@@ -171,5 +170,13 @@ public class OrderWorkServiceBean implements IOrderWorkService {
 	@Override
 	public String queryOrdersStartDate(PageData pd) throws Exception {
 		return  (String) daoph.findForObject("OrdersMapper.queryOrdersStartDate" ,pd);
+	}
+	
+	/**
+	 * 设置住院病历为专家点评
+	 */
+	@Override
+	public void updateExpertPatVisit(PageData pd) throws Exception {
+		daoph.update("PatVisitMapper.updateExpertPatVisit", pd);
 	}
 }

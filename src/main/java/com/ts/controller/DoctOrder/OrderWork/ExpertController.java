@@ -20,6 +20,8 @@ import com.ts.controller.base.BaseController;
 import com.ts.entity.Page;
 import com.ts.entity.system.User;
 import com.ts.service.DoctOrder.OrderWork.ExpertService;
+import com.ts.service.DoctOrder.OrderWork.IOrderWorkService;
+import com.ts.service.DoctOrder.OrderWork.PrescService;
 import com.ts.service.system.user.UserManager;
 import com.ts.util.Const;
 import com.ts.util.Jurisdiction;
@@ -34,6 +36,10 @@ public class ExpertController extends BaseController{
 	private ExpertService expertService;
 	@Autowired
 	private UserManager userService;
+	@Autowired
+	private PrescService prescService;
+	@Autowired
+	private IOrderWorkService orderWorkService;
 	
 	/**
 	 * 专家点评列表
@@ -67,7 +73,12 @@ public class ExpertController extends BaseController{
 		PageData pd = this.getPageData();
 		//设置住院病历为专家点评
 		try {
-			expertService.updateExpertPatVisit(pd);
+			if("0".equals(pd.getString("business_type"))){
+				orderWorkService.updateExpertPatVisit(pd);
+			}else if("1".equals(pd.getString("business_type"))){
+				//处方列表，供给选择
+				prescService.updateExpertPresc(pd);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
