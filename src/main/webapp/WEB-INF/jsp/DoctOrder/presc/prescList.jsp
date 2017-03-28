@@ -32,42 +32,42 @@
 					<div class="row">
 						<div class="col-xs-12">
 						<!-- 检索  -->
-						<form action="presc/prescListPage.do" method="post" name="userForm" id="userForm">
-						<table style="margin-top:5px;">
-							<tr>
-								<td style="padding-left:2px;padding-right:8px;">
-									<div class="nav-search">
+						<form action="presc/prescListPage.do" method="post" name="searchForm" id="searchForm">
+								<div style="margin-bottom: 5px;">	
+									<div class="check-search nav-search" style="width: 400px;">
+										科室：
 										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${page.pd.keywords}" placeholder="科室/诊断" maxlength="32"/>
+											<input class="nav-search-input" autocomplete="off" id="ORG_NAME" type="text" name="ORG_NAME" value="${page.pd.ORG_NAME}" placeholder="科室名称" maxlength="32"/>
+											<i class="ace-icon fa fa-search nav-search-icon"></i>
+										</span>
+										诊断：
+										<span class="input-icon">
+											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${page.pd.keywords}" placeholder="诊断" maxlength="32"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
-								</td>
-								<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
-								<td style="vertical-align:top;padding-left:2px;padding-right:8px;" nowrap> 
+									<div class="check-search" style="width: 77px;">
+									<a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
+									<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i></a>
+									</div>
+									<div class="check-search" style="width: 250px;" >
 									是否点评：
-								 	<select class="chosen-select form-control" name="orderRemark" id="orderRemark" data-placeholder="医嘱是否点评" style="vertical-align:top;width: 80px;" onchange="changeTree();">
+								 	<select class="chosen-select form-control" name="ISORDERCHECK" id="ISORDERCHECK" data-placeholder="医嘱是否点评" style="vertical-align:top;width: 80px;" onchange="changeTree();">
 										<option value="">全部</option>
-										<option <c:if test="${page.pd.ISORDERCHECK == 1}">selected</c:if> value="1" >已点评</option>
-										<option <c:if test="${page.pd.ISORDERCHECK == 0}">selected</c:if> value="0" >未点评</option>
+										<option <c:if test="${page.pd.ISORDERCHECK == '0'}">selected</c:if> value="0" >未点评</option>
+										<option <c:if test="${page.pd.ISORDERCHECK == '1'}">selected</c:if> value="1" >已点评</option>
 									</select>
-								</td>
-								
-								<td style="vertical-align:top;padding-left:2px;padding-right:8px;" nowrap>
+									</div>
+									<div class="check-search" style="width: 250px;" >
 									是否合理：
-								 	<select class="chosen-select form-control" name="OrderIsTrue" id="OrderIsTrue" data-placeholder="医嘱是否合理" style="vertical-align:top;width: 120px;">
+								 	<select class="chosen-select form-control" name="ISCHECKTRUE" id="ISCHECKTRUE" data-placeholder="医嘱是否合理" style="vertical-align:top;width: 120px;">
 								 		<option value="">全部</option>
-										<option <c:if test="${page.pd.ISCHECKTRUE == 0 }">selected</c:if> value="0" >合理</option>
-										<option <c:if test="${page.pd.ISCHECKTRUE == 1 }">selected</c:if> value="1" >不合理</option>
-										<option <c:if test="${page.pd.ISCHECKTRUE == 2 }">selected</c:if> value="2" >待定</option>
+										<option <c:if test="${page.pd.ISCHECKTRUE == '0' }">selected</c:if> value="0" >合理</option>
+										<option <c:if test="${page.pd.ISCHECKTRUE == '1' }">selected</c:if> value="1" >不合理</option>
+										<option <c:if test="${page.pd.ISCHECKTRUE == '2' }">selected</c:if> value="2" >待定</option>
 									</select>
-								</td>
-								<td style="vertical-align:top;padding-left:2px;padding-right:8px;" nowrap>
-									科室：
-									<input type="text" name="orderDept" id="orderDept"  maxlength="50" placeholder="科室名称" title="科室名称" value="${page.pd.orderDept }"/>
-								</td>
-							</tr>
-						</table>
+									</div>
+								</div>
 						<!-- 检索  -->
 					
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
@@ -93,7 +93,7 @@
 								<c:when test="${not empty prescList}">
 									<c:forEach items="${prescList}" var="presc" varStatus="vs">
 										<tr ondblclick="detailPresc('${presc.id}','${presc.NGROUPNUM}')">
-											<td class="center">${presc.PRESC_NO}</td>
+											<td class="center"><a href="javascript:detailPresc('${presc.id}','${presc.NGROUPNUM}');">${presc.PRESC_NO}</a></td>
 											<td class="center">${presc.ORDER_DATE}</td>
 											<td class="center">${presc.PATIENT_NAME}</td>
 											<td class="center">${presc.PATIENT_SEX}</td>
@@ -172,6 +172,7 @@
 	<script src="static/ace/js/chosen.jquery.js"></script>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
+	<script type="text/javascript" src="static/js/common/common.js"></script>
 	</body>
 
 <script type="text/javascript">
@@ -180,11 +181,11 @@ $(top.hangge());
 //检索
 function searchs(){
 	top.jzts();
-	$("#userForm").submit();
+	$("#searchForm").submit();
 }
 
 function resetForm(){
-	document.getElementById("userForm").reset();
+	document.getElementById("searchForm").reset();
 }
 
 $(function() {
@@ -230,8 +231,9 @@ function detailPresc(id,NGROUPNUM){
 	diag.Width =  window.screen.width;
 	diag.Height =  window.screen.height;  
 	diag.CancelEvent = function(){ //关闭事件
-		//nextPage(${page.currentPage});
 		diag.close();
+		
+		nextPage(${page.currentPage});
 	 };
 	 diag.show();
 }

@@ -146,24 +146,32 @@ function save(){
 	if(!flag){ return; }
 	$("#zhongxin").hide();
 	$("#zhongxin2").show();
-	var url = path+"/DoctOrder/addCheckRs.do?"+$("#userForm").serialize();
-	$.get(url,function(data){
-		if(data.result=="success"){
-			var ngroupnum =data.ngroupnum;
-			if(ngroupnum!=null&&ngroupnum!=""){
-				$("#ngroupnum").val(ngroupnum);
+	var url = path+"/DoctOrder/addCheckRs.do";
+	$.ajax({
+		type: "POST",
+		url: url, 
+    	data: $("#userForm").serialize(),
+		dataType:'json',
+		async:false,
+		cache: false,
+		success: function(data){
+			if(data.result=="success"){
+				var ngroupnum =data.ngroupnum;
+				if(ngroupnum!=null&&ngroupnum!=""){
+					$("#ngroupnum").val(ngroupnum);
+				}
+				top.Dialog.close();
+			}else{
+				$("#zhongxin").show();
+				$("#zhongxin2").hide();
+				bootbox.dialog({
+					message: "<span class='bigger-110'>"+data.result+"</span>",
+					buttons: 			
+					{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+				});
 			}
-			top.Dialog.close();
-		}else{
-			$("#zhongxin").show();
-			$("#zhongxin2").hide();
-			bootbox.dialog({
-				message: "<span class='bigger-110'>"+data.result+"</span>",
-				buttons: 			
-				{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
-			});
 		}
-	});
+    });
 }
 //改变类型
 function changeType(obj){

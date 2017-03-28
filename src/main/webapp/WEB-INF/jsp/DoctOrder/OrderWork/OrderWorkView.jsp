@@ -83,7 +83,7 @@
 										 		<option value="">全部</option>
 												<option <c:if test="${pd.ISCHECKTRUE == '0' }">selected</c:if> value="0" >合理</option>
 												<option <c:if test="${pd.ISCHECKTRUE == '1' }">selected</c:if> value="1" >不合理</option>
-												<option <c:if test="${pd.ISCHECKTRUE == 2 }">selected</c:if> value="2" >待定</option>
+												<option <c:if test="${pd.ISCHECKTRUE == '2' }">selected</c:if> value="2" >待定</option>
 											</select>
 										</div>
 								</div>

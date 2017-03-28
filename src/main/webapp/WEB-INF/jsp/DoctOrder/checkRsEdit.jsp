@@ -119,18 +119,26 @@ function save(){
 	if(!flag){return;}
 	$("#zhongxin").hide();
 	$("#zhongxin2").show();
-	var url = path+"/DoctOrder/editCheckRs.do?"+$("#userForm").serialize();
-	$.get(url,function(data){
-		if(data.result=="success"){
-			top.Dialog.close();
-		}else{
-			$("#zhongxin").show();
-			$("#zhongxin2").hide();
-			bootbox.dialog({
-				message: "<span class='bigger-110'>"+data.result+"</span>",
-				buttons: 			
-				{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
-			});
+	var url = path+"/DoctOrder/editCheckRs.do";
+	$.ajax({
+		type: "POST",
+		url: url, 
+    	data: $("#userForm").serialize(),
+		dataType:'json',
+		async:false,
+		cache: false,
+		success: function(data){
+			if(data.result=="success"){
+				top.Dialog.close();
+			}else{
+				$("#zhongxin").show();
+				$("#zhongxin2").hide();
+				bootbox.dialog({
+					message: "<span class='bigger-110'>"+data.result+"</span>",
+					buttons: 			
+					{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+				});
+			}
 		}
 	});
 }

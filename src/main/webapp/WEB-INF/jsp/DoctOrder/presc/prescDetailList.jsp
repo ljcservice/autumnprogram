@@ -71,7 +71,7 @@
 							</div>
 						</div>
 						<div >
-<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:10px;">
+						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:10px;">
 							<thead>
 								<tr>
 									<th class="center" nowrap></th>
@@ -92,7 +92,7 @@
 								<c:when test="${not empty prescDetailList}">
 									<c:forEach items="${prescDetailList}" var="order" varStatus="vs">
 										<tr ondblclick="orderCheck(this)"  id="tr${order.order_no}${order.order_sub_no}" 
-											order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_name="${order.drug_name }" >
+											order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_code="${order.drug_code}" order_name="${order.drug_name }" >
 											<c:set var="key1" >
 											${order.order_no.toString()}_${order.order_sub_no.toString()}
 											</c:set>
@@ -174,11 +174,11 @@
 <!-- 													<a href="#" data-action="reload"> -->
 <!-- 														<i class="ace-icon fa fa-refresh"></i> -->
 <!-- 													</a> -->
-													<a href="javascript:dragSave()" data-action="collapse" title="保存">
+													<a href="javascript:dragSave();" data-action="collapse" title="保存">
 														<i class="ace-icon fa blue fa-check-square-o"></i>
 													</a>
 
-													<a href="javascript:dragClose()" data-action="close" title="关闭">
+													<a href="javascript:dragClose();" data-action="close" title="关闭">
 														<i class="ace-icon fa fa-times"></i>
 													</a>
 												</div>
@@ -272,6 +272,7 @@
 		checkType = jsonObj.checkType;
 		count     = jsonObj.count;
 		order_no     = jsonObj.order_no;
+		order_code = jsonObj.order_code;
 		order_sub_no = jsonObj.order_sub_no;
 		order_name   = jsonObj.order_name;
 		checkJson    = $("#checkJsonInfo").val();
@@ -286,6 +287,7 @@
 	var order_no     = "";
 	var order_sub_no = "";
 	var order_name   = "";
+	var order_code  = "";
 	var checkJson    = "";
 	
 	function buildJson(){
@@ -296,10 +298,13 @@
 	function setCheckJsonInfo(){
 		$("#checkJsonInfo").val(buildJson());
 	}
-	
+	var mycun = 0;
 	// 快捷审核页面 保存
 	function dragSave(){
-		
+		if(mycun!=0){
+			return ;
+		}
+		mycun =1;
 		var ngroupnum = $("#ngroupnum").val();
 		var checkText = $("#checkText").val();
 		var id     = $("#id").val();
@@ -307,20 +312,22 @@
 			type: "POST",
 			url: basePath + 'presc/saveShortcut.do', 
 	    	data: {checkType:checkType,order_no:order_no,order_sub_no:order_sub_no
-	    		,order_name:order_name,tmpOrder_Name:tmpOrder_Name,tmpOrder_sub_no:tmpOrder_sub_no
+	    		,order_name:order_name,order_code:order_code,tmpOrder_Name:tmpOrder_Name,tmpOrder_code:tmpOrder_code,tmpOrder_sub_no:tmpOrder_sub_no
 	    		,tmpOrder_no:tmpOrder_no,count:count,checkText:checkText,ngroupnum:ngroupnum,id:id},
 			dataType:'json',
 			async:false,
 			cache: false,
 			success: function(data){
-				
+				mycun =0;
 				if(data.result=="ok"){
-					$("#dragCheck").hide(500); 
+					$("#dragCheck").hide(500);
 					reSetCheck();
-					$("#myForm").submit();
-// 					nextPage(${page.currentPage});
-					// 如果成功设置旗子
+					//刷新上个页面
+					parent.CheckRsFrame.location.href = parent.$("#CheckRsFrame").attr("src");
+					//刷新本页面
+					reloadPage();
 					
+					// 如果成功设置旗子
 					//var trFirst = $("#tr" + order_no + order_sub_no);
 					//var trSecond = $("#tr" + tmpOrder_no + tmpOrder_sub_no);
 					//if(trFirst){ 
@@ -331,7 +338,11 @@
 					//trsecond.children.eq(1).html("<div class='fa fa-flag red bigger-130'></div>");
 					
 				}
-			}
+			},
+    		error:function (XMLHttpRequest, textStatus, errorThrown) {
+    			mycun =0;    			
+    		 	alert('网络异常，请稍后重试');
+    		}
 		});
 		
 	}
@@ -374,27 +385,7 @@
 		$("#shortcutName").val(_CheckName);
 		setCheckJsonInfo();
 	}
-	function reSetViewType(){
-		$("#resetViewTypeId").text("未选择医嘱类型");
-		$("#resetViewTypeSpan").text("医嘱类型");
-		var myform = window.document.forms[0];
-		myform.repeat_indicator.value = "";
-		myform.repeat_indicator_name.value = "";
-	}
-	function reSetOrderView(){
-		$("#resetOrderViewId").text("未选择医嘱类别");
-		$("#resetOrderViewSpan").text("医嘱类别");
-		var myform = window.document.forms[0];
-		myform.order_class.value = "";
-		myform.order_class_name.value = "";
-	}
-	function reSetShowType(){
-		$("#reSetShowTypeId").text("未选择");
-		$("#reSetShowTypeSpan").text("医嘱查看切换");
-		var myform = window.document.forms[0];
-		myform.show_type.value = "";
-		myform.show_type_name.value = "";
-	}
+	
 	// 重置审核项
 	function reSetCheck(){
 		if(!checkFlag) return ;
@@ -407,6 +398,7 @@
 		order_no     = "";
 		order_sub_no = "";
 		order_name   = "";
+		order_code = "";
 		checkJson    = "";
 		$("#resetCheckId").text("未选择点评项");
 		$("#shortcutNameSpan").text("快捷点评");
@@ -424,6 +416,7 @@
 	
 	var tmpOrder_Name   = "";
 	var tmpOrder_no     = "";
+	var tmpOrder_code     = "";
 	var tmpOrder_sub_no = "";
 	var tmpColor        = "";
 	
@@ -435,20 +428,19 @@
 			order_no     = "";
 			order_sub_no = "";
 			order_name   = "";
+			order_code = "";
 			setCount++;
 			setCheckJsonInfo();
 			return ;
 		}
 		var myColor = _trObj.style.backgroundColor;
 		_trObj.style.backgroundColor = "red";
-		if($("#show_type").val()==1){
-			$(".mydateclass").css("background-Color","white");
-		}
 		if(setCount == 1)
 		{
 			var drug1 = $("#checkDrug1");
 			var drug2 = $("#checkDrug2");
 			tmpOrder_Name   = _trObj.getAttributeNode("order_name").value;
+			tmpOrder_code   = _trObj.getAttributeNode("order_code").value;
 			tmpOrder_no     = _trObj.getAttributeNode("order_no").value;
 			tmpOrder_sub_no = _trObj.getAttributeNode("order_sub_no").value;
 			tmpColor        = myColor;
@@ -471,69 +463,17 @@
 			order_no     = _trObj.getAttributeNode("order_no").value;
 			order_sub_no = _trObj.getAttributeNode("order_sub_no").value;
 			order_name   = _trObj.getAttributeNode("order_name").value;
+			order_code   = _trObj.getAttributeNode("order_code").value;
 			setCount--;
 			setCheckJsonInfo();
 		}
 	}
-	//处理医嘱类别
-	function orderViewClass(_type,_name)
-	{
-		showBG();
-		var myform = window.document.forms[0];
-		myform.order_class.value = _type;
-		myform.order_class_name.value = _name;
-		myform.submit();
-	}
-	//医嘱查看切换
-	function show_type(_type,_name){
-		showBG();
-		var myform = window.document.forms[0];
-		myform.show_type.value = _type;
-		myform.show_type_name.value = _name;
-		myform.submit();
-	}
-	// 处理医嘱类型
-	function orderViewType(_type,_name)
-	{
-		showBG();
-		var myform = window.document.forms[0];
-		myform.repeat_indicator.value = _type;
-		myform.repeat_indicator_name.value = _name;
-		myform.submit();
-	}
 	
 	//查新当前页
 	function reloadPage(){
-		showBG();
 		window.document.forms[0].submit();
 	}
 		
-	//单页遮罩层
-	var bgObj = null;
-	function closeBG()
-	{
-		if(bgObj != null)
-		{
-			document.body.removeChild(bgObj);
-		}
-		bgObj = null;
-	}
-	function showBG()
-	{
-		document.body.style.margin = "0";
-		bgObj   = document.createElement("div");
-		bgObj.setAttribute('id', 'bgDiv');
-		bgObj.style.position   = "absolute";
-		bgObj.style.top        = "0";
-		bgObj.style.background = "#777";
-		bgObj.style.filter     = "progid:DXImageTransform.Microsoft.Alpha(opacity=50)";
-		bgObj.style.opacity    = "0.4";
-		bgObj.style.left       = "0";
-		bgObj.style.width      = "100%";
-		bgObj.style.height     = "100%";
-		bgObj.style.zIndex     = "1000";
-		document.body.appendChild(bgObj);
-	}
 	</script>
 	</body>
 </html>
