@@ -71,6 +71,7 @@
 							</div>
 						</div>
 						<div >
+						<div>当前处方明细：</div>
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:10px;">
 							<thead>
 								<tr>
@@ -91,7 +92,7 @@
 							<c:choose>
 								<c:when test="${not empty prescDetailList}">
 									<c:forEach items="${prescDetailList}" var="order" varStatus="vs">
-										<tr ondblclick="orderCheck(this)"  id="tr${order.order_no}${order.order_sub_no}" 
+										<tr ondblclick="orderCheck(this,1)"  id="tr${order.order_no}${order.order_sub_no}" 
 											order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_code="${order.drug_code}" order_name="${order.drug_name }" >
 											<c:set var="key1" >
 											${order.order_no.toString()}_${order.order_sub_no.toString()}
@@ -144,14 +145,80 @@
 							</tbody>
 						</table>
 						</div>
-						<div class="page-header position-relative">
-							<table style="width:100%;">
+						<div >
+						<div>同日其他处方明细：</div>
+						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:10px;">
+							<thead>
 								<tr>
-									<td style="vertical-align:top;">
-										<div class="pagination" style="float: right;padding-top: 0px;margin: 0px;">${page.pageStr}</div>
-									</td>
+									<th class="center" nowrap></th>
+									<th class="center" nowrap>药品名称规格</th>
+									<th class="center" nowrap>单次计量</th>
+									<th class="center" nowrap>用法</th>
+									<th class="center" nowrap>频次</th>
+									<th class="center" nowrap>用药天数</th>
+									<th class="center" nowrap>单价</th>
+									<th class="center" nowrap>数量</th>
+									<th class="center" nowrap>单位</th>
+									<th class="center" nowrap>药费</th>
 								</tr>
-							</table>
+							</thead>
+							<tbody>
+							<!-- 开始循环 -->	
+							<c:choose>
+								<c:when test="${not empty otherPrescDetailList}">
+									<c:forEach items="${otherPrescDetailList}" var="order" varStatus="vs">
+										<tr ondblclick="orderCheck(this,2)"  id="tr${order.order_no}${order.order_sub_no}" 
+											order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_code="${order.drug_code}" order_name="${order.drug_name }" >
+											<c:set var="key1" >
+											${order.order_no.toString()}_${order.order_sub_no.toString()}
+											</c:set>
+											<td class='center' style="padding-bottom: 0px;">
+												<c:if test="${CheckRss.containsKey(key1)}">
+												  	
+														<a class="fa fa-flag red bigger-130"
+															data-rel="popover" 
+															data-placement="right" 
+															title="<i class='ace-icon fa fa-check red'></i>   ${order.order_Text}" 
+															data-content="<font size='0'>
+																<c:forEach items="${CheckRss.get(key1)}" var="rs">
+																	<b>${rsTypeDict.get(rs.IN_RS_TYPE).rs_type_name }:  
+																	<c:if test="${rs.drug_id1_name != order.order_Text }"> 
+																		${rs.drug_id1_name }</b>
+																	</c:if>
+																	<c:if test="${rs.drug_id2_name != order.order_Text }"> 
+																		${rs.drug_id2_name }</b>
+																	</c:if>
+																	 <br>
+																	${rs.ALERT_HINT }<br>
+																</c:forEach>	
+															</font>"
+														></a>
+												</c:if>
+											</td>
+											
+											<td class='center' >
+												${order.DRUG_NAME } ${order.DRUG_SPEC }
+											</td>
+											<td class="center ">${order.DOSAGE }</td>
+											<td class="center ">不知道</td>
+											<td class="center " >${order.FREQUENCY}</td>
+											<td class="center " >${order.DRUG_USE_DAYS }</td>
+											<td class="center " >${order.COSTS } </td>
+											<td class="center " >${order.AMOUNT } </td>
+											<td class="center " >${order.PACKAGE_SPEC}</td>
+											<td class="center " >${order.COSTS * order.AMOUNT}</td>
+										</tr>
+									
+									</c:forEach>
+								</c:when>
+								<c:otherwise>
+									<tr class="main_info">
+										<td colspan="10" class="center">没有相关数据</td>
+									</tr>
+								</c:otherwise>
+							</c:choose>
+							</tbody>
+						</table>
 						</div>
 						
 								<div  id="dragCheck" style="width: 400px;position: absolute;top: 100px;left:260px;display:none;" class="drag"   >
@@ -363,7 +430,7 @@
 			},
 			callback: function(result) {
 				if(!result) return ;
-				$("#dragCheck").hide(500);
+				$("#dragCheck").hide();
 				var trFirst = $("#tr" + order_no + order_sub_no);
 				if(trFirst) trFirst.css("background-Color",oldColor);
 				$("#tr" + tmpOrder_no + tmpOrder_sub_no).css("background-Color",tmpColor);
@@ -405,6 +472,10 @@
 		$("#shortcutName").val("");
 		$("#checkJsonInfo").val("");
 		$("#checkText").val("");
+		//当前处方选择标识
+		select_current = 0 ;
+		//同日其他处方选择标识
+		select_other = 0 ;
 		cleanDragDrug();
 		setCheckJsonInfo();
 	}
@@ -420,53 +491,75 @@
 	var tmpOrder_sub_no = "";
 	var tmpColor        = "";
 	
+	//当前处方选择标识
+	var select_current = 0 ;
+	//同日其他处方选择标识
+	var select_other = 0 ;
 	//快捷点评 点选某行
-	function orderCheck(_trObj){
+	function orderCheck(_trObj,type){
 		if(!checkFlag) return ;
 		if(_trObj.style.backgroundColor=="red"){
+			if(type==1){
+				select_current = 0;
+			}else{
+				select_other = 0;
+			}
 			_trObj.style.backgroundColor = oldColor;
 			order_no     = "";
 			order_sub_no = "";
 			order_name   = "";
 			order_code = "";
-			setCount++;
+			//setCount++;
 			setCheckJsonInfo();
 			return ;
 		}
+		if(setCount ==1 && type ==2){
+			$(_trObj).children().eq(1).tips({ side:3, msg:'单项点评只允许选择当前处方的明细做点评', bg:'#AE81FF', time:2 });
+			return;
+		}
+		if(select_other==1 && type ==2 && setCount == 2){
+			$(_trObj).children().eq(1).tips({ side:3, msg:'最多只允许选择一个其他处方的明细做点评', bg:'#AE81FF', time:2 });
+			return;
+		}
+		
+		if(type==1){
+			select_current = 1;
+		}else{
+			select_other = 1;
+		}
 		var myColor = _trObj.style.backgroundColor;
 		_trObj.style.backgroundColor = "red";
-		if(setCount == 1)
-		{
-			var drug1 = $("#checkDrug1");
-			var drug2 = $("#checkDrug2");
+		var drug1 = $("#checkDrug1");
+		var drug2 = $("#checkDrug2");
+		if(setCount == 1) {
 			tmpOrder_Name   = _trObj.getAttributeNode("order_name").value;
 			tmpOrder_code   = _trObj.getAttributeNode("order_code").value;
 			tmpOrder_no     = _trObj.getAttributeNode("order_no").value;
 			tmpOrder_sub_no = _trObj.getAttributeNode("order_sub_no").value;
 			tmpColor        = myColor;
-			if(order_no == ""){
-				
-				drug1.text(_trObj.getAttributeNode("order_name").value);
-				alert("一个药品可以做添加点评项目");
-				
-			}else{
-				drug1.text(order_name);
-				var  text = "<b>与</b> " + _trObj.getAttributeNode("order_name").value
-				drug2.html(text);
-				alert("两个药品可以做添加点评项目");
-			}
+			
+			drug1.text(_trObj.getAttributeNode("order_name").value);
+			alert("一个药品可以做添加点评项目");
 			$(".widget-title").text(checkName);
 			$("#dragCheck").show(500);
-		}else if (setCount == 2 )
-		{
+		}else if (setCount == 2 ) {
 			oldColor     = myColor;
 			order_no     = _trObj.getAttributeNode("order_no").value;
 			order_sub_no = _trObj.getAttributeNode("order_sub_no").value;
 			order_name   = _trObj.getAttributeNode("order_name").value;
 			order_code   = _trObj.getAttributeNode("order_code").value;
-			setCount--;
+			//setCount--;
 			setCheckJsonInfo();
+			if(select_current+select_other==2){
+				drug1.text(order_name);
+				var  text = "<b>与</b> " + _trObj.getAttributeNode("order_name").value
+				drug2.html(text);
+				alert("两个药品可以做添加点评项目");
+				$(".widget-title").text(checkName);
+				$("#dragCheck").show(500);
+			}
 		}
+
 	}
 	
 	//查新当前页

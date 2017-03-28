@@ -51,14 +51,14 @@
 													<td >
 														<div>
 															<select class="chosen-select form-control" name="orderDrug1" id="orderDrug1">
-																<c:forEach items="${orderMap.entrySet()}" var="partTyp" varStatus="vs">
+																<c:forEach items="${orderMap1.entrySet()}" var="partTyp" varStatus="vs">
 																	<option value="${partTyp.key}" <c:if test="${vs.index ==0 }">selected</c:if>>${partTyp.value}</option>
 																</c:forEach>
 															</select>
 														</div>
 														<div id="divorderMap2" style="padding-top: 5px;">
 															<select class="chosen-select form-control" name="orderDrug2" id="orderDrug2" >
-																<c:forEach items="${orderMap.entrySet()}" var="partTyp" varStatus="vs">
+																<c:forEach items="${orderMap2.entrySet()}" var="partTyp" varStatus="vs">
 																	<option value="${partTyp.key}" <c:if test="${vs.index ==0}">selected</c:if>>${partTyp.value}</option>
 																</c:forEach>
 															</select>
