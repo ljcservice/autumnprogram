@@ -89,17 +89,14 @@ public class TPatient implements java.io.Serializable
 
     public Long calAgeDays()
     {
-
         Long days = new Long(0);
-
         if (this.dateOfBirth == null)
             return days;
-
-        days = (Calendar.getInstance().getTime().getTime() - DateUtils
-                .getDateFromString(dateOfBirth).getTime())
-                / 1000
-                / (24 * 60 * 60);
-
+        Long currentTime = Calendar.getInstance().getTime().getTime();
+        if(dateOfBirth.length() > 10)
+        	this.dateOfBirth = this.dateOfBirth.substring(10);
+        Long dob = DateUtils.getDateFromString(dateOfBirth).getTime();
+        days = (currentTime - dob) / 1000  / (24 * 60 * 60);
         return days;
     }
 

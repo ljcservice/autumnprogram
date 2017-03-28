@@ -59,7 +59,7 @@ public class MedicareChecker extends Persistent4DB implements IMedicareChecker
                 /* 业务结果缓存中去数据*/
                 //TMedicareRslt mdrsl = BeanRSCache.getDrugMedicareRslt(pods[i].getDrugID());
                 TMedicareRslt mdrsl = pdssCache.getDrugMedicareRslt(pods[i].getDrugID());
-                
+                if(mdrsl == null) continue;
                 /* 根据诊断整理数据  */
                 TMedicareRslt tmResult = DataArrange(patoderids, mdrsl);
                 tmResult.setRecMainNo(pods[i].getRecMainNo());

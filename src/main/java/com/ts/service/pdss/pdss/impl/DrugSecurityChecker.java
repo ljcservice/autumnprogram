@@ -285,8 +285,8 @@ public class DrugSecurityChecker implements IDrugSecurityChecker
         System.out.println("配伍审查:" + (System.currentTimeMillis() - xx));
         /* 禁忌症审查 */
         xx = System.currentTimeMillis();
-        
-//   TODO     this.drugDiagCheckerBean.Check(po).CopyDrugDiagInfoRsltTo(dsr);
+//        //   TODO     
+        this.drugDiagCheckerBean.Check(po).CopyDrugDiagInfoRsltTo(dsr);
         System.out.println("禁忌症  :" + (System.currentTimeMillis() - xx));
         /* 特殊人群审查 */
         xx = System.currentTimeMillis();
@@ -312,10 +312,10 @@ public class DrugSecurityChecker implements IDrugSecurityChecker
         xx = System.currentTimeMillis();
         this.drugSideCheckerBean.Check(po).CopySideCheckRsltTo(dsr);
         System.out.println("不良反应:" + (System.currentTimeMillis() - xx));
-        /* 医保审查 */
-        xx = System.currentTimeMillis();
-        this.medicareCheckerBean.Check(po).CopyMedicareCheckResultTo(dsr);
-        System.out.println("医保用药:" + (System.currentTimeMillis() - xx));
+//        /* 医保审查 */
+//        xx = System.currentTimeMillis();
+//        this.medicareCheckerBean.Check(po).CopyMedicareCheckResultTo(dsr);
+//        System.out.println("医保用药:" + (System.currentTimeMillis() - xx));
         return dsr;
     }
     

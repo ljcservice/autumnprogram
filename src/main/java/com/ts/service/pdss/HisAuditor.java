@@ -352,10 +352,10 @@ public class HisAuditor implements IHisAuditor
 	    }
 	    return (String[])listStr.toArray(new String[0]);
 	}
-
+ 
 	/**
 	 * 
-	 * 从缓存中去除结果
+	 * 从缓存中取出 结果
 	 * 根据单药品信息到查询审查结果中寻找数据
 	 * 
 	 */
@@ -560,7 +560,7 @@ public class HisAuditor implements IHisAuditor
 	        System.out.println("药物安全审查结束:" + (System.currentTimeMillis() - x1));
 	        tcr.set("DRUG_OVER", String.valueOf(System.currentTimeMillis() - x1));                //药物安全审查结束
 		}
-		/* 判断是否开启  抗菌物安全审查  */
+		/* TODO 让前端进行过滤 ，  判断是否开启  抗菌物安全审查  */
 		if(Config.getIntParamValue("ADSSSwitcher") == 1) 
         {
 		    x1 = System.currentTimeMillis();
@@ -639,7 +639,7 @@ public class HisAuditor implements IHisAuditor
     		tcr.set("ANTI_OVER", String.valueOf(System.currentTimeMillis() - x1));                //抗菌药物审查结束
     		tcr.set("ANTI_NUM", String.valueOf(count));                                           //抗菌药物数量
         }
-		/* 判断是否开启 大处方处方  */
+		/* TODO 彻底不用考虑他了， 判断是否开启 大处方处方  */
 	    if(Config.getIntParamValue("PESSSwitcher") == 1)
         {
 	        x1 = System.currentTimeMillis();

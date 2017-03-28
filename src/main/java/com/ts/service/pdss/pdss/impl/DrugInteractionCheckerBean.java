@@ -3,6 +3,7 @@ package com.ts.service.pdss.pdss.impl;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -34,13 +35,12 @@ import com.ts.util.PageData;
  * 
  */
 @Service
-@Transactional
 public class DrugInteractionCheckerBean extends Persistent4DB implements  IDrugInteractionChecker
 {
     private final static Logger log = Logger.getLogger(DrugInteractionCheckerBean.class);
     
 	@Resource(name = "pdssCache")
-	private PdssCache pdssCache;
+	private PdssCache pdssCache; 
     
     /**
      * 互动信息查询
@@ -58,12 +58,12 @@ public class DrugInteractionCheckerBean extends Persistent4DB implements  IDrugI
             /* 查找drugs 中的所有要药品*/
             TPatOrderDrug[] pods = po.getPatOrderDrugs();
             // 通过map过滤掉重复的药品码
-//            Map<String, TDrug> drugs2  = QueryUtils.queryDrug(pods, null, query);
-            List<String> ids = new ArrayList<String>();
-            for(TPatOrderDrug tp:pods){
-            	ids.add(tp.getDrugID());
-            }
-            List<TDrug> drugs = pdssCache.queryDrugListByIds(ids);
+            Map<String, TDrug> drugs  = pdssCache.queryDrugMap(pods);
+//            List<String> ids = new ArrayList<String>();
+//            for(TPatOrderDrug tp:pods){
+//            	ids.add(tp.getDrugID());
+//            }
+//            List<TDrug> drugs = pdssCache.queryDrugListByIds(ids);
             
             // 下面循环无重复的药品码之间的配对
             // 将配对结果放入缓存中
@@ -72,17 +72,22 @@ public class DrugInteractionCheckerBean extends Persistent4DB implements  IDrugI
             for (int i = 0; i < pods.length; i++)
             {
             	TPatOrderDrug podA = pods[i];
+            	TDrug drugA = drugs.get(podA.getDrugID());
+            	if(drugA == null || "".equals(drugA.getDRUG_ID())) continue;
+            	Long ff = System.currentTimeMillis();
             	for (int j = i + 1 ; j < pods.length; j++)
             	{
             		if (i == j) continue;
             		TPatOrderDrug podB = pods[j];
+            		TDrug drugB = drugs.get(podB.getDrugID());
+            		if(drugB == null || "".equals(drugB.getDRUG_ID())) continue;
             		if (podA.getDrugID().equalsIgnoreCase(podB.getDrugID()))
             			continue;
                     // 此处从缓存中取结果=====================================
                     String key1 = podA.getDrugID();
                     String key2 = podB.getDrugID();
-                    TDrug drugA = pdssCache.queryDrugById(key1);
-                    TDrug drugB = pdssCache.queryDrugById(key2);
+//                    TDrug drugA = pdssCache.queryDrugById(key1);
+//                    TDrug drugB = pdssCache.queryDrugById(key2);
                     TDrugInteractionRslt diRslt = pdssCache.queryDrugInteraction(drugA,drugB);
                     if ((diRslt != null) && (diRslt.getDrugInteractionInfo().length > 0))
                     {
@@ -108,8 +113,10 @@ public class DrugInteractionCheckerBean extends Persistent4DB implements  IDrugI
                        	dsr.regInteractionCheckResult(copyCache.getDrugA(), copyCache.getDrugB(), copyCache);
                     }
             	}
+            	
+            	System.out.println("次循环结束时间 ： " + (System.currentTimeMillis() - ff));
             }
-            drugs = null;
+//            drugs = null;
             return  dsr;
     	}
     	catch(Exception e)

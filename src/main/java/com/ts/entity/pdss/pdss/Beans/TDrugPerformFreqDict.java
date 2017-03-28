@@ -10,7 +10,8 @@ import com.hitzd.his.Beans.TBaseBean;
  */
 public class TDrugPerformFreqDict extends TBaseBean
 {
-    /* ID */
+	private static final long serialVersionUID = 1L;
+	/* ID */
     private String PERFORM_FREQ_DICT_ID;
     /* 执行频率描述 */
     private String PERFORM_FREQ_DICT_NAME;

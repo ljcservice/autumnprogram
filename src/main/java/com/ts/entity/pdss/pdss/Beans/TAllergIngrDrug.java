@@ -11,7 +11,8 @@ import com.hitzd.his.Beans.TBaseBean;
  */
 public class TAllergIngrDrug extends TBaseBean
 {
-    /* 药敏信息代码 */
+	private static final long serialVersionUID = 1L;
+	/* 药敏信息代码 */
     private String DRUG_ALLERGEN_ID;
     /* 对照字典ID */
     private String ALLERG_INGR_DRUG_ID;

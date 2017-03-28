@@ -10,6 +10,10 @@ import com.hitzd.his.Beans.TBaseBean;
  */
 public class TDrugIvEffect extends TBaseBean
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/* 配伍码 */
     private String EFFECT_ID;
     /* 药品输液码1 */
@@ -102,58 +106,58 @@ public class TDrugIvEffect extends TBaseBean
         REF_SOURCE = rEF_SOURCE;
     }
     
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result
-                + ((IV_CLASS_CODE1 == null) ? 0 : IV_CLASS_CODE1.hashCode());
-        result = prime * result
-                + ((IV_CLASS_CODE2 == null) ? 0 : IV_CLASS_CODE2.hashCode());
-        
-        return result;
-    }
-    
-    public boolean ObjEquals(String obj1, String obj2)
-    {
-        if (obj1 == null)
-        {
-            if (obj2 != null)
-                return false;
-        }
-        else
-            return obj1.equals(obj2);
-        
-        return true;
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        TDrugIvEffect other = (TDrugIvEffect) obj;
-        
-        // 修改此处以使得该对象的相等判断可以使平行判断，也可以是交叉判断。
-        
-        if (!ObjEquals(IV_CLASS_CODE1, other.IV_CLASS_CODE1))
-        {
-            if (ObjEquals(IV_CLASS_CODE1, other.IV_CLASS_CODE2))
-            {
-                if (!ObjEquals(IV_CLASS_CODE2, other.IV_CLASS_CODE1))
-                    return false;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        else
-        if (!ObjEquals(IV_CLASS_CODE2, other.IV_CLASS_CODE2))
-            return false;
-        return true;
-    }
+//    @Override
+//    public int hashCode() {
+//        final int prime = 31;
+//        int result = 1;
+//        result = prime * result
+//                + ((IV_CLASS_CODE1 == null) ? 0 : IV_CLASS_CODE1.hashCode());
+//        result = prime * result
+//                + ((IV_CLASS_CODE2 == null) ? 0 : IV_CLASS_CODE2.hashCode());
+//        
+//        return result;
+//    }
+//    
+//    public boolean ObjEquals(String obj1, String obj2)
+//    {
+//        if (obj1 == null)
+//        {
+//            if (obj2 != null)
+//                return false;
+//        }
+//        else
+//            return obj1.equals(obj2);
+//        
+//        return true;
+//    }
+//    
+//    @Override
+//    public boolean equals(Object obj) {
+//        if (this == obj)
+//            return true;
+//        if (obj == null)
+//            return false;
+//        if (getClass() != obj.getClass())
+//            return false;
+//        TDrugIvEffect other = (TDrugIvEffect) obj;
+//        
+//        // 修改此处以使得该对象的相等判断可以使平行判断，也可以是交叉判断。
+//        
+//        if (!ObjEquals(IV_CLASS_CODE1, other.IV_CLASS_CODE1))
+//        {
+//            if (ObjEquals(IV_CLASS_CODE1, other.IV_CLASS_CODE2))
+//            {
+//                if (!ObjEquals(IV_CLASS_CODE2, other.IV_CLASS_CODE1))
+//                    return false;
+//            }
+//            else
+//            {
+//                return false;
+//            }
+//        }
+//        else
+//        if (!ObjEquals(IV_CLASS_CODE2, other.IV_CLASS_CODE2))
+//            return false;
+//        return true;
+//    }
 }

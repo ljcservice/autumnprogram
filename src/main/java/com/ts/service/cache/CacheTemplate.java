@@ -76,6 +76,11 @@ public class CacheTemplate {
 			}
 		}
 
+		if(proccessor  == null) {
+			watch.stop();
+			log.debug(keyName + ",query cost => " + watch.getTime() + "ms");
+			return null;
+		}
 		T ret = proccessor.handle();
 		watch.stop();
 		log.debug(keyName + ",query cost => " + watch.getTime() + "ms");

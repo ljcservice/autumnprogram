@@ -2,6 +2,7 @@ package com.ts.service.pdss.pdss.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -56,18 +57,20 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
 	        /* 诊断id*/
 	        TPatOrderDiagnosis[] patOds = po.getPatOrderDiagnosiss();
 	        TDrugSecurityRslt result = new TDrugSecurityRslt();
+	        Map<String, TDrug> drugs  = pdssCache.queryDrugMap(pods);
 	        for(TPatOrderDrug pod : pods){
 	        	// 获得药品信息
-	        	TDrug  drug =  pdssCache.queryDrugById(pod.getDrugID());
-	        	if( drug == null) return new TDrugSecurityRslt();
+	        	TDrug  drug =  drugs.get(pod.getDrugID());
+	        	if( drug == null) continue;
 	        	// 获得给药途径信息
 	        	TAdministration drugAdmin = pdssCache.queryAdministration(pod.getAdministrationID());
+	        	if(drugAdmin == null ) continue;
 	        	// 获得 处置编码
 	        	TDrugDiagRel ddr =  pdssCache.queryDrugDiagRel(drug.getDRUG_CLASS_ID(), drugAdmin.getADMINISTRATION_ID());
-	        	if (ddr == null) return  new TDrugSecurityRslt();
+	        	if (ddr == null) continue;
 	        	// 获得禁忌信息
 	        	List<TDrugDiagInfo > ddis = pdssCache.getDrugDiagInfos(ddr.getCONTRAIND_ID());
-	        	if(ddis == null) return new TDrugSecurityRslt();
+	        	if(ddis == null) continue;
 	        	// 用诊断过滤  禁忌信息 ，如何诊断中包含禁忌信息视为匹配上，故识别为问题，    尚未使用 疾病对照表，进行诊断匹配。
 	        	for(TDrugDiagInfo ddi : ddis){
 	        		for(TPatOrderDiagnosis patOd  : patOds)
@@ -75,6 +78,8 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
 	        			if(patOd.getDiagnosisName().indexOf(ddi.getDIAG_DESC()) != -1)
 	        			{
 	    	        		TDrugDiagRslt diarslt = new TDrugDiagRslt();
+	    	        		drug.setRecMainNo(pod.getRecMainNo());
+	    	        		drug.setRecSubNo(pod.getRecSubNo());
 	    	        		diarslt.addDrugDiag(drug, ddr, ddi,patOd.getDiagnosisName());
 	    	 	            diarslt.setRecMainNo(pod.getRecMainNo());
 	    	 	            diarslt.setRecSubNo(pod.getRecSubNo());
@@ -238,74 +243,82 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
 	 * 改造完成
 	 */
     @Override
-    public TDrugSecurityRslt Check(String[] drugs, String[] diagnosis) throws Exception{
-        /* 设置访问数据库代码 */
-        this.setQueryCode("PDSS");
-        /* 疾病诊断码sql组装 */
-        /* 所有药品信息 */
-        QueryUtils queryUtils = new QueryUtils();
-//        List<TDrug> drugslist  = queryUtils.queryDrug(drugs, null, query);
-        List<TDrug> drugslist = pdssCache.queryDrugListByIds(drugs);
-        /* 药品类吗  组装 */
-        String[] drugClassID  = new String[drugslist.size()];
-        for(int i = 0 ;i<drugslist.size();i++)
+    public TDrugSecurityRslt Check(String[] drugs, String[] diagnosis) {
+    	TDrugSecurityRslt result = new TDrugSecurityRslt();
+        try
         {
-            TDrug drug      = drugslist.get(i);
-            if(drug.getDRUG_CLASS_ID()!=null)
-                drugClassID[i] = drug.getDRUG_CLASS_ID();
-        }
-        /* 药物禁忌症对应信息 */
-        //TODO 这里有的药品类码 但是 药品类码可能会重复
-        List<TDrugDiagRel> drugDiagRels = new ArrayList<TDrugDiagRel>();
-        if(drugClassID.length > 0)
-        {
-//            drugDiagRels = queryUtils.queryDrugDiagRel(drugClassID, null, query);
-        }
-        /*  药物禁忌症对应id 组装sql*/
-        List<String> drugDiagRelIds = new ArrayList<String>();
-        for(TDrugDiagRel entry : drugDiagRels)
-        {
-            drugDiagRelIds.add(entry.getDRUG_DIAG_REL_ID());
-        }
-        /* 药物禁忌症信息 */
-      	PageData pd = new PageData();
-      	pd.put("DIAGNOSIS_DICT_ID", diagnosis);
-      	pd.put("DRUG_DIAG_REL_ID", drugDiagRelIds);
-        List<TDrugDiagInfo> drugDiagInfos = (List<TDrugDiagInfo>) dao.findForList("DrugMapper.drugDiagInfosByRel",pd);
-        //  List<TDrugDiagInfo> drugDiagInfos = (List<TDrugDiagInfo>) query.query(strSql , new DrugDiagInfoMapper());
-        
-        TDrugSecurityRslt result = new TDrugSecurityRslt();
-        /* 整理数据结果返回  */
-        for(TDrugDiagInfo entity : drugDiagInfos)
-        {
-            TDrugDiagRel ddr = null;
-            TDrug       drug = null;
-            /* 装载 药物禁忌症信息  */
-            /* 装载 药物禁忌症对应*/
-            for(TDrugDiagRel drugDiagRel : drugDiagRels)
+        	/* 设置访问数据库代码 */
+            this.setQueryCode("PDSS");
+            /* 疾病诊断码sql组装 */
+            /* 所有药品信息 */
+            QueryUtils queryUtils = new QueryUtils();
+//            List<TDrug> drugslist  = queryUtils.queryDrug(drugs, null, query);
+            List<TDrug> drugslist = pdssCache.queryDrugListByIds(drugs);
+            /* 药品类吗  组装 */
+            String[] drugClassID  = new String[drugslist.size()];
+            for(int i = 0 ;i<drugslist.size();i++)
             {
-                if (entity.getDRUG_DIAG_REL_ID().equals(drugDiagRel.getDRUG_DIAG_REL_ID()))
-                {
-                    ddr = drugDiagRel ;
-                    drugDiagRels.remove(drugDiagRel);
-                    break;
-                }
+                TDrug drug      = drugslist.get(i);
+                if(drug.getDRUG_CLASS_ID()!=null)
+                    drugClassID[i] = drug.getDRUG_CLASS_ID();
             }
-            /* 装载 药品信息  */
-            for(TDrug _drug :drugslist)
+            /* 药物禁忌症对应信息 */
+            //TODO 这里有的药品类码 但是 药品类码可能会重复
+            List<TDrugDiagRel> drugDiagRels = new ArrayList<TDrugDiagRel>();
+            if(drugClassID.length > 0)
             {
-                
-                if (ddr.getDRUG_CLASS_ID().equals(_drug.getDRUG_CLASS_ID()))
-                {
-                    drug = _drug;
-                    drugslist.remove(_drug);
-                    break;
-                }
+//                drugDiagRels = queryUtils.queryDrugDiagRel(drugClassID, null, query);
             }
-            TDrugDiagRslt diarslt = new TDrugDiagRslt();
-            diarslt.addDrugDiag(drug, ddr, entity,"");
-            result.regDiagCheckResult(drug, diarslt);
+            /*  药物禁忌症对应id 组装sql*/
+            List<String> drugDiagRelIds = new ArrayList<String>();
+            for(TDrugDiagRel entry : drugDiagRels)
+            {
+                drugDiagRelIds.add(entry.getDRUG_DIAG_REL_ID());
+            }
+            /* 药物禁忌症信息 */
+          	PageData pd = new PageData();
+          	pd.put("DIAGNOSIS_DICT_ID", diagnosis);
+          	pd.put("DRUG_DIAG_REL_ID", drugDiagRelIds);
+            List<TDrugDiagInfo> drugDiagInfos = (List<TDrugDiagInfo>) dao.findForList("DrugMapper.drugDiagInfosByRel",pd);
+            //  List<TDrugDiagInfo> drugDiagInfos = (List<TDrugDiagInfo>) query.query(strSql , new DrugDiagInfoMapper());
+            
+            /* 整理数据结果返回  */
+            for(TDrugDiagInfo entity : drugDiagInfos)
+            {
+                TDrugDiagRel ddr = null;
+                TDrug       drug = null;
+                /* 装载 药物禁忌症信息  */
+                /* 装载 药物禁忌症对应*/
+                for(TDrugDiagRel drugDiagRel : drugDiagRels)
+                {
+                    if (entity.getDRUG_DIAG_REL_ID().equals(drugDiagRel.getDRUG_DIAG_REL_ID()))
+                    {
+                        ddr = drugDiagRel ;
+                        drugDiagRels.remove(drugDiagRel);
+                        break;
+                    }
+                }
+                /* 装载 药品信息  */
+                for(TDrug _drug :drugslist)
+                {
+                    
+                    if (ddr.getDRUG_CLASS_ID().equals(_drug.getDRUG_CLASS_ID()))
+                    {
+                        drug = _drug;
+                        drugslist.remove(_drug);
+                        break;
+                    }
+                }
+                TDrugDiagRslt diarslt = new TDrugDiagRslt();
+                diarslt.addDrugDiag(drug, ddr, entity,"");
+                result.regDiagCheckResult(drug, diarslt);
+            }
         }
+        catch(Exception e)
+        {
+        	e.printStackTrace();
+        }
+    	
         return result;
     }
 }

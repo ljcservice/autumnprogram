@@ -1044,29 +1044,29 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                     }
                 }
                 
-                TDrugSecurityRslt dsr = new TDrugSecurityRslt();
-                TDrug drug = new TDrug();
-                drug.setDRUG_NO_LOCAL(ad.getDrug_ID());
-                drug.setRecMainNo(ad.getOrder_No());
-                drug.setRecSubNo(ad.getOrder_Sub_No());  
-                /*特殊人群*/
-                if(ad.getDrugSpecPeopleRslt()!= null && ad.getDrugSpecPeopleRslt().length != 0 && ad.getDrugSpecPeopleRslt()[0] != null)
-                {
-                    dsr.regDrugSpecPeopleCheckResult(drug, ad.getDrugSpecPeopleRslt()[0]);
-                }
-                if(ad.getAllergenRslt() != null && ad.getAllergenRslt().length != 0 && ad.getAllergenRslt()[0] != null)
-                {
-                    /* 药物过敏审查结果对象 */
-                    dsr.regAllergenCheckResult(drug, ad.getAllergenRslt()[0]);
-                }
-                if(ad.getDosageRslt() != null && ad.getDosageRslt().length != 0 && ad.getDosageRslt()[0] != null)
-                {
-                    /* 剂量 */
-                    dsr.regDosageCheckResult(drug, ad.getDosageRslt()[0]);
-                }
-                this.saveDrugSpecPeopleCheckInfo(dsr);
-                this.saveDrugAllergenCheckInfo(dsr);
-                this.saveDrugDosageCheckInfo(dsr);
+//                TDrugSecurityRslt dsr = new TDrugSecurityRslt();
+//                TDrug drug = new TDrug();
+//                drug.setDRUG_NO_LOCAL(ad.getDrug_ID());
+//                drug.setRecMainNo(ad.getOrder_No());
+//                drug.setRecSubNo(ad.getOrder_Sub_No());  
+//                /*特殊人群*/
+//                if(ad.getDrugSpecPeopleRslt()!= null && ad.getDrugSpecPeopleRslt().length != 0 && ad.getDrugSpecPeopleRslt()[0] != null)
+//                {
+//                    dsr.regDrugSpecPeopleCheckResult(drug, ad.getDrugSpecPeopleRslt()[0]);
+//                }
+//                if(ad.getAllergenRslt() != null && ad.getAllergenRslt().length != 0 && ad.getAllergenRslt()[0] != null)
+//                {
+//                    /* 药物过敏审查结果对象 */
+//                    dsr.regAllergenCheckResult(drug, ad.getAllergenRslt()[0]);
+//                }
+//                if(ad.getDosageRslt() != null && ad.getDosageRslt().length != 0 && ad.getDosageRslt()[0] != null)
+//                {
+//                    /* 剂量 */
+//                    dsr.regDosageCheckResult(drug, ad.getDosageRslt()[0]);
+//                }
+//                this.saveDrugSpecPeopleCheckInfo(dsr);
+//                this.saveDrugAllergenCheckInfo(dsr);
+//                this.saveDrugDosageCheckInfo(dsr);
             }
         }
         catch(Exception e)

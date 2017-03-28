@@ -2,6 +2,8 @@ package com.ts.entity.pdss.pdss.RSBeans;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlElement;
+
 import com.ts.entity.pdss.pdss.Beans.TDrug;
 import com.ts.entity.pdss.pdss.Beans.TDrugUseDetail;
 
@@ -33,15 +35,18 @@ public class TDrugSpecPeopleRslt extends TBaseResult implements Serializable{
     
     private boolean isFlag = false;
     
+	@XmlElement(name="getIsFlag")
     public boolean getIsFlag()
     {
     	return this.isFlag;
     }
-    public TDrugSpecPeopleRslt() 
+	
+	public TDrugSpecPeopleRslt() 
     {
         setVersion(2);
     }
     
+	@XmlElement(name="getDrug")
     public TDrug getDrug()
     {
         return drug;
@@ -52,61 +57,73 @@ public class TDrugSpecPeopleRslt extends TBaseResult implements Serializable{
         this.drug = drug;
     }
 
+    @XmlElement(name="getChildLevel")
     public String getChildLevel()
     {
         return childLevel;
     }
 
+    @XmlElement(name="getDrugchild")
     public TDrugUseDetail getDrugchild()
     {
         return drugchild;
     }
 
+    @XmlElement(name="getOldLevel")
     public String getOldLevel()
     {
         return oldLevel;
     }
 
+    @XmlElement(name="getDrugold")
     public TDrugUseDetail getDrugold()
     {
         return drugold;
     }
 
+    @XmlElement(name="getPregnantLevel")
     public String getPregnantLevel()
     {
         return pregnantLevel;
     }
 
+    @XmlElement(name="getDrugpregnant")
     public TDrugUseDetail getDrugpregnant()
     {
         return drugpregnant;
     }
 
+    @XmlElement(name="getLactLevel")
     public String getLactLevel()
     {
         return lactLevel;
     }
 
+    @XmlElement(name="getDruglact")
     public TDrugUseDetail getDruglact()
     {
         return druglact;
     }
 
+    @XmlElement(name="getHepaticalLevel")
     public String getHepaticalLevel()
     {
         return hepaticalLevel;
     }
 
+    @XmlElement(name="getDrughepatical")
     public TDrugUseDetail getDrughepatical()
     {
         return drughepatical;
     }
 
+    @XmlElement(name="getRenalLevel")
     public String getRenalLevel()
     {
         return renalLevel;
     }
 
+    @XmlElement(name="getDrugrenal")
     public TDrugUseDetail getDrugrenal()
     {
         return drugrenal;

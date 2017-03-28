@@ -17,12 +17,12 @@ public interface IDrugDiagChecker
      * @param diagnosis
      * @return
      */
-    public TDrugSecurityRslt Check(String[] drugs ,String[] diagnosis)throws Exception;
+    public TDrugSecurityRslt Check(String[] drugs ,String[] diagnosis) ;
     /**
      * 禁忌症审查 
      * @param drugs
      * @param diagnosis
      * @return
      */
-    public TDrugSecurityRslt Check( TPatientOrder po)throws Exception;
+    public TDrugSecurityRslt Check( TPatientOrder po);
 }

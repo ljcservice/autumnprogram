@@ -1,12 +1,16 @@
 package com.ts.entity.pdss.pdss.Beans;
 
+import java.io.Serializable;
+
 /**
  * 抗菌药物
  * @author Administrator
  *
  */
-public class TAntiDrug
+public class TAntiDrug implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	/*序号*/
 	private String SERIAL_NO;     
 	/* */

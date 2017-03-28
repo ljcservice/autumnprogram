@@ -5,7 +5,7 @@ package com.ts.entity.pdss.mas.RSBeans;
  * @author Administrator
  *
  */
-public class TMedcareSecurityRslt
+public class TMedcareSecurityRslt 
 {
 
 }

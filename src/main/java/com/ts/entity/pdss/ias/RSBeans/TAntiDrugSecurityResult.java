@@ -19,7 +19,7 @@ public class TAntiDrugSecurityResult
 	private String order_Sub_No;
 	/* */
 	private String drugStandID;
-	
+//	
 	/*特殊人群*/
 	private TDrugSpecPeopleRslt[]  dspList = null;
 	/* 药物过敏审查结果对象 */

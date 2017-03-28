@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class TBaseBean implements Serializable
 {
-    /* 使用次数 */
+	/* 使用次数 */
     private long usrCount = 0l ;
     /* 创建时间  */
     private String createDate = "";

@@ -10,7 +10,8 @@ import com.hitzd.his.Beans.TBaseBean;
  */
 public class TDrugMap extends TBaseBean
 {
-    /**/
+	private static final long serialVersionUID = 1L;
+	/**/
     private String DRUG_NO_LOCAL;
     /**/
     private String DRUG_NAME_LOCAL;

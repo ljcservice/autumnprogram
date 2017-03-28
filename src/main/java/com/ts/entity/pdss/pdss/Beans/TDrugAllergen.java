@@ -11,7 +11,8 @@ import com.hitzd.his.Beans.TBaseBean;
 public class TDrugAllergen extends TBaseBean
 {
 
-    /* 过敏编码 */
+	private static final long serialVersionUID = 1L;
+	/* 过敏编码 */
     private String DRUG_ALLERGEN_ID;
     /* 输入码 */
     private String INPUT_CODE;

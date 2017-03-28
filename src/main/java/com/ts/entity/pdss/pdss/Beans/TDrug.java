@@ -1,7 +1,8 @@
 package com.ts.entity.pdss.pdss.Beans;
 
+
 import com.hitzd.his.Beans.TBaseBean;
-import com.hitzd.his.Utils.DrugUtils;
+//import com.hitzd.his.Utils.DrugUtils;
 
 /**
  * 药品字典
@@ -11,9 +12,8 @@ import com.hitzd.his.Utils.DrugUtils;
  */
 public class TDrug extends TBaseBean
 {
-    private static final long serialVersionUID = 1L;
-
-    /* ID */
+	private static final long serialVersionUID = 1L;
+	/* ID */
     private String DRUG_ID;
     /* 药品名称 */
     private String DRUG_NAME;
@@ -59,7 +59,10 @@ public class TDrug extends TBaseBean
 	private String recSubNo   = "";
 	/* 药敏代码 */
 	private String SENSIT_CODE = "";
-	private boolean isAnti    = false;     
+//	/*抗菌藥物標示*/
+//	private boolean isAnti    = false;     
+	/*抗菌药物标示 */
+	private String is_anti ="";
 
 	private String UseType    = "";
 	
@@ -75,6 +78,18 @@ public class TDrug extends TBaseBean
 	{
 		this.direct_no = direct_no;
 	}
+
+	public String getIs_anti() {
+		return is_anti;
+	}
+
+	public void setIs_anti(String is_anti) {
+		this.is_anti = is_anti;
+	}
+
+//	public void setAnti(boolean isAnti) {
+//		this.isAnti = isAnti;
+//	}
 
 	public TDrug() {}
 	
@@ -104,10 +119,11 @@ public class TDrug extends TBaseBean
 			this.OPER_TYPE       = drugInput.OPER_TYPE;
 			this.recMainNo       = drugInput.recMainNo;
 			this.recSubNo        = drugInput.recSubNo;
-			this.isAnti          = drugInput.isAnti;
+//			this.isAnti          = drugInput.isAnti;
 			this.SENSIT_CODE     = drugInput.SENSIT_CODE;
 			this.UseType         = drugInput.UseType;
 			this.direct_no       = drugInput.direct_no;
+			this.is_anti         = drugInput.is_anti;
 		}
 	}
 	
@@ -133,7 +149,8 @@ public class TDrug extends TBaseBean
 
 	public boolean isAnti()
     {
-		return isAnti;
+//		return isAnti;
+		return "1".equals(this.is_anti)?true:false;
 	}
 
 	public String getRecMainNo()
@@ -315,7 +332,7 @@ public class TDrug extends TBaseBean
     {
     	
     	/* 判断是否是抗菌药物 */
-		this.isAnti = DrugUtils.isKJDrug(dRUG_NO_LOCAL);
+//		this.isAnti = DrugUtils.isKJDrug(dRUG_NO_LOCAL);
         DRUG_NO_LOCAL = dRUG_NO_LOCAL;
     }
 

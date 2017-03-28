@@ -10,7 +10,8 @@ import com.hitzd.his.Beans.TBaseBean;
  */
 public class TDrugUseDetail extends TBaseBean
 {
-    /* 药品用药信息ID */
+	private static final long serialVersionUID = 1L;
+	/* 药品用药信息ID */
     private String DRUG_USE_DETAIL_ID;
     /* 药品类码ID */
     private String DRUG_CLASS_ID;

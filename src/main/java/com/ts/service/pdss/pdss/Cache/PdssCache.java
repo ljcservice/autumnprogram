@@ -40,7 +40,6 @@ import com.ts.service.cache.CacheTemplate;
 import com.ts.util.PageData;
 
 @Service
-@Transactional
 public class PdssCache {
 	public static String drugCacheByLocal = "drugCacheByLocal";	//单个药品信息kEY，以本地药品码为主键的药品Bean 
 	public static String drugInteraction  = "drugInteraction";	//互动信息结果缓存
@@ -62,8 +61,8 @@ public class PdssCache {
 	@Autowired
 	private CacheTemplate cacheTemplate;
 	
-	@Resource(name = "daoSupportPdss")
-	private DaoSupportPdss dao;
+//	@Resource(name = "daoSupportPdss")
+//	private DaoSupportPdss dao;
 	
     /**
      * 药物禁忌症对应，已应用数据库快照
@@ -72,26 +71,26 @@ public class PdssCache {
      * @return
      * @throws Exception 
      */
-    public List<TDrugDiagRel> queryDrugDiagRels(String[] drugClassIDs, String[] drugAdmini) throws Exception
-    {
-        final List<TDrugDiagRel> list = new ArrayList<TDrugDiagRel>();
-        List<String> param = new ArrayList<String>();
-        for (int i = 0; i < drugClassIDs.length; i++){
-            for (int j = 0; j < drugAdmini.length; j++){
-	        	if(param.contains(drugClassIDs[i]+"_"+drugAdmini[j])){
-	        		//重复数据
-	        	}else{
-	        		TDrugDiagRel o = queryDrugDiagRel(drugClassIDs[i], drugAdmini[j]);
-	        		if(o!=null){
-	        			list.add(o);
-	        		}
-	        		param.add(drugClassIDs[i]+"_"+drugAdmini[j]);
-	        	}
-            }
-        }       
-        return list;	
-    	
-    }
+//    public List<TDrugDiagRel> queryDrugDiagRels(String[] drugClassIDs, String[] drugAdmini) throws Exception
+//    {
+//        final List<TDrugDiagRel> list = new ArrayList<TDrugDiagRel>();
+//        List<String> param = new ArrayList<String>();
+//        for (int i = 0; i < drugClassIDs.length; i++){
+//            for (int j = 0; j < drugAdmini.length; j++){
+//	        	if(param.contains(drugClassIDs[i]+"_"+drugAdmini[j])){
+//	        		//重复数据
+//	        	}else{
+//	        		TDrugDiagRel o = queryDrugDiagRel(drugClassIDs[i], drugAdmini[j]);
+//	        		if(o!=null){
+//	        			list.add(o);
+//	        		}
+//	        		param.add(drugClassIDs[i]+"_"+drugAdmini[j]);
+//	        	}
+//            }
+//        }       
+//        return list;	
+//    	
+//    }
     /**
      * 药物禁忌症对应，已应用数据库快照
      * @param DrugClassID
@@ -159,6 +158,8 @@ public class PdssCache {
   	 */
   	public TAdministration queryAdministrationByName(final String adminiName ) throws Exception {
   		TAdministration t = cacheTemplate.cache(drugadmini ,"name_" + adminiName, null);
+  		if(t == null)
+  			t =  cacheTemplate.cache(drugadmini , "code_" + adminiName, null);
   		return t;
   	}
   	
@@ -172,6 +173,8 @@ public class PdssCache {
 		
 		//只从redis中取得数据
 		TAdministration t =  cacheTemplate.cache(drugadmini , "code_" + administrationID, null);
+		if( t == null) 
+			 t = cacheTemplate.cache(drugadmini ,"name_" + administrationID, null);
 		
 //		new CacheProcessor<TAdministration>() {
 //			@Override
@@ -206,34 +209,44 @@ public class PdssCache {
         	key1 = drugB.getDRUG_NO_LOCAL();
             key2 = drugA.getDRUG_NO_LOCAL();
         }
-    	TDrugInteractionRslt t = cacheTemplate.cache(drugInteraction , key1 + "_" + key2, new CacheProcessor<TDrugInteractionRslt>() {
-			@Override
-			public TDrugInteractionRslt handle() {
-				TDrugInteractionRslt res = new TDrugInteractionRslt();
-				try {
-                    // 药品A成分 分割后 组装sql
-                    if(drugA.getINGR_CLASS_IDS() == null)
-                        return null;
-                    String[] ingrclassidsA = drugA.getINGR_CLASS_IDS().split(",");
-                    // 药品B成分  分割后 组装sql
-                    if(drugB == null || drugB.getINGR_CLASS_IDS() == null)
-                    	return null;
-                    String[] ingrclassidsB = drugB.getINGR_CLASS_IDS().split(",");
-                    List<TDrugInteractionInfo> list = queryDrugInteractionInfo(ingrclassidsA,ingrclassidsB, null);
-                    if(list != null && list.size() > 0){
-                    	res.addDrugInfo(new TDrug(drugA), new TDrug(drugB), list);
-                    }
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				return res;
-			}
-		});
+//        Long l = System.currentTimeMillis();
+    	TDrugInteractionRslt t = cacheTemplate.cache(drugInteraction , key1 + "_" + key2, null );
+    	if(t == null)
+    		t = cacheTemplate.cache(drugInteraction , key2 + "_" + key1, null );
+//    	new CacheProcessor<TDrugInteractionRslt>() {
+//			@Override 
+//			public TDrugInteractionRslt handle() {
+//				TDrugInteractionRslt res = new TDrugInteractionRslt();
+//				try {
+//                    // 药品A成分 分割后 组装sql
+//                    if(drugA.getINGR_CLASS_IDS() == null)
+//                        return null;
+//                    String[] ingrclassidsA = drugA.getINGR_CLASS_IDS().split(",");
+//                    // 药品B成分  分割后 组装sql
+//                    if(drugB == null || drugB.getINGR_CLASS_IDS() == null)
+//                    	return null;
+//                    String[] ingrclassidsB = drugB.getINGR_CLASS_IDS().split(",");
+//                    Long x = System.currentTimeMillis();
+//                    List<TDrugInteractionInfo> list = queryDrugInteractionInfo(ingrclassidsA,ingrclassidsB, null);
+//                    System.out.println("TDrugInteractionInfo:" + (System.currentTimeMillis() - x));
+//                    if(list != null && list.size() > 0){
+//                    	res.addDrugInfo(new TDrug(drugA), new TDrug(drugB), list);
+//                    }
+//                    else {
+//                    	return null;
+//                    }
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//				return res;
+//			}
+//		}
+//    	System.out.println(System.currentTimeMillis() - l);
     	return t;
     }
     
     /**
-     * 药品互作用信息，已应用数据库快照
+     * 药品互作用信息，
      * 
      * @param Code1
      * @param Code2
@@ -299,19 +312,20 @@ public class PdssCache {
      * @throws Exception 
      */
     public TDrug queryDrugById(final String id) throws Exception{
-    	TDrug t = cacheTemplate.cache(drugCacheByLocal, id, new CacheProcessor<TDrug>() {
-			@Override
-			public TDrug handle() throws Exception {
-				PageData pd = new PageData();
-				pd.put("id", id);
-				@SuppressWarnings("unchecked")
-				List<TDrug> drugs = (List<TDrug>) dao.findForList("DrugMapper.queryDrugById", pd);
-				TDrug res = null;
-				if(drugs != null && drugs.size() > 0 )
-					res = drugs.get(0);
-				return res;
-			}
-		});
+    	TDrug t = cacheTemplate.cache(drugCacheByLocal, id, null);
+//    	new CacheProcessor<TDrug>() {
+//			@Override
+//			public TDrug handle() throws Exception {
+//				PageData pd = new PageData();
+//				pd.put("id", id);
+//				@SuppressWarnings("unchecked")
+//				List<TDrug> drugs = (List<TDrug>) dao.findForList("DrugMapper.queryDrugById", pd);
+//				TDrug res = null;
+//				if(drugs != null && drugs.size() > 0 )
+//					res = drugs.get(0);
+//				return res;
+//			}
+//		}
     	return t;
     }
     /**
@@ -360,15 +374,18 @@ public class PdssCache {
      * @throws Exception 
      */
     public List<PageData> getDiseageVsDiag(final String Diag_Code) throws Exception{
-    	List<PageData> t = cacheTemplate.cache(DiseageVsDiag,Diag_Code, new CacheProcessor<List<PageData>>() {
-			@Override
-			public List<PageData> handle() throws Exception {
-				PageData pd = new PageData();
-				pd.put("diagnosis_code",Diag_Code);
-				List<PageData> r = (List<PageData>) dao.findForObject("DrugMapper.getDiseageVsDiag",pd);
-				return r;
-			}
-		});
+    	List<PageData> t = cacheTemplate.cache(DiseageVsDiag,Diag_Code,null);
+    	
+    	
+//    	 new CacheProcessor<List<PageData>>() {
+// 			@Override
+// 			public List<PageData> handle() throws Exception {
+// 				PageData pd = new PageData();
+// 				pd.put("diagnosis_code",Diag_Code);
+// 				List<PageData> r = (List<PageData>) dao.findForObject("DrugMapper.getDiseageVsDiag",pd);
+// 				return r;
+// 			}
+// 		}
     	return t;
     }
     /**
@@ -379,8 +396,14 @@ public class PdssCache {
      * @throws Exception 
      */
 	public List<TDrugIvEffect> queryDrugIvEffect(final String drugIvCode1,final String drugIvCode2) throws Exception {
-    	List<TDrugIvEffect> t = cacheTemplate.cache(drugIvEffect,drugIvCode1 + "_" + drugIvCode2,null);
 
+		List<TDrugIvEffect> t = null;
+		if (Integer.parseInt(drugIvCode1) > Integer.parseInt(drugIvCode2)) {
+			t = cacheTemplate.cache(drugIvEffect,drugIvCode2 + "_" + drugIvCode1,null);
+		}else
+		{
+			t = cacheTemplate.cache(drugIvEffect,drugIvCode1 + "_" + drugIvCode2,null);
+		}
     	//    	, new CacheProcessor<List<TDrugIvEffect>>() {
 //			@Override
 //			public List<TDrugIvEffect> handle() throws Exception {
@@ -449,16 +472,16 @@ public class PdssCache {
      * @return
      * @throws Exception 
      */
-    public List<TDrugUseDetail> queryDrugDudList(List<TDrug> drugs ) throws Exception
-    {
-        List<TDrugUseDetail> list = new ArrayList<TDrugUseDetail>();
-        for(TDrug drug:drugs)
-        {  
-        	TDrugUseDetail dud = (TDrugUseDetail)getDud(drug.getDRUG_CLASS_ID());
-        	list.add(dud);
-        }
-        return list;
-    }
+//    public List<TDrugUseDetail> queryDrugDudList(List<TDrug> drugs ) throws Exception
+//    {
+//        List<TDrugUseDetail> list = new ArrayList<TDrugUseDetail>();
+//        for(TDrug drug:drugs)
+//        {  
+//        	TDrugUseDetail dud = (TDrugUseDetail)getDud(drug.getDRUG_CLASS_ID());
+//        	list.add(dud);
+//        }
+//        return list;
+//    }
     /**
      * 药品  特殊人群，给药途径
      * @param drugClass
@@ -468,16 +491,18 @@ public class PdssCache {
     public TDrugUseDetail getDud(final String drugClass) throws Exception
     {
     	if(drugClass == null || "".equals(drugClass)) return null;
-    	TDrugUseDetail t = cacheTemplate.cache(dudCache , drugClass, new CacheProcessor<TDrugUseDetail>() {
-			@Override
-			public TDrugUseDetail handle() throws Exception {
-				PageData pd = new PageData();
-				pd.put("DRUG_CLASS_ID", drugClass);
-				TDrugUseDetail r = (TDrugUseDetail) dao.findForObject("DrugMapper.getDudInfoById",drugClass);
-				pd = null;
-				return r;
-			}
-		});
+    	TDrugUseDetail t = cacheTemplate.cache(dudCache , drugClass,null);
+    	
+//    	 new CacheProcessor<TDrugUseDetail>() {
+// 			@Override
+// 			public TDrugUseDetail handle() throws Exception {
+// 				PageData pd = new PageData();
+// 				pd.put("DRUG_CLASS_ID", drugClass);
+// 				TDrugUseDetail r = (TDrugUseDetail) dao.findForObject("DrugMapper.getDudInfoById",drugClass);
+// 				pd = null;
+// 				return r;
+// 			}
+// 		}
     	return t;
     	
     }
@@ -525,16 +550,17 @@ public class PdssCache {
      */
     public List<TAllergIngrDrug> getAid(final String allergenID) throws Exception
     {
-    	List<TAllergIngrDrug> t = cacheTemplate.cache(aidCache,allergenID, new CacheProcessor<List<TAllergIngrDrug>>() {
-			@Override
-			public List<TAllergIngrDrug> handle() throws Exception {
-				PageData pd = new PageData();
-				pd.put("drug_allergen_id", allergenID);
-				List<TAllergIngrDrug> r = (List<TAllergIngrDrug>) dao.findForObject("InfoMapper.getAidInfoById",pd);
-				pd = null;
-				return r;
-			}
-		});
+    	List<TAllergIngrDrug> t = cacheTemplate.cache(aidCache,allergenID,null);
+//    	new CacheProcessor<List<TAllergIngrDrug>>() {
+//			@Override
+//			public List<TAllergIngrDrug> handle() throws Exception {
+//				PageData pd = new PageData();
+//				pd.put("drug_allergen_id", allergenID);
+//				List<TAllergIngrDrug> r = (List<TAllergIngrDrug>) dao.findForObject("InfoMapper.getAidInfoById",pd);
+//				pd = null;
+//				return r;
+//			}
+//		}
     	return t;
     	
     }
@@ -547,9 +573,9 @@ public class PdssCache {
      * @return
      * @throws Exception 
      */
-    public  List<TDrugDosage> getDdg(final String drugClass ,final String administation ) throws Exception
+    public  List<TDrugDosage> getDdg(final String dosageClass ,final String administation ) throws Exception
     {
-    	List<TDrugDosage> t = cacheTemplate.cache(ddgCache, drugClass + "_" + administation , null);
+    	List<TDrugDosage> t = cacheTemplate.cache(ddgCache, dosageClass + "_" + administation , null);
     	
 //    	 new CacheProcessor<List<TDrugDosage>>() {
 // 			@Override
@@ -574,16 +600,16 @@ public class PdssCache {
     * @return
      * @throws Exception 
     */
-    public List<TDrugPerformFreqDict> queryDrugPerfoms(String[] performIDs) throws Exception {
-        List<TDrugPerformFreqDict> list = new ArrayList<TDrugPerformFreqDict>();
-            for(String performID:performIDs) {
-            	TDrugPerformFreqDict t = queryDrugPerfom(performID);
-            	if(t!=null){
-            		list.add(t);
-            	}
-            }
-        return list;
-    }
+//    public List<TDrugPerformFreqDict> queryDrugPerfoms(String[] performIDs) throws Exception {
+//        List<TDrugPerformFreqDict> list = new ArrayList<TDrugPerformFreqDict>();
+//            for(String performID:performIDs) {
+//            	TDrugPerformFreqDict t = queryDrugPerfom(performID);
+//            	if(t!=null){
+//            		list.add(t);
+//            	}
+//            }
+//        return list;
+//    }
     
     /**
      * 医嘱执行频率  code 
@@ -662,7 +688,7 @@ public class PdssCache {
 	}
 	
 	/**
-	 * 不良反应字典
+	 * 不良反应字典 加载
 	 * @param drugClassID
 	 * @param adminID
 	 * @return
@@ -681,41 +707,45 @@ public class PdssCache {
      * @throws Exception 
      */
 	public TMedicareCatalog queryTMedicareCatalog(final String DRUG_ID) throws Exception {
-    	TMedicareCatalog t = cacheTemplate.cache(drugMedicare, DRUG_ID , new CacheProcessor<TMedicareCatalog>() {
-			@Override
-			public TMedicareCatalog handle() throws Exception {
-				PageData pd = new PageData();
-				pd.put("DRUG_ID", DRUG_ID);
-				TMedicareCatalog r = (TMedicareCatalog) dao.findForObject("DrugMapper.queryTMedicareCatalog",pd);
-				pd = null;
-				return r;
-			}
-		});
+    	TMedicareCatalog t = cacheTemplate.cache(drugMedicare, DRUG_ID , null);
+    	
+//    	new CacheProcessor<TMedicareCatalog>() {
+//			@Override
+//			public TMedicareCatalog handle() throws Exception {
+//				PageData pd = new PageData();
+//				pd.put("DRUG_ID", DRUG_ID);
+//				TMedicareCatalog r = (TMedicareCatalog) dao.findForObject("DrugMapper.queryTMedicareCatalog",pd);
+//				pd = null;
+//				return r;
+//			}
+//		})
     	return t;
 	}
 	
 	public TMedicareRslt getDrugMedicareRslt(final String drugID) throws Exception {
-		TMedicareRslt t = cacheTemplate.cache(drugMedicareRslt, drugID , new CacheProcessor<TMedicareRslt>() {
-			@Override
-			public TMedicareRslt handle() throws Exception {
-				TDrug drug = queryDrugById(drugID);
-                if(drug == null) return null;
-            	TMedicareRslt mdrsl = new TMedicareRslt();
-                TMedicareCatalog  mcare = queryTMedicareCatalog(drug.getDRUG_NO_LOCAL());
-                if(mcare == null){
-                    mdrsl.setFlag(false);
-                    mdrsl.setAlertInfo("该药为医保外用药");
-                    mdrsl.setMemo(new ArrayList<TMemo>());
-                }else{
-                    mdrsl.setFlag(true);
-                    List<TMemo> memos = queryMemoList(mcare.getDRUG_ID());
-                    mdrsl.setMemo(memos);
-                }
-                mdrsl.setDrug(drug);
-                mdrsl.setMedicareCatalog(mcare);
-                return mdrsl;
-			}
-		});
+		TMedicareRslt t = cacheTemplate.cache(drugMedicareRslt, drugID , null);
+		
+//		new CacheProcessor<TMedicareRslt>() {
+//			@Override
+//			public TMedicareRslt handle() throws Exception {
+//				TDrug drug = queryDrugById(drugID);
+//                if(drug == null) return null;
+//            	TMedicareRslt mdrsl = new TMedicareRslt();
+//                TMedicareCatalog  mcare = queryTMedicareCatalog(drug.getDRUG_NO_LOCAL());
+//                if(mcare == null){
+//                    mdrsl.setFlag(false);
+//                    mdrsl.setAlertInfo("该药为医保外用药");
+//                    mdrsl.setMemo(new ArrayList<TMemo>());
+//                }else{
+//                    mdrsl.setFlag(true);
+//                    List<TMemo> memos = queryMemoList(mcare.getDRUG_ID());
+//                    mdrsl.setMemo(memos);
+//                }
+//                mdrsl.setDrug(drug);
+//                mdrsl.setMedicareCatalog(mcare);
+//                return mdrsl;
+//			}
+//		}
     	return t;
 	}
 }
