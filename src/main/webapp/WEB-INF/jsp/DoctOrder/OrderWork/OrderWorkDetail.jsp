@@ -123,7 +123,7 @@
 																 <td width="10%" class="info">住院天数:</th>
 																 <th width="15%" > ${ pat.dayCount} </th>
 																 <td width="10%" class="info">诊断:</th>
-																 <th width="15%" >啧啧啧</th>
+																 <th width="15%" >${ pat.DIAGNOSIS_DESC}</th>
 															</tr>
 															
 															<tr>

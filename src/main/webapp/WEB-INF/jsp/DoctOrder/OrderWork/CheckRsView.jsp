@@ -56,10 +56,10 @@
 												<i class="ace-icon fa fa-pencil bigger-120 "></i>
 											</a>
 											</c:if>
-											<a  class="btn btn-minier btn-success" title="刷新点评结果" onclick="$('#checkForm').submit();">
+											<a  class="btn btn-minier btn-success" title="刷新点评结果" onclick="refreshAll();">
 												<i class="ace-icon fa fa-refresh bigger-120"></i>
 											</a>
-											<c:if test="${modifyFlag==1 }">
+											<c:if test="${empty expert_id && modifyFlag==1 }">
 											&nbsp;
 											|
 											&nbsp;
@@ -99,7 +99,7 @@
 													</td>
 													<td style="width: 80px;" class='center' > ${rsTypeDict.get(rs.RS_DRUG_TYPE).rs_type_name }</td>
 													<td >${rs.drug_id1_name } 
-														<c:if test="${rsTypeDict.get(rs.RS_COUNT) == 2}"> 
+														<c:if test="${rsTypeDict.get(rs.RS_DRUG_TYPE).RS_COUNT == 2}"> 
 														<font color="red">与</font> ${rs.drug_id2_name } 
 														 </c:if>
 													</td>
@@ -221,6 +221,7 @@ function delCheckRs(id){
 			var url = path+"/DoctOrder/delCheckRs.do?RS_ID="+id;
 			$.get(url,function(data){
 				if(data.result=="success"){
+					refreshDoctFrame();
 					$("#checkForm").submit();
 				}else{
 					bootbox.dialog({
@@ -272,6 +273,7 @@ function delCheckRsBatch(){
 				cache: false,
 				success: function(data){
 					if(data.result=="success"){
+						refreshDoctFrame();
 						$("#checkForm").submit();
 					}else{
 						$(top.hangge());
@@ -303,6 +305,7 @@ function toAddCheckRs(ngroupnum){
 		diag.close();
 		//遮罩层控制，第三层弹窗使用
 		top.$("#_DialogBGDiv").css("z-index",900).css("display","block");
+		refreshDoctFrame();
 		$("#checkForm").submit();
 	};
 	diag.show();
@@ -361,6 +364,9 @@ function saveIsCheckTrue(){
 			var url = path+"/DoctOrder/setCheckRsStatus.do?"+$("#checkForm").serialize();
 			$.get(url,function(data){
 				if(data.result=="success"){
+					if(ISCHECKTRUE==0){
+						refreshDoctFrame();
+					}
 					$("#checkForm").submit();
 				}else{
 					bootbox.dialog({
@@ -389,10 +395,19 @@ function expertOrders(){
 		//遮罩层控制，第三层弹窗使用
 		top.$("#_DialogBGDiv").css("z-index",900).css("display","block");
 		//刷新下方iframe列表
-		parent.DoctFrame.location.href = parent.$("#DoctFrame").attr("src");
+		refreshDoctFrame();
 		$("#checkForm").submit();
 	};
 	diag.show();
+}
+function refreshAll(){
+	//刷新下方iframe列表
+	refreshDoctFrame();
+	$("#checkForm").submit();
+}
+function refreshDoctFrame(){
+	//刷新下方iframe列表
+	parent.DoctFrame.location.href = parent.$("#DoctFrame").attr("src");
 }
 </script>
 </html>

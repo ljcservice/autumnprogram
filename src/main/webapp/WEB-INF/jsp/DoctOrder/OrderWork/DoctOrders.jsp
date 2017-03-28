@@ -195,7 +195,7 @@
 								<c:when test="${not empty DoctOrders}">
 									<c:forEach items="${DoctOrders}" var="order" varStatus="vs">
 										<tr ondblclick="orderCheck(this)"  id="tr${order.order_no}${order.order_sub_no}" 
-											order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_name="${order.order_Text }" >
+											order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_code="${order.order_code}" order_name="${order.order_Text }" >
 											<c:set var="key1" >
 											${order.order_no.toString()}_${order.order_sub_no.toString()}
 											</c:set>
@@ -472,6 +472,7 @@
 		order_no     = jsonObj.order_no;
 		order_sub_no = jsonObj.order_sub_no;
 		order_name   = jsonObj.order_name;
+		order_code   = jsonObj.order_code;
 		checkJson    = $("#checkJsonInfo").val();
 	} 
 	
@@ -484,21 +485,25 @@
 	var order_no     = "";
 	var order_sub_no = "";
 	var order_name   = "";
+	var order_code   = "";
 	var checkJson    = "";
 	
 	function buildJson(){
 		checkJson = "{\"setCount\":" + setCount + ",\"checkName\":\"" + checkName + "\",\"checkFlag\":" + checkFlag + ",\"checkType\":\"" 
-			+ checkType + "\",\"oldColor\":\"" + oldColor + "\",\"order_no\":\"" + order_no + "\",\"order_sub_no\":\"" + order_sub_no + "\",\"order_name\":\"" + order_name + "\",\"count\":\"" + count + "\"}";
-		return checkJson;
+			+ checkType + "\",\"oldColor\":\"" + oldColor + "\",\"order_no\":\"" + order_no + "\",\"order_sub_no\":\"" + order_sub_no + "\",\"order_name\":\"" + order_name + "\",\"order_code\":\"" + order_code + "\",\"count\":\"" + count + "\"}";
+			return checkJson;
 	}
 	
 	function setCheckJsonInfo(){
 		$("#checkJsonInfo").val(buildJson());
 	}
 	
+	var mycun = 0;
 	// 快捷审核页面 保存
 	function dragSave(){
-		
+		if(mycun!=0){
+			return ;
+		}
 		var ngroupnum = $("#ngroupnum").val();
 		var checkText = $("#checkText").val();
 		var patId     = $("#patient_id").val();
@@ -507,17 +512,19 @@
 			type: "POST",
 			url: basePath + 'DoctOrder/SaveShortcut.do', 
 	    	data: {checkType:checkType,order_no:order_no,order_sub_no:order_sub_no
-	    		,order_name:order_name,tmpOrder_Name:tmpOrder_Name,tmpOrder_sub_no:tmpOrder_sub_no
+	    		,order_name:order_name,order_code:order_code,tmpOrder_Name:tmpOrder_Name,tmpOrder_code:tmpOrder_code,tmpOrder_sub_no:tmpOrder_sub_no
 	    		,tmpOrder_no:tmpOrder_no,count:count,checkText:checkText,ngroupnum:ngroupnum,patient_id:patId,visit_id:visitId},
 			dataType:'json',
 			async:false,
 			cache: false,
 			success: function(data){
-				
+				mycun =0;
 				if(data.result=="ok"){
 					$("#dragCheck").hide(500); 
 					reSetCheck();
-					
+					//刷新上个页面
+					parent.CheckRsFrame.location.href = parent.$("#CheckRsFrame").attr("src");
+					//刷新本页面
 					nextPage(${page.currentPage});
 					// 如果成功设置旗子
 					
@@ -531,7 +538,11 @@
 					//trsecond.children.eq(1).html("<div class='fa fa-flag red bigger-130'></div>");
 					
 				}
-			}
+			},
+    		error:function (XMLHttpRequest, textStatus, errorThrown) {
+    			mycun =0;    			
+    		 	alert('网络异常，请稍后重试');
+    		}
 		});
 		
 	}
@@ -607,6 +618,7 @@
 		order_no     = "";
 		order_sub_no = "";
 		order_name   = "";
+		order_code   = "";
 		checkJson    = "";
 		$("#resetCheckId").text("未选择点评项");
 		$("#shortcutNameSpan").text("快捷点评");
@@ -623,6 +635,7 @@
 	}
 	
 	var tmpOrder_Name   = "";
+	var tmpOrder_code   = "";
 	var tmpOrder_no     = "";
 	var tmpOrder_sub_no = "";
 	var tmpColor        = "";
@@ -635,6 +648,7 @@
 			order_no     = "";
 			order_sub_no = "";
 			order_name   = "";
+			order_code  = "";
 			setCount++;
 			setCheckJsonInfo();
 			return ;
@@ -649,6 +663,7 @@
 			var drug1 = $("#checkDrug1");
 			var drug2 = $("#checkDrug2");
 			tmpOrder_Name   = _trObj.getAttributeNode("order_name").value;
+			tmpOrder_code   = _trObj.getAttributeNode("order_code").value;
 			tmpOrder_no     = _trObj.getAttributeNode("order_no").value;
 			tmpOrder_sub_no = _trObj.getAttributeNode("order_sub_no").value;
 			tmpColor        = myColor;
@@ -671,6 +686,7 @@
 			order_no     = _trObj.getAttributeNode("order_no").value;
 			order_sub_no = _trObj.getAttributeNode("order_sub_no").value;
 			order_name   = _trObj.getAttributeNode("order_name").value;
+			order_code   = _trObj.getAttributeNode("order_code").value;
 			setCount--;
 			setCheckJsonInfo();
 		}
