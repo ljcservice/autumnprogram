@@ -40,7 +40,7 @@
 							<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
 								<thead>
 									<tr style="padding-top: 0px;padding-bottom: 0px;">
-										<th colspan="4" style="vertical-middle;">
+										<th colspan="5" style="vertical-middle;">
 										
 											<label>
 												<input type="checkbox" name="delAll" id="delAll" class="ace" onclick="setCheckBox(this);">
@@ -102,6 +102,7 @@
 														<font color="red">与</font> ${rs.drug_id2_name } 
 														 </c:if>
 													</td>
+													<td>${rs.CHECKDATE}</td>
 													<td style="width: 300px;">
 														<c:if test="${modifyFlag==1 }">
 														<a class="btn btn-minier btn-danger"  onclick="delCheckRs('${rs.rs_id }');">
@@ -114,7 +115,7 @@
 													</td>
 												</tr>
 												<tr>
-													<td colspan="3">&nbsp;&nbsp;&nbsp;&nbsp; ${rs.ALERT_HINT } </td>
+													<td colspan="4">&nbsp;&nbsp;&nbsp;&nbsp; ${rs.ALERT_HINT } </td>
 												</tr>
 											</c:forEach>
 										</c:when>
