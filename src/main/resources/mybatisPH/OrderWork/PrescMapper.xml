@@ -16,10 +16,18 @@
 		<if test="pd.keywords!= null and pd.keywords != ''">
 			and
 				(
-					 USERNAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-					 or
-					 NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 a. DIAGNOSIS_NAMES LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 				)
+		</if>
+		<if test="pd.ORG_NAME!= null and pd.ORG_NAME != ''">
+			and
+					 a. ORG_NAME LIKE CONCAT(CONCAT('%', #{pd.ORG_NAME}),'%')
+		</if>
+		<if test="pd.ISCHECKTRUE != null and pd.ISCHECKTRUE != ''"> <!-- 是否合理-->
+			and t.ISCHECKTRUE = #{pd.ISCHECKTRUE} 
+		</if>
+		<if test="pd.ISORDERCHECK != null and pd.ISORDERCHECK != ''"> <!--点评记录-->
+			and t.ISORDERCHECK = #{pd.ISORDERCHECK}
 		</if>
 		order by ORDER_DATE desc
 	</select>
