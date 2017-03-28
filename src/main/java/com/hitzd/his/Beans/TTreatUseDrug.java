@@ -7,14 +7,20 @@ package com.hitzd.his.Beans;
  * @author Administrator
  * 
  */
-public class TTreatUseDrug
+public class TTreatUseDrug extends TBaseBean
 {
-    /* 治疗用药id */
+	private static final long serialVersionUID = 1L;
+	
+	/* 治疗用药id */
     private String ZL_ID;
     /* 病人id号(住院号) */
     private String PATIENT_ID;
     /* 出院次数 */
     private String VISIT_ID;
+    /* 医嘱主序号 */
+    private String order_no;
+    /* 医嘱子序号 */
+    private String order_sub_no;
     /* 科室代码 */
     private String DEPT_CODE;
     /* 科室名称 */
@@ -51,11 +57,11 @@ public class TTreatUseDrug
     private String ADMINISTRATION;
     /* 记录时间 */
     private String REC_DATE;
-    /* */
+    /* 特征日期*/
     private String TWDATE;
-    /* */
+    /* 体征值*/
     private String TWVALUE;
-    /* */
+    /* 体征 */
     private String TWOK;
     /* */
     private String XXDATE;
@@ -345,4 +351,21 @@ public class TTreatUseDrug
     {
         XXOK = xXOK;
     }
+
+	public String getOrder_no() {
+		return order_no;
+	}
+
+	public void setOrder_no(String order_no) {
+		this.order_no = order_no;
+	}
+
+	public String getOrder_sub_no() {
+		return order_sub_no;
+	}
+
+	public void setOrder_sub_no(String order_sub_no) {
+		this.order_sub_no = order_sub_no;
+	}
+    
 }

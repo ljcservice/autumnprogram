@@ -3,6 +3,8 @@ package com.ts.entity.pdss.pdss.RSBeans;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
+
 import com.hitzd.his.Beans.TPatOrderDrug;
 import com.ts.entity.pdss.pdss.Beans.TDrugIvEffect;
 
@@ -10,10 +12,9 @@ import com.ts.entity.pdss.pdss.Beans.TDrugIvEffect;
  * @description 药品配伍审查结果
  */
 
-public class TDrugIvEffectRslt extends TBaseResult implements java.io.Serializable
+public class TDrugIvEffectRslt extends TBaseResult
 {
-
-    private static final long serialVersionUID = 1L;
+//    private static final long serialVersionUID = 1L;
 
     public TDrugIvEffectRslt()
     {
@@ -41,7 +42,8 @@ public class TDrugIvEffectRslt extends TBaseResult implements java.io.Serializab
         drug2 = (adrug2);
         this.recMainNo2 = adrug2.getRecMainNo();
         this.recSubNo2  = adrug2.getRecSubNo();
-        dies   = adies;
+//        dies   = adies;
+        dies.addAll(adies);
         alertLevel = "";
         alertHint  = "";
         alertCause = "";
@@ -67,27 +69,31 @@ public class TDrugIvEffectRslt extends TBaseResult implements java.io.Serializab
         }
     }
     
-    /**
-     * 
-     * @return
-     */
-    public List<TDrugIvEffect> getTDrugIvEffevtList()
-    {
-    	return this.dies;
-    }
+//    /**
+//     * 
+//     * @return
+//     */
+//    public List<TDrugIvEffect> getTDrugIvEffevtList()
+//    {
+//    	return this.dies;
+//    }
     /**
      * 返回数据集
      * @return
      */
+	@XmlElement(name="getTDrugIvEffect")
     public TDrugIvEffect[] getTDrugIvEffect()
     {
-        return (TDrugIvEffect[])this.dies.toArray(new TDrugIvEffect[0]);
+        return this.dies.toArray(new TDrugIvEffect[0]);
     }
+	
+	@XmlElement(name="getPatOrderDrug1")
     public TPatOrderDrug getPatOrderDrug1()
     {
         return drug1;
     }
 
+	@XmlElement(name="getPatOrderDrug2")
     public TPatOrderDrug getPatOrderDrug2()
     {
         return drug2;

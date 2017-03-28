@@ -45,15 +45,17 @@ public class DrugIvEffectCheckerBean extends Persistent4DB implements  IDrugIvEf
 	/**
 	 * 
 	 * 改造完成
+	 * okay
 	 */
     @Override
     public TDrugSecurityRslt Check(TPatientOrder po)
     {
     	try
     	{
-	        this.setQueryCode("PDSS");
+//	        this.setQueryCode("PDSS");
 	        TDrugSecurityRslt Result = new TDrugSecurityRslt();
 	    	TPatOrderDrug[] pods = po.getPatOrderDrugs();
+	    	Map<String, TDrug> mapDrugs = pdssCache.queryDrugMap(pods);
 	    	// 药品分组
 	    	Map<String, List<TPatOrderDrug>> group = new HashMap<String, List<TPatOrderDrug>>(); 
 	    	for (int i = 0; i < pods.length; i++)
@@ -65,7 +67,7 @@ public class DrugIvEffectCheckerBean extends Persistent4DB implements  IDrugIvEf
 	    		// TODO: 此处用3代表了注射的用药途径，正确的做法是调用DrugUtils.isZSDrug(adm.getADMINISTRATION_ID)或者
 	    		// DrugUtils.isZSDrug(pod.getAdministrationID())，根据isZSDrug的数据来源来确定，来源为His选第二个，来源为param选第一个
 	    		String configAdmin = Config.getParamValue("DrugIvEffectAdmin") + ",";
-	    		if (configAdmin.equals(adm.getADMINISTRATION_ID() + ","))
+	    		if (configAdmin.indexOf(adm.getADMINISTRATION_ID() + ",") != -1)
 	    		{
 	    			List<TPatOrderDrug> list = group.get(pod.getRecMainNo());
 	    			if (list == null)
@@ -95,12 +97,14 @@ public class DrugIvEffectCheckerBean extends Persistent4DB implements  IDrugIvEf
 		        for (int i = 0; i < indexList.size(); i++)
 		        {
 		        	TPatOrderDrug podDrugA = indexList.get(i);
-		        	TDrug drugA        = pdssCache.queryDrugById(podDrugA.getDrugID());
+		        	TDrug drugA        = mapDrugs.get(podDrugA.getDrugID());//pdssCache.queryDrugById(podDrugA.getDrugID());
+		        	if(drugA == null || drugA.getIV_CLASS_CODE() == null || "".equals(drugA.getIV_CLASS_CODE())) continue;
 		        	String drugIvCode1 = drugA.getIV_CLASS_CODE();
 		        	for (int j = i + 1; j < indexList.size(); j++)
 		        	{
 		        		TPatOrderDrug podDrugB = indexList.get(j);
-		        		TDrug drugB = pdssCache.queryDrugById(podDrugB.getDrugID());
+		        		TDrug drugB = mapDrugs.get(podDrugB.getDrugID()); //pdssCache.queryDrugById(podDrugB.getDrugID());
+		        		if(drugB == null || drugB.getIV_CLASS_CODE() == null || "".equals(drugB.getIV_CLASS_CODE())) continue;
 		        		String drugIvCode2 = drugB.getIV_CLASS_CODE();
 		        		/* 数据集缓存中寻找*/
 		        		//TDrugIvEffectRslt cacheInfo = BeanRSCache.getDrugIvEffectRslt(drugA.getDRUG_NO_LOCAL(), drugB.getDRUG_NO_LOCAL());
@@ -118,7 +122,7 @@ public class DrugIvEffectCheckerBean extends Persistent4DB implements  IDrugIvEf
 	        		    	drugB.setRecMainNo(podDrugB.getRecMainNo());
 	        		    	drugB.setRecSubNo(podDrugB.getRecSubNo());
 	        		    	
-		                    drugiveff.addIvEffect(podDrugA,podDrugB, list);
+		                    drugiveff.addIvEffect(podDrugA,podDrugB,list);
 		                    drugiveff.setRecMainNo(podDrugA.getRecMainNo());
 		                    drugiveff.setRecSubNo(podDrugA.getRecSubNo());
 		                    drugiveff.setRecMainNo2(podDrugB.getRecMainNo());

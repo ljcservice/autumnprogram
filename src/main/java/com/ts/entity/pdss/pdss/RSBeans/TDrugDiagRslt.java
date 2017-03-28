@@ -3,6 +3,8 @@ package com.ts.entity.pdss.pdss.RSBeans;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
+
 import com.ts.entity.pdss.pdss.Beans.TDrug;
 import com.ts.entity.pdss.pdss.Beans.TDrugDiagInfo;
 import com.ts.entity.pdss.pdss.Beans.TDrugDiagRel;
@@ -60,6 +62,7 @@ public class TDrugDiagRslt extends TBaseResult implements Serializable
      * 获得药品字段数组
      * @return
      */
+    @XmlElement(name="getDrug")
     public TDrug getDrug()
     {
         return this.drug;
@@ -78,6 +81,7 @@ public class TDrugDiagRslt extends TBaseResult implements Serializable
      *  获得药品禁忌信息
      * @return
      */
+    @XmlElement(name="getDrugDiagInfo")
     public TDrugDiagInfo getDrugDiagInfo()
     {
         return this.drugDiaInfo;

@@ -9,8 +9,8 @@ import com.hitzd.his.Beans.TBaseBean;
  */
 public class TDrugSideDict extends TBaseBean
 {
-    private static final long serialVersionUID  = 1L;
-    /* 副作用代码 */
+	private static final long serialVersionUID = 1L;
+	/* 副作用代码 */
     private String            SIDE_ID           = "";
     /* 副作用描述 */
     private String            DIAGNOSIS_DESC    = "";
@@ -28,6 +28,9 @@ public class TDrugSideDict extends TBaseBean
     private String            ADMINISTRATION_ID = "";
     /* 药品类别  */
     private String            DRUG_CLASS_ID     = "";
+    
+    private String            diagnosis_code    = "";
+    private String   		  diagnosis_name    = "";
     
     public String getSIDE_ID()
     {
@@ -105,6 +108,16 @@ public class TDrugSideDict extends TBaseBean
     {
         Diagnosis_dict_name = diagnosis_dict_name;
     }
-   
-    
+	public String getDiagnosis_code() {
+		return diagnosis_code;
+	}
+	public void setDiagnosis_code(String diagnosis_code) {
+		this.diagnosis_code = diagnosis_code;
+	}
+	public String getDiagnosis_name() {
+		return diagnosis_name;
+	}
+	public void setDiagnosis_name(String diagnosis_name) {
+		this.diagnosis_name = diagnosis_name;
+	}
 }

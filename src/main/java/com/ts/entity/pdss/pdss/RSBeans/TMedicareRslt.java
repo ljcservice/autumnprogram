@@ -9,7 +9,8 @@ import com.ts.entity.pdss.pdss.Beans.TDrug;
 
 public class TMedicareRslt extends TBaseResult 
 {
-    /* 药品 */
+	private static final long serialVersionUID = 1L;
+	/* 药品 */
     private TDrug  drug;
 	/* */
 	private TMedicareCatalog medicareCatalog;

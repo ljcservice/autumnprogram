@@ -8,6 +8,8 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
+
 import com.ts.entity.pdss.pdss.Beans.TDrug;
 import com.ts.entity.pdss.pdss.Beans.TDrugInteractionInfo;
 
@@ -42,6 +44,7 @@ public class TDrugInteractionRslt extends TBaseResult
         return Result;
     }
 
+    @XmlElement(name="getListDruginfo")
     public List<TDrugInteractionInfo> getListDruginfo()
     {
     	return drugInfos;

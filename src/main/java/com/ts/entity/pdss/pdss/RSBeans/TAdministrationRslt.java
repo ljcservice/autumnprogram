@@ -2,6 +2,8 @@ package com.ts.entity.pdss.pdss.RSBeans;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlElement;
+
 import com.hitzd.his.Beans.TPatOrderDrug;
 import com.ts.entity.pdss.pdss.Beans.TDrug;
 import com.ts.entity.pdss.pdss.Beans.TDrugUseDetail;
@@ -40,6 +42,7 @@ public class TAdministrationRslt extends TBaseResult implements Serializable
      * 
      * @return
      */
+    @XmlElement(name="getPatOrderDrug")
     public TPatOrderDrug getPatOrderDrug()
     {
         return this.pod;
@@ -50,6 +53,7 @@ public class TAdministrationRslt extends TBaseResult implements Serializable
      * 
      * @return
      */
+    @XmlElement(name="getDrug")
     public TDrug getDrug()
     {
         return this.drug;
@@ -60,6 +64,7 @@ public class TAdministrationRslt extends TBaseResult implements Serializable
      * 
      * @return
      */
+    @XmlElement(name="getDrugUseDetail")
     public TDrugUseDetail getDrugUseDetail()
     {
         return this.dud;

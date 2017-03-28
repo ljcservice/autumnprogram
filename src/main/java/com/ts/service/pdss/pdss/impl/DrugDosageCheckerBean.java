@@ -74,9 +74,7 @@ public class DrugDosageCheckerBean extends Persistent4DB implements IDrugDosageC
 	            /* 药品*/
 	            TDrug drug = pdssCache.queryDrugById(pod.getDrugID());
 	            TAdministration administr = pdssCache.queryAdministration(pod.getAdministrationID()) ;//(new String[]{pod.getAdministrationID()}, null, query);
-	            		
-	            if(drug == null || administr == null) 	continue;
-	            if(drug.getDOSE_CLASS_ID() == null)     continue;
+	            if(drug == null || administr == null || drug.getDOSE_CLASS_ID() == null) 	continue;
 	            /* 将缓存中 获取 剂量  */
 	            List<TDrugDosage> ddgs = pdssCache.getDdg(drug.getDOSE_CLASS_ID(), administr.getADMINISTRATION_ID());
 	            if(ddgs.size() <= 0)  continue;

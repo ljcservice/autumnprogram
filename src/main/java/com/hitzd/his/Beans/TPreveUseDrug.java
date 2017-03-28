@@ -18,6 +18,10 @@ public class TPreveUseDrug extends TBaseBean
     private String            PATIENT_ID;
     /* 出院次数 */
     private String            VISIT_ID;
+    /* 医嘱主序号 */
+    private String 			  order_no;
+    /* 医嘱子序号 */
+    private String  		  order_sub_no;
     /* 科室代码 */
     private String            DEPT_CODE;
     /* 科室名称 */
@@ -348,4 +352,20 @@ public class TPreveUseDrug extends TBaseBean
     {
         TSYQ = tSYQ;
     }
+
+	public String getOrder_no() {
+		return order_no;
+	}
+
+	public void setOrder_no(String order_no) {
+		this.order_no = order_no;
+	}
+
+	public String getOrder_sub_no() {
+		return order_sub_no;
+	}
+
+	public void setOrder_sub_no(String order_sub_no) {
+		this.order_sub_no = order_sub_no;
+	}
 }

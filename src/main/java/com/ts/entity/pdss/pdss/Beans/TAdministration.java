@@ -10,7 +10,8 @@ import com.hitzd.his.Beans.TBaseBean;
  */
 public class TAdministration extends TBaseBean
 {
-    /* 本地给药途径编码 */
+	private static final long serialVersionUID = 1L;
+	/* 本地给药途径编码 */
     private String ADMINISTRATION_NO_LOCAL;
     /* 本地给药途径名称 */
     private String ADMINISTRATION_NAME_LOCAL;

@@ -71,7 +71,7 @@ public class DrugSpecPeopleCheckerBean extends Persistent4DB implements IDrugSpe
 	            TDrug drug = drugMap.get(pod.getDrugID()); // CommonUtils.getDrugInfoOne(drugs, pod);
 	            if(drug == null)
 	                continue;
-	            /* 特殊信息*/
+	            /* 药品信息*/
 	            TDrugUseDetail dud = duds.get(drug.getDRUG_CLASS_ID());
 	            /*
 	            for(int i= 0 ;i<duds.size();i++)

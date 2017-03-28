@@ -1,5 +1,7 @@
 package com.ts.entity.pdss.pdss.RSBeans;
 
+import javax.xml.bind.annotation.XmlElement;
+
 import com.ts.entity.pdss.pdss.Beans.TDrug;
 import com.ts.entity.pdss.pdss.Beans.TDrugSideDict;
 
@@ -41,6 +43,7 @@ public class TDrugHarmfulRslt extends TBaseResult implements
      * 
      * @return
      */
+	@XmlElement(name="getDrugSide")
     public TDrugSideDict getDrugSide()
     {
         return  this.drugside;
@@ -50,6 +53,7 @@ public class TDrugHarmfulRslt extends TBaseResult implements
      * 返回药品
      * @return
      */
+	@XmlElement(name="getDrug")
     public TDrug getDrug()
     {
         return this.drug;

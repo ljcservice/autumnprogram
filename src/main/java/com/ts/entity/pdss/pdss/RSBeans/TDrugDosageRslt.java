@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
+
 import com.ts.entity.pdss.pdss.Beans.TDrug;
 
 /**
@@ -37,6 +39,7 @@ public class TDrugDosageRslt extends TBaseResult implements Serializable
      * 获得所用药信息
      * @return
      */
+    @XmlElement(name="getPods")
     public TDrug getPods()
     {
         return this.drug;
@@ -47,6 +50,7 @@ public class TDrugDosageRslt extends TBaseResult implements Serializable
      * @param index
      * @return
      */
+    @XmlElement(name="getPerformInfo")
     public String[] getPerformInfo()
     {
         return (String[])this.performInfos.toArray(new String[0] ) ;

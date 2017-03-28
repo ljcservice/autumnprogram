@@ -1,5 +1,6 @@
 package com.ts.service.pdss.pdss.Cache;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -16,12 +17,16 @@ import com.ts.entity.pdss.mas.Beans.TMemo;
 import com.ts.entity.pdss.pdss.Beans.TAdministration;
 import com.ts.entity.pdss.pdss.Beans.TAllergIngrDrug;
 import com.ts.entity.pdss.pdss.Beans.TDrug;
+import com.ts.entity.pdss.pdss.Beans.TDrugDiagInfo;
 import com.ts.entity.pdss.pdss.Beans.TDrugDiagRel;
 import com.ts.entity.pdss.pdss.Beans.TDrugDosage;
 import com.ts.entity.pdss.pdss.Beans.TDrugInteractionInfo;
 import com.ts.entity.pdss.pdss.Beans.TDrugIvEffect;
 import com.ts.entity.pdss.pdss.Beans.TDrugPerformFreqDict;
+import com.ts.entity.pdss.pdss.Beans.TDrugSideDict;
 import com.ts.entity.pdss.pdss.Beans.TDrugUseDetail;
+import com.ts.entity.pdss.pdss.RSBeans.TDrugInteractionRslt;
+import com.ts.service.cache.CacheProcessor;
 import com.ts.service.cache.CacheTemplate;
 import com.ts.util.PageData;
 
@@ -38,36 +43,41 @@ public class InitPdssCache {
 	@Resource(name = "daoSupportPdss")
 	private DaoSupportPdss dao;
 	
-	
+	private int showCount = 5000;
 //	@PostConstruct()
 	public void bulidRedisCache(){
 		try
 		{
-//			log.info("内容构建");
-//			log.info("药物禁忌症对应");
-//			setDrugDiagRel();
-//			log.info("用药途径单个缓存");
-//			setAdministration();
-//			log.info("相互作用");
-//			setDrugInteractionInfo();
-//			log.info("药品缓存 view_drug");
-//			setDrugById();
-//			log.info(" 查询单个诊断对应的疾病");
-//			setDiseageVsDiag();
-//			log.info("配伍禁忌");
-//			setDrugIvEffect();
-//			log.info("药物成分、药敏、药物分类与药物对照字典  目前放弃");
-//			//getAid();
-//			log.info("药品剂量使用字典");
-//			getDdg();
+			log.info("内容构建");
+			log.info("药物禁忌症对应");
+			setDrugDiagRel();
+			log.info("药物禁忌症信息");
+			setDrugDiagInfo();
+			log.info("用药途径单个缓存");
+			setAdministration();
+			log.info("相互作用");
+//	暂时不用 		setDrugInteractionInfo();
+			setDrugInteractionMap();
+			log.info("药品缓存 view_drug");
+			setDrugById();
+			log.info(" 查询单个诊断对应的疾病");
+			setDiseageVsDiag();
+			log.info("配伍禁忌");
+			setDrugIvEffect();
+			log.info("药物成分、药敏、药物分类与药物对照字典  目前放弃");
+			setAid();
+			log.info("药品剂量使用字典");
+			setDdg();
+			log.info("不良反应");
+			setDrugSideDict();
 			log.info("医嘱执行频率");
-			queryDrugPerfom();
+			setDrugPerfom();
 			log.info("特殊人群");
 			setDud();
-			log.info("医保内容");
-			queryMemoList();
-			log.info("医保用药 适应列表 ");
-			queryTMedicareCatalog();
+//			log.info("医保内容");
+//			setMemoList();
+//			log.info("医保用药 适应列表 ");
+//			setTMedicareCatalog();
 			log.info("内容构建完成");
 		}
 		catch(Exception e )
@@ -84,7 +94,7 @@ public class InitPdssCache {
 	public void setDrugDiagRel() throws Exception {
 		Page page = new Page();
 		int pageNum = 1;
-		page.setShowCount(3000);
+		page.setShowCount(showCount);
 		page.setTotalPage(pageNum);
 		while( pageNum == 1 || pageNum <= page.getTotalPage()){
 			page.setCurrentPage(pageNum);
@@ -95,16 +105,45 @@ public class InitPdssCache {
 				cacheTemplate.setObject(PdssCache.ddrCache, drug.getDRUG_CLASS_ID() + "_" + drug.getADMINISTRATION_ID(),-1, drug);
 			}
 			pageNum = page.getCurrentPage() + 1;
+			log.info("药物禁忌症对应-- 第" + pageNum +"页");
 		}
 	}
 
+	
+	/**
+	 * 药品禁忌症信息表
+	 * @throws Exception
+	 */
+	public void setDrugDiagInfo() throws Exception{
+		Page page = new Page();
+		int pageNum = 1;
+		page.setShowCount(showCount);
+		page.setTotalPage(pageNum);
+		String key = null;
+		List<TDrugDiagInfo> ddiRs = new ArrayList<TDrugDiagInfo>();
+//		while( pageNum == 1 || pageNum <= page.getTotalPage()){
+//			page.setCurrentPage(pageNum);
+			List<TDrugDiagInfo> ddis = (List<TDrugDiagInfo>) dao.findForList("DrugMapper.getDrugDiagInfos", page);
+			for(TDrugDiagInfo ddi : ddis){
+				if(key != null && !key.equals(ddi.getCONTRAIND_ID()) ){
+					cacheTemplate.setObject(PdssCache.ddisCache, key ,-1, ddiRs);
+					ddiRs = new ArrayList<TDrugDiagInfo>();
+				}
+				key = ddi.getCONTRAIND_ID();
+				ddiRs.add(ddi);
+			}
+//			pageNum = page.getCurrentPage() + 1;
+//		}
+	}
+	
+	
 	/**
 	 * 用药途径单个缓存查询
 	 */
 	public void setAdministration() throws Exception {
 		Page page = new Page();
 		int pageNum = 1;
-		page.setShowCount(3000);
+		page.setShowCount(showCount);
 		page.setTotalPage(pageNum);
 		while( pageNum == 1 || pageNum <= page.getTotalPage())
 		{
@@ -123,6 +162,7 @@ public class InitPdssCache {
 				cacheTemplate.setObject(PdssCache.drugadmini ,"name_" + t.getADMINISTRATION_NAME_LOCAL(), -1, t);
 			}
 			pageNum = page.getCurrentPage()+1;
+			log.info("用药途径单-- 第" + pageNum +"页");
 		}
 	}
 
@@ -138,7 +178,7 @@ public class InitPdssCache {
 	public void setDrugInteractionInfo() throws Exception {
 		Page page = new Page();
 		int pageNum = 1;
-		page.setShowCount(3000);
+		page.setShowCount(showCount);
 		page.setTotalPage(pageNum);
 		while( pageNum == 1 || pageNum <= page.getTotalPage()){
 			page.setCurrentPage(pageNum);
@@ -149,8 +189,86 @@ public class InitPdssCache {
 				cacheTemplate.setObject(PdssCache.diiCache ,t.getINGR_CLASS_CODE1() + "_" + t.getINGR_CLASS_CODE2(), -1, t);
 			}
 			pageNum = page.getCurrentPage()+1;
+			log.info("相互作用-- 第" + pageNum +"页");
 		}
 	}
+	
+	public void setDrugInteractionMap()	throws Exception {
+		
+		Page page = new Page();
+		int pageNum = 1;
+		page.setShowCount(showCount);
+		page.setTotalPage(pageNum);
+		List<TDrug> drugs = (List<TDrug>) dao.findForList("DrugMapper.queryDrugPage",page);
+		for(int i =0 ;i<drugs.size() ; i++)
+		{
+			for(int j = i ; j < drugs.size() ; j++)
+			{
+				final TDrug drugA = drugs.get(i);
+				final TDrug drugB = drugs.get(j);
+				String key1 = drugA.getDRUG_NO_LOCAL();
+				String key2 = drugB.getDRUG_NO_LOCAL();
+//				TDrugInteractionRslt t = 
+				cacheTemplate.cache(PdssCache.drugInteraction , key1 + "_" + key2,-1, new CacheProcessor<TDrugInteractionRslt>() {
+					@Override
+					public TDrugInteractionRslt handle() {
+						TDrugInteractionRslt res = new TDrugInteractionRslt();
+						try {
+		                    // 药品A成分 分割后 组装sql
+		                    if(drugA.getINGR_CLASS_IDS() == null)
+		                        return null;
+		                    String[] ingrclassidsA = drugA.getINGR_CLASS_IDS().split(",");
+		                    // 药品B成分  分割后 组装sql
+		                    if(drugB == null || drugB.getINGR_CLASS_IDS() == null)
+		                    	return null;
+		                    String[] ingrclassidsB = drugB.getINGR_CLASS_IDS().split(",");
+		                    Long x = System.currentTimeMillis();
+		                    List<TDrugInteractionInfo> list = queryDrugInteractionInfo(ingrclassidsA,ingrclassidsB);
+		                    if(list != null && list.size() > 0){
+		                    	res.addDrugInfo(new TDrug(drugA), new TDrug(drugB), list);
+		                    }
+		                    else {
+		                    	return null;
+		                    }
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						return res;
+					}
+				});
+			}
+		}
+	}
+	
+	/**
+     * 药品互作用信息，
+     * 
+     * @param Code1
+     * @param Code2
+     * @param wheres
+     * @param query
+     * @return
+     * @throws Exception 
+     */
+    public List<TDrugInteractionInfo> queryDrugInteractionInfo(String[] Codes1, String[] Codes2) throws Exception
+    {
+    	 
+    	PageData pd = new PageData();
+    	StringBuffer code1 = new StringBuffer();
+    	StringBuffer code2 = new StringBuffer();
+    	for(String s: Codes1){
+    		code1.append(s).append(",");
+    	}
+    	for(String s: Codes2){
+    		code2.append(s).append(",");
+    	}
+    	code1.deleteCharAt(code1.length() - 1 );
+    	code2.deleteCharAt(code2.length() - 1 );
+    	pd.put("code1", code1.toString());
+    	pd.put("code2", code2.toString());	
+    	List<TDrugInteractionInfo>  listRs = (List<TDrugInteractionInfo>) dao.findForList("DrugMapper.getDrugInteraction", pd);
+        return listRs;
+    }
 
 	/**
 	 * 查询单个药品信息，使用缓存
@@ -162,7 +280,7 @@ public class InitPdssCache {
 	public void setDrugById() throws Exception {
 		Page page = new Page();
 		int pageNum = 1;
-		page.setShowCount(3000);
+		page.setShowCount(showCount);
 		page.setTotalPage(pageNum);
 		while( pageNum == 1 || pageNum <= page.getTotalPage()){
 			page.setCurrentPage(pageNum);
@@ -173,6 +291,7 @@ public class InitPdssCache {
 				cacheTemplate.setObject(PdssCache.drugCacheByLocal,t.getDRUG_NO_LOCAL(), -1, t);
 			}
 			pageNum = page.getCurrentPage()+1;
+			log.info("查询单个药品信息，使用缓存-- 第" + pageNum +"页");
 		}
 	}
 
@@ -186,7 +305,7 @@ public class InitPdssCache {
 	public void setDiseageVsDiag() throws Exception {
 		Page page = new Page();
 		int pageNum = 1;
-		page.setShowCount(3000);
+		page.setShowCount(showCount);
 		page.setTotalPage(pageNum);
 		while( pageNum == 1 || pageNum <= page.getTotalPage()){
 			page.setCurrentPage(pageNum);
@@ -197,6 +316,7 @@ public class InitPdssCache {
 				cacheTemplate.setObject(PdssCache.DiseageVsDiag ,t.getString("diagnosis_code"), -1, t);
 			}
 			pageNum = page.getCurrentPage()+1;
+			log.info(" 查询单个诊断对应的疾病，使用缓存-- 第" + pageNum +"页");
 		}
 	}
 
@@ -211,18 +331,92 @@ public class InitPdssCache {
 	public void setDrugIvEffect() throws Exception {
 		Page page = new Page();
 		int pageNum = 1;
-		page.setShowCount(3000);
+		page.setShowCount(showCount);
 		page.setTotalPage(pageNum);
+		String key1 = null;
+		String key2 = null;
+		List<TDrugIvEffect> dieRs = new ArrayList<>();
 		while( pageNum == 1 || pageNum <= page.getTotalPage()){
 			page.setCurrentPage(pageNum);	
 			List<TDrugIvEffect> list = (List<TDrugIvEffect>) dao.findForList("DrugMapper.queryDrugIvEffectPage",page);
-			if (list == null)
-				return;
-			for (TDrugIvEffect t : list) {
-				cacheTemplate.setObject(PdssCache.drugIvEffect, t.getIV_CLASS_CODE1() + "_" + t.getIV_CLASS_CODE2(), -1,t);
+			if (list == null || list.size() == 0)return;
+			for(TDrugIvEffect die  : list){
+				if(key1 != null && key2 != null && (!key1.equals(die.getIV_CLASS_CODE1())|| !key2.equals(die.getIV_CLASS_CODE2()))){
+					cacheTemplate.setObject(PdssCache.drugIvEffect, key1 + "_" + key2, -1,dieRs);
+					dieRs = new ArrayList<TDrugIvEffect>();
+				}
+				key1 = die.getIV_CLASS_CODE1();
+				key2 = die.getIV_CLASS_CODE2();
+				dieRs.add(die);
 			}
 			pageNum = page.getCurrentPage() + 1;
+			log.info("配伍信息,使用缓存-- 第" + pageNum +"页");
 		}
+//		while( pageNum == 1 || pageNum <= page.getTotalPage()){
+//			page.setCurrentPage(pageNum);	
+//			List<PageData>  pd = (List<PageData>) dao.findForList("DrugMapper.queryDrugIvEffectGroupPage",page);
+//			if (pd == null || pd.size() == 0)return;
+//			for(PageData p :pd){
+//				List<TDrugIvEffect> list = (List<TDrugIvEffect>) dao.findForList("DrugMapper.queryDrugIvEffectList",p);
+//				cacheTemplate.setObject(PdssCache.drugIvEffect, p.getInt("iv_class_code1") + "_" + p.getInt("iv_class_code2"), -1,list);
+//			}
+//			pageNum = page.getCurrentPage() + 1;
+//		}
+	}
+	
+	
+	/**
+	 * 不良反应 所有信息 使用缓存
+	 * 
+	 * @param Code1
+	 * @param Code2
+	 * @return
+	 * @throws Exception
+	 */
+	public void setDrugSideDict() throws Exception {
+		Page page = new Page();
+		int pageNum = 1;
+		page.setShowCount(showCount);
+		page.setTotalPage(pageNum);
+		String key1 = null;
+		String key2 = null;
+		List<TDrugSideDict> dsdRs = new ArrayList<TDrugSideDict>();
+		while( pageNum == 1 || pageNum <= page.getTotalPage()){
+			page.setCurrentPage(pageNum);	
+			List<TDrugSideDict> list = (List<TDrugSideDict>) dao.findForList("DrugMapper.getTDrugSideDictPage",page);
+			if (list == null || list.size() == 0)return;
+			for(TDrugSideDict did : list){
+				if(key1 != null && key2 != null && (!key1.equals(did.getDRUG_CLASS_ID())|| !key2.equals(did.getADMINISTRATION_ID()))){
+					cacheTemplate.setObject(PdssCache.drugSideDict,key1 + "_" + key2, -1,dsdRs);
+					dsdRs = new ArrayList<TDrugSideDict>();
+				}
+				key1 = did.getDRUG_CLASS_ID();
+				key2 = did.getADMINISTRATION_ID();
+				dsdRs.add(did);
+			}
+			pageNum = page.getCurrentPage() + 1;
+			log.info(" 不良反应 所有信息 使用缓存-- 第" + pageNum +"页");
+		}
+		
+//		for(TDrugIvEffect die  : list){
+//			if(key1 != null && key2 != null && (!key1.equals(die.getIV_CLASS_CODE1())|| !key2.equals(die.getIV_CLASS_CODE2()))){
+//				cacheTemplate.setObject(PdssCache.drugIvEffect, key1 + "_" + key2, -1,list);
+//				dieRs = new ArrayList<TDrugIvEffect>();
+//			}
+//			key1 = die.getIV_CLASS_CODE1();
+//			key2 = die.getIV_CLASS_CODE2();
+//			dieRs.add(die);
+//		}
+//		while( pageNum == 1 || pageNum <= page.getTotalPage()){
+//			page.setCurrentPage(pageNum);	
+//			List<PageData>  pd = (List<PageData>) dao.findForList("DrugMapper.getTDrugSideDictGroupList",page);
+//			if (pd == null || pd.size() == 0)return;
+//			for(PageData p :pd){
+//				List<TDrugIvEffect> list = (List<TDrugIvEffect>) dao.findForList("DrugMapper.getTDrugSideDictList",p);
+//				cacheTemplate.setObject(PdssCache.drugIvEffect, p.getInt("DRUG_CLASS_ID") + "_" + p.getInt("ADMINISTRATION_ID"), -1,list);
+//			}
+//			pageNum = page.getCurrentPage() + 1;
+//		}
 	}
 
 	/**
@@ -235,7 +429,7 @@ public class InitPdssCache {
 	public void setDud() throws Exception {
 		Page page = new Page();
 		int pageNum = 1;
-		page.setShowCount(3000);
+		page.setShowCount(showCount);
 		page.setTotalPage(pageNum);
 		while( pageNum == 1 || pageNum <= page.getTotalPage()){
 			page.setCurrentPage(pageNum);
@@ -246,6 +440,7 @@ public class InitPdssCache {
 				cacheTemplate.setObject(PdssCache.dudCache ,t.getDRUG_CLASS_ID(),-1,t);
 			}
 			pageNum = page.getCurrentPage() + 1;
+			log.info("特殊人群-- 第" + pageNum +"页");
 		}
 	}
 
@@ -257,10 +452,10 @@ public class InitPdssCache {
 	 * @return
 	 * @throws Exception
 	 */
-	public void getAid() throws Exception {
+	public void setAid() throws Exception {
 		Page page = new Page();
 		int pageNum = 1;
-		page.setShowCount(3000);
+		page.setShowCount(showCount);
 		page.setCurrentPage(pageNum);
 		page.setTotalPage(pageNum);
 		while( pageNum == 1 || pageNum <= page.getTotalPage()){
@@ -268,33 +463,43 @@ public class InitPdssCache {
 			if (list == null)
 				return;
 			for (TAllergIngrDrug t : list) {
-				cacheTemplate.setObject(PdssCache.aidCache, t.getALLERG_INGR_DRUG_ID(), -1, t);
+				cacheTemplate.setObject(PdssCache.aidCache, t.getDRUG_CLASS_ID(), -1, t);
 			}
 			pageNum = page.getCurrentPage() + 1;
+			log.info("药物成分、药敏、药物分类与药物对照字典 -- 第" + pageNum +"页");
 		}
 	}
 
 	/**
 	 * 药品剂量使用字典
-	 * 
 	 * @param allergenID
 	 * @param drugClassid
 	 * @return
 	 * @throws Exception
 	 */
-	public void getDdg() throws Exception {
+	public void setDdg() throws Exception {
 		Page page = new Page();
 		int pageNum = 1;
-		page.setShowCount(3000);
+		page.setShowCount(showCount);
 		page.setTotalPage(pageNum);
+		String key1 = null;
+		String key2 = null;
+		List<TDrugDosage> ddgRs = new ArrayList<>();
 		while( pageNum == 1 || pageNum <= page.getTotalPage()){
 			page.setCurrentPage(pageNum);
 			List<TDrugDosage> list = (List<TDrugDosage>) dao.findForList("DrugMapper.getDdgInfoPage", page);
-			if (list == null) return;
-			for (TDrugDosage t : list) {
-				cacheTemplate.setObject(PdssCache.ddgCache, t.getDOSE_CLASS_ID() + "_" + t.getADMINISTRATION_ID(), -1,t);
+			if(list == null || list.size() == 0) return ;
+			for(TDrugDosage ddg : list){
+				if(key1 != null && key2 != null && (!key1.equals(ddg.getDOSE_CLASS_ID())|| !key2.equals(ddg.getADMINISTRATION_ID()))){
+					cacheTemplate.setObject(PdssCache.ddgCache,key1 + "_" + key2, -1,ddgRs);
+					ddgRs = new ArrayList<TDrugDosage>();
+				}
+				key1 = ddg.getDOSE_CLASS_ID();
+				key2 = ddg.getADMINISTRATION_ID();
+				ddgRs.add(ddg);
 			}
 			pageNum = page.getCurrentPage() + 1;
+			log.info("药品剂量使用字典-- 第" + pageNum +"页");
 		}
 	}
 
@@ -305,10 +510,10 @@ public class InitPdssCache {
 	 * @return
 	 * @throws Exception
 	 */
-	public void queryDrugPerfom() throws Exception {
+	public void setDrugPerfom() throws Exception {
 		Page page = new Page();
 		int pageNum = 1;
-		page.setShowCount(3000);
+		page.setShowCount(showCount);
 		page.setTotalPage(pageNum);
 		while( pageNum == 1 || pageNum <= page.getTotalPage()){
 			page.setCurrentPage(pageNum);
@@ -319,9 +524,12 @@ public class InitPdssCache {
 				cacheTemplate.setObject(PdssCache.drugPerform , "name_" + t.getPERFORM_FREQ_DICT_NAME_LOCAL() ,-1,t);
 			}
 			pageNum = page.getCurrentPage()+1;
+			log.info("医嘱执行频率-- 第" + pageNum +"页");
 		}
 	}
 
+//	public void setDiagnons
+	
 	/**
 	 * 医保用药 适应列表
 	 * 
@@ -329,10 +537,10 @@ public class InitPdssCache {
 	 * @return
 	 * @throws Exception
 	 */
-	public void queryMemoList() throws Exception {
+	public void setMemoList() throws Exception {
 		Page page = new Page();
 		int pageNum = 1;
-		page.setShowCount(3000);
+		page.setShowCount(showCount);
 		page.setTotalPage(pageNum);
 		while( pageNum == 1 || pageNum <= page.getTotalPage()){
 			page.setCurrentPage(pageNum);
@@ -342,6 +550,7 @@ public class InitPdssCache {
 				cacheTemplate.setObject(PdssCache.commonCache, t.getDRUG_ID(), -1, t);
 			}
 			pageNum = page.getCurrentPage() + 1;
+			log.info("医保用药 适应列表-- 第" + pageNum +"页");
 		}
 	}
 
@@ -352,10 +561,10 @@ public class InitPdssCache {
 	 * @return
 	 * @throws Exception
 	 */
-	public void queryTMedicareCatalog() throws Exception {
+	public void setTMedicareCatalog() throws Exception {
 		Page page = new Page();
 		int pageNum = 1;
-		page.setShowCount(3000);
+		page.setShowCount(showCount);
 		page.setTotalPage(pageNum);
 		while( pageNum == 1 || pageNum <= page.getTotalPage()){
 			page.setCurrentPage(pageNum);
@@ -365,6 +574,7 @@ public class InitPdssCache {
 				cacheTemplate.setObject(PdssCache.drugMedicare, t.getDRUG_ID(), -1, t);
 			}
 			pageNum = page.getCurrentPage() + 1;
+			log.info("医保用药 适应列表-- 第" + pageNum +"页");
 		}
 	}
 }

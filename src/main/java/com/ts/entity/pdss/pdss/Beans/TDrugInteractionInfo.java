@@ -9,6 +9,7 @@ import com.hitzd.his.Beans.TBaseBean;
  */
 public class TDrugInteractionInfo extends TBaseBean
 {
+	private static final long serialVersionUID = 1L;
 
 	public TDrugInteractionInfo()
     {
@@ -17,9 +18,9 @@ public class TDrugInteractionInfo extends TBaseBean
     /* 药物相互作用信息ID */
     private String DRUG_INTERACTION_INFO_ID;
     /* 药品成分1 */
-    private String INGR_CLASS_CODE1;
+    private String INGR_CLASS_ID1;
     /* 药品成分2 */
-    private String INGR_CLASS_CODE2;
+    private String INGR_CLASS_ID2;
     /* 严重程度 */
     private String INTER_INDI;
     /* 警示信息 */
@@ -45,22 +46,22 @@ public class TDrugInteractionInfo extends TBaseBean
 
     public String getINGR_CLASS_CODE1()
     {
-        return INGR_CLASS_CODE1;
+        return INGR_CLASS_ID1;
     }
 
     public void setINGR_CLASS_CODE1(String iNGR_CLASS_CODE1)
     {
-        INGR_CLASS_CODE1 = iNGR_CLASS_CODE1;
+        INGR_CLASS_ID1 = iNGR_CLASS_CODE1;
     }
 
     public String getINGR_CLASS_CODE2()
     {
-        return INGR_CLASS_CODE2;
+        return INGR_CLASS_ID2;
     }
 
     public void setINGR_CLASS_CODE2(String iNGR_CLASS_CODE2)
     {
-        INGR_CLASS_CODE2 = iNGR_CLASS_CODE2;
+        INGR_CLASS_ID2 = iNGR_CLASS_CODE2;
     }
 
     public String getINTER_INDI()
@@ -129,10 +130,10 @@ public class TDrugInteractionInfo extends TBaseBean
         int result = 1;
         result = prime
                 * result
-                + ((INGR_CLASS_CODE1 == null) ? 0 : INGR_CLASS_CODE1.hashCode());
+                + ((INGR_CLASS_ID1 == null) ? 0 : INGR_CLASS_ID1.hashCode());
         result = prime
                 * result
-                + ((INGR_CLASS_CODE2 == null) ? 0 : INGR_CLASS_CODE2.hashCode());
+                + ((INGR_CLASS_ID2 == null) ? 0 : INGR_CLASS_ID2.hashCode());
         return result;
     }
 
@@ -145,15 +146,15 @@ public class TDrugInteractionInfo extends TBaseBean
         if (getClass() != obj.getClass())
             return false;
         TDrugInteractionInfo other = (TDrugInteractionInfo) obj;
-        if (INGR_CLASS_CODE1 == null) {
-            if (other.INGR_CLASS_CODE1 != null)
+        if (INGR_CLASS_ID1 == null) {
+            if (other.INGR_CLASS_ID1 != null)
                 return false;
-        } else if (!INGR_CLASS_CODE1.equals(other.INGR_CLASS_CODE1))
+        } else if (!INGR_CLASS_ID1.equals(other.INGR_CLASS_ID1))
             return false;
-        if (INGR_CLASS_CODE2 == null) {
-            if (other.INGR_CLASS_CODE2 != null)
+        if (INGR_CLASS_ID2 == null) {
+            if (other.INGR_CLASS_ID2 != null)
                 return false;
-        } else if (!INGR_CLASS_CODE2.equals(other.INGR_CLASS_CODE2))
+        } else if (!INGR_CLASS_ID2.equals(other.INGR_CLASS_ID2))
             return false;
         return true;
     }

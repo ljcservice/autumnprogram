@@ -11,7 +11,11 @@ import com.hitzd.his.Beans.TBaseBean;
  */
 public class TDrugDiagInfo extends TBaseBean
 {
-    /* 药物禁忌症信息ID */
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/* 药物禁忌症信息ID */
     private String DRUG_DIAG_INFO_ID;
     /* 诊断ID */
     private String DIAGNOSIS_DICT_ID;

@@ -1,13 +1,15 @@
 package com.ts.entity.pdss.mas.Beans;
 
+import java.io.Serializable;
 
 /**
  * 医保用药目录
  * @author liujc
  *
  */
-public class TMedicareCatalog 
+public class TMedicareCatalog implements Serializable
 {
+	private static final long serialVersionUID = 1L;
 	public static String Prefix = "MedicareCatalog_";
 	/*药品ID	 */
 	private String DRUG_ID;
