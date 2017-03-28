@@ -162,9 +162,11 @@ public class PrescController extends BaseController{
 
 		mv.setViewName("DoctOrder/presc/checkRsView");
 		mv.addObject("rsTypeDict",getCheckTypeDict());
+		
 		// 当前登录专家
 		User user = getCurrentUser();
 		String expert_id = presc.getString("expert_id");
+		mv.addObject("expert_id",expert_id);
 		mv.addObject("modifyFlag", 1);
 		//
 		if(!Tools.isEmpty(expert_id) &&!user.getUSER_ID().equals(expert_id)){

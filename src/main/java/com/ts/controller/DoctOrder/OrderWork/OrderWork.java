@@ -79,9 +79,6 @@ public class OrderWork extends BaseController
 		try
 		{
 			String keywords = pd.getString("keywords");				//关键词检索条件
-			if(null != keywords && !"".equals(keywords)){
-				pd.put("keywords", keywords.trim());
-			}
 			String beginDate = pd.getString("beginDate");	//开始时间
 			String endDate = pd.getString("endDate");		//结束时间
 			if(endDate != null && !"".equals(endDate))
@@ -91,7 +88,8 @@ public class OrderWork extends BaseController
 				cal.setTime(DateUtil.fomatDate(endDate));
 				cal.add(Calendar.DAY_OF_MONTH, 1);
 				pd.put("endDate", sdf.format(cal.getTime()));
-			} 
+			}
+			mv.addObject("pd", pd);
 			page.setPd(pd);
 			List<PageData> entity =  this.orderWorkService.patientList(page);
 			for(PageData pp:entity){
@@ -99,6 +97,11 @@ public class OrderWork extends BaseController
 				if(!Tools.isEmpty(RS_DRUG_TYPES)){
 					String[] RS_DRUG_TYPE = RS_DRUG_TYPES.split("@;@");
 					pp.put("RS_DRUG_TYPES", RS_DRUG_TYPE);
+				}
+				String DIAGNOSIS_DESC = pp.getString("DIAGNOSIS_DESC");
+				if(!Tools.isEmpty(DIAGNOSIS_DESC)){
+					String[] DIAGNOSIS_DESCS = DIAGNOSIS_DESC.split("@;@");
+					pp.put("DIAGNOSIS_DESC", DIAGNOSIS_DESCS);
 				}
 			}
 			mv.addObject("rstypeMap", DoctorConst.rstypeMap); 
@@ -157,6 +160,7 @@ public class OrderWork extends BaseController
 		// 当前登录专家
 		User user = getCurrentUser();
 		String expert_id = PatVisit.getString("expert_id");
+		mv.addObject("expert_id",expert_id);
 		mv.addObject("modifyFlag", 1);
 		//
 		if(!Tools.isEmpty(expert_id) &&!user.getUSER_ID().equals(expert_id)){
