@@ -39,6 +39,16 @@
 	<select id="prescDetailList" parameterType="pd" resultType="pd" >
 		select * from presc_detail where presc_id = #{id}
 	</select>
+	<!-- 	其他处方详情 -->
+	<select id="otherPrescDetailList" parameterType="pd" resultType="pd" >
+		select a.* from presc_detail a,
+		(select id from presc where id!= #{id} and 
+			ORDER_DATE in (select ORDER_DATE from presc where id= #{id})
+		) b
+		 where a.presc_id = b.id 
+	</select>
+	
+	
 	<!-- 	更新处方的关联问题字段 -->
 	<update id="updatePrescNgroupnum" parameterType="pd" >
 		update presc set NGROUPNUM = #{Ngroupnum} ,ISCHECKTRUE = #{ISCHECKTRUE}
@@ -53,6 +63,17 @@
 			, drug_name as value
 		from  presc_detail
 		where PRESC_ID= #{PRESC_ID}
+	</select>
+	<!-- 	查询处方，为新增点评使用 -->
+	<select id="otherPrescListSpecial" parameterType="pd" resultType="pd">
+		select ORDER_NO||'@;@'||ORDER_SUB_NO||'@;@'||DRUG_CODE||'@;@'||drug_name as key
+			, drug_name as value
+		from  presc_detail a,
+		(	
+			select id from presc 
+			where ORDER_DATE in (select ORDER_DATE from presc where id= #{id})
+		) b
+		where a.presc_id = b.id 
 	</select>
 <!-- 	设置为专家点评 -->
 	<update id="updateExpertPresc">
