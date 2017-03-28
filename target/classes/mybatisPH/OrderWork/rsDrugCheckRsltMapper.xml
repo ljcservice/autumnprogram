@@ -37,10 +37,10 @@
 		#{drug_id1_name},
 		#{rec_main_no1},
 		#{rec_sub_no1},
-		#{drug_id2},
-		#{drug_id2_name},
-		#{rec_main_no2},
-		#{rec_sub_no2},
+		#{drug_id2,jdbcType=VARCHAR},
+		#{drug_id2_name,jdbcType=VARCHAR},
+		#{rec_main_no2,jdbcType=VARCHAR},
+		#{rec_sub_no2,jdbcType=VARCHAR},
 		#{ngroupnum},
 		#{rs_drug_type},
 		#{in_rs_type},
@@ -62,18 +62,24 @@
 			)
 	</insert>
 	
-<!-- 	 查询审核结果 -->
+<!-- 	 查询审核结果  查询患者点评结果信息-->
 	<select id="selectCheckRsByNgroupnum" parameterType="page" resultType="pd">
-		select 
-			<include refid="Field"></include>
-		from 
-			<include refid="tableName"></include>
+		select <include refid="Field"></include>
+		from RS_DRUG_CHECKRSLT
 		where 
 		 <!-- 审核结果组号 -->  
 		ngroupnum = #{pd.ngroupnum} 
-	
 	</select>
-	
+	<delete id="delCheckRsByNgroupnum" parameterType="pd" >
+		delete from RS_DRUG_CHECKRSLT
+		where 
+		 <!-- 审核结果组号 -->  
+		ngroupnum = #{ngroupnum} 
+	</delete>
+	<update id="deleteCheckRsById" parameterType="pd" >
+		delete from RS_DRUG_CHECKRSLT 
+		where RS_ID = #{RS_ID}
+	</update>
 	
 	<!--查询病人信息  -->
 <!-- 	<select id="OperationById" parameterType="page" resultType="pd"> -->
@@ -86,5 +92,10 @@
 <!-- 		Order by operating_date -->
 <!-- 	</select> -->
 	
-
+	<select id="getCheckRsById" parameterType="pd" resultType="pd">
+		select * from RS_DRUG_CHECKRSLT where rs_id=#{rs_id}
+	</select>
+	<update id="updateCheckResult"  parameterType="pd"  >
+		update RS_DRUG_CHECKRSLT set ALERT_HINT=#{ALERT_HINT} where  rs_id=#{rs_id}
+	</update>
 </mapper>

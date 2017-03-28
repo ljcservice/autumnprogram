@@ -77,7 +77,7 @@
 						<div class="main_input_box">
 							<span class="add-on bg_lg">
 							<i><img height="37" src="static/login/user.png" /></i>
-							</span><input type="text" name="loginname" id="loginname" value="" placeholder="请输入用户名" />
+							</span><input type="text" name="loginname" id="loginname" value="admin" placeholder="请输入用户名" />
 						</div>
 					</div>
 				</div>
@@ -86,7 +86,7 @@
 						<div class="main_input_box">
 							<span class="add-on bg_ly">
 							<i><img height="37" src="static/login/suo.png" /></i>
-							</span><input type="password" name="password" id="password" value="" placeholder="请输入密码" class="keypad" keypadMode="full" allowKeyboard="true" value=""/>
+							</span><input type="password" name="password" id="password" value="1" placeholder="请输入密码" class="keypad" keypadMode="full" allowKeyboard="true" value=""/>
 						</div>
 					</div>
 				</div>
@@ -95,7 +95,7 @@
 						<font color="white">记住密码</font>
 					</div>
 					<div style="float: left;">
-						<input name="form-field-checkbox" id="saveid" type="checkbox"
+						<input name="form-field-checkbox" id="saveid" type="checkbox" 
 							onclick="savePaw();" style="padding-top:0px;" />
 					</div>
 				</div>
@@ -106,7 +106,7 @@
 							<i><img src="static/login/yan.png" /></i>
 						</div>
 						<div style="float: left;" class="codediv">
-							<input type="text" name="code" id="code" class="login_code" value=""
+							<input type="text" name="code" id="code" class="login_code" value="1"
 								style="height:16px; padding-top:4px;" />
 						</div>
 						<div style="float: left;">

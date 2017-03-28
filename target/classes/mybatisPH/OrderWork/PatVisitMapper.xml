@@ -110,7 +110,8 @@
 		link_date,
 		NGROUPNUM,
 		ISORDERCHECK,
-		ISCHECKTRUE
+		ISCHECKTRUE,
+		expert_id
 	</sql>
 	
 	<!-- 字段值 -->
@@ -215,8 +216,8 @@
 		#{link_date},
 		#{NGROUPNUM},
 		#{ISORDERCHECK},
-		#{ISCHECKTRUE}
-
+		#{ISCHECKTRUE},
+		#{expert_id}
 	</sql>
 	
 	
@@ -278,10 +279,31 @@
 			t.link_date,
 			t.NGROUPNUM,
 			t.ISORDERCHECK,
+			t.expert_id,
 			t.ISCHECKTRUE
-		from   
-			pat_visit t
-		left join pat_master_index p on t.patient_id = p.patient_id
+      		,m.RS_DRUG_TYPES
+      		,n.DIAGNOSIS_DESC,nvl(N.DIAGNOSIS_COUNT,0) DIAGNOSIS_COUNT
+	    from pat_visit t
+	    left join pat_master_index p on t.patient_id = p.patient_id 
+	    left join ( select NGROUPNUM,listagg( RS_DRUG_TYPE ,'@;@') within GROUP (order by NGROUPNUM) RS_DRUG_TYPES 
+	         from  (
+	         		select NGROUPNUM,RS_DRUG_TYPE  from RS_DRUG_CHECKRSLT group by NGROUPNUM,RS_DRUG_TYPE 
+           			) group by NGROUPNUM
+	    ) m on t.NGROUPNUM=m.NGROUPNUM
+	    <if test="pd.DIAGNOSIS_DESC != null and pd.DIAGNOSIS_DESC != ''"> <!-- 诊断-->
+		    inner  
+		</if>
+		<if test="pd.DIAGNOSIS_DESC ==null or pd.DIAGNOSIS_DESC == ''"> <!-- 诊断-->
+		    left 
+		</if>
+	     join ( 
+	    	select PATIENT_ID,VISIT_ID,count(DIAGNOSIS_DESC) DIAGNOSIS_COUNT,listagg(DIAGNOSIS_DESC,'@;@') within GROUP (order by PATIENT_ID,VISIT_ID) DIAGNOSIS_DESC 
+	    	from diagnosis 
+		    <if test="pd.DIAGNOSIS_DESC != null and pd.DIAGNOSIS_DESC != ''"> <!-- 诊断-->
+		    	where DIAGNOSIS_DESC LIKE CONCAT(CONCAT('%', #{pd.DIAGNOSIS_DESC}),'%') 
+		    </if>
+	    	group by PATIENT_ID,VISIT_ID
+	    )n on (t.patient_id = n.patient_id and t.VISIT_ID=n.VISIT_ID )
 		where 1=1 
 		<if test="pd.keywords != null and pd.keywords != ''"><!-- 关键词检索 -->
 			and
@@ -297,6 +319,12 @@
 		</if>
 		<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
 			and t.discharge_date_time &lt; to_date(#{pd.endDate} ,'yyyy-mm-dd') 
+		</if>
+		<if test="pd.ISCHECKTRUE != null and pd.ISCHECKTRUE != ''"> <!-- 是否合理-->
+			and t.ISCHECKTRUE = #{pd.ISCHECKTRUE} 
+		</if>
+		<if test="pd.ISORDERCHECK != null and pd.ISORDERCHECK != ''"> <!--点评记录-->
+			and t.ISORDERCHECK = #{pd.ISORDERCHECK}
 		</if>
 		Order by t.discharge_date_time 
 	</select>
@@ -359,10 +387,18 @@
 			t.link_date,
 			t.NGROUPNUM,
 			t.ISORDERCHECK,
-			t.ISCHECKTRUE
+			t.ISCHECKTRUE,
+			t.expert_id
+			,n.DIAGNOSIS_DESC,nvl(N.DIAGNOSIS_COUNT,0)
 		from 
 			pat_visit t 
 		left join pat_master_index p on t.patient_id = p.patient_id
+	    left join ( 
+	    	select PATIENT_ID,VISIT_ID,count(DIAGNOSIS_DESC) DIAGNOSIS_COUNT,listagg(DIAGNOSIS_DESC,';') within GROUP (order by PATIENT_ID,VISIT_ID) DIAGNOSIS_DESC 
+	    	from diagnosis 
+	    	where patient_id =#{pd.patient_id} and visit_id = #{pd.visit_id}
+	    	 group by PATIENT_ID,VISIT_ID
+	    )n on (t.patient_id = n.patient_id and t.VISIT_ID=n.VISIT_ID )
 		where  t.patient_id =#{pd.patient_id} and t.visit_id = #{pd.visit_id}
 	</select>
 	
@@ -370,12 +406,20 @@
 		update
 			<include refid="tableName">	</include>
 		set
-			ngroupnum = #{NGROUPNUM},
-			ISORDERCHECK = #{ISORDERCHECK}, 
-			ISCHECKTRUE  = #{ISCHECKTRUE} 
+			ngroupnum = #{NGROUPNUM,jdbcType=VARCHAR},ISCHECKTRUE = #{ISCHECKTRUE}
+			<if test="ISORDERCHECK !=null and ISORDERCHECK!='' ">
+				,ISORDERCHECK = #{ISORDERCHECK}
+			</if>
 		where 
 			 patient_id =#{patient_id} and visit_id = #{visit_id}
 	
 	</update>
-
+	<select id="queryPatVisit" parameterType="pd" resultType="pd">
+		select * from  pat_visit t
+		 where  t.patient_id =#{patient_id} and t.visit_id = #{visit_id}
+	</select>
+	<update id="updateExpertPatVisit">
+		update pat_visit t set expert_id=#{expert_id} 
+ 		where  t.patient_id =#{patient_id} and t.visit_id = #{visit_id}
+	</update>
 </mapper>

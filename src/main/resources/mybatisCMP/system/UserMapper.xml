@@ -194,7 +194,10 @@
 			<include refid="Field"></include>
 		from 
 			<include refid="tableName"></include>
-		where USERNAME != 'admin'  
+		where 1=1 
+		<if test="pd.showAdmin== null or pd.showAdmin == ''">
+			and USERNAME != 'admin'  
+		</if>
 		<!-- 		关键词检索 -->
 		<if test="pd.keywords!= null and pd.keywords != ''">
 			and

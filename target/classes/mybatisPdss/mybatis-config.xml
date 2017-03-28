@@ -14,12 +14,25 @@
 		<!-- 分页 -->
 		<typeAlias type="com.ts.entity.Page" alias="Page"/>
 		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TDrug" alias="TDrug"/>
+		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TAdministration" alias="TAdministration"/>
+		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TDrugDiagRel" alias="TDrugDiagRel"/>
+		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TDrugDiagInfo" alias="TDrugDiagInfo"/>
+		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TDrugInteractionInfo" alias="TDrugInteractionInfo"/>
+		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TDrugIvEffect" alias="TDrugIvEffect"/>
+		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TAllergIngrDrug" alias="TAllergIngrDrug"/>
+		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TDrugUseDetail" alias="TDrugUseDetail"/>
+		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TDrugDosage" alias="TDrugDosage"/>
+		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TDrugSideDict" alias="TDrugSideDict"/>
+		<typeAlias type="com.ts.entity.pdss.mas.Beans.TMedicareCatalog" alias="TMedicareCatalog"/>
+		<typeAlias type="com.ts.entity.pdss.mas.Beans.TMemo" alias="TMemo"/>
+		
+		
 	</typeAliases>
 	
 	<plugins>
 		<plugin interceptor="com.ts.plugin.PagePlugin">
 			<property name="dialect" value="oracle"/>
-			<property name="pageSqlId" value=".*listPage.*"/>
+			<property name="pageSqlId" value=".*Page.*"/>
 		</plugin>
 	</plugins>
 	

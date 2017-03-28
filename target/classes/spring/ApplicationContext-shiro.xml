@@ -41,8 +41,8 @@
 	           	/code.do 					= anon
 	           	/login_login	 			= anon
 	           	/app**/** 					= anon
-	           	/pdss**/** 					= anon
 	           	/weixin/** 					= anon
+	           	/services/** 				= anon
 	           	/**							= authc
 				</value>
 			</property>

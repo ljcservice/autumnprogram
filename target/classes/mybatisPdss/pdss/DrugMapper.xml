@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="CommonMapper">
+<mapper namespace="DrugMapper">
 
 	<!-- 诊断名称同义词-本体 关联查询 -->
-	<select id="diagOsynWidgetlistPage" parameterType="pd"
-		resultType="pd">
+	<select id="diagOsynWidgetlistPage" parameterType="pd"	resultType="pd">
 		select * from dual t
 		<!-- where -->
 
@@ -12,14 +11,220 @@
 			new CommonMapper() -->
 	</select>
 	<!-- 查询单个药品 -->
-	<select id="queryDrugById" parameterType="String" resultType="TDrug">
+	<select id="queryDrugById" parameterType="pd" resultType="TDrug">
 		select * from view_DRUG 
+		<if test="id != null and id != ''">
 		where drug_no_local =#{id}
+		</if>
 	</select>
-	<!-- 查询单2个成分是否药理冲突 -->
-	<select id="getDrugInteraction" parameterType="pd" resultType="TDrug">
-		select EFFECT_ID, IV_CLASS_CODE1, FIRM_ID1, IV_CLASS_CODE2, FIRM_ID2,RESULT_ID, REFER_INFO, REF_SOURCE from DRUG_IV_EFFECT 
+	<select id="queryDrugPage" parameterType="page" resultType="TDrug">
+		select * from view_DRUG 
+	</select>
+	<!-- 查询单2个成分是否药理冲突 --> 
+	<select id="getDrugInteraction" parameterType="pd" resultType="TDrugInteractionInfo">
+		select DRUG_INTERACTION_INFO_ID,INGR_CLASS_ID1,INGR_CLASS_ID2,INTER_INDI,WAR_INFO,MEC_INFO,MAN_INFO,DIS_INFO,REF_SOURCE 
+		from DRUG_INTERACTION_INFO 
+		<if test="code1 != null and code1 != '' and code2 != null and code2 != ''">
+		where (INGR_CLASS_ID1 = #{code1} and INGR_CLASS_ID2 = #{code2}) 
+			or (INGR_CLASS_ID1 = #{code2} and INGR_CLASS_ID2 = #{code1}) 
+		</if>
+　	</select>
+	<select id="getDrugInteractionPage" parameterType="page" resultType="TDrugInteractionInfo">
+		select DRUG_INTERACTION_INFO_ID,INGR_CLASS_ID1,INGR_CLASS_ID2,INTER_INDI,WAR_INFO,MEC_INFO,MAN_INFO,DIS_INFO,REF_SOURCE 
+		from DRUG_INTERACTION_INFO 
+　	</select>
+	<!-- 诊断信息转换 -->
+	<select id="queryDiagDictMap" parameterType="pd" resultType="String">
+	<!-- 		select ICD9,id, diagnosis_no_local, diagnosis_name_local, diagnosis_id, oper_user, oper_time, oper_type  -->
+		select ICD9 from diagnosis_map 
+		where diagnosis_no_local in 
+ 		<foreach item="item" index="index" collection="diagnosis" open="(" separator="," close=")">  
+ 			 #{item}  
+ 		</foreach> 
+	</select>
+	<!-- 	查询单个诊断对应的疾病 -->
+	<select id="getDiseageVsDiag" parameterType="pd" resultType="pd">
+		select t.disease_id,t.diagnosis_code,t.disease_name 
+		from view_Disease_vs_diagnosis t 
+		<if test="diagnosis_code != null and diagnosis_code != ''">
+		where t.diagnosis_code = #{diagnosis_code}
+		</if>
+	</select>
+	<select id="getDiseageVsDiagPage" parameterType="page" resultType="pd">
+		select t.disease_id,t.diagnosis_code,t.disease_name 
+		from view_Disease_vs_diagnosis t 
+	</select>
+	<!-- 	用药途径 -->
+	<select id="getAdministration" parameterType="pd" resultType="TAdministration">
+		select ADMINISTRATION_ID,ADMINISTRATION_NAME,INPUT_CODE,ADMINISTRATION_CLASS,ROUTE_METHOD,ROUTE_CLASS,
+ 			ADMINISTRATION_NO_LOCAL,ADMINISTRATION_NAME_LOCAL,OPER_USER,OPER_TIME 
+ 			from view_administration 
+ 			<if test="ADMINISTRATION_ID != null and ADMINISTRATION_ID != ''">
+ 				where ADMINISTRATION_ID = #{ADMINISTRATION_ID}
+ 			</if>
+	</select>
+	
+	<!-- 	用药途径 -->
+	<select id="getAdministrationPage" parameterType="page" resultType="TAdministration">
+		select ADMINISTRATION_ID,ADMINISTRATION_NAME,INPUT_CODE,ADMINISTRATION_CLASS,ROUTE_METHOD,ROUTE_CLASS,
+ 			ADMINISTRATION_NO_LOCAL,ADMINISTRATION_NAME_LOCAL,OPER_USER,OPER_TIME 
+ 			from view_administration 
+	</select>
+	
+	<!-- 	用药途径 -->
+	<select id="getAdministrationLocal" parameterType="pd" resultType="TAdministration">
+		select ADMINISTRATION_ID,ADMINISTRATION_NAME,INPUT_CODE,ADMINISTRATION_CLASS,ROUTE_METHOD,ROUTE_CLASS,
+			ADMINISTRATION_NO_LOCAL,ADMINISTRATION_NAME_LOCAL,ADMINISTRATION_ID,OPER_USER,OPER_TIME 
+			from view_administration 
+			<if test="id != null and id != ''">
+				where ADMINISTRATION_NO_LOCAL = #{id}
+    		</if>
+	</select>
+	
+	<!-- 	药物禁忌症对应信息 -->
+	<select id="queryDrugDiagRel" parameterType="pd" resultType="TDrugDiagRel">
+		select DRUG_DIAG_REL_ID,CONTRAIND_ID,DRUG_CLASS_ID,ADMINISTRATION_ID,INDEX_ID 
+		from DRUG_DIAG_REL
+        where 1=1
+        	<if test="drugClassId != null and drugClassId != ''">
+		       and  DRUG_CLASS_ID = #{drugClassId} 
+        	</if>
+        	<if test="drugAdmini != null and drugAdmini != ''">
+        		and ADMINISTRATION_ID = #{drugAdmini}
+        	</if>
+	</select>
+	<select id="queryDrugDiagRelPage" parameterType="page" resultType="TDrugDiagRel">
+		select DRUG_DIAG_REL_ID,CONTRAIND_ID,DRUG_CLASS_ID,ADMINISTRATION_ID,INDEX_ID 
+		from DRUG_DIAG_REL
+	</select>
+	<!-- 	药物禁忌症对应CONTRAIND_ID -->
+	<select id="getDrugDiagInfos" parameterType="pd" resultType="TDrugDiagInfo">
+		select DRUG_DIAG_INFO_ID,DIAGNOSIS_DICT_ID,DRUG_DIAG_REL_ID,SEQ_ID,INTER_INDI,DIAG_DESC,DRUG_REF_SOURCE,CONTRAIND_ID 
+		from DRUG_DIAG_INFO 
+		where disease_id in
+	    	<foreach item="item" index="index" collection="diaeVsDiags" open="(" separator="," close=")">  
+ 			 	#{item}  
+ 			</foreach> 
+ 			<if test="drugDiagRelIds != null and drugDiagRelIds != ''">
+	 			and contraind_id in 
+	 			<foreach item="item" index="index" collection="drugDiagRelIds" open="(" separator="," close=")">  
+	 			 	#{item}  
+	 			</foreach> 
+	        </if>
+	</select>
+	
+	<!-- 	药物禁忌症对应CONTRAIND_ID -->
+	<select id="getDrugDiagInfosPage" parameterType="pd" resultType="TDrugDiagInfo">
+		select DRUG_DIAG_INFO_ID,DIAGNOSIS_DICT_ID,DRUG_DIAG_REL_ID,SEQ_ID,INTER_INDI,DIAG_DESC,DRUG_REF_SOURCE,CONTRAIND_ID 
+		from DRUG_DIAG_INFO 
+	</select>
+	
+	<!-- 	 配伍信息 -->
+	<select id="queryDrugIvEffect" parameterType="pd" resultType="TDrugIvEffect">
+		select EFFECT_ID, IV_CLASS_CODE1, FIRM_ID1, IV_CLASS_CODE2, FIRM_ID2,RESULT_ID, REFER_INFO, REF_SOURCE 
+		from DRUG_IV_EFFECT 
+		<if test="code1 != null and code1 != '' and code2 != null and code2 != '' ">
         where (IV_CLASS_CODE1 = #{code1} and IV_CLASS_CODE2 =#{code2}) 
         	or (IV_CLASS_CODE1 = #{code2} and IV_CLASS_CODE2 = #{code1})
-　	</select>
+        </if>
+	</select>
+	
+	<select id="queryDrugIvEffectPage" parameterType="page" resultType="TDrugIvEffect">
+		select EFFECT_ID, IV_CLASS_CODE1, FIRM_ID1, IV_CLASS_CODE2, FIRM_ID2,RESULT_ID, REFER_INFO, REF_SOURCE 
+		from DRUG_IV_EFFECT 
+	</select>
+	<!-- 不良反应 所有信息 -->
+	<select id="getTDrugSideDictList" parameterType="pd" resultType="TDrugSideDict">
+		select SIDE_ID,DIAGNOSIS_DICT_ID,SEQ_NO,DIAGNOSIS_DESC,SIDE_GROUP_ID,SEVERITY,DRUG_CLASS_ID,ADMINISTRATION_ID  
+		from view_side 
+		where 1==1 
+			<if test="DRUG_CLASS_ID != null and DRUG_CLASS_ID != ''">
+	 			and DRUG_CLASS_ID in  
+	 			<foreach item="item" index="index" collection="DRUG_CLASS_ID" open="(" separator="," close=")">  
+	 			 	#{item}  
+	 			</foreach> 
+	        </if>
+			<if test="DIAGNOSIS_DICT_ID != null and DIAGNOSIS_DICT_ID != ''">
+	 			and DIAGNOSIS_DICT_ID in  
+	 			<foreach item="item" index="index" collection="DIAGNOSIS_DICT_ID" open="(" separator="," close=")">  
+	 			 	#{item}  
+	 			</foreach> 
+	        </if>
+	        <if test="ADMINISTRATION_ID != null and DRUG_CLASS_ID != ''">
+	 			and ADMINISTRATION_ID in  
+	 			<foreach item="item" index="index" collection="ADMINISTRATION_ID" open="(" separator="," close=")">  
+	 			 	#{item}  
+	 			</foreach> 
+	        </if>
+	</select>
+	
+	<!-- 此后迁移过来  特殊人群 -->
+	<select id="getDudInfoById" parameterType="pd"	resultType="TDrugUseDetail">
+		select drug_use_detail_id, drug_class_id, last_date_time, pregnant_indi, pregnant_info, pregnant_info_ref, lact_indi, lact_info, lact_info_ref, kid_indi, kid_low, kid_high, kid_info, kid_info_ref, old_indi, old_info, old_info_ref, hepatical_indi, renal_indi, forbid_ruid, forbid_cause, inadvis_rtid, inadvis_cause, advert_rtid, advert_cause 
+    	from DRUG_USE_DETAIL 
+    	<if test="DRUG_CLASS_ID != null and DRUG_CLASS_ID != ''">
+    	where DRUG_CLASS_ID = #{DRUG_CLASS_ID}
+    	</if>
+	</select>
+	<select id="getDudInfoPage" parameterType="page"	resultType="TDrugUseDetail">
+		select drug_use_detail_id, drug_class_id, last_date_time, pregnant_indi, pregnant_info, pregnant_info_ref, lact_indi, lact_info, lact_info_ref, kid_indi, kid_low, kid_high, kid_info, kid_info_ref, old_indi, old_info, old_info_ref, hepatical_indi, renal_indi, forbid_ruid, forbid_cause, inadvis_rtid, inadvis_cause, advert_rtid, advert_cause 
+    	from DRUG_USE_DETAIL 
+	</select>
+	<!-- 药物成分、药敏、药物分类与药物对 -->
+	<select id="getAidInfoById" parameterType="pd"	resultType="TAllergIngrDrug">
+		select drug_allergen_id,input_code,drug_allergen_name,allerg_ingr_drug_id,drug_class_id 
+		from view_allergen 
+		where drug_allergen_id =#{drug_allergen_id}
+	</select>
+	<select id="getAidInfoPage" parameterType="pd"	resultType="TAllergIngrDrug">
+		select drug_allergen_id,input_code,drug_allergen_name,allerg_ingr_drug_id,drug_class_id 
+		from view_allergen 
+	</select>
+	<!--  药品剂量使用 -->
+	<select id="getDdgInfoById" parameterType="pd"	resultType="TDrugDosage">
+		select drug_dosage_id, dose_class_id, administration_id, drug_form, dose_units, age_indi, age_low, 
+			age_high, weight_indi, weight_low, weight_high, cal_indi, dose_each_low, dose_each_high, 
+			dose_each_unit, dose_day_low, dose_day_high, dose_day_unit, dose_max_high, dose_max_unit, 
+			dose_freq_low, dose_freq_high, dur_low, dur_high, special_desc, reference_info 
+		from DRUG_DOSAGE 
+		where DOSE_CLASS_ID = #{DOSE_CLASS_ID} and ADMINISTRATION_ID = #{ADMINISTRATION_ID} 
+	</select>
+	<select id="getDdgInfoPage" parameterType="page"	resultType="TDrugDosage">
+		select drug_dosage_id, dose_class_id, administration_id, drug_form, dose_units, age_indi, age_low, 
+			age_high, weight_indi, weight_low, weight_high, cal_indi, dose_each_low, dose_each_high, 
+			dose_each_unit, dose_day_low, dose_day_high, dose_day_unit, dose_max_high, dose_max_unit, 
+			dose_freq_low, dose_freq_high, dur_low, dur_high, special_desc, reference_info 
+		from DRUG_DOSAGE 
+	</select>
+	<!-- 医嘱执行频率 -->
+	<select id="queryDrugPerfom" parameterType="pd"	resultType="TDrugDosage">
+		select PERFORM_FREQ_DICT_NAME,FREQ_COUNTER,FREQ_INTERVAL,FREQ_INTERVAL_UNITS,PERFORM_FREQ_DICT_NO_LOCAL,PERFORM_FREQ_DICT_NAME_LOCAL,PERFORM_FREQ_DICT_ID,OPER_USER,OPER_TIME
+   		from view_perform 
+   		where perform_freq_dict_no_local = #{performID} 
+	</select>
+	<select id="queryDrugPerfomPage" parameterType="page"	resultType="TDrugDosage">
+		select PERFORM_FREQ_DICT_NAME,FREQ_COUNTER,FREQ_INTERVAL,FREQ_INTERVAL_UNITS,PERFORM_FREQ_DICT_NO_LOCAL,PERFORM_FREQ_DICT_NAME_LOCAL,PERFORM_FREQ_DICT_ID,OPER_USER,OPER_TIME
+   		from view_perform 
+	</select>
+	<!-- 	医保内容 -->
+	<select id="queryMemoList" parameterType="pd"	resultType="TMemo">
+		select ID, DRUG_ID, CHECK_ITEM_NAME, CHECK_ITEM_CODE, CHECK_TYPE 
+		from memo 
+		where DRUG_ID = #{DRUG_ID}
+	</select>
+	<select id="queryMemoPage" parameterType="page"	resultType="TMemo">
+		select ID, DRUG_ID, CHECK_ITEM_NAME, CHECK_ITEM_CODE, CHECK_TYPE 
+		from memo 
+	</select>
+	<!-- 	医保目录 -->
+	<select id="queryTMedicareCatalog" parameterType="pd"	resultType="TMedicareCatalog">
+		select DRUG_ID, DRUG_NAME, REMARK, APPLY_TYPE, FEE_TYPE 
+		from Medicare_catalog 
+		where DRUG_ID = #{DRUG_ID}
+	</select>
+	<select id="queryTMedicareCatalogPage" parameterType="pd"	resultType="TMedicareCatalog">
+		select DRUG_ID, DRUG_NAME, REMARK, APPLY_TYPE, FEE_TYPE 
+		from Medicare_catalog 
+	</select>
+
 </mapper>

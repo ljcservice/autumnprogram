@@ -19,7 +19,7 @@
 	<plugins>
 		<plugin interceptor="com.ts.plugin.PagePlugin">
 			<property name="dialect" value="oracle"/>
-			<property name="pageSqlId" value=".*listPage.*"/>
+			<property name="pageSqlId" value=".*Page.*"/>
 		</plugin>
 	</plugins>
 	
