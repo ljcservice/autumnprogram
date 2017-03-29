@@ -70,6 +70,14 @@ public interface PrescService {
 	 */
 	public List<PageData> otherPrescDetailList(PageData pd)throws Exception;
 
+	/**
+	 * 处方问题统计
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> prescReportList(PageData pd)throws Exception;
+
 
 
 }

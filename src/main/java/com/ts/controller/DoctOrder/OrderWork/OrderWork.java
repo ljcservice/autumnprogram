@@ -9,8 +9,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import net.sf.json.JSONArray;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ts.controller.base.BaseController;
 import com.ts.entity.Page;
 import com.ts.entity.system.User;
+import com.ts.service.DoctOrder.OrderWork.CommonService;
 import com.ts.service.DoctOrder.OrderWork.IOrderWorkService;
 import com.ts.service.DoctOrder.OrderWork.PrescService;
 import com.ts.util.DateUtil;
@@ -40,6 +39,8 @@ import com.ts.util.doctor.DoctorConst;
 @RequestMapping(value="/DoctOrder")
 public class OrderWork extends BaseController
 {
+	@Autowired
+	private CommonService commonService;
 	@Autowired
 	private IOrderWorkService orderWorkService;
 
@@ -106,7 +107,7 @@ public class OrderWork extends BaseController
 			}
 			mv.addObject("rstypeMap", DoctorConst.rstypeMap); 
 			mv.addObject("rstypeColorMap", DoctorConst.rstypeColorMap); 
-			mv.addObject("checktypeMap", getCheckTypeDict()); 
+			mv.addObject("checktypeMap", commonService.getCheckTypeDict()); 
 			mv.addObject("patVisits", entity);
 		}catch(Exception e )
 		{
@@ -156,7 +157,7 @@ public class OrderWork extends BaseController
 		mv.addObject("ISCHECKTRUE", PatVisit.get("ISCHECKTRUE")==null?2:PatVisit.get("ISCHECKTRUE"));
 		mv.addObject("checkRss", checkRss);
 		mv.setViewName("DoctOrder/OrderWork/CheckRsView");
-		mv.addObject("rsTypeDict",getCheckTypeDict());
+		mv.addObject("rsTypeDict",commonService.getCheckTypeDict());
 		// 当前登录专家
 		User user = getCurrentUser();
 		String expert_id = PatVisit.getString("expert_id");
@@ -213,7 +214,7 @@ public class OrderWork extends BaseController
 			List<PageData> treeList = orderWorkService.OrdersPicture(pd);
 			int  i = 0;
 			for(PageData pp:treeList){
-				pp.put("title",pp.getString("order_Text")+"["+getOrderClassDict().get( pp.getString("order_class"))+"]");
+				pp.put("title",pp.getString("order_Text")+"["+commonService.getOrderClassDict().get( pp.getString("order_class"))+"]");
 				pp.put("CLASSNAME", classmap.get(i));
 				if(i>=6){
 					i=0;
@@ -256,10 +257,10 @@ public class OrderWork extends BaseController
 			if(!map.containsKey(key2)) map.put(key2, new ArrayList<PageData>()); 
 			map.get(key2).add(d);
 		}
-		mv.addObject("orderClassMap",getOrderClassDict());
+		mv.addObject("orderClassMap",commonService.getOrderClassDict());
 		mv.addObject("CheckRss",map);
 		mv.addObject("DoctOrders", pdOrders);
-		mv.addObject("rsTypeDict",getCheckTypeDict());
+		mv.addObject("rsTypeDict",commonService.getCheckTypeDict());
 		mv.setViewName("DoctOrder/OrderWork/DoctOrders");
 		//权限控制
 		// 当前登录专家
@@ -307,8 +308,12 @@ public class OrderWork extends BaseController
 				pd.put("ngroupnum", patient.getString("ngroupnum"));
 			}
 		}
+		if("0".equals(pd.getString("business_type"))){
+			pd.put("in_rs_type", 4);
+		}else if("1".equals(pd.getString("business_type"))){
+			pd.put("in_rs_type", 2);
+		}
 		pd.put("rs_id", this.get32UUID());
-		pd.put("in_rs_type", pd.getString("checkType"));
 		pd.put("alert_level", pd.getString("r"));
 		pd.put("alert_hint", pd.getString("checkText"));
 		pd.put("alert_cause", "药师自审");
@@ -353,36 +358,6 @@ public class OrderWork extends BaseController
 		return  mv;
 	}
 	
-	/**
-	 * 获得字段数据
-	 * @return
-	 * @throws Exception
-	 */
-	private Map<String, PageData> getCheckTypeDict() throws Exception
-	{
-		Map<String, PageData> rs = new HashMap<>();
-		// 审核字典
-		List<PageData> rsTypeDict = this.orderWorkService.selectRsTypeDict();
-		for(PageData pd : rsTypeDict){
-			rs.put(pd.getString("RS_TYPE_CODE"), pd);
-		}
-		return rs;
-	}
-	
-	/**
-	 * 获得字段数据
-	 * @return
-	 * @throws Exception
-	 */
-	private Map<String, String> getOrderClassDict() throws Exception {
-		Map<String, String> rs = new HashMap<>();
-		// 审核字典
-		List<PageData> rsTypeDict = this.orderWorkService.getOrderClassDict();
-		for(PageData pd : rsTypeDict){
-			rs.put(pd.getString("ORDER_CLASS_CODE"), pd.getString("ORDER_CLASS_NAME"));
-		}
-		return rs;
-	}
 	/**
 	 * 删除单个快捷点评结果
 	 * @param pid
@@ -447,7 +422,7 @@ public class OrderWork extends BaseController
 		pd = this.getPageData();
 		try{
 			mv.addObject("pd", pd);
-			mv.addObject("checkType", getCheckTypeDict());
+			mv.addObject("checkType", commonService.getCheckTypeDict());
 			if("0".equals(pd.getString("business_type"))){
 				Map orderMap = orderWorkService.ordersListSpecial(pd);
 				mv.addObject("orderMap1", orderMap);
@@ -490,6 +465,7 @@ public class OrderWork extends BaseController
 			pd.put("CHECKPEOPLE", user.getUSER_ID());
 			//查询住院记录，找到ngroupnum，此值一定要一致
 			if("0".equals(pd.getString("business_type"))){
+				pd.put("in_rs_type", 4);
 				Page p = new Page();
 				p.setPd(pd);
 				PageData patient = orderWorkService.findByPatient(p);
@@ -508,6 +484,7 @@ public class OrderWork extends BaseController
 				}
 				this.orderWorkService.updatePatVisitNgroupnum(pd);
 			}else if("1".equals(pd.getString("business_type"))){
+				pd.put("in_rs_type", 2);
 				//查询处方记录，找到ngroupnum
 				PageData Presc = prescService.findPrescById(pd);
 				//校验是否为专家点评，如果有专家则校验是否为当前人
@@ -527,14 +504,13 @@ public class OrderWork extends BaseController
 				this.prescService.updatePrescNgroupnum(pd);
 			}
 			pd.put("rs_id", this.get32UUID());
-			pd.put("in_rs_type", 4);
+			
 			pd.put("alert_level", pd.getString("r"));
-			String ALERT_HINT =  new String(pd.getString("alert_hint").getBytes("ISO-8859-1"),"UTF-8");
-			pd.put("alert_hint", ALERT_HINT);
+//			pd.put("alert_hint", ALERT_HINT);
 			pd.put("alert_cause", "药师自审");
 			pd.put("alert_level", "r");
 			pd.put("checkdate", DateUtil.getDay());
-			String orderDrug1 = new String(pd.getString("orderDrug1").getBytes("ISO-8859-1"),"UTF-8");
+			String orderDrug1 = pd.getString("orderDrug1");
 			String[] drug1 = orderDrug1.split("@;@");
 			pd.put("drug_id1", drug1[2]);
 			pd.put("drug_id1_name", drug1[3]);
@@ -568,7 +544,7 @@ public class OrderWork extends BaseController
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		try{
-			mv.addObject("checkType", getCheckTypeDict());
+			mv.addObject("checkType", commonService.getCheckTypeDict());
 			PageData order = orderWorkService.getCheckRsById(pd);
 			order.putAll(pd);
 			mv.setViewName("DoctOrder/checkRsEdit");

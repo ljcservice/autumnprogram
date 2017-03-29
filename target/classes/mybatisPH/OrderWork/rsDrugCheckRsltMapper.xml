@@ -69,6 +69,7 @@
 		where 
 		 <!-- 审核结果组号 -->  
 		ngroupnum = #{pd.ngroupnum} 
+		order by CHECKDATE
 	</select>
 	<delete id="delCheckRsByNgroupnum" parameterType="pd" >
 		delete from RS_DRUG_CHECKRSLT
@@ -98,4 +99,8 @@
 	<update id="updateCheckResult"  parameterType="pd"  >
 		update RS_DRUG_CHECKRSLT set ALERT_HINT=#{ALERT_HINT} where  rs_id=#{rs_id}
 	</update>
+	
+	<select id="prescReportList" parameterType="pd" resultType="pd">
+		select 
+	</select>
 </mapper>

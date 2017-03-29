@@ -99,4 +99,8 @@
 	<update id="updateCheckResult"  parameterType="pd"  >
 		update RS_DRUG_CHECKRSLT set ALERT_HINT=#{ALERT_HINT} where  rs_id=#{rs_id}
 	</update>
+	
+	<select id="prescReportList" parameterType="pd" resultType="pd">
+		select 
+	</select>
 </mapper>

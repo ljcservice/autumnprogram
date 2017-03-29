@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ts.controller.base.BaseController;
 import com.ts.entity.Page;
 import com.ts.entity.system.User;
+import com.ts.service.DoctOrder.OrderWork.CommonService;
 import com.ts.service.DoctOrder.OrderWork.IOrderWorkService;
 import com.ts.service.DoctOrder.OrderWork.PrescService;
 import com.ts.service.system.user.UserManager;
@@ -28,7 +29,8 @@ import com.ts.util.doctor.DoctorConst;
 @Controller
 @RequestMapping(value="/presc")
 public class PrescController extends BaseController{
-
+	@Autowired
+	private CommonService commonService;
 	@Autowired
 	private PrescService prescService;
 	@Autowired
@@ -58,7 +60,7 @@ public class PrescController extends BaseController{
 			}
 			mv.addObject("rstypeMap", DoctorConst.rstypeMap); 
 			mv.addObject("rstypeColorMap", DoctorConst.rstypeColorMap); 
-			mv.addObject("checktypeMap", getCheckTypeDict()); 
+			mv.addObject("checktypeMap", commonService.getCheckTypeDict()); 
 			mv.addObject("prescList", prescList);
 			mv.setViewName("DoctOrder/presc/prescList");
 			mv.addObject("pd", pd);
@@ -126,7 +128,7 @@ public class PrescController extends BaseController{
 			}
 			mv.addObject("CheckRss",map);
 		}
-		mv.addObject("rsTypeDict",getCheckTypeDict());
+		mv.addObject("rsTypeDict",commonService.getCheckTypeDict());
 		mv.addObject("pd", pd);
 		mv.setViewName("DoctOrder/presc/prescDetailList");
 		
@@ -163,7 +165,7 @@ public class PrescController extends BaseController{
 		mv.addObject("checkRss", checkRss);
 
 		mv.setViewName("DoctOrder/presc/checkRsView");
-		mv.addObject("rsTypeDict",getCheckTypeDict());
+		mv.addObject("rsTypeDict",commonService.getCheckTypeDict());
 		
 		// 当前登录专家
 		User user = getCurrentUser();
@@ -176,22 +178,6 @@ public class PrescController extends BaseController{
 			mv.addObject("modifyFlag", 0);
 		}
 		return mv;
-	}
-	
-	/**
-	 * 获得字段数据
-	 * @return
-	 * @throws Exception
-	 */
-	private Map<String, PageData> getCheckTypeDict() throws Exception
-	{
-		Map<String, PageData> rs = new HashMap<>();
-		// 审核字典
-		List<PageData> rsTypeDict = this.orderWorkService.selectRsTypeDict();
-		for(PageData pd : rsTypeDict){
-			rs.put(pd.getString("RS_TYPE_CODE"), pd);
-		}
-		return rs;
 	}
 	
 	/**

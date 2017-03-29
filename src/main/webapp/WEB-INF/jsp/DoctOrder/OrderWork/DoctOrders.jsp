@@ -513,7 +513,7 @@
 			url: basePath + 'DoctOrder/SaveShortcut.do', 
 	    	data: {checkType:checkType,order_no:order_no,order_sub_no:order_sub_no
 	    		,order_name:order_name,order_code:order_code,tmpOrder_Name:tmpOrder_Name,tmpOrder_code:tmpOrder_code,tmpOrder_sub_no:tmpOrder_sub_no
-	    		,tmpOrder_no:tmpOrder_no,count:count,checkText:checkText,ngroupnum:ngroupnum,patient_id:patId,visit_id:visitId},
+	    		,tmpOrder_no:tmpOrder_no,count:count,checkText:checkText,ngroupnum:ngroupnum,patient_id:patId,visit_id:visitId,business_type:0},
 			dataType:'json',
 			async:false,
 			cache: false,

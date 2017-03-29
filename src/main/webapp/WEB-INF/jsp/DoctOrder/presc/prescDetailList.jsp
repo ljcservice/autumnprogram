@@ -380,7 +380,7 @@
 			url: basePath + 'presc/saveShortcut.do', 
 	    	data: {checkType:checkType,order_no:order_no,order_sub_no:order_sub_no
 	    		,order_name:order_name,order_code:order_code,tmpOrder_Name:tmpOrder_Name,tmpOrder_code:tmpOrder_code,tmpOrder_sub_no:tmpOrder_sub_no
-	    		,tmpOrder_no:tmpOrder_no,count:count,checkText:checkText,ngroupnum:ngroupnum,id:id},
+	    		,tmpOrder_no:tmpOrder_no,count:count,checkText:checkText,ngroupnum:ngroupnum,id:id,business_type:1},
 			dataType:'json',
 			async:false,
 			cache: false,
