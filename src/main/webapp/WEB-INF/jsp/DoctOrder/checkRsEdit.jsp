@@ -45,13 +45,20 @@
 													<td rowspan="1">${checkType.get(pd.RS_DRUG_TYPE.toString()).RS_TYPE_NAME} </td>
 												</tr>
 												<tr>
-													<td width="15%;" style="text-align: right;padding-top: 10px;">医嘱名称:</td>
+													<td width="15%;" rowspan="2" style="text-align: right;padding-top: 10px;"><c:if test="${pd.business_type==0}">医嘱名称</c:if><c:if test="${pd.business_type==1}">药品名称</c:if>:</td>
 													<td width="35%;">
 														<div>
 															${pd.DRUG_ID1_NAME}
 														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>
 														<div id="divorderMap2">
 															${pd.DRUG_ID2_NAME}
+															<c:if test="${pd.business_type==1}">
+																<span style="color: #ffb752">（此处包括同日其他处方的药品）</span>
+															</c:if>
 														</div>
 													</td>
 												</tr>

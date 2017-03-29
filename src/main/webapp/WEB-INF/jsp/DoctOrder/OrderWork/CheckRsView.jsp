@@ -312,7 +312,7 @@ function toAddCheckRs(ngroupnum){
 	diag.show();
 }
 function editCheckRs(rs_id){
-	var url = path + "/DoctOrder/toEditCheckRs.do?rs_id="+rs_id;
+	var url = path + "/DoctOrder/toEditCheckRs.do?business_type=0&rs_id="+rs_id;
 	//top.jzts();
 	var diag = new top.Dialog();
 	diag.Drag=true;
