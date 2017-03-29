@@ -60,6 +60,16 @@ public class PrescServiceImpl implements PrescService{
 		}
 		return map;
 	}
+	public Map otherPrescListSpecial(PageData pd)throws Exception{
+		Map<String,String> map = new HashMap<String,String>();
+		List<PageData>	list =	(List<PageData>) daoph.findForList("PrescMapper.otherPrescListSpecial",pd);
+		if(list!=null){
+			for(PageData p:list){
+				map.put(p.getString("key"), p.getString("value"));
+			}
+		}
+		return map;
+	}
 	
 	/**
 	 * 设置为专家点评
@@ -82,5 +92,14 @@ public class PrescServiceImpl implements PrescService{
 		//更新病人住院记录pat_visit的状态为0合理1不合理2待定
 		//pd.put("ISCHECKTRUE", pd.getString("ISCHECKTRUE"));
 		updatePrescNgroupnum(pd);
+	}
+
+	/**
+	 * 当日其他人开具的处方详情
+	 * @param pd
+	 * @return
+	 */
+	public List<PageData> otherPrescDetailList(PageData pd)throws Exception{
+		return (List<PageData>) daoph.findForList("PrescMapper.otherPrescDetailList", pd);
 	}
 }

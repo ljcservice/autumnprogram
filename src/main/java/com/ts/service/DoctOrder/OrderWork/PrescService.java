@@ -47,6 +47,12 @@ public interface PrescService {
 	 * @return
 	 */
 	public Map prescListSpecial(PageData pd) throws Exception;
+	/**
+	 * 新增点评时查询处方的列表，同日包括其他处方的信息
+	 * @param pd
+	 * @return
+	 */
+	public Map otherPrescListSpecial(PageData pd)throws Exception;
 
 	/**
 	 * 设置为专家点评
@@ -56,5 +62,14 @@ public interface PrescService {
 	public void updateExpertPresc(PageData pd)throws Exception;
 
 	public void setCheckRsStatus(PageData pd)throws Exception;
+
+	/**
+	 * 当日其他人开具的处方详情
+	 * @param pd
+	 * @return
+	 */
+	public List<PageData> otherPrescDetailList(PageData pd)throws Exception;
+
+
 
 }
