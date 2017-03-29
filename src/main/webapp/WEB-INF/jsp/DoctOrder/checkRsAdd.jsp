@@ -37,8 +37,8 @@
 											<div>
 											<table id="table_report" class="table table-bordered table-hover">
 												<tr>
-													<td width="25%;" style="text-align: right;padding-top: 10px;">点评类型:</td>
-													<td width="75%;">
+													<td width="15%;" style="text-align: right;padding-top: 10px;">点评类型:</td>
+													<td width="85%;">
 														<select class="chosen-select form-control" style="vertical-align:top;width: 80px;" name="RS_DRUG_TYPE" id="RS_DRUG_TYPE" onchange="changeType(this);">
 															<c:forEach items="${checkType.entrySet()}" var="partTyp" varStatus="vs">
 																<option value="${partTyp.key}" <c:if test="${partTyp.key == 'iv_effect' }">selected</c:if>>${partTyp.value.rs_type_name}</option>
@@ -47,7 +47,7 @@
 													</td>
 												</tr>
 												<tr>
-													<td style="text-align: right;padding-top: 10px;">医嘱名称:</td>
+													<td style="text-align: right;padding-top: 10px;" rowspan="2"><c:if test="${pd.business_type==0}">医嘱名称</c:if><c:if test="${pd.business_type==1}">药品名称</c:if>:</td>
 													<td >
 														<div>
 															<select class="chosen-select form-control" name="orderDrug1" id="orderDrug1">
@@ -56,12 +56,17 @@
 																</c:forEach>
 															</select>
 														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>
 														<div id="divorderMap2" style="padding-top: 5px;">
-															<select class="chosen-select form-control" name="orderDrug2" id="orderDrug2" >
+															<select class="chosen-select form-control" name="orderDrug2" id="orderDrug2" style="width: 50px;">
 																<c:forEach items="${orderMap2.entrySet()}" var="partTyp" varStatus="vs">
 																	<option value="${partTyp.key}" <c:if test="${vs.index ==0}">selected</c:if>>${partTyp.value}</option>
 																</c:forEach>
 															</select>
+															<span style="color: #ffb752">（此处包括同日其他处方的明细）</span>
 														</div>
 													</td>
 												</tr>
