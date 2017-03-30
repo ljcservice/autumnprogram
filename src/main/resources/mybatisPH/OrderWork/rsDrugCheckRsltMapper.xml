@@ -101,6 +101,7 @@
 	</update>
 	
 	<select id="prescReportList" parameterType="pd" resultType="pd">
-		select 
+		  select a.rs_drug_type,count(a.rs_id) count
+  		  from RS_DRUG_CHECKRSLT a where IN_RS_TYPE=2 group by a.rs_drug_type
 	</select>
 </mapper>
