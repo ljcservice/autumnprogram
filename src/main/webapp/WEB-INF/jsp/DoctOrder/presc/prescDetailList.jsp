@@ -548,7 +548,6 @@
 		_trObj.style.backgroundColor = "red";
 		var drug1 = $("#checkDrug1");
 		var drug2 = $("#checkDrug2");
-		alert(exist_select);
 		//alert("setCount:"+setCount+".select_current:"+select_current+".select_other:"+select_other);
 		if(setCount == 1) {
 			tmpOrder_name   = _trObj.getAttributeNode("order_name").value;

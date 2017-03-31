@@ -42,9 +42,9 @@
 					<div class="row">
 						<div class="col-xs-12">
 						<!-- 检索  -->
-						<form action="report/prescReport.do" method="post" name="searchForm" id="searchForm">
+						<form action="report/ordersReport.do" method="post" name="searchForm" id="searchForm">
 								<div style="margin-bottom: 5px;">	
-									<div class="check-search nav-search" style="width: 600px;">
+									<div class="check-search nav-search" style="width: 400px;">
 										科室：
 										<span class="input-icon">
 											<input class="nav-search-input" autocomplete="off" id="ORG_NAME" type="text" name="ORG_NAME" value="${pd.ORG_NAME}" placeholder="科室名称" maxlength="32" />
@@ -52,14 +52,14 @@
 										</span>
 										医生：
 										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="DOCTOR_NAME" value="${pd.DOCTOR_NAME}" placeholder="诊断名称" maxlength="32"/>
+											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="DOCTOR_NAME" value="${pd.DOCTOR_NAME}" placeholder="医生 名称" maxlength="32"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
-										药品：
-										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="DRUG_NAME" value="${pd.DRUG_NAME}" placeholder="药品名称" maxlength="32"/>
-											<i class="ace-icon fa fa-search nav-search-icon"></i>
-										</span>
+<!-- 										药品： -->
+<!-- 										<span class="input-icon"> -->
+<!-- 											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="DRUG_NAME" value="${pd.DRUG_NAME}" placeholder="诊断" maxlength="32"/> -->
+<!-- 											<i class="ace-icon fa fa-search nav-search-icon"></i> -->
+<!-- 										</span> -->
 									</div>
 									<div class="check-search" style="width: 77px;">
 										<a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
