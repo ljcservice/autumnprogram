@@ -92,7 +92,7 @@
 							<c:choose>
 								<c:when test="${not empty prescDetailList}">
 									<c:forEach items="${prescDetailList}" var="order" varStatus="vs">
-										<tr ondblclick="orderCheck(this,1)"  id="tr${order.order_no}${order.order_sub_no}" 
+										<tr ondblclick="orderCheck(this,1)"  id="tr${order.order_no}_${order.order_sub_no}" 
 											order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_code="${order.drug_code}" order_name="${order.drug_name }" >
 											<c:set var="key1" >
 											${order.order_no.toString()}_${order.order_sub_no.toString()}
@@ -167,7 +167,7 @@
 							<c:choose>
 								<c:when test="${not empty otherPrescDetailList}">
 									<c:forEach items="${otherPrescDetailList}" var="order" varStatus="vs">
-										<tr ondblclick="orderCheck(this,2)"  id="tr${order.order_no}${order.order_sub_no}" 
+										<tr ondblclick="orderCheck(this,2)"  id="tr${order.order_no}_${order.order_sub_no}" 
 											order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_code="${order.drug_code}" order_name="${order.drug_name }" >
 											<c:set var="key1" >
 											${order.order_no.toString()}_${order.order_sub_no.toString()}
@@ -331,7 +331,7 @@
 		var cji = $("#checkJsonInfo").val();
 		if(cji == '' || cji == 'undefind') return ;
 		var jsonObj = JSON.parse(cji);
-		var id = "#tr" + jsonObj.order_no + "" + jsonObj.order_sub_no ;
+		var id = "#tr" + jsonObj.order_no + "_" + jsonObj.order_sub_no ;
 		$(id).css("background-Color","red");
 		setCount = jsonObj.setCount;
 		checkFlag = jsonObj.checkFlag ;
@@ -379,7 +379,7 @@
 			type: "POST",
 			url: basePath + 'presc/saveShortcut.do', 
 	    	data: {checkType:checkType,order_no:order_no,order_sub_no:order_sub_no
-	    		,order_name:order_name,order_code:order_code,tmpOrder_Name:tmpOrder_Name,tmpOrder_code:tmpOrder_code,tmpOrder_sub_no:tmpOrder_sub_no
+	    		,order_name:order_name,order_code:order_code,tmpOrder_name:tmpOrder_name,tmpOrder_code:tmpOrder_code,tmpOrder_sub_no:tmpOrder_sub_no
 	    		,tmpOrder_no:tmpOrder_no,count:count,checkText:checkText,ngroupnum:ngroupnum,id:id,business_type:1},
 			dataType:'json',
 			async:false,
@@ -431,9 +431,11 @@
 			callback: function(result) {
 				if(!result) return ;
 				$("#dragCheck").hide();
-				var trFirst = $("#tr" + order_no + order_sub_no);
-				if(trFirst) trFirst.css("background-Color",oldColor);
-				$("#tr" + tmpOrder_no + tmpOrder_sub_no).css("background-Color",tmpColor);
+				var trFirst = $("#tr" + order_no+"_" + order_sub_no);
+				if(trFirst!=null && trFirst!="undefined") {
+					trFirst.css("background-Color",tmpColor);
+				}
+				$("#tr" + tmpOrder_no+"_" + tmpOrder_sub_no).css("background-Color",tmpColor);
 				reSetCheck();
 			}
 		  }
@@ -467,6 +469,12 @@
 		order_name   = "";
 		order_code = "";
 		checkJson    = "";
+		
+		tmpOrder_code   = "";
+		tmpOrder_name   = "";
+		tmpOrder_no     = "";
+		tmpOrder_sub_no = "";
+		tmpColor        = "";
 		$("#resetCheckId").text("未选择点评项");
 		$("#shortcutNameSpan").text("快捷点评");
 		$("#shortcutName").val("");
@@ -476,6 +484,7 @@
 		select_current = 0 ;
 		//同日其他处方选择标识
 		select_other = 0 ;
+		exist_select = 0;
 		cleanDragDrug();
 		setCheckJsonInfo();
 	}
@@ -485,12 +494,12 @@
 		$("#checkDrug2").text("");
 	}
 	
-	var tmpOrder_Name   = "";
+	var tmpOrder_code   = "";
+	var tmpOrder_name   = "";
 	var tmpOrder_no     = "";
-	var tmpOrder_code     = "";
 	var tmpOrder_sub_no = "";
 	var tmpColor        = "";
-	
+	var exist_select = 0;
 	//当前处方选择标识
 	var select_current = 0 ;
 	//同日其他处方选择标识
@@ -505,58 +514,77 @@
 				select_other = 0;
 			}
 			_trObj.style.backgroundColor = oldColor;
-			order_no     = "";
-			order_sub_no = "";
-			order_name   = "";
-			order_code = "";
-			//setCount++;
+			if(type==1){
+				tmpOrder_code   = "";
+				tmpOrder_name   = "";
+				tmpOrder_no     = "";
+				tmpOrder_sub_no = "";
+			}
+			if(type==2){
+				order_no     = "";
+				order_sub_no = "";
+				order_name   = "";
+				order_code = "";
+			}
+			exist_select -=1;
 			setCheckJsonInfo();
 			return ;
 		}
 		if(setCount ==1 && type ==2){
-			$(_trObj).children().eq(1).tips({ side:3, msg:'单项点评只允许选择当前处方的明细做点评', bg:'#AE81FF', time:2 });
+			$(_trObj).children().eq(1).tips({ side:2, msg:'单项点评只允许选择当前处方的明细做点评', bg:'#AE81FF', time:2 });
 			return;
 		}
 		if(select_other==1 && type ==2 && setCount == 2){
-			$(_trObj).children().eq(1).tips({ side:3, msg:'最多只允许选择一个其他处方的明细做点评', bg:'#AE81FF', time:2 });
+			$(_trObj).children().eq(1).tips({ side:2, msg:'最多只允许选择一个其他处方的明细做点评', bg:'#AE81FF', time:2 });
 			return;
 		}
-		
 		if(type==1){
 			select_current = 1;
 		}else{
 			select_other = 1;
 		}
+		exist_select +=1;
 		var myColor = _trObj.style.backgroundColor;
 		_trObj.style.backgroundColor = "red";
 		var drug1 = $("#checkDrug1");
 		var drug2 = $("#checkDrug2");
+		alert(exist_select);
+		//alert("setCount:"+setCount+".select_current:"+select_current+".select_other:"+select_other);
 		if(setCount == 1) {
-			tmpOrder_Name   = _trObj.getAttributeNode("order_name").value;
+			tmpOrder_name   = _trObj.getAttributeNode("order_name").value;
 			tmpOrder_code   = _trObj.getAttributeNode("order_code").value;
 			tmpOrder_no     = _trObj.getAttributeNode("order_no").value;
 			tmpOrder_sub_no = _trObj.getAttributeNode("order_sub_no").value;
 			tmpColor        = myColor;
 			
+			setCheckJsonInfo();
 			drug1.text(_trObj.getAttributeNode("order_name").value);
 			alert("一个药品可以做添加点评项目");
 			$(".widget-title").text(checkName);
 			$("#dragCheck").show(500);
 		}else if (setCount == 2 ) {
-			oldColor     = myColor;
-			order_no     = _trObj.getAttributeNode("order_no").value;
-			order_sub_no = _trObj.getAttributeNode("order_sub_no").value;
-			order_name   = _trObj.getAttributeNode("order_name").value;
-			order_code   = _trObj.getAttributeNode("order_code").value;
-			//setCount--;
-			setCheckJsonInfo();
-			if(select_current+select_other==2){
+			if(exist_select==1){
+				tmpOrder_name   = _trObj.getAttributeNode("order_name").value;
+				tmpOrder_code   = _trObj.getAttributeNode("order_code").value;
+				tmpOrder_no     = _trObj.getAttributeNode("order_no").value;
+				tmpOrder_sub_no = _trObj.getAttributeNode("order_sub_no").value;
+				tmpColor        = myColor;
+			}else if(exist_select==2){
+				oldColor     = myColor;
+				order_no     = _trObj.getAttributeNode("order_no").value;
+				order_sub_no = _trObj.getAttributeNode("order_sub_no").value;
+				order_name   = _trObj.getAttributeNode("order_name").value;
+				order_code   = _trObj.getAttributeNode("order_code").value;
+			
+				setCheckJsonInfo();
 				drug1.text(order_name);
 				var  text = "<b>与</b> " + _trObj.getAttributeNode("order_name").value
 				drug2.html(text);
 				alert("两个药品可以做添加点评项目");
 				$(".widget-title").text(checkName);
 				$("#dragCheck").show(500);
+			}else{
+				alert("请刷新页面重试！！！");
 			}
 		}
 
