@@ -95,7 +95,7 @@ public class LoginController extends BaseController {
 				String USERNAME = KEYDATA[0];	//登录过来的用户名
 				String PASSWORD  = KEYDATA[1];	//登录过来的密码
 				pd.put("USERNAME", USERNAME);
-				if(Tools.notEmpty(sessionCode) ){		//判断登录验证码&& sessionCode.equalsIgnoreCase(code)
+				if(Tools.notEmpty(sessionCode)&& sessionCode.equalsIgnoreCase(code)){ //判断登录验证码
 					String passwd = new SimpleHash("SHA-1", USERNAME, PASSWORD).toString();	//密码加密
 					pd.put("PASSWORD", passwd);
 					User user = userService.getUserByNameAndPwd(pd);	//根据用户名和密码去读取用户信息
@@ -243,19 +243,19 @@ public class LoginController extends BaseController {
 					}
 				}
 				session.removeAttribute(USERNAME + Const.SESSION_CURRENT_MENU_LIST);
-//				if(roleMax!=null && roleMax < 2){
-//					//超级管理员和授权角色进入系统菜单					
-//					session.setAttribute(USERNAME + Const.SESSION_CURRENT_MENU_LIST, menuList1);
-//					session.removeAttribute("changeMenu");
-//					session.setAttribute("changeMenu", "1");
-//					menuList = menuList1;
-//				}else{
+				if(roleMax!=null && roleMax < 2){
+					//超级管理员和授权角色进入系统菜单					
+					session.setAttribute(USERNAME + Const.SESSION_CURRENT_MENU_LIST, menuList1);
+					session.removeAttribute("changeMenu");
+					session.setAttribute("changeMenu", "1");
+					menuList = menuList1;
+				}else{
 					//业务角色进入业务菜单
 					session.setAttribute(USERNAME + Const.SESSION_CURRENT_MENU_LIST, menuList2);
 					session.removeAttribute("changeMenu");
 					session.setAttribute("changeMenu", "2");
 					menuList = menuList2;
-//				}
+				}
 			}else{
 				menuList = (List<Menu>)session.getAttribute(USERNAME + Const.SESSION_CURRENT_MENU_LIST);
 			}
