@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import net.sf.json.JSONArray;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +41,7 @@ import com.ts.util.doctor.DoctorConst;
 @RequestMapping(value="/DoctOrder")
 public class OrderWork extends BaseController
 {
-	@Autowired
+	@Resource(name="commonServicePdss")
 	private CommonService commonService;
 	@Autowired
 	private IOrderWorkService orderWorkService;
@@ -322,8 +324,8 @@ public class OrderWork extends BaseController
 		pd.put("RS_DRUG_TYPE", pd.get("checkType"));
 		pd.put("checkdate", DateUtil.getDay());
 		if("1".equals(count)){
-			pd.put("drug_id1", pd.getString("order_code"));
-			pd.put("drug_id1_name", pd.getString("tmpOrder_Name"));
+			pd.put("drug_id1", pd.getString("tmpOrder_code"));
+			pd.put("drug_id1_name", pd.getString("tmpOrder_name"));
 			pd.put("rec_main_no1", pd.getString("tmpOrder_no"));
 			pd.put("rec_sub_no1", pd.getString("tmpOrder_sub_no"));
 			pd.put("drug_id2", "");
@@ -337,8 +339,9 @@ public class OrderWork extends BaseController
 			pd.put("drug_id1_name", pd.getString("order_name"));
 			pd.put("rec_main_no1", pd.getString("order_no"));
 			pd.put("rec_sub_no1", pd.getString("order_sub_no"));
-			pd.put("drug_id2", pd.getString("tmpOrder_Code"));
-			pd.put("drug_id2_name", pd.getString("tmpOrder_Name"));
+			
+			pd.put("drug_id2", pd.getString("tmpOrder_code"));
+			pd.put("drug_id2_name", pd.getString("tmpOrder_name"));
 			pd.put("rec_main_no2", pd.getString("tmpOrder_no"));
 			pd.put("rec_sub_no2", pd.getString("tmpOrder_sub_no"));
 		}
@@ -374,8 +377,8 @@ public class OrderWork extends BaseController
 			// 当前登录用户
 			User user = getCurrentUser();
 			pd = this.getPageData();
-			pd.put("CHECK_USER", user.getUSERNAME());
-			pd.put("CHECK_TIME", new Date());
+//			pd.put("CHECK_USER", user.getUSERNAME());
+//			pd.put("CHECK_TIME", new Date());
 			orderWorkService.deleteCheckRsById(pd);
 			errInfo="success";
 		} catch(Exception e){

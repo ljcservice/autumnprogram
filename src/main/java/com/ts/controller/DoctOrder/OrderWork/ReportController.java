@@ -1,16 +1,13 @@
 package com.ts.controller.DoctOrder.OrderWork;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ts.controller.base.BaseController;
@@ -20,16 +17,13 @@ import com.ts.service.DoctOrder.OrderWork.CommonService;
 import com.ts.service.DoctOrder.OrderWork.IOrderWorkService;
 import com.ts.service.DoctOrder.OrderWork.PrescService;
 import com.ts.service.system.user.UserManager;
-import com.ts.util.DateUtil;
+import com.ts.util.MyDecimalFormat;
 import com.ts.util.PageData;
-import com.ts.util.Tools;
-import com.ts.util.app.AppUtil;
-import com.ts.util.doctor.DoctorConst;
 
 @Controller
 @RequestMapping(value="/report")
 public class ReportController extends BaseController{
-	@Autowired
+	@Resource(name="commonServicePdss")
 	private CommonService commonService;
 	@Autowired
 	private PrescService prescService;
@@ -52,8 +46,22 @@ public class ReportController extends BaseController{
 			User user = getCurrentUser();
 			mv.addObject("pd", pd);
 			//处方问题统计
-			List<PageData>	reportList = prescService.prescReportList(pd);
-
+			List<PageData>	reportList = prescService.prescReport(pd);
+			long total = 0;
+			for(PageData p:reportList){
+				Object count = p.get("count");
+				total += Long.valueOf(count.toString());
+			}
+			for(PageData p:reportList){
+				BigDecimal count =  (BigDecimal) p.get("count");
+				if(count.doubleValue()==0){
+					p.put("percent", "0.00 %");
+				}else{
+					BigDecimal percent = count.multiply(new BigDecimal(100)).divide(new BigDecimal(total),2, BigDecimal.ROUND_HALF_UP);
+					String percentv = MyDecimalFormat.format(percent.doubleValue());
+					p.put("percent", percentv +" %");
+				}
+			}
 			mv.addObject("reportList", reportList);
 			mv.addObject("checktypeMap", commonService.getCheckTypeDict()); 
 			mv.setViewName("DoctOrder/report/prescReport");

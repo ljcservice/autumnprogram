@@ -29,7 +29,7 @@ import com.ts.util.doctor.DoctorConst;
 @Controller
 @RequestMapping(value="/presc")
 public class PrescController extends BaseController{
-	@Autowired
+	@Resource(name="commonServicePdss")
 	private CommonService commonService;
 	@Autowired
 	private PrescService prescService;
@@ -207,10 +207,14 @@ public class PrescController extends BaseController{
 				pd.put("ngroupnum", Presc.getString("ngroupnum"));
 			}
 		}
+		if("0".equals(pd.getString("business_type"))){
+			pd.put("in_rs_type", 4);
+		}else if("1".equals(pd.getString("business_type"))){
+			pd.put("in_rs_type", 2);
+		}
 		//更新处方的关联问题字段
 		this.prescService.updatePrescNgroupnum(pd);
 		pd.put("rs_id", this.get32UUID());
-		pd.put("in_rs_type", pd.getString("checkType"));
 		pd.put("alert_level", pd.getString("r"));
 		pd.put("alert_hint", pd.getString("checkText"));
 		pd.put("alert_cause", "药师自审");
