@@ -100,8 +100,38 @@
 		update RS_DRUG_CHECKRSLT set ALERT_HINT=#{ALERT_HINT} where  rs_id=#{rs_id}
 	</update>
 	
-	<select id="prescReportList" parameterType="pd" resultType="pd">
-		  select a.rs_drug_type,count(a.rs_id) count
-  		  from RS_DRUG_CHECKRSLT a where IN_RS_TYPE=2 group by a.rs_drug_type
+	<select id="prescReport" parameterType="pd" resultType="pd">
+		select a.RS_TYPE_NAME,count(b.rs_id) count
+  		from rs_type_dict a left join ( 
+  					select m.rs_id,m.IN_RS_TYPE,m.RS_DRUG_TYPE,m.CHECKDATE
+  					FROM RS_DRUG_CHECKRSLT m, presc n 
+  					WHERE M.NGROUPNUM = N.NGROUPNUM
+					<if test="DOCTOR_NAME != null and DOCTOR_NAME != ''"> <!-- 医生名-->
+						and n.DOCTOR_NAME LIKE CONCAT(CONCAT('%', #{DOCTOR_NAME}),'%')
+					</if>
+					<if test="ORG_NAME != null and ORG_NAME != ''"> <!-- 诊断名-->
+						and n.ORG_NAME  LIKE CONCAT(CONCAT('%', #{ORG_NAME}),'%')
+					</if>
+					<if test="DRUG_NAME != null and DRUG_NAME != ''"> <!-- 药品名-->
+					 and exists( select PRESC_ID from presc_detail q 
+					 	where n.id = q.PRESC_ID 
+						and q.DRUG_NAME  LIKE CONCAT(CONCAT('%', #{DRUG_NAME}),'%')
+					 )
+					</if>
+  				)b
+	  			on ( 
+	  				a.RS_TYPE_CODE = b.RS_DRUG_TYPE and b.IN_RS_TYPE='2' 
+					<if test="beginDate != null and beginDate != ''"> <!--开始日期-->
+						and b.CHECKDATE &gt;= #{beginDate}
+					</if>
+					<if test="endDate != null and endDate != ''"> <!--开始日期-->
+						and b.CHECKDATE &lt;= #{endDate}
+					</if>
+	  			)
+  		where 1=1
+		<if test="RS_DRUG_TYPE != null and RS_DRUG_TYPE != ''"> <!-- 类型-->
+			and a.RS_TYPE_CODE = #{RS_DRUG_TYPE} 
+		</if>
+  		group by a.RS_TYPE_NAME
 	</select>
 </mapper>
