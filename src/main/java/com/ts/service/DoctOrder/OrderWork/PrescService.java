@@ -76,7 +76,7 @@ public interface PrescService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<PageData> prescReportList(PageData pd)throws Exception;
+	public List<PageData> prescReport(PageData pd)throws Exception;
 
 
 

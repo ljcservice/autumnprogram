@@ -11,7 +11,7 @@ import com.ts.service.DoctOrder.OrderWork.CommonService;
 import com.ts.service.DoctOrder.OrderWork.IOrderWorkService;
 import com.ts.util.PageData;
 
-@Service(value="commonService")
+@Service(value="commonServicePdss")
 public class CommonServiceImpl implements CommonService{
 	
 	@Autowired

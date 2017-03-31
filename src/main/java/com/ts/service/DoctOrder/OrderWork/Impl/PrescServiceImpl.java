@@ -110,7 +110,7 @@ public class PrescServiceImpl implements PrescService{
 	 * @return
 	 * @throws Exception
 	 */
-	public List<PageData> prescReportList(PageData pd)throws Exception{
-		return (List<PageData>) daoph.findForList("rsDrugCheckRsltMapper.prescReportList", pd);
+	public List<PageData> prescReport(PageData pd)throws Exception{
+		return (List<PageData>) daoph.findForList("rsDrugCheckRsltMapper.prescReport", pd);
 	}
 }
