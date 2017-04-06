@@ -280,7 +280,8 @@
 			t.NGROUPNUM,
 			t.ISORDERCHECK,
 			t.expert_id,
-			t.ISCHECKTRUE
+			t.ISCHECKTRUE,
+			t.ATTENDING_DOCTOR
       		,m.RS_DRUG_TYPES
       		,n.DIAGNOSIS_DESC,nvl(N.DIAGNOSIS_COUNT,0) DIAGNOSIS_COUNT
 	    from pat_visit t
