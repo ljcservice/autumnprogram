@@ -180,5 +180,13 @@ public interface IOrderWorkService {
 	 * 设置住院病历为专家点评
 	 */
 	public void updateExpertPatVisit(PageData pd) throws Exception ;
+
+	/**
+	 * 医嘱报表
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> ordersReport(PageData pd) throws Exception ;
 	
 }

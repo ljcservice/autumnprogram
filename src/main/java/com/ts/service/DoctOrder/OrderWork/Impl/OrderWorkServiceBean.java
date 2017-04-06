@@ -133,6 +133,7 @@ public class OrderWorkServiceBean implements IOrderWorkService {
 				map.put(p.getString("key"), p.getString("value"));
 			}
 		}
+		
 		return map;
 	}
 
@@ -178,5 +179,14 @@ public class OrderWorkServiceBean implements IOrderWorkService {
 	@Override
 	public void updateExpertPatVisit(PageData pd) throws Exception {
 		daoph.update("PatVisitMapper.updateExpertPatVisit", pd);
+	}
+	/**
+	 * 医嘱报表
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> ordersReport(PageData pd) throws Exception {
+		return (List<PageData>) daoph.findForList("rsDrugCheckRsltMapper.ordersReport", pd);
 	}
 }
