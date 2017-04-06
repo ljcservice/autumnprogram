@@ -90,17 +90,18 @@
 							<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
 							<thead>
 								<tr>
-									<th class="center" style="width:50px;">序号</th>
-									<th class="center">患者ID</th>
-									<th class="center">患者名称</th>
-									<th class="center">诊断结果数</th>
-									<th class="center">入院科室</th>
-									<th class="center"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>入院时间</th>
-									<th class="center">出院科室</th>
-									<th class="center"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>出院时间</th>
-									<th class="center">点评</th>
-									<th class="center">合理</th>
-									<th class="center" style="width:260px;">结果</th>
+									<th class="center" nowrap style="width:35px;">序号</th>
+									<th class="center" nowrap>患者ID</th>
+									<th class="center" nowrap>患者名称</th>
+									<th class="center" nowrap>诊断结果数</th>
+									<th class="center" nowrap>主治医师</th>
+									<th class="center" nowrap>入院科室</th>
+									<th class="center" nowrap><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>入院时间</th>
+									<th class="center" nowrap>出院科室</th>
+									<th class="center" nowrap><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>出院时间</th>
+									<th class="center" nowrap>点评</th>
+									<th class="center" nowrap>合理</th>
+									<th class="center" nowrap>结果</th>
 								</tr>
 							</thead>
 													
@@ -112,39 +113,42 @@
 									<c:forEach items="${patVisits}" var="patVisit" varStatus="vs" >
 												
 										<tr ondblclick="viewDetail('${patVisit.PATIENT_ID}','${patVisit.VISIT_ID}','${patVisit.ngroupnum}');">
-											<td class='center' style="width: 30px;">${vs.index+1}</td>
-											<td class="center"> <a onclick="javascript:viewDetail('${patVisit.PATIENT_ID}','${patVisit.VISIT_ID}','${patVisit.ngroupnum}')" style="cursor:pointer;">${patVisit.PATIENT_ID}(${patVisit.VISIT_ID})</a> </td>
-											<td class="center">${patVisit.NAME }</td>
-											<td class="center">${patVisit.DIAGNOSIS_COUNT } &nbsp;
-												<a class="fa fa-flag"
-															data-rel="popover" 
-															data-placement="right" 
-															title="<i class='ace-icon fa fa-check red'></i> ${patVisit.NAME }" 
-															data-content="<font size='0'>
-																<c:forEach items="${patVisit.DIAGNOSIS_DESC}" var="rs">
-																	<b>${rs}</b><br>
-																</c:forEach>	
-															</font>"
-														></a>
+											<td nowrap class='center' style="width: 30px;">${vs.index+1}</td>
+											<td nowrap class="center"> <a onclick="javascript:viewDetail('${patVisit.PATIENT_ID}','${patVisit.VISIT_ID}','${patVisit.ngroupnum}')" style="cursor:pointer;">${patVisit.PATIENT_ID}(${patVisit.VISIT_ID})</a> </td>
+											<td nowrap class="center">${patVisit.NAME }</td>
+											<td nowrap class="center">${patVisit.DIAGNOSIS_COUNT } &nbsp;
+												<c:if test="${patVisit.DIAGNOSIS_COUNT!=0}">
+														<a class="fa fa-flag"
+																data-rel="popover" 
+																data-placement="right" 
+																title="<i class='ace-icon fa fa-check red'></i> ${patVisit.NAME }" 
+																data-content="<font size='0'>
+																	<c:forEach items="${patVisit.DIAGNOSIS_DESC}" var="rs">
+																		<b>${rs}</b><br>
+																	</c:forEach>	
+																</font>"
+															></a>
+												</c:if>
 											</td>
-											<td class="center">${patVisit.in_dept_name }</td>
-											<td class="center"><fmt:formatDate value="${patVisit.admission_date_time }" pattern="yyyy-MM-dd"/> </td>
-											<td class="center"> ${patVisit.out_dept_name }</td>
-											<td class="center"><fmt:formatDate value="${patVisit.discharge_date_time}" pattern="yyyy-MM-dd"/> </td> 
-											<td class="center">
+											<td nowrap class="center">${patVisit.ATTENDING_DOCTOR }</td>
+											<td nowrap class="center">${patVisit.in_dept_name }</td>
+											<td nowrap class="center"><fmt:formatDate value="${patVisit.admission_date_time }" pattern="yyyy-MM-dd"/> </td>
+											<td nowrap class="center"> ${patVisit.out_dept_name }</td>
+											<td nowrap class="center"><fmt:formatDate value="${patVisit.discharge_date_time}" pattern="yyyy-MM-dd"/> </td> 
+											<td nowrap class="center">
 												<c:choose>
 													<c:when test="${patVisit.ISORDERCHECK == 0 }">未点评</c:when>
 													<c:otherwise> 已点评 </c:otherwise>
 												</c:choose>
 											</td>
-											<td style="width: 60px;" class="center">
+											<td nowrap class="center">
 												<c:choose>
 													<c:when test="${patVisit.ISCHECKTRUE == 0 }"> 合理 </c:when>
 													<c:when test="${patVisit.ISORDERCHECK == 1 }"> 不合理</c:when>
 													<c:otherwise>待定</c:otherwise>
 												</c:choose>
 											</td>
-											<td class="center">
+											<td class="center" nowrap>
 												<div class="hidden-sm hidden-xs btn-group">
 													<c:forEach items="${patVisit.RS_DRUG_TYPES}" var="rs_type" varStatus="vs" >
 														<a class="btn btn-xs ${rstypeColorMap.get(rs_type)}"  title="${checktypeMap.get(rs_type).RS_TYPE_NAME}" >

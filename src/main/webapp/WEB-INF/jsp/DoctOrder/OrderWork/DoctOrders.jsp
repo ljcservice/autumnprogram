@@ -38,11 +38,11 @@
 							<input type="hidden" name="shortcutName" value="${page.pd.shortcutName}" id="shortcutName"/>
 							<!-- 点评结果之一 -->
 							<input type="hidden" name="checkJsonInfo" value='${page.pd.checkJsonInfo}' id="checkJsonInfo"/>
-						<div style="vertical-align:bottom;padding-top: 5px;padding-bottom: 5px;">
+						<div id="btn-toolbar" style="vertical-align:bottom;padding: 3px;">
 							<div style="margin-top: 5px;margin-bottom: 5px;">
 								<span><b> <font color="blue" >医嘱信息</font></b></span>
 								<div style="float: right;margin-bottom: 5px;">
-									<div class="btn-toolbar" style="float: right;">
+									<div  class="btn-toolbar" style="float: right;">
 									
 									<div class="btn-group">
 										<button data-toggle="dropdown" class="btn btn-sm btn-yellow">
@@ -178,7 +178,7 @@
 								</div>
 							</div>
 						</div>
-						<div >
+						<div style="width: 100%;height: auto;">
 						<!-- 	常规查看  -->
 						<c:if test="${page.pd.show_type== null || page.pd.show_type=='' || page.pd.show_type==0 }">
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:10px;">
@@ -205,7 +205,7 @@
 											<c:set var="key1" >
 											${order.order_no.toString()}_${order.order_sub_no.toString()}
 											</c:set>
-											<td class='center' style="padding-bottom: 0px;">
+											<td nowrap class='center' style="padding-bottom: 0px;">
 												<c:if test="${CheckRss.containsKey(key1)}">
 												  	
 														<a class="fa fa-flag red bigger-130"
@@ -229,21 +229,21 @@
 												</c:if>
 											</td>
 											
-											<td class='center' >
+											<td nowrap class='center' >
 												${order.order_Text }
 											</td>
-											<td class="center ">
+											<td nowrap class="center ">
 												${orderClassMap.get(order.order_class.toString())}
 											</td>
-											<td class="center " >${order.dept_name}</td>
-											<td class="center " >${order.frequency }</td>
-											<td class="center ">
+											<td nowrap class="center " >${order.dept_name}</td>
+											<td nowrap class="center " >${order.frequency }</td>
+											<td nowrap class="center ">
 												<fmt:formatNumber value="${order.dosage }" pattern="#0.00"></fmt:formatNumber>
 												${order.dosage_units }
 											</td>
-											<td class="center " >${order.administration } </td>
-											<td class="center " >${order.start_date_time }</td>
-											<td class="center " >${order.stop_date_time }</td>
+											<td nowrap class="center " >${order.administration } </td>
+											<td nowrap class="center " >${order.start_date_time }</td>
+											<td nowrap class="center " >${order.stop_date_time }</td>
 										</tr>
 									
 									</c:forEach>
@@ -287,10 +287,10 @@
 											<tr ondblclick="orderCheck(this)"  id="tr${order.order_no}${order.order_sub_no}" 
 												order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_name="${order.order_Text }" >
 											<c:if test="${myindex==0}">
-												<td class="center mydateclass" rowspan="${dateMap.value}">${dateMap.key }</td>
+												<td nowrap class="center mydateclass" rowspan="${dateMap.value}">${dateMap.key }</td>
 											</c:if>
 											<c:set var="myindex">${myindex+1}</c:set>
-											<td class='center' style="padding-bottom: 0px;">
+											<td nowrap class='center' style="padding-bottom: 0px;">
 												<c:set var="key1" >
 													${order.order_no.toString()}_${order.order_sub_no.toString()}
 												</c:set>
@@ -316,22 +316,22 @@
 												</c:if>
 											</td>
 											
-											<td class='center' >
+											<td nowrap class='center' >
 												${order.order_Text }
 											</td>
-											<td class="center ">
+											<td nowrap class="center ">
 												${orderClassMap.get(order.order_class.toString())}
 											</td>
-											<td class="center " >${order.dept_name}</td>
-											<td class="center " >${order.frequency }</td>
-											<td class="center ">
+											<td nowrap class="center " >${order.dept_name}</td>
+											<td nowrap class="center " >${order.frequency }</td>
+											<td nowrap class="center ">
 												<fmt:formatNumber value="${order.dosage }" pattern="#0.00"></fmt:formatNumber>
 												${order.dosage_units }
 											</td>
-											<td class="center " >${order.administration } </td>
+											<td nowrap class="center " >${order.administration } </td>
 											<c:if test="${page.pd.show_type==3}">
-											<td class="center " >${order.start_date_time }</td>
-											<td class="center " >${order.stop_date_time }</td>
+											<td nowrap class="center " >${order.start_date_time }</td>
+											<td nowrap class="center " >${order.stop_date_time }</td>
 											</c:if>
 										</tr>
 										</c:if>
@@ -348,14 +348,14 @@
 						</table>
 						</c:if>
 						</div>
-						<div class="page-header position-relative">
-							<table style="width:100%;">
-								<tr>
-									<td style="vertical-align:top;">
-										<div class="pagination" style="float: right;padding-top: 0px;margin: 0px;">${page.pageStr}</div>
-									</td>
-								</tr>
-							</table>
+						<div class="pageStrDiv" id="pageStrDiv" style="height: 40px;padding-top: 10px;">
+						<table style="width:100%;">
+							<tr>
+								<td>
+									<div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div>
+								</td>
+							</tr>
+						</table>
 						</div>
 						
 								<div  id="dragCheck" style="width: 400px;position: absolute;top: 100px;left:260px;display:none;" class="drag"   >
@@ -436,10 +436,6 @@
 	
 	$(top.hangge());
 	$(function() {
-		
-		$('[data-rel=tooltip]').tooltip();
-		$('[data-rel=popover]').popover({html:true});
-		
 		var _move = false; //移动标记
 		var _x, _y; //鼠标离控件左上角的相对位置
 		$(".drag").mousedown(function(e) {
@@ -462,8 +458,18 @@
 		     _move = false;
 		     $(".drag").fadeTo("fast", 1); //松开鼠标后停止移动并恢复成不透明
 		});
+		//重置当前页面高度，自适应浏览器
+		initWidthHeight();
+		$(window).off('resize').on('resize', function() {
+			initWidthHeight();
+		}).trigger('resize');
 	});
-	
+	//重置当前页面高度，自适应浏览器
+	function initWidthHeight(){
+		var height = $(window).height();
+		var myheight =height-$("#btn-toolbar").outerHeight()-$("#pageStrDiv").outerHeight();
+		FixTable("simple-table", 0, $(window).width(), myheight-10);
+	}
 	window.onload = function(){
 		var cji = $("#checkJsonInfo").val();
 		if(cji == '' || cji == 'undefind') return ;
@@ -775,5 +781,6 @@
 		document.body.appendChild(bgObj);
 	}
 	</script>
+	<script type="text/javascript" src="static/js/common/lockTable.js?v=20161"></script>
 	</body>
 </html>

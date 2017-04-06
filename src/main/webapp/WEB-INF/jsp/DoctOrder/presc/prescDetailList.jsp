@@ -75,7 +75,7 @@
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:10px;">
 							<thead>
 								<tr>
-									<th class="center" nowrap></th>
+									<th class="center" nowrap><a class="fa fa-flag red bigger-130" title="点评信息"></a></th>
 									<th class="center" nowrap>药品名称规格</th>
 									<th class="center" nowrap>单次计量</th>
 									<th class="center" nowrap>用法</th>
@@ -150,7 +150,7 @@
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:10px;">
 							<thead>
 								<tr>
-									<th class="center" nowrap></th>
+									<th class="center" nowrap><a class="fa fa-flag red bigger-130" title="点评信息"></a></th>
 									<th class="center" nowrap>药品名称规格</th>
 									<th class="center" nowrap>单次计量</th>
 									<th class="center" nowrap>用法</th>

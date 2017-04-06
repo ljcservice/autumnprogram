@@ -19,9 +19,6 @@
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
 <style>
-.ztree li a.curSelectedNode {
-/* 	background-color: #ffb951;	 */
- }
 
 </style>
 </head>
@@ -163,11 +160,11 @@
 <script type="text/javascript">
 $(top.hangge());
 $(function() {
+	//var height = $(document).height();
 	var w = '${checkRss==null?null:checkRss.size()}';
 	if(w!=null){
 		parent.$("#checkSize").text(w);
 	}
-	//changeTree();
 	//日期框
 	$('.date-picker').datepicker({autoclose: true,todayHighlight: true});
 	
@@ -177,16 +174,7 @@ $(function() {
 	//下拉框
 	if(!ace.vars['touch']) {
 		$('.chosen-select').chosen({allow_single_deselect:true}); 
-		//resize the chosen on window resize
-	
-		$(window)
-		.off('resize.chosen')
-		.on('resize.chosen', function() {
-			$('.chosen-select').each(function() {
-				 var $this = $(this);
-				 $this.next().css({'width': $this.width()});
-			})
-		}).trigger('resize.chosen');
+
 		//resize chosen on sidebar collapse/expand
 		$(document).on('settings.ace.chosen', function(e, event_name, event_val) {
 			if(event_name != 'sidebar_collapsed') return;

@@ -35,13 +35,8 @@
 				<div class="page-content">
 					<div class="row">
 						<div class="col-xs-12"  >
-						<table border="0" style="padding: 0 0 0 0;width: 100%">
-							<tr height="150px" > 
-								<td style="margin: 0px 0px 0px 0px;" >
-									<div class="row">
-								<div class="col-sm-12" >
 										<!-- #section:elements.tab -->
-										<div class="tabbable" id="myTabbable" >
+										<div class="tabbable" id="myTabbable" style="padding-top: 2px;" >
 											<ul class="nav nav-tabs" id="myTab">
 												<li class="active">
 													<a data-toggle="tab" href="#doctOrder">
@@ -98,7 +93,7 @@
 												</li>
 											</ul>
 
-											<div class="tab-content" style="overflow-y:auto;height:150px;padding-top: 2px;padding-left: 2px;padding-right: 2px;padding-bottom: 0px;">
+											<div class="tab-content" style="padding:2px;max-height: 220px;overflow: auto;">
 												<div id="doctOrder" class="tab-pane fade in active" >
 													<table class="table table-bordered table-striped table-responsive " style="font-size:10px;" >
 														<tbody>
@@ -187,66 +182,34 @@
 												</table>
 												</div>
 
-												<div id="orderCheck" class="tab-pane fade" >
+												<div id="orderCheck" class="tab-pane fade" style="width: 100%;min-height: 100px;">
 													<iframe  name="CheckRsFrame" id="CheckRsFrame" scrolling ="auto"" frameborder="0"
-														src="DoctOrder/CheckRsViewUI.do?patient_id=${page.pd.patient_id}&visit_id=${page.pd.visit_id}&ngroupnum=${page.pd.ngroupnum}" style="margin:0px 0px 0px 0px;width:100%;height: 135px;">
+														src="DoctOrder/CheckRsViewUI.do?patient_id=${page.pd.patient_id}&visit_id=${page.pd.visit_id}&ngroupnum=${page.pd.ngroupnum}" style="margin:0px 0px 0px 0px;width:100%;height: 100%;">
 													</iframe>
 												</div>
-											</div>
-										</div>
+											</div><!-- tab-content -->
+											
+										</div><!-- tabbable -->
 										
-										<!-- /section:elements.tab -->
-									</div><!-- /.col -->
-									</div> 
+										<div style="">
+											<iframe name="DoctFrame" id="DoctFrame" scrolling="no" frameborder="0" 
+												src="DoctOrder/DoctOrdersDetail.do?patient_id=${page.pd.patient_id}&visit_id=${page.pd.visit_id}&ngroupnum=${page.pd.ngroupnum}" style="margin:0 auto;width:100%;height: 100%;">
+											</iframe>
+										</div>
 									
-								</td>
-							</tr>
-							<tr id="trLagout" height="*" >
-								<td>
-									<div style="height:430px;overflow-y:hidden;overflow-x:hidden; ">
-										<iframe name="DoctFrame" id="DoctFrame" scrolling="no" frameborder="0" 
-											src="DoctOrder/DoctOrdersDetail.do?patient_id=${page.pd.patient_id}&visit_id=${page.pd.visit_id}&ngroupnum=${page.pd.ngroupnum}" style="margin:0 auto;width:100%;height: 100%">
-										</iframe>
-									</div>
-								</td>
-							</tr>
-						</table>
-						</div>
-						
-<!-- 						<div name="" style="padding-top: 30px;"> -->
-<!-- 							<table style="width:100%;" border="0"> -->
-<!-- 								<tr> -->
-<!-- 									<td style="width:15%;" valign="top"> -->
-<!-- 										<div style='overflow: scroll;max-width: 350px;max-height: auto;'> -->
-<!-- 											<div id="treeName">本体数</div> -->
-<!-- 											<div id="treeId"> -->
-<!-- 												<ul id="leftTree" class="ztree"></ul> -->
-<!-- 											</div> -->
-<!-- 										</div> -->
-<!-- 									</td> -->
-<!-- 									<td style="width:85%;" valign="top" > -->
-<%-- 										<iframe name="treeFrame" id="treeFrame" scrolling="no" frameborder="0" src="${basePath}ontology/ontologyList.do?ontoType=${ontoType}" style="margin:0 auto;width:100%;"></iframe> --%>
-<!-- 										<iframe name="osynFrame" id="osynFrame" frameborder="0" src="${basePath}osyn/osynList.do?initFlag=0&ontoType=${ontoType}" style="margin:0 auto;width:100%;height: 300px;"></iframe> -->
-<!-- 									</td> -->
-<!-- 								</tr> -->
-<!-- 							</table> -->
-<!-- 						</div> -->
-						
-					</div>
-					<!-- /.row -->
-				</div>
-				<!-- /.page-content -->
-			</div>
-		</div>
-		<!-- /.main-content -->
+						</div><!-- /.col-xs-12 -->
+					</div><!-- /.row -->
+				</div><!-- /.page-content -->
+			</div><!-- /.main-content-inner -->
+		</div> <!-- /.main-content -->
 
 		<!-- 返回顶部 -->
-		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-			<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
-		</a>
+<%--		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">--%>
+<%--			<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>--%>
+<%--		</a>--%>
 
-	</div>
-	<!-- /.main-container -->
+	</div> <!-- /.main-container -->
+	
 	<!-- basic scripts -->
 	<!-- 页面底部js¨ -->
 	<%@ include file="/WEB-INF/jsp/system/index/foot.jsp"%>
@@ -266,7 +229,6 @@
 <script type="text/javascript">
 $(top.hangge());
 $(function() {
-	//changeTree();
 	//日期框
 	$('.date-picker').datepicker({autoclose: true,todayHighlight: true});
 	
@@ -277,15 +239,6 @@ $(function() {
 	if(!ace.vars['touch']) {
 		$('.chosen-select').chosen({allow_single_deselect:true}); 
 		//resize the chosen on window resize
-	
-		$(window)
-		.off('resize.chosen')
-		.on('resize.chosen', function() {
-			$('.chosen-select').each(function() {
-				 var $this = $(this);
-				 $this.next().css({'width': $this.width()});
-			})
-		}).trigger('resize.chosen');
 		//resize chosen on sidebar collapse/expand
 		$(document).on('settings.ace.chosen', function(e, event_name, event_val) {
 			if(event_name != 'sidebar_collapsed') return;
@@ -295,7 +248,6 @@ $(function() {
 			})
 		});
 	
-	
 		$('#chosen-multiple-style .btn').on('click', function(e){
 			var target = $(this).find('input[type=radio]');
 			var which = parseInt(target.val());
@@ -303,14 +255,32 @@ $(function() {
 			 else $('#form-field-select-4').removeClass('tag-input-style');
 		});
 	}
-
+	//var title = $('#myTabbable');//the element I want to monitor
+	//title.bind('DOMNodeInserted',
+	// function(e) {
+	//    alert('element  now contains: ' );
+	//});
+	//重新划分页面高度及大小
+	//重置当前页面高度，自适应浏览器
+	initWidthHeight();
+	$("#myTabbable").bind('click', function() {
+		setTimeout(initWidthHeight,300);
+	});
 });
+var height = $(window).height();
+//重置当前页面高度，自适应浏览器
+function initWidthHeight(){
+	//alert($("#myTabbable").outerHeight());
+	//alert((height-$("#myTabbable").outerHeight()-10 ));
+	$("#DoctFrame").css('height' ,(height-$("#myTabbable").outerHeight()-10 )+'px');
+	//var myheight =height-$("#btnDiv").outerHeight()-$("#pageStrDiv").outerHeight();
+	//FixTable("simple-table", 2, $(window).outerWidth(), myheight);
+}
 // 查询
 function searchs(){
 	top.jzts();
 	$("#searchForm").submit();
 	
 }
-
 </script>
 </html>
