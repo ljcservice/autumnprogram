@@ -60,6 +60,7 @@
 									<th class="center" nowrap>医嘱专家</th>
 									<th class="center" nowrap>处方专家</th>
 									<th class="center" nowrap>更新时间</th>
+									<th class="center" nowrap>备注</th>
 									<th class="center" nowrap>操作</th>
 								</tr>
 							</thead>
@@ -77,6 +78,7 @@
 											<td class="center"><c:if test="${user.IS_ORDERS==0}">否</c:if><c:if test="${user.IS_ORDERS==1}">是</c:if></td>
 											<td class="center"><c:if test="${user.IS_RECIPE==0}">否</c:if><c:if test="${user.IS_RECIPE==1}">是</c:if></td>
 											<td class="center"><fmt:formatDate value="${user.UPDATE_TIME}" type="both" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+											<td class="center">${user.remark}</td>
 											<td>
 													<ts:rights code="expert/toEdit">
 														<a class="btn btn-xs btn-success" title="编辑" onclick="editUser('${user.USER_ID}');">

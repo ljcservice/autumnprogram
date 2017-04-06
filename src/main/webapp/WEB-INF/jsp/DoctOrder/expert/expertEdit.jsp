@@ -31,7 +31,7 @@
 									<div id="zhongxin" style="padding-top: 13px;">
 									<table id="table_report" class="table table-striped table-bordered table-hover">
 										<tr>
-											<td style="width:100px;text-align: right;padding-top: 13px;">用户名/姓名:</td>
+											<td style="width:100px;text-align: right;padding-top: 13px;">用户名 / 姓名:</td>
 											<c:if test="${MSG=='add' }">
 												<td>
 												<select name="USER_ID"  style="width: 100%;">

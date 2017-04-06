@@ -114,7 +114,12 @@
 											</span>
 											<span class="ace-icon fa fa-caret-down icon-on-right"></span>
 										</button>
-										<ul class="dropdown-menu dropdown-yellow">
+										<c:if test="${modifyFlag==1 }">
+											<ul class="dropdown-menu dropdown-yellow">
+										</c:if>
+										<c:if test="${modifyFlag!=1 }">
+											<ul class="dropdown-menu dropdown-yellow dropdown-menu-right">
+										</c:if>
 											<li>
 												<a href="javascript:orderViewType('','全部医嘱');">全部医嘱</a>
 											</li>
@@ -136,6 +141,7 @@
 													</a>
 											</li>
 										</ul>
+									
 									</div><!-- /.btn-group -->
 									
 									<c:if test="${modifyFlag==1 }">
@@ -178,7 +184,7 @@
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:10px;">
 							<thead>
 								<tr>
-									<th class="center" nowrap></th>
+									<th class="center" nowrap><a class="fa fa-flag red bigger-130" title="点评信息"></a></th>
 									<th class="center" nowrap>医嘱名称</th>
 									<th class="center" nowrap>医嘱类型</th>
 									<th class="center" nowrap>医嘱科室</th>
