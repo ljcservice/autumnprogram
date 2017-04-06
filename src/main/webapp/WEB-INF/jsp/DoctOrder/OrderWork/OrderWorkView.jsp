@@ -291,8 +291,8 @@ function viewDetail(patId , visitId,ngnum){
 	diag.Drag=true;
 	diag.Title ="医嘱点评";
 	diag.URL = "<%=path%>/DoctOrder/OrderWorkDetailUI.do?patient_id=" + patId + "&visit_Id=" + visitId + "&ngroupnum=" + ngnum;    
-	diag.Width = 1020;//window.screen.width;
-	diag.Height = 900;//window.screen.height;  
+	diag.Width = window.screen.width;
+	diag.Height = window.screen.height;  
 	diag.CancelEvent = function(){ //关闭事件
 		
 		nextPage(${page.currentPage});

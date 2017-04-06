@@ -35,11 +35,11 @@
 				<div class="page-content">
 					<div class="row">
 						<div class="col-xs-12"  >
-						<table border="0" style="padding: 0 0 0 0;">
+						<table border="0" style="padding: 0 0 0 0;width: 100%">
 							<tr height="150px" > 
 								<td style="margin: 0px 0px 0px 0px;" >
 									<div class="row">
-								<div class="col-sm-6" >
+								<div class="col-sm-12" >
 										<!-- #section:elements.tab -->
 										<div class="tabbable" id="myTabbable" >
 											<ul class="nav nav-tabs" id="myTab">
@@ -270,8 +270,8 @@ $(function() {
 	//日期框
 	$('.date-picker').datepicker({autoclose: true,todayHighlight: true});
 	
-	var myObj = document.getElementById("myTabbable");
-	myObj.style.width = "970px"; 
+	//var myObj = document.getElementById("myTabbable");
+	//myObj.style.width = "970px"; 
 	
 	//下拉框
 	if(!ace.vars['touch']) {
