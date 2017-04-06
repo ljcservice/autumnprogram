@@ -124,8 +124,8 @@
 											<td class='center' >
 												${order.DRUG_NAME } ${order.DRUG_SPEC }
 											</td>
-											<td class="center ">${order.DOSAGE }</td>
-											<td class="center ">不知道</td>
+											<td class="center ">${order.DOSAGE } ${order.DOSAGE_UNITS}</td>
+											<td class="center ">${order.ADMINISTRATION }</td>
 											<td class="center " >${order.FREQUENCY}</td>
 											<td class="center " >${order.DRUG_USE_DAYS }</td>
 											<td class="center " >${order.COSTS } </td>
