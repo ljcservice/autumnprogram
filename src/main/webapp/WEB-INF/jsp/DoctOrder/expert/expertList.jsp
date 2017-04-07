@@ -71,7 +71,7 @@
 									<c:forEach items="${expertList}" var="user" varStatus="vs">
 										<tr>
 											<td class='center' style="width: 30px;">
-												<label><input type="radio" class="ace" name='ids' value="${user.user_id}" /><span class="lbl"></span></label>
+												<label><input type="checkbox" class="ace" name='ids' value="${user.user_id}" /><span class="lbl"></span></label>
 											</td>
 											<td class="center">${user.username}</td>
 											<td class="center">${user.name}</td>
@@ -80,6 +80,7 @@
 											<td class="center"><fmt:formatDate value="${user.UPDATE_TIME}" type="both" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 											<td class="center">${user.remark}</td>
 											<td>
+												<div class=" btn-group" style="height: 30px;width: auto;overflow: visible;">
 													<ts:rights code="expert/toEdit">
 														<a class="btn btn-xs btn-success" title="编辑" onclick="editUser('${user.USER_ID}');">
 															<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
@@ -90,6 +91,7 @@
 															<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
 														</a>
 													</ts:rights>
+												</div>
 											</td>
 										</tr>
 									
@@ -228,14 +230,6 @@ $(function() {
 	//下拉框
 	if(!ace.vars['touch']) {
 		$('.chosen-select').chosen({allow_single_deselect:true}); 
-		$(window)
-		.off('resize.chosen')
-		.on('resize.chosen', function() {
-			$('.chosen-select').each(function() {
-				 var $this = $(this);
-				 $this.next().css({'width': $this.parent().width()});
-			});
-		}).trigger('resize.chosen');
 		$(document).on('settings.ace.chosen', function(e, event_name, event_val) {
 			if(event_name != 'sidebar_collapsed') return;
 			$('.chosen-select').each(function() {
