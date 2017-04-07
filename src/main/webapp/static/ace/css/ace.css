@@ -5157,7 +5157,7 @@ body.mob-safari .sidebar.sidebar-fixed {
   .nav-search .nav-search-input:focus,
   .nav-search .nav-search-input:hover,
   .nav-search .nav-search-input:active {
-    width: 145px;
+    width: 105px;
   }
 }
 @media only screen and (max-width: 767px) {

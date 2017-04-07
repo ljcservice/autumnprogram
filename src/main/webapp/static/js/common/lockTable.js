@@ -13,6 +13,7 @@ function FixTable(TableID, FixColumnNumber, width, height) {
 	if($("#"+TableID).outerHeight()+20 <height){
 		height = $("#"+TableID).outerHeight()+20;
 	}
+	$("#"+TableID).css("width",width-17);
 	if ($("#" + TableID + "_tableLayout").length != 0) {
 		$("#" + TableID + "_tableLayout").before($("#" + TableID));
 		$("#" + TableID + "_tableLayout").empty();
