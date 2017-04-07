@@ -374,6 +374,10 @@
 		mycun =1;
 		var ngroupnum = $("#ngroupnum").val();
 		var checkText = $("#checkText").val();
+		if(checkText==null || $.trim(checkText)==''){
+			$("#checkText").tips({ side:3,  msg:'问题不能为空',   time:2  });
+			return;
+		}
 		var id     = $("#id").val();
 		$.ajax({
 			type: "POST",

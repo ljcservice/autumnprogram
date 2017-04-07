@@ -358,7 +358,7 @@
 						</table>
 						</div>
 						
-								<div  id="dragCheck" style="width: 400px;position: absolute;top: 100px;left:260px;display:none;" class="drag"   >
+								<div  id="dragCheck" style="width: 400px;position: absolute;top: 100px;left:260px;display:none;z-index: 950;" class="drag"   >
 										<!-- #section:custom/widget-box -->
 										<div class="widget-box" >
 											<div class="widget-header" >
@@ -518,8 +518,12 @@
 		if(mycun!=0){
 			return ;
 		}
-		var ngroupnum = $("#ngroupnum").val();
 		var checkText = $("#checkText").val();
+		if(checkText==null || $.trim(checkText)==''){
+			$("#checkText").tips({ side:3,  msg:'问题不能为空',   time:2  });
+			return;
+		}
+		var ngroupnum = $("#ngroupnum").val();
 		var patId     = $("#patient_id").val();
 		var visitId   = $("#visit_id").val();
 		$.ajax({
@@ -693,7 +697,7 @@
 				alert("两个药品可以做添加点评项目");
 			}
 			$(".widget-title").text(checkName);
-			$("#dragCheck").show(500);
+			showDragCheck();
 		}else if (setCount == 2 )
 		{
 			oldColor     = myColor;
@@ -704,6 +708,11 @@
 			setCount--;
 			setCheckJsonInfo();
 		}
+	}
+	function showDragCheck(){
+		$("#dragCheck").css("top",($(window).height())/5 + 'px');
+		$("#dragCheck").css("left",($(window).width()-$("#dragCheck").outerWidth())/2 + 'px');
+		$("#dragCheck").show(500);
 	}
 	//处理医嘱类别
 	function orderViewClass(_type,_name)
