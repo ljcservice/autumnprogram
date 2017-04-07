@@ -223,9 +223,8 @@
 	<script src="static/ace/js/chosen.jquery.js?v=2008001"></script>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
+	<script type="text/javascript" src="static/js/common/lockTable.js?v=20161"></script>
 </body>
-<script type="text/javascript" src="static/js/ontology/tree.fixer.js?v=2018082"></script>
-<script type="text/javascript" src="static/js/ontology/tree.js?v=20180861"></script>
 <script type="text/javascript">
 $(top.hangge());
 $(function() {

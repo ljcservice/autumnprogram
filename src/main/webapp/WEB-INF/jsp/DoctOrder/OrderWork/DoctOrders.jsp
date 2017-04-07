@@ -181,7 +181,7 @@
 						<div style="width: 100%;height: auto;">
 						<!-- 	常规查看  -->
 						<c:if test="${page.pd.show_type== null || page.pd.show_type=='' || page.pd.show_type==0 }">
-						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:10px;">
+						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;margin-bottom: 5px;">
 							<thead>
 								<tr>
 									<th class="center" nowrap><a class="fa fa-flag red bigger-130" title="点评信息"></a></th>
@@ -259,7 +259,7 @@
 						</c:if>
 						<!-- 	按日分解查看						 -->
 						<c:if test="${page.pd.show_type!= null && (page.pd.show_type==1 || page.pd.show_type==3)}">		
-						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:10px;">
+						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;margin-bottom: 5px;">
 							<thead>
 								<tr>
 									<th class="center" nowrap><c:if test="${page.pd.show_type==3}">手术</c:if>日期</th>
@@ -431,8 +431,8 @@
 	<script src="static/ace/js/chosen.jquery.js"></script>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
-
-	<script type="text/javascript">
+</body>
+<script type="text/javascript">
 	
 	$(top.hangge());
 	$(function() {
@@ -468,7 +468,9 @@
 	function initWidthHeight(){
 		var height = $(window).height();
 		var myheight =height-$("#btn-toolbar").outerHeight()-$("#pageStrDiv").outerHeight();
-		FixTable("simple-table", 0, $(window).width(), myheight-10);
+		if($("#simple-table").outerHeight() >myheight || $("#simple-table").outerWidth() >$(window).width()){
+			FixTable("simple-table", 0, $(window).width(), myheight-10);
+		}
 	}
 	window.onload = function(){
 		var cji = $("#checkJsonInfo").val();
@@ -780,7 +782,6 @@
 		bgObj.style.zIndex     = "1000";
 		document.body.appendChild(bgObj);
 	}
-	</script>
-	<script type="text/javascript" src="static/js/common/lockTable.js?v=20161"></script>
-	</body>
+</script>
+<script type="text/javascript" src="static/js/common/lockTable.js?v=20161"></script>
 </html>
