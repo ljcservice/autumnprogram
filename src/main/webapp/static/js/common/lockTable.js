@@ -1,19 +1,18 @@
 //锁定table表头和列，TableID表单的ID，锁定的列数。
 function FixTable(TableID, FixColumnNumber, width, height) {
+	$("#"+TableID).css("width",width-17);
 	//去除右侧下来条宽度
 	if(width<300){
 		width =300;
 	}else{
-		width = width-2;
+		width = width-20;
 	}
 	if(height<200){
 		height = 200;
 	}
-	//alert($("#"+TableID).outerHeight()+":"+height);
-	if($("#"+TableID).outerHeight()+20 <height){
-		height = $("#"+TableID).outerHeight()+20;
+	if($("#"+TableID).outerHeight()+18 <height){
+		height = $("#"+TableID).outerHeight()+18;
 	}
-	$("#"+TableID).css("width",width-17);
 	if ($("#" + TableID + "_tableLayout").length != 0) {
 		$("#" + TableID + "_tableLayout").before($("#" + TableID));
 		$("#" + TableID + "_tableLayout").empty();
@@ -56,24 +55,25 @@ function FixTable(TableID, FixColumnNumber, width, height) {
 
 	var ColumnsWidth = 0;
 	var ColumnsNumber = 0;
-	$("#" + TableID + "_tableColumn tr:last td:lt(" + FixColumnNumber + ")").each(function () {
-		ColumnsWidth += $(this).outerWidth(true);
+	$("#" + TableID + " tr:first td:lt(" + FixColumnNumber + ")").each(function () {
+//		alert($(this).outerWidth())
+		ColumnsWidth += $(this).outerWidth();
 		ColumnsNumber++;
 	});
-	ColumnsWidth += 2;
+//	ColumnsWidth -= 20;
 
-	if (!$.support.leadingWhitespace) {
-		var br=navigator.userAgent.toLowerCase();  
-		 var browserVer=(br.match(/.+(?:rv|it|ra|ie)[\/: ]([\d.]+)/) || [0, '0'])[1];
-		switch (browserVer) {
-			case "7.0":
-				if (ColumnsNumber >= 3) ColumnsWidth--;
-				break;
-			case "8.0":
-				if (ColumnsNumber >= 2) ColumnsWidth--;
-				break;
-		}
-	}
+//	if (!$.support.leadingWhitespace) {
+//		var br=navigator.userAgent.toLowerCase();  
+//		 var browserVer=(br.match(/.+(?:rv|it|ra|ie)[\/: ]([\d.]+)/) || [0, '0'])[1];
+//		switch (browserVer) {
+//			case "7.0":
+//				if (ColumnsNumber >= 3) ColumnsWidth--;
+//				break;
+//			case "8.0":
+//				if (ColumnsNumber >= 2) ColumnsWidth--;
+//				break;
+//		}
+//	}
 	$("#" + TableID + "_tableColumn").css("width", ColumnsWidth);
 	$("#" + TableID + "_tableFix").css("width", ColumnsWidth);
 
