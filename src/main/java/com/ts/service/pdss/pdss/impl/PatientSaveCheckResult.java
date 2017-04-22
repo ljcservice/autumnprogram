@@ -1099,6 +1099,8 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
             	param.put("sex", p.getSEX() );
             	param.put("age", p.getAGE());
             	param.put("weight", p.getWEIGHT() );
+            	param.put("order_no", p.getOrder_no());
+            	param.put("order_sub_no", p.getOrder_sub_no());
             	param.put("drug_code", p.getDRUG_CODE() );
             	param.put("drug_name", p.getDRUG_NAME() );
             	param.put("dosage", p.getDOSAGE());
@@ -1146,35 +1148,37 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
             	PageData param = new PageData();
             	try{
             		//String sql = " insert into ANTI_DRUG_USE_REC_ZL(zl_id, patient_id, visit_id, dept_code, dept_name, doctor_name, name, sex, age, weight, yyly, zlfl, grbw, zdyj, kndzbj, drug_code, drug_name, dosage, dosage_units, administration, rec_date, twdate, twvalue, twok, xxdate, xxvalue, cvalue, xxok) values (" +
-	                param.put("zl_id", this.ngroupnum  );
-	                param.put("patient_id", p.getPATIENT_ID()  );
-	                param.put("visit_id", p.getVISIT_ID()  );
-	                param.put("dept_code", p.getDEPT_CODE() );
-	                param.put("dept_name",  p.getDEPT_NAME()   );
-	                param.put("doctor_name", p.getDOCTOR_NAME()  );
-	                param.put("name", p.getNAME()   );
-	                param.put("sex", p.getSEX()  );
-	                param.put("age", p.getAGE()   );
-	                param.put("weight", p.getWEIGHT() );
-	                param.put("yyly", p.getYYLY()   );
-	                param.put("zlfl", p.getZLFL()  );
-	                param.put("grbw", p.getGRBW()  );
-	                param.put("zdyj", p.getZDYJ()  );
-	                param.put("kndzbj", p.getKNDZBJ()   );
-	                param.put("drug_code", p.getDRUG_CODE() );
-	                param.put("drug_name", p.getDRUG_NAME()   );
-	                param.put("dosage", p.getDOSAGE() );
-	                param.put("dosage_units", p.getDOSAGE_UNITS()  );
-	                param.put("administration", p.getADMINISTRATION() );
-	                param.put("rec_date", p.getREC_DATE() );
-	                param.put("twdate", p.getTWDATE()   );
-	                param.put("twvalue", p.getTWVALUE() );
-	                param.put("twok", p.getTWOK()   );
-	            	param.put("xxdate", p.getXXDATE()   );
-	            	param.put("xxvalue", p.getXXVALUE()  );
-	            	param.put("cvalue", p.getCVALUE()   );
-	            	param.put("xxok", p.getXXOK()  );
-	                dao.save("ResultMapper.saveAntiDrugUseRecZl", param);
+                    param.put("zl_id", this.ngroupnum);
+                    param.put("patient_id", p.getPATIENT_ID());
+                    param.put("visit_id", p.getVISIT_ID());
+                    param.put("dept_code", p.getDEPT_CODE());
+                    param.put("dept_name", p.getDEPT_NAME());
+                    param.put("doctor_name", p.getDOCTOR_NAME());
+                    param.put("order_no", p.getOrder_no());
+                    param.put("order_sub_no", p.getOrder_sub_no());
+                    param.put("name", p.getNAME());
+                    param.put("sex", p.getSEX());
+                    param.put("age", p.getAGE());
+                    param.put("weight", p.getWEIGHT());
+                    param.put("yyly", p.getYYLY());
+                    param.put("zlfl", p.getZLFL());
+                    param.put("grbw", p.getGRBW());
+                    param.put("zdyj", p.getZDYJ());
+                    param.put("kndzbj", p.getKNDZBJ());
+                    param.put("drug_code", p.getDRUG_CODE());
+                    param.put("drug_name", p.getDRUG_NAME());
+                    param.put("dosage", p.getDOSAGE());
+                    param.put("dosage_units", p.getDOSAGE_UNITS());
+                    param.put("administration", p.getADMINISTRATION());
+                    param.put("rec_date", DateUtils.getDateTime());//日  时 分 秒
+                    param.put("twdate", p.getTWDATE());
+                    param.put("twvalue", p.getTWVALUE());
+                    param.put("twok", p.getTWOK());
+                    param.put("xxdate", p.getXXDATE());
+                    param.put("xxvalue", p.getXXVALUE());
+                    param.put("cvalue", p.getCVALUE());
+                    param.put("xxok", p.getXXOK());
+                    dao.save("ResultMapper.saveAntiDrugUseRecZl", param);
                 }
                 catch(Exception e )
                 {

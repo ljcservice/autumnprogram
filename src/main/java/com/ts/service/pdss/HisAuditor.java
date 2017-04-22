@@ -28,6 +28,8 @@ import com.hitzd.his.Beans.TPatOrderDrug;
 import com.hitzd.his.Beans.TPatOrderDrugSensitive;
 import com.hitzd.his.Beans.TPatVitalSigns;
 import com.hitzd.his.Beans.TPatientOrder;
+import com.hitzd.his.Beans.TPreveUseDrug;
+import com.hitzd.his.Beans.TTreatUseDrug;
 import com.hitzd.his.Utils.Config;
 import com.hitzd.his.Utils.DateUtils;
 import com.hitzd.his.Utils.DrugUtils;
@@ -125,8 +127,7 @@ public class HisAuditor implements IHisAuditor
 	/**
 	 * 返回体检信息 
 	 */
-	@WebMethod
-    public TPatVitalSigns[] getpatVsVisitSigns(@WebParam(name = "patID")String patID ,@WebParam(name = "Visitid") String Visitid)
+    public TPatVitalSigns[] getpatVsVisitSigns(String patID , String Visitid)
 	{
 	    return antiDrugscr.getpatVsVisitSigns(patID, Visitid);
 	}
@@ -217,14 +218,16 @@ public class HisAuditor implements IHisAuditor
 	 * 预防抗菌药物记录保存
 	 */
 	@Override
-	public void SavePreveUseDrug(String[][] PreveUseInfo)
+//	public void SavePreveUseDrug(String[][] PreveUseInfo)
+	public void SavePreveUseDrug(TPreveUseDrug[] preveUseInfo)
 	{
 	    PatientSaveCheckResult pscr = new PatientSaveCheckResult();
         TPatientOrder po = new TPatientOrder();
         pscr.setNgroupnum(UUID.randomUUID().toString());
 	    try
 	    {
-	        po.setPreveUseDrug(CommonUtils.getPreveUseDrug(PreveUseInfo));
+//	        po.setPreveUseDrug(CommonUtils.getPreveUseDrug(PreveUseInfo));
+	    	po.setPreveUseDrug(preveUseInfo);
 	        pscr.savePreveUseDrug(po);
 	    }
 	    catch(Exception e)
@@ -242,7 +245,8 @@ public class HisAuditor implements IHisAuditor
 	 * 治疗抗菌药物记录保存
 	 */
 	@Override
-	public void SaveTreatUseDrug(String[][] TreatUseInfo)
+//	public void SaveTreatUseDrug(String[][] TreatUseInfo)
+	public void SaveTreatUseDrug(TTreatUseDrug[] TreatUseInfo)
 	{
 
 	    PatientSaveCheckResult pscr = new PatientSaveCheckResult();
@@ -250,7 +254,8 @@ public class HisAuditor implements IHisAuditor
 	    pscr.setNgroupnum(UUID.randomUUID().toString());
 	    try
 	    {
-	        po.setTreatUseDrug(CommonUtils.getTreatUseDrug(TreatUseInfo));
+//	        po.setTreatUseDrug(CommonUtils.getTreatUseDrug(TreatUseInfo));
+	    	po.setTreatUseDrug(TreatUseInfo);
 	        pscr.saveTreatUseDrug(po);
 	    }
 	    catch(Exception e )
@@ -572,7 +577,7 @@ public class HisAuditor implements IHisAuditor
     		{
     			diagnosis[i] = podi[i].getDiagnosisDictID();
     		}
-    		String[] doctorInfo = new String[6];
+    		String[] doctorInfo = new String[6]; 
             doctorInfo[0] = po.getDoctorDeptID();
             doctorInfo[1] = po.getDoctorDeptName();
             doctorInfo[2] = po.getDoctorID();
@@ -632,7 +637,8 @@ public class HisAuditor implements IHisAuditor
 	    				adsr.setDosageRslt(drugsr1.getCheckResult(drug).getDrugDosageRslt());
 	    			}
     			}
-    			list.add(adsr);
+    			// 在不存在问题情况下不保存 
+    			if(adsr.getTAntiDrugSecurity().length != 0) list.add(adsr);
     		}
     		crc.setAdsr((TAntiDrugSecurityResult[])list.toArray(new TAntiDrugSecurityResult[0]));
     		System.out.println("抗菌药物审查结束:" + (System.currentTimeMillis() - x1) + "抗菌药物数量: " + count);

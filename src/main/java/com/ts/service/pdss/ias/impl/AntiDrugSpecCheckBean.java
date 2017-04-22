@@ -33,6 +33,7 @@ public class AntiDrugSpecCheckBean extends Persistent4DB implements IAntiDrugSpe
             if(antidrug == null)
             {
             	 antiDrug.setDrug_ID(antiDrugInp.getDrugID());
+            	 antiDrug.setDrug_name(antiDrugInp.getDrugName());
                  antiDrug.setOrder_No(antiDrugInp.getRecMainNo());
                  antiDrug.setOrder_Sub_No(antiDrugInp.getRecSubNo());
                  antiDrug.addAntiDrugResult(new TAntiDrugResult(TAntiDrugResult.AntiDrugSpecCheck,"没有该药品",false,"抗菌药"));
@@ -45,16 +46,18 @@ public class AntiDrugSpecCheckBean extends Persistent4DB implements IAntiDrugSpe
             if(flag)
             {
                 antiDrug.setDrug_ID(antiDrugInp.getDrugID());
+                antiDrug.setDrug_name(antiDrugInp.getDrugName());
                 antiDrug.setOrder_No(antiDrugInp.getRecMainNo());
                 antiDrug.setOrder_Sub_No(antiDrugInp.getRecSubNo());
                 antiDrug.addAntiDrugResult(new TAntiDrugResult(TAntiDrugResult.AntiDrugSpecCheck,"该药品为特殊药品请及时送检标本！",false,"抗菌药"));
             }
             else
             {
-                antiDrug.setDrug_ID(antiDrugInp.getDrugID());
-                antiDrug.setOrder_No(antiDrugInp.getRecMainNo());
-                antiDrug.setOrder_Sub_No(antiDrugInp.getRecSubNo());
-                antiDrug.addAntiDrugResult(new TAntiDrugResult(TAntiDrugResult.AntiDrugSpecCheck,"非特殊用药",true,"抗菌药"));
+            	return null;
+//                antiDrug.setDrug_ID(antiDrugInp.getDrugID());
+//                antiDrug.setOrder_No(antiDrugInp.getRecMainNo());
+//                antiDrug.setOrder_Sub_No(antiDrugInp.getRecSubNo());
+//                antiDrug.addAntiDrugResult(new TAntiDrugResult(TAntiDrugResult.AntiDrugSpecCheck,"非特殊用药",true,"抗菌药"));
             }
         }
         catch(Exception e)

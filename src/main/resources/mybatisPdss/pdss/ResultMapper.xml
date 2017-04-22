@@ -39,21 +39,23 @@
 		insert into ANTI_DRUG_USE_REC_YF(yf_id, patient_id, visit_id, dept_code, dept_name, doctor_name
 			, name, sex, age, weight, drug_code, drug_name, dosage, dosage_units, administration
 			, opertor_date, opertor_name, opertor_type, opertor_use_time, drug_use_time, gms, btgms
-			, wxys, kndzbj, kljlanjl, yf_use_drug_yj, REC_DATE,tsyq) 
+			, wxys, kndzbj, kljlanjl, yf_use_drug_yj, REC_DATE,tsyq ,order_no,order_sub_no ) 
 		values (#{yf_id}, #{patient_id}, #{visit_id}, #{dept_code}, #{dept_name}, #{doctor_name}
 			,#{name},#{sex}, #{age},#{weight},#{drug_code},#{drug_name},#{dosage},#{dosage_units}, #{administration}
 			,#{opertor_date},#{opertor_name},#{opertor_type},#{opertor_use_time},#{drug_use_time},#{gms},#{btgms}
-			,#{wxys},#{kndzbj},#{kljlanjl},#{yf_use_drug_yj},#{REC_DATE},#{tsyq})
+			,#{wxys},#{kndzbj},#{kljlanjl},#{yf_use_drug_yj},#{REC_DATE},#{tsyq}
+			,#{order_no},#{order_sub_no})
 	</insert>
 
 
 	<insert id="saveAntiDrugUseRecZl" parameterType="pd" >
 		insert into ANTI_DRUG_USE_REC_ZL(zl_id, patient_id, visit_id, dept_code, dept_name, doctor_name
 			, name, sex, age, weight, yyly, zlfl, grbw, zdyj, kndzbj, drug_code, drug_name, dosage
-			, dosage_units, administration, rec_date, twdate, twvalue, twok, xxdate, xxvalue, cvalue, xxok) 
+			, dosage_units, administration, rec_date, twdate, twvalue, twok, xxdate, xxvalue, cvalue, xxok,order_no,order_sub_no) 
 		values (#{zl_id}, #{patient_id},#{visit_id},#{dept_code},#{dept_name},#{doctor_name}
 			,#{name},#{sex},#{age},#{weight},#{yyly},#{zlfl},#{grbw},#{zdyj},#{kndzbj},#{drug_code},#{drug_name},#{dosage}
-			,#{dosage_units},#{administration},#{rec_date},#{twdate},#{twvalue},#{twok},#{xxdate},#{xxvalue},#{cvalue},#{xxok})
+			,#{dosage_units},#{administration},#{rec_date},#{twdate},#{twvalue},#{twok},#{xxdate},#{xxvalue},#{cvalue},#{xxok}
+			,#{order_no},#{order_sub_no})
 	</insert>
 	
 </mapper>

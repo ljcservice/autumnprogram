@@ -3,6 +3,8 @@ package com.ts.entity.pdss.ias.RSBeans;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
+
 import com.ts.entity.pdss.pdss.RSBeans.TDrugAllergenRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugDosageRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSpecPeopleRslt;
@@ -102,6 +104,7 @@ public class TAntiDrugSecurityResult
 		}
 	}
 	
+	@XmlElement(name="getTAntiDrugSecurity")
 	public TAntiDrugSecurityCheckResult[] getTAntiDrugSecurity()
 	{
 		return (TAntiDrugSecurityCheckResult[])antiDrugSecurity.toArray(new TAntiDrugSecurityCheckResult[0]);

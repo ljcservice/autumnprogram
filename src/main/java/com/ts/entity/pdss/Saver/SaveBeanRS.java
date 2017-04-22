@@ -17,8 +17,8 @@ public class SaveBeanRS
 	private TPatientOrder  po;
 	/* 总体检查对象  */
 	private TCheckResultCollection checkRC;
-	/* 抗菌药审查结果  */
-	private TAntiDrugSecurityResult[] adsr;  
+//	/* 抗菌药审查结果  */
+//	private TAntiDrugSecurityResult[] adsr;  
 	
     public String getID()
     {
@@ -45,13 +45,13 @@ public class SaveBeanRS
 		this.checkRC = checkRC;
 	}
 
-    public TAntiDrugSecurityResult[] getAdsr()
-    {
-        return adsr;
-    }
-
-    public void setAdsr(TAntiDrugSecurityResult[] adsr)
-    {
-        this.adsr = adsr;
-    }
+//    public TAntiDrugSecurityResult[] getAdsr()
+//    {
+//        return adsr;
+//    }
+//
+//    public void setAdsr(TAntiDrugSecurityResult[] adsr)
+//    {
+//        this.adsr = adsr;
+//    }
 }

@@ -6,7 +6,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import com.hitzd.his.Scheduler.ModelHandler;
+import com.ts.SchedulerHandler.ModelHandler;
+
 
 /**
  * 该类实现定时器调用功能

@@ -14,7 +14,7 @@ public class ReportHandlerFactory
 		//synchronized (Locker) {
 			try 
 			{
-				return (ReportHandler) JillClassLoader.loadClass(Objects)
+				return (ReportHandler) ClassLoaderUnit.loadClass(Objects)
 						.newInstance();
 			} 
 			catch (Exception e) 

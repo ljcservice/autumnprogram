@@ -36,7 +36,7 @@ public class AntiDrugExcessAuthorizationCheckBean extends Persistent4DB implemen
         antiDrug.setDrug_ID(antiDrugInp.getDrugID());
         /* 本地药品  */
         antiDrug.setDrugStandID("");
-        antiDrug.setDrug_name(antiDrug.getDrug_name());
+        antiDrug.setDrug_name(antiDrugInp.getDrugName());
         antiDrug.setOrder_No(antiDrugInp.getRecMainNo());
         antiDrug.setOrder_Sub_No(antiDrugInp.getRecSubNo());
         /* 提示信息 */
@@ -83,7 +83,8 @@ public class AntiDrugExcessAuthorizationCheckBean extends Persistent4DB implemen
             }
             if(flag)
             {
-                antiDrug.addAntiDrugResult(new TAntiDrugResult(TAntiDrugResult.AntiDrugExcessAuthorizationCheck,"",true,"抗菌药",new String[]{drugInfo}));
+            	return null;
+                //antiDrug.addAntiDrugResult(new TAntiDrugResult(TAntiDrugResult.AntiDrugExcessAuthorizationCheck,"",true,"抗菌药",new String[]{drugInfo}));
             }
             else
             {

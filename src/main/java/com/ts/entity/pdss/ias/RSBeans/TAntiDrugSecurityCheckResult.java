@@ -3,6 +3,8 @@ package com.ts.entity.pdss.ias.RSBeans;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
+
 /**
  * 总数据集
  * 
@@ -29,6 +31,7 @@ public class TAntiDrugSecurityCheckResult
 		results.add(result);
 	}
 	
+	@XmlElement(name="getAntiDrugResult")
 	public TAntiDrugResult[] getAntiDrugResult()
 	{
 		return (TAntiDrugResult[])results.toArray(new TAntiDrugResult[0]);

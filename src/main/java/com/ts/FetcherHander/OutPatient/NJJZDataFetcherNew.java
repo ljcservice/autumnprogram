@@ -1,4 +1,4 @@
-package com.ts.service.pdss.peaas.timer;
+package com.ts.FetcherHander.OutPatient;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -19,7 +19,8 @@ import com.hitzd.DBUtils.TCommonRecord;
 import com.hitzd.Factory.DBQueryFactory;
 import com.hitzd.Transaction.TransaCallback;
 import com.hitzd.Transaction.TransactionTemp;
-import com.hitzd.his.Scheduler.ModelHandler;
+import com.ts.SchedulerHandler.ModelHandler;
+
 import com.hitzd.his.Scheduler.ReportScheduler;
 import com.hitzd.his.Utils.Config;
 import com.hitzd.his.Utils.DateUtils;

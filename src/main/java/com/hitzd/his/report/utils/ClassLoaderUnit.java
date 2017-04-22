@@ -10,7 +10,7 @@ interface VMClassLoader
   public Class loadClass(String cls) throws ClassNotFoundException;
 }
 
-public class JillClassLoader
+public class ClassLoaderUnit
 {
 	private static VMClassLoader vmClassLoader;
 	static
