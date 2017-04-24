@@ -12,63 +12,16 @@
 <html lang="en">
 <head>
 <base href="<%=basePath%>"
-<!-- 下拉框 -->
-<link rel="stylesheet" href="static/ace/css/chosen.css" />
-<!-- jsp文件头和头部 -->
-<%@ include file="/WEB-INF/jsp/system/index/top.jsp"%>
-<!-- 日期框 -->
-<link rel="stylesheet" href="static/ace/css/datepicker.css" />
 </head>
-<body class="no-skin">
+<div id="resultDiv" style="overflow: auto;">
 
-	<!-- /section:basics/navbar.layout -->
-	<div class="main-container" id="main-container">
-		<!-- /section:basics/sidebar -->
-		<div class="main-content">
-			<div class="main-content-inner">
-				<div class="page-content">
-					<div class="row">
-						<div class="col-xs-12">
-						<form action="show/list.do" method="post" id="myform" name="myform">
-							<input type="hidden" name="id" value="${pd.id}" id="id"/>
-							<input type="hidden" name="name" value="${pd.name}" id="name"/>
-							<input type="hidden" name="ONTO_TYPE" value="${pd.ONTO_TYPE}" id="ONTO_TYPE"/>
-						</form>
-						<iframe id="resultDiv" scrolling="no" frameborder="0"  style="margin:0 auto;width:100%;overflow: auto;">
 								<c:forEach items="${resultList}" var="item" varStatus="vs">
-									${item.content}
+									${item.CONTENT}
 								</c:forEach>
-						</iframe>
-						
-						</div>
-						<!-- /.col -->
-					</div>
-					<!-- /.row -->
-				</div>
-				<!-- /.page-content -->
-			</div>
-			
-		</div>
-		<!-- /.main-content -->
-
-	</div>
-	<!-- /.main-container -->
-
-	<!-- basic scripts -->
+</div>
+</body>
 	<!-- 页面底部js¨ -->
 	<%@ include file="/WEB-INF/jsp/system/index/foot.jsp"%>
-	<!-- 删除时确认窗口 -->
-	<script src="static/ace/js/bootbox.js"></script>
-	<!-- ace scripts -->
-	<script src="static/ace/js/ace/ace.js"></script>
-	<!-- 日期框 -->
-	<script src="static/ace/js/date-time/bootstrap-datepicker.js"></script>
-	<!-- 下拉框 -->
-	<script src="static/ace/js/chosen.jquery.js"></script>
-	<!--提示框-->
-	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
-	<!--本体查询列表js-->
-	</body>
 <script>
 $(function() {
 	//窗口变化，重新初始化 
@@ -78,8 +31,9 @@ $(function() {
 	
 });
 function initWidthHeight(){
-	var myHeight = $(window).outerHeight() ;
-	$("#resultDiv").css('height', myHeight-10+'px');
+	var myHeight = $(window).outerHeight() -15;
+	$("#resultDiv").css('height', myHeight+'px');
 }
 </script>
 </html>
+		

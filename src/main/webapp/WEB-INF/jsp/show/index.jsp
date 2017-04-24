@@ -87,6 +87,7 @@ img{
 	<div class="item_container" style="height: 100%;z-index: 999;">
 		
 		<div class="item_content" id="item_content">
+			<div>
 			<ul>
 				<li>
 					<div class="item" style="float:right; " title="药品说明书" ondblclick="mainDiv(0);">
@@ -150,7 +151,12 @@ img{
 				</li>
 				
 			</ul>
+			</div>
+			<div style="position: relative;left: -720px;top: 190px;">
+				<img class="nav-user-photo" src="static/images/show/jiantou-2.png" onclick="hideCategoryDiv();">
+			</div>
 		</div>
+		
 		<div style="display: none;height: 100%;" id="mainDiv">
 			<table style="width: 100%;height: 100%;z-index: 999;" >
 				<tr>
@@ -164,7 +170,7 @@ img{
 								<li><a href="javascript:searchFram(4);" title="医药法规"><img class="nav-user-photo" src="static/images/show/icon05.png" ></a></li>
 								<li><a href="javascript:searchFram(5);" title="临床检验正常值及意义"><img class="nav-user-photo" src="static/images/show/icon06.png" ></a></li>
 								<li><a href="javascript:searchFram(6);" title="临床路径"><img class="nav-user-photo" src="static/images/show/icon07.png" ></a></li>
-								<li ><a href="javascript:showCtanner(7);" title="显示主页"><img class="nav-user-photo" src="static/images/show/jiantou.jpg" ></a></li>
+								<li ><a href="javascript:showCtanner(7);" title="显示主页"><img class="nav-user-photo" src="static/images/show/jiantou-1.png" ></a></li>
 							</ul>
 						</div>
 					</td>
@@ -339,7 +345,10 @@ img{
 		$("#mainDiv").height($(top.window).height()-45);
 	}
 	
-	
+	function hideCategoryDiv(){
+		$("#item_content").hide();
+		$("#mainDiv").show();
+	}
 	function mainDiv(ONTO_TYPE){
 		$("#item_content").hide();
 		$("#mainDiv").show();
