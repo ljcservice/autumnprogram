@@ -15,7 +15,7 @@ import com.hitzd.his.Utils.DictCache;
 /**
  * 计算用药的天数
  * @author Administrator
- *
+ *TODO DrugUseDate 需要使用redis 存储
  */
 public class DrugUseDate {
     /* 频次基本信息  */

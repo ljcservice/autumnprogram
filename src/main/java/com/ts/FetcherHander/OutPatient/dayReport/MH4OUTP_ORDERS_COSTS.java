@@ -1,4 +1,4 @@
-package com.ts.service.pdss.peaas.timer.MHControl;
+package com.ts.FetcherHander.OutPatient.dayReport;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -17,30 +17,25 @@ import com.hitzd.his.casehistory.helper.CaseHistoryFunction;
 import com.hitzd.his.casehistory.helper.CaseHistoryHelperUtils;
 import com.hitzd.his.casehistory.helper.ICaseHistoryHelper;
 
-public class MH4OUTP_BILL_ITEMS
+public class MH4OUTP_ORDERS_COSTS 
 {
     @MHPerformProp(MethodParam={String.class,JDBCQueryImpl.class,JDBCQueryImpl.class})
     public void run(String aDate,JDBCQueryImpl hisQuery,JDBCQueryImpl query)
     {
         ICaseHistoryHelper chhr = CaseHistoryFactory.getCaseHistoryHelper();
-        String strFields = "t.VISIT_DATE,t.VISIT_NO,t.RCPT_NO,t.ITEM_NO,t.ITEM_CLASS,t.CLASS_ON_RCPT,t.ITEM_CODE,t.ITEM_NAME,t.ITEM_SPEC,t.AMOUNT,t.UNITS,t.PERFORMED_BY,t.COSTS,t.CHARGES"
-                + ",B.VISIT_DATE,B.VISIT_NO,B.PATIENT_ID,B.PRESC_INDICATOR,B.ORDERED_BY_DEPT,B.ORDERED_BY_DOCTOR,B.RCPT_NO";
+        String strFields = "*";
         List<TCommonRecord> lsWheres = new ArrayList<TCommonRecord>();
         try {
             
-            TCommonRecord where = CaseHistoryHelperUtils.genWhereCR("t.VISIT_DATE",
-                    CaseHistoryFunction.genRToDate("outpbill.outp_bill_items", "t.VISIT_DATE", "'" + aDate + "'", "yyyy-mm-dd")
+            TCommonRecord where = CaseHistoryHelperUtils.genWhereCR("VISIT_DATE",
+                    CaseHistoryFunction.genRToDate("outpdoct.OUTP_ORDERS_COSTS", "VISIT_DATE", "'" + aDate + "'", "yyyy-mm-dd")
                     , "", ">=", "", "");
             lsWheres.add(where);
-            where = CaseHistoryHelperUtils.genWhereCR("t.VISIT_DATE",
-                    CaseHistoryFunction.genRToDate("outpbill.outp_bill_items", "t.VISIT_DATE", "'" + DateUtils.getDateAdded(1,aDate) + "'", "yyyy-mm-dd")
+            where = CaseHistoryHelperUtils.genWhereCR("VISIT_DATE",
+                    CaseHistoryFunction.genRToDate("outpdoct.OUTP_ORDERS_COSTS", "VISIT_DATE", "'" + DateUtils.getDateAdded(1,aDate) + "'", "yyyy-mm-dd")
                     , "", "<", "", "");
             lsWheres.add(where);
-            where = CaseHistoryHelperUtils.genWhereCR("t.VISIT_DATE","b.VISIT_DATE", "", "=", "", "");
-            lsWheres.add(where);
-            where = CaseHistoryHelperUtils.genWhereCR("t.visit_no","b.visit_no", "", "=", "", "");
-            lsWheres.add(where);
-            String sql = chhr.genSQL(strFields, "outpbill.outp_bill_items t,outpbill.outp_order_desc b", lsWheres, null,null);
+            String sql = chhr.genSQL(strFields, "outpdoct.OUTP_ORDERS_COSTS", lsWheres, null,null);
             List<TCommonRecord> results = hisQuery.query(sql, new CommonMapper());
                 for(TCommonRecord t: results)
                 {
@@ -52,12 +47,12 @@ public class MH4OUTP_BILL_ITEMS
                                 "AMOUNT, ORDERED_BY_DEPT, ORDERED_BY_DOCTOR, PERFORMED_BY, CLASS_ON_RCPT, COSTS, CHARGES, RCPT_NO, BILL_DESC_NO, BILL_ITEM_NO, "
                                 + "ORDERED_BY_DEPT_CODE,PERFORMED_BY_CODE,is_anti,CHARGE_INDICATOR)" +
                                 " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        				sqlParams.add(t.get("PATIENT_ID"));
-        				Timestamp dateTime = new Timestamp(DateUtils.getDateFromString(t.getDateString("VISIT_DATE")).getTime());
+                        sqlParams.add(t.get("PATIENT_ID"));
+                        Timestamp dateTime = new Timestamp(DateUtils.getDateFromString(t.getDateString("VISIT_DATE")).getTime());
     					sqlParams.add(dateTime);
                         sqlParams.add(t.get("VISIT_NO")            );
                         sqlParams.add(t.get("SERIAL_NO")           );
-                        sqlParams.add(t.get("ITEM_CLASS")          );
+                        sqlParams.add(t.get("ORDER_CLASS")         );
                         sqlParams.add(t.get("ORDER_NO")            );
                         sqlParams.add(t.get("ORDER_SUB_NO")        );
                         sqlParams.add(t.get("ITEM_CLASS")          );
@@ -80,7 +75,7 @@ public class MH4OUTP_BILL_ITEMS
                         sqlParams.add(t.get("ORDERED_BY_DEPT")     );
                         sqlParams.add(t.get("PERFORMED_BY")        );
                         sqlParams.add((t.get("ITEM_CLASS").equals(Config.getParamValue("Drug_In_Order"))?(DrugUtils.isKJDrug(t.get("ITEM_CODE"))?"1":"0"):"0") );
-                        sqlParams.add("1");    
+                        sqlParams.add(t.get("CHARGE_INDICATOR")    );
                         
                         query.update(sql,sqlParams.toArray());
                     }

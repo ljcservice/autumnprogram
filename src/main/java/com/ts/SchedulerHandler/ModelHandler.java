@@ -1,8 +1,14 @@
-package com.hitzd.his.Scheduler;
+package com.ts.SchedulerHandler;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import org.quartz.Job;
+import org.quartz.JobDataMap;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 
 import com.hitzd.Annotations.MHPerformProp;
 import com.hitzd.DBUtils.CommonMapper;
@@ -10,7 +16,7 @@ import com.hitzd.DBUtils.JDBCQueryImpl;
 import com.hitzd.DBUtils.TCommonRecord;
 import com.hitzd.Factory.DBQueryFactory;
 import com.hitzd.his.SysLog.SysLog4Dcdt;
-import com.hitzd.his.report.utils.JillClassLoader;
+import com.hitzd.his.report.utils.ClassLoaderUnit;
 
 /**
  * 组件管理者
@@ -18,7 +24,7 @@ import com.hitzd.his.report.utils.JillClassLoader;
  * @author jingcong
  * 
  */
-final public class ModelHandler extends SysLog4Dcdt implements Runnable
+final public class ModelHandler extends SysLog4Dcdt implements Runnable,Job
 {
     /* 组件组号 */
     private String       mhGroupCode = "";
@@ -83,7 +89,7 @@ final public class ModelHandler extends SysLog4Dcdt implements Runnable
                 if ("".equals(mhClassPath))
                     throw new RuntimeException(mhCode + "," + mhCaption + ":没有登记组件路径!");
 
-                Class clazz = JillClassLoader.loadClass(mhClassPath);
+                Class clazz = ClassLoaderUnit.loadClass(mhClassPath);
                 Method performMethod = null;
                 for (Method m : clazz.getMethods())
                 {
@@ -131,12 +137,19 @@ final public class ModelHandler extends SysLog4Dcdt implements Runnable
         return new Object();
     }
 
-//    private static Object setParam4Type(Class cType,String value)
-//    {
-//        
-//
-//        
-//    }
-    
+    /**
+     * 重写job接口方法。
+     */
+    @SuppressWarnings ("unchecked")
+    @Override
+    public void execute(JobExecutionContext context) throws JobExecutionException
+    {
+        JobDataMap  dataMap =  context.getJobDetail().getJobDataMap();
+        Map<String,Object> parameter = (Map<String,Object>)dataMap.get("parameterList");    //获取参数
+        String groupCode =  parameter.get("mhGroupCode").toString();
+        this.mhGroupCode = groupCode;
+        PerformIt();
+        
+    }
     
 }

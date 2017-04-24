@@ -152,7 +152,7 @@ public class AntiDrugSecurityCheckerBean implements IAntiDrugSecurityChecker
 		
         xx = System.currentTimeMillis();
 		TAntiDrugSecurityCheckResult antidrugExce   = this.antidrugExcess.Checker(input);
-		result.addAntiDrugSecurity(antidrugExce);
+		if(antidrugExce != null) result.addAntiDrugSecurity(antidrugExce);
 		System.out.println("超授权使用抗菌药物监测与提示:" + (System.currentTimeMillis() - xx));
 		HisSubCheckTime.setSubCheckTime("[超授权使用抗菌药物监测与提示:" + (System.currentTimeMillis() - xx) + "]");
 		
@@ -176,7 +176,7 @@ public class AntiDrugSecurityCheckerBean implements IAntiDrugSecurityChecker
 //        
         xx = System.currentTimeMillis();
         TAntiDrugSecurityCheckResult antidrugspec   = this.AntiDrugSppec.Checker(input);
-        result.addAntiDrugSecurity(antidrugspec);
+        if(antidrugspec != null)  result.addAntiDrugSecurity(antidrugspec);
         System.out.println("特殊用抗菌药监测与提示:" + (System.currentTimeMillis() - xx));
         HisSubCheckTime.setSubCheckTime("[特殊用抗菌药监测与提示:" + (System.currentTimeMillis() - xx) + "]");
         

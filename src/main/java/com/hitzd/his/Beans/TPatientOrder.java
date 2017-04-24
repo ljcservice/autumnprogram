@@ -1,5 +1,13 @@
 package com.hitzd.his.Beans;
 
+import java.util.Map;
+
+import org.springframework.beans.BeansException;
+
+import com.hitzd.springBeanManager.SpringBeanUtil;
+import com.ts.entity.pdss.pdss.Beans.TDrug;
+import com.ts.service.pdss.pdss.Cache.PdssCache;
+
 /**
  * 医嘱对象
  * 
@@ -12,6 +20,8 @@ public class TPatientOrder implements java.io.Serializable
     private static final long        serialVersionUID        = 1L;
     /* 病人ID */
     private String                   patientID               = null;
+    /* 门诊 住院标示 */
+    private String                   patType                 = null;
     /* 病人主要信息 */
     private TPatient                 patient                 = null;
     /* 病人就诊扩展信息 */
@@ -49,6 +59,27 @@ public class TPatientOrder implements java.io.Serializable
     /* 治疗用药信息  */
     private TTreatUseDrug[]          treatUseDrug           = null;
     
+    private Map<String, TDrug>       drugMap                = null;
+    
+    
+    public String getPatType()
+    {
+        return patType;
+    }
+
+    public TDrug getDrugMap(String drugCode){
+        if(drugMap.containsKey(drugCode))
+        {
+            return drugMap.get(drugCode);
+        }
+        return null;
+    }
+    
+    public void setPatType(String patType)
+    {
+        this.patType = patType;
+    }
+
     public TPatOperation[] getPatOperation()
     {
 		return patOperation;
@@ -111,12 +142,21 @@ public class TPatientOrder implements java.io.Serializable
 
     public TPatOrderDrug[] getPatOrderDrugs()
     {
+        
         return patOrderDrugs;
     }
 
     public void setPatOrderDrugs(TPatOrderDrug[] patOrderDrugs)
     {
         this.patOrderDrugs = patOrderDrugs;
+        try
+        {
+            drugMap = ((PdssCache)SpringBeanUtil.getBean("pdssCache")).queryDrugMap(this.patOrderDrugs);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public TPatOrderDiagnosis[] getPatOrderDiagnosiss()

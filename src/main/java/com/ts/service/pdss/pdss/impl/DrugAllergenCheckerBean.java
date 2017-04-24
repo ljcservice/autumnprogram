@@ -28,7 +28,7 @@ import com.ts.service.pdss.pdss.manager.IDrugAllergenChecker;
  */
 @Service
 @Transactional
-public class DrugAllergenCheckerBean extends Persistent4DB implements IDrugAllergenChecker
+public class DrugAllergenCheckerBean  implements IDrugAllergenChecker
 {
 	private final static Logger log = Logger.getLogger(DrugAllergenCheckerBean.class);
 	@Resource(name = "pdssCache")

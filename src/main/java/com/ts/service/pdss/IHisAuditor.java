@@ -8,6 +8,8 @@ import com.hitzd.his.Beans.TLabTest;
 import com.hitzd.his.Beans.TPatOperation;
 import com.hitzd.his.Beans.TPatVitalSigns;
 import com.hitzd.his.Beans.TPatientOrder;
+import com.hitzd.his.Beans.TPreveUseDrug;
+import com.hitzd.his.Beans.TTreatUseDrug;
 import com.ts.entity.pdss.ias.RSBeans.TAntiDrugSecurityCheckResult;
 import com.ts.entity.pdss.ias.RSBeans.TAntiDrugSecurityResult;
 import com.ts.entity.pdss.pdss.RSBeans.TCheckResultCollection;
@@ -116,13 +118,15 @@ public interface IHisAuditor
      * 预防用药记录保存保存
      * @param PreveUseInfo
      */
-    public void SavePreveUseDrug(String[][] PreveUseInfo);
+//    public void SavePreveUseDrug(String[][] PreveUseInfo);
+    public void SavePreveUseDrug(TPreveUseDrug[] preveUseInfo);
     
     /**
      * 治疗用药信息保存
      * @param TreatUseInfo
      */
-    public void SaveTreatUseDrug(String[][] TreatUseInfo);
+//    public void SaveTreatUseDrug(String[][] TreatUseInfo);
+    public void SaveTreatUseDrug(TTreatUseDrug[] TreatUseInfo);
     
     
 	/**

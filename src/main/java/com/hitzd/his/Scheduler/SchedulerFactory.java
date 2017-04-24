@@ -1,6 +1,6 @@
 package com.hitzd.his.Scheduler;
 
-import com.hitzd.his.report.utils.JillClassLoader;
+import com.hitzd.his.report.utils.ClassLoaderUnit;
 
 public class SchedulerFactory 
 {
@@ -11,7 +11,7 @@ public class SchedulerFactory
         	Object obj = null;
 			try 
 			{
-				obj = JillClassLoader.loadClass(clazz).newInstance();
+				obj = ClassLoaderUnit.loadClass(clazz).newInstance();
 			} 
 			catch (Exception e) 
 			{

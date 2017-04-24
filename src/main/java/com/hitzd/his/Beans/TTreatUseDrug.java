@@ -63,13 +63,13 @@ public class TTreatUseDrug extends TBaseBean
     private String TWVALUE;
     /* 体征 */
     private String TWOK;
-    /* */
+    /* 血象检查日期 */
     private String XXDATE;
-    /* */
+    /* 血象值 */
     private String XXVALUE;
-    /* */
+    /* C蛋白 */
     private String CVALUE;
-    /* */
+    /* XXOK */
     private String XXOK;
 
     public String getZL_ID()

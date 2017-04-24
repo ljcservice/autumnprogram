@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.hitzd.his.Beans.Middle.TTableConfig;
 import com.hitzd.his.Utils.Config;
-import com.hitzd.his.report.utils.JillClassLoader;
+import com.hitzd.his.report.utils.ClassLoaderUnit;
 
 public class CaseHistoryFactory 
 {
@@ -15,7 +15,7 @@ public class CaseHistoryFactory
 		{
 			String chhName = Config.getParamValue("CaseHistoryHelper");
 			chhName = chhName.length() == 0 ? "com.hitzd.his.casehistory.helper.CaseHistoryJWYH" : chhName;
-			return (ICaseHistoryHelper) JillClassLoader.loadClass(chhName).newInstance();
+			return (ICaseHistoryHelper) ClassLoaderUnit.loadClass(chhName).newInstance();
 		} 
 		catch (Exception e) 
 		{
