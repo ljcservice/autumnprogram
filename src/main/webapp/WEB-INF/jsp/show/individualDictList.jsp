@@ -40,7 +40,7 @@
 							</div>
 							<div style="padding: 5px;">
 								<h4 style="color: blue;">检验项目</h4>
-								<c:forEach items="${resultList}" var="item" varStatus="vs">
+								<c:forEach items="${list1}" var="item" varStatus="vs">
 									<div>
 										<div>[检查名称]：${item.CHECK_ITEM }
 										</div>
@@ -53,11 +53,11 @@
 							
 							<div style="padding: 5px;">
 								<h4 style="color: blue;">血液浓度采集时期</h4>
-								<c:forEach items="${resultList}" var="item" varStatus="vs">
+								<c:forEach items="${list2}" var="item" varStatus="vs">
 									<div>
-										<div>[成分]：${item.INGREDIENT }
+										<div>[采集时间]：${item.COLLECT_TIME }
 										</div>
-										<div>[适应症]：${item.INDICATION }
+										<div>[周期性检测]：${item.COLLECT_DESC }
 										</div>
 									</div>
 								</c:forEach>
@@ -67,11 +67,11 @@
 							<div style="padding: 5px;">
 								<h4 style="color: blue;">血液浓度范围</h4>
 								<div>
-								<table>
-									<c:forEach items="${resultList}" var="item" varStatus="vs">
+								<table style="width: 100%;">
+									<c:forEach items="${list3}" var="item" varStatus="vs">
 										<tr>
-											<td>${item.INGREDIENT }</td>
-											<td>${item.INGREDIENT }</td>
+											<td align="left">${item.RANGE }</td>
+											<td width="200px;" align="center">${item.CROWD }</td>
 										</tr>
 									</c:forEach>
 								</table>

@@ -34,21 +34,11 @@
 							<input type="hidden" name="name" value="${pd.name}" id="name"/>
 							<input type="hidden" name="ONTO_TYPE" value="${pd.ONTO_TYPE}" id="ONTO_TYPE"/>
 						</form>
-						<div id="resultDiv" style="overflow: auto;">
-							<div>
-								${pd.name}
-							</div>
-							<div style="padding: 5px;" >
-								<h4 style="color: blue;">检验项目</h4>
+						<iframe id="resultDiv" scrolling="no" frameborder="0"  style="margin:0 auto;width:100%;overflow: auto;">
 								<c:forEach items="${resultList}" var="item" varStatus="vs">
-									<div >
-										<iframe style="overflow: visible;">
-											${item.content}
-										</iframe>
-									</div>
+									${item.content}
 								</c:forEach>
-							</div>
-						</div>
+						</iframe>
 						
 						</div>
 						<!-- /.col -->
@@ -89,7 +79,7 @@ $(function() {
 });
 function initWidthHeight(){
 	var myHeight = $(window).outerHeight() ;
-	$("#resultDiv").css('max-height', myHeight-2+'px');
+	$("#resultDiv").css('height', myHeight-10+'px');
 }
 </script>
 </html>

@@ -34,16 +34,15 @@
 							<input type="hidden" name="name" value="${pd.name}" id="name"/>
 							<input type="hidden" name="ONTO_TYPE" value="${pd.ONTO_TYPE}" id="ONTO_TYPE"/>
 						</form>
+						<div>
+							<table style="width: 100%;">
+								<tr>
+									<td align="left"><b >搜索结果</b></td>
+									<td align="right"><b >搜索到含“${pd.name}”的结果共有<font style="color: blue;">${resultList.size()}</font>条 </b>&nbsp;&nbsp;</td>
+								</tr>
+							</table>
+						</div>
 						<div id="resultDiv" style="overflow: auto;">
-							<div>
-								<table style="width: 100%;">
-									<tr>
-										<td align="left"><b >搜索结果</b></td>
-										<td align="right"><b >搜索到含“${pd.name}”的结果共有<font style="color: blue;">${resultList.size()}</font>条 </b>&nbsp;&nbsp;</td>
-									</tr>
-								</table>
-							</div>
-							<div>
 							<c:forEach items="${resultList}" var="item" varStatus="vs">
 								<div style="padding: 5px;">
 									<h4 style="color: blue;"><a href="javascript:detailPage('${item.DIRECTION_NO }');">${item.drug_name } - ${item.firm_name }</a></h4>
@@ -56,7 +55,6 @@
 									<div style="width:100%;height:2px;border-bottom: 1px dotted #e2e2e2;"></div>
 								</div>
 							</c:forEach>
-							</div>
 						</div>
 						</div></div></div>
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 10px;padding-bottom: 10px;">
@@ -107,7 +105,7 @@ $(function() {
 	
 });
 function initWidthHeight(){
-	var myHeight = $(window).outerHeight() - $("#pageStrDiv").outerHeight();
+	var myHeight = $(window).outerHeight() - $("#pageStrDiv").outerHeight() -15;
 	$("#resultDiv").css('max-height', myHeight-2+'px');
 }
 function detailPage(DIRECTION_NO){

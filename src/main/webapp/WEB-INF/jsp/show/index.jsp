@@ -12,6 +12,7 @@
 <base href="<%=basePath%>">
 <meta charset="utf-8" />
 <title>主页</title>
+<link type="text/css" rel="stylesheet" href="static/css/show/show.css"/>
 <style>
 ul,li{
  list-style:none;
@@ -29,188 +30,6 @@ img{
 #mainDiv img{
 	width: 35px;
 }
-</style>
-<link type="text/css" rel="stylesheet" href="static/css/show/show.css"/>
-<script type="text/javascript" src="static/js/show/jq.js"></script>
-<script>
-	
-	$(function() {
-		//设置位置居中
-		var w = ($(top.window).width()-$("#item_content").width())/2;
-		var y = ($(top.window).height()-$("#item_content").height())/2;
-		$("#item_content").css("left",w).css("top",y);
-		$("#myframe").width($(top.window).width()-60);
-		$("#myframe").height($(top.window).height()-50);
-		$("#mainDiv").height($(top.window).height()-50);
-		function Pointer(x, y) {
-			this.x = x ;
-			this.y = y ;
-		}
-		function Position(left, top) {
-			this.left = left ;
-			this.top = top ;
-		}
-		$(".item_content .item").each(function(i) {
-			this.init = function() { // 初始化
-				this.box = $(this).parent() ;
-				$(this).attr("index", i).css({
-					position : "absolute",
-					left : this.box.offset().left-w,
-					top : this.box.offset().top-y
-				}).appendTo(".item_content") ;
-				this.drag() ;
-			},
-			this.move = function(callback) {  // 移动
-				$(this).stop(true).animate({
-					left : this.box.offset().left-w,
-					top : this.box.offset().top-y
-				}, 500, function() {
-					if(callback) {
-						callback.call(this) ;
-					}
-				}) ;
-			},
-			this.collisionCheck = function() {
-				var currentItem = this ;
-				var direction = null ;
-				$(this).siblings(".item").each(function() {
-					if(
-						currentItem.pointer.x > this.box.offset().left &&
-						currentItem.pointer.y > this.box.offset().top &&
-						(currentItem.pointer.x < this.box.offset().left + this.box.width()) &&
-						(currentItem.pointer.y < this.box.offset().top + this.box.height())
-					) {
-						// 返回对象和方向
-						if(currentItem.box.offset().top < this.box.offset().top) {
-							direction = "down" ;
-						} else if(currentItem.box.offset().top > this.box.offset().top) {
-							direction = "up" ;
-						} else {
-							direction = "normal" ;
-						}
-						this.swap(currentItem, direction) ;
-					}
-				}) ;
-			},
-			this.swap = function(currentItem, direction) { // 交换位置
-				if(this.moveing) return false ;
-				var directions = {
-					normal : function() {
-						var saveBox = this.box ;
-						this.box = currentItem.box ;
-						currentItem.box = saveBox ;
-						this.move() ;
-						$(this).attr("index", this.box.index()) ;
-						$(currentItem).attr("index", currentItem.box.index()) ;
-					},
-					down : function() {
-						// 移到上方
-						var box = this.box ;
-						var node = this ;
-						var startIndex = currentItem.box.index() ;
-						var endIndex = node.box.index(); ;
-						for(var i = endIndex; i > startIndex ; i--) {
-							var prevNode = $(".item_content .item[index="+ (i - 1) +"]")[0] ;
-							node.box = prevNode.box ;
-							$(node).attr("index", node.box.index()) ;
-							node.move() ;
-							node = prevNode ;
-						}
-						currentItem.box = box ;
-						$(currentItem).attr("index", box.index()) ;
-					},
-					up : function() {
-						// 移到上方
-						var box = this.box ;
-						var node = this ;
-						var startIndex = node.box.index() ;
-						var endIndex = currentItem.box.index(); ;
-						for(var i = startIndex; i < endIndex; i++) {
-							var nextNode = $(".item_content .item[index="+ (i + 1) +"]")[0] ;
-							node.box = nextNode.box ;
-							$(node).attr("index", node.box.index()) ;
-							node.move() ;
-							node = nextNode ;
-						}
-						currentItem.box = box ;
-						$(currentItem).attr("index", box.index()) ;
-					}
-				}
-				directions[direction].call(this) ;
-			},
-			this.drag = function() { // 拖拽
-				var oldPosition = new Position() ;
-				var oldPointer = new Pointer() ;
-				var isDrag = false ;
-				var currentItem = null ;
-				$(this).mousedown(function(e) {
-					e.preventDefault() ;
-					oldPosition.left = $(this).position().left ;
-					oldPosition.top =  $(this).position().top;
-					oldPointer.x = e.clientX;
-					oldPointer.y = e.clientY;
-					isDrag = true ;
-					
-					currentItem = this ;
-					
-				}) ;
-				$(document).mousemove(function(e) {
-					var currentPointer = new Pointer(e.clientX, e.clientY) ;
-					if(!isDrag) return false ;
-					$(currentItem).css({
-						"opacity" : "0.8",
-						"z-index" : 999
-					}) ;
-					var left = currentPointer.x - oldPointer.x + oldPosition.left ;
-					var top = currentPointer.y - oldPointer.y + oldPosition.top ;
-					$(currentItem).css({
-						left : left,
-						top : top
-					}) ;
-					currentItem.pointer = currentPointer ;
-					// 开始交换位置
-					
-					currentItem.collisionCheck() ;
-					
-					
-				}) ;
-				$(document).mouseup(function() {
-					if(!isDrag) return false ;
-					isDrag = false ;
-					currentItem.move(function() {
-						$(this).css({
-							"opacity" : "1",
-							"z-index" : 0
-						}) ;
-					}) ;
-				}) ;
-			}
-			this.init() ;
-		}) ;
-	}) ;
-	
-	
-	function mainDiv(ONTO_TYPE){
-		$("#item_content").hide();
-		$("#mainDiv").show();
-		searchFram(ONTO_TYPE);
-	}
-	function searchFram(ONTO_TYPE){
-		var ontoUrl = '<%=basePath%>' + "show/all.do?ONTO_TYPE="+ONTO_TYPE +"&tm="+new Date().getTime();
-		myframe.location.href= ontoUrl;
-	}
-	function showCtanner(){
-		$("#item_content").show();
-		$("#mainDiv").hide();
-	}
-	function tologin(){
-		window.open('<%=basePath%>login_toLogin');
-	}
-	function  toMain(){
-		window.open('<%=basePath%>main/index');
-	}
-</script>
-<style>
 .item_content ul  {
 	list-style:none;
 }
@@ -360,5 +179,185 @@ img{
 	</div>
 
 </body>
-
+<script type="text/javascript" src="static/js/show/jq.js"></script>
+<script>
+	
+	$(function() {
+		//设置位置居中
+		var w = ($(top.window).width()-$("#item_content").width())/2;
+		var y = ($(top.window).height()-$("#item_content").height())/2;
+		$("#item_content").css("left",w).css("top",y);
+		function Pointer(x, y) {
+			this.x = x ;
+			this.y = y ;
+		}
+		function Position(left, top) {
+			this.left = left ;
+			this.top = top ;
+		}
+		$(".item_content .item").each(function(i) {
+			this.init = function() { // 初始化
+				this.box = $(this).parent() ;
+				$(this).attr("index", i).css({
+					position : "absolute",
+					left : this.box.offset().left-w,
+					top : this.box.offset().top-y
+				}).appendTo(".item_content") ;
+				this.drag() ;
+			},
+			this.move = function(callback) {  // 移动
+				$(this).stop(true).animate({
+					left : this.box.offset().left-w,
+					top : this.box.offset().top-y
+				}, 500, function() {
+					if(callback) {
+						callback.call(this) ;
+					}
+				}) ;
+			},
+			this.collisionCheck = function() {
+				var currentItem = this ;
+				var direction = null ;
+				$(this).siblings(".item").each(function() {
+					if(
+						currentItem.pointer.x > this.box.offset().left &&
+						currentItem.pointer.y > this.box.offset().top &&
+						(currentItem.pointer.x < this.box.offset().left + this.box.width()) &&
+						(currentItem.pointer.y < this.box.offset().top + this.box.height())
+					) {
+						// 返回对象和方向
+						if(currentItem.box.offset().top < this.box.offset().top) {
+							direction = "down" ;
+						} else if(currentItem.box.offset().top > this.box.offset().top) {
+							direction = "up" ;
+						} else {
+							direction = "normal" ;
+						}
+						this.swap(currentItem, direction) ;
+					}
+				}) ;
+			},
+			this.swap = function(currentItem, direction) { // 交换位置
+				if(this.moveing) return false ;
+				var directions = {
+					normal : function() {
+						var saveBox = this.box ;
+						this.box = currentItem.box ;
+						currentItem.box = saveBox ;
+						this.move() ;
+						$(this).attr("index", this.box.index()) ;
+						$(currentItem).attr("index", currentItem.box.index()) ;
+					},
+					down : function() {
+						// 移到上方
+						var box = this.box ;
+						var node = this ;
+						var startIndex = currentItem.box.index() ;
+						var endIndex = node.box.index(); ;
+						for(var i = endIndex; i > startIndex ; i--) {
+							var prevNode = $(".item_content .item[index="+ (i - 1) +"]")[0] ;
+							node.box = prevNode.box ;
+							$(node).attr("index", node.box.index()) ;
+							node.move() ;
+							node = prevNode ;
+						}
+						currentItem.box = box ;
+						$(currentItem).attr("index", box.index()) ;
+					},
+					up : function() {
+						// 移到上方
+						var box = this.box ;
+						var node = this ;
+						var startIndex = node.box.index() ;
+						var endIndex = currentItem.box.index(); ;
+						for(var i = startIndex; i < endIndex; i++) {
+							var nextNode = $(".item_content .item[index="+ (i + 1) +"]")[0] ;
+							node.box = nextNode.box ;
+							$(node).attr("index", node.box.index()) ;
+							node.move() ;
+							node = nextNode ;
+						}
+						currentItem.box = box ;
+						$(currentItem).attr("index", box.index()) ;
+					}
+				}
+				directions[direction].call(this) ;
+			},
+			this.drag = function() { // 拖拽
+				var oldPosition = new Position() ;
+				var oldPointer = new Pointer() ;
+				var isDrag = false ;
+				var currentItem = null ;
+				$(this).mousedown(function(e) {
+					e.preventDefault() ;
+					oldPosition.left = $(this).position().left ;
+					oldPosition.top =  $(this).position().top;
+					oldPointer.x = e.clientX;
+					oldPointer.y = e.clientY;
+					isDrag = true ;
+					currentItem = this ;
+				}) ;
+				$(document).mousemove(function(e) {
+					var currentPointer = new Pointer(e.clientX, e.clientY) ;
+					if(!isDrag) return false ;
+					$(currentItem).css({
+						"opacity" : "0.8",
+						"z-index" : 999
+					}) ;
+					var left = currentPointer.x - oldPointer.x + oldPosition.left ;
+					var top = currentPointer.y - oldPointer.y + oldPosition.top ;
+					$(currentItem).css({
+						left : left,
+						top : top
+					}) ;
+					currentItem.pointer = currentPointer ;
+					// 开始交换位置
+					currentItem.collisionCheck() ;
+				}) ;
+				$(document).mouseup(function() {
+					if(!isDrag) return false ;
+					isDrag = false ;
+					currentItem.move(function() {
+						$(this).css({
+							"opacity" : "1",
+							"z-index" : 0
+						}) ;
+					}) ;
+				}) ;
+			}
+			this.init() ;
+		}) ;
+		//窗口变化，重新初始化 
+		$(window).off('resize').on('resize', function() {
+			initWidthHeight();
+		}).trigger('resize');
+		
+	});
+	function initWidthHeight(){
+		$("#myframe").width($(top.window).width()-60);
+		$("#myframe").height($(top.window).height()-50);
+		$("#mainDiv").height($(top.window).height()-45);
+	}
+	
+	
+	function mainDiv(ONTO_TYPE){
+		$("#item_content").hide();
+		$("#mainDiv").show();
+		searchFram(ONTO_TYPE);
+	}
+	function searchFram(ONTO_TYPE){
+		var ontoUrl = '<%=basePath%>' + "show/all.do?ONTO_TYPE="+ONTO_TYPE +"&tm="+new Date().getTime();
+		myframe.location.href= ontoUrl;
+	}
+	function showCtanner(){
+		$("#item_content").show();
+		$("#mainDiv").hide();
+	}
+	function tologin(){
+		window.open('<%=basePath%>login_toLogin');
+	}
+	function  toMain(){
+		window.open('<%=basePath%>main/index');
+	}
+</script>
 </html>

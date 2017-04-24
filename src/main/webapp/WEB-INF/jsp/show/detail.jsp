@@ -20,7 +20,6 @@
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
 </head>
 <body class="no-skin">
-
 	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
 		<!-- /section:basics/sidebar -->
@@ -34,16 +33,20 @@
 							<input type="hidden" name="name" value="${pd.name}" id="name"/>
 							<input type="hidden" name="ONTO_TYPE" value="${pd.ONTO_TYPE}" id="ONTO_TYPE"/>
 						</form>
-						<div style="float: right;"><a href="javascript:backPage();">返回查询</a></div>
+						<div id="mmDiv">
+							<table style="width: 100%;">
+								<tr>
+									<td  align="left">${pd.name }</td>
+									<td width="65px;"><a href="javascript:backPage();">返回查询</a></div></td>
+								</tr>
+							</table>
 						</div>
-						<div style="padding: 5px;">
+						<div id="resultDiv" style="padding: 5px;overflow: auto;">
 							<c:forEach items="${resultList}" var="item" varStatus="vs">
-								<div>
-										<div>[${item.title_name }]
-										</div>
-										<div>${item.TCONTENT }
-										</div>
-									<div style="width:100%;height:2px;border-bottom: solid;border: 1px;"></div>
+								<div style="padding: 8px;">
+									<div><b>[${item.title_name }]</b> </div>
+									<div>${item.TCONTENT } </div>
+									<div style="width:100%;height:2px;border-bottom: 1px dotted #e2e2e2;"></div>
 								</div>
 							</c:forEach>
 						</div>
@@ -84,7 +87,7 @@ $(function() {
 	
 });
 function initWidthHeight(){
-	var myHeight = $(window).outerHeight() - $("#pageStrDiv").outerHeight();
+	var myHeight = $(window).outerHeight() - $("#mmDiv").outerHeight();
 	$("#resultDiv").css('max-height', myHeight-2+'px');
 }
 function backPage(){

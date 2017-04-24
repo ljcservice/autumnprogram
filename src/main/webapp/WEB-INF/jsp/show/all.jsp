@@ -43,7 +43,6 @@ width: 28px;
 </style>
 </head>
 <body class="no-skin">
-
 	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
 		<!-- /section:basics/sidebar -->
@@ -51,17 +50,27 @@ width: 28px;
 			<div class="main-content-inner">
 				<div class="page-content">
 					<div class="row">
-						<div class="col-xs-12" id="searchDiv">
-							<form name="searchForm" id="searchForm" action="ontology/ontologyList.do">
-								<input type="hidden" name="ONTO_TYPE" id="ONTO_TYPE" value="${pd.ONTO_TYPE}"/>
-							</form>
-						</div>
-						
 						<div name=""  style="">
 							<table style="width:100%;height: 100%;" border="0">
 								<tr>
 									<td style="width:250px;vertical-align: top;text-align: center;" align="center">
 										<div id="treeTitle">
+											<div class="col-xs-12" id="searchDiv">
+												<form name="searchForm" id="searchForm" action="show/list.do">
+													<input type="hidden" name="ONTO_TYPE" id="ONTO_TYPE" value="${pd.ONTO_TYPE}"/>
+													<c:if test="${pd.ONTO_TYPE==0 }">
+													<div class="check-search nav-search" >
+															<span class="input-icon" style="">
+																<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="name" value="" placeholder=" " maxlength="80"/>
+																<i class="ace-icon fa fa-search nav-search-icon"></i>
+															</span>
+													</div>
+													<div class="check-search"  >
+														<a class="btn btn-light btn-xs" onclick="searchs();" title="检索" target="treeFrame" id="searchBtn"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
+													</div>
+													</c:if>
+												</form>
+											</div>
 											<div id="treeName" class="treeName">
 												<c:if test="${pd.ONTO_TYPE==0 }"><img class="nav-user-photo" src="static/images/show/icon01.png" >药品说明书</c:if>
 												<c:if test="${pd.ONTO_TYPE==1 }"><img class="nav-user-photo" src="static/images/show/icon02.png" >个性化给药</c:if>
@@ -71,6 +80,7 @@ width: 28px;
 												<c:if test="${pd.ONTO_TYPE==5 }"><img class="nav-user-photo" src="static/images/show/icon06.png" >临床检验正常值及意义</c:if>
 												<c:if test="${pd.ONTO_TYPE==6 }"><img class="nav-user-photo" src="static/images/show/icon07.png" >临床路径</c:if>
 											</div>
+											<c:if test="${pd.ONTO_TYPE==0 }">
 											<div id="codeDiv">
 												<select class="chosen-select form-control" name="code" id="code" data-placeholder="药理分类" onchange="changeTree();">
 													<option value="1"  selected >药理分类</option>
@@ -80,6 +90,7 @@ width: 28px;
 													<option value="7"   >妊娠分类</option>
 												</select>
 											</div>
+											</c:if>
 										</div>
 										<div id="treeDiv" style='width:250px;overflow: auto;height: 100%;'>
 												<ul id="leftTree" class="ztree"></ul>
@@ -91,7 +102,7 @@ width: 28px;
 										</div>
 									</td>
 									<td style="vertical-align:top;">
-										<iframe name="treeFrame" id="treeFrame" scrolling="no" frameborder="0"  style="margin:0 auto;width:100%;height: 100%;"></iframe>
+										<iframe name="treeFrame" id="treeFrame" scrolling="no" frameborder="0"  style="margin:0 auto;width:100%;"></iframe>
 										&nbsp;
 									</td>
 								</tr>
@@ -105,11 +116,6 @@ width: 28px;
 			</div>
 		</div>
 		<!-- /.main-content -->
-
-		<!-- 返回顶部 -->
-		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-			<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
-		</a>
 
 	</div>
 	<!-- /.main-container -->
@@ -135,14 +141,7 @@ $(function() {
 
 // 查询本体
 function searchs(){
-	top.jzts();
-	//清空同义词列表
-// 	var emptyHtm = "<tr class='main_info'><td colspan='11' class='center'>没有相关数据</td></tr>";
-// 	var mydocument = osynFrame.document;
-// 	mydocument.getElementById("osynTbody").innerHTML = emptyHtm;
-// 	mydocument.getElementById("osynPageParam").style.display = "none";
-	//iframe跳转
-	var ontoUrl = '<%=basePath%>'+"show/list.do?tm="+new Date().getTime();
+	var ontoUrl = '<%=basePath%>'+"show/list.do?"+$("#searchForm").serialize()+"&tm="+new Date().getTime();
 	treeFrame.location.href= ontoUrl;
 }
 function beforeClick(){
@@ -178,7 +177,7 @@ function initTree(){
 		async: {
 			enable: true,
 			url:zTreeUrl,
-			autoParam:["id", "name","IS_LEAF"],
+			autoParam:["id","IS_LEAF"],
 			otherParam:{}
 		}
 	};
