@@ -1,6 +1,11 @@
 package com.ts.controller.base;
 
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+
 import javax.servlet.http.HttpServletRequest;
 
 import net.sf.json.JSONObject;
@@ -115,4 +120,15 @@ public class BaseController {
 	public boolean isNotNull(String str){
 		return (str!=null&&str!="");
 	}
+	
+	protected String getResponseAsString(InputStream is, String encoding) throws UnsupportedEncodingException, IOException {
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        int i = -1;
+        while ((i = is.read()) != -1) {
+            baos.write(i);
+        }
+        return baos.toString(encoding);
+
+    }
 }

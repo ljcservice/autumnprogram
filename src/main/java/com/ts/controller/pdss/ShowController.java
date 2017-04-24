@@ -1,5 +1,6 @@
 package com.ts.controller.pdss;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -7,6 +8,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONArray;
+
+import oracle.sql.CLOB;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +23,7 @@ import com.ts.service.DoctOrder.OrderWork.ExpertService;
 import com.ts.service.DoctOrder.OrderWork.IOrderWorkService;
 import com.ts.service.pdss.ShowService;
 import com.ts.service.system.user.UserManager;
+import com.ts.util.ConvertCharacter;
 import com.ts.util.PageData;
 import com.ts.util.Tools;
 
@@ -81,12 +85,13 @@ public class ShowController extends BaseController{
 		if(treeList!=null){
 			for(PageData p:treeList){
 				if("0".equals(type)){//药品说明书
-					if("1".equals(pd.getString("IS_LEAF"))){
+					if("1".equals(p.get("IS_LEAF").toString())){
 						//根节点，增加跳转的iframe标识
 						p.put("target", "treeFrame"); 
 						p.put("url", new StringBuffer("show/list?ONTO_TYPE=").append(type)
 								.append("&id=").append(p.get("ID").toString()).append("&name=")
-								.append(p.getString("name")).toString());
+								.append(p.getString("name")).toString() );
+//								java.net.URLEncoder.encode(,"UTF-8")
 						p.put("isParent", false);
 					}else{
 						p.put("isParent", true);
@@ -97,7 +102,7 @@ public class ShowController extends BaseController{
 							.append("&id=").append(p.get("ID").toString()).toString());
 					p.put("isParent", false);
 				}else if ("2".equals(type)||"3".equals(type)||"4".equals(type)||"5".equals(type)||"6".equals(type)){
-					if("1".equals(pd.getString("IS_LEAF"))){
+					if("1".equals(p.get("IS_LEAF").toString())){
 						p.put("target", "treeFrame"); 
 						p.put("url", new StringBuffer("show/list?ONTO_TYPE=").append(type)
 								.append("&id=").append(p.get("ID").toString()).toString());
@@ -139,9 +144,14 @@ public class ShowController extends BaseController{
 			String type = pd.getString("ONTO_TYPE");
 			if("0".equals(type)){//药品说明书
 				list = showService.queryList(page);
+//				for(PageData p:list){
+//					p.put("INGREDIENT", ConvertCharacter.specilConvertCharacter( p.getString("INGREDIENT")));
+//					p.put("INDICATION", ConvertCharacter.specilConvertCharacter(p.getString("INDICATION")));
+//				}
 				mv.addObject("resultList",list);
 				mv.setViewName("show/list");
 			}else if ("1".equals(type)){//个性化给药
+				pd.put("ID", Integer.valueOf(pd.getString("ID")));
 				List<PageData> list1 = showService.queryIndividualItem(pd);
 				List<PageData> list2 = showService.queryCollectDescDict(pd);
 				List<PageData> list3 = showService.queryConsistencyRange(pd);
@@ -152,32 +162,94 @@ public class ShowController extends BaseController{
 			}else if ("2".equals(type)){//抗菌药物临床应用指导原则
 				pd.put("CODE", 11);
 				list = showService.queryDrugRelrefDirection(pd);
+				for(PageData pp:list){
+					java.sql.Clob clob = (java.sql.Clob) pp.get("CONTENT");
+					if(clob!=null){
+						java.io.Reader reder = clob.getCharacterStream();
+						BufferedReader br = new BufferedReader(reder);
+						StringBuffer sb = new StringBuffer();
+						 for (String s= br.readLine();s!=null;) {
+							sb.append(s);
+							s= br.readLine();
+						 }
+						pp.put("TCONTENT", sb.toString());
+					}
+				}
 				mv.addObject("resultList",list);
 				mv.setViewName("show/drugRelrefDirection");
 			}else if ("3".equals(type)){//医学常用计算公式
 				pd.put("CODE", 12);
 				list = showService.queryDrugRelrefDirection(pd);
+				for(PageData pp:list){
+					java.sql.Clob clob = (java.sql.Clob) pp.get("CONTENT");
+					if(clob!=null){
+						java.io.Reader reder = clob.getCharacterStream();
+						BufferedReader br = new BufferedReader(reder);
+						StringBuffer sb = new StringBuffer();
+						 for (String s= br.readLine();s!=null;) {
+							sb.append(s);
+							s= br.readLine();
+						 }
+						pp.put("TCONTENT", sb.toString());
+					}
+				}
 				mv.addObject("resultList",list);
 				mv.setViewName("show/drugRelrefDirection");
 			}else if ("4".equals(type)){//医药法规
 				pd.put("CODE", 13);
 				list = showService.queryDrugRelrefDirection(pd);
+				for(PageData pp:list){
+					java.sql.Clob clob = (java.sql.Clob) pp.get("CONTENT");
+					if(clob!=null){
+						java.io.Reader reder = clob.getCharacterStream();
+						BufferedReader br = new BufferedReader(reder);
+						StringBuffer sb = new StringBuffer();
+						 for (String s= br.readLine();s!=null;) {
+							sb.append(s);
+							s= br.readLine();
+						 }
+						pp.put("TCONTENT", sb.toString());
+					}
+				}
 				mv.addObject("resultList",list);
 				mv.setViewName("show/drugRelrefDirection");
 			}else if ("5".equals(type)){//临床检验正常值及意义
 				pd.put("CODE", 100);
 				list = showService.queryDrugRelrefDirection(pd);
+				for(PageData pp:list){
+					java.sql.Clob clob = (java.sql.Clob) pp.get("CONTENT");
+					if(clob!=null){
+						java.io.Reader reder = clob.getCharacterStream();
+						BufferedReader br = new BufferedReader(reder);
+						StringBuffer sb = new StringBuffer();
+						 for (String s= br.readLine();s!=null;) {
+							sb.append(s);
+							s= br.readLine();
+						 }
+						pp.put("TCONTENT", sb.toString());
+					}
+				}
 				mv.addObject("resultList",list);
 				mv.setViewName("show/drugRelrefDirection");
 			}else if ("6".equals(type)){//临床路径
 				list = showService.queryClinicalPathwayInfo(pd);
+				for(PageData pp:list){
+					java.sql.Clob clob = (java.sql.Clob) pp.get("CONTENT");
+					if(clob!=null){
+						java.io.Reader reder = clob.getCharacterStream();
+						BufferedReader br = new BufferedReader(reder);
+						StringBuffer sb = new StringBuffer();
+						 for (String s= br.readLine();s!=null;) {
+							sb.append(s);
+							s= br.readLine();
+						 }
+						pp.put("TCONTENT", sb.toString());
+					}
+				}
 				mv.addObject("resultList",list);
 				mv.setViewName("show/clinicalPathwayInfo");
 			}
-			
-			
 			mv.addObject("pd", pd);
-			
 		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
@@ -191,17 +263,27 @@ public class ShowController extends BaseController{
 		try{
 			User user = getCurrentUser();
 			List<PageData> list = showService.drugDirectionDetail(pd);
+			for(PageData pp:list){
+				java.sql.Clob clob = (java.sql.Clob) pp.get("TCONTENT");
+				if(clob!=null){
+					java.io.Reader reder = clob.getCharacterStream();
+					BufferedReader br = new BufferedReader(reder);
+					StringBuffer sb = new StringBuffer();
+					 for (String s= br.readLine();s!=null;) {
+						sb.append(s);
+						s= br.readLine();
+					 }
+					pp.put("TCONTENT", sb.toString());
+				}
+			}
 			mv.addObject("resultList",list);
 			mv.setViewName("show/detail");
 			mv.addObject("pd", pd);
-			
 		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
 		return mv;
 	}
-	
-	
 	
 	
 	
