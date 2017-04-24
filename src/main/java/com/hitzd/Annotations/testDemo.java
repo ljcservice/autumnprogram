@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 
 import com.hitzd.DBUtils.LobCreatingPSCallBeck;
 import com.hitzd.DBUtils.TCommonRecord;
-import com.hitzd.his.Scheduler.ModelHandler;
 import com.hitzd.his.Utils.DateUtils;
 
 public class testDemo
