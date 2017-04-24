@@ -114,4 +114,7 @@
   <session-config>
     <session-timeout>600</session-timeout>
   </session-config>
+  <welcome-file-list>
+  <welcome-file> index_show.jsp</welcome-file>
+ </welcome-file-list>
 </web-app>
