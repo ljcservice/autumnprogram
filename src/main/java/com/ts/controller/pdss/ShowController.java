@@ -1,0 +1,208 @@
+package com.ts.controller.pdss;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONArray;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.ts.controller.base.BaseController;
+import com.ts.entity.Page;
+import com.ts.entity.system.User;
+import com.ts.service.DoctOrder.OrderWork.ExpertService;
+import com.ts.service.DoctOrder.OrderWork.IOrderWorkService;
+import com.ts.service.pdss.ShowService;
+import com.ts.service.system.user.UserManager;
+import com.ts.util.PageData;
+import com.ts.util.Tools;
+
+@Controller
+@RequestMapping(value="/show")
+public class ShowController extends BaseController{
+
+	@Autowired
+	private ShowService showService;
+	
+	/**
+	 * 主页
+	 */
+	@RequestMapping(value="/index")
+	public ModelAndView index(Page page)throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = this.getPageData();
+		try{
+			logger.info("into index page.");
+			User user = getCurrentUser();
+			if(user!=null){
+				pd.put("SYSNAME", user.getUSERNAME());
+			}
+			mv.setViewName("show/index");
+			mv.addObject("pd", pd);
+			
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
+	@RequestMapping(value="/all")
+	public ModelAndView all()throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = this.getPageData();
+		try{
+			User user = getCurrentUser();
+			//查询树
+			
+			mv.setViewName("show/all");
+			mv.addObject("pd", pd);
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
+	@RequestMapping(value="/tree")
+	public void tree(HttpServletResponse response)throws Exception{
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		List<PageData> treeList = null;
+		String id = pd.getString("ID");
+		if(Tools.isEmpty(id)){
+			pd.put("ID", 0);//默认顶级菜单
+		}
+		String type = pd.getString("ONTO_TYPE");
+		treeList = showService.treeRootList(pd);
+		//默认都显示 + 符号
+		if(treeList!=null){
+			for(PageData p:treeList){
+				if("0".equals(type)){//药品说明书
+					if("1".equals(pd.getString("IS_LEAF"))){
+						//根节点，增加跳转的iframe标识
+						p.put("target", "treeFrame"); 
+						p.put("url", new StringBuffer("show/list?ONTO_TYPE=").append(type)
+								.append("&id=").append(p.get("ID").toString()).append("&name=")
+								.append(p.getString("name")).toString());
+						p.put("isParent", false);
+					}else{
+						p.put("isParent", true);
+					}
+				}else if ("1".equals(type)){//个性化给药
+					p.put("target", "treeFrame"); 
+					p.put("url", new StringBuffer("show/list?ONTO_TYPE=").append(type)
+							.append("&id=").append(p.get("ID").toString()).toString());
+					p.put("isParent", false);
+				}else if ("2".equals(type)||"3".equals(type)||"4".equals(type)||"5".equals(type)||"6".equals(type)){
+					if("1".equals(pd.getString("IS_LEAF"))){
+						p.put("target", "treeFrame"); 
+						p.put("url", new StringBuffer("show/list?ONTO_TYPE=").append(type)
+								.append("&id=").append(p.get("ID").toString()).toString());
+						p.put("isParent", false);
+					}else {
+						p.put("isParent", true);
+					}
+				}
+				p.put("ONTO_TYPE", type);
+			}
+		}
+		JSONArray arr = JSONArray.fromObject(treeList);
+		// 替换为Ztree使用的参数TREE_ID
+		String json = arr.toString();
+		json = json.replaceAll("ID", "id").replaceAll("TARGET", "target").replaceAll("URL", "url").replaceAll("NAME", "name").replaceAll("ISPARENT", "isParent");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/json");
+        PrintWriter out = null;
+        try {
+            out = response.getWriter();
+            out.println(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (out != null) {
+                out.close();
+            }
+        }
+	}
+	@RequestMapping(value="/list")
+	public ModelAndView list(Page page)throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = this.getPageData();
+		try{
+			User user = getCurrentUser();
+			page.setPd(pd);
+			getRequest().getHeaderNames();
+			List<PageData> list;
+			String type = pd.getString("ONTO_TYPE");
+			if("0".equals(type)){//药品说明书
+				list = showService.queryList(page);
+				mv.addObject("resultList",list);
+				mv.setViewName("show/list");
+			}else if ("1".equals(type)){//个性化给药
+				List<PageData> list1 = showService.queryIndividualItem(pd);
+				List<PageData> list2 = showService.queryCollectDescDict(pd);
+				List<PageData> list3 = showService.queryConsistencyRange(pd);
+				mv.addObject("list1",list1);
+				mv.addObject("list2",list2);
+				mv.addObject("list3",list3);
+				mv.setViewName("show/individualDictList");
+			}else if ("2".equals(type)){//抗菌药物临床应用指导原则
+				pd.put("CODE", 11);
+				list = showService.queryDrugRelrefDirection(pd);
+				mv.addObject("resultList",list);
+				mv.setViewName("show/drugRelrefDirection");
+			}else if ("3".equals(type)){//医学常用计算公式
+				pd.put("CODE", 12);
+				list = showService.queryDrugRelrefDirection(pd);
+				mv.addObject("resultList",list);
+				mv.setViewName("show/drugRelrefDirection");
+			}else if ("4".equals(type)){//医药法规
+				pd.put("CODE", 13);
+				list = showService.queryDrugRelrefDirection(pd);
+				mv.addObject("resultList",list);
+				mv.setViewName("show/drugRelrefDirection");
+			}else if ("5".equals(type)){//临床检验正常值及意义
+				pd.put("CODE", 100);
+				list = showService.queryDrugRelrefDirection(pd);
+				mv.addObject("resultList",list);
+				mv.setViewName("show/drugRelrefDirection");
+			}else if ("6".equals(type)){//临床路径
+				list = showService.queryClinicalPathwayInfo(pd);
+				mv.addObject("resultList",list);
+				mv.setViewName("show/clinicalPathwayInfo");
+			}
+			
+			
+			mv.addObject("pd", pd);
+			
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
+	
+	@RequestMapping(value="/detail")
+	public ModelAndView detail( )throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = this.getPageData();
+		try{
+			User user = getCurrentUser();
+			List<PageData> list = showService.drugDirectionDetail(pd);
+			mv.addObject("resultList",list);
+			mv.setViewName("show/detail");
+			mv.addObject("pd", pd);
+			
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
+	
+	
+	
+	
+	
+}
