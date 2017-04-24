@@ -172,7 +172,7 @@ public class ShowController extends BaseController{
 							sb.append(s);
 							s= br.readLine();
 						 }
-						pp.put("TCONTENT", sb.toString());
+						pp.put("content", sb.toString());
 					}
 				}
 				mv.addObject("resultList",list);
@@ -190,7 +190,7 @@ public class ShowController extends BaseController{
 							sb.append(s);
 							s= br.readLine();
 						 }
-						pp.put("TCONTENT", sb.toString());
+						pp.put("content", sb.toString());
 					}
 				}
 				mv.addObject("resultList",list);
@@ -208,7 +208,7 @@ public class ShowController extends BaseController{
 							sb.append(s);
 							s= br.readLine();
 						 }
-						pp.put("TCONTENT", sb.toString());
+						pp.put("content", sb.toString());
 					}
 				}
 				mv.addObject("resultList",list);
@@ -226,7 +226,7 @@ public class ShowController extends BaseController{
 							sb.append(s);
 							s= br.readLine();
 						 }
-						pp.put("TCONTENT", sb.toString());
+						pp.put("content", sb.toString());
 					}
 				}
 				mv.addObject("resultList",list);
@@ -243,7 +243,7 @@ public class ShowController extends BaseController{
 							sb.append(s);
 							s= br.readLine();
 						 }
-						pp.put("TCONTENT", sb.toString());
+						pp.put("content", sb.toString());
 					}
 				}
 				mv.addObject("resultList",list);
