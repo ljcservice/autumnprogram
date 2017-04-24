@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ShowMapper">
+	
+<select id="drugTreeList" parameterType="pd" resultType="pd">
+		select SERIAL_ID id,DRUG_CLASS_NME name ,SPUER_CODE PARENT_ID,IS_LEAF,ref_class_code code 
+		from drug_category 
+		where spuer_code =#{ID} and ref_class_code =#{CODE}  and direction_count>0 
+		 order by drug_class
+</select>
+<select id="drugTreeList2" parameterType="pd" resultType="pd">
+		select a.drug_class_id id, a.drug_class_name name 
+		from drug_class a, drug_class_category_rel b  
+		where a.drug_class_id = b.drug_class_id 
+			and b.drug_category_id = #{id}
+			and a.direction_count>0 order by a.drug_class_name
+</select>
+
+
+<select id="categoryTreeList" parameterType="pd" resultType="pd">
+select category_id ,
+       class_code id,
+       class_nme name,
+       spuer_code,
+       ref_class_code,
+       is_leaf,
+       leaf_count
+  from category
+ where spuer_code = #{id}
+   and ref_class_code = 101
+</select>
+
+<select id="drugDirectionPage" parameterType="pd" resultType="pd">
+	select ddm.*
+	from drug_direction_master ddm
+	left join hospital_direction_rel hdr
+		on (ddm.direction_no = hdr.direction_id and
+		   hdr.hospital_name like CONCAT(CONCAT('%', #{pd.name}),'%') )
+	where 1 = 1
+	  and ddm.direction_no in
+	      (select distinct ddr.direction_no
+	         from drug_direction_rel ddr
+	        where ddr.drug_Class_id = #{pd.id} )
+	order by case
+	when hdr.direction_id is null then  2 else 1  end,  ddm.firm_name ASC
+</select>
+<select id="drugDirectionDetail" parameterType="pd" resultType="pd">
+	select a.*,b.title_name from drug_direction a,drug_reg_title_dict b
+	where b.title_num = a.title_no 
+      and a.direction_no = #{direction_no}
+</select>
+                 
+<!--       个体给药         start       -->
+<select id="queryIndividualDict" parameterType="pd" resultType="pd">
+	select INDIVI_ID id,DRUG_CLASS_NAME name from individual_dict where drug_class_name is not null order by indivi_id
+</select>
+<!-- 检验项目 -->
+<select id="queryIndividualItem" parameterType="pd" resultType="pd">
+select * from individual_item where Indivi_id = #{id};
+</select>
+<!-- 血液浓度采集时期 -->
+<select id="queryCollectDescDict" parameterType="pd" resultType="pd">
+select * from collect_desc_dict where Indivi_id =  #{id};
+</select>
+<!-- 血液浓度范围 -->
+<select id="queryConsistencyRange" parameterType="pd" resultType="pd">
+select * from consistency_range where Indivi_id =  #{id};
+</select>
+<!--       个体给药        end      -->
+
+<!--      抗菌药物临床应用指导原则      start      -->
+<select id="queryDrugRelrefDirection" parameterType="pd" resultType="pd">
+select drd.drug_relref_no,
+       drd.ref_class_code,
+       drd.i_text_id,
+       drd.docu_no,
+       drd.docu_sub_no,
+       drd.title_name,
+       drd.file_name,
+       drd.docu_content,
+       drd.content
+  from drug_relref_direction drd, drug_class_refinfo_rel dcrr
+ where drd.ref_class_code = #{code}
+   and drd.i_text_id = dcrr.drug_ref_info_id and
+ drd.docu_sub_no = 0
+   and dcrr.drug_class_id = #{id}
+
+</select>
+
+<select id="queryClinicalPathwayInfo" parameterType="pd" resultType="pd">
+select cpi.clinical_pathway_id,
+       cpi.class_code,
+       cpi.dept_name,
+       cpi.keywords,
+       cpi.title_name,
+       cpi.ref_info,
+       cpi.hospital_type,
+       cpi.particular_year,
+       cpi.content
+  from CLINICAL_PATHWAY_INFO cpi
+ where cpi.class_code = #{id}
+</select>
+
+
+
+
+
+</mapper>
