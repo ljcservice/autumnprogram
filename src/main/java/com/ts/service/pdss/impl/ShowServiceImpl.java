@@ -42,6 +42,7 @@ public class ShowServiceImpl implements ShowService{
 			pd.put("CODE", 100);
 			list = (List<PageData>)dao.findForList("ShowMapper.drugTreeList", pd);
 		}else if ("6".equals(type)){//临床路径
+			pd.put("id",pd.get("ID").toString());
 			list = (List<PageData>)dao.findForList("ShowMapper.categoryTreeList", pd);
 		}
 		return list;
