@@ -9,14 +9,15 @@ $(function() {
 function initWidthHeight(){
 	var myHeight = $(window).outerHeight() ;
 	if($("#treeTitle").length >0){
-		myHeight = myHeight - $("#treeTitle").outerHeight() -10;
+		myHeight = myHeight - $("#treeTitle").outerHeight();
 	}
 	if(myHeight<200){
 		myHeight = 200;
 	}
-	$("#treeDiv").css('max-height', myHeight-20+'px');
+	//alert(myHeight-30);
+	$("#treeDiv").css('max-height', myHeight-30+'px');
 	if($("#treeFrame").length >0){
-		$("#treeFrame").css('height' ,myHeight-20+'px');
+		$("#treeFrame").css('height' ,$(window).outerHeight()-30+'px');
 	}
 }
 var mywidth = 0;
@@ -24,13 +25,17 @@ function bindTreeHide(){
 	if($("#mysidebar").length >0){
 		$("#mysidebar").toggle(
 				function(){
+					$("#searchDiv").hide();
+					$("#codeDiv").hide();
 					$("#treeDiv").hide();
 					var mytd = $(this).closest("td");
 					mywidth = mytd.css('width');
-					mytd.css('width','20px').prepend("<div id='mytreeName' class='treeName'>" + $("#treeName").text() +"</div>");
+					mytd.css('width','20px');//.prepend("<div id='mytreeName' class='treeName'>" + $("#treeName").text() +"</div>");
 					$(this).find("i").eq(0).removeClass("fa-angle-double-left").addClass("fa-angle-double-right");
 				},
 				function(){
+					$("#searchDiv").show();
+					$("#codeDiv").show();
 					$(this).closest("td").css('width',mywidth );
 					$("#mytreeName").remove();
 					$("#treeDiv").show();

@@ -9,7 +9,7 @@ $(function() {
 function initWidthHeight(){
 	var myHeight = $(window).outerHeight() ;s
 	if($("#searchDiv").length >0){
-		myHeight = myHeight - $("#searchDiv").outerHeight() -10;
+		myHeight = myHeight - $("#searchDiv").outerHeight();
 	}
 	if(myHeight<200){
 		myHeight = 200;
