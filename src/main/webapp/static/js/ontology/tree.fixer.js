@@ -9,18 +9,21 @@ var mytimes = 0;
 var myInterval = null;
 var same_times = 1;
 //定位，获取所有父节点
-function fixerTree(id,purl,ontoType){
+function fixerTree(id,purl,ONTO_TYPE){
+	if( $("#treeDiv").length > 0 && $("#treeDiv").css("display")=='none'){
+		$("#mysidebar").click();
+	}
 	zTree.setting.view.selectedMulti= true;
 	//根据ID 找到节点
 	//var c_note = zTree.getNodeByParam ("id", select_id, null);
 	//选中节点
 	//zTree.selectNode (nodes[i], false, false);
 	//定位树与列表的类型不一致，刷新树
-	if(ontoType!=null && ontoType != $("#ontoType").val()){
-		$("select#ontoType option[value='"+ontoType+"']").attr("selected", "true");
-		var s = $("select#ontoType option[value='"+ontoType+"']").text();
-		$("#ontoType_chosen").children().eq(0).children().eq(0).text(s);
+	if(ONTO_TYPE!=null && ONTO_TYPE != $("#ONTO_TYPE").val()){
+		$("select#ONTO_TYPE option[value='"+ONTO_TYPE+"']").attr("selected", true);
+		$("#ONTO_TYPE").chosen('destroy').chosen({allow_single_deselect:true});
 		changeTree();
+		pre_id = null;
 	}
 	select_id = id;
 	if(select_id == pre_id){
@@ -147,51 +150,18 @@ function checkArrayExt(ids,id){
 }
 //zTree展开节点的回掉函数 （多个节点同时异步打开后 只有第一个打开的事件回调函数好使，此处jquery bug，废弃）
 function onExpand(event, treeId, treeNode) {
-//	if(treeNode==null || treeNode==undefined){
-//		alert(treeId);
-//	}
-//	expandNodeAll(treeNode.children);
-	//谷歌360自动给这个ul加上了隐藏属性，导致不显示子节点。火狐没问题
-	$("#"+treeNode.tId+"_ul").css("overflow","visible");
-	//父节点为空，说明当前为根节点
-	if(treeNode.getParentNode()==null){
-		if(treeNode.MAIN_CODE!=null&&treeNode.MAIN_CODE!=''){
-			treeNode.main_show=1;
-		}
-		if(treeNode.ADD_CODE!=null&&treeNode.ADD_CODE!=''){
-			treeNode.add_show=1;
-		}
-	}
-	var p_main = treeNode.MIAN_CODE;
-	var p_add = treeNode.ADD_CODE;
-	var children = treeNode.children;
-	var len = children.length;
-	for(var i=0;i<len;i++){
-		var c = children[i];
-		if(c.IS_DISABLE==1){
-			$("#"+c.tId+"_span").css("text-decoration","line-through").css("color","red").attr("title","已经停用");
-		}
-		if($("#ontoType").val()=='51005'){
-			if(treeNode.main_show==1){
-				//可能存在主要编码与附加编码颠倒情况
-				if(c.MAIN_CODE!=null&&c.MAIN_CODE!=''){
-					c.main_show=1;
-					c.name=c.CN +"["+c.MAIN_CODE+"]";
-				}else{
-					c.add_show=1;
-					c.name=c.CN +"["+c.ADD_CODE+"]";
-				}
-				zTree.updateNode(c);
-			}else if(treeNode.add_show==1){
-				//可能存在主要编码与附加编码颠倒情况
-				if(c.ADD_CODE!=null&&c.ADD_CODE!=''){
-					c.add_show=1;
-					c.name=c.CN +"["+c.ADD_CODE+"]";
-				}else{
-					c.main_show=1;
-					c.name=c.CN +"["+c.MAIN_CODE+"]";
-				}
-				zTree.updateNode(c);
+	if(treeNode==null || treeNode==undefined){
+		
+	}else{
+	//	expandNodeAll(treeNode.children);
+		//谷歌360自动给这个ul加上了隐藏属性，导致不显示子节点。火狐没问题
+		$("#"+treeNode.tId+"_ul").css("overflow","visible");
+		var children = treeNode.children;
+		var len = children.length;
+		for(var i=0;i<len;i++){
+			var c = children[i];
+			if(c.IS_DISABLE==1){
+				$("#"+c.tId+"_span").css("text-decoration","line-through").css("color","red").attr("title","已经停用");
 			}
 		}
 	}
@@ -205,43 +175,12 @@ function delayonExpand(treeNode,times) {
 		//谷歌360自动给这个ul加上了隐藏属性，导致不显示子节点。火狐没问题
 		$("#"+treeNode.tId+"_ul").css("overflow","visible");
 		//父节点为空，说明当前为根节点
-		if(treeNode.getParentNode()==null){
-			if(treeNode.MAIN_CODE!=null&&treeNode.MAIN_CODE!=''){
-				treeNode.main_show=1;
-			}
-			if(treeNode.ADD_CODE!=null&&treeNode.ADD_CODE!=''){
-				treeNode.add_show=1;
-			}
-		}
 		var children = treeNode.children;
 		var len = children.length;
 		for(var i=0;i<len;i++){
 			var c = children[i];
 			if(c.IS_DISABLE==1){
 				$("#"+c.tId+"_span").css("text-decoration","line-through").css("color","red").attr("title","已经停用");
-			}
-			if($("#ontoType").val()=='51005'){
-				if(treeNode.main_show==1){
-					//可能存在主要编码与附加编码颠倒情况
-					if(c.MAIN_CODE!=null&&c.MAIN_CODE!=''){
-						c.main_show=1;
-						c.name=c.CN +"["+c.MAIN_CODE+"]";
-					}else{
-						c.add_show=1;
-						c.name=c.CN +"["+c.ADD_CODE+"]";
-					}
-					zTree.updateNode(c);
-				}else if(treeNode.add_show==1){
-					//可能存在主要编码与附加编码颠倒情况
-					if(c.ADD_CODE!=null&&c.ADD_CODE!=''){
-						c.add_show=1;
-						c.name=c.CN +"["+c.ADD_CODE+"]";
-					}else{
-						c.main_show=1;
-						c.name=c.CN +"["+c.MAIN_CODE+"]";
-					}
-					zTree.updateNode(c);
-				}
 			}
 		}
 		myExpandNode(children[0]);

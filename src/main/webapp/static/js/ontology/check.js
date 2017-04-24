@@ -94,7 +94,12 @@ function passRefuse(id,type){
 //双击显示输入框
 function setInput(obj,name){
 	var val =  $(obj).parent().text();
-	var htm = "<input type='text' name='"+name+"' id='"+name+"' value='"+val+"' title='"+val+"' style='width:98%;' maxlength='80'/>"
+	var htm = "";
+	if("TERM_DEFIN"==name){
+		htm = "<input type='text' name='"+name+"' id='"+name+"' value='"+val+"' title='"+val+"' style='width:98%;' maxlength='500'/>"
+	}else{
+		htm = "<input type='text' name='"+name+"' id='"+name+"' value='"+val+"' title='"+val+"' style='width:98%;' maxlength='80'/>"
+	}
 	$(obj).parent().html(htm).attr("onclick","return false;").removeClass("changeTd");
 	$("#"+name).focus();
 	if('TERM_DEFIN'==name){
@@ -111,9 +116,9 @@ function selectCategory(){
 	var diag = new top.Dialog();
 	diag.Drag=true;
 	diag.Title ="选择父节点";
-	diag.URL = path + '/common/treeWidget.do?ontoType='+$("#ontoType").val()+"&H_ID="+$("#H_ID").val()+"&D_ID="+$("#D_ID").val()+"&businessType=1";
-	diag.Width = 900;
- 	diag.Height = 500;
+	diag.URL = path + '/common/treeWidget.do?ONTO_TYPE='+$("#ONTO_TYPE").val()+"&H_ID="+$("#H_ID").val()+"&D_ID="+$("#D_ID").val()+"&businessType=1";
+	diag.Width = $(top.window).width();
+	diag.Height = $(top.window).height();
 	diag.CancelEvent = function(){ //关闭事件
 		diag.close();
 		//遮罩层控制，第三层弹窗使用
@@ -128,7 +133,7 @@ function checkName(obj,name){
 	}
 	var flag = true;
 	var mydata = null;
-	mydata = {DN_CHN:$.trim($(obj).val()),ontoType:$("#ontoType").val(),standFlag:1,DN_ID:$("#DN_ID").val()};
+	mydata = {DN_CHN:$.trim($(obj).val()),ONTO_TYPE:$("#ONTO_TYPE").val(),standFlag:1,DN_ID:$("#DN_ID").val()};
 	$.ajax({
 		type: "POST",
 		url: basePath+'/osyn/checkExistName.do',
@@ -212,7 +217,7 @@ function depCategory(){
 	top.jzts();
 	var diag = new top.Dialog();
 	diag.Drag=true;
-	diag.URL = path + '/common/treeWidget.do?ontoType=51006'+"&ONTO_ID="+$("#D_ID").val()+"&H_ID="+$("#H_ID").val()+"&businessType=3";
+	diag.URL = path + '/common/treeWidget.do?ONTO_TYPE=3'+"&ONTO_ID="+$("#D_ID").val()+"&H_ID="+$("#H_ID").val()+"&businessType=3";
 	diag.Width = 900;
 	diag.Height = 500;
 	diag.Title ="科室分类信息";

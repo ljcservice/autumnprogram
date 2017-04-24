@@ -1,14 +1,7 @@
 //清除遮罩层
 $(top.hangge());
-
 $(function() {
-	//重置页面高度
-	treeFrameT("treeFrame");
-	function treeFrameT(obj){
-		var hmainT = parent.document.getElementById(obj);
-		hmainT.style.width = '100%';
-		hmainT.style.height = ($("#main-container").height()) + 'px';
-	}
+
 	//复选框全选控制
 	var active_class = 'active';
 	$('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
@@ -20,22 +13,29 @@ $(function() {
 		});
 	});
 	
-// 	$(".queryOsyn").bind("dbclick",queryOsyn);
+	//重置当前页面高度，自适应浏览器
+	initWidthHeight();
 });
+//重置当前页面高度，自适应浏览器
+function initWidthHeight(){
+	var mycars = new Array();
+	mycars[0]="btnDiv";mycars[1]="pageStrDiv";
+	FixTable("simple-table", 2 ,mycars);
+}
 //新增
 function add(name,id){
 	 top.jzts();
 	 var diag = new top.Dialog();
-	 var ontoTypeCurent = $("#ontoType").val();
+	 var ontoTypeCurent = $("#ONTO_TYPE").val();
 	 diag.Drag=true;
-	 diag.URL = path+'/ontology/to'+name+'.do?ontoType='+ontoTypeCurent+'&ONTO_ID='+id;
-	 if(ontoTypeCurent=="51001"){
+	 diag.URL = path+'/ontology/to'+name+'.do?ONTO_TYPE='+ontoTypeCurent+'&ONTO_ID='+id;
+	 if(ontoTypeCurent=="5"){
 	 	diag.Title ="药品";
-	 }else if(ontoTypeCurent=="51003"){
+	 }else if(ontoTypeCurent=="2"){
 	 	diag.Title ="手术";
-	 }else if(ontoTypeCurent=="51005"){
+	 }else if(ontoTypeCurent=="1"){
 	 	diag.Title ="诊断";
-	 }else if(ontoTypeCurent=="51006"){
+	 }else if(ontoTypeCurent=="3"){
 	 	diag.Title ="科室";
 	 }
 	 diag.Width = $(top.window).width();
@@ -61,10 +61,10 @@ function edit(obj,name){
 }
 
 //定位
-var purl = basePath+'ontoTree/treePidsById.action?ontotype='+$("#ontoType").val();
+var purl = path+'/ontoTree/treePidsById.action?ONTO_TYPE='+$("#ONTO_TYPE").val();
 function fixer_tree(e,id){
 	//window.event? window.event.cancelBubble = true : e.stopPropagation();
-	parent.fixerTree(id,purl,$("#ontoType").val());
+	parent.fixerTree(id,purl,$("#ONTO_TYPE").val());
 }
 //修改父节点
 function selectCategory(){
@@ -74,7 +74,7 @@ function selectCategory(){
 	var obj = $("input[name=ids]:checked");
 	var m = obj.eq(0);
 	//诊断本体编码大于8位数才允许修改
-	if($("#ontoType").val()=='51005'){
+	if($("#ONTO_TYPE").val()=='1'){
 		if((m.attr("MAIN_CODE")!=""&&m.attr("MAIN_CODE").length<=8)||(m.attr("ADD_CODE")!=""&&m.attr("ADD_CODE").length<=8)){
 			bootbox.dialog({
 				message: "<span class='bigger-110'>诊断只有8位编码才能修改父节点！</span>",
@@ -85,7 +85,7 @@ function selectCategory(){
 		}
 	}
 	//科室本体编码大于11位数才允许修改
-	if($("#ontoType").val()=='51006'){
+	if($("#ONTO_TYPE").val()=='3'){
 //		if(m.attr("MAIN_CODE")!=""&&m.attr("MAIN_CODE").length<10){
 //			bootbox.dialog({
 //				message: "<span class='bigger-110'>科室只有11位编码才能修改父节点！</span>",
@@ -96,7 +96,7 @@ function selectCategory(){
 //		}
 	}
 	//手术本体编码大于8位数才允许修改
-	if($("#ontoType").val()=='51003'){
+	if($("#ONTO_TYPE").val()=='2'){
 		if(m.attr("MAIN_CODE")!=""&&m.attr("MAIN_CODE").length<6){
 			bootbox.dialog({
 				message: "<span class='bigger-110'>手术只有7位编码才能修改父节点！</span>",
@@ -110,7 +110,7 @@ function selectCategory(){
 	var diag = new top.Dialog();
 	diag.Drag=true;
 	diag.Title ="选择父节点";
-	diag.URL = path + '/common/treeWidget.do?ontoType='+$("#ontoType").val()+"&ONTO_ID="+obj.eq(0).val()+"&businessType=0";
+	diag.URL = path + '/common/treeWidget.do?ONTO_TYPE='+$("#ONTO_TYPE").val()+"&ONTO_ID="+obj.eq(0).val()+"&businessType=0";
 	diag.Width = $(top.window).width();
 	diag.Height = $(top.window).height();
 	diag.CancelEvent = function(){ //关闭事件
@@ -153,17 +153,12 @@ function checkOnto(){
 function stopOnto(){
 	var obj = $("input[name=ids]:checked");
 	if(obj.length != 1){
-		$("#simple-table tbody").children().first().children().first().children().first().tips({
-			side:2,
-          msg:'请勾选一条数据',
-          bg:'#AE81FF',
-          time:2
-      });
+		$("#simple-table tbody tr td").children().first().tips({ side:2, msg:'请勾选一条数据',  bg:'#AE81FF', time:2});
       return false;
 	}
 	var m = obj.eq(0);
 	//本体编码大于8位数才允许修改
-	if($("#ontoType").val()=='51005'){
+	if($("#ONTO_TYPE").val()=='1'){
 		if((m.attr("MAIN_CODE")!=""&&m.attr("MAIN_CODE").length<=8)||(m.attr("ADD_CODE")!=""&&m.attr("ADD_CODE").length<=8)){
 			bootbox.dialog({
 				message: "<span class='bigger-110'>诊断只有8位编码才能停用！</span>",
@@ -174,7 +169,7 @@ function stopOnto(){
 		}
 	}
 	//科室本体编码大于11位数才允许修改
-	if($("#ontoType").val()=='51006'){
+	if($("#ONTO_TYPE").val()=='3'){
 //		if(m.attr("MAIN_CODE")!=""&&m.attr("MAIN_CODE").length<10){
 //			bootbox.dialog({
 //				message: "<span class='bigger-110'>科室只有11位编码才能停用！</span>",
@@ -185,7 +180,7 @@ function stopOnto(){
 //		}
 	}
 	//手术本体编码大于8位数才允许修改
-	if($("#ontoType").val()=='51003'){
+	if($("#ONTO_TYPE").val()=='2'){
 		if(m.attr("MAIN_CODE")!=""&&m.attr("MAIN_CODE").length<6){
 			bootbox.dialog({
 				message: "<span class='bigger-110'>手术只有7位编码才能停用！</span>",
@@ -206,13 +201,13 @@ function stopOnto(){
 		msg = "本体";
 		ONTO_FLAG = ontology.attr("ONTO_FLAG");
 		IS_DISABLE = obj.eq(0).attr("IS_DISABLE");
-		url = basePath +"common/stopOntology.do?ontoType="+$("#ontoType").val()+"&ONTO_ID=" + obj.eq(0).val();
+		url = basePath +"common/stopOntology.do?ONTO_TYPE="+$("#ONTO_TYPE").val()+"&ONTO_ID=" + obj.eq(0).val();
 	}else{
 		//同义词
 		msg ="同义词";
 		ONTO_FLAG = ontology.attr("OSYN_FLAG");
 		IS_DISABLE = obj.eq(0).attr("OSYN_IS_DISABLE");
-		url = basePath +"common/stopOsyn.do?ontoType="+$("#ontoType").val()+"&OSYN_ID=" + obj.eq(0).attr("OSYN_ID");
+		url = basePath +"common/stopOsyn.do?ONTO_TYPE="+$("#ONTO_TYPE").val()+"&OSYN_ID=" + obj.eq(0).attr("OSYN_ID");
 	}
 	if(IS_DISABLE==1){
 		bootbox.dialog({
@@ -252,7 +247,7 @@ function stopOnto(){
 function editOsyn(type){
 	var obj = $("input[name=ids]:checked");
 	if(obj.length != 1){
-		$("#simple-table tbody").children().first().children().first().children().first().tips({
+		$("#simple-table tbody tr td").children().first().tips({
 		  side:2,msg:'请勾选一条数据',bg:'#AE81FF',time:2
       });
       return false;
@@ -267,7 +262,7 @@ function editOsyn(type){
 		}
 		top.jzts();
 		diag.Title ="添加同义词";
-		diag.URL = path + '/common/toOsynAdd.do?ontoType='+$("#ontoType").val()+"&STAND_ID="+obj.eq(0).attr("STAND_ID");
+		diag.URL = path + '/common/toOsynAdd.do?ONTO_TYPE='+$("#ONTO_TYPE").val()+"&STAND_ID="+obj.eq(0).attr("STAND_ID");
 	}else{
 		top.jzts();
 		if(obj.eq(0).attr("OSYN_ID")==obj.eq(0).attr("STAND_ID")){
@@ -289,10 +284,10 @@ function editOsyn(type){
 			return ;
 		}
 		diag.Title ="修改同义词";
-		diag.URL = path + '/common/toOsynEdit.do?ontoType='+$("#ontoType").val()+"&OSYN_ID="+obj.eq(0).attr("OSYN_ID");
+		diag.URL = path + '/common/toOsynEdit.do?ONTO_TYPE='+$("#ONTO_TYPE").val()+"&OSYN_ID="+obj.eq(0).attr("OSYN_ID");
 	}
-	diag.Width = 500;
-	diag.Height = 485;
+	diag.Width = 600;
+	diag.Height = $(top.window).height();
 	diag.CancelEvent = function(){ //关闭事件
 		if(type==1){
 			if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
@@ -311,21 +306,21 @@ function depCategory(){
 	}
 	var obj = $("input[name=ids]:checked");
 	//本体编码大于8位数才允许修改
-	if($("#ontoType").val()=='51005'){
-		var m = obj.eq(0);
-		if((m.attr("MAIN_CODE")!=""&&m.attr("MAIN_CODE").length<=8)||(m.attr("ADD_CODE")!=""&&m.attr("ADD_CODE").length<=8)){
-			bootbox.dialog({
-				message: "<span class='bigger-110'>诊断只有8位编码才能编辑！</span>",
-				buttons: 			
-				{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
-			});
-			return;
-		}
-	}
+//	if($("#ONTO_TYPE").val()=='1'){
+//		var m = obj.eq(0);
+//		if((m.attr("MAIN_CODE")!=""&&m.attr("MAIN_CODE").length<=8)||(m.attr("ADD_CODE")!=""&&m.attr("ADD_CODE").length<=8)){
+//			bootbox.dialog({
+//				message: "<span class='bigger-110'>诊断只有8位编码才能编辑！</span>",
+//				buttons: 			
+//				{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+//			});
+//			return;
+//		}
+//	}
 	top.jzts();
 	var diag = new top.Dialog();
 	diag.Drag=true;
-	diag.URL = path + '/common/toKnowledgeEdit.do?ontoType='+$("#ontoType").val()+'&ONTO_ID='+obj.eq(0).val();
+	diag.URL = path + '/common/toKnowledgeEdit.do?ONTO_TYPE='+$("#ONTO_TYPE").val()+'&ONTO_ID='+obj.eq(0).val();
 	diag.Width = 900;
 	diag.Height = 500;
 	diag.Title ="术语知识编辑";
@@ -339,48 +334,49 @@ function depCategory(){
 	diag.show();
 }
 
-//本体导入
-function importOnto(){
-	top.jzts();
-	var diag = new top.Dialog();
-	diag.Drag=true;
-	diag.URL = path + '/ontology/importOntology.do?ontoType='+$("#ontoType").val();;
-	diag.Width = 350;
-	diag.Height = 200;
-	diag.Title ="本体导入";
-	diag.CancelEvent = function(){ //关闭事件
-		diag.close();
-	};
-	diag.show();
+function cancelSubmit(id){
+	bootbox.confirm("确定要撤销已提交的数据吗?", function(result) {
+		if(result) {
+			top.jzts();
+			var url = path+'/ontology/cancelSubmit?ONTO_ID='+id+"&ONTO_TYPE="+$("#ONTO_TYPE").val();
+			$.get(url,function(data){
+				if(data.result=="success"){
+					nextPage($("#currentPage").val());
+				}else{
+					if(data.refresh==1){
+						nextPage($("#currentPage").val());
+					}
+					bootbox.dialog({
+						message: "<span class='bigger-110'>"+data.result+"</span>",
+						buttons: 			
+						{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+					});
+					$(top.hangge());
+				}
+			});
+		};
+	});
 }
-
-//查询同义词
-// function queryOsyn(){
-// 	top.jzts();
-// 	当前tr
-// 	var myParent = $(this).parent();
-// 	设置未选择行颜色
-// 	$.each(myParent.parent().children(), function(i, value) {
-// 		if(i%2==0){
-// 			$(this).css("background-color","#f9f9f9").attr("setColor","#f9f9f9");
-// 		}else{
-// 			$(this).css("background-color","#ffffff").attr("setColor","#ffffff");
-// 		}
-// 		$(this).hover(
-// 			  function () {
-// 			    $(this).css("background-color","#ffe599");
-// 			  },
-// 			  function () {
-// 				$(this).css("background-color",$(this).attr("setColor"));
-// 			  }
-// 		);
-// 	});
-// 	设置选中行颜色
-// 	myParent.unbind('mouseenter mouseleave').removeClass("hover").css("background-color","#6fb3e0");
-// 	获取标准词ID
-// 	var id = myParent.find("input[name=ids]").eq(0).attr("standId");
-// 	$("#standardId").val(id);
-// 	iframe跳转
-// 	var osynurl = "osyn/osynList.do?standardId="+id+"&ontoType="+$("#ontoType").val()+"&tm="+new Date().getTime();;
-// 	parent.osynFrame.location.href= osynurl;
-// }
+function cancelOsyn(id){
+	bootbox.confirm("确定要撤销已提交的数据吗?", function(result) {
+		if(result) {
+			top.jzts();
+			var url = path+'/osyn/cancelSubmit?DN_ID='+id+"&ONTO_TYPE="+$("#ONTO_TYPE").val();
+			$.get(url,function(data){
+				if(data.result=="success"){
+					nextPage($("#currentPage").val());
+				}else{
+					if(data.refresh==1){
+						nextPage($("#currentPage").val());
+					}
+					bootbox.dialog({
+						message: "<span class='bigger-110'>"+data.result+"</span>",
+						buttons: 			
+						{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+					});
+					$(top.hangge());
+				}
+			});
+		};
+	});
+}

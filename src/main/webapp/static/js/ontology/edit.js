@@ -43,9 +43,8 @@ $(function() {
 	     $(".drag").fadeTo("fast", 1); //松开鼠标后停止移动并恢复成不透明
 	});
 });
-
 var zTree;
-var zTreeUrl = basePath+"ontoTree/tree.do?ontoType=" + $("#ontoType").val();
+var zTreeUrl = basePath+"ontoTree/tree.do?ONTO_TYPE=" + $("#ONTO_TYPE").val();
 function initTree(){
 	var setting = {
 		view: {
@@ -72,26 +71,28 @@ function initTree(){
 
 //切换树
 function changeTree(){
-	var ontoTypeCurent = $("#ontoType").val();
+	var ontoTypeCurent = $("#ONTO_TYPE").val();
 	if(ontoTypeCurent==null || ontoTypeCurent==""){
 		return;
 	}
 	$("#leftTree").empty();
-	zTreeUrl = basePath + "ontoTree/tree.do?ontoType="+ontoTypeCurent;
+	zTreeUrl = basePath + "ontoTree/tree.do?ONTO_TYPE="+ontoTypeCurent;
 	//切换树标题名称
-	if(ontoTypeCurent=="51001"){
+	if(ontoTypeCurent=="5"){
 		$("#treeName").html("药品ATC分类");
-	}else if(ontoTypeCurent=="51003"){
+	}else if(ontoTypeCurent=="2"){
 		$("#treeName").html("手术本体树");
-	}else if(ontoTypeCurent=="51005"){
+	}else if(ontoTypeCurent=="1"){
 		$("#treeName").html("诊断本体树");
+	}else if(ontoTypeCurent=="3"){
+		$("#treeName").html("科室本体树");
 	}
 	initTree();
 }
 //增加图标
 function addDiyDom(treeId, treeNode) {
 	//诊断显示详情图标
-	if($("#ontoType").val() == '51005'){
+	if($("#ONTO_TYPE").val() == '1'){
 		var aObj = $("#" + treeNode.tId + "_a");
 		var editStr = "<span class='demoIcon' id='diyBtn_" +treeNode.id+ "' title='"+treeNode.name+"' onclick='queryDetail(this,"+treeNode.id+");'><span class='detail'></span></span>";
 		aObj.after(editStr);
@@ -109,7 +110,7 @@ function checkName(obj,name){
 		return false;
 	}
 	var flag = true;
-	var mydata = {DN_CHN:$.trim($(obj).val()),ontoType:$("#ontoType").val(),standFlag:1,DN_ID:$("#DN_ID").val()};
+	var mydata = {DN_CHN:$.trim($(obj).val()),ONTO_TYPE:$("#ONTO_TYPE").val(),standFlag:1,DN_ID:$("#DN_ID").val()};
 	$.ajax({
 		type: "POST",
 		url: basePath+'/osyn/checkExistName.do',
@@ -133,7 +134,7 @@ function hisDetail(){
 	top.jzts();
 	var diag = new top.Dialog();
 	diag.Drag=true;
-	diag.URL = path+'/ontology/hisDetail.do?ontoType='+$("#ontoType").val()+'&D_ID='+$("#D_ID").val();
+	diag.URL = path+'/ontology/hisDetail.do?ONTO_TYPE='+$("#ONTO_TYPE").val()+'&D_ID='+$("#D_ID").val();
 	diag.Width = $(top.window).width();
 	diag.Height = $(top.window).height();
 	diag.Title ="变更历史详情";
@@ -149,7 +150,7 @@ function depCategory(){
 	top.jzts();
 	var diag = new top.Dialog();
 	diag.Drag=true;
-	diag.URL = path + '/common/treeWidget.do?ontoType=51006'+"&ONTO_ID="+$("#D_ID").val()+"&businessType=2";
+	diag.URL = path + '/common/treeWidget.do?ONTO_TYPE=3'+"&ONTO_ID="+$("#D_ID").val()+"&businessType=2";
 	diag.Width = $(top.window).width();
 	diag.Height = $(top.window).height();
 	diag.Title ="科室分类信息";
@@ -195,6 +196,12 @@ function saveOnto(){
 //删除一个父节点
 function cancelCategory(id){
 	$("#father_"+id).remove();
+	$("#span_exchange").remove();
+	if($("#ADD_P_ID").val()!=null&&$("#ADD_P_ID").val()!=""){
+		var b = $("#selectedCont").find("b").eq(0);
+		b.text(b.text().replace("(附)","(主)"));
+	}
+	$("#ADD_P_ID").val("");
 }
 //移除一个同义词table
 function closeTable(obj){
@@ -206,9 +213,9 @@ function addOsyn(){
 	var diag = new top.Dialog();
 	diag.Drag=true;
 	diag.Title ="增加同义词";
-	diag.URL = path+'/common/toSubOsynAdd.do?ontoType='+$("#ontoType").val();
-	diag.Width = 450;
- 	diag.Height = 440;
+	diag.URL = path+'/common/toSubOsynAdd.do?ONTO_TYPE='+$("#ONTO_TYPE").val();
+	diag.Width = 600;
+	diag.Height = $(top.window).height();
 	diag.CancelEvent = function(){ //关闭事件
 		diag.close();
 		//遮罩层控制，第三层弹窗使用
@@ -218,11 +225,11 @@ function addOsyn(){
 }
 //查询单个本体,允许页面缓存
 function queryDetail(obj,id){
-	var ontoType = $("#ontoType").val();
+	var ONTO_TYPE = $("#ONTO_TYPE").val();
 	$.ajax({
 		type: "POST",
 		url: basePath+'ontology/ontoDetail.do',
-    	data: {ID:id,ontoType:ontoType},
+    	data: {ID:id,ONTO_TYPE:ONTO_TYPE},
 		dataType:'json',
 		asyn:true,
 		cache: true,
@@ -232,7 +239,6 @@ function queryDetail(obj,id){
 				$("#det_cn").text(data.STAD_DN_CHN);
 				$("#det_en").text(data.STAD_DN_ENG);
 				$("#det_o_cn").text(data.ORG_STAD_DN_CHN);
-				$("#det_o_en").text(data.ORG_STAD_DN_ENG);
 				$("#det_type").text(data.TERM_TYPE);
 				$("#det_defin").text(data.TERM_DEFIN);
 				$("#det_dep").text(data.DEP_CATEGORY_NAME);
