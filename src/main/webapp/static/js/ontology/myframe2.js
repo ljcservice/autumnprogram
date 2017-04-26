@@ -15,9 +15,9 @@ function initWidthHeight(){
 		myHeight = 200;
 	}
 	//alert(myHeight-30);
-	$("#treeDiv").css('max-height', myHeight-30+'px');
+	$("#treeDiv").css('max-height', myHeight-25+'px');
 	if($("#treeFrame").length >0){
-		$("#treeFrame").css('height' ,$(window).outerHeight()-30+'px');
+		$("#treeFrame").css('height' ,$(window).height()-10+'px');
 	}
 }
 var mywidth = 0;
