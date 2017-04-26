@@ -67,7 +67,7 @@
 							<div style="padding: 5px;">
 								<h4 style="color: blue;">血液浓度范围</h4>
 								<div>
-								<table style="width: 100%;">
+								<table class="table table-striped table-bordered table-hover"  style="width: 100%;">
 									<c:forEach items="${list3}" var="item" varStatus="vs">
 										<tr>
 											<td align="left">${item.RANGE }</td>
