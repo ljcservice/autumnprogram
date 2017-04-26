@@ -181,7 +181,7 @@ img{
 					</td>
 					<td style="height: 100%;vertical-align:top;">
 						<div class="" style="">
-							<iframe name="myframe" id="myframe" scrolling="auto" style="border: none;" width="100%" height="100%"></iframe>
+							<iframe name="myframe" id="myframe" scrolling="no" style="border: none;" width="100%" height="100%"></iframe>
 						</div>
 					</td>
 				</tr>

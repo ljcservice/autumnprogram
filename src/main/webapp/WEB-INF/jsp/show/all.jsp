@@ -50,7 +50,7 @@ width: 28px;
 			<div class="main-content-inner">
 				<div class="page-content">
 					<div class="row">
-						<div name=""  style="">
+						<div name=""  style="overflow: hidden ;">
 							<table style="width:100%;height: 100%;" border="0">
 								<tr>
 									<td style="width:250px;vertical-align: top;text-align: center;" align="center">
@@ -101,7 +101,7 @@ width: 28px;
 											</div>
 										</div>
 									</td>
-									<td style="vertical-align:top;">
+									<td style="vertical-align:top;overflow: hidden;">
 										<iframe name="treeFrame" id="treeFrame" scrolling="no" frameborder="0"  style="margin:0 auto;width:100%;"></iframe>
 										&nbsp;
 									</td>

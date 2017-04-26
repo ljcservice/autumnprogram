@@ -34,7 +34,7 @@
 							<input type="hidden" name="name" value="${pd.name}" id="name"/>
 							<input type="hidden" name="ONTO_TYPE" value="${pd.ONTO_TYPE}" id="ONTO_TYPE"/>
 						</form>
-						<div>
+						<div id="myTitle">
 							<table style="width: 100%;">
 								<tr>
 									<td align="left"><b >搜索结果</b></td>
@@ -57,7 +57,7 @@
 							</c:forEach>
 						</div>
 						</div></div></div>
-						<div class= "pageStrDiv" id="pageStrDiv" style="padding : 5px;">
+						<div class= "pageStrDiv" id="pageStrDiv" style="padding : 3px;">
 							<table style="width:100%;">
 								<tr>
 									<td style="vertical-align:top;" nowrap="nowrap">
@@ -105,11 +105,11 @@ $(function() {
 	
 });
 function initWidthHeight(){
-	var ss = $("#pageStrDiv").height();
+	var ss = $("#pageStrDiv").outerHeight();
 	if(ss>50){//后台传输到前台内容有误，导致标签宽高不准确
 		ss=50;
 	}
-	var myHeight = $(window).outerHeight() - ss -15;
+	var myHeight = $(window).outerHeight() - ss  -$("#myTitle").height();
 	$("#resultDiv").css('max-height', myHeight-2+'px');
 }
 function detailPage(DIRECTION_NO){
