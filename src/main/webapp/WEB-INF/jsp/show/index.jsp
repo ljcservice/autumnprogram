@@ -73,20 +73,24 @@ img{
 }
 </style>
 </head>
-<body>
-	<div style="position:relative;width: 100% ;z-index: 1;">
-		<div style=" float: right;margin-right: 20px;">
-		<c:if test="${pd.SYSNAME !=null}"><a href="javascript:toMain();">主页</a></c:if> 
-		<c:if test="${pd.SYSNAME ==null}">
-		
-		<a href="javascript:tologin();">登录</a>
-		
-		</c:if>
+<body style="padding: 0px;margin: 0px;">
+	<div id="headDiv" style="background-color:#efefef;position: relative;top:0;left:0; width: 100% ;z-index: 1;border-color: #e7e7e7;border-width:0 0 1px 0;border-style:solid;">
+		<div style="padding: 5px;">
+		<table  width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+			<tr style="">
+				<td>
+					医药信息查询系统
+				</td>
+				<td width="200px" style="padding-right: 10px;" align="right">
+					<c:if test="${pd.SYSNAME !=null}"><a href="javascript:toMain();">主页</a></c:if> 
+					<c:if test="${pd.SYSNAME ==null}"> <a href="javascript:tologin();">登录</a></c:if>
+				</td>
+			</tr>
+		</table>
 		</div>
 	</div>
-	<div class="item_container" style="height: 100%;z-index: 999;">
-		
-		<div class="item_content" id="item_content">
+	<div class="item_container" style="height: 100%;z-index: 99999;">
+		<div class="item_content" id="item_content" style="z-index: 99999;">
 			<div>
 			<ul>
 				<li>
@@ -153,14 +157,15 @@ img{
 			</ul>
 			</div>
 			<div style="position: relative;left: -720px;top: 190px;">
-				<img class="nav-user-photo" src="static/images/show/jiantou-2.png" onclick="hideCategoryDiv();">
+				<a href="javascript:hideCategoryDiv();"><img class="nav-user-photo" src="static/images/show/jiantou-2.png" ></a>
 			</div>
 		</div>
 		
 		<div style="display: none;height: 100%;" id="mainDiv">
+			<div>
 			<table style="width: 100%;height: 100%;z-index: 999;" >
 				<tr>
-					<td style="width:50px;height: 100%;vertical-align:top">
+					<td style="width:45px;height: 100%;vertical-align:top">
 						<div class="tabDiv">
 							<ul style="list-style-type: none;">
 								<li><a href="javascript:searchFram(0);" title="药品说明书"><img class="nav-user-photo" src="static/images/show/icon01.png" ></a></li>
@@ -181,9 +186,21 @@ img{
 					</td>
 				</tr>
 			</table>
+			</div>
+			<div id="footDiv" style="position:absolute; bottom:0; width:100%; height:30px;position: relative; width: 100% ;z-index: 1;border-color: #e7e7e7;border-width:0 0 1px 0;border-style:solid;">
+				<div style="padding: 5px;">
+				<table  width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+					<tr style="">
+						<td align="center" style="font-size: 12px;">
+							<a href="javascript:void(0);" style="text-decoration: none;color: #6c6c6c;">联系我们</a>
+							<em style= "color :#9c9c9c">&copy; 2015-2017 www.aabbcc.com 版权所有</em>
+						</td>
+					</tr>
+				</table>
+				</div>
+			</div>
 		</div>
 	</div>
-
 </body>
 <script type="text/javascript" src="static/js/show/jq.js"></script>
 <script>
@@ -341,8 +358,8 @@ img{
 	});
 	function initWidthHeight(){
 		$("#myframe").width($(top.window).width()-60);
-		$("#myframe").height($(top.window).height()-50);
-		$("#mainDiv").height($(top.window).height()-45);
+		$("#myframe").height($(top.window).height()-$("#footDiv").outerHeight()-$("#headDiv").outerHeight()-15);
+		$("#mainDiv").height($(top.window).height()-$("#headDiv").outerHeight() -10);
 	}
 	
 	function hideCategoryDiv(){

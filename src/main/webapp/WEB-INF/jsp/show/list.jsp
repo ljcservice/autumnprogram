@@ -57,10 +57,10 @@
 							</c:forEach>
 						</div>
 						</div></div></div>
-						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 10px;padding-bottom: 10px;">
+						<div class= "pageStrDiv" id="pageStrDiv" style="padding : 5px;">
 							<table style="width:100%;">
 								<tr>
-									<td style="vertical-align:top;width: 250px;" nowrap="nowrap">
+									<td style="vertical-align:top;" nowrap="nowrap">
 										<div class="pagination" style="float: right;padding: 0px;margin: 0px;">${page.pageStr}</div>
 									</td>
 								</tr>
@@ -105,7 +105,11 @@ $(function() {
 	
 });
 function initWidthHeight(){
-	var myHeight = $(window).outerHeight() - $("#pageStrDiv").outerHeight() -15;
+	var ss = $("#pageStrDiv").height();
+	if(ss>50){//后台传输到前台内容有误，导致标签宽高不准确
+		ss=50;
+	}
+	var myHeight = $(window).outerHeight() - ss -15;
 	$("#resultDiv").css('max-height', myHeight-2+'px');
 }
 function detailPage(DIRECTION_NO){
