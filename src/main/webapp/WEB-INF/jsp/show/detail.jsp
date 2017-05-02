@@ -36,7 +36,7 @@
 						<div id="mmDiv">
 							<table style="width: 100%;">
 								<tr>
-									<td  align="left">${pd.name }</td>
+									<td  align="left"><h4 style="color: blue;">${pd.name }</h4></td>
 									<td width="65px;"><a href="javascript:backPage();">返回查询</a></div></td>
 								</tr>
 							</table>
@@ -46,6 +46,7 @@
 								<div style="padding: 8px;">
 									<div><b>[${item.title_name }]</b> </div>
 									<div>${item.TCONTENT } </div>
+									<div><img alt="" src="show/image?DIRECTION_NO=${item.DIRECTION_NO}&TITLE_NO=${item.TITLE_NO}"> </div>
 									<div style="width:100%;height:2px;border-bottom: 1px dotted #e2e2e2;"></div>
 								</div>
 							</c:forEach>
