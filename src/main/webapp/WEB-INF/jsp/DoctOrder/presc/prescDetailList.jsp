@@ -92,7 +92,7 @@
 							<c:choose>
 								<c:when test="${not empty prescDetailList}">
 									<c:forEach items="${prescDetailList}" var="order" varStatus="vs">
-										<tr ondblclick="orderCheck(this,1)"  id="tr${order.order_no}_${order.order_sub_no}" 
+										<tr ondblclick="orderCheck(this,1)"  id="tr${order.order_no}_${order.order_sub_no}" class="tr${order.order_no}_${order.order_sub_no}" ORDER_CLASS="${order.order_class}"
 											order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_code="${order.drug_code}" order_name="${order.drug_name }" >
 											<c:set var="key1" >
 											${order.order_no.toString()}_${order.order_sub_no.toString()}
@@ -167,7 +167,7 @@
 							<c:choose>
 								<c:when test="${not empty otherPrescDetailList}">
 									<c:forEach items="${otherPrescDetailList}" var="order" varStatus="vs">
-										<tr ondblclick="orderCheck(this,2)"  id="tr${order.order_no}_${order.order_sub_no}" 
+										<tr ondblclick="orderCheck(this,2)"  id="tr${order.order_no}_${order.order_sub_no}" class="tr${order.order_no}_${order.order_sub_no}" ORDER_CLASS="${order.order_class}"
 											order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_code="${order.drug_code}" order_name="${order.drug_name }" >
 											<c:set var="key1" >
 											${order.order_no.toString()}_${order.order_sub_no.toString()}
@@ -435,11 +435,11 @@
 			callback: function(result) {
 				if(!result) return ;
 				$("#dragCheck").hide();
-				var trFirst = $("#tr" + order_no+"_" + order_sub_no);
+				var trFirst = $(".tr" + order_no+"_" + order_sub_no);
 				if(trFirst!=null && trFirst!="undefined") {
 					trFirst.css("background-Color",tmpColor);
 				}
-				$("#tr" + tmpOrder_no+"_" + tmpOrder_sub_no).css("background-Color",tmpColor);
+				$(".tr" + tmpOrder_no+"_" + tmpOrder_sub_no).css("background-Color",tmpColor);
 				reSetCheck();
 			}
 		  }
@@ -510,6 +510,7 @@
 	var select_other = 0 ;
 	//快捷点评 点选某行
 	function orderCheck(_trObj,type){
+		if($(_trObj).attr("ORDER_CLASS")!="A"){return ;}
 		if(!checkFlag) return ;
 		if(_trObj.style.backgroundColor=="red"){
 			if(type==1){

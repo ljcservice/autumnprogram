@@ -514,18 +514,19 @@ public class OrderWork extends BaseController
 			pd.put("alert_level", "r");
 			pd.put("checkdate", DateUtil.getDay());
 			String orderDrug1 = pd.getString("orderDrug1");
+			String orderDrug2 = pd.getString("orderDrug2");
 			String[] drug1 = orderDrug1.split("@;@");
+			String[] drug2 = orderDrug2.split("@;@");
 			pd.put("drug_id1", drug1[2]);
 			pd.put("drug_id1_name", drug1[3]);
 			pd.put("rec_main_no1", drug1[0]);
 			pd.put("rec_sub_no1", drug1[1]);
-			String orderDrug2 = new String(pd.getString("orderDrug2").getBytes("ISO-8859-1"),"UTF-8");
-			if(!Tools.isEmpty(orderDrug2))
+			if(!Tools.isEmpty(pd.getString("orderDrug2")))
 			{
-				pd.put("drug_id2", drug1[2]);
-				pd.put("drug_id2_name", drug1[3]);
-				pd.put("rec_main_no2", drug1[0]);
-				pd.put("rec_sub_no2", drug1[1]);
+				pd.put("drug_id2", drug2[2]);
+				pd.put("drug_id2_name", drug2[3]);
+				pd.put("rec_main_no2", drug2[0]);
+				pd.put("rec_sub_no2", drug2[1]);
 			}
 			int i = orderWorkService.saveCheckResult(pd);
 			map.put("ngroupnum", pd.get("ngroupnum"));

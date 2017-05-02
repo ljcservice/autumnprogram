@@ -3,13 +3,14 @@ package com.ts.controller.pdss;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.util.List;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONArray;
-
-import oracle.sql.CLOB;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,12 +19,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ts.controller.base.BaseController;
 import com.ts.entity.Page;
+import com.ts.entity.pdss.DirectionImage;
 import com.ts.entity.system.User;
-import com.ts.service.DoctOrder.OrderWork.ExpertService;
-import com.ts.service.DoctOrder.OrderWork.IOrderWorkService;
 import com.ts.service.pdss.ShowService;
-import com.ts.service.system.user.UserManager;
-import com.ts.util.ConvertCharacter;
 import com.ts.util.PageData;
 import com.ts.util.Tools;
 
@@ -85,7 +83,7 @@ public class ShowController extends BaseController{
 		if(treeList!=null){
 			for(PageData p:treeList){
 				if("0".equals(type)){//药品说明书
-					if("1".equals(p.get("IS_LEAF").toString())){
+					if(pd.get("IS_LEAF")!=null&&"1".equals(pd.get("IS_LEAF"))){
 						//根节点，增加跳转的iframe标识
 						p.put("target", "treeFrame"); 
 						p.put("url", new StringBuffer("show/list?ONTO_TYPE=").append(type)
@@ -259,21 +257,33 @@ public class ShowController extends BaseController{
 	@RequestMapping(value="/detail")
 	public ModelAndView detail( )throws Exception{
 		ModelAndView mv = this.getModelAndView();
+		User user = getCurrentUser();
 		PageData pd = this.getPageData();
 		try{
-			User user = getCurrentUser();
 			List<PageData> list = showService.drugDirectionDetail(pd);
+			Reader reder = null;
+			BufferedReader br  = null;
 			for(PageData pp:list){
 				java.sql.Clob clob = (java.sql.Clob) pp.get("TCONTENT");
 				if(clob!=null){
-					java.io.Reader reder = clob.getCharacterStream();
-					BufferedReader br = new BufferedReader(reder);
+					reder = clob.getCharacterStream();
+					br = new BufferedReader(reder);
 					StringBuffer sb = new StringBuffer();
-					 for (String s= br.readLine();s!=null;) {
+					for (String s= br.readLine();s!=null;) {
 						sb.append(s);
 						s= br.readLine();
-					 }
-					pp.put("TCONTENT", sb.toString());
+					}
+					//show/image?DIRECTION_NO=${item.DIRECTION_NO}&ITEM_NAME=
+					String TCONTENT = sb.toString();
+					if(TCONTENT.contains("src=\"")){
+						TCONTENT = TCONTENT.replace("src=\"", "src=\"show/image?DIRECTION_NO="+pp.get("DIRECTION_NO").toString()+"&ITEM_NAME=");
+					}
+					if(TCONTENT.contains("src=\'")){
+						TCONTENT = TCONTENT.replaceAll("src=\'", "src=\'show/image?DIRECTION_NO="+pp.get("DIRECTION_NO").toString()+"&ITEM_NAME=");
+					}
+					pp.put("TCONTENT",TCONTENT);
+					br.close();
+					reder.close();
 				}
 			}
 			mv.addObject("resultList",list);
@@ -284,7 +294,29 @@ public class ShowController extends BaseController{
 		}
 		return mv;
 	}
-	
+	@RequestMapping(value="/image")
+	public void image(HttpServletRequest request,HttpServletResponse response)throws Exception{
+		ServletOutputStream out = null;
+		try {
+			out = response.getOutputStream(); 
+			response.setContentType("image/jpeg");
+			PageData pd = this.getPageData();
+			String ITEM_NAME = pd.getString("ITEM_NAME");
+			if(!Tools.isEmpty(ITEM_NAME)){
+				DirectionImage img = showService.drugDirectionImage(pd);
+				if(img!=null&&img.getIMAGE().length>1){
+					out.write(img.getIMAGE()); 
+					out.flush(); 
+				}
+			}
+			out.close();
+		} catch (Exception e) {
+		} finally{
+			if(out!=null){
+				out.close();
+			}
+		}
+	}
 	
 	
 }

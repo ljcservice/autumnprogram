@@ -64,7 +64,7 @@
 	select DIRECT_IMAGE_SERIAL,IMAGE
 	from drug_direction_image  
 	where direct_no = #{DIRECTION_NO}
-		and TITLE_NO = #{TITLE_NO}
+		and  #{ITEM_NAME} like ITEM_NAME
 </select>        
 <!--       个体给药         start       -->
 <select id="queryIndividualDict" parameterType="pd" resultType="pd">

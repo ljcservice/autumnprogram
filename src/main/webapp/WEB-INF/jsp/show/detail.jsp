@@ -46,7 +46,6 @@
 								<div style="padding: 8px;">
 									<div><b>[${item.title_name }]</b> </div>
 									<div>${item.TCONTENT } </div>
-									<div><img alt="" src="show/image?DIRECTION_NO=${item.DIRECTION_NO}&TITLE_NO=${item.TITLE_NO}"> </div>
 									<div style="width:100%;height:2px;border-bottom: 1px dotted #e2e2e2;"></div>
 								</div>
 							</c:forEach>
