@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.ts.dao.DaoSupportPdss;
 import com.ts.entity.Page;
+import com.ts.entity.pdss.DirectionImage;
 import com.ts.service.pdss.ShowService;
 import com.ts.util.PageData;
 
@@ -94,5 +95,9 @@ public class ShowServiceImpl implements ShowService{
 
 	public List<PageData> queryClinicalPathwayInfo(PageData pd)throws Exception{
 		return (List<PageData>)dao.findForList("ShowMapper.queryClinicalPathwayInfo", pd);
+	}
+
+	public DirectionImage drugDirectionImage(PageData pd)throws Exception{
+		return (DirectionImage)dao.findForObject("ShowMapper.drugDirectionImage", pd);
 	}
 }

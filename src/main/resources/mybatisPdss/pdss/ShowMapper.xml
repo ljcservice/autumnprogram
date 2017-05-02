@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ShowMapper">
-	
+
+<resultMap id="DirectionImageMap" type="com.ts.entity.pdss.DirectionImage"  >  
+    <result property="IMAGE"  column="IMAGE"  />
+</resultMap>  
+
 <select id="drugTreeList" parameterType="pd" resultType="pd">
 		select DRUG_CLASS id,DRUG_CLASS_NME name ,SPUER_CODE PARENT_ID,IS_LEAF,ref_class_code code 
 		from drug_category 
@@ -49,15 +53,19 @@
 	order by case
 	when hdr.direction_id is null then  2 else 1  end,  ddm.firm_name ASC
 </select>
-<select id="drugDirectionDetail" parameterType="pd" resultType="pd">
-	select a.*,b.title_name,ddi.IMAGE
-	 from drug_direction a
-	left join drug_direction_image ddi on ddi.direct_no = a.direction_no
-	,drug_reg_title_dict b 
+<select id="drugDirectionDetail" parameterType="pd" resultType="pd" >
+	select  a.DIRECT_SERIAL_NO,a.DIRECTION_NO,a.TITLE_NO,a.TITLE_INDEX,a.TCONTENT,
+		b.title_name  
+	from drug_direction a ,drug_reg_title_dict b 
 	where b.title_num = a.title_no 
       and a.direction_no = #{direction_no}
 </select>
-                 
+ <select id="drugDirectionImage" parameterType="pd" resultMap="DirectionImageMap" >
+	select DIRECT_IMAGE_SERIAL,IMAGE
+	from drug_direction_image  
+	where direct_no = #{DIRECTION_NO}
+		and TITLE_NO = #{TITLE_NO}
+</select>        
 <!--       个体给药         start       -->
 <select id="queryIndividualDict" parameterType="pd" resultType="pd">
 	select INDIVI_ID id,DRUG_CLASS_NAME name from individual_dict 

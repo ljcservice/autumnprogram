@@ -3,6 +3,7 @@ package com.ts.service.pdss;
 import java.util.List;
 
 import com.ts.entity.Page;
+import com.ts.entity.pdss.DirectionImage;
 import com.ts.util.PageData;
 
 public interface ShowService {
@@ -22,5 +23,7 @@ public interface ShowService {
 	public List<PageData> queryDrugRelrefDirection(PageData pd)throws Exception;
 
 	public List<PageData> queryClinicalPathwayInfo(PageData pd)throws Exception;
+
+	public DirectionImage drugDirectionImage(PageData pd)throws Exception;
 	
 }
