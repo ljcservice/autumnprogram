@@ -554,12 +554,12 @@
 		var drug2 = $("#checkDrug2");
 		//alert("setCount:"+setCount+".select_current:"+select_current+".select_other:"+select_other);
 		if(setCount == 1) {
-			tmpOrder_name   = _trObj.getAttributeNode("order_name").value;
-			tmpOrder_code   = _trObj.getAttributeNode("order_code").value;
-			tmpOrder_no     = _trObj.getAttributeNode("order_no").value;
-			tmpOrder_sub_no = _trObj.getAttributeNode("order_sub_no").value;
-			tmpColor        = myColor;
+			tmpOrder_Name   = $(_trObj).attr("order_name");
+			tmpOrder_code   = $(_trObj).attr("order_code");
+			tmpOrder_no     = $(_trObj).attr("order_no");
+			tmpOrder_sub_no = $(_trObj).attr("order_sub_no");
 			
+			tmpColor        = myColor;
 			setCheckJsonInfo();
 			drug1.text(_trObj.getAttributeNode("order_name").value);
 			alert("一个药品可以做添加点评项目");
@@ -567,17 +567,17 @@
 			$("#dragCheck").show(500);
 		}else if (setCount == 2 ) {
 			if(exist_select==1){
-				tmpOrder_name   = _trObj.getAttributeNode("order_name").value;
-				tmpOrder_code   = _trObj.getAttributeNode("order_code").value;
-				tmpOrder_no     = _trObj.getAttributeNode("order_no").value;
-				tmpOrder_sub_no = _trObj.getAttributeNode("order_sub_no").value;
+				tmpOrder_Name   = $(_trObj).attr("order_name");
+				tmpOrder_code   = $(_trObj).attr("order_code");
+				tmpOrder_no     = $(_trObj).attr("order_no");
+				tmpOrder_sub_no = $(_trObj).attr("order_sub_no");
 				tmpColor        = myColor;
 			}else if(exist_select==2){
 				oldColor     = myColor;
-				order_no     = _trObj.getAttributeNode("order_no").value;
-				order_sub_no = _trObj.getAttributeNode("order_sub_no").value;
-				order_name   = _trObj.getAttributeNode("order_name").value;
-				order_code   = _trObj.getAttributeNode("order_code").value;
+				tmpOrder_Name   = $(_trObj).attr("order_name");
+				tmpOrder_code   = $(_trObj).attr("order_code");
+				tmpOrder_no     = $(_trObj).attr("order_no");
+				tmpOrder_sub_no = $(_trObj).attr("order_sub_no");
 			
 				setCheckJsonInfo();
 				drug1.text(order_name);

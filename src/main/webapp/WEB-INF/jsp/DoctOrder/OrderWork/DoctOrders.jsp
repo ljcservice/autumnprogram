@@ -207,7 +207,6 @@
 											</c:set>
 											<td nowrap class='center' style="padding-bottom: 0px;">
 												<c:if test="${CheckRss.containsKey(key1)}">
-												  	
 														<a class="fa fa-flag red bigger-130"
 															data-rel="popover" 
 															data-placement="right" 
@@ -433,9 +432,11 @@
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 </body>
 <script type="text/javascript">
-	
 	$(top.hangge());
 	$(function() {
+		$('[data-rel=tooltip]').tooltip();
+		$('[data-rel=popover]').popover({html:true});
+		
 		var _move = false; //移动标记
 		var _x, _y; //鼠标离控件左上角的相对位置
 		$(".drag").mousedown(function(e) {
@@ -680,19 +681,19 @@
 		{
 			var drug1 = $("#checkDrug1");
 			var drug2 = $("#checkDrug2");
-			tmpOrder_Name   = _trObj.getAttributeNode("order_name").value;
-			tmpOrder_code   = _trObj.getAttributeNode("order_code").value;
-			tmpOrder_no     = _trObj.getAttributeNode("order_no").value;
-			tmpOrder_sub_no = _trObj.getAttributeNode("order_sub_no").value;
+			tmpOrder_Name   = $(_trObj).attr("order_name");
+			tmpOrder_code   = $(_trObj).attr("order_code");
+			tmpOrder_no     = $(_trObj).attr("order_no");
+			tmpOrder_sub_no = $(_trObj).attr("order_sub_no");
 			tmpColor        = myColor;
 			if(order_no == ""){
 				
-				drug1.text(_trObj.getAttributeNode("order_name").value);
+				drug1.text($(_trObj).attr("order_name"));
 				alert("一个药品可以做添加点评项目");
 				
 			}else{
 				drug1.text(order_name);
-				var  text = "<b>与</b> " + _trObj.getAttributeNode("order_name").value
+				var  text = "<b>与</b> " + $(_trObj).attr("order_name");
 				drug2.html(text);
 				alert("两个药品可以做添加点评项目");
 			}
@@ -701,10 +702,10 @@
 		}else if (setCount == 2 )
 		{
 			oldColor     = myColor;
-			order_no     = _trObj.getAttributeNode("order_no").value;
-			order_sub_no = _trObj.getAttributeNode("order_sub_no").value;
-			order_name   = _trObj.getAttributeNode("order_name").value;
-			order_code   = _trObj.getAttributeNode("order_code").value;
+			order_no     = $(_trObj).attr("order_no");
+			order_sub_no = $(_trObj).attr("order_sub_no");
+			order_name   = $(_trObj).attr("order_name");
+			order_code   = $(_trObj).attr("order_code");
 			setCount--;
 			setCheckJsonInfo();
 		}
