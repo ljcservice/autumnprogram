@@ -181,10 +181,11 @@
 		date.setMonth(Number(dateStr[1]+1));
 		date.setDate(Number(dateStr[2]));
 	}
-	var d = date.getDate();
-	var m = date.getMonth();
-	var y = date.getFullYear();
+	//var d = date.getDate();
+	//var m = date.getMonth();
+	//var y = date.getFullYear();
 	var calendar = $('#calendar').fullCalendar({
+		defaultDate:dateStart,
 		//isRTL: true,
 		 buttonHtml: {
 			prev: '<i class="ace-icon fa fa-chevron-left"></i>',
