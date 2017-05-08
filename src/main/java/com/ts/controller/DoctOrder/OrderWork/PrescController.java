@@ -1,6 +1,8 @@
 package com.ts.controller.DoctOrder.OrderWork;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +28,11 @@ import com.ts.util.Tools;
 import com.ts.util.app.AppUtil;
 import com.ts.util.doctor.DoctorConst;
 
+/**
+ * 处方点评
+ * @author silong.xing
+ *
+ */
 @Controller
 @RequestMapping(value="/presc")
 public class PrescController extends BaseController{
@@ -50,6 +57,18 @@ public class PrescController extends BaseController{
 		try{
 			// 当前登录专家
 			User user = getCurrentUser();
+			String beginDate = pd.getString("beginDate");	//开始时间
+			String endDate = pd.getString("endDate");		//结束时间
+			if(endDate != null && !"".equals(endDate))
+			{
+				pd.put("end_Date", endDate);
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(DateUtil.fomatDate(endDate));
+				cal.add(Calendar.DAY_OF_MONTH, 1);
+				pd.put("endDate", sdf.format(cal.getTime()));
+			}
+			page.setPd(pd);
 			List<PageData>	prescList = prescService.prescListPage(page);	//列出专家列表
 			for(PageData pp:prescList){
 				String RS_DRUG_TYPES = pp.getString("RS_DRUG_TYPES");
@@ -73,7 +92,7 @@ public class PrescController extends BaseController{
 
 
 	/**
-	 * 处方工作主页详细信息
+	 * 处方工作主页 单个
 	 * @return
 	 * @throws Exception
 	 */
@@ -83,9 +102,15 @@ public class PrescController extends BaseController{
 		PageData pd = this.getPageData();
 		page.setPd(pd);
 		//查询处方中的病人信息
-		PageData pdPat = prescService.findPrescById(pd);
-		mv.addObject("pat", pdPat);
-		
+		PageData presc = prescService.findPrescById(pd);
+		String expert_id = presc.getString("expert_id");
+		mv.addObject("pat", presc);
+		if(!Tools.isEmpty(expert_id) ){
+			User expert = userService.findUserById(expert_id) ;
+			if(expert!=null){
+				mv.addObject("expert_name", expert.getNAME());
+			}
+		}
 		//点评查询结果ByNgroupnum
 		if(!Tools.isEmpty(pd.getString("ngroupnum"))){
 			List<PageData> checkRss = orderWorkService.findByCheckResultsByNgroupnum(page);
@@ -96,7 +121,7 @@ public class PrescController extends BaseController{
 	}
 	
 	/**
-	 * 处方工作主页详细信息
+	 * 处方列表
 	 * @return
 	 * @throws Exception
 	 */
@@ -104,13 +129,36 @@ public class PrescController extends BaseController{
 	public ModelAndView prescDetailList(Page page) throws Exception{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
+		// 当前登录专家
+		User user = getCurrentUser();
 		page.setPd(pd);
-		//处方详情
+		//处方信息
+		PageData presc = prescService.findPrescById(pd);
+		//当前处方的详情
 		List<PageData> prescDetailList = prescService.prescDetailList(pd);
 		mv.addObject("prescDetailList", prescDetailList);
-		//当日其他人开具的处方详情
-		List<PageData> otherPrescDetailList = prescService.otherPrescDetailList(pd);
-		mv.addObject("otherPrescDetailList",otherPrescDetailList);
+		//当日其他药师开具的处方
+		List<PageData> otherPrescList = prescService.otherPrescList(presc);
+		mv.addObject("otherPrescList",otherPrescList);
+		//当日其他药师开具的处方
+		List<PageData> otherPrescDetailList = prescService.otherPrescDetailList(presc);
+		Map<String, List<PageData>> otherDetailMap = new HashMap<String , List<PageData>>();
+		if(otherPrescDetailList!=null){
+			for(PageData pp :otherPrescDetailList){
+				String PRESC_ID = pp.get("PRESC_ID").toString();
+				if(otherDetailMap.containsKey(PRESC_ID)){
+					List<PageData> detailList = otherDetailMap.get(PRESC_ID);
+					detailList.add(pp);
+				}else{
+					List<PageData> detailList = new ArrayList<PageData>();
+					detailList.add(pp);
+					otherDetailMap.put(PRESC_ID, detailList);
+				}
+			}
+		}
+		mv.addObject("otherPrescDetailMap",otherDetailMap);
+		
+		
 		
 		if(!Tools.isEmpty(pd.getString("ngroupnum"))){
 			//查询结果ByNgroupnum
@@ -132,10 +180,6 @@ public class PrescController extends BaseController{
 		mv.addObject("pd", pd);
 		mv.setViewName("DoctOrder/presc/prescDetailList");
 		
-		//权限控制
-		// 当前登录专家
-		User user = getCurrentUser();
-		PageData presc = prescService.findPrescById(pd);
 		String expert_id = presc.getString("expert_id");
 		mv.addObject("modifyFlag", 1);
 		//

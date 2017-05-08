@@ -125,6 +125,7 @@ public class OrderWorkServiceBean implements IOrderWorkService {
 		return (List<PageData>) daoph.findForList("RS_TYPE_DICTMapper.getOrderClassDict","");
 	}
 	
+	//查询药疗类型的 医嘱信息
 	public Map ordersListSpecial(PageData pd) throws Exception{
 		Map<String,String> map = new HashMap<String,String>();
 		List<PageData>	list =	(List<PageData>) daoph.findForList("OrdersMapper.ordersListSpecial",pd);

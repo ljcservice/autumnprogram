@@ -95,6 +95,14 @@ public class PrescServiceImpl implements PrescService{
 	}
 
 	/**
+	 * 当日其他人开具的处方
+	 * @param pd
+	 * @return
+	 */
+	public List<PageData> otherPrescList(PageData pd)throws Exception{
+		return (List<PageData>) daoph.findForList("PrescMapper.otherPrescList", pd);
+	}
+	/**
 	 * 当日其他人开具的处方详情
 	 * @param pd
 	 * @return
@@ -102,7 +110,6 @@ public class PrescServiceImpl implements PrescService{
 	public List<PageData> otherPrescDetailList(PageData pd)throws Exception{
 		return (List<PageData>) daoph.findForList("PrescMapper.otherPrescDetailList", pd);
 	}
-	
 
 	/**
 	 * 处方问题统计

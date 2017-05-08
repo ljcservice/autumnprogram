@@ -64,6 +64,12 @@ public interface PrescService {
 	public void setCheckRsStatus(PageData pd)throws Exception;
 
 	/**
+	 * 当日其他人开具的处方
+	 * @param pd
+	 * @return
+	 */
+	public List<PageData> otherPrescList(PageData pd)throws Exception;
+	/**
 	 * 当日其他人开具的处方详情
 	 * @param pd
 	 * @return

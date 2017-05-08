@@ -25,6 +25,7 @@ import com.ts.entity.system.User;
 import com.ts.service.DoctOrder.OrderWork.CommonService;
 import com.ts.service.DoctOrder.OrderWork.IOrderWorkService;
 import com.ts.service.DoctOrder.OrderWork.PrescService;
+import com.ts.service.system.user.UserManager;
 import com.ts.util.DateUtil;
 import com.ts.util.PageData;
 import com.ts.util.Tools;
@@ -45,7 +46,8 @@ public class OrderWork extends BaseController
 	private CommonService commonService;
 	@Autowired
 	private IOrderWorkService orderWorkService;
-
+	@Autowired
+	private UserManager userService;
 	@Autowired
 	private PrescService prescService;
 	
@@ -86,6 +88,7 @@ public class OrderWork extends BaseController
 			String endDate = pd.getString("endDate");		//结束时间
 			if(endDate != null && !"".equals(endDate))
 			{
+				pd.put("end_Date", endDate);
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(DateUtil.fomatDate(endDate));
@@ -130,7 +133,8 @@ public class OrderWork extends BaseController
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
 		page.setPd(pd);
-		PageData pdPat         = this.orderWorkService.findByPatient(page);
+		PageData pdPat = this.orderWorkService.findByPatient(page);
+
 		List<PageData> pdOper  = this.orderWorkService.operationList(page);
 		//查询结果ByNgroupnum
 		List<PageData> checkRss = this.orderWorkService.findByCheckResultsByNgroupnum(page);
@@ -155,6 +159,13 @@ public class OrderWork extends BaseController
 		page.setPd(pd);
 		List<PageData> checkRss = this.orderWorkService.findByCheckResultsByNgroupnum(page);
 		PageData PatVisit = orderWorkService.queryPatVisit(pd);
+		String expert_id = PatVisit.getString("expert_id");
+		if(!Tools.isEmpty(expert_id) ){
+			User expert = userService.findUserById(expert_id) ;
+			if(expert!=null){
+				mv.addObject("expert_name", expert.getNAME());
+			}
+		}
 		//默认待定
 		mv.addObject("ISCHECKTRUE", PatVisit.get("ISCHECKTRUE")==null?2:PatVisit.get("ISCHECKTRUE"));
 		mv.addObject("checkRss", checkRss);
@@ -162,7 +173,6 @@ public class OrderWork extends BaseController
 		mv.addObject("rsTypeDict",commonService.getCheckTypeDict());
 		// 当前登录专家
 		User user = getCurrentUser();
-		String expert_id = PatVisit.getString("expert_id");
 		mv.addObject("expert_id",expert_id);
 		mv.addObject("modifyFlag", 1);
 		//
