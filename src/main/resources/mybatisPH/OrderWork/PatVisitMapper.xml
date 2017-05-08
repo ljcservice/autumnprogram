@@ -423,4 +423,21 @@
 		update pat_visit t set expert_id=#{expert_id} 
  		where  t.patient_id =#{patient_id} and t.visit_id = #{visit_id}
 	</update>
+	
+	<!-- 	查询出院病人 -->
+	<select id="queryPatVisitByDate" parameterType="pd" resultType="pd" >
+		select * from pat_visit t 
+		left join  pat_master_index  m on m.patient_id  = t.patient_id  
+		where 
+			t.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
+			and t.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+	</select>
+		 
+	<!-- 	查询诊断 -->
+	<select id="queryDiagnosisByPatVisist" parameterType="pd" resultType="pd">
+		select * from diagnosis t 
+			where 
+			patient_id =#{patient_id} and visit_id = #{visit_id}
+	</select>
+		
 </mapper>
