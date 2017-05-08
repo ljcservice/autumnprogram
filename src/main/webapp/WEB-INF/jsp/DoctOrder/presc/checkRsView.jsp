@@ -37,7 +37,7 @@
 							<form name="checkForm" id="checkForm" action="presc/checkRsView.do" method="post">
 							<input type="hidden" value="${page.pd.id}" name="id" id="id"/>
 							<input type="hidden" value="${page.pd.ngroupnum}"  name="ngroupnum"  id="ngroupnum"/>
-							<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
+							<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:0px;margin-bottom:0px;">
 								<thead>
 									<tr style="padding-top: 0px;padding-bottom: 0px;">
 										<th colspan="5" style="vertical-middle;">
@@ -76,9 +76,12 @@
 												<label><input class="ace" id="u3897_input" value="2" name="ISCHECKTRUE" type="radio" <c:if test="${ISCHECKTRUE==2 }">checked</c:if> >待定&nbsp;<span class="lbl"></span></label>&nbsp;&nbsp;
 											</span>
 											<c:if test="${modifyFlag==1 }">
-											<a class="btn btn-minier btn-grey" title="保存" onclick="saveIsCheckTrue()">
-												<i class="ace-icon fa fa-floppy-o bigger-120"></i>
-											</a>
+												<a class="btn btn-minier btn-grey" title="保存" onclick="saveIsCheckTrue()">
+													<i class="ace-icon fa fa-floppy-o bigger-120"></i>
+												</a>
+											</c:if>
+											<c:if test="${expert_name !=null and expert_name!='' }">
+												&nbsp;&nbsp;&nbsp;&nbsp; 当前指定专家：${expert_name}
 											</c:if>
 										</th>
 									</tr>
@@ -136,11 +139,6 @@
 			</div>
 		</div>
 		<!-- /.main-content -->
-		<!-- 返回顶部 -->
-		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-			<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
-		</a>
-
 	</div>
 	<!-- /.main-container -->
 	<!-- basic scripts -->

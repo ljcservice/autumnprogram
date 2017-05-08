@@ -35,12 +35,6 @@
 				<div class="page-content">
 					<div class="row">
 						<div class="col-xs-12"  >
-						<table border="0" style="padding: 0 0 0 0;width: 100%;" >
-							<tr height="150px" > 
-								<td style="margin: 0px 0px 0px 0px;" >
-									<div class="row">
-								<div class="" >
-										<!-- #section:elements.tab -->
 										<div class="tabbable" id="myTabbable" >
 											<ul class="nav nav-tabs" id="myTab">
 												<li class="active">
@@ -64,7 +58,7 @@
 
 											<div class="tab-content" style="overflow-y:auto;height:150px;padding-top: 2px;padding-left: 2px;padding-right: 2px;padding-bottom: 0px;">
 												<div id="doctOrder" class="tab-pane fade in active" >
-													<table class="table table-bordered table-striped table-responsive " style="font-size:10px;" >
+													<table class="table table-bordered table-striped table-responsive " style="font-size:10px;margin-bottom:0px;" >
 														<tbody>
 															<tr>
 																 <td width="10%" class="info">患者编号:</th>
@@ -111,22 +105,11 @@
 											</div>
 										</div>
 										
-										<!-- /section:elements.tab -->
-									</div><!-- /.col -->
-									</div> 
-									
-								</td>
-							</tr>
-							<tr id="trLagout" height="*" >
-								<td>
-									<div style="height:430px;overflow-y:hidden;overflow-x:hidden; ">
+									<div style="overflow-y:hidden;overflow-x:hidden; ">
 										<iframe name="DoctFrame" id="DoctFrame" scrolling="no" frameborder="0" 
 											src="presc/prescDetailList.do?id=${pat.id}&NGROUPNUM=${pat.NGROUPNUM}" style="margin:0 auto;width:100%;height: 100%">
 										</iframe>
 									</div>
-								</td>
-							</tr>
-						</table>
 						</div>
 						
 					</div>
@@ -201,7 +184,14 @@ $(function() {
 		});
 	}
 
+	//重置当前页面高度，自适应浏览器
+	treeFrameT("DoctFrame");
 });
+function treeFrameT(obj){
+	var hmainT = document.getElementById(obj);
+	hmainT.style.width = '100%';
+	hmainT.style.height = ( $(window).height() - $("#myTabbable").height() -10) + 'px';
+}
 // 查询
 function searchs(){
 	top.jzts();

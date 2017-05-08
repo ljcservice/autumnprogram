@@ -26,8 +26,7 @@
  }
  .check-search{
 	float: left;
-	margin-top: 2px;
-	margin-bottom: 5px;
+	margin: 4px;
 }
 </style>
 </head>
@@ -42,44 +41,45 @@
 					<div class="row">
 						<div class="col-xs-12">
 						<!-- 检索  -->
-						<form action="presc/prescListPage.do" method="post" name="searchForm" id="searchForm">
-								<div style="margin-bottom: 5px;">	
-									<div class="check-search nav-search" style="width: 400px;">
+								<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
+								<form action="presc/prescListPage.do" method="post" name="searchForm" id="searchForm">
+									<div class="check-search nav-search"  >
 										科室：
 										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="ORG_NAME" type="text" name="ORG_NAME" value="${page.pd.ORG_NAME}" placeholder="科室名称" maxlength="32"/>
+											<input class="nav-search-input" autocomplete="off" id="ORG_NAME" type="text" name="ORG_NAME" value="${pd.ORG_NAME}" placeholder="科室名称" maxlength="32"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 										诊断：
 										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${page.pd.keywords}" placeholder="诊断" maxlength="32"/>
+											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords}" placeholder="诊断" maxlength="32"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
-									<div class="check-search" style="width: 77px;">
+									<div class="check-search"  >
 										<a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
 										<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i></a>
 									</div>
-									<div class="check-search" style="width: 155px;" >
+									<div class="check-search"   >
 										是否点评：
 									 	<select class="chosen-select form-control" name="ISORDERCHECK" id="ISORDERCHECK" data-placeholder="处方是否点评" style="vertical-align:top;width: 80px;" >
 											<option value="">全部</option>
-											<option <c:if test="${page.pd.ISORDERCHECK == '0'}">selected</c:if> value="0" >未点评</option>
-											<option <c:if test="${page.pd.ISORDERCHECK == '1'}">selected</c:if> value="1" >已点评</option>
+											<option <c:if test="${pd.ISORDERCHECK == '0'}">selected</c:if> value="0" >未点评</option>
+											<option <c:if test="${pd.ISORDERCHECK == '1'}">selected</c:if> value="1" >已点评</option>
 										</select>
 									</div>
-									<div class="check-search" style="width: 155px;" >
+									<div class="check-search"  >
 										是否合理：
 									 	<select class="chosen-select form-control" name="ISCHECKTRUE" id="ISCHECKTRUE" data-placeholder="处方是否合理" style="vertical-align:top;width: 80px;">
 									 		<option value="">全部</option>
-											<option <c:if test="${page.pd.ISCHECKTRUE == '0' }">selected</c:if> value="0" >合理</option>
-											<option <c:if test="${page.pd.ISCHECKTRUE == '1' }">selected</c:if> value="1" >不合理</option>
-											<option <c:if test="${page.pd.ISCHECKTRUE == '2' }">selected</c:if> value="2" >待定</option>
+											<option <c:if test="${pd.ISCHECKTRUE == '0' }">selected</c:if> value="0" >合理</option>
+											<option <c:if test="${pd.ISCHECKTRUE == '1' }">selected</c:if> value="1" >不合理</option>
+											<option <c:if test="${pd.ISCHECKTRUE == '2' }">selected</c:if> value="2" >待定</option>
 										</select>
 									</div>
+								</form>
 								</div>
 						<!-- 检索  -->
-					
+						<div>
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
 							<thead>
 								<tr>
@@ -135,21 +135,22 @@
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
-										<td colspan="10" class="center">没有相关数据</td>
+										<td colspan="12" class="center">没有相关数据</td>
 									</tr>
 								</c:otherwise>
 							</c:choose>
 							</tbody>
 						</table>
-						
-					<div class="page-header position-relative">
-					<table style="width:100%;">
-						<tr>
-							<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
-						</tr>
-					</table>
-					</div>
-					</form>
+						</div>
+						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">
+							<table style="width:100%;">
+								<tr>
+									<td>
+										<div class="pagination" style="float: right;padding: 0px;margin: 0px;">${page.pageStr}</div>
+									</td>
+								</tr>
+							</table>
+						</div>
 	
 						</div>
 						<!-- /.col -->
@@ -184,7 +185,7 @@
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<script type="text/javascript" src="static/js/common/common.js"></script>
 	</body>
-
+<script type="text/javascript" src="static/js/common/lockTable.js?v=20161"></script>
 <script type="text/javascript">
 $(top.hangge());
 
@@ -220,9 +221,18 @@ $(function() {
 		});
 	}
 
-	
-
+	//重置当前页面高度，自适应浏览器
+	initWidthHeight();
+	$(window).off('resize').on('resize', function() {
+		initWidthHeight();
+	}).trigger('resize');
 });
+//重置当前页面高度，自适应浏览器
+function initWidthHeight(){
+	var height = $(window).height();
+	var myheight =height-$("#searchDiv").outerHeight()-$("#pageStrDiv").outerHeight();
+	FixTable("simple-table", 0, $(window).width(), myheight-20);
+}
 //
 function detailPresc(id,NGROUPNUM){
 	top.jzts();

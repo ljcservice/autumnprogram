@@ -17,7 +17,7 @@
 </head>
 <body class="no-skin">
 	<!-- /section:basics/navbar.layout -->
-	<div class="main-container" id="main-container">
+	<div class="main-container" id="main-container" >
 		<!-- /section:basics/sidebar -->
 		<div class="main-content">
 			<div class="main-content-inner">
@@ -31,9 +31,10 @@
 							<input type="hidden" name="shortcutName" value="${page.pd.shortcutName}" id="shortcutName"/>
 							<!-- 点评结果之一 -->
 							<input type="hidden" name="checkJsonInfo" value='${page.pd.checkJsonInfo}' id="checkJsonInfo"/>
+						</form>
 						<div style="vertical-align:bottom;padding-top: 5px;padding-bottom: 5px;">
 							<div style="margin-top: 5px;margin-bottom: 5px;">
-								<span><b> <font color="blue" >医嘱信息</font></b></span>
+								<span><b> <font color="blue" >处方信息</font></b></span>
 								<div style="float: right;margin-bottom: 5px;">
 									<div class="btn-toolbar" style="float: right;">
 									<c:if test="${modifyFlag==1 }">
@@ -70,6 +71,7 @@
 								</div>
 							</div>
 						</div>
+						<div id="showDiv" style="overflow: auto;">
 						<div >
 						<div>当前处方明细：</div>
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:10px;">
@@ -99,14 +101,13 @@
 											</c:set>
 											<td class='center' style="padding-bottom: 0px;">
 												<c:if test="${CheckRss.containsKey(key1)}">
-												  	
 														<a class="fa fa-flag red bigger-130"
 															data-rel="popover" 
 															data-placement="right" 
 															title="<i class='ace-icon fa fa-check red'></i>   ${order.order_Text}" 
 															data-content="<font size='0'>
 																<c:forEach items="${CheckRss.get(key1)}" var="rs">
-																	<b>${rsTypeDict.get(rs.IN_RS_TYPE).rs_type_name }:  
+																	<b>${rsTypeDict.get(rs.RS_DRUG_TYPE).rs_type_name }:  
 																	<c:if test="${rs.drug_id1_name != order.order_Text }"> 
 																		${rs.drug_id1_name }</b>
 																	</c:if>
@@ -145,80 +146,106 @@
 							</tbody>
 						</table>
 						</div>
-						<div >
-						<div>同日其他处方明细：</div>
-						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:10px;">
-							<thead>
-								<tr>
-									<th class="center" nowrap><a class="fa fa-flag red bigger-130" title="点评信息"></a></th>
-									<th class="center" nowrap>药品名称规格</th>
-									<th class="center" nowrap>单次计量</th>
-									<th class="center" nowrap>用法</th>
-									<th class="center" nowrap>频次</th>
-									<th class="center" nowrap>用药天数</th>
-									<th class="center" nowrap>单价</th>
-									<th class="center" nowrap>数量</th>
-									<th class="center" nowrap>单位</th>
-									<th class="center" nowrap>药费</th>
-								</tr>
-							</thead>
-							<tbody>
-							<!-- 开始循环 -->	
-							<c:choose>
-								<c:when test="${not empty otherPrescDetailList}">
-									<c:forEach items="${otherPrescDetailList}" var="order" varStatus="vs">
-										<tr ondblclick="orderCheck(this,2)"  id="tr${order.order_no}_${order.order_sub_no}" class="tr${order.order_no}_${order.order_sub_no}" ORDER_CLASS="${order.order_class}"
-											order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_code="${order.drug_code}" order_name="${order.drug_name }" >
-											<c:set var="key1" >
-											${order.order_no.toString()}_${order.order_sub_no.toString()}
-											</c:set>
-											<td class='center' style="padding-bottom: 0px;">
-												<c:if test="${CheckRss.containsKey(key1)}">
-												  	
-														<a class="fa fa-flag red bigger-130"
-															data-rel="popover" 
-															data-placement="right" 
-															title="<i class='ace-icon fa fa-check red'></i>   ${order.order_Text}" 
-															data-content="<font size='0'>
-																<c:forEach items="${CheckRss.get(key1)}" var="rs">
-																	<b>${rsTypeDict.get(rs.IN_RS_TYPE).rs_type_name }:  
-																	<c:if test="${rs.drug_id1_name != order.order_Text }"> 
-																		${rs.drug_id1_name }</b>
-																	</c:if>
-																	<c:if test="${rs.drug_id2_name != order.order_Text }"> 
-																		${rs.drug_id2_name }</b>
-																	</c:if>
-																	 <br>
-																	${rs.ALERT_HINT }<br>
-																</c:forEach>	
-															</font>"
-														></a>
-												</c:if>
-											</td>
-											
-											<td class='center' >
-												${order.DRUG_NAME } ${order.DRUG_SPEC }
-											</td>
-											<td class="center ">${order.DOSAGE }</td>
-											<td class="center ">不知道</td>
-											<td class="center " >${order.FREQUENCY}</td>
-											<td class="center " >${order.DRUG_USE_DAYS }</td>
-											<td class="center " >${order.COSTS } </td>
-											<td class="center " >${order.AMOUNT } </td>
-											<td class="center " >${order.PACKAGE_SPEC}</td>
-											<td class="center " >${order.COSTS * order.AMOUNT}</td>
+						<div style="overflow:visible;height: auto;width: 100%;">
+						<div>同日其他处方：</div>
+						<!-- 开始循环 -->	
+						<c:choose>
+							<c:when test="${not empty otherPrescList}">
+							<c:forEach items="${otherPrescList}" var="presc" varStatus="vs">
+							<div  style="margin:1px 1px 15px 1px;padding: 2px;border-width: 1px;border:1px solid #d5d5d5;">
+							<table id="" class="table table-striped table-bordered table-hover"  style="padding: 0;margin: 0;padding-right: 1px;">
+								<thead>
+								<!-- 开始循环 -->	
+										<tr  >
+											<th style="text-align: right;">处方号：</th><th class="left"> ${presc.PRESC_NO} </th>
+											<th style="text-align: right;">科室：</th><th class="left">${presc.ORG_NAME}</th>
+											<th style="text-align: right;">医生：</th><th class="left">${presc.DOCTOR_NAME}</th>
+											<th style="text-align: right;">抗菌：</th><th class="left"><c:if test="${presc.HASKJ==0}">否</c:if><c:if test="${presc.HASKJ==1}">是</c:if></th>
+											<th style="text-align: right;">诊断：</th><th class="left">${presc.DIAGNOSIS_NAMES}</th>
+											<th class="center" style="border-right: 1px;"><a href="javascript:void(0);" onclick="showDetail(this);">详情</a></th>
 										</tr>
-									
-									</c:forEach>
+								</thead>
+							</table>
+								<c:choose>
+								<c:when test="${not empty otherPrescDetailMap.get(presc.id)}">
+							<div style="display: none;">
+								<table id="" class="table table-striped table-bordered table-hover"  style="padding: 0;margin: 0;margin-top: 3px;">
+									<thead>
+										<tr>
+											<td class="center" nowrap><a class="fa fa-flag red bigger-130" title="点评信息"></a></td>
+											<td class="center" nowrap>药品名称规格</td>
+											<td class="center" nowrap>单次计量</td>
+											<td class="center" nowrap>用法</td>
+											<td class="center" nowrap>频次</td>
+											<td class="center" nowrap>用药天数</td>
+											<td class="center" nowrap>单价</td>
+											<td class="center" nowrap>数量</td>
+											<td class="center" nowrap>单位</td>
+											<td class="center" nowrap>药费</td>
+										</tr>
+									</thead>
+									<tbody>
+									<!-- 开始循环 -->
+											<c:forEach items="${otherPrescDetailMap.get(presc.id)}" var="order" varStatus="vs">
+												<tr ondblclick="orderCheck(this,1)"  id="tr${order.order_no}_${order.order_sub_no}" class="tr${order.order_no}_${order.order_sub_no}" ORDER_CLASS="${order.order_class}"
+													order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_code="${order.drug_code}" order_name="${order.drug_name }" >
+													<c:set var="key1">
+														${order.order_no.toString()}_${order.order_sub_no.toString()}
+													</c:set>
+													<td class='center' style="padding-bottom: 0px;">
+														<c:if test="${CheckRss.containsKey(key1)}">
+																<a class="fa fa-flag red bigger-130"
+																	data-rel="popover" 
+																	data-placement="right" 
+																	title="<i class='ace-icon fa fa-check red'></i>   ${order.order_Text}" 
+																	data-content="<font size='0'>
+																		<c:forEach items="${CheckRss.get(key1)}" var="rs">
+																			<b>${rsTypeDict.get(rs.RS_DRUG_TYPE).rs_type_name }:  
+																			<c:if test="${rs.drug_id1_name != order.order_Text }"> 
+																				${rs.drug_id1_name }</b>
+																			</c:if>
+																			<c:if test="${rs.drug_id2_name != order.order_Text }"> 
+																				${rs.drug_id2_name }</b>
+																			</c:if>
+																			 <br>
+																			${rs.ALERT_HINT }<br>
+																		</c:forEach>	
+																	</font>"
+																></a>
+														</c:if>
+													</td>
+													
+													<td class='center' >
+														${order.DRUG_NAME } ${order.DRUG_SPEC }
+													</td>
+													<td class="center ">${order.DOSAGE } ${order.DOSAGE_UNITS}</td>
+													<td class="center ">${order.ADMINISTRATION }</td>
+													<td class="center " >${order.FREQUENCY}</td>
+													<td class="center " >${order.DRUG_USE_DAYS }</td>
+													<td class="center " >${order.COSTS } </td>
+													<td class="center " >${order.AMOUNT } </td>
+													<td class="center " >${order.PACKAGE_SPEC}</td>
+													<td class="center " >${order.COSTS * order.AMOUNT}</td>
+												</tr>
+											
+											</c:forEach>
+									</tbody>
+								</table>
+							</div>
 								</c:when>
 								<c:otherwise>
-									<tr class="main_info">
-										<td colspan="10" class="center">没有相关数据</td>
-									</tr>
 								</c:otherwise>
-							</c:choose>
-							</tbody>
-						</table>
+								</c:choose>
+							
+							</div>
+							</c:forEach>
+								
+							</c:when>
+							<c:otherwise>
+							</c:otherwise>
+						</c:choose>
+						</div>
+						
 						</div>
 						
 								<div  id="dragCheck" style="width: 400px;position: absolute;top: 100px;left:260px;display:none;" class="drag"   >
@@ -266,7 +293,6 @@
 										</div>
 									</div>
 						
-						</form>
 						
 						</div>
 						<!-- /.col -->
@@ -325,7 +351,19 @@
 		     _move = false;
 		     $(".drag").fadeTo("fast", 1); //松开鼠标后停止移动并恢复成不透明
 		});
+		//重置当前页面高度，自适应浏览器
+		
+		//重置当前页面高度，自适应浏览器
+		initWidthHeight();
+		$(window).off('resize').on('resize', function() {
+			initWidthHeight();
+		}).trigger('resize');
 	});
+	//重置当前页面高度，自适应浏览器
+	function initWidthHeight(){
+		var height = $(window).height();
+		$("#showDiv").height(height-20+'px');
+	}
 	
 	window.onload = function(){
 		var cji = $("#checkJsonInfo").val();
@@ -598,7 +636,16 @@
 	function reloadPage(){
 		window.document.forms[0].submit();
 	}
-		
-	</script>
-	</body>
+var mm = 0;
+function showDetail(obj){
+	if(mm==0){
+		mm=1;
+		$(obj).closest("table").next().show();
+	}else{
+		$(obj).closest("table").next().hide();
+		mm=0;
+	}
+}
+</script>
+</body>
 </html>
