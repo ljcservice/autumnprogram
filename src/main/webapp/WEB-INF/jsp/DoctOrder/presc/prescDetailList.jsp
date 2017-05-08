@@ -71,7 +71,7 @@
 								</div>
 							</div>
 						</div>
-						<div id="showDiv" style="overflow: auto;">
+						<div id="showDiv" style="overflow: auto;width: 100%;">
 						<div >
 						<div>当前处方明细：</div>
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:10px;">
@@ -125,7 +125,7 @@
 											<td class='center' >
 												${order.DRUG_NAME } ${order.DRUG_SPEC }
 											</td>
-											<td class="center ">${order.DOSAGE } ${order.DOSAGE_UNITS}</td>
+											<td class="center "><fmt:formatNumber value="${order.dosage }" pattern="#0.00"></fmt:formatNumber>${order.DOSAGE_UNITS}</td>
 											<td class="center ">${order.ADMINISTRATION }</td>
 											<td class="center " >${order.FREQUENCY}</td>
 											<td class="center " >${order.DRUG_USE_DAYS }</td>
@@ -187,7 +187,7 @@
 									<tbody>
 									<!-- 开始循环 -->
 											<c:forEach items="${otherPrescDetailMap.get(presc.id)}" var="order" varStatus="vs">
-												<tr ondblclick="orderCheck(this,1)"  id="tr${order.order_no}_${order.order_sub_no}" class="tr${order.order_no}_${order.order_sub_no}" ORDER_CLASS="${order.order_class}"
+												<tr ondblclick="orderCheck(this,2)"  id="tr${order.order_no}_${order.order_sub_no}" class="tr${order.order_no}_${order.order_sub_no}" ORDER_CLASS="${order.order_class}"
 													order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_code="${order.drug_code}" order_name="${order.drug_name }" >
 													<c:set var="key1">
 														${order.order_no.toString()}_${order.order_sub_no.toString()}
@@ -218,7 +218,7 @@
 													<td class='center' >
 														${order.DRUG_NAME } ${order.DRUG_SPEC }
 													</td>
-													<td class="center ">${order.DOSAGE } ${order.DOSAGE_UNITS}</td>
+													<td class="center "><fmt:formatNumber value="${order.dosage }" pattern="#0.00"></fmt:formatNumber> ${order.DOSAGE_UNITS}</td>
 													<td class="center ">${order.ADMINISTRATION }</td>
 													<td class="center " >${order.FREQUENCY}</td>
 													<td class="center " >${order.DRUG_USE_DAYS }</td>
@@ -362,7 +362,7 @@
 	//重置当前页面高度，自适应浏览器
 	function initWidthHeight(){
 		var height = $(window).height();
-		$("#showDiv").height(height-20+'px');
+		$("#showDiv").height(height-30+'px');
 	}
 	
 	window.onload = function(){
@@ -548,7 +548,7 @@
 	var select_other = 0 ;
 	//快捷点评 点选某行
 	function orderCheck(_trObj,type){
-		if($(_trObj).attr("ORDER_CLASS")!="A"){return ;}
+		//sif($(_trObj).attr("ORDER_CLASS")!="A"){return ;}
 		if(!checkFlag) return ;
 		if(_trObj.style.backgroundColor=="red"){
 			if(type==1){
@@ -574,11 +574,11 @@
 			return ;
 		}
 		if(setCount ==1 && type ==2){
-			$(_trObj).children().eq(1).tips({ side:2, msg:'单项点评只允许选择当前处方的明细做点评', bg:'#AE81FF', time:2 });
+			$(_trObj).children().eq(0).tips({ side:2, msg:'单项点评只允许选择当前处方的明细做点评', bg:'#AE81FF', time:2 });
 			return;
 		}
 		if(select_other==1 && type ==2 && setCount == 2){
-			$(_trObj).children().eq(1).tips({ side:2, msg:'最多只允许选择一个其他处方的明细做点评', bg:'#AE81FF', time:2 });
+			$(_trObj).children().eq(0).tips({ side:2, msg:'最多只允许选择一个其他处方的明细做点评', bg:'#AE81FF', time:2 });
 			return;
 		}
 		if(type==1){
@@ -603,7 +603,7 @@
 			drug1.text(_trObj.getAttributeNode("order_name").value);
 			alert("一个药品可以做添加点评项目");
 			$(".widget-title").text(checkName);
-			$("#dragCheck").show(500);
+			$("#dragCheck").show(500).css("top",20).css("left",($(window).width()-400)/2);
 		}else if (setCount == 2 ) {
 			if(exist_select==1){
 				tmpOrder_Name   = $(_trObj).attr("order_name");
