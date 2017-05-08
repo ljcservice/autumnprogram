@@ -32,9 +32,6 @@
 	float: left;
 	margin: 4px;
 }
-.nav-search-input:hover{
-	width: 105px;
-}
 </style>
 </head>
 <body class="no-skin">
@@ -46,9 +43,9 @@
 			<div class="main-content-inner">
 				<div class="page-content">
 					<div class="row">
-						<form name="searchForm" id="searchForm" action="DoctOrder/OrderWork.do" method="post" > 
-						<div class="col-xs-12" id="searchDiv">
-							<input type="hidden" name="category_id" id="category_id" value=""/>   
+						<div class="col-xs-12" >
+							<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
+								<form name="searchForm" id="searchForm" action="DoctOrder/OrderWork.do" method="post" > 
 									<div class="check-search nav-search" >
 											科室：
 										<span class="input-icon">
@@ -68,7 +65,7 @@
 									<div class="check-search"  >
 										出院日期：
 										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
-										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.endDate }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
+										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.end_Date }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
 									</div>
 									<div class="check-search"  > 
 										是否点评：
@@ -87,6 +84,7 @@
 											<option <c:if test="${pd.ISCHECKTRUE == '2' }">selected</c:if> value="2" >待定</option>
 										</select>
 									</div>
+									</form>
 							</div>
 							<div style="width: 100%;height: auto;">
 							<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
@@ -171,7 +169,7 @@
 							</tbody>
 						</table>
 						</div>
-						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 10px;padding-bottom: 10px;">
+						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">
 							<table style="width:100%;">
 								<tr>
 									<td>
@@ -180,8 +178,10 @@
 								</tr>
 							</table>
 						</div>
+						
+						</div>
 					</div>
-					</form>
+					
 						
 					</div>
 					<!-- /.row -->
@@ -213,7 +213,7 @@
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 </body>
 <script type="text/javascript" src="static/js/common/common.js"></script>
-<script type="text/javascript" src="static/js/common/lockTable.js?v=20161"></script>
+<script type="text/javascript" src="static/js/common/lockTable2.js?v=20161"></script>
 <script type="text/javascript">
 $(top.hangge());
 $(function() {
@@ -249,11 +249,11 @@ $(function() {
 });
 //重置当前页面高度，自适应浏览器
 function initWidthHeight(){
-	var height = $(window).height();
-	var myheight =height-$("#searchDiv").outerHeight()-$("#pageStrDiv").outerHeight();
-	//if($("#simple-table").innerHeight() >myheight || $("#simple-table").innerWidth() >$(window).width()){
-		FixTable("simple-table", 0, $(window).width(), myheight-20);
-	//}
+	var height = $(window).outerHeight();
+	var rr = new Array;
+	rr[0]="searchDiv";
+	rr[1]="pageStrDiv";
+	FixTable("simple-table", 0, rr);
 }
 // 查询
 function searchs(){

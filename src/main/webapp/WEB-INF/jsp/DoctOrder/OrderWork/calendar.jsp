@@ -58,7 +58,6 @@
 			</script>
 
 			<!-- /section:basics/sidebar -->
-			<input type="hidden" id="dateStart" value="${dateStart}">
 			<div class="main-content">
 				<div class="main-content-inner">
 					<!-- #section:basics/content.breadcrumbs -->

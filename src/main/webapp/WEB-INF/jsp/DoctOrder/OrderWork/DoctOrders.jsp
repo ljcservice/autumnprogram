@@ -40,7 +40,7 @@
 							<input type="hidden" name="checkJsonInfo" value='${page.pd.checkJsonInfo}' id="checkJsonInfo"/>
 						<div id="btn-toolbar" style="vertical-align:bottom;padding: 3px;">
 							<div style="margin-top: 5px;margin-bottom: 5px;">
-								<span><b> <font color="blue" >医嘱信息</font></b></span>
+								<span><b> <font color="#6fb3e0" >医嘱信息</font></b><font color="#fee188">（温馨提示：只有药疗类型的医嘱才能进行点评）</font></span>
 								<div style="float: right;margin-bottom: 5px;">
 									<div  class="btn-toolbar" style="float: right;">
 									
@@ -200,8 +200,8 @@
 							<c:choose>
 								<c:when test="${not empty DoctOrders}">
 									<c:forEach items="${DoctOrders}" var="order" varStatus="vs">
-										<tr ondblclick="orderCheck(this)"  id="tr${order.order_no}${order.order_sub_no}" class="tr${order.order_no}${order.order_sub_no}" ORDER_CLASS="${order.order_class}"
-											order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_code="${order.order_code}" order_name="${order.order_Text }" >
+										<tr ondblclick="orderCheck(this)"  id="tr${order.order_no}${order.order_sub_no}" class="tr${order.order_no}${order.order_sub_no}" ORDER_CLASS="${order.order_class}" 
+											loacl_order_class="${order.loacl_order_class}"  order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_code="${order.order_code}" order_name="${order.order_Text }" >
 											<c:set var="key1" >
 											${order.order_no.toString()}_${order.order_sub_no.toString()}
 											</c:set>
@@ -284,7 +284,7 @@
 											<c:forEach items="${DoctOrders}" var="order" varStatus="vs">
 											<c:if test="${order.datestr == dateMap.key}">
 											<tr ondblclick="orderCheck(this)"  id="tr${order.order_no}${order.order_sub_no}" class="tr${order.order_no}${order.order_sub_no}" ORDER_CLASS="${order.order_class}"
-												order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_name="${order.order_Text }" >
+												loacl_order_class="${order.loacl_order_class}"  order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_name="${order.order_Text }" >
 											<c:if test="${myindex==0}">
 												<td nowrap class="center mydateclass" rowspan="${dateMap.value}">${dateMap.key }</td>
 											</c:if>
@@ -661,7 +661,7 @@
 	
 	//快捷点评 点选某行
 	function orderCheck(_trObj){
-		if($(_trObj).attr("ORDER_CLASS")!="A"){return ;}
+		if($(_trObj).attr("LOACL_ORDER_CLASS")!="A"){return ;}
 		if(!checkFlag) return ;
 		if(_trObj.style.backgroundColor=="red"){
 			_trObj.style.backgroundColor = oldColor;

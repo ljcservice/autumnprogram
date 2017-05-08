@@ -74,10 +74,15 @@
 												<label><input class="ace" id="u3897_input" value="2" name="ISCHECKTRUE" type="radio" <c:if test="${ISCHECKTRUE==2 }">checked</c:if> >待定&nbsp;<span class="lbl"></span></label>&nbsp;&nbsp;
 											</span>
 											<c:if test="${modifyFlag==1 }">
-											<a class="btn btn-minier btn-grey" title="保存" onclick="saveIsCheckTrue()">
-												<i class="ace-icon fa fa-floppy-o bigger-120"></i>
-											</a>
+												<a class="btn btn-minier btn-grey" title="保存" onclick="saveIsCheckTrue()">
+													<i class="ace-icon fa fa-floppy-o bigger-120"></i>
+												</a>
 											</c:if>
+											<span style="text-align: left;vertical-align: middle;">
+											<c:if test="${expert_name !=null and expert_name!='' }">
+												&nbsp;&nbsp;&nbsp;&nbsp;<font color="#6fb3e0" >当前指定专家：${expert_name}</font>
+											</c:if>
+											</span>
 										</th>
 									</tr>
 								</thead>
