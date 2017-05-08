@@ -114,7 +114,7 @@
 		<!-- page specific plugin scripts -->
 		<script src="static/html_UI/assets/js/jquery-ui.custom.js"></script>
 		<script src="static/html_UI/assets/js/jquery.ui.touch-punch.js"></script>
-		<script src="static/html_UI/assets/js/date-time/moment.js?v=233"></script>
+		<script src="static/html_UI/assets/js/date-time/moment.js"></script>
 		<script src="static/html_UI/assets/js/fullcalendar.js?v=12"></script>
 		<script src="static/html_UI/assets/js/bootbox.js"></script>
 
@@ -179,7 +179,7 @@
 	if(dateStart!=null && dateStart!=""){
 		var dateStr = dateStart.split(" ")[0].split("-");
 		date.setFullYear(Number(dateStr[0]));
-		date.setMonth(Number(dateStr[1]-1));
+		date.setMonth(Number(dateStr[1]+1));
 		date.setDate(Number(dateStr[2]));
 	}
 	//var d = date.getDate();
