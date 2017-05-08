@@ -20,14 +20,13 @@
 				)
 		</if>
 		<if test="pd.ORG_NAME!= null and pd.ORG_NAME != ''">
-			and
-					 a. ORG_NAME LIKE CONCAT(CONCAT('%', #{pd.ORG_NAME}),'%')
+			and a. ORG_NAME LIKE CONCAT(CONCAT('%', #{pd.ORG_NAME}),'%')
 		</if>
 		<if test="pd.ISCHECKTRUE != null and pd.ISCHECKTRUE != ''"> <!-- 是否合理-->
-			and t.ISCHECKTRUE = #{pd.ISCHECKTRUE} 
+			and a.ISCHECKTRUE = #{pd.ISCHECKTRUE} 
 		</if>
 		<if test="pd.ISORDERCHECK != null and pd.ISORDERCHECK != ''"> <!--点评记录-->
-			and t.ISORDERCHECK = #{pd.ISORDERCHECK}
+			and a.ISORDERCHECK = #{pd.ISORDERCHECK}
 		</if>
 		order by ORDER_DATE desc
 	</select>
@@ -39,15 +38,20 @@
 	<select id="prescDetailList" parameterType="pd" resultType="pd" >
 		select * from presc_detail where presc_id = #{id}
 	</select>
-	<!-- 	其他处方详情 -->
-	<select id="otherPrescDetailList" parameterType="pd" resultType="pd" >
-		select a.* from presc_detail a,
-		(select id from presc where id!= #{id} and 
-			ORDER_DATE in (select ORDER_DATE from presc where id= #{id})
-		) b
-		 where a.presc_id = b.id 
+	<!-- 	同日其他处方(同一天，同一个人，开的处方） -->
+	<select id="otherPrescList" parameterType="pd" resultType="pd" >
+		select a.* from presc  a 
+		where PATIENT_ID = #{PATIENT_ID}
+		and ORDER_DATE = #{ORDER_DATE}
 	</select>
-	
+		<!-- 	同日其他处方处方详情 -->
+	<select id="otherPrescDetailList" parameterType="pd" resultType="pd" >
+		select a.* 
+		from presc_detail a, presc b 
+		where a.presc_id = b.id 
+		and b.PATIENT_ID = #{PATIENT_ID}
+		and b.ORDER_DATE = #{ORDER_DATE}
+	</select>
 	
 	<!-- 	更新处方的关联问题字段 -->
 	<update id="updatePrescNgroupnum" parameterType="pd" >
