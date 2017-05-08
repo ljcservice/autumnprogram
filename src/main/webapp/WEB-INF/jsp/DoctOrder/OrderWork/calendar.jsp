@@ -58,6 +58,7 @@
 			</script>
 
 			<!-- /section:basics/sidebar -->
+			<input type="hidden" id="dateStart" value="${dateStart}">
 			<div class="main-content">
 				<div class="main-content-inner">
 					<!-- #section:basics/content.breadcrumbs -->
@@ -113,7 +114,7 @@
 		<!-- page specific plugin scripts -->
 		<script src="static/html_UI/assets/js/jquery-ui.custom.js"></script>
 		<script src="static/html_UI/assets/js/jquery.ui.touch-punch.js"></script>
-		<script src="static/html_UI/assets/js/date-time/moment.js"></script>
+		<script src="static/html_UI/assets/js/date-time/moment.js?v=233"></script>
 		<script src="static/html_UI/assets/js/fullcalendar.js?v=12"></script>
 		<script src="static/html_UI/assets/js/bootbox.js"></script>
 
@@ -178,13 +179,14 @@
 	if(dateStart!=null && dateStart!=""){
 		var dateStr = dateStart.split(" ")[0].split("-");
 		date.setFullYear(Number(dateStr[0]));
-		date.setMonth(Number(dateStr[1]+1));
+		date.setMonth(Number(dateStr[1]-1));
 		date.setDate(Number(dateStr[2]));
 	}
-	var d = date.getDate();
-	var m = date.getMonth();
-	var y = date.getFullYear();
+	//var d = date.getDate();
+	//var m = date.getMonth();
+	//var y = date.getFullYear();
 	var calendar = $('#calendar').fullCalendar({
+		defaultDate:dateStart,
 		//isRTL: true,
 		 buttonHtml: {
 			prev: '<i class="ace-icon fa fa-chevron-left"></i>',
