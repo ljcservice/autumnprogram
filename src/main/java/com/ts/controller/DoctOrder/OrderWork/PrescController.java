@@ -310,7 +310,7 @@ public class PrescController extends BaseController{
 		pd.put("checkdate", DateUtil.getDay());
 		pd.put("RS_DRUG_TYPE", pd.get("checkType"));
 		if("1".equals(count)){
-			pd.put("RELATION_ID1", pd.getString("RELATION_ID1"));
+			pd.put("RELATION_ID1", pd.getString("tmpPresc_id"));
 			pd.put("drug_id1", pd.getString("order_code"));
 			pd.put("drug_id1_name", pd.getString("tmpOrder_Name"));
 			pd.put("rec_main_no1", pd.getString("tmpOrder_no"));
@@ -322,7 +322,6 @@ public class PrescController extends BaseController{
 		}
 		else if("2".equals(count))
 		{	
-			pd.put("RELATION_ID2", pd.getString("RELATION_ID2"));
 			pd.put("drug_id1", pd.getString("order_code"));
 			pd.put("drug_id1_name", pd.getString("order_name"));
 			pd.put("rec_main_no1", pd.getString("order_no"));
@@ -331,6 +330,9 @@ public class PrescController extends BaseController{
 			pd.put("drug_id2_name", pd.getString("tmpOrder_Name"));
 			pd.put("rec_main_no2", pd.getString("tmpOrder_no"));
 			pd.put("rec_sub_no2", pd.getString("tmpOrder_sub_no"));
+			pd.put("RELATION_ID1", pd.getString("tmpPresc_id"));
+			pd.put("RELATION_ID2", pd.getString("presc_id"));
+			
 		}
 		int i = orderWorkService.saveCheckResult(pd);
 		map.put("result", "ok");

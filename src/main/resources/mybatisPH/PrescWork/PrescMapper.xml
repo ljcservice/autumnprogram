@@ -7,7 +7,9 @@
 		select a.*,m.RS_DRUG_TYPES
 		from presc a
 		left join ( select NGROUPNUM,listagg( RS_DRUG_TYPE ,'@;@') within GROUP (order by NGROUPNUM) RS_DRUG_TYPES 
-	         from  RS_DRUG_CHECKRSLT  group by NGROUPNUM
+	         from  (
+	         		select NGROUPNUM,RS_DRUG_TYPE  from RS_DRUG_CHECKRSLT group by NGROUPNUM,RS_DRUG_TYPE 
+           	) group by NGROUPNUM
 	    ) m on a.NGROUPNUM=m.NGROUPNUM
 		where 1=1 
 		<!-- 		关键词检索 -->
@@ -57,6 +59,7 @@
 		select a.* 
 		from presc_detail a, presc b 
 		where a.presc_id = b.id 
+		and b.id != #{ID}
 		and b.PATIENT_ID = #{PATIENT_ID}
 		and b.ORDER_DATE = #{ORDER_DATE}
 	</select>

@@ -107,13 +107,14 @@
 															title="<i class='ace-icon fa fa-check red'></i>   ${order.order_Text}" 
 															data-content="<font size='0'>
 																<c:forEach items="${CheckRss.get(key1)}" var="rs">
-																	<b>${rsTypeDict.get(rs.RS_DRUG_TYPE).rs_type_name }:  
+																	<b>${rsTypeDict.get(rs.RS_DRUG_TYPE).rs_type_name }:</b>
 																	<c:if test="${rs.drug_id1_name != order.order_Text }"> 
-																		${rs.drug_id1_name }</b>
+																		${rs.drug_id1_name }
 																	</c:if>
 																	<c:if test="${rs.drug_id2_name != order.order_Text }"> 
-																		${rs.drug_id2_name }</b>
+																		与 ${rs.drug_id2_name }
 																	</c:if>
+																	
 																	 <br>
 																	${rs.ALERT_HINT }<br>
 																</c:forEach>	
@@ -480,10 +481,7 @@
 			callback: function(result) {
 				if(!result) return ;
 				$("#dragCheck").hide();
-				var trFirst = $(".tr" + order_no+"_" + order_sub_no);
-				if(trFirst!=null && trFirst!="undefined") {
-					trFirst.css("background-Color",tmpColor);
-				}
+				$(".tr" + order_no+"_" + order_sub_no).css("background-Color",tmpColor);
 				$(".tr" + tmpOrder_no+"_" + tmpOrder_sub_no).css("background-Color",tmpColor);
 				reSetCheck();
 			}
@@ -606,36 +604,36 @@
 		//alert("setCount:"+setCount+".select_current:"+select_current+".select_other:"+select_other);
 		if(setCount == 1) {
 			tmpPresc_id	    = $(_trObj).attr("presc_id");
-			tmpOrder_Name   = $(_trObj).attr("order_name");
+			tmpOrder_name   = $(_trObj).attr("order_name");
 			tmpOrder_code   = $(_trObj).attr("order_code");
 			tmpOrder_no     = $(_trObj).attr("order_no");
 			tmpOrder_sub_no = $(_trObj).attr("order_sub_no");
 			
 			tmpColor        = myColor;
 			setCheckJsonInfo();
-			drug1.text(_trObj.getAttributeNode("order_name").value);
+			drug1.html(_trObj.getAttributeNode("order_name").value);
 			alert("一个药品可以做添加点评项目");
 			$(".widget-title").text(checkName);
 			$("#dragCheck").show(500).css("top",20).css("left",($(window).width()-400)/2);
 		}else if (setCount == 2 ) {
 			if(exist_select==1){
 				tmpPresc_id     = $(_trObj).attr("presc_id");
-				tmpOrder_Name   = $(_trObj).attr("order_name");
+				tmpOrder_name   = $(_trObj).attr("order_name");
 				tmpOrder_code   = $(_trObj).attr("order_code");
 				tmpOrder_no     = $(_trObj).attr("order_no");
 				tmpOrder_sub_no = $(_trObj).attr("order_sub_no");
 				tmpColor        = myColor;
 			}else if(exist_select==2){
 				oldColor     = myColor;
-				tmpPresc_id     = $(_trObj).attr("presc_id");
-				tmpOrder_Name   = $(_trObj).attr("order_name");
-				tmpOrder_code   = $(_trObj).attr("order_code");
-				tmpOrder_no     = $(_trObj).attr("order_no");
-				tmpOrder_sub_no = $(_trObj).attr("order_sub_no");
-			
-				setCheckJsonInfo();
-				drug1.text(order_name);
-				var  text = "<b>与</b> " + _trObj.getAttributeNode("order_name").value
+				presc_id     = $(_trObj).attr("presc_id");
+				order_name   = $(_trObj).attr("order_name");
+				order_code   = $(_trObj).attr("order_code");
+				order_no     = $(_trObj).attr("order_no");
+				order_sub_no = $(_trObj).attr("order_sub_no");
+				//setCheckJsonInfo();
+				
+				drug1.html(tmpOrder_name);
+				var  text = "<b>与</b> " + _trObj.getAttributeNode("order_name").value;
 				drug2.html(text);
 				alert("两个药品可以做添加点评项目");
 				$(".widget-title").text(checkName);
