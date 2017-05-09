@@ -187,6 +187,7 @@
 		</if>
   		group by a.RS_TYPE_CODE,a.RS_TYPE_NAME
 	</select>
+<!-- 	医嘱 按医生分组查询统计 -->
 	<select id="orderListByDoctor" parameterType="pd" resultType="pd">
 		select b.ATTENDING_DOCTOR ,count(a.rs_id) count
 		FROM RS_DRUG_CHECKRSLT a ,pat_visit b
@@ -200,5 +201,18 @@
 			</if>
 		group by b.ATTENDING_DOCTOR
 	</select>
-	
+	<!-- 	医嘱 按出院科室分组查询统计 -->
+	<select id="orderListByDep" parameterType="pd" resultType="pd">
+		select b.out_dept_name ,count(a.rs_id) count
+		FROM RS_DRUG_CHECKRSLT a ,pat_visit b
+		WHERE a.NGROUPNUM = b.NGROUPNUM
+			and a.RS_DRUG_TYPE = #{RS_DRUG_TYPE}
+			<if test="beginDate != null and beginDate != ''"> <!--开始日期-->
+			and b.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
+			</if>
+			<if test="endDate != null and endDate != ''"> <!--开始日期-->
+			and b.discharge_date_time &lt;= to_date(#{endDate},'yyyy-mm-dd') 
+			</if>
+		group by b.out_dept_name
+	</select>
 </mapper>

@@ -191,5 +191,7 @@ public interface IOrderWorkService {
 
 	public List<PageData> orderListByDoctor(PageData pd) throws Exception ;
 
+	public List<PageData> orderListByDep(PageData pd)throws Exception ;
+
 	
 }
