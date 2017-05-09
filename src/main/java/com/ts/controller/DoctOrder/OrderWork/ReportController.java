@@ -202,4 +202,34 @@ public class ReportController extends BaseController{
 		mv.setViewName("DoctOrder/report/orderListByDoctor");
 		return  mv; 
 	}
+	@RequestMapping(value="/orderListByDep")
+	public ModelAndView orderListByDep(){
+		ModelAndView mv = new ModelAndView();
+		PageData pd = this.getPageData();
+		try {
+			List<PageData> list =  this.orderWorkService.orderListByDep(pd);
+			long total = 0;
+			for(PageData p:list){
+				Object count = p.get("count");
+				total += Long.valueOf(count.toString());
+			}
+			for(PageData p:list){
+				BigDecimal count =  (BigDecimal) p.get("count");
+				if(count.doubleValue()==0){
+					p.put("percent", "0.00 %");
+				}else{
+					BigDecimal percent = count.multiply(new BigDecimal(100)).divide(new BigDecimal(total),2, BigDecimal.ROUND_HALF_UP);
+					String percentv = MyDecimalFormat.format(percent.doubleValue());
+					p.put("percent", percentv +" %");
+				}
+			}
+			mv.addObject("pd", pd);
+			mv.addObject("resultList", list);
+			mv.addObject("checktypeMap", commonService.getCheckTypeDict()); 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		mv.setViewName("DoctOrder/report/orderListByDep");
+		return  mv; 
+	}
 }
