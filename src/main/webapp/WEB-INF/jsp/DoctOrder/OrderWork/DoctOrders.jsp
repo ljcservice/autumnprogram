@@ -40,7 +40,7 @@
 							<input type="hidden" name="checkJsonInfo" value='${page.pd.checkJsonInfo}' id="checkJsonInfo"/>
 						<div id="btn-toolbar" style="vertical-align:bottom;padding: 3px;">
 							<div style="margin-top: 5px;margin-bottom: 5px;">
-								<span><b> <font color="#6fb3e0" >医嘱信息</font></b><font color="#fee188">（温馨提示：只有药疗类型的医嘱才能进行点评）</font></span>
+								<span><b><font color="#6fb3e0" size="4">医嘱信息</font></b><font color="#87b87f">（温馨提示：只有药疗类型的医嘱才能进行点评）</font></span>
 								<div style="float: right;margin-bottom: 5px;">
 									<div  class="btn-toolbar" style="float: right;">
 									

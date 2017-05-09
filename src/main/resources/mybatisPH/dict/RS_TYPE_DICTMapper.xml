@@ -26,10 +26,7 @@
 	
 	<!--查询病人信息  -->
 	<select id="reTypeDcit" parameterType="String" resultType="pd">
-		select  
-			<include refid="Field"></include>
-		from 
-			<include refid="tableName"></include>
+		select * from RS_TYPE_DICT 
 	</select>
 	<select id="getOrderClassDict" parameterType="String" resultType="pd">
 		select * from DICT_ORDER_CLASS

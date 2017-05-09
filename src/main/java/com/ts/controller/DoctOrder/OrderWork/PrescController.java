@@ -46,6 +46,54 @@ public class PrescController extends BaseController{
 	private IOrderWorkService orderWorkService;
 	
 	/**
+	 * 处方工作表
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/prescWorkListPage")
+	public ModelAndView prescWorkListPage(Page page)throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = this.getPageData();
+		try{
+			// 当前登录专家
+			User user = getCurrentUser();
+			String beginDate = pd.getString("beginDate");	//开始时间
+			String endDate = pd.getString("endDate");		//结束时间
+			if(endDate != null && !"".equals(endDate))
+			{
+				pd.put("end_Date", endDate);
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(DateUtil.fomatDate(endDate));
+				cal.add(Calendar.DAY_OF_MONTH, 1);
+				pd.put("endDate", sdf.format(cal.getTime()));
+			}
+			page.setPd(pd);
+			List<PageData>	prescList = prescService.prescListPage(page);	//列出专家列表
+			for(PageData pp:prescList){
+				String RS_DRUG_TYPES = pp.getString("RS_DRUG_TYPES");
+				if(!Tools.isEmpty(RS_DRUG_TYPES)){
+					String[] RS_DRUG_TYPE = RS_DRUG_TYPES.split("@;@");
+					pp.put("RS_DRUG_TYPES", RS_DRUG_TYPE);
+				}
+			}
+			mv.addObject("rstypeMap", DoctorConst.rstypeMap); 
+			mv.addObject("rstypeColorMap", DoctorConst.rstypeColorMap); 
+			mv.addObject("checktypeMap", commonService.getCheckTypeDict()); 
+			mv.addObject("prescList", prescList);
+			mv.setViewName("DoctOrder/presc/prescWorkList");
+			mv.addObject("pd", pd);
+			
+			//统计
+			PageData report = prescService.prescCountReport(pd); 
+			mv.addObject("report", report);
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
+	
+	/**
 	 * 处方列表
 	 * @return
 	 * @throws Exception
@@ -262,7 +310,7 @@ public class PrescController extends BaseController{
 		pd.put("checkdate", DateUtil.getDay());
 		pd.put("RS_DRUG_TYPE", pd.get("checkType"));
 		if("1".equals(count)){
-			pd.put("presc_id1", pd.getString("presc_id1"));
+			pd.put("RELATION_ID1", pd.getString("RELATION_ID1"));
 			pd.put("drug_id1", pd.getString("order_code"));
 			pd.put("drug_id1_name", pd.getString("tmpOrder_Name"));
 			pd.put("rec_main_no1", pd.getString("tmpOrder_no"));
@@ -274,7 +322,7 @@ public class PrescController extends BaseController{
 		}
 		else if("2".equals(count))
 		{	
-			pd.put("presc_id2", pd.getString("presc_id2"));
+			pd.put("RELATION_ID2", pd.getString("RELATION_ID2"));
 			pd.put("drug_id1", pd.getString("order_code"));
 			pd.put("drug_id1_name", pd.getString("order_name"));
 			pd.put("rec_main_no1", pd.getString("order_no"));

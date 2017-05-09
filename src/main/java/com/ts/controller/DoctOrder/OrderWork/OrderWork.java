@@ -529,14 +529,14 @@ public class OrderWork extends BaseController
 			pd.put("drug_id1_name", drug1[3]);
 			pd.put("rec_main_no1", drug1[0]);
 			pd.put("rec_sub_no1", drug1[1]);
-			pd.put("presc_id1", drug1[4]);
+			pd.put("RELATION_ID1", drug1[4]);
 			if(!Tools.isEmpty(pd.getString("orderDrug2")))
 			{
 				pd.put("drug_id2", drug2[2]);
 				pd.put("drug_id2_name", drug2[3]);
 				pd.put("rec_main_no2", drug2[0]);
 				pd.put("rec_sub_no2", drug2[1]);
-				pd.put("presc_id2", drug2[4]);
+				pd.put("RELATION_ID2", drug2[4]);
 			}
 			int i = orderWorkService.saveCheckResult(pd);
 			map.put("ngroupnum", pd.get("ngroupnum"));

@@ -80,7 +80,7 @@
 											</c:if>
 											<span style="text-align: left;vertical-align: middle;">
 											<c:if test="${expert_name !=null and expert_name!='' }">
-												&nbsp;&nbsp;&nbsp;&nbsp;<font color="#6fb3e0" >当前指定专家：${expert_name}</font>
+												&nbsp;&nbsp;&nbsp;&nbsp;<font color="#87b87f" >当前指定专家：${expert_name}</font>
 											</c:if>
 											</span>
 										</th>

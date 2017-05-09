@@ -34,7 +34,7 @@
 						</form>
 						<div style="vertical-align:bottom;padding-top: 5px;padding-bottom: 5px;">
 							<div style="margin-top: 5px;margin-bottom: 5px;">
-								<span><b> <font color="blue" >处方信息</font></b></span>
+								<span><b><font color="#6fb3e0" >处方信息</font></b></span>
 								<div style="float: right;margin-bottom: 5px;">
 									<div class="btn-toolbar" style="float: right;">
 									<c:if test="${modifyFlag==1 }">

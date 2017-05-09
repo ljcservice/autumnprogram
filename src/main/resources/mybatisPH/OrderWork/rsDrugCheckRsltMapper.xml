@@ -27,8 +27,8 @@
 		alert_cause,
 		checkdate,
 		CHECKPEOPLE,
-		PRESC_ID1,
-		PRESC_ID2
+		RELATION_ID1,
+		RELATION_ID2
 	</sql>
 	
 	<!-- 字段值 -->
@@ -50,8 +50,8 @@
 		#{alert_cause},
 		#{checkdate},
 		#{CHECKPEOPLE},
-		#{PRESC_ID1,jdbcType=VARCHAR},
-		#{PRESC_ID2,jdbcType=VARCHAR}
+		#{RELATION_ID1,jdbcType=VARCHAR},
+		#{RELATION_ID2,jdbcType=VARCHAR}
 	</sql>
 	
 <!-- 	保存审核结果 -->
@@ -70,13 +70,13 @@
 		select a.rs_id,a.drug_id1,a.drug_id1_name,a.rec_main_no1,a.rec_sub_no1,
 			a.drug_id2,a.drug_id2_name,a.rec_main_no2,a.rec_sub_no2,a.ngroupnum,
 			a.rs_drug_type,a.in_rs_type,a.alert_level,a.alert_hint,a.alert_cause,
-			a.checkdate,a.CHECKPEOPLE,a.PRESC_ID1,a.PRESC_ID2	
+			a.checkdate,a.CHECKPEOPLE,a.RELATION_ID1,a.RELATION_ID2	
 			,b.DOCTOR_NAME DOCTOR_NAME1,b.ORG_NAME ORG_NAME1,b.PRESC_NO PRESC_NO1
 			,c.DOCTOR_NAME DOCTOR_NAME2,c.ORG_NAME ORG_NAME2,c.PRESC_NO PRESC_NO2
 			,u.name CHECKPEOPLE_NAME
 		from RS_DRUG_CHECKRSLT a 
-		left join PRESC b on b.id = a.PRESC_ID1 
-		left join PRESC c on c.id = a.PRESC_ID2 
+		left join PRESC b on b.id = a.RELATION_ID1 
+		left join PRESC c on c.id = a.RELATION_ID2 
 		left join plat.sys_user u on a.CHECKPEOPLE = u.user_id
 		where 
 		 	<!-- 审核结果组号 -->  
@@ -109,21 +109,22 @@
 		select a.rs_id,a.drug_id1,a.drug_id1_name,a.rec_main_no1,a.rec_sub_no1,
 			a.drug_id2,a.drug_id2_name,a.rec_main_no2,a.rec_sub_no2,a.ngroupnum,
 			a.rs_drug_type,a.in_rs_type,a.alert_level,a.alert_hint,a.alert_cause,
-			a.checkdate,a.CHECKPEOPLE,a.PRESC_ID1,a.PRESC_ID2	
+			a.checkdate,a.CHECKPEOPLE,a.RELATION_ID1,a.RELATION_ID2	
 			,b.DOCTOR_NAME DOCTOR_NAME1,b.ORG_NAME ORG_NAME1,b.DIAGNOSIS_NAMES DIAGNOSIS_NAMES1
 			,c.DOCTOR_NAME DOCTOR_NAME2,c.ORG_NAME ORG_NAME2,c.DIAGNOSIS_NAMES DIAGNOSIS_NAMES2
 		from RS_DRUG_CHECKRSLT a 
-		left join PRESC b on b.id = a.PRESC_ID1 
-		left join PRESC c on c.id = a.PRESC_ID2 
+		left join PRESC b on b.id = a.RELATION_ID1 
+		left join PRESC c on c.id = a.RELATION_ID2 
 		where a.rs_id=#{rs_id}
 	</select>
 	<update id="updateCheckResult"  parameterType="pd"  >
 		update RS_DRUG_CHECKRSLT set ALERT_HINT=#{ALERT_HINT} where  rs_id=#{rs_id}
 	</update>
-	
+	<!-- 处方报表 -->
 	<select id="prescReport" parameterType="pd" resultType="pd">
 		select a.RS_TYPE_NAME,count(b.rs_id) count
-  		from rs_type_dict a left join ( 
+  		from rs_type_dict a 
+  			left join ( 
   					select m.rs_id,m.IN_RS_TYPE,m.RS_DRUG_TYPE,n.ORDER_DATE
   					FROM RS_DRUG_CHECKRSLT m, presc n 
   					WHERE M.NGROUPNUM = N.NGROUPNUM

@@ -102,4 +102,13 @@
 		select * from presc_detail where PRESC_ID = #{id}
 	</select>
 	
+	<select id="prescCountReport" parameterType="pd"  resultType="pd">
+		select count(id) ALL_COUNT,sum(DRUG_COUNT) DRUG_COUNT_SUM,sum(HASZS) HASZS_SUM
+			,sum(BASEDRUG_COUNT) BASEDRUG_COUNT_SUM,sum(AMOUNT) AMOUNT_SUM,sum(HASKJ) HASKJ_SUM
+			,round(avg(AMOUNT),2) AMOUNT_AVG,round(avg(DRUG_COUNT),2) DRUG_COUNT_AVG
+			, decode(count(id),0,0.00,round(100*sum(HASZS)/count(id),2)) HASZS_PERSENTS
+			,decode(count(id),0,0.00,round(100*sum(HASKJ)/count(id),2)) HASKJ_PERSENTS
+			,decode(count(id),0,0.00,round(100*sum(BASEDRUG_COUNT)/count(id),2)) BASEDRUG_COUNT_PERSENTS 
+		from presc 
+	</select>
 </mapper>

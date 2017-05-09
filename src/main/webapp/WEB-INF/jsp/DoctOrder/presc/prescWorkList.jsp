@@ -102,12 +102,15 @@
 									<th class="center" nowrap>性别</th>
 									<th class="center" nowrap>科室</th>
 									<th class="center" nowrap>医生</th>
-									<th class="center" nowrap>抗菌</th>
 									<th class="center" nowrap>诊断</th>
-									<th class="center" nowrap>药费</th>
 									<th class="center" nowrap>点评</th>
 									<th class="center" nowrap>是否合理</th>
-									<th class="center" nowrap>结果</th>
+									<th class="center" nowrap>品种</th>
+									<th class="center" nowrap>抗菌</th>
+									<th class="center" nowrap>注射</th>
+									<th class="center" nowrap>基药数</th>
+									<th class="center" nowrap>金额</th>
+									<th class="center" nowrap>存在问题</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -122,9 +125,7 @@
 											<td class="center">${presc.PATIENT_SEX}</td>
 											<td class="center">${presc.ORG_NAME}</td>
 											<td class="center">${presc.DOCTOR_NAME}</td>
-											<td class="center"><c:if test="${presc.HASKJ==0}">否</c:if><c:if test="${presc.HASKJ==1}">是</c:if></td>
 											<td class="center">${presc.DIAGNOSIS_NAMES}</td>
-											<td class="center">${presc.AMOUNT}</td>
 											<td class="center"><c:if test="${presc.ISORDERCHECK==0}">否</c:if><c:if test="${presc.ISORDERCHECK==1}">是</c:if></td>
 											<td class="center">
 												<c:choose>
@@ -133,6 +134,11 @@
 													<c:otherwise>待定</c:otherwise>
 												</c:choose>
 											</td>
+											<td class="center">${presc.DRUG_COUNT}</td>
+											<td class="center"><c:if test="${presc.HASKJ==0}">否</c:if><c:if test="${presc.HASKJ==1}">是</c:if></td>
+											<td class="center">${presc.HASZS}</td>
+											<td class="center">${presc.BASEDRUG_COUNT}</td>
+											<td class="center">${presc.AMOUNT}</td>
 											<td class="center">
 												<div class="hidden-sm hidden-xs btn-group">
 													<c:forEach items="${presc.RS_DRUG_TYPES}" var="rs_type" varStatus="vs" >
@@ -143,7 +149,6 @@
 												</div>
 											</td>
 										</tr>
-									
 									</c:forEach>
 								</c:when>
 								<c:otherwise>
@@ -152,6 +157,27 @@
 									</tr>
 								</c:otherwise>
 							</c:choose>
+									<tr>
+										<td>总 计：</td><td>${report.ALL_COUNT}</td><td></td><td></td><td></td>
+										<td></td><td></td><td></td><td></td><td>${report.DRUG_COUNT_SUM }</td>
+										<td>${report.HASZS_SUM }</td><td>${report.HASKJ_SUM }</td>
+										<td>${report.BASEDRUG_COUNT_SUM }</td>
+										<td>${report.AMOUNT_SUM }</td><td></td>
+									</tr>
+									<tr>
+										<td>平 均：</td><td></td><td></td><td></td><td></td>
+										<td></td><td></td><td></td><td></td><td>${report.DRUG_COUNT_AVG }</td>
+										<td></td><td></td>
+										<td></td>
+										<td>${report.AMOUNT_AVG }</td><td></td>
+									</tr>
+									<tr>
+										<td> % </td><td></td><td></td><td></td><td></td>
+										<td></td><td></td><td></td><td></td><td></td>
+										<td>${report.HASZS_PERSENTS }</td><td>${report.HASKJ_PERSENTS}</td>
+										<td>${report.BASEDRUG_COUNT_PERSENTS }</td>
+										<td></td><td></td>
+									</tr>
 							</tbody>
 						</table>
 						</div>
