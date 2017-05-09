@@ -251,15 +251,10 @@ public class PrescController extends BaseController{
 				pd.put("ngroupnum", Presc.getString("ngroupnum"));
 			}
 		}
-		if("0".equals(pd.getString("business_type"))){
-			pd.put("in_rs_type", 4);
-		}else if("1".equals(pd.getString("business_type"))){
-			pd.put("in_rs_type", 2);
-		}
+		pd.put("in_rs_type", 2);
 		//更新处方的关联问题字段
 		this.prescService.updatePrescNgroupnum(pd);
 		pd.put("rs_id", this.get32UUID());
-		pd.put("alert_level", pd.getString("r"));
 		pd.put("alert_hint", pd.getString("checkText"));
 		pd.put("alert_cause", "药师自审");
 		pd.put("alert_level", "r");
@@ -267,6 +262,7 @@ public class PrescController extends BaseController{
 		pd.put("checkdate", DateUtil.getDay());
 		pd.put("RS_DRUG_TYPE", pd.get("checkType"));
 		if("1".equals(count)){
+			pd.put("presc_id1", pd.getString("presc_id1"));
 			pd.put("drug_id1", pd.getString("order_code"));
 			pd.put("drug_id1_name", pd.getString("tmpOrder_Name"));
 			pd.put("rec_main_no1", pd.getString("tmpOrder_no"));
@@ -277,7 +273,8 @@ public class PrescController extends BaseController{
 			pd.put("rec_sub_no2", "");
 		}
 		else if("2".equals(count))
-		{
+		{	
+			pd.put("presc_id2", pd.getString("presc_id2"));
 			pd.put("drug_id1", pd.getString("order_code"));
 			pd.put("drug_id1_name", pd.getString("order_name"));
 			pd.put("rec_main_no1", pd.getString("order_no"));

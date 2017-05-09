@@ -320,11 +320,7 @@ public class OrderWork extends BaseController
 				pd.put("ngroupnum", patient.getString("ngroupnum"));
 			}
 		}
-		if("0".equals(pd.getString("business_type"))){
-			pd.put("in_rs_type", 4);
-		}else if("1".equals(pd.getString("business_type"))){
-			pd.put("in_rs_type", 2);
-		}
+		pd.put("in_rs_type", 4);
 		pd.put("rs_id", this.get32UUID());
 		pd.put("alert_level", pd.getString("r"));
 		pd.put("alert_hint", pd.getString("checkText"));
@@ -533,12 +529,14 @@ public class OrderWork extends BaseController
 			pd.put("drug_id1_name", drug1[3]);
 			pd.put("rec_main_no1", drug1[0]);
 			pd.put("rec_sub_no1", drug1[1]);
+			pd.put("presc_id1", drug1[4]);
 			if(!Tools.isEmpty(pd.getString("orderDrug2")))
 			{
 				pd.put("drug_id2", drug2[2]);
 				pd.put("drug_id2_name", drug2[3]);
 				pd.put("rec_main_no2", drug2[0]);
 				pd.put("rec_sub_no2", drug2[1]);
+				pd.put("presc_id2", drug2[4]);
 			}
 			int i = orderWorkService.saveCheckResult(pd);
 			map.put("ngroupnum", pd.get("ngroupnum"));
