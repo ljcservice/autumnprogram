@@ -437,6 +437,7 @@ public class OrderWork extends BaseController
 			mv.addObject("pd", pd);
 			mv.addObject("checkType", commonService.getCheckTypeDict());
 			if("0".equals(pd.getString("business_type"))){
+				//医嘱点评
 				Map orderMap = orderWorkService.ordersListSpecial(pd);
 				mv.addObject("orderMap1", orderMap);
 				mv.addObject("orderMap2", orderMap);
@@ -447,7 +448,8 @@ public class OrderWork extends BaseController
 				mv.addObject("orderMap1", orderMap);
 //				Map orderMap2 = new HashMap();
 //				orderMap2.putAll(orderMap);
-				Map otherPescMap = prescService.otherPrescListSpecial(pd);
+				PageData presc = prescService.findPrescById(pd);
+				Map otherPescMap = prescService.otherPrescListSpecial(presc);
 				mv.addObject("orderMap2", otherPescMap);
 			}
 			mv.setViewName("DoctOrder/checkRsAdd");

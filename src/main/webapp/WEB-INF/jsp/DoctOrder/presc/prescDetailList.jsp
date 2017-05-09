@@ -86,7 +86,7 @@
 									<th class="center" nowrap>单价</th>
 									<th class="center" nowrap>数量</th>
 									<th class="center" nowrap>单位</th>
-									<th class="center" nowrap>药费</th>
+									<th class="center" nowrap style="border-right: 1px;">药费</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -162,7 +162,7 @@
 											<th style="text-align: right;">医生：</th><th class="left">${presc.DOCTOR_NAME}</th>
 											<th style="text-align: right;">抗菌：</th><th class="left"><c:if test="${presc.HASKJ==0}">否</c:if><c:if test="${presc.HASKJ==1}">是</c:if></th>
 											<th style="text-align: right;">诊断：</th><th class="left">${presc.DIAGNOSIS_NAMES}</th>
-											<th class="center" style="border-right: 1px;"><a href="javascript:void(0);" onclick="showDetail(this);">详情</a></th>
+											<th class="center" style="border-right: 1px;"><a href="javascript:void(0);" onclick="showDetail(this);">打开详情</a></th>
 										</tr>
 								</thead>
 							</table>
@@ -304,6 +304,11 @@
 		</div>
 		<!-- /.main-content -->
 
+		<!-- 返回顶部 -->
+		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+			<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+		</a>
+		
 	</div>
 	<!-- /.main-container -->
 
@@ -641,7 +646,9 @@ function showDetail(obj){
 	if(mm==0){
 		mm=1;
 		$(obj).closest("table").next().show();
+		$(obj).text("关闭详情");
 	}else{
+		$(obj).text("打开详情");
 		$(obj).closest("table").next().hide();
 		mm=0;
 	}
