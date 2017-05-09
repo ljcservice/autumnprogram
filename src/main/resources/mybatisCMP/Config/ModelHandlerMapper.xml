@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ModelHandlerMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		modelhandler 
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		 mh_id,        
+		 mh_groupcode, 
+		 mh_code,      
+		 mh_caption,   
+		 mh_action,    
+		 mh_classpath ,
+		 mh_progcode,  
+		 mh_progname , 
+		 mh_database,  
+		 mh_level,     
+		 mh_groupname, 
+
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+			#{mh_id},	
+			#{mh_groupcode},	
+			#{mh_code},	
+			#{mh_caption},	
+			#{mh_action},	
+			#{mh_classpath},	
+			#{mh_progcode},
+			#{mh_progname},
+			#{mh_database},
+			#{mh_level},
+			#{mh_groupname}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="Field"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			mh_id = #{mh_id}
+	</delete>
+		
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+			set 
+				mh_action = #{mh_action},	
+				mh_classpath = #{mh_classpath},
+			where 
+				mh_id = #{mh_id}
+	</update>
+	<select id="findByAction" parameterType="pd" resultType="pd">
+		select 
+			<include refid="Field"></include>
+			
+		from 
+			<include refid="tableName"></include>
+		where 
+			
+	
+	</select>
+	
+</mapper>

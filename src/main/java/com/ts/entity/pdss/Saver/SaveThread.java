@@ -1,8 +1,10 @@
 package com.ts.entity.pdss.Saver;
 
 import com.hitzd.his.Beans.TPatientOrder;
+import com.hitzd.springBeanManager.SpringBeanUtil;
 import com.ts.entity.pdss.pdss.RSBeans.TCheckResultCollection;
 import com.ts.service.pdss.pdss.impl.PatientSaveCheckResult;
+import com.ts.service.pdss.pdss.manager.IPatientSaveCheckResult;
 
 /**
  * 队列保存保存信息 
@@ -14,7 +16,8 @@ public class SaveThread implements Runnable
 
 	public SaveThread() {}
 	
-	private static PatientSaveCheckResult patientSaveBean = new PatientSaveCheckResult();
+	// 审核保存
+	private static IPatientSaveCheckResult patientSaveBean = (PatientSaveCheckResult)SpringBeanUtil.getBean("patientSaveCheckResult");
 	
 	@Override
 	public void run() 
@@ -27,14 +30,14 @@ public class SaveThread implements Runnable
 				//System.out.println("雷达捕捉到猎物进行处理 ");
 				SaveBeanRS bean            = QueueBean.getQueueSaveBeanRS();
 				TPatientOrder po           = bean.getPo();
-				if(po == null)
-					continue;
+				if(po == null) continue;
 				TCheckResultCollection crc = bean.getCheckRC();
 				if(crc != null)
 				{
 					try
 					{
 						patientSaveBean.setNgroupnum(bean.getID());
+						patientSaveBean.setIn_rs_type(po.getPatType());
 						/* 保存基本信息 */
 						patientSaveBean.savePatientCheckInfo(po,crc.getDsr());
 				        /* 相互作用检查 */

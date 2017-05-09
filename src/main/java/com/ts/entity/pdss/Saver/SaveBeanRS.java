@@ -20,6 +20,17 @@ public class SaveBeanRS
 //	/* 抗菌药审查结果  */
 //	private TAntiDrugSecurityResult[] adsr;  
 	
+	public SaveBeanRS()
+    {
+	    
+    }
+	
+	public SaveBeanRS(String uuid)
+    {
+	    this.id = uuid;
+    }
+	
+	
     public String getID()
     {
         return id;

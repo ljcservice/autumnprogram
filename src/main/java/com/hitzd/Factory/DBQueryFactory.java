@@ -35,6 +35,7 @@ public final class DBQueryFactory
         DataSource ds = null;
         try
         {
+            ds = (DataSource) SpringBeanUtil.getBean("dataSource" + ("".equals(resourceID) ? "":"_" + resourceID )); 
             //2014-10-21 liujc 修改 使用tomcat  数据连接池
 //            Context  initContext = new InitialContext();
 //            Context envContext = (Context)initContext.lookup("java:/comp/env");

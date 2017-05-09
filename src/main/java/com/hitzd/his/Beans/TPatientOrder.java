@@ -20,7 +20,7 @@ public class TPatientOrder implements java.io.Serializable
     private static final long        serialVersionUID        = 1L;
     /* 病人ID */
     private String                   patientID               = null;
-    /* 门诊 住院标示 */
+    /* 门诊 住院标示  指明审核数据的来源，1，门诊事实 2，门诊处方点评，3，临床医嘱事实 4，临床医嘱点评  */
     private String                   patType                 = null;
     /* 病人主要信息 */
     private TPatient                 patient                 = null;

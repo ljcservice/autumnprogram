@@ -70,6 +70,20 @@ public class PageData extends HashMap implements Map{
 		if(rs == null || "".equals(rs)) rs = "";
 		return rs ;
 	}
+	
+	public String getObjectString(Object key)
+	{
+	    Object rs = get(key);
+	    Class clazz = String.class;
+	    String rsString = "" ;
+	    if(rs.getClass().equals(String.class)){
+	        rsString  = (String)rs;
+	    }
+	    else{
+	        rsString = rs.toString();
+	    }
+	    return rsString;
+	}
 	public Integer getInt(Object key) {
 		Object rs =  get(key);
 		if(rs == null || "".equals(rs.toString())) return null;

@@ -2,10 +2,12 @@ package com.hitzd.Transaction;
 
 
 
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import com.hitzd.Factory.DBQueryFactory;
 import com.hitzd.springBeanManager.SpringBeanUtil;
 
 
@@ -22,13 +24,11 @@ public class TransactionTemp extends TransactionTemplate
     {
 //        DataSourceTransactionManager d = new DataSourceTransactionManager();
 //        d.setDataSource(DBQueryFactory.getDataSource(TransactionSource));
-
-        // 2014-10-21 liujc 修改 事务bean不从spring 容器中获得        
-//        ts = "txManager" + TransactionSource;
-//        if(ts == null || "".equals(ts))
-//            throw new RuntimeException();
-        this.setTransactionManager((PlatformTransactionManager)SpringBeanUtil.getBean("transactionManager_PDSS"));
 //        this.setTransactionManager(d);
+        // 2014-10-21 liujc 修改 事务bean不从spring 容器中获得    
+        
+        ts = "transactionManager" +  ("".equals(TransactionSource) ? "":"_" + TransactionSource );
+        this.setTransactionManager((PlatformTransactionManager)SpringBeanUtil.getBean(ts));
     }
     
     public Object execute(TransaCallback transalCallback) throws TransactionException

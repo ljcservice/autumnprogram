@@ -54,7 +54,7 @@ public class ReportScheduler extends SysLog4Dcdt
 	
 	public void beforeBuild(String ADate, String key)
 	{
-	    JDBCQueryImpl confQuery = DBQueryFactory.getQuery("PEAAS");
+	    JDBCQueryImpl confQuery = DBQueryFactory.getQuery("");
 	    StringBuffer sql = new StringBuffer("select * from reportBuild where action = '1' and progCode = '").append(key).append("' and orderNo = -1 order by orderNo");
 		List<TCommonRecord> builders = confQuery.query(sql.toString(), new CommonMapper());
 		for (TCommonRecord cr: builders)
@@ -120,7 +120,7 @@ public class ReportScheduler extends SysLog4Dcdt
 	@SuppressWarnings({ "rawtypes", "unchecked" })
     public void BuildReport(String ADate, String key, Vector<String> vctLog)
 	{
-	    JDBCQueryImpl confQuery = DBQueryFactory.getQuery("PEAAS");
+	    JDBCQueryImpl confQuery = DBQueryFactory.getQuery("");
 	    /*
 	     * reportid
 	     * reportCode

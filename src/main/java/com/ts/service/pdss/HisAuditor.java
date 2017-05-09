@@ -612,6 +612,7 @@ public class HisAuditor implements IHisAuditor
     			orderDrug[5] = pod.getStopDateTime();
     			orderDrug[6] = pod.getUseType();
     			TAntiDrugSecurityResult adsr = AntiDrugSecurityCheckerA(doctorInfo, diagnosis, patOper, orderDrug, new String[]{po.getPatVisitInfo().getPatientID(),po.getPatVisitInfo().getVisitID()});
+    			/* 去掉安全用药的无用审核
     			if(crc.getDsr() == null)
     			{
     				TDrugSecurityRslt drugsr1 = null;
@@ -637,6 +638,7 @@ public class HisAuditor implements IHisAuditor
 	    				adsr.setDosageRslt(drugsr1.getCheckResult(drug).getDrugDosageRslt());
 	    			}
     			}
+    			*/
     			// 在不存在问题情况下不保存 
     			if(adsr.getTAntiDrugSecurity().length != 0) list.add(adsr);
     		}

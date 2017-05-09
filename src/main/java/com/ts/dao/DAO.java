@@ -1,4 +1,7 @@
 package com.ts.dao;
+
+import java.util.List;
+
 /**
  * @author 
  * 修改时间：2015、12、11
@@ -59,4 +62,12 @@ public interface DAO {
 	 */
 	public Object findForMap(String sql, Object obj, String key , String value) throws Exception;
 	
+	/**
+     * 批量更新
+     * @param str
+     * @param obj
+     * @return
+     * @throws Exception
+     */
+    public void batchUpdate(String str, List objs ) throws Exception; 
 }

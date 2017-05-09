@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="RSDCCMapper">
+
+	<!--表名  总体审核情况 -->
+	<sql id="tableName">
+		RS_DRUG_CHECKRSLT
+	</sql>
+	
+	<sql id="Field">
+	   NGROUPNUM,
+	   NADVICENUM,
+	   NREDADVICEQUESSUM,
+	   NYELLOWADVICEQUESSUM,
+	   VDOCTORCODE,
+	   VDOCTORNAME,
+	   VORGCODE,
+	   VORGNAME,
+	   NALLERGENRED,
+	   NALLERGENYELLOW,
+	   NIVEFFECTRED,
+	   NIVEFFECTYELLOW,
+	   NDIAGINFORED,
+	   NDIAGINFOYELLOW,
+	   NINTERACTIONRED,
+	   NINTERACTIONYELLOW,
+	   NADMINISTRATIONRED,
+	   NADMINISTRATIONYELLOW,
+	   NDOSAGECHECKRED,
+	   NDOSAGECHECKYELLOW,
+	   NINGREDIENTRED,
+	   NINGREDIENTYELLOW,
+	   NOLDRED,
+	   NOLDYELLOW,
+	   NKIDRED,
+	   NKIDYELLOW,
+	   NPREGNANTRED,
+	   NPREGNANTYELLOW,
+	   NLACTATIONRED,
+	   NLACTATIONYELLOW,
+	   NRENALRED,
+	   NRENALYELLOW,
+	   NHEPATICALRED,
+	   NHEPATICALYELLOW,
+	   NSIDERED,
+	   NSIDEYELLOW,
+	   CHECKDATE
+	</sql>
+	
+	<sql id="FieldValue">
+	   #{NGROUPNUM},
+	   #{NADVICENUM},
+	   #{NREDADVICEQUESSUM},
+	   #{NYELLOWADVICEQUESSUM},
+	   #{VDOCTORCODE},
+	   #{VDOCTORNAME},
+	   #{VORGCODE},
+	   #{VORGNAME},
+	   #{NALLERGENRED},
+	   #{NALLERGENYELLOW},
+	   #{NIVEFFECTRED},
+	   #{NIVEFFECTYELLOW},
+	   #{NDIAGINFORED},
+	   #{NDIAGINFOYELLOW},
+	   #{NINTERACTIONRED},
+	   #{NINTERACTIONYELLOW},
+	   #{NADMINISTRATIONRED},
+	   #{NADMINISTRATIONYELLOW},
+	   #{NDOSAGECHECKRED},
+	   #{NDOSAGECHECKYELLOW},
+	   #{NINGREDIENTRED},
+	   #{NINGREDIENTYELLOW},
+	   #{NOLDRED},
+	   #{NOLDYELLOW},
+	   #{NKIDRED},
+	   #{NKIDYELLOW},
+	   #{NPREGNANTRED},
+	   #{NPREGNANTYELLOW},
+	   #{NLACTATIONRED},
+	   #{NLACTATIONYELLOW},
+	   #{NRENALRED},
+	   #{NRENALYELLOW},
+	   #{NHEPATICALRED},
+	   #{NHEPATICALYELLOW},
+	   #{NSIDERED},
+	   #{NSIDEYELLOW},
+	   #{CHECKDATE})
+	</sql>
+	
+	<insert id="saveDrugCheckInfoCollection" parameterType="pd"	>
+		insert into 
+		<include refid="tableName"></include>  
+		(
+			<include refid="Field"></include>  
+		)
+        values(
+        	<include refid="FieldValue"></include>
+        )
+	</insert>
+
+	
+</mapper>
