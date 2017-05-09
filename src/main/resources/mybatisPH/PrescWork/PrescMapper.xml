@@ -68,6 +68,7 @@
 		from  presc_detail a, presc b 
 		where a.presc_id = b.id 
 			and PRESC_ID= #{PRESC_ID}
+			order by b.PRESC_NO
 	</select>
 	<!-- 	查询处方，为新增点评使用 -->
 	<select id="otherPrescListSpecial" parameterType="pd" resultType="pd">
@@ -77,6 +78,7 @@
 		where a.presc_id = b.id 
 		and b.PATIENT_ID = #{PATIENT_ID}
 		and b.ORDER_DATE = #{ORDER_DATE}
+		order by b.PRESC_NO
 	</select>
 	<!-- 	设置为专家点评 -->
 	<update id="updateExpertPresc">
