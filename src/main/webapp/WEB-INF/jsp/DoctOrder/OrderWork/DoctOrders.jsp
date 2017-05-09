@@ -467,11 +467,10 @@
 	});
 	//重置当前页面高度，自适应浏览器
 	function initWidthHeight(){
-		var height = $(window).height();
-		var myheight =height-$("#btn-toolbar").outerHeight()-$("#pageStrDiv").outerHeight();
-		if($("#simple-table").outerHeight() >myheight || $("#simple-table").outerWidth() >$(window).width()){
-			FixTable("simple-table", 0, $(window).width(), myheight-10);
-		}
+		var rr = new Array;
+		rr[0]="btn-toolbar";
+		rr[1]="pageStrDiv";
+		FixTable("simple-table", 0, rr);
 	}
 	window.onload = function(){
 		var cji = $("#checkJsonInfo").val();

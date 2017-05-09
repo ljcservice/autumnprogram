@@ -49,12 +49,12 @@
 									<div class="check-search nav-search" >
 											科室：
 										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords}" placeholder="科室" maxlength="32"/>
+											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords}" placeholder="科室" maxlength="80"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 											诊断：
 										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="DIAGNOSIS_DESC" type="text" name="DIAGNOSIS_DESC" value="${pd.DIAGNOSIS_DESC}" placeholder="诊断" maxlength="32"/>
+											<input class="nav-search-input" autocomplete="off" id="DIAGNOSIS_DESC" type="text" name="DIAGNOSIS_DESC" value="${pd.DIAGNOSIS_DESC}" placeholder="诊断" maxlength="80"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
@@ -66,6 +66,14 @@
 										出院日期：
 										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
 										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.end_Date }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
+									</div>
+									<div class="check-search"  > 
+										是否含手术：
+									 	<select class="chosen-select form-control" name="IS_OPERATION" id="IS_OPERATION" data-placeholder="是否含手术" style="vertical-align:top;width: 80px;">
+									 		<option value="">全部</option>
+											<option <c:if test="${pd.IS_OPERATION == '0' }">selected</c:if> value="0" >否</option>
+											<option <c:if test="${pd.IS_OPERATION == '1' }">selected</c:if> value="1" >是</option>
+										</select>
 									</div>
 									<div class="check-search"  > 
 										是否点评：
@@ -213,7 +221,7 @@
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 </body>
 <script type="text/javascript" src="static/js/common/common.js"></script>
-<script type="text/javascript" src="static/js/common/lockTable2.js?v=20161"></script>
+<script type="text/javascript" src="static/js/common/lockTable.js?v=20161"></script>
 <script type="text/javascript">
 $(top.hangge());
 $(function() {
@@ -249,11 +257,10 @@ $(function() {
 });
 //重置当前页面高度，自适应浏览器
 function initWidthHeight(){
-	var height = $(window).outerHeight();
 	var rr = new Array;
 	rr[0]="searchDiv";
 	rr[1]="pageStrDiv";
-	FixTable("simple-table", 0, rr);
+	FixTable("simple-table", 3, rr);
 }
 // 查询
 function searchs(){

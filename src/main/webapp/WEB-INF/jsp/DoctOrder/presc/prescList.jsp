@@ -46,12 +46,12 @@
 									<div class="check-search nav-search"  >
 										科室：
 										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="ORG_NAME" type="text" name="ORG_NAME" value="${pd.ORG_NAME}" placeholder="科室名称" maxlength="32"/>
+											<input class="nav-search-input" autocomplete="off" id="ORG_NAME" type="text" name="ORG_NAME" value="${pd.ORG_NAME}" placeholder="科室名称" maxlength="80"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 										诊断：
 										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords}" placeholder="诊断" maxlength="32"/>
+											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords}" placeholder="诊断" maxlength="80"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
@@ -75,6 +75,19 @@
 											<option <c:if test="${pd.ISCHECKTRUE == '1' }">selected</c:if> value="1" >不合理</option>
 											<option <c:if test="${pd.ISCHECKTRUE == '2' }">selected</c:if> value="2" >待定</option>
 										</select>
+									</div>
+									<div class="check-search"  >
+										是否抗菌：
+									 	<select class="chosen-select form-control" name="HASKJ" id="HASKJ" data-placeholder="是否抗菌" style="vertical-align:top;width: 80px;">
+									 		<option value="">全部</option>
+											<option <c:if test="${pd.HASKJ == '0' }">selected</c:if> value="0" >否</option>
+											<option <c:if test="${pd.HASKJ == '1' }">selected</c:if> value="1" >是</option>
+										</select>
+									</div>
+									<div class="check-search"  >
+										处方日期：
+										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
+										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.end_Date }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
 									</div>
 								</form>
 								</div>
@@ -185,7 +198,7 @@
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<script type="text/javascript" src="static/js/common/common.js"></script>
 	</body>
-<script type="text/javascript" src="static/js/common/lockTable.js?v=20161"></script>
+<script type="text/javascript" src="static/js/common/lockTable.js?v=201612"></script>
 <script type="text/javascript">
 $(top.hangge());
 
@@ -229,9 +242,10 @@ $(function() {
 });
 //重置当前页面高度，自适应浏览器
 function initWidthHeight(){
-	var height = $(window).height();
-	var myheight =height-$("#searchDiv").outerHeight()-$("#pageStrDiv").outerHeight();
-	FixTable("simple-table", 0, $(window).width(), myheight-20);
+	var rr = new Array;
+	rr[0]="searchDiv";
+	rr[1]="pageStrDiv";
+	FixTable("simple-table", 1, rr);
 }
 //
 function detailPresc(id,NGROUPNUM){
@@ -244,7 +258,6 @@ function detailPresc(id,NGROUPNUM){
 	diag.Height =  window.screen.height;  
 	diag.CancelEvent = function(){ //关闭事件
 		diag.close();
-		
 		nextPage(${page.currentPage});
 	 };
 	 diag.show();

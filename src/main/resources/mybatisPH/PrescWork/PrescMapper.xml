@@ -7,9 +7,7 @@
 		select a.*,m.RS_DRUG_TYPES
 		from presc a
 		left join ( select NGROUPNUM,listagg( RS_DRUG_TYPE ,'@;@') within GROUP (order by NGROUPNUM) RS_DRUG_TYPES 
-	         from  (
-	         		select NGROUPNUM,RS_DRUG_TYPE  from RS_DRUG_CHECKRSLT group by NGROUPNUM,RS_DRUG_TYPE 
-           			) group by NGROUPNUM
+	         from  RS_DRUG_CHECKRSLT  group by NGROUPNUM
 	    ) m on a.NGROUPNUM=m.NGROUPNUM
 		where 1=1 
 		<!-- 		关键词检索 -->
@@ -28,6 +26,16 @@
 		<if test="pd.ISORDERCHECK != null and pd.ISORDERCHECK != ''"> <!--点评记录-->
 			and a.ISORDERCHECK = #{pd.ISORDERCHECK}
 		</if>
+		<if test="pd.HASKJ != null and pd.HASKJ != ''"> <!-- 是否抗菌 -->
+			and a.HASKJ = #{pd.HASKJ}
+		</if>
+		<if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
+			and a.ORDER_DATE &gt;= #{pd.beginDate} 
+		</if>
+		<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
+			and a.ORDER_DATE &lt; #{pd.endDate}
+		</if>
+		
 		order by ORDER_DATE desc
 	</select>
 	<!-- 单个处方主要信息 -->
