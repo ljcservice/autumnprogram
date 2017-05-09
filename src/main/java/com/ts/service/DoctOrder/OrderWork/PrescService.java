@@ -86,6 +86,10 @@ public interface PrescService {
 
 	public PageData prescCountReport(PageData pd)throws Exception;
 
+	public List<PageData> prescListByDoctor(PageData pd)throws Exception;
+
+	public List<PageData> prescListByDep(PageData pd)throws Exception;
+
 
 
 }

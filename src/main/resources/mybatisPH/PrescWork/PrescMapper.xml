@@ -6,9 +6,20 @@
 	<select id="prescListPage" parameterType="page" resultType="pd" >
 		select a.*,m.RS_DRUG_TYPES
 		from presc a
-		left join ( select NGROUPNUM,listagg( RS_DRUG_TYPE ,'@;@') within GROUP (order by NGROUPNUM) RS_DRUG_TYPES 
+	   <if test="pd.RS_DRUG_TYPE != null and pd.RS_DRUG_TYPE != ''"> <!-- 问题类型 -->
+		    inner 
+		</if>
+	    <if test="pd.RS_DRUG_TYPE ==null or pd.RS_DRUG_TYPE == ''"> <!-- 问题类型 -->
+		    left 
+		</if>
+		 join ( select NGROUPNUM,listagg( RS_DRUG_TYPE ,'@;@') within GROUP (order by NGROUPNUM) RS_DRUG_TYPES 
 	         from  (
-	         		select NGROUPNUM,RS_DRUG_TYPE  from RS_DRUG_CHECKRSLT group by NGROUPNUM,RS_DRUG_TYPE 
+	         		select NGROUPNUM,RS_DRUG_TYPE  
+	         		from RS_DRUG_CHECKRSLT 
+	         		<if test="pd.RS_DRUG_TYPE != null and pd.RS_DRUG_TYPE != ''"> <!-- 问题类型 -->
+			    		where RS_DRUG_TYPE = #{pd.RS_DRUG_TYPE}
+			    	</if>
+	         		group by NGROUPNUM,RS_DRUG_TYPE 
            	) group by NGROUPNUM
 	    ) m on a.NGROUPNUM=m.NGROUPNUM
 		where 1=1 

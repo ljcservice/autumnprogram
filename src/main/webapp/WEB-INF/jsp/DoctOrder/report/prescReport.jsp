@@ -44,6 +44,15 @@
 						<!-- 检索  -->
 						<form action="report/prescReport.do" method="post" name="searchForm" id="searchForm">
 								<div style="margin-bottom: 5px;">	
+									<div class="check-search" style="width: 250px;" >
+										起止日期：
+										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
+										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.endDate }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
+									</div>
+									<div class="check-search" style="width: 77px;">
+										<a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
+										<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i></a>
+									</div>
 									<div class="check-search nav-search" style="width: 600px;">
 										科室：
 										<span class="input-icon">
@@ -61,10 +70,6 @@
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
-									<div class="check-search" style="width: 77px;">
-										<a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
-										<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i></a>
-									</div>
 									<div class="check-search" style="width: 190px;" >
 										问题类别：
 									 	<select class="chosen-select form-control" name="RS_DRUG_TYPE" id="RS_DRUG_TYPE" data-placeholder="问题类别" style="vertical-align:top;width: 110px;" >
@@ -73,11 +78,6 @@
 												<option <c:if test="${map.key == pd.RS_DRUG_TYPE}">selected</c:if> value="${map.key}" >${map.value.RS_TYPE_NAME}</option>
 											</c:forEach>
 										</select>
-									</div>
-									<div class="check-search" style="width: 250px;" >
-										起止日期：
-										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
-										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.endDate }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
 									</div>
 								</div>
 						<!-- 检索  -->
@@ -101,8 +101,11 @@
 											<td class="center">${presc.RS_TYPE_NAME}</td>
 											<td class="center">${presc.count}</td>
 											<td class="center">${presc.percent}</td>
-											<td class="center"></td>
-											<td class="center"></td>
+											<td class="center">
+												<a onclick="detailListByDep('${presc.RS_TYPE_CODE}');" href="javascript:void(0);">科室</a>
+												<a onclick="detailListByDoctor('${presc.RS_TYPE_CODE}');" href="javascript:void(0);">医生</a>
+											</td>
+											<td class="center"><a onclick="detailList('${presc.RS_TYPE_CODE}');" href="javascript:void(0);">处方列表</a></td>
 										</tr>
 									</c:forEach>
 								</c:when>
@@ -197,21 +200,44 @@ $(function() {
 
 });
 //
-function detailPresc(id,NGROUPNUM){
+function detailList(RS_TYPE_CODE){
 	top.jzts();
 	var diag = new top.Dialog();
 	diag.Drag=true;
-	diag.Title ="处方详情及点评";
-	diag.URL = path + "/presc/prescDetail.do?id=" +  id +"&NGROUPNUM="+NGROUPNUM;
+	diag.Title ="医嘱统计列表";
+	diag.URL = path + "/report/prescList.do?type=1&RS_DRUG_TYPE="+RS_TYPE_CODE+"&beginDate="+$("#beginDate").val()+"&endDate="+$("#endDate").val();
 	diag.Width =  window.screen.width;
 	diag.Height =  window.screen.height;  
 	diag.CancelEvent = function(){ //关闭事件
 		diag.close();
-		
-		nextPage(${page.currentPage});
 	 };
 	 diag.show();
 }
-
+function detailListByDoctor(RS_TYPE_CODE){
+	top.jzts();
+	var diag = new top.Dialog();
+	diag.Drag=true;
+	diag.Title ="医嘱统计列表";
+	diag.URL = path + "/report/prescListByDoctor.do?type=1&RS_DRUG_TYPE="+RS_TYPE_CODE+"&beginDate="+$("#beginDate").val()+"&endDate="+$("#endDate").val();
+	diag.Width =  window.screen.width;
+	diag.Height =  window.screen.height;  
+	diag.CancelEvent = function(){ //关闭事件
+		diag.close();
+	 };
+	 diag.show();
+}
+function detailListByDep(RS_TYPE_CODE){
+	top.jzts();
+	var diag = new top.Dialog();
+	diag.Drag=true;
+	diag.Title ="医嘱统计列表";
+	diag.URL = path + "/report/prescListByDep.do?type=1&RS_DRUG_TYPE="+RS_TYPE_CODE+"&beginDate="+$("#beginDate").val()+"&endDate="+$("#endDate").val();
+	diag.Width =  window.screen.width;
+	diag.Height =  window.screen.height;  
+	diag.CancelEvent = function(){ //关闭事件
+		diag.close();
+	 };
+	 diag.show();
+}
 </script>
 </html>

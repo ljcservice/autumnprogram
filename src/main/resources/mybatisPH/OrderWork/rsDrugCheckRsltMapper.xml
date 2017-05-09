@@ -215,4 +215,34 @@
 			</if>
 		group by b.out_dept_name
 	</select>
+	
+	<!-- 	处方按医生分组查询统计 -->
+	<select id="prescListByDoctor" parameterType="pd" resultType="pd">
+		select b.DOCTOR_NAME ,count(a.rs_id) count
+		FROM RS_DRUG_CHECKRSLT a ,presc b
+		WHERE a.NGROUPNUM = b.NGROUPNUM
+				and a.RS_DRUG_TYPE = #{RS_DRUG_TYPE}
+			<if test="beginDate != null and beginDate != ''"> <!--开始日期-->
+				and b.ORDER_DATE &gt;=  #{beginDate}
+			</if>
+			<if test="endDate != null and endDate != ''"> <!--开始日期-->
+				and b.ORDER_DATE &lt;=  #{endDate} 
+			</if>
+		group by b.DOCTOR_NAME
+	</select>
+	
+		<!-- 	处方 按出院科室分组查询统计 -->
+	<select id="prescListByDep" parameterType="pd" resultType="pd">
+		select b.ORG_NAME ,count(a.rs_id) count
+		FROM RS_DRUG_CHECKRSLT a ,presc b
+		WHERE a.NGROUPNUM = b.NGROUPNUM
+				and a.RS_DRUG_TYPE = #{RS_DRUG_TYPE}
+			<if test="beginDate != null and beginDate != ''"> <!--开始日期-->
+				and b.ORDER_DATE &gt;=  #{beginDate}
+			</if>
+			<if test="endDate != null and endDate != ''"> <!--开始日期-->
+				and b.ORDER_DATE &lt;=  #{endDate} 
+			</if>
+		group by b.ORG_NAME
+	</select>
 </mapper>
