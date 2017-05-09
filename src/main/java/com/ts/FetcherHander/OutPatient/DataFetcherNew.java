@@ -20,6 +20,8 @@ import com.hitzd.DBUtils.TCommonRecord;
 import com.hitzd.Factory.DBQueryFactory;
 import com.hitzd.Transaction.TransaCallback;
 import com.hitzd.Transaction.TransactionTemp;
+import com.ts.FetcherHander.OutPatient.Check.IOutPatientCheck;
+import com.ts.FetcherHander.OutPatient.Check.Impl.OutPatientCheckBean;
 import com.ts.SchedulerHandler.ModelHandler;
 
 import com.hitzd.his.Scheduler.ReportScheduler;
@@ -43,11 +45,7 @@ import com.ts.util.LoggerFileSaveUtil;
  * @author Administrator
  * 
  */
-@Transactional
 public class DataFetcherNew extends ReportScheduler  {
-
-	@Resource(name = "reviewResultService")
-	private IReviewResultServ reviewResultService;
 
 	private Logger logger  = Logger.getLogger(DataFetcherNew.class);
 	
@@ -266,6 +264,7 @@ public class DataFetcherNew extends ReportScheduler  {
 	 * 插入draw信息,放入到peaas目录下
 	 */
 	public void InsertDrawInfo() {
+	    getQuery("");
 		String id = UUID.randomUUID().toString();
 		String FileName = "APPLOG\\peaas\\peaas_" + prevDate + ".log";
 		String sql = "insert into drawinfo(drawid,exccounter,finistcounter,drawdate,path) values(?,?,?,?,?)";
@@ -318,7 +317,7 @@ public class DataFetcherNew extends ReportScheduler  {
 			if (super.canRun()) {
 				Calendar cal = Calendar.getInstance();
 				int hour = cal.get(Calendar.HOUR_OF_DAY);
-				JDBCQueryImpl peaasQuery = DBQueryFactory.getQuery("PEAAS");
+				JDBCQueryImpl peaasQuery = DBQueryFactory.getQuery("");
 				@SuppressWarnings("unchecked")
 				List<TCommonRecord> list = peaasQuery.query("select rulecode,rulevalue from ruleparameter where rulecode = 'PEAASDataFetcherTime'",new CommonMapper());
 				peaasQuery = null;
@@ -359,10 +358,10 @@ public class DataFetcherNew extends ReportScheduler  {
 		    }
 		    excuterFlag = true;
 		    prevDate = bool ? aDate : getPrevDate();
-		    LoggerFileSaveUtil.LogFileSave(logger, "APPLOG\\peaas\\peaas_" + prevDate + ".log");
+		    LoggerFileSaveUtil.LogFileSave(logger, "APPLOG\\presc\\presc_" + prevDate + ".log");
 		    logger.info("准备开始处理数据...");
 			counter = 0;
-			getQuery("PEAAS");
+			getQuery("ph");
 			setDebugLevel(Config.getIntParamValue("IASDebugLevel"));
 			JDBCQueryImpl hisQuery = DBQueryFactory.getQuery("HIS");
 			logger.info("数据库连接准备完毕...");
@@ -592,7 +591,7 @@ public class DataFetcherNew extends ReportScheduler  {
 	 * @param idx
 	 */
 	private void FetchDataHospitalDetail(final TCommonRecord crm,final JDBCQueryImpl hisQuery, final String ADate) {
-		TransactionTemp tt = new TransactionTemp("PEAAS");
+		TransactionTemp tt = new TransactionTemp("ph");
 		TCommonRecord parmComm = new TCommonRecord();
 		tt.execute(new TransaCallback(parmComm) {
 			@Override
@@ -940,11 +939,11 @@ public class DataFetcherNew extends ReportScheduler  {
 	 * @param idx
 	 */
 	private void FetchDataOutDetail(final TCommonRecord crm,final JDBCQueryImpl hisQuery, final String ADate) {
-		TransactionTemp tt = new TransactionTemp("PEAAS");
+		TransactionTemp tt = new TransactionTemp("ph");
 		tt.execute(new TransaCallback() {
 			@Override
 			public void ExceuteSqlRecord() {
-				JDBCQueryImpl query = DBQueryFactory.getQuery("PEAAS");
+				JDBCQueryImpl query = DBQueryFactory.getQuery("ph");
 				String sql = null;
 				List<String> pzMap = new ArrayList<String>();
 				int impDrugCount = 0;
@@ -1186,7 +1185,7 @@ public class DataFetcherNew extends ReportScheduler  {
 
 	private void DeleteOldFetcherDate(String sDate)
 	{
-	    JDBCQueryImpl query = DBQueryFactory.getQuery("PEAAS");
+	    JDBCQueryImpl query = DBQueryFactory.getQuery("ph");
 	    try
 	    {
 	        String sql = "delete presc where ORDER_DATE = '" + sDate + "'";
@@ -1216,128 +1215,20 @@ public class DataFetcherNew extends ReportScheduler  {
 	 * @param ADate
 	 */
 	int CheckCount = 0;
-
 	@SuppressWarnings("unchecked")
 	public void PrescCheck(String ADate) {
-		getQuery("PEAAS");
-		CheckCount = 0;
-		CommonMapper cmr = new CommonMapper();
-		String sql = null;
 		try
 		{
-			sql = "select * from presc where order_date = '" + ADate + "' and org_name is not null and amount >= 0 ";
-			List<TCommonRecord> listPrescs = (List<TCommonRecord>) query.query(	sql.toString(), cmr);
-			logger.info("审核处方-开方日期 " + ADate + " , 要审查的处方数 " + listPrescs.size());
-			int CounterAll = listPrescs.size();
-			/* 处方评价 功能 */
-			IPrescReviewChecker prescChecker = (IPrescReviewChecker) SpringBeanUtil.getBean("prescReviewCheckerBean");
-			for (TCommonRecord t : listPrescs) // 一条一条地处理信息
-			{
-				try
-				{
-					logger.info("审核日期: " + ADate + ",审核进度:  " + CheckCount + "/" + CounterAll);
-					sql = "select * from presc_detail where presc_id = '" + t.get("id") + "'";
-					List<TCommonRecord> presc = query.query(sql, cmr);
-					/* 处方进行评价 */
-					TCommonRecord tCom = prescChecker.PrescReviewCheck(t, presc);
-					if (tCom.getKeys().size() > 2) 
-					{
-						String checkUUID = tCom.get("uuid");
-						StringBuffer sbfr = new StringBuffer();
-						for (String key : tCom.getKeys()) 
-						{
-							// PRESCCHECKINFO PRESCCHECKFLAG 0 没有问题 1 有问题
-							if (!"UUID".equals(key) && !"MAXUSEDAY".equals(key)) 
-							{
-								sbfr.append(key).append(","); // 错误信息
-								if (!key.equals(tCom.get(key))) 
-								{
-									saveReviewResult(t, key, tCom.get(key),checkUUID);
-								}
-
-							}
-						}
-						if (sbfr.length() > 0) sbfr.deleteCharAt(sbfr.length() - 1);
-						sql = "update presc set Presccheckid = '"+ checkUUID+ "' , PRESCCHECKFLAG = '1' , PRESCCHECKINFO = '"
-								+ sbfr.toString() + "', maxuseday='" + tCom.get("maxuseday") + "'  where id = '"+ t.get("id") + "'";
-					} 
-					else
-					{
-						sql = "update presc set PRESCCHECKFLAG = '0' , maxuseday='" + tCom.get("maxuseday") + "' where id = '" + t.get("id") + "'" ;
-					}
-					if (query.update(sql) == 0) 
-					{
-						logger.warn("更新出错 处方id号 : " + t.get("id"));
-						new RuntimeException("更新出问题 处方id号 : " + t.get("id"));
-					}
-					else 
-					{
-						logger.info("审核成功 处方id号 : " + t.get("id"));
-						CheckCount++;
-					}
-				} 
-				catch (Exception e) 
-				{
-					logger.warn(" 问题处方id号 ：" + t.get("id"));
-					e.printStackTrace();
-				}
-			}
+		    //审核功能 
+		    IOutPatientCheck opc = (IOutPatientCheck) SpringBeanUtil.getBean("outPatientCheckBean");
+		    List<Object> entity = new ArrayList<Object>();
+		    entity.add(ADate);
+		    opc.OutPatientCheck(entity.toArray(new Object[0]));
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			cmr = null;
 			logger.info(" 处方审查完成.... " + CheckCount + "个评价完成 ");
 		}
 	}
 
-	/**
-	 * *评审结果由以下字段组成: 1.patient_review_id: 评审id 2.patient_id: 病人编号
-	 * 3.patient_name: 病人的名字 4.org_code: 组织结构代码 5.org_name: 组织机构名称
-	 * 6.doctor_code:医生编号 7.doctor_name: 医生的名称 8.order_date: 处方发生的日期
-	 * 9.dispensary_code: 取药的药房编号 10. dispensary_name : 取药的药房名称 11
-	 * review_error_codes : 错误的编码信息 12 review_error_message : 错误的原因信息 13 state:
-	 * 记录的状态
-	 * 
-	 * 
-	 * 存储评审的结果
-	 * 
-	 * @param patient
-	 *            病人记录
-	 * @param reviewErrorCode
-	 *            评审结果错误编码
-	 * @param reviewMessage
-	 *            评审结果原因信息
-	 * @param patientReviewId
-	 *            评审uuid
-	 */
-	private void saveReviewResult(TCommonRecord patient,String reviewErrorCode, String reviewMessage, String patientReviewId) {
-		if (reviewResultService == null)
-			reviewResultService = new ReviewResultBean();
-		// 边界判断
-		if (reviewErrorCode == null || "".equals(reviewErrorCode)) {
-			return;
-		}
-		TCommonRecord reviewResult = new TCommonRecord();
-		reviewResult.set("patientReviewId", patientReviewId);
-		reviewResult.set("patientId", patient.get("PATIENT_ID"));
-		reviewResult.set("patientName", patient.get("PATIENT_NAME"));
-		reviewResult.set("orgCode", patient.get("ORG_CODE"));
-		reviewResult.set("orgName", patient.get("ORG_NAME"));
-		reviewResult.set("doctorCode", patient.get("DOCTOR_CODE"));
-		reviewResult.set("doctorName", patient.get("DOCTOR_NAME"));
-		reviewResult.set("orderDate", patient.get("ORDER_DATE"));
-		reviewResult.set("dispensaryCode", patient.get("DISPENSARY"));
-		reviewResult.set("dispensaryName", patient.get("DISPENSARYNAME"));
-		reviewResult.set("reviewErrorCode", reviewErrorCode);
-		reviewResult.set("reviewErrorMessage", reviewMessage);
-		reviewResultService.saveReviewResult(reviewResult);
-	}
-
-	public IReviewResultServ getReviewResultService() {
-		return reviewResultService;
-	}
-
-	public void setReviewResultService(IReviewResultServ reviewResultService) {
-		this.reviewResultService = reviewResultService;
-	}
 }

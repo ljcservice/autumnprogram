@@ -24,7 +24,7 @@ import com.hitzd.his.report.utils.ClassLoaderUnit;
  * @author jingcong
  * 
  */
-final public class ModelHandler extends SysLog4Dcdt implements Runnable,Job
+final public class ModelHandler extends SysLog4Dcdt implements Job,Runnable
 {
     /* 组件组号 */
     private String       mhGroupCode = "";
@@ -41,7 +41,11 @@ final public class ModelHandler extends SysLog4Dcdt implements Runnable,Job
     {
         this.writerParam = writerParam;
     }
-
+    
+    public ModelHandler()
+    {
+        // TODO Auto-generated constructor stub
+    }
     /**
      * 组件号。
      */
@@ -62,7 +66,7 @@ final public class ModelHandler extends SysLog4Dcdt implements Runnable,Job
     @SuppressWarnings ({ "unchecked", "unused" })
     public Object PerformIt()
     {
-        JDBCQueryImpl query = DBQueryFactory.getQuery("PEAAS");
+        JDBCQueryImpl query = DBQueryFactory.getQuery("");
         CommonMapper cmr = new CommonMapper();
         try
         {

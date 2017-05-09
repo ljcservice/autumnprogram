@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +20,7 @@ import com.hitzd.his.Beans.TPreveUseDrug;
 import com.hitzd.his.Beans.TTreatUseDrug;
 import com.hitzd.his.Utils.DateUtils;
 import com.hitzd.persistent.Persistent4DB;
-import com.ts.dao.DaoSupportPdss;
+import com.ts.dao.DAO;
 import com.ts.entity.pdss.ias.RSBeans.TAntiDrugResult;
 import com.ts.entity.pdss.ias.RSBeans.TAntiDrugSecurityCheckResult;
 import com.ts.entity.pdss.ias.RSBeans.TAntiDrugSecurityResult;
@@ -43,6 +42,7 @@ import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSpecPeopleRslt;
 import com.ts.service.pdss.pdss.manager.IPatientSaveCheckResult;
 import com.ts.util.DateUtil;
+import com.ts.util.Logger;
 import com.ts.util.PageData;
 import com.ts.util.UuidUtil;
 
@@ -53,11 +53,13 @@ import com.ts.util.UuidUtil;
  */
 public class PatientSaveCheckResult extends Persistent4DB implements IPatientSaveCheckResult
 {
-	@Resource(name = "daoSupportPdss")
-	private DaoSupportPdss dao;
+	@Resource(name = "daoSupportPH")
+	private DAO dao;
 	
     /* 每次批次号 */
     private String ngroupnum = "";
+    /* 保存数据来源类型  指明审核数据的来源，1，门诊事实 2，门诊处方点评，3，临床医嘱事实 4，临床医嘱点评 */
+    private String in_rs_type = "3";
     String CheckTime  = "";
     
     public PatientSaveCheckResult()
@@ -65,6 +67,12 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
         
     }
     
+    public void setIn_rs_type(String in_rs_type)
+    {
+        this.in_rs_type = in_rs_type;
+    }
+
+
     private void setNgroupnum()
     {
         this.ngroupnum = UUID.randomUUID().toString();
@@ -88,6 +96,9 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
     {
         try
         {
+            if (po == null || "4".equals(po.getPatType()) ||"2".equals(po.getPatType())) return ; 
+            //设置数据来源
+            setIn_rs_type(po.getPatType());
 //            setQueryCode("HisSysManager");
             //StringBuffer patient = new StringBuffer();
             /* 病人信息 
@@ -321,7 +332,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                 return ;
             if(dsr.getCheckResults() == null)
                 return ;
-            setQueryCode("HisSysManager");
+            //setQueryCode("HisSysManager");
             TCheckResult[] tcrs = dsr.getCheckResults();
             for(int i = 0 ; i<tcrs.length ;i++)
             {
@@ -337,19 +348,23 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                     for(TDrugInteractionInfo t : dia)
                     {
                         PageData param = new PageData();
-                    	param.put("ID", t.getDRUG_INTERACTION_INFO_ID());
+                    	param.put("rs_id", UuidUtil.get32UUID());
                     	param.put("DRUG_ID1", dir[j].getDrugA().getDRUG_NO_LOCAL());
+                    	param.put("DRUG_ID1_Name", dir[j].getDrugA().getDRUG_NAME_LOCAL());
                     	param.put("REC_MAIN_NO1", dir[j].getRecMainNo());
                     	param.put("REC_SUB_NO1",dir[j].getRecSubNo());
                     	param.put("DRUG_ID2", dir[j].getDrugB().getDRUG_NO_LOCAL());
+                    	param.put("DRUG_ID2_Name", dir[j].getDrugB().getDRUG_NAME_LOCAL());
                     	param.put("REC_MAIN_NO2", dir[j].getRecMainNo2());
                     	param.put("REC_SUB_NO2", dir[j].getRecSubNo2());
                     	param.put("NGROUPNUM", this.ngroupnum);
-                    	param.put("ALERT_HINT", "");
+                    	param.put("ALERT_HINT", t.getMAN_INFO() + " /r/n " + t.getMEC_INFO());
                     	param.put("ALERT_LEVEL", dir[j].getAlertLevel());
-                    	param.put("ALERT_CAUSE", "");
+                    	param.put("ALERT_CAUSE", "系统审核");
+                    	param.put("In_rs_type", this.in_rs_type);
                     	param.put("checkDate", CheckTime);
-                    	param.put("type", 1);//互动信息的类型
+                    	param.put("RS_DRUG_TYPE", "interaction");
+//                    	param.put("type", 1);//互动信息的类型
                         dao.save("ResultMapper.saveDrugCheckInfo", param);
                     }
                 }
@@ -391,19 +406,22 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                     for(TDrugIvEffect t : diet)
                     {
                         PageData param = new PageData();
-                    	param.put("ID", t.getEFFECT_ID());
+                    	param.put("RS_ID", t.getEFFECT_ID());
                     	param.put("DRUG_ID1", die[j].getPatOrderDrug1().getDrugID());
+                    	param.put("DRUG_ID1_Name", die[j].getPatOrderDrug1().getDrugName());
                     	param.put("REC_MAIN_NO1", die[j].getRecMainNo());
                     	param.put("REC_SUB_NO1",die[j].getRecSubNo());
                     	param.put("DRUG_ID2", die[j].getPatOrderDrug2().getDrugID());
+                    	param.put("DRUG_ID2_Name", die[j].getPatOrderDrug2().getDrugName());
                     	param.put("REC_MAIN_NO2",die[j].getRecMainNo2());
                     	param.put("REC_SUB_NO2", die[j].getRecSubNo2());
                     	param.put("NGROUPNUM", this.ngroupnum);
-                    	param.put("ALERT_HINT", "");
+                    	param.put("ALERT_HINT", t.getREFER_INFO());
                     	param.put("ALERT_LEVEL", die[j].getAlertLevel());
-                    	param.put("ALERT_CAUSE", "");
+                    	param.put("ALERT_CAUSE", "系统审核");
+                    	param.put("In_rs_type", this.in_rs_type);
                     	param.put("checkDate", CheckTime);
-                    	param.put("type", 2);//配伍信息的类型
+                    	param.put("RS_DRUG_TYPE", "iv_effect");//配伍信息的类型
                         dao.save("ResultMapper.saveDrugCheckInfo", param);
                     }
                 }
@@ -441,19 +459,22 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                 for(int j = 0 ;j<ddr.length ;j++)
                 {
                         PageData param = new PageData();
-                    	param.put("ID", UuidUtil.get32UUID());
+                    	param.put("RS_ID", UuidUtil.get32UUID());
                     	param.put("DRUG_ID1", ddr[j].getDrug().getDRUG_NO_LOCAL());
+                    	param.put("DRUG_ID1_Name", ddr[j].getDrug().getDRUG_NAME_LOCAL());
                     	param.put("REC_MAIN_NO1", ddr[j].getRecMainNo());
                     	param.put("REC_SUB_NO1",ddr[j].getRecSubNo());
-                    	param.put("DRUG_ID2", null);
-                    	param.put("REC_MAIN_NO2",null);
-                    	param.put("REC_SUB_NO2", null);
+                    	param.put("DRUG_ID2", "");
+                    	param.put("DRUG_ID2_Name", "");
+                    	param.put("REC_MAIN_NO2","");
+                    	param.put("REC_SUB_NO2", "");
                     	param.put("NGROUPNUM", this.ngroupnum);
-                    	param.put("ALERT_HINT", ddr[j].getAlertHint());
+                    	param.put("ALERT_HINT", ddr[j].getDrugDiagInfo().getDIAG_DESC());
                     	param.put("ALERT_LEVEL", ddr[j].getAlertLevel());
-                    	param.put("ALERT_CAUSE", ddr[j].getAlertCause());
+                    	param.put("ALERT_CAUSE", "系统审核");
+                    	param.put("In_rs_type", this.in_rs_type);
                     	param.put("checkDate", CheckTime);
-                    	param.put("type", 3);//禁忌症审查的类型
+                    	param.put("RS_DRUG_TYPE", "diaginfo");//禁忌症审查的类型
                         dao.save("ResultMapper.saveDrugCheckInfo", param);
                 }
             }
@@ -491,26 +512,28 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                 {
                     PageData param = new PageData();
                     param.put("DRUG_ID1", dsp[j].getDrug().getDRUG_NO_LOCAL());
+                    param.put("DRUG_ID1_Name", dsp[j].getDrug().getDRUG_NAME_LOCAL());
                     /* 儿童 */
                     if(!dsp[j].getChildLevel().equals("0"))
                     {
-                    	param.put("ID", dsp[j].getDrugchild().getDRUG_USE_DETAIL_ID());
-                        param.put("ALERT_LEVEL",  dsp[j].getOldLevel());
+//                    	param.put("ID", dsp[j].getDrugchild().getDRUG_USE_DETAIL_ID());
+                        param.put("ALERT_HINT", dsp[j].getDrugchild().getKID_INFO());
+                        param.put("ALERT_LEVEL",  dsp[j].getChildLevel());
                         param.put("CHECK_ITEM", 1);
-                        
-                        
                     }
                     /* 老人 */
                     if(!dsp[j].getOldLevel().equals("0"))
                     {
-                    	param.put("ID", dsp[j].getDrugold().getDRUG_USE_DETAIL_ID());
+//                    	param.put("ID", dsp[j].getDrugold().getDRUG_USE_DETAIL_ID());
+                        param.put("ALERT_HINT", dsp[j].getDrugold().getOLD_INFO());
                         param.put("ALERT_LEVEL",  dsp[j].getOldLevel());
                         param.put("CHECK_ITEM", 2);
                     }
                     /* 孕妇*/
                     if(!dsp[j].getPregnantLevel().equals("0"))
                     {
-                    	param.put("ID", dsp[j].getDrugpregnant().getDRUG_USE_DETAIL_ID());
+//                    	param.put("ID", dsp[j].getDrugpregnant().getDRUG_USE_DETAIL_ID());
+                        param.put("ALERT_HINT",dsp[j].getDrugpregnant().getPREGNANT_INFO());
                         param.put("ALERT_LEVEL",  dsp[j].getPregnantLevel());
                         param.put("CHECK_ITEM", 3);
                     }
@@ -520,36 +543,40 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                     /* 哺乳期 */
                     if(!dsp[j].getLactLevel().equals("0"))
                     {
-                    	param.put("ID", dsp[j].getDruglact().getDRUG_USE_DETAIL_ID());
+//                    	param.put("ID", dsp[j].getDruglact().getDRUG_USE_DETAIL_ID());
+                        param.put("ALERT_HINT", dsp[j].getDruglact().getLACT_INFO());
                         param.put("ALERT_LEVEL",  dsp[j].getLactLevel());
                         param.put("CHECK_ITEM", 4);
                     }
                     /* 肝功不全 */
                     if(!dsp[j].getHepaticalLevel().equals("0"))
                     {
-                    	param.put("ID", dsp[j].getDrughepatical().getDRUG_USE_DETAIL_ID());
+//                    	param.put("ID", dsp[j].getDrughepatical().getDRUG_USE_DETAIL_ID());
+                        param.put("ALERT_HINT", "");
                         param.put("ALERT_LEVEL",  dsp[j].getHepaticalLevel());
-                        param.put("CHECK_ITEM", 5);
+//                        param.put("CHECK_ITEM", 5);
                     }
                     /* 肾功不全  */
                     if(!dsp[j].getRenalLevel().equals("0"))
                     {
-                    	param.put("ID", dsp[j].getDrugrenal().getDRUG_USE_DETAIL_ID());
+//                    	param.put("ID", dsp[j].getDrugrenal().getDRUG_USE_DETAIL_ID());
+                        param.put("ALERT_HINT", "");
                         param.put("ALERT_LEVEL",  dsp[j].getRenalLevel());
-                        param.put("CHECK_ITEM", 6);
+//                        param.put("CHECK_ITEM", 6);
                     }
-                	
+                	param.put("RS_ID", UuidUtil.get32UUID());
                 	param.put("REC_MAIN_NO1", dsp[j].getRecMainNo());
                 	param.put("REC_SUB_NO1",dsp[j].getRecSubNo());
-                	param.put("DRUG_ID2", null);
-                	param.put("REC_MAIN_NO2",null);
-                	param.put("REC_SUB_NO2", null);
+                	param.put("DRUG_ID2", "");
+                	param.put("REC_MAIN_NO2","");
+                	param.put("REC_SUB_NO2", "");
                 	param.put("NGROUPNUM", this.ngroupnum);
-                	param.put("ALERT_HINT", "");
-                	param.put("ALERT_CAUSE", "");
+                	param.put("ALERT_CAUSE", "系统审核");
+                	param.put("In_rs_type", this.in_rs_type);
                 	param.put("checkDate", CheckTime);
-                	param.put("type", 4);//人群信息的类型
-                    dao.save("ResultMapper.saveDrugCheckInfo", param);
+                	param.put("checkpeople", "");
+                	param.put("RS_DRUG_TYPE", "specpeople");//人群信息的类型
+                    dao.save("rsDrugCheckRsltMapper.saveCheckRS", param);
                 }
             }
             
@@ -562,7 +589,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
     }
 
     /**
-     *  构成组成部分的，类型为5
+     *  重复成分 构成组成部分的，类型为5
      */
     @Override
     public void saveDrugIngredientCheckInfo(TDrugSecurityRslt dsr)
@@ -593,19 +620,22 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                     {
                         TDrug drug = did[j].getDrugs()[x];
                         PageData param = new PageData();
-                    	param.put("ID", UuidUtil.get32UUID());
+                    	param.put("RS_ID", UuidUtil.get32UUID());
                     	param.put("DRUG_ID1", did[j].getDrug().getDRUG_NO_LOCAL());
+                    	param.put("DRUG_ID1_Name", did[j].getDrug().getDRUG_NAME_LOCAL());
                     	param.put("REC_MAIN_NO1", did[j].getRecMainNo());
                     	param.put("REC_SUB_NO1",did[j].getRecSubNo());
                     	param.put("DRUG_ID2", drug.getDRUG_NO_LOCAL());
+                    	param.put("DRUG_ID2_Name", drug.getDRUG_NAME_LOCAL());
                     	param.put("REC_MAIN_NO2",drug.getRecMainNo());
                     	param.put("REC_SUB_NO2", drug.getRecSubNo());
                     	param.put("NGROUPNUM", this.ngroupnum);
-                    	param.put("ALERT_HINT", did[j].getAlertHint());
+                    	param.put("ALERT_HINT", "重复用药");
                     	param.put("ALERT_LEVEL", did[j].getAlertLevel());
-                    	param.put("ALERT_CAUSE", did[j].getAlertCause());
+                    	param.put("ALERT_CAUSE", "系统审核");
+                    	param.put("In_rs_type", this.in_rs_type);
                     	param.put("checkDate", CheckTime);
-                    	param.put("type", 5);//类型
+                    	param.put("RS_DRUG_TYPE", "ingredien");//类型
                         dao.save("ResultMapper.saveDrugCheckInfo", param);
                     }
                 }
@@ -619,7 +649,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
     }
     
     /**
-     *  Administration：类型为6
+     *  用药途径审查 Administration：类型为6
      */
     @Override
     public void saveDrugAdministrationCheckInfo(TDrugSecurityRslt dsr)
@@ -648,19 +678,22 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                 {
                     TDrugUseDetail dud =  admin[j].getDrugUseDetail();
                     PageData param = new PageData();
-                	param.put("ID", admin[j].getDrugUseDetail().getDRUG_USE_DETAIL_ID());
+                	param.put("RS_ID", admin[j].getDrugUseDetail().getDRUG_USE_DETAIL_ID());
                 	param.put("DRUG_ID1", admin[j].getDrug().getDRUG_NO_LOCAL());
+                	param.put("DRUG_ID1_Name", admin[j].getDrug().getDRUG_NAME_LOCAL());
                 	param.put("REC_MAIN_NO1", admin[j].getRecMainNo());
                 	param.put("REC_SUB_NO1",admin[j].getRecSubNo());
-                	param.put("DRUG_ID2", null);
-                	param.put("REC_MAIN_NO2",null);
-                	param.put("REC_SUB_NO2", null);
+                	param.put("DRUG_ID2", "");
+                	param.put("DRUG_ID2_Name","");
+                	param.put("REC_MAIN_NO2","");
+                	param.put("REC_SUB_NO2", "");
                 	param.put("NGROUPNUM", this.ngroupnum);
-                	param.put("ALERT_HINT", null);
+                	param.put("ALERT_HINT", "R".equals(admin[j].getAlertLevel())? dud.getFORBID_CAUSE():dud.getINADVIS_CAUSE());
                 	param.put("ALERT_LEVEL", admin[j].getAlertLevel());
-                	param.put("ALERT_CAUSE", dud.getFORBID_CAUSE() + "," + dud.getADVERT_CAUSE() + "," + dud.getINADVIS_CAUSE());
+                	param.put("ALERT_CAUSE", "系统审核");
+                	param.put("In_rs_type", this.in_rs_type);
                 	param.put("checkDate", CheckTime);
-                	param.put("type", 6);//类型
+                	param.put("RS_Drug_Type", "administrator");//类型
                     dao.save("ResultMapper.saveDrugCheckInfo", param);
                 }
             }
@@ -706,15 +739,18 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                         PageData param = new PageData();
                     	param.put("ID", dagBean[x].getDRUG_ALLERGEN_ID());
                     	param.put("DRUG_ID1", dag[j].getDrug().getDRUG_NO_LOCAL());
+                    	param.put("DRUG_ID1_Name", dag[j].getDrug().getDRUG_NAME_LOCAL());
                     	param.put("REC_MAIN_NO1", dag[j].getRecMainNo());
                     	param.put("REC_SUB_NO1",dag[j].getRecSubNo());
-                    	param.put("DRUG_ID2", null);
-                    	param.put("REC_MAIN_NO2",null);
-                    	param.put("REC_SUB_NO2", null);
+                    	param.put("DRUG_ID2", "");
+                    	param.put("DRUG_ID2_Name", "");
+                    	param.put("REC_MAIN_NO2","");
+                    	param.put("REC_SUB_NO2", "");
                     	param.put("NGROUPNUM", this.ngroupnum);
                     	param.put("ALERT_HINT", null);
                     	param.put("ALERT_LEVEL", dag[j].getAlertLevel());
-                    	param.put("ALERT_CAUSE", null);
+                    	param.put("ALERT_CAUSE", "");
+                    	param.put("In_rs_type", this.in_rs_type);
                     	param.put("checkDate", CheckTime);
                     	param.put("type", 7);//类型
                         dao.save("ResultMapper.saveDrugCheckInfo", param);
@@ -729,7 +765,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
     }
 
     /**
-     * 类型8
+     *药物剂量审查　 类型8
      * @param dsr
      */
     @Override
@@ -764,19 +800,22 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                         values.append(value).append(";");
                     }
                     PageData param = new PageData();
-                	param.put("ID", UuidUtil.get32UUID());
+                	param.put("RS_ID", UuidUtil.get32UUID());
                 	param.put("DRUG_ID1", t.getPods().getDRUG_NO_LOCAL());
+                	param.put("DRUG_ID1_Name", t.getPods().getDRUG_NAME_LOCAL());
                 	param.put("REC_MAIN_NO1", t.getRecMainNo());
                 	param.put("REC_SUB_NO1",t.getRecSubNo());
-                	param.put("DRUG_ID2", null);
-                	param.put("REC_MAIN_NO2",null);
-                	param.put("REC_SUB_NO2", null);
+                	param.put("DRUG_ID2", "");
+                	param.put("DRUG_ID2_Name", "");
+                	param.put("REC_MAIN_NO2","");
+                	param.put("REC_SUB_NO2", "");
                 	param.put("NGROUPNUM", this.ngroupnum);
-                	param.put("ALERT_HINT", null);
+                	param.put("ALERT_HINT", values.toString());
                 	param.put("ALERT_LEVEL", t.getAlertLevel());
-                	param.put("ALERT_CAUSE", values.toString());
+                	param.put("ALERT_CAUSE", "系统审核");
+                	param.put("In_rs_type", this.in_rs_type);
                 	param.put("checkDate", CheckTime);
-                	param.put("type", 8);//类型
+                	param.put("RS_Drug_Type", "dosage");//类型
                     dao.save("ResultMapper.saveDrugCheckInfo", param);
                 }
             }
@@ -789,7 +828,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
     }
 
     /**
-     * 类型 9
+     * 异常信号审查 类型 9
      * @param dsr
      */
     @Override
@@ -805,7 +844,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
             {
                 return ;
             }
-            setQueryCode("HisSysManager");
+//            setQueryCode("HisSysManager");
             TCheckResult[] tcrs = dsr.getCheckResults();
             for(int i = 0 ; i<tcrs.length ;i++)
             {
@@ -820,17 +859,20 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                     PageData param = new PageData();
                 	param.put("ID", dhf[j].getDrugSide().getSIDE_ID());
                 	param.put("DRUG_ID1", dhf[j].getDrug().getDRUG_NO_LOCAL());
+                	param.put("DRUG_ID1_Name", dhf[j].getDrug().getDRUG_NAME_LOCAL());
                 	param.put("REC_MAIN_NO1", dhf[j].getRecMainNo());
                 	param.put("REC_SUB_NO1",dhf[j].getRecSubNo());
-                	param.put("DRUG_ID2", null);
-                	param.put("REC_MAIN_NO2",null);
-                	param.put("REC_SUB_NO2", null);
+                	param.put("DRUG_ID2", "");
+                	param.put("DRUG_ID2_Name", "");
+                	param.put("REC_MAIN_NO2","");
+                	param.put("REC_SUB_NO2", "");
                 	param.put("NGROUPNUM", this.ngroupnum);
-                	param.put("ALERT_HINT", null);
+                	param.put("ALERT_HINT", dhf[j].getDrugSide().getDIAGNOSIS_DESC());
                 	param.put("ALERT_LEVEL", dhf[j].getAlertLevel());
-                	param.put("ALERT_CAUSE", dhf[j].getDrugSide().getDIAGNOSIS_DESC());
+                	param.put("ALERT_CAUSE", "系统审核");
+                	param.put("In_rs_type", this.in_rs_type);
                 	param.put("checkDate", CheckTime);
-                	param.put("type", 9);//类型
+                	param.put("RS_Drug_Type", "side");//类型
                     dao.save("ResultMapper.saveDrugCheckInfo", param);
                  }
             }
@@ -1018,6 +1060,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
         //setQueryCode("HisSysManager");
         try
         {
+            if(adsr== null) return ;
             for(TAntiDrugSecurityResult ad : adsr)
             {
                 TAntiDrugSecurityCheckResult[] ascrs = ad.getTAntiDrugSecurity();

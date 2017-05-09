@@ -1,6 +1,8 @@
 package com.ts.service.pdss.pdss.impl;
 
 
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
@@ -44,21 +46,25 @@ public class DrugAdministrationCheckerBean extends Persistent4DB implements IDru
     	{
 	        TDrugSecurityRslt result = new TDrugSecurityRslt();
 	        TPatOrderDrug[] pods = po.getPatOrderDrugs();
+//	        Map<String, TDrug> mapDrug = pdssCache.queryDrugMap(pods);
 	        if(pods == null) return new TDrugSecurityRslt();
 	        for (int i = 0; i < pods.length; i++)
 	        {
 	        	TPatOrderDrug pod     = pods[i];
 	        	TDrug drug            = pdssCache.queryDrugById(pod.getDrugID());
+	        	if(drug == null ) continue;
 	        	TAdministration admin = pdssCache.queryAdministration(pod.getAdminName());
+	        	if(admin == null) continue;
 	        	TDrugUseDetail dud    = pdssCache.getDud(drug.getDRUG_CLASS_ID());
 	        	String inforLevelRs ="";
-                /* 禁止的用药途径 */
-                if (dud.getFORBID_RUID() != null)
+	        	/* 需注意的用药途径 */
+                if (dud.getADVERT_RTID() != null)
                 {
-                    if (("," + dud.getFORBID_RUID() + ",").indexOf("," + admin.getADMINISTRATION_ID() + ",") != -1)
+                    if (("," + dud.getADVERT_RTID() + ",").indexOf("," + admin.getADMINISTRATION_ID() + ",") != -1)
                     {
-                        inforLevelRs = "R";
+                        inforLevelRs = "G";
                     }
+
                 }
                 /* 不宜的用药途径 */
                 if (dud.getINADVIS_RTID() != null)
@@ -68,15 +74,14 @@ public class DrugAdministrationCheckerBean extends Persistent4DB implements IDru
                         inforLevelRs = "Y";
                     }
                 }
-                /* 需注意的用药途径 */
-                if (dud.getADVERT_RTID() != null)
+                /* 禁止的用药途径 */
+                if (dud.getFORBID_RUID() != null)
                 {
-                    if (("," + dud.getADVERT_RTID() + ",").indexOf("," + admin.getADMINISTRATION_ID() + ",") != -1)
+                    if (("," + dud.getFORBID_RUID() + ",").indexOf("," + admin.getADMINISTRATION_ID() + ",") != -1)
                     {
-                        inforLevelRs = "G";
+                        inforLevelRs = "R";
                     }
-
-                }
+                }                
 	            if(!"".equals(inforLevelRs))
 	            {
 	            	drug.setRecMainNo(pod.getRecMainNo());

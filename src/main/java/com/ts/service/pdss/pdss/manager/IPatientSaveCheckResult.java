@@ -16,6 +16,12 @@ public interface IPatientSaveCheckResult
 	 * @param uuid
 	 */
 	public void setNgroupnum(String uuid);
+	
+	/**
+	 * 数据审核来源
+	 * @param in_rs_type
+	 */
+	public void setIn_rs_type(String in_rs_type);
     /**
      * 保存审查的基本信息
      * @param po

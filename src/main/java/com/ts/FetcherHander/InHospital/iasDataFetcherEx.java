@@ -30,6 +30,9 @@ import com.hitzd.his.casehistory.helper.CaseHistoryFunction;
 import com.hitzd.his.casehistory.helper.CaseHistoryHelperUtils;
 import com.hitzd.his.casehistory.helper.ICaseHistoryHelper;
 import com.hitzd.his.task.Task;
+import com.hitzd.springBeanManager.SpringBeanUtil;
+import com.ts.FetcherHander.InHospital.Check.InHospitalCheck;
+import com.ts.FetcherHander.InHospital.Check.Impl.InHospitalCheckBean;
 
 
 /**
@@ -78,7 +81,7 @@ public class iasDataFetcherEx extends ReportScheduler implements  IScheduler
     	beforeBuild(prevDate, "IAS");
     	crCount = new TCommonRecord();
     	errorList = new ArrayList<String>();
-        JDBCQueryImpl patQuery = DBQueryFactory.getQuery("PatientHistory");
+        JDBCQueryImpl patQuery = DBQueryFactory.getQuery("ph");
         beforeFetch(patQuery, prevDate);
         ICaseHistoryHelper chhr = CaseHistoryFactory.getCaseHistoryHelper();
     	List<TCommonRecord> lsWheres = new ArrayList<TCommonRecord>();
@@ -1901,7 +1904,7 @@ public class iasDataFetcherEx extends ReportScheduler implements  IScheduler
     public void SaveDrugPresc(JDBCQueryImpl hisQuery, JDBCQueryImpl patQuery, String PatientID, String VisitID, TCommonRecord crPatMasterIndex, TCommonRecord PatientInfo)
     {
     	
-    	JDBCQueryImpl iasQuery = DBQueryFactory.getQuery("PEAAS");
+    	JDBCQueryImpl iasQuery = DBQueryFactory.getQuery("");
     	TCommonRecord crVisit = (TCommonRecord)crPatMasterIndex.getObj(ICaseHistoryHelper.Key_PatVisit);
     	if (crVisit == null) return;
     	List<TCommonRecord> dpm = (List<TCommonRecord>)crVisit.getObj(ICaseHistoryHelper.Key_DrugPrescMaster);
@@ -2224,7 +2227,7 @@ public class iasDataFetcherEx extends ReportScheduler implements  IScheduler
     	{
     		Calendar cal = Calendar.getInstance();
     		int hour = cal.get(Calendar.HOUR_OF_DAY);
-    		JDBCQueryImpl peaasQuery = DBQueryFactory.getQuery("PEAAS");
+    		JDBCQueryImpl peaasQuery = DBQueryFactory.getQuery("");
             @SuppressWarnings("unchecked")
     		List<TCommonRecord> list = peaasQuery.query("select rulecode,rulevalue from ruleparameter where rulecode = 'IASDataFetcherTime'", new CommonMapper());
             peaasQuery = null;
@@ -2282,10 +2285,12 @@ public class iasDataFetcherEx extends ReportScheduler implements  IScheduler
 	    	setDebugLevel(Config.getIntParamValue("IASDebugLevel"));
 	    	Log(50, "开始提取病人病历信息...");
 	    	JDBCQueryImpl hisQuery = DBQueryFactory.getQuery("HIS");
-	        getQuery("IAS");
+	        getQuery("ph");
 	    	if (getOwner() != null)
 	    		getOwner().setTaskStatusDesc("正在抓取" + prevDate + "数据！");
 	        FetchData(hisQuery, prevDate);
+	        Log("审核医嘱开始");
+	        CheckPat(prevDate);
 	    	if (getOwner() != null)
 	    		getOwner().setTaskStatusDesc("开始构造报表");
 	        BuildReport(prevDate, "IAS", vctLog);
@@ -2300,6 +2305,13 @@ public class iasDataFetcherEx extends ReportScheduler implements  IScheduler
     		e.printStackTrace();
     		saveLog("ias_" + prevDate + "_error.log");
     	}
+	}
+	
+	private void CheckPat(String prevDate){
+	    InHospitalCheck ihc = new  InHospitalCheckBean(); //(InHospitalCheck)SpringBeanUtil.getBean("");
+	    List<Object> values = new ArrayList<Object>();
+	    values.add(prevDate);
+        Object rs = ihc.InHospitalCheck(values);
 	}
 	
 	private void clearData(JDBCQueryImpl patQuery, String prevDate) {
