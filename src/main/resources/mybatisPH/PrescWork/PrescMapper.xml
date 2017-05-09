@@ -71,8 +71,8 @@
 	</update>
 	<!-- 	查询处方，为新增点评使用 -->
 	<select id="prescListSpecial" parameterType="pd" resultType="pd">
-		select ORDER_NO||'@;@'||ORDER_SUB_NO||'@;@'||DRUG_CODE||'@;@'||drug_name as key
-			, drug_name || '（处方号：'||b.PRESC_NO||'，科室：'||b.ORG_NAME||'，医生：' ||b.DOCTOR_NAME ||'）' as value
+		select ORDER_NO||'@;@'||ORDER_SUB_NO||'@;@'||DRUG_CODE||'@;@'||drug_name||'@;@'||presc_id as key
+			, drug_name || '（处方号：'||b.PRESC_NO||'，科室：'||b.ORG_NAME||'，医生：' ||b.DOCTOR_NAME ||'诊断'||b.DIAGNOSIS_NAMES||'）' as value
 		from  presc_detail a, presc b 
 		where a.presc_id = b.id 
 			and PRESC_ID= #{PRESC_ID}
@@ -80,8 +80,8 @@
 	</select>
 	<!-- 	查询处方，为新增点评使用 -->
 	<select id="otherPrescListSpecial" parameterType="pd" resultType="pd">
-		select ORDER_NO||'@;@'||ORDER_SUB_NO||'@;@'||DRUG_CODE||'@;@'||drug_name as key
-			, drug_name || '（处方号：'||b.PRESC_NO||'，科室：'||b.ORG_NAME||'，医生：' ||b.DOCTOR_NAME ||'）' as value
+		select ORDER_NO||'@;@'||ORDER_SUB_NO||'@;@'||DRUG_CODE||'@;@'||drug_name||'@;@'||presc_id as key
+			, drug_name || '（处方号：'||b.PRESC_NO||'，科室：'||b.ORG_NAME||'，医生：' ||b.DOCTOR_NAME ||'诊断'||b.DIAGNOSIS_NAMES||'）'  as value
 		from  presc_detail a, presc b 
 		where a.presc_id = b.id 
 		and b.PATIENT_ID = #{PATIENT_ID}

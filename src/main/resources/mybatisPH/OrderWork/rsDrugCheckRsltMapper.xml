@@ -26,8 +26,9 @@
 		alert_hint,
 		alert_cause,
 		checkdate,
-		CHECKPEOPLE
-
+		CHECKPEOPLE,
+		PRESC_ID1,
+		PRESC_ID2
 	</sql>
 	
 	<!-- 字段值 -->
@@ -48,7 +49,9 @@
 		#{alert_hint},
 		#{alert_cause},
 		#{checkdate},
-		#{CHECKPEOPLE}
+		#{CHECKPEOPLE},
+		#{PRESC_ID1,jdbcType=VARCHAR},
+		#{PRESC_ID2,jdbcType=VARCHAR}
 	</sql>
 	
 <!-- 	保存审核结果 -->
@@ -64,11 +67,20 @@
 	
 <!-- 	 查询审核结果  查询患者点评结果信息-->
 	<select id="selectCheckRsByNgroupnum" parameterType="page" resultType="pd">
-		select <include refid="Field"></include>
-		from RS_DRUG_CHECKRSLT
+		select a.rs_id,a.drug_id1,a.drug_id1_name,a.rec_main_no1,a.rec_sub_no1,
+			a.drug_id2,a.drug_id2_name,a.rec_main_no2,a.rec_sub_no2,a.ngroupnum,
+			a.rs_drug_type,a.in_rs_type,a.alert_level,a.alert_hint,a.alert_cause,
+			a.checkdate,a.CHECKPEOPLE,a.PRESC_ID1,a.PRESC_ID2	
+			,b.DOCTOR_NAME DOCTOR_NAME1,b.ORG_NAME ORG_NAME1,b.PRESC_NO PRESC_NO1
+			,c.DOCTOR_NAME DOCTOR_NAME2,c.ORG_NAME ORG_NAME2,c.PRESC_NO PRESC_NO2
+			,u.name CHECKPEOPLE_NAME
+		from RS_DRUG_CHECKRSLT a 
+		left join PRESC b on b.id = a.PRESC_ID1 
+		left join PRESC c on c.id = a.PRESC_ID2 
+		left join plat.sys_user u on a.CHECKPEOPLE = u.user_id
 		where 
-		 <!-- 审核结果组号 -->  
-		ngroupnum = #{pd.ngroupnum} 
+		 	<!-- 审核结果组号 -->  
+			a.ngroupnum = #{pd.ngroupnum} 
 		order by CHECKDATE
 	</select>
 	<delete id="delCheckRsByNgroupnum" parameterType="pd" >
@@ -94,7 +106,16 @@
 <!-- 	</select> -->
 	
 	<select id="getCheckRsById" parameterType="pd" resultType="pd">
-		select * from RS_DRUG_CHECKRSLT where rs_id=#{rs_id}
+		select a.rs_id,a.drug_id1,a.drug_id1_name,a.rec_main_no1,a.rec_sub_no1,
+			a.drug_id2,a.drug_id2_name,a.rec_main_no2,a.rec_sub_no2,a.ngroupnum,
+			a.rs_drug_type,a.in_rs_type,a.alert_level,a.alert_hint,a.alert_cause,
+			a.checkdate,a.CHECKPEOPLE,a.PRESC_ID1,a.PRESC_ID2	
+			,b.DOCTOR_NAME DOCTOR_NAME1,b.ORG_NAME ORG_NAME1,b.DIAGNOSIS_NAMES DIAGNOSIS_NAMES1
+			,c.DOCTOR_NAME DOCTOR_NAME2,c.ORG_NAME ORG_NAME2,c.DIAGNOSIS_NAMES DIAGNOSIS_NAMES2
+		from RS_DRUG_CHECKRSLT a 
+		left join PRESC b on b.id = a.PRESC_ID1 
+		left join PRESC c on c.id = a.PRESC_ID2 
+		where a.rs_id=#{rs_id}
 	</select>
 	<update id="updateCheckResult"  parameterType="pd"  >
 		update RS_DRUG_CHECKRSLT set ALERT_HINT=#{ALERT_HINT} where  rs_id=#{rs_id}
