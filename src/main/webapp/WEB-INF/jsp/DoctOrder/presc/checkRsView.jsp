@@ -40,7 +40,7 @@
 							<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:0px;margin-bottom:0px;">
 								<thead>
 									<tr style="padding-top: 0px;padding-bottom: 0px;">
-										<th colspan="5" style="vertical-middle;">
+										<th colspan="6" style="vertical-middle;">
 										
 											<label>
 												<input type="checkbox" name="delAll" id="delAll" class="ace" onclick="setCheckBox(this);">
@@ -76,7 +76,7 @@
 												<label><input class="ace" id="u3897_input" value="2" name="ISCHECKTRUE" type="radio" <c:if test="${ISCHECKTRUE==2 }">checked</c:if> >待定&nbsp;<span class="lbl"></span></label>&nbsp;&nbsp;
 											</span>
 											<c:if test="${modifyFlag==1 }">
-												<a class="btn btn-minier btn-grey" title="保存" onclick="saveIsCheckTrue()">
+												<a class="btn btn-minier btn-info" title="保存" onclick="saveIsCheckTrue()">
 													<i class="ace-icon fa fa-floppy-o bigger-120"></i>
 												</a>
 											</c:if>
@@ -94,19 +94,20 @@
 											<c:forEach items="${checkRss}" var="rs" varStatus="vs" >
 												<tr>
 													<td class='center' style="width:30px;vertical-align: middle;" rowspan="2" >
-													<label>
-														<input type="checkbox" name="rs_ids"  class="ace" value="${rs.rs_id }"  >
-														<span class="lbl"></span>
-													</label>
+														<label>
+															<input type="checkbox" name="rs_ids"  class="ace" value="${rs.rs_id }"  >
+															<span class="lbl"></span>
+														</label>
 													</td>
-													<td style="width: 80px;" class='center' > ${rsTypeDict.get(rs.RS_DRUG_TYPE).rs_type_name }</td>
-													<td >${rs.drug_id1_name } 
+													<td style="width: 100px;" class='center' > ${rsTypeDict.get(rs.RS_DRUG_TYPE).rs_type_name }</td>
+													<td >${rs.drug_id1_name }&nbsp;（处方号：${rs.PRESC_NO1}，科室${rs.ORG_NAME1}，医生：${rs.DOCTOR_NAME1}）
 														<c:if test="${rsTypeDict.get(rs.RS_DRUG_TYPE).RS_COUNT == 2}"> 
-														<font color="red">与</font> ${rs.drug_id2_name } 
+														<font color="red">与</font> ${rs.drug_id2_name }&nbsp;（处方号：${rs.PRESC_NO1}，科室${rs.ORG_NAME1}，医生：${rs.DOCTOR_NAME1}）
 														 </c:if>
 													</td>
-													<td>${rs.CHECKDATE}</td>
-													<td style="width: 300px;">
+													<td style="text-align: right;" nowrap>日期：</td>
+													<td rowspan="1" style="text-align: left;vertical-align: middle;">${rs.CHECKDATE}</td>
+													<td rowspan="2" style="text-align: center;vertical-align: middle;width: 100px;">
 														<c:if test="${modifyFlag==1 }">
 														<a class="btn btn-minier btn-danger"  onclick="delCheckRs('${rs.rs_id }');">
 															<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
@@ -118,7 +119,10 @@
 													</td>
 												</tr>
 												<tr>
-													<td colspan="4">&nbsp;&nbsp;&nbsp;&nbsp; ${rs.ALERT_HINT } </td>
+													<td style="text-align: right;" nowrap>问题描述：</td>
+													<td  class="left"  colspan="1">${rs.ALERT_HINT } </td>
+													<td style="text-align: right;" nowrap>提交人：</td>
+													<td  class="left" >${rs.CHECKPEOPLE_NAME }</td>
 												</tr>
 											</c:forEach>
 										</c:when>

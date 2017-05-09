@@ -94,7 +94,7 @@
 							<c:choose>
 								<c:when test="${not empty prescDetailList}">
 									<c:forEach items="${prescDetailList}" var="order" varStatus="vs">
-										<tr ondblclick="orderCheck(this,1)"  id="tr${order.order_no}_${order.order_sub_no}" class="tr${order.order_no}_${order.order_sub_no}" ORDER_CLASS="${order.order_class}"
+										<tr ondblclick="orderCheck(this,1)" presc_id="${order.presc_id }"  id="tr${order.order_no}_${order.order_sub_no}" class="tr${order.order_no}_${order.order_sub_no}" ORDER_CLASS="${order.order_class}"
 											order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_code="${order.drug_code}" order_name="${order.drug_name }" >
 											<c:set var="key1" >
 											${order.order_no.toString()}_${order.order_sub_no.toString()}
@@ -187,7 +187,7 @@
 									<tbody>
 									<!-- 开始循环 -->
 											<c:forEach items="${otherPrescDetailMap.get(presc.id)}" var="order" varStatus="vs">
-												<tr ondblclick="orderCheck(this,2)"  id="tr${order.order_no}_${order.order_sub_no}" class="tr${order.order_no}_${order.order_sub_no}" ORDER_CLASS="${order.order_class}"
+												<tr ondblclick="orderCheck(this,2)" presc_id="${order.presc_id }" id="tr${order.order_no}_${order.order_sub_no}" class="tr${order.order_no}_${order.order_sub_no}" ORDER_CLASS="${order.order_class}"
 													order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_code="${order.drug_code}" order_name="${order.drug_name }" >
 													<c:set var="key1">
 														${order.order_no.toString()}_${order.order_sub_no.toString()}
@@ -385,6 +385,7 @@
 		order_code = jsonObj.order_code;
 		order_sub_no = jsonObj.order_sub_no;
 		order_name   = jsonObj.order_name;
+		presc_id     =jsonObj.presc_id;
 		checkJson    = $("#checkJsonInfo").val();
 	} 
 	
@@ -394,6 +395,7 @@
 	var checkFlag    = false;
 	var checkType    = "";
 	var oldColor     = "";
+	var presc_id     = "";
 	var order_no     = "";
 	var order_sub_no = "";
 	var order_name   = "";
@@ -425,8 +427,8 @@
 		$.ajax({
 			type: "POST",
 			url: basePath + 'presc/saveShortcut.do', 
-	    	data: {checkType:checkType,order_no:order_no,order_sub_no:order_sub_no
-	    		,order_name:order_name,order_code:order_code,tmpOrder_name:tmpOrder_name,tmpOrder_code:tmpOrder_code,tmpOrder_sub_no:tmpOrder_sub_no
+	    	data: {checkType:checkType,presc_id:presc_id,order_no:order_no,order_sub_no:order_sub_no 
+	    		,order_name:order_name,order_code:order_code,tmpPresc_id:tmpPresc_id,tmpOrder_name:tmpOrder_name,tmpOrder_code:tmpOrder_code,tmpOrder_sub_no:tmpOrder_sub_no
 	    		,tmpOrder_no:tmpOrder_no,count:count,checkText:checkText,ngroupnum:ngroupnum,id:id,business_type:1},
 			dataType:'json',
 			async:false,
@@ -511,12 +513,14 @@
 		checkFlag    = false;
 		checkType    = "";
 		oldColor     = "";
+		presc_id     = "";
 		order_no     = "";
 		order_sub_no = "";
 		order_name   = "";
 		order_code = "";
 		checkJson    = "";
 		
+        tmpPresc_id     = "";
 		tmpOrder_code   = "";
 		tmpOrder_name   = "";
 		tmpOrder_no     = "";
@@ -541,6 +545,7 @@
 		$("#checkDrug2").text("");
 	}
 	
+	var tmpPresc_id 	= "";
 	var tmpOrder_code   = "";
 	var tmpOrder_name   = "";
 	var tmpOrder_no     = "";
@@ -563,12 +568,14 @@
 			}
 			_trObj.style.backgroundColor = oldColor;
 			if(type==1){
+				tmpPresc_id    = "";
 				tmpOrder_code   = "";
 				tmpOrder_name   = "";
 				tmpOrder_no     = "";
 				tmpOrder_sub_no = "";
 			}
 			if(type==2){
+				presc_id    ="";
 				order_no     = "";
 				order_sub_no = "";
 				order_name   = "";
@@ -598,6 +605,7 @@
 		var drug2 = $("#checkDrug2");
 		//alert("setCount:"+setCount+".select_current:"+select_current+".select_other:"+select_other);
 		if(setCount == 1) {
+			tmpPresc_id	    = $(_trObj).attr("presc_id");
 			tmpOrder_Name   = $(_trObj).attr("order_name");
 			tmpOrder_code   = $(_trObj).attr("order_code");
 			tmpOrder_no     = $(_trObj).attr("order_no");
@@ -611,6 +619,7 @@
 			$("#dragCheck").show(500).css("top",20).css("left",($(window).width()-400)/2);
 		}else if (setCount == 2 ) {
 			if(exist_select==1){
+				tmpPresc_id     = $(_trObj).attr("presc_id");
 				tmpOrder_Name   = $(_trObj).attr("order_name");
 				tmpOrder_code   = $(_trObj).attr("order_code");
 				tmpOrder_no     = $(_trObj).attr("order_no");
@@ -618,6 +627,7 @@
 				tmpColor        = myColor;
 			}else if(exist_select==2){
 				oldColor     = myColor;
+				tmpPresc_id     = $(_trObj).attr("presc_id");
 				tmpOrder_Name   = $(_trObj).attr("order_name");
 				tmpOrder_code   = $(_trObj).attr("order_code");
 				tmpOrder_no     = $(_trObj).attr("order_no");
@@ -641,16 +651,15 @@
 	function reloadPage(){
 		window.document.forms[0].submit();
 	}
-var mm = 0;
 function showDetail(obj){
-	if(mm==0){
-		mm=1;
-		$(obj).closest("table").next().show();
+	var ss = $(obj).closest("table").next();
+	var flag = ss.attr("show");
+	if(flag==undefined || flag == 0){
+		ss.show().attr("show","1");
 		$(obj).text("关闭详情");
 	}else{
+		ss.hide().attr("show","0");
 		$(obj).text("打开详情");
-		$(obj).closest("table").next().hide();
-		mm=0;
 	}
 }
 </script>

@@ -48,7 +48,10 @@
 													<td width="15%;" rowspan="2" style="text-align: right;padding-top: 10px;"><c:if test="${pd.business_type==0}">医嘱名称</c:if><c:if test="${pd.business_type==1}">药品名称</c:if>:</td>
 													<td width="35%;">
 														<div>
-															${pd.DRUG_ID1_NAME}
+															${pd.DRUG_ID1_NAME} 
+															<c:if test="${pd.business_type==1}"> 
+																处方号：${pd.PRESC_NO1}，科室${pd.ORG_NAME1}，医生：${pd.DOCTOR_NAME1}
+															</c:if>
 														</div>
 													</td>
 												</tr>
@@ -56,6 +59,9 @@
 													<td>
 														<div id="divorderMap2">
 															${pd.DRUG_ID2_NAME}
+															<c:if test="${pd.business_type==1}"> 
+																处方号：${pd.PRESC_NO2}，科室${pd.ORG_NAME2}，医生：${pd.DOCTOR_NAME2}
+															</c:if>
 															<c:if test="${pd.business_type==1}">
 																<span style="color: #ffb752">（此处包括同日其他处方的药品）</span>
 															</c:if>
