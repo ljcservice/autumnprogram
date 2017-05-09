@@ -32,7 +32,6 @@
 </style>
 </head>
 <body class="no-skin">
-
 	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
 		<!-- /section:basics/sidebar -->
@@ -101,8 +100,11 @@
 											<td class="center">${presc.RS_TYPE_NAME}</td>
 											<td class="center">${presc.count}</td>
 											<td class="center">${presc.percent}</td>
-											<td class="center"></td>
-											<td class="center"></td>
+											<td class="center">
+												<a onclick="" href="javascript:void(0);">科室</a>
+												<a onclick="detailListByDoctor('${presc.RS_TYPE_CODE}');" href="javascript:void(0);">医生</a>
+											</td>
+											<td class="center"><a onclick="detailList('${presc.RS_TYPE_CODE}');" href="javascript:void(0);">处方列表</a></td>
 										</tr>
 									</c:forEach>
 								</c:when>
@@ -197,21 +199,31 @@ $(function() {
 
 });
 //
-function detailPresc(id,NGROUPNUM){
+function detailList(RS_TYPE_CODE){
 	top.jzts();
 	var diag = new top.Dialog();
 	diag.Drag=true;
-	diag.Title ="处方详情及点评";
-	diag.URL = path + "/presc/prescDetail.do?id=" +  id +"&NGROUPNUM="+NGROUPNUM;
+	diag.Title ="医嘱统计列表";
+	diag.URL = path + "/report/orderList.do?type=0&RS_DRUG_TYPE="+RS_TYPE_CODE+"&beginDate="+$("#beginDate").val()+"&endDate="+$("#endDate").val();
 	diag.Width =  window.screen.width;
 	diag.Height =  window.screen.height;  
 	diag.CancelEvent = function(){ //关闭事件
 		diag.close();
-		
-		nextPage(${page.currentPage});
 	 };
 	 diag.show();
 }
-
+function detailListByDoctor(RS_TYPE_CODE){
+	top.jzts();
+	var diag = new top.Dialog();
+	diag.Drag=true;
+	diag.Title ="医嘱统计列表";
+	diag.URL = path + "/report/orderListByDoctor.do?type=0&RS_DRUG_TYPE="+RS_TYPE_CODE+"&beginDate="+$("#beginDate").val()+"&endDate="+$("#endDate").val();
+	diag.Width =  window.screen.width;
+	diag.Height =  window.screen.height;  
+	diag.CancelEvent = function(){ //关闭事件
+		diag.close();
+	 };
+	 diag.show();
+}
 </script>
 </html>

@@ -286,11 +286,19 @@
       		,n.DIAGNOSIS_DESC,nvl(N.DIAGNOSIS_COUNT,0) DIAGNOSIS_COUNT
 	    from pat_visit t
 	    left join pat_master_index p on t.patient_id = p.patient_id 
-	    left join ( select NGROUPNUM,listagg( RS_DRUG_TYPE ,'@;@') within GROUP (order by NGROUPNUM) RS_DRUG_TYPES 
-	         from  (
-	         		select NGROUPNUM,RS_DRUG_TYPE  from RS_DRUG_CHECKRSLT group by NGROUPNUM,RS_DRUG_TYPE 
-           			) group by NGROUPNUM
-	    ) m on t.NGROUPNUM=m.NGROUPNUM
+	    <if test="pd.RS_DRUG_TYPE != null and pd.RS_DRUG_TYPE != ''"> <!-- 问题类型 -->
+		    inner 
+		</if>
+	    <if test="pd.RS_DRUG_TYPE ==null or pd.RS_DRUG_TYPE == ''"> <!-- 问题类型 -->
+		    left 
+		</if>
+		 join ( select NGROUPNUM,listagg( RS_DRUG_TYPE ,'@;@') within GROUP (order by NGROUPNUM) RS_DRUG_TYPES 
+	         from  RS_DRUG_CHECKRSLT 
+	         <if test="pd.RS_DRUG_TYPE != null and pd.RS_DRUG_TYPE != ''"> <!-- 问题类型 -->
+	    		where RS_DRUG_TYPE = #{pd.RS_DRUG_TYPE}
+	    	</if>
+	         group by NGROUPNUM
+	    ) m on (t.NGROUPNUM=m.NGROUPNUM  )
 	    <if test="pd.DIAGNOSIS_DESC != null and pd.DIAGNOSIS_DESC != ''"> <!-- 诊断-->
 		    inner  
 		</if>

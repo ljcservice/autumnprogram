@@ -188,5 +188,8 @@ public interface IOrderWorkService {
 	 * @throws Exception
 	 */
 	public List<PageData> ordersReport(PageData pd) throws Exception ;
+
+	public List<PageData> orderListByDoctor(PageData pd) throws Exception ;
+
 	
 }

@@ -122,7 +122,7 @@
 	</update>
 	<!-- 处方报表 -->
 	<select id="prescReport" parameterType="pd" resultType="pd">
-		select a.RS_TYPE_NAME,count(b.rs_id) count
+		select a.RS_TYPE_CODE,a.RS_TYPE_NAME,count(b.rs_id) count
   		from rs_type_dict a 
   			left join ( 
   					select m.rs_id,m.IN_RS_TYPE,m.RS_DRUG_TYPE,n.ORDER_DATE
@@ -154,13 +154,14 @@
 		<if test="RS_DRUG_TYPE != null and RS_DRUG_TYPE != ''"> <!-- 类型-->
 			and a.RS_TYPE_CODE = #{RS_DRUG_TYPE} 
 		</if>
-  		group by a.RS_TYPE_NAME
+  		group by a.RS_TYPE_CODE,a.RS_TYPE_NAME
 	</select>
 	
 <!-- 	医嘱报表 -->
 	<select id="ordersReport" parameterType="pd" resultType="pd">
-		select a.RS_TYPE_NAME,count(b.rs_id) count
-  		from rs_type_dict a left join ( 
+		select a.RS_TYPE_CODE,a.RS_TYPE_NAME,count(b.rs_id) count
+  		from rs_type_dict a 
+  		left join ( 
   					select m.rs_id,m.IN_RS_TYPE,m.RS_DRUG_TYPE,n.discharge_date_time
   					FROM RS_DRUG_CHECKRSLT m, pat_visit n 
   					WHERE M.NGROUPNUM = N.NGROUPNUM
@@ -184,6 +185,20 @@
 		<if test="RS_DRUG_TYPE != null and RS_DRUG_TYPE != ''"> <!-- 类型-->
 			and a.RS_TYPE_CODE = #{RS_DRUG_TYPE} 
 		</if>
-  		group by a.RS_TYPE_NAME
+  		group by a.RS_TYPE_CODE,a.RS_TYPE_NAME
 	</select>
+	<select id="orderListByDoctor" parameterType="pd" resultType="pd">
+		select b.ATTENDING_DOCTOR ,count(a.rs_id) count
+		FROM RS_DRUG_CHECKRSLT a ,pat_visit b
+		WHERE a.NGROUPNUM = b.NGROUPNUM
+			and a.RS_DRUG_TYPE = #{RS_DRUG_TYPE}
+			<if test="beginDate != null and beginDate != ''"> <!--开始日期-->
+			and b.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
+			</if>
+			<if test="endDate != null and endDate != ''"> <!--开始日期-->
+			and b.discharge_date_time &lt;= to_date(#{endDate},'yyyy-mm-dd') 
+			</if>
+		group by b.ATTENDING_DOCTOR
+	</select>
+	
 </mapper>
