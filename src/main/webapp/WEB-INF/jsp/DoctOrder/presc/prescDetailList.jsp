@@ -133,7 +133,7 @@
 											<td class="center " >${order.COSTS } </td>
 											<td class="center " >${order.AMOUNT } </td>
 											<td class="center " >${order.PACKAGE_SPEC}</td>
-											<td class="center " >${order.COSTS * order.AMOUNT}</td>
+											<td class="center " ><fmt:formatNumber value="${order.COSTS * order.AMOUNT}" pattern="###,###,##0.00"></fmt:formatNumber>  </td>
 										</tr>
 									
 									</c:forEach>
@@ -226,7 +226,7 @@
 													<td class="center " >${order.COSTS } </td>
 													<td class="center " >${order.AMOUNT } </td>
 													<td class="center " >${order.PACKAGE_SPEC}</td>
-													<td class="center " >${order.COSTS * order.AMOUNT}</td>
+													<td class="center " ><fmt:formatNumber value="${order.COSTS * order.AMOUNT}" pattern="###,###,##0.00"></fmt:formatNumber>  </td>
 												</tr>
 											
 											</c:forEach>
@@ -614,7 +614,7 @@
 			drug1.html(_trObj.getAttributeNode("order_name").value);
 			alert("一个药品可以做添加点评项目");
 			$(".widget-title").text(checkName);
-			$("#dragCheck").show(500).css("top",20).css("left",($(window).width()-400)/2);
+			showDragCheck();
 		}else if (setCount == 2 ) {
 			if(exist_select==1){
 				tmpPresc_id     = $(_trObj).attr("presc_id");
@@ -637,7 +637,7 @@
 				drug2.html(text);
 				alert("两个药品可以做添加点评项目");
 				$(".widget-title").text(checkName);
-				$("#dragCheck").show(500);
+				showDragCheck();
 			}else{
 				alert("请刷新页面重试！！！");
 			}
@@ -645,10 +645,15 @@
 
 	}
 	
-	//查新当前页
-	function reloadPage(){
-		window.document.forms[0].submit();
-	}
+//查新当前页
+function reloadPage(){
+	window.document.forms[0].submit();
+}
+function showDragCheck(){
+	$("#dragCheck").css("top",($(window).height())/5 + 'px');
+	$("#dragCheck").css("left",($(window).width()-$("#dragCheck").outerWidth())/2 + 'px');
+	$("#dragCheck").show(500);
+}
 function showDetail(obj){
 	var ss = $(obj).closest("table").next();
 	var flag = ss.attr("show");

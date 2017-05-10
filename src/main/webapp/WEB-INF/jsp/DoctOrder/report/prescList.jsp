@@ -64,8 +64,8 @@
 							<c:choose>
 								<c:when test="${not empty prescList}">
 									<c:forEach items="${prescList}" var="presc" varStatus="vs">
-										<tr ondblclick="detailPresc('${presc.id}','${presc.NGROUPNUM}')">
-											<td class="center"><a href="javascript:detailPresc('${presc.id}','${presc.NGROUPNUM}');">${presc.PRESC_NO}</a></td>
+										<tr >
+											<td class="center">${presc.PRESC_NO}</td>
 											<td class="center">${presc.ORDER_DATE}</td>
 											<td class="center">${presc.PATIENT_NAME}</td>
 											<td class="center">${presc.PATIENT_SEX}</td>
@@ -107,7 +107,7 @@
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">
 							<table style="width:100%;">
 								<tr>
-									<td align="left"><a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a></td>
+									<td align="left"><a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">关闭</a></td>
 									<td>
 										<div class="pagination" style="float: right;padding: 0px;margin: 0px;">${page.pageStr}</div>
 									</td>

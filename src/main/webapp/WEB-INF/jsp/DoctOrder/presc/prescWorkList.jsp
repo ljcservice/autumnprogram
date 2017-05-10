@@ -42,7 +42,7 @@
 						<div class="col-xs-12">
 						<!-- 检索  -->
 								<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
-								<form action="presc/prescListPage.do" method="post" name="searchForm" id="searchForm">
+								<form action="presc/prescWorkListPage.do" method="post" name="searchForm" id="searchForm">
 									<div class="check-search nav-search"  >
 										科室：
 										<span class="input-icon">
@@ -138,7 +138,7 @@
 											<td class="center"><c:if test="${presc.HASKJ==0}">否</c:if><c:if test="${presc.HASKJ==1}">是</c:if></td>
 											<td class="center">${presc.HASZS}</td>
 											<td class="center">${presc.BASEDRUG_COUNT}</td>
-											<td class="center">${presc.AMOUNT}</td>
+											<td class="center"><fmt:formatNumber value="${presc.AMOUNT }" pattern="###,###,##0.00"></fmt:formatNumber></td>
 											<td class="center">
 												<div class="hidden-sm hidden-xs btn-group">
 													<c:forEach items="${presc.RS_DRUG_TYPES}" var="rs_type" varStatus="vs" >
@@ -162,7 +162,7 @@
 										<td></td><td></td><td></td><td></td><td>${report.DRUG_COUNT_SUM }</td>
 										<td>${report.HASZS_SUM }</td><td>${report.HASKJ_SUM }</td>
 										<td>${report.BASEDRUG_COUNT_SUM }</td>
-										<td>${report.AMOUNT_SUM }</td><td></td>
+										<td><fmt:formatNumber value="${report.AMOUNT_SUM}" pattern="###,###,##0.00"></fmt:formatNumber></td><td></td>
 									</tr>
 									<tr>
 										<td>平 均：</td><td></td><td></td><td></td><td></td>

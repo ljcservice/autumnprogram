@@ -185,10 +185,10 @@ public class PrescController extends BaseController{
 		//当前处方的详情
 		List<PageData> prescDetailList = prescService.prescDetailList(pd);
 		mv.addObject("prescDetailList", prescDetailList);
-		//当日其他药师开具的处方
+		//当日其他药师开具的处方（排除当前处方）
 		List<PageData> otherPrescList = prescService.otherPrescList(presc);
 		mv.addObject("otherPrescList",otherPrescList);
-		//当日其他药师开具的处方
+		//当日其他药师开具的处方详细（排除当前处方）
 		List<PageData> otherPrescDetailList = prescService.otherPrescDetailList(presc);
 		Map<String, List<PageData>> otherDetailMap = new HashMap<String , List<PageData>>();
 		if(otherPrescDetailList!=null){

@@ -203,7 +203,7 @@ function detailList(RS_TYPE_CODE){
 	top.jzts();
 	var diag = new top.Dialog();
 	diag.Drag=true;
-	diag.Title ="医嘱统计列表";
+	diag.Title ="问题医嘱列表";
 	diag.URL = path + "/report/orderList.do?type=0&RS_DRUG_TYPE="+RS_TYPE_CODE+"&beginDate="+$("#beginDate").val()+"&endDate="+$("#endDate").val();
 	diag.Width =  window.screen.width;
 	diag.Height =  window.screen.height;  
@@ -216,7 +216,7 @@ function detailListByDoctor(RS_TYPE_CODE){
 	top.jzts();
 	var diag = new top.Dialog();
 	diag.Drag=true;
-	diag.Title ="医嘱统计列表";
+	diag.Title ="医嘱问题统计列表(医生)";
 	diag.URL = path + "/report/orderListByDoctor.do?type=0&RS_DRUG_TYPE="+RS_TYPE_CODE+"&beginDate="+$("#beginDate").val()+"&endDate="+$("#endDate").val();
 	diag.Width =  window.screen.width;
 	diag.Height =  window.screen.height;  
@@ -229,7 +229,7 @@ function detailListByDep(RS_TYPE_CODE){
 	top.jzts();
 	var diag = new top.Dialog();
 	diag.Drag=true;
-	diag.Title ="医嘱统计列表";
+	diag.Title ="医嘱问题统计列表(科室)";
 	diag.URL = path + "/report/orderListByDep.do?type=0&RS_DRUG_TYPE="+RS_TYPE_CODE+"&beginDate="+$("#beginDate").val()+"&endDate="+$("#endDate").val();
 	diag.Width =  window.screen.width;
 	diag.Height =  window.screen.height;  
