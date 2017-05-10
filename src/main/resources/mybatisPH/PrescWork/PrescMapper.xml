@@ -126,4 +126,6 @@
 			,decode(count(id),0,0.00,round(100*sum(BASEDRUG_COUNT)/count(id),2)) BASEDRUG_COUNT_PERSENTS 
 		from presc 
 	</select>
+	
+
 </mapper>

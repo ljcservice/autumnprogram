@@ -19,7 +19,6 @@ import com.ts.service.DoctOrder.OrderWork.CommonService;
 import com.ts.service.DoctOrder.OrderWork.IOrderWorkService;
 import com.ts.service.DoctOrder.OrderWork.PrescService;
 import com.ts.service.system.user.UserManager;
-import com.ts.util.ApplicationUtil;
 import com.ts.util.DateUtil;
 import com.ts.util.MyDecimalFormat;
 import com.ts.util.PageData;
@@ -33,8 +32,6 @@ public class ReportController extends BaseController{
 	private CommonService commonService;
 	@Autowired
 	private PrescService prescService;
-	@Autowired
-	private UserManager userService;
 	@Autowired
 	private IOrderWorkService orderWorkService;
 	
@@ -355,6 +352,101 @@ public class ReportController extends BaseController{
 			e.printStackTrace();
 		}
 		mv.setViewName("DoctOrder/report/prescListByDep");
+		return  mv; 
+	}
+	
+	/**
+	 * 门(急)诊处方点评汇总
+	 * @return
+	 */
+	@RequestMapping(value="/prescStatistics")
+	public ModelAndView prescStatistics(){
+		ModelAndView mv = new ModelAndView();
+		PageData pd = this.getPageData();
+		try {
+			
+			mv.addObject("pd", pd);
+			PageData p1 =  this.prescService.prescStatistics1(pd);
+			BigDecimal HASKJ_SUM = (BigDecimal) p1.get("HASKJ_SUM");
+			BigDecimal HASZS_SUM = (BigDecimal) p1.get("HASZS_SUM");
+			BigDecimal CHECKFALSE = (BigDecimal) p1.get("CHECKFALSE");
+			BigDecimal CHECKTRUE = (BigDecimal) p1.get("CHECKTRUE");
+			BigDecimal CHECKPEND = (BigDecimal) p1.get("CHECKPEND");
+			BigDecimal COUNT = (BigDecimal) p1.get("COUNT");
+			//计算百分比  
+			if(COUNT==null||COUNT.doubleValue()==0){
+				p1.put("HASKJ_PERSENTS",0);
+				p1.put("HASZS_PERSENTS",0);
+				p1.put("CHECKFALSE_PERSENTS",0);
+				p1.put("CHECKTRUE_PERSENTS",0);
+				p1.put("CHECKPEND_PERSENTS",0);
+			}else{
+				p1.put("HASKJ_PERSENTS", MyDecimalFormat.format(HASKJ_SUM.divide(COUNT,4,4).doubleValue()*100));
+				p1.put("HASZS_PERSENTS", MyDecimalFormat.format(HASZS_SUM.divide(COUNT,4,4).doubleValue()*100));
+				p1.put("CHECKFALSE_PERSENTS",MyDecimalFormat.format(CHECKFALSE.divide(COUNT,4,4).doubleValue()*100));
+				p1.put("CHECKTRUE_PERSENTS", MyDecimalFormat.format(CHECKTRUE.divide(COUNT,4,4).doubleValue()*100));
+				p1.put("CHECKPEND_PERSENTS", MyDecimalFormat.format(CHECKPEND.divide(COUNT,4,4).doubleValue()*100));
+			}
+			//国家基本药物品种百分比
+			BigDecimal BASEDRUG_COUNT_SUM = (BigDecimal) p1.get("BASEDRUG_COUNT_SUM");
+			BigDecimal DRUG_COUNT_SUM = (BigDecimal) p1.get("DRUG_COUNT_SUM");
+			if(DRUG_COUNT_SUM==null||DRUG_COUNT_SUM.doubleValue()==0){
+				p1.put("BASEDRUG_COUNT_PERSENTS", 0);
+			}else {
+				p1.put("BASEDRUG_COUNT_PERSENTS", MyDecimalFormat.format(BASEDRUG_COUNT_SUM.divide(DRUG_COUNT_SUM,4,4).doubleValue()*100));
+			}
+			
+			//抗菌药金额比例百分比(
+			BigDecimal ANTIDRUGCOSTS_SUM = (BigDecimal) p1.get("ANTIDRUGCOSTS_SUM");
+			BigDecimal AMOUNT_SUM = (BigDecimal) p1.get("AMOUNT_SUM");
+			if(AMOUNT_SUM==null||AMOUNT_SUM.doubleValue()==0){
+				p1.put("ANTIDRUGCOSTS_PERSENTS", 0);
+			}else{
+				p1.put("ANTIDRUGCOSTS_PERSENTS", MyDecimalFormat.format(ANTIDRUGCOSTS_SUM.divide(AMOUNT_SUM,4,4).doubleValue()*100));
+			}
+			
+			PageData p2 =  this.prescService.prescStatistics2(pd);
+			BigDecimal DRUG_COUNT = (BigDecimal) p2.get("DRUG_COUNT");
+			BigDecimal ONE_LEVEL = (BigDecimal) p2.get("ONE_LEVEL");
+			BigDecimal TWO_LEVEL = (BigDecimal) p2.get("TWO_LEVEL");
+			BigDecimal THREE_LEVEL = (BigDecimal) p2.get("THREE_LEVEL");
+			if(DRUG_COUNT==null||DRUG_COUNT.doubleValue()==0){
+				p2.put("ONE_LEVEL_PERSENTS",0);
+				p2.put("TWO_LEVEL_PERSENTS",0);
+				p2.put("THREE_LEVEL_PERSENTS",0);
+			}else{
+				p2.put("ONE_LEVEL_PERSENTS", MyDecimalFormat.format(ONE_LEVEL.divide(DRUG_COUNT,4,4).doubleValue()*100));
+				p2.put("TWO_LEVEL_PERSENTS", MyDecimalFormat.format(TWO_LEVEL.divide(DRUG_COUNT,4,4).doubleValue()*100));
+				p2.put("THREE_LEVEL_PERSENTS", MyDecimalFormat.format(THREE_LEVEL.divide(DRUG_COUNT,4,4).doubleValue()*100));
+			}
+			BigDecimal MAXUSEDAY_SUM = (BigDecimal) p1.get("MAXUSEDAY_SUM");
+			//平均每张处方金额：
+			//计算百分比  
+			if(COUNT==null||COUNT.doubleValue()==0){
+				p1.put("AMOUNT_AVG",0);
+				p1.put("MAXUSEDAY_AVG", 0);
+				p1.put("BASEDRUG_COUNT_AVG", 0);
+			}else {
+				p1.put("AMOUNT_AVG", MyDecimalFormat.format(AMOUNT_SUM.divide(COUNT,4,4).doubleValue()*100));
+				p1.put("MAXUSEDAY_AVG", MyDecimalFormat.format(MAXUSEDAY_SUM.divide(COUNT,4,4).doubleValue()*100));
+				p1.put("BASEDRUG_COUNT_AVG", MyDecimalFormat.format(BASEDRUG_COUNT_SUM.divide(COUNT,4,4).doubleValue()*100));
+			}
+			
+			PageData p3 =  this.prescService.prescStatistics3(pd);
+			BigDecimal PATIENT_ID_COUNT = (BigDecimal) p3.get("PATIENT_ID_COUNT");
+			if(PATIENT_ID_COUNT==null||PATIENT_ID_COUNT.doubleValue()==0){
+				p3.put("PATIENT_ID_AVG",0);
+			}else {
+				p3.put("PATIENT_ID_AVG", MyDecimalFormat.format(BASEDRUG_COUNT_SUM.divide(PATIENT_ID_COUNT,4,4).doubleValue()*100));
+			}
+			
+			mv.addObject("p1", p1);
+			mv.addObject("p2", p2);
+			mv.addObject("p3", p3);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		mv.setViewName("DoctOrder/report/prescStatistics");
 		return  mv; 
 	}
 }

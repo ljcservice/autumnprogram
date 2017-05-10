@@ -147,7 +147,7 @@
 							</tbody>
 						</table>
 						</div>
-						<div style="overflow:visible;height: auto;width: 100%;">
+						<div style="overflow:visible;height: auto;width: 100%;min-height: 80px;">
 						<div>同日其他处方：</div>
 						<!-- 开始循环 -->	
 						<c:choose>

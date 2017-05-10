@@ -245,4 +245,62 @@
 			</if>
 		group by b.ORG_NAME
 	</select>
+	
+	<!-- 门(急)诊处方点评汇总 -->
+	<select id="prescStatistics1" parameterType="pd"  resultType="pd">
+	    select nvl(SUM(HASKJ),0) HASKJ_SUM
+	    	,nvl(SUM(HASZS),0) HASZS_SUM 
+           ,nvl(SUM(DECODE(ISCHECKTRUE,0,1,0)),0) CHECKFALSE 
+           ,nvl(SUM(DECODE(ISCHECKTRUE,1,1,0)),0) CHECKTRUE 
+           ,nvl(SUM(DECODE(ISCHECKTRUE,2,1,0)),0) CHECKPEND 
+           ,nvl(SUM(BASEDRUG_COUNT),0) BASEDRUG_COUNT_SUM
+           ,nvl(SUM(DRUG_COUNT),0) DRUG_COUNT_SUM
+           ,nvl(SUM(ANTIDRUGCOSTS),0) ANTIDRUGCOSTS_SUM
+           ,nvl(SUM(AMOUNT),0) AMOUNT_SUM
+           ,nvl(SUM(MAXUSEDAY),0) MAXUSEDAY_SUM
+           ,nvl(count(id),0) as count 
+    	from  presc a 
+    	where 1=1 
+    	<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
+			and a.ORDER_DATE &gt;= #{beginDate} 
+		</if>
+		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+			and a.ORDER_DATE &lt;= #{endDate}
+		</if>
+    </select>
+    
+	<select id="prescStatistics2" parameterType="pd"  resultType="pd">
+	   select nvl(count(drug_code),0) DRUG_COUNT
+	   	   ,nvl(sum(decode(ANTI_LEVEL,1,1,0)),0) ONE_LEVEL
+		   ,nvl(sum(decode(ANTI_LEVEL,2,1,0)),0) TWO_LEVEL
+		   ,nvl(sum(decode(ANTI_LEVEL,3,1,0)),0) THREE_LEVEL
+	   from ( 
+	        select a.drug_code,nvl(b.ANTI_LEVEL,1) ANTI_LEVEL 
+	        from  presc_detail a,pdss.drug_map b 
+	        where a.drug_code = b.drug_no_local 
+	              and b.IS_ANTI = 1 
+				<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
+					and a.prescdate &gt;= #{beginDate} 
+				</if>
+				<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+					and a.prescdate &lt;= #{endDate}
+				</if>
+	        group by  a.drug_code,b.ANTI_LEVEL 
+	    )
+	 </select>
+	 <!-- 门(急)诊处方点评汇总 -->
+	<select id="prescStatistics3" parameterType="pd"  resultType="pd">
+		 select nvl(count(PATIENT_ID),0) PATIENT_ID_COUNT
+		 from (   select distinct(PATIENT_ID) PATIENT_ID
+	    	from  presc a 
+	    	where 1=1 
+	    	<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
+				and a.ORDER_DATE &gt;= #{beginDate} 
+			</if>
+			<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+				and a.ORDER_DATE &lt;= #{endDate}
+			</if>
+		)
+    </select>
+	 
 </mapper>
