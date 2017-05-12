@@ -23,6 +23,7 @@ import com.ts.service.DoctOrder.OrderWork.IOrderWorkService;
 import com.ts.service.DoctOrder.OrderWork.PrescService;
 import com.ts.service.system.user.UserManager;
 import com.ts.util.DateUtil;
+import com.ts.util.ObjectExcelView;
 import com.ts.util.PageData;
 import com.ts.util.Tools;
 import com.ts.util.app.AppUtil;
@@ -87,6 +88,80 @@ public class PrescController extends BaseController{
 			//统计
 			PageData report = prescService.prescCountReport(pd); 
 			mv.addObject("report", report);
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
+	
+	/**
+	 * 导出到excel
+	 * @return
+	 */
+	@RequestMapping(value="/prescListExport")
+	public ModelAndView prescListExport(Page page){
+		logBefore(logger, "导出Textmsg到excel");
+		ModelAndView mv = new ModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		page.setPd(pd);
+		page.setShowCount(1000);
+		try{
+			Map<String,Object> dataMap = new HashMap<String,Object>();
+			List<String> titles = new ArrayList<String>();
+			titles.add("处方号");//1
+			titles.add("处方日期");//2
+			titles.add("患者");//3
+			titles.add("性别 	");	//4
+			titles.add("科室");	//5
+			titles.add("医生");	//5
+			titles.add("抗菌");	//5
+			titles.add("诊断");	//5
+			titles.add("药费");	//5
+			titles.add("点评");	//5
+			titles.add("是否合理");	//5
+			titles.add("结果");	//5
+			dataMap.put("titles", titles);
+			
+			List<PageData> varOList =  prescService.prescListPage(page);
+			int TotalPage = page.getTotalPage();
+			//分批查询
+			for(int i = 2;i<=TotalPage;i++){
+				page.setCurrentPage(i);
+				List<PageData> newList =  prescService.prescListPage(page);
+				varOList.addAll(newList);
+			}
+			
+			List<PageData> varList = new ArrayList<PageData>();
+			for(int i=0;i<varOList.size();i++){
+				PageData vpd = new PageData();
+				vpd.put("var1", varOList.get(i).getString("PRESC_NO"));	//1
+				vpd.put("var2", varOList.get(i).getString("ORDER_DATE"));	//2
+				vpd.put("var3", varOList.get(i).getString("PATIENT_NAME"));	//3
+				vpd.put("var4", varOList.get(i).getString("PATIENT_SEX"));	//4
+				vpd.put("var5", varOList.get(i).getString("ORG_NAME"));	//5
+				vpd.put("var6", varOList.get(i).getString("DOCTOR_NAME"));	//5
+				vpd.put("var7", varOList.get(i).getString("HASKJ"));	//5
+				vpd.put("var8", varOList.get(i).getString("DIAGNOSIS_NAMES"));	//5
+				vpd.put("var9", varOList.get(i).getDouble("AMOUNT"));	//5
+				vpd.put("var10", varOList.get(i).get("ISORDERCHECK").toString());	//5
+				vpd.put("var11", varOList.get(i).get("ISCHECKTRUE").toString());	//5
+				
+				String RS_DRUG_TYPES = varOList.get(i).getString("RS_DRUG_TYPES");
+				StringBuffer sb = new StringBuffer();
+				if(!Tools.isEmpty(RS_DRUG_TYPES)){
+					String[] RS_DRUG_TYPE = RS_DRUG_TYPES.split("@;@");
+					for(String ss:RS_DRUG_TYPE){
+						String w = DoctorConst.rstypeMap.get(ss );
+						sb.append(w);
+					}
+				}
+				vpd.put("var12", sb.toString());	//5
+				varList.add(vpd);
+			}
+			dataMap.put("varList", varList);
+			ObjectExcelView erv = new ObjectExcelView();
+			mv = new ModelAndView(erv,dataMap);
 		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
