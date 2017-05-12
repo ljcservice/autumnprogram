@@ -218,7 +218,7 @@
 	
 	<!-- 	处方按医生分组查询统计 -->
 	<select id="prescListByDoctor" parameterType="pd" resultType="pd">
-		select b.DOCTOR_NAME ,count(a.rs_id) count
+		select b.DOCTOR_CODE,b.DOCTOR_NAME ,count(a.rs_id) count
 		FROM RS_DRUG_CHECKRSLT a ,presc b
 		WHERE a.NGROUPNUM = b.NGROUPNUM
 				and a.RS_DRUG_TYPE = #{RS_DRUG_TYPE}
@@ -228,12 +228,12 @@
 			<if test="endDate != null and endDate != ''"> <!--开始日期-->
 				and b.ORDER_DATE &lt;=  #{endDate} 
 			</if>
-		group by b.DOCTOR_NAME
+		group by b.DOCTOR_CODE,b.DOCTOR_NAME
 	</select>
 	
 		<!-- 	处方 按出院科室分组查询统计 -->
 	<select id="prescListByDep" parameterType="pd" resultType="pd">
-		select b.ORG_NAME ,count(a.rs_id) count
+		select b.ORG_CODE,b.ORG_NAME ,count(a.rs_id) count
 		FROM RS_DRUG_CHECKRSLT a ,presc b
 		WHERE a.NGROUPNUM = b.NGROUPNUM
 				and a.RS_DRUG_TYPE = #{RS_DRUG_TYPE}
@@ -243,7 +243,7 @@
 			<if test="endDate != null and endDate != ''"> <!--开始日期-->
 				and b.ORDER_DATE &lt;=  #{endDate} 
 			</if>
-		group by b.ORG_NAME
+		group by b.ORG_CODE,b.ORG_NAME
 	</select>
 	
 	<!-- 门(急)诊处方点评汇总 -->
@@ -302,5 +302,189 @@
 			</if>
 		)
     </select>
+<!--     -------------------------超常规统计 start------------------------------- -->
+<!--   处方  超常规统计（科室） -->
+	 <select id="exceedCommonDep" parameterType="pd"  resultType="pd">
+	 	select a.ORG_CODE,a.ORG_NAME
+	 			,nvl(sum(decode(rs_drug_type,'diaginfo',1,0)),0) diaginfo_sum
+		       ,nvl(sum(decode(rs_drug_type,'dosage',1,0)),0) dosage_sum
+		       ,nvl(sum(decode(rs_drug_type,'ingredien',1,0)),0) ingredien_sum
+		       ,nvl(sum(decode(rs_drug_type,'interaction',1,0)),0) interaction_sum
+		       ,nvl(sum(decode(rs_drug_type,'iv_effect',1,0)),0) iv_effect_sum
+		       ,nvl(sum(decode(rs_drug_type,'side',1,0)),0) side_sum
+		       ,nvl(sum(decode(rs_drug_type,'administrator',1,0)),0) administrator_sum
+		       ,nvl(sum(decode(rs_drug_type,'specpeople',1,0)),0) specpeople_sum
+		       ,nvl(sum(decode(rs_drug_type,'manager',1,0)),0) manager_sum
+		from presc  a,RS_DRUG_CHECKRSLT b
+		where a.ngroupnum = b.ngroupnum(+)
+		<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
+			and a.ORDER_DATE &gt;= #{beginDate} 
+		</if>
+		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+			and a.ORDER_DATE &lt; #{endDate}
+		</if>
+		group by a.ORG_CODE,a.ORG_NAME
+	 </select>
+<!-- 	处方 超常规统计（医生） -->
+	 <select id="exceedCommonDoctor" parameterType="pd"  resultType="pd">
+		 select a.DOCTOR_CODE,a.doctor_name
+				,nvl(sum(decode(rs_drug_type,'diaginfo',1,0)),0) diaginfo_sum
+		       ,nvl(sum(decode(rs_drug_type,'dosage',1,0)),0) dosage_sum
+		       ,nvl(sum(decode(rs_drug_type,'ingredien',1,0)),0) ingredien_sum
+		       ,nvl(sum(decode(rs_drug_type,'interaction',1,0)),0) interaction_sum
+		       ,nvl(sum(decode(rs_drug_type,'iv_effect',1,0)),0) iv_effect_sum
+		       ,nvl(sum(decode(rs_drug_type,'side',1,0)),0) side_sum
+		       ,nvl(sum(decode(rs_drug_type,'administrator',1,0)),0) administrator_sum
+		       ,nvl(sum(decode(rs_drug_type,'specpeople',1,0)),0) specpeople_sum
+		       ,nvl(sum(decode(rs_drug_type,'manager',1,0)),0) manager_sum
+		from presc  a,RS_DRUG_CHECKRSLT b
+		where a.ngroupnum = b.ngroupnum(+)
+		<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
+			and a.ORDER_DATE &gt;= #{beginDate} 
+		</if>
+		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+			and a.ORDER_DATE &lt; #{endDate}
+		</if>
+		group by a.DOCTOR_CODE,a.doctor_name
+	 </select>
+	 <select id="exceedCommonAll" parameterType="pd"  resultType="pd">
+		 select nvl(sum(decode(rs_drug_type,'diaginfo',1,0)),0) diaginfo_sum
+		       ,nvl(sum(decode(rs_drug_type,'dosage',1,0)),0) dosage_sum
+		       ,nvl(sum(decode(rs_drug_type,'ingredien',1,0)),0) ingredien_sum
+		       ,nvl(sum(decode(rs_drug_type,'interaction',1,0)),0) interaction_sum
+		       ,nvl(sum(decode(rs_drug_type,'iv_effect',1,0)),0) iv_effect_sum
+		       ,nvl(sum(decode(rs_drug_type,'side',1,0)),0) side_sum
+		       ,nvl(sum(decode(rs_drug_type,'administrator',1,0)),0) administrator_sum
+		       ,nvl(sum(decode(rs_drug_type,'specpeople',1,0)),0) specpeople_sum
+		       ,nvl(sum(decode(rs_drug_type,'manager',1,0)),0) manager_sum
+		from presc  a,RS_DRUG_CHECKRSLT b
+		where a.ngroupnum = b.ngroupnum
+		<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
+			and a.ORDER_DATE &gt;= #{beginDate} 
+		</if>
+		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+			and a.ORDER_DATE &lt; #{endDate}
+		</if>
+	 </select>
+	 <select id="prescCountDoctor" parameterType="pd"  resultType="pd">
+	 	select a.DOCTOR_CODE,nvl(sum(decode(ISCHECKTRUE,1,1,0)),0) checkfalse_sum
+	 		,count(id) presc_count
+	 	from presc a
+	 	WHERE 1=1 
+	 	<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
+			and a.ORDER_DATE &gt;= #{beginDate} 
+		</if>
+		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+			and a.ORDER_DATE &lt; #{endDate}
+		</if>
+	 	group by a.DOCTOR_CODE
+	 </select>
+	 <select id="prescCountDep" parameterType="pd"  resultType="pd">
+	 	select a.ORG_CODE,a.ORG_NAME,nvl(sum(decode(ISCHECKTRUE,1,1,0)),0) checkfalse_sum
+	 		,count(id) presc_count
+	 	from presc a
+	 	WHERE 1=1
+	 	<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
+			and a.ORDER_DATE &gt;= #{beginDate} 
+		</if>
+		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+			and a.ORDER_DATE &lt; #{endDate}
+		</if>
+	 	group by a.ORG_CODE,a.ORG_NAME
+	 </select>
 	 
+	 <!-- 医嘱  超常规统计（科室） -->
+	 <select id="exceedCommonOrderDep" parameterType="pd"  resultType="pd">
+	 	select a.out_dept_name
+	 			,nvl(sum(decode(rs_drug_type,'diaginfo',1,0)),0) diaginfo_sum
+		       ,nvl(sum(decode(rs_drug_type,'dosage',1,0)),0) dosage_sum
+		       ,nvl(sum(decode(rs_drug_type,'ingredien',1,0)),0) ingredien_sum
+		       ,nvl(sum(decode(rs_drug_type,'interaction',1,0)),0) interaction_sum
+		       ,nvl(sum(decode(rs_drug_type,'iv_effect',1,0)),0) iv_effect_sum
+		       ,nvl(sum(decode(rs_drug_type,'side',1,0)),0) side_sum
+		       ,nvl(sum(decode(rs_drug_type,'administrator',1,0)),0) administrator_sum
+		       ,nvl(sum(decode(rs_drug_type,'specpeople',1,0)),0) specpeople_sum
+		       ,nvl(sum(decode(rs_drug_type,'manager',1,0)),0) manager_sum
+		from pat_visit a,RS_DRUG_CHECKRSLT b
+		where a.ngroupnum = b.ngroupnum(+)
+		<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
+			and t.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
+		</if>
+		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+			and t.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+		</if>
+		group by a.out_dept_name
+	 </select>
+<!-- 	医嘱  超常规统计（医生） -->
+	 <select id="exceedCommonOrderDoctor" parameterType="pd"  resultType="pd">
+		 select  nvl(a.ATTENDING_DOCTOR,'其他药师') ATTENDING_DOCTOR
+				,nvl(sum(decode(rs_drug_type,'diaginfo',1,0)),0) diaginfo_sum
+		       ,nvl(sum(decode(rs_drug_type,'dosage',1,0)),0) dosage_sum
+		       ,nvl(sum(decode(rs_drug_type,'ingredien',1,0)),0) ingredien_sum
+		       ,nvl(sum(decode(rs_drug_type,'interaction',1,0)),0) interaction_sum
+		       ,nvl(sum(decode(rs_drug_type,'iv_effect',1,0)),0) iv_effect_sum
+		       ,nvl(sum(decode(rs_drug_type,'side',1,0)),0) side_sum
+		       ,nvl(sum(decode(rs_drug_type,'administrator',1,0)),0) administrator_sum
+		       ,nvl(sum(decode(rs_drug_type,'specpeople',1,0)),0) specpeople_sum
+		       ,nvl(sum(decode(rs_drug_type,'manager',1,0)),0) manager_sum
+		from pat_visit a,RS_DRUG_CHECKRSLT b
+		where a.ngroupnum = b.ngroupnum(+)
+		<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
+			and t.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
+		</if>
+		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+			and t.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+		</if>
+		group by a.ATTENDING_DOCTOR
+	 </select>
+	 <select id="exceedCommonOrderAll" parameterType="pd"  resultType="pd">
+		 select nvl(sum(decode(rs_drug_type,'diaginfo',1,0)),0) diaginfo_sum
+		       ,nvl(sum(decode(rs_drug_type,'dosage',1,0)),0) dosage_sum
+		       ,nvl(sum(decode(rs_drug_type,'ingredien',1,0)),0) ingredien_sum
+		       ,nvl(sum(decode(rs_drug_type,'interaction',1,0)),0) interaction_sum
+		       ,nvl(sum(decode(rs_drug_type,'iv_effect',1,0)),0) iv_effect_sum
+		       ,nvl(sum(decode(rs_drug_type,'side',1,0)),0) side_sum
+		       ,nvl(sum(decode(rs_drug_type,'administrator',1,0)),0) administrator_sum
+		       ,nvl(sum(decode(rs_drug_type,'specpeople',1,0)),0) specpeople_sum
+		       ,nvl(sum(decode(rs_drug_type,'manager',1,0)),0) manager_sum
+		from pat_visit  a,RS_DRUG_CHECKRSLT b
+		where a.ngroupnum = b.ngroupnum
+		<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
+			and t.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
+		</if>
+		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+			and t.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+		</if>
+	 </select>
+	 <select id="prescCountOrderDoctor" parameterType="pd"  resultType="pd">
+	 	select a.ATTENDING_DOCTOR,nvl(sum(decode(ISCHECKTRUE,1,1,0)),0) checkfalse_sum
+	 		,count(id) presc_count
+	 	from pat_visit a
+	 	WHERE 1=1 
+		<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
+			and t.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
+		</if>
+		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+			and t.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+		</if>
+	 	group by a.ATTENDING_DOCTOR
+	 </select>
+	 <select id="prescCountOrderDep" parameterType="pd"  resultType="pd">
+	 	select a.out_dept_name,nvl(sum(decode(ISCHECKTRUE,1,1,0)),0) checkfalse_sum
+	 		,count(id) presc_count
+	 	from pat_visit a
+	 	WHERE 1=1
+		<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
+			and t.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
+		</if>
+		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+			and t.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+		</if>
+	 	group by a.out_dept_name
+	 </select>
+<!-- ----------------------超常规统计 end ---------------------------- -->
+
+
+
+
 </mapper>

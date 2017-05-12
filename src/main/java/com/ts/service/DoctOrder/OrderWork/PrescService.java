@@ -90,6 +90,28 @@ public interface PrescService {
 
 	public List<PageData> prescListByDep(PageData pd)throws Exception;
 
+	public PageData prescStatistics1(PageData pd)throws Exception;
 
+	public PageData prescStatistics2(PageData pd)throws Exception;
 
+	public PageData prescStatistics3(PageData pd)throws Exception;
+
+	public List<PageData> exceedCommonDoctor(PageData pd)throws Exception;
+
+	public List<PageData> exceedCommonDep(PageData pd)throws Exception;
+
+	public List<PageData> prescCountDoctor(PageData pd)throws Exception;
+
+	public PageData exceedCommonAll(PageData pd)throws Exception;
+
+	public List<PageData> prescCountDep(PageData pd)throws Exception;
+	
+	public List<PageData> exceedCommonOrderDoctor(PageData pd)throws Exception;
+	public List<PageData> exceedCommonOrderDep(PageData pd)throws Exception;
+
+	public List<PageData> prescCountOrderDoctor(PageData pd)throws Exception;
+
+	public PageData exceedCommonOrderAll(PageData pd)throws Exception;
+
+	public List<PageData> prescCountOrderDep(PageData pd)throws Exception;
 }

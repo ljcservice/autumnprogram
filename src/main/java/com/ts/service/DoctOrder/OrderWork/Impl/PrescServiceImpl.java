@@ -146,4 +146,42 @@ public class PrescServiceImpl implements PrescService{
 	public PageData prescStatistics3(PageData pd)throws Exception{
 		return (PageData) daoph.findForObject("rsDrugCheckRsltMapper.prescStatistics3", pd);
 	}
+	public List<PageData> exceedCommonDoctor(PageData pd)throws Exception{
+		return (List<PageData>) daoph.findForList("rsDrugCheckRsltMapper.exceedCommonDoctor", pd);
+	}
+	public List<PageData> exceedCommonDep(PageData pd)throws Exception{
+		return (List<PageData>) daoph.findForList("rsDrugCheckRsltMapper.exceedCommonDep", pd);
+	}
+
+	public List<PageData> prescCountDoctor(PageData pd)throws Exception{
+		return (List<PageData>) daoph.findForList("rsDrugCheckRsltMapper.prescCountDoctor", pd);
+	}
+
+	public PageData exceedCommonAll(PageData pd)throws Exception{
+		return (PageData) daoph.findForObject("rsDrugCheckRsltMapper.exceedCommonAll", pd);
+	}
+
+	public List<PageData> prescCountDep(PageData pd)throws Exception{
+		return (List<PageData>) daoph.findForList("rsDrugCheckRsltMapper.prescCountDep", pd);
+	}
+
+	
+	public List<PageData> exceedCommonOrderDoctor(PageData pd)throws Exception{
+		return (List<PageData>) daoph.findForList("rsDrugCheckRsltMapper.exceedCommonOrderDoctor", pd);
+	}
+	public List<PageData> exceedCommonOrderDep(PageData pd)throws Exception{
+		return (List<PageData>) daoph.findForList("rsDrugCheckRsltMapper.exceedCommonOrderDep", pd);
+	}
+
+	public List<PageData> prescCountOrderDoctor(PageData pd)throws Exception{
+		return (List<PageData>) daoph.findForList("rsDrugCheckRsltMapper.prescCountOrderDoctor", pd);
+	}
+
+	public PageData exceedCommonOrderAll(PageData pd)throws Exception{
+		return (PageData) daoph.findForObject("rsDrugCheckRsltMapper.exceedCommonOrderAll", pd);
+	}
+
+	public List<PageData> prescCountOrderDep(PageData pd)throws Exception{
+		return (List<PageData>) daoph.findForList("rsDrugCheckRsltMapper.prescCountOrderDep", pd);
+	}
 }

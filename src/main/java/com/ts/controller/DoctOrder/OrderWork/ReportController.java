@@ -3,7 +3,9 @@ package com.ts.controller.DoctOrder.OrderWork;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -447,6 +449,233 @@ public class ReportController extends BaseController{
 			e.printStackTrace();
 		}
 		mv.setViewName("DoctOrder/report/prescStatistics");
+		return  mv; 
+	}
+	
+	/**
+	 * 处方超常规统计（科室）
+	 * @return
+	 */
+	@RequestMapping(value="/exceedCommonDep")
+	public ModelAndView exceedCommonDep(){
+		ModelAndView mv = new ModelAndView();
+		PageData pd = this.getPageData();
+		try {
+			//超常规统计（科室）按照问题类型分组
+			List<PageData> list =  this.prescService.exceedCommonDep(pd);
+			//按照医生分组
+			Map<String,PageData> map = new HashMap<String,PageData>();
+			for(PageData px:list){
+				String ORG_CODE = px.getString("ORG_CODE");
+				map.put(ORG_CODE, px);
+			}
+			BigDecimal checkfalse_sum_all = new BigDecimal(0);//不合格处方数汇总
+			BigDecimal presc_count_all =  new BigDecimal(0);//总处方统计-汇总
+			//（科室分组）不合格处方数,总处方统计
+			List<PageData> countlist =  this.prescService.prescCountDep(pd);
+			for(PageData py:countlist){
+				String ORG_CODE = py.getString("ORG_CODE");
+				PageData px = map.get(ORG_CODE);
+				px.put("checkfalse_sum", py.get("checkfalse_sum"));
+				px.put("presc_count", py.get("presc_count"));
+				BigDecimal checkfalse_sum = (BigDecimal) py.get("checkfalse_sum");
+				BigDecimal presc_count = (BigDecimal) py.get("presc_count");
+				checkfalse_sum_all= checkfalse_sum_all.add(checkfalse_sum);
+				presc_count_all = presc_count_all.add(presc_count);
+			}
+			//汇总统计
+			PageData all = this.prescService.exceedCommonAll(pd);
+			all.put("checkfalse_sum_all", checkfalse_sum_all);
+			all.put("presc_count_all", presc_count_all);
+			mv.addObject("all", all);
+			
+			//计算平均值
+			for(PageData px:list){
+				String checkfalse_persents1 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(checkfalse_sum_all,4,4).doubleValue()*100);
+				px.put("checkfalse_persents1", checkfalse_persents1);
+				String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("presc_count")).divide(presc_count_all,4,4).doubleValue()*100);
+				px.put("checkfalse_persents2", checkfalse_persents2);
+			}
+			
+			mv.addObject("resultList", list);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		mv.setViewName("DoctOrder/report/exceedCommonDep");
+		return  mv; 
+	}
+	/**
+	 * 处方超常规统计（医生）
+	 * @return
+	 */
+	@RequestMapping(value="/exceedCommonDoctor")
+	public ModelAndView exceedCommonDoctor(){
+		ModelAndView mv = new ModelAndView();
+		PageData pd = this.getPageData();
+		try {
+			//超常规统计（医生）按照问题类型分组
+			List<PageData> list =  this.prescService.exceedCommonDoctor(pd);
+			//按照医生分组
+			Map<String,PageData> map = new HashMap<String,PageData>();
+			for(PageData px:list){
+				String DOCTOR_CODE = px.getString("DOCTOR_CODE");
+				map.put(DOCTOR_CODE, px);
+			}
+			BigDecimal checkfalse_sum_all = new BigDecimal(0);//不合格处方数汇总
+			BigDecimal presc_count_all =  new BigDecimal(0);//总处方统计-汇总
+			//（医生分组）不合格处方数,总处方统计
+			List<PageData> countlist =  this.prescService.prescCountDoctor(pd);
+			for(PageData py:countlist){
+				String DOCTOR_CODE = py.getString("DOCTOR_CODE");
+				PageData px = map.get(DOCTOR_CODE);
+				px.put("checkfalse_sum", py.get("checkfalse_sum"));
+				px.put("presc_count", py.get("presc_count"));
+				BigDecimal checkfalse_sum = (BigDecimal) py.get("checkfalse_sum");
+				BigDecimal presc_count = (BigDecimal) py.get("presc_count");
+				checkfalse_sum_all= checkfalse_sum_all.add(checkfalse_sum);
+				presc_count_all = presc_count_all.add(presc_count);
+			}
+			//汇总统计
+			PageData all = this.prescService.exceedCommonAll(pd);
+			all.put("checkfalse_sum_all", checkfalse_sum_all);
+			all.put("presc_count_all", presc_count_all);
+			mv.addObject("all", all);
+			
+			//计算平均值
+			for(PageData px:list){
+				if(checkfalse_sum_all==null||checkfalse_sum_all.doubleValue()==0){
+					px.put("checkfalse_persents1", 0);
+				}else{
+					String checkfalse_persents1 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(checkfalse_sum_all,4,4).doubleValue()*100);
+					px.put("checkfalse_persents1", checkfalse_persents1);
+				}
+				if(presc_count_all==null||presc_count_all.doubleValue()==0){
+					px.put("checkfalse_persents2", 0);
+				}else{
+					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("presc_count")).divide(presc_count_all,4,4).doubleValue()*100);
+					px.put("checkfalse_persents2", checkfalse_persents2);
+				}
+			}
+			
+			mv.addObject("resultList", list);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		mv.setViewName("DoctOrder/report/exceedCommonDoctor");
+		return  mv; 
+	}
+	
+	
+	/**
+	 * 医嘱超常规统计（科室）
+	 * @return
+	 */
+	@RequestMapping(value="/exceedCommonOrderDep")
+	public ModelAndView exceedCommonOrderDep(){
+		ModelAndView mv = new ModelAndView();
+		PageData pd = this.getPageData();
+		try {
+			//超常规统计（科室）按照问题类型分组
+			List<PageData> list =  this.prescService.exceedCommonOrderDep(pd);
+			//按照医生分组
+			Map<String,PageData> map = new HashMap<String,PageData>();
+			for(PageData px:list){
+				String ORG_CODE = px.getString("ORG_CODE");
+				map.put(ORG_CODE, px);
+			}
+			BigDecimal checkfalse_sum_all = new BigDecimal(0);//不合格处方数汇总
+			BigDecimal presc_count_all =  new BigDecimal(0);//总处方统计-汇总
+			//（科室分组）不合格处方数,总处方统计
+			List<PageData> countlist =  this.prescService.prescCountOrderDep(pd);
+			for(PageData py:countlist){
+				String ORG_CODE = py.getString("ORG_CODE");
+				PageData px = map.get(ORG_CODE);
+				px.put("checkfalse_sum", py.get("checkfalse_sum"));
+				px.put("presc_count", py.get("presc_count"));
+				BigDecimal checkfalse_sum = (BigDecimal) py.get("checkfalse_sum");
+				BigDecimal presc_count = (BigDecimal) py.get("presc_count");
+				checkfalse_sum_all= checkfalse_sum_all.add(checkfalse_sum);
+				presc_count_all = presc_count_all.add(presc_count);
+			}
+			//汇总统计
+			PageData all = this.prescService.exceedCommonAll(pd);
+			all.put("checkfalse_sum_all", checkfalse_sum_all);
+			all.put("presc_count_all", presc_count_all);
+			mv.addObject("all", all);
+			
+			//计算平均值
+			for(PageData px:list){
+				String checkfalse_persents1 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(checkfalse_sum_all,4,4).doubleValue()*100);
+				px.put("checkfalse_persents1", checkfalse_persents1);
+				String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("presc_count")).divide(presc_count_all,4,4).doubleValue()*100);
+				px.put("checkfalse_persents2", checkfalse_persents2);
+			}
+			
+			mv.addObject("resultList", list);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		mv.setViewName("DoctOrder/report/exceedCommonDep");
+		return  mv; 
+	}
+	/**
+	 * 医嘱超常规统计（医生）
+	 * @return
+	 */
+	@RequestMapping(value="/exceedCommonOrderDoctor")
+	public ModelAndView exceedCommonOrderDoctor(){
+		ModelAndView mv = new ModelAndView();
+		PageData pd = this.getPageData();
+		try {
+			//超常规统计（医生）按照问题类型分组
+			List<PageData> list =  this.prescService.exceedCommonOrderDoctor(pd);
+			//按照医生分组
+			Map<String,PageData> map = new HashMap<String,PageData>();
+			for(PageData px:list){
+				String DOCTOR_CODE = px.getString("DOCTOR_CODE");
+				map.put(DOCTOR_CODE, px);
+			}
+			BigDecimal checkfalse_sum_all = new BigDecimal(0);//不合格处方数汇总
+			BigDecimal presc_count_all =  new BigDecimal(0);//总处方统计-汇总
+			//（医生分组）不合格处方数,总处方统计
+			List<PageData> countlist =  this.prescService.prescCountOrderDoctor(pd);
+			for(PageData py:countlist){
+				String DOCTOR_CODE = py.getString("DOCTOR_CODE");
+				PageData px = map.get(DOCTOR_CODE);
+				px.put("checkfalse_sum", py.get("checkfalse_sum"));
+				px.put("presc_count", py.get("presc_count"));
+				BigDecimal checkfalse_sum = (BigDecimal) py.get("checkfalse_sum");
+				BigDecimal presc_count = (BigDecimal) py.get("presc_count");
+				checkfalse_sum_all= checkfalse_sum_all.add(checkfalse_sum);
+				presc_count_all = presc_count_all.add(presc_count);
+			}
+			//汇总统计
+			PageData all = this.prescService.exceedCommonAll(pd);
+			all.put("checkfalse_sum_all", checkfalse_sum_all);
+			all.put("presc_count_all", presc_count_all);
+			mv.addObject("all", all);
+			
+			//计算平均值
+			for(PageData px:list){
+				if(checkfalse_sum_all==null||checkfalse_sum_all.doubleValue()==0){
+					px.put("checkfalse_persents1", 0);
+				}else{
+					String checkfalse_persents1 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(checkfalse_sum_all,4,4).doubleValue()*100);
+					px.put("checkfalse_persents1", checkfalse_persents1);
+				}
+				if(presc_count_all==null||presc_count_all.doubleValue()==0){
+					px.put("checkfalse_persents2", 0);
+				}else{
+					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("presc_count")).divide(presc_count_all,4,4).doubleValue()*100);
+					px.put("checkfalse_persents2", checkfalse_persents2);
+				}
+			}
+			
+			mv.addObject("resultList", list);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		mv.setViewName("DoctOrder/report/exceedCommonDoctor");
 		return  mv; 
 	}
 }
