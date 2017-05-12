@@ -80,7 +80,7 @@
 								<c:when test="${not empty resultList}">
 									<c:forEach items="${resultList}" var="p1" varStatus="vs" >
 								<tr  >
-									<td nowrap class="center">${p1.ORG_NAME }</td>
+									<td nowrap class="center">${p1.out_dept_name }</td>
 									<td nowrap class="center">${p1.DOSAGE_SUM }</td>
 									<td nowrap class="center">${p1.DIAGINFO_SUM }</td>
 									<td nowrap class="center">${p1.INGREDIEN_SUM }</td>

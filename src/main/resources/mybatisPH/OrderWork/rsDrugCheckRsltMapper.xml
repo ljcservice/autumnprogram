@@ -302,7 +302,7 @@
 			</if>
 		)
     </select>
-<!--     -------------------------超常规统计 start------------------------------- -->
+<!--                    超常规统计 start                   -->
 <!--   处方  超常规统计（科室） -->
 	 <select id="exceedCommonDep" parameterType="pd"  resultType="pd">
 	 	select a.ORG_CODE,a.ORG_NAME
@@ -323,7 +323,8 @@
 		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
 			and a.ORDER_DATE &lt; #{endDate}
 		</if>
-		group by a.ORG_CODE,a.ORG_NAME
+		group by a.ORG_CODE,a.ORG_NAME 
+		order by a.ORG_NAME
 	 </select>
 <!-- 	处方 超常规统计（医生） -->
 	 <select id="exceedCommonDoctor" parameterType="pd"  resultType="pd">
@@ -346,6 +347,7 @@
 			and a.ORDER_DATE &lt; #{endDate}
 		</if>
 		group by a.DOCTOR_CODE,a.doctor_name
+		order by a.doctor_name
 	 </select>
 	 <select id="exceedCommonAll" parameterType="pd"  resultType="pd">
 		 select nvl(sum(decode(rs_drug_type,'diaginfo',1,0)),0) diaginfo_sum
@@ -414,6 +416,7 @@
 			and t.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
 		</if>
 		group by a.out_dept_name
+		order by a.out_dept_name
 	 </select>
 <!-- 	医嘱  超常规统计（医生） -->
 	 <select id="exceedCommonOrderDoctor" parameterType="pd"  resultType="pd">
@@ -436,6 +439,7 @@
 			and t.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
 		</if>
 		group by a.ATTENDING_DOCTOR
+		order by a.ATTENDING_DOCTOR
 	 </select>
 	 <select id="exceedCommonOrderAll" parameterType="pd"  resultType="pd">
 		 select nvl(sum(decode(rs_drug_type,'diaginfo',1,0)),0) diaginfo_sum
@@ -457,8 +461,9 @@
 		</if>
 	 </select>
 	 <select id="prescCountOrderDoctor" parameterType="pd"  resultType="pd">
-	 	select a.ATTENDING_DOCTOR,nvl(sum(decode(ISCHECKTRUE,1,1,0)),0) checkfalse_sum
-	 		,count(id) presc_count
+	 	select nvl(a.ATTENDING_DOCTOR,'其他药师') ATTENDING_DOCTOR
+	 		,nvl(sum(decode(ISCHECKTRUE,1,1,0)),0) checkfalse_sum
+	 		,count(PATIENT_ID) order_count
 	 	from pat_visit a
 	 	WHERE 1=1 
 		<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
@@ -471,7 +476,7 @@
 	 </select>
 	 <select id="prescCountOrderDep" parameterType="pd"  resultType="pd">
 	 	select a.out_dept_name,nvl(sum(decode(ISCHECKTRUE,1,1,0)),0) checkfalse_sum
-	 		,count(id) presc_count
+	 		,count(PATIENT_ID) order_count
 	 	from pat_visit a
 	 	WHERE 1=1
 		<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
@@ -482,7 +487,7 @@
 		</if>
 	 	group by a.out_dept_name
 	 </select>
-<!-- ----------------------超常规统计 end ---------------------------- -->
+<!--                   超常规统计 end                     -->
 
 
 

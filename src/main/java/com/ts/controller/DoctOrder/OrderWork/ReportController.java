@@ -460,6 +460,7 @@ public class ReportController extends BaseController{
 	public ModelAndView exceedCommonDep(){
 		ModelAndView mv = new ModelAndView();
 		PageData pd = this.getPageData();
+		mv.addObject("pd", pd);
 		try {
 			//超常规统计（科室）按照问题类型分组
 			List<PageData> list =  this.prescService.exceedCommonDep(pd);
@@ -512,6 +513,7 @@ public class ReportController extends BaseController{
 	public ModelAndView exceedCommonDoctor(){
 		ModelAndView mv = new ModelAndView();
 		PageData pd = this.getPageData();
+		mv.addObject("pd", pd);
 		try {
 			//超常规统计（医生）按照问题类型分组
 			List<PageData> list =  this.prescService.exceedCommonDoctor(pd);
@@ -574,40 +576,41 @@ public class ReportController extends BaseController{
 	public ModelAndView exceedCommonOrderDep(){
 		ModelAndView mv = new ModelAndView();
 		PageData pd = this.getPageData();
+		mv.addObject("pd", pd);
 		try {
 			//超常规统计（科室）按照问题类型分组
 			List<PageData> list =  this.prescService.exceedCommonOrderDep(pd);
 			//按照医生分组
 			Map<String,PageData> map = new HashMap<String,PageData>();
 			for(PageData px:list){
-				String ORG_CODE = px.getString("ORG_CODE");
+				String ORG_CODE = px.getString("out_dept_name");
 				map.put(ORG_CODE, px);
 			}
 			BigDecimal checkfalse_sum_all = new BigDecimal(0);//不合格处方数汇总
-			BigDecimal presc_count_all =  new BigDecimal(0);//总处方统计-汇总
+			BigDecimal order_count_all =  new BigDecimal(0);//总处方统计-汇总
 			//（科室分组）不合格处方数,总处方统计
 			List<PageData> countlist =  this.prescService.prescCountOrderDep(pd);
 			for(PageData py:countlist){
-				String ORG_CODE = py.getString("ORG_CODE");
+				String ORG_CODE = py.getString("out_dept_name");
 				PageData px = map.get(ORG_CODE);
 				px.put("checkfalse_sum", py.get("checkfalse_sum"));
-				px.put("presc_count", py.get("presc_count"));
+				px.put("order_count", py.get("order_count"));
 				BigDecimal checkfalse_sum = (BigDecimal) py.get("checkfalse_sum");
-				BigDecimal presc_count = (BigDecimal) py.get("presc_count");
+				BigDecimal order_count = (BigDecimal) py.get("order_count");
 				checkfalse_sum_all= checkfalse_sum_all.add(checkfalse_sum);
-				presc_count_all = presc_count_all.add(presc_count);
+				order_count_all = order_count_all.add(order_count);
 			}
 			//汇总统计
 			PageData all = this.prescService.exceedCommonAll(pd);
 			all.put("checkfalse_sum_all", checkfalse_sum_all);
-			all.put("presc_count_all", presc_count_all);
+			all.put("order_count_all", order_count_all);
 			mv.addObject("all", all);
 			
 			//计算平均值
 			for(PageData px:list){
 				String checkfalse_persents1 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(checkfalse_sum_all,4,4).doubleValue()*100);
 				px.put("checkfalse_persents1", checkfalse_persents1);
-				String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("presc_count")).divide(presc_count_all,4,4).doubleValue()*100);
+				String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("order_count")).divide(order_count_all,4,4).doubleValue()*100);
 				px.put("checkfalse_persents2", checkfalse_persents2);
 			}
 			
@@ -615,7 +618,7 @@ public class ReportController extends BaseController{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mv.setViewName("DoctOrder/report/exceedCommonDep");
+		mv.setViewName("DoctOrder/report/exceedCommonOrderDep");
 		return  mv; 
 	}
 	/**
@@ -626,13 +629,14 @@ public class ReportController extends BaseController{
 	public ModelAndView exceedCommonOrderDoctor(){
 		ModelAndView mv = new ModelAndView();
 		PageData pd = this.getPageData();
+		mv.addObject("pd", pd);
 		try {
 			//超常规统计（医生）按照问题类型分组
 			List<PageData> list =  this.prescService.exceedCommonOrderDoctor(pd);
 			//按照医生分组
 			Map<String,PageData> map = new HashMap<String,PageData>();
 			for(PageData px:list){
-				String DOCTOR_CODE = px.getString("DOCTOR_CODE");
+				String DOCTOR_CODE = px.getString("ATTENDING_DOCTOR");
 				map.put(DOCTOR_CODE, px);
 			}
 			BigDecimal checkfalse_sum_all = new BigDecimal(0);//不合格处方数汇总
@@ -640,12 +644,12 @@ public class ReportController extends BaseController{
 			//（医生分组）不合格处方数,总处方统计
 			List<PageData> countlist =  this.prescService.prescCountOrderDoctor(pd);
 			for(PageData py:countlist){
-				String DOCTOR_CODE = py.getString("DOCTOR_CODE");
+				String DOCTOR_CODE = py.getString("ATTENDING_DOCTOR");
 				PageData px = map.get(DOCTOR_CODE);
 				px.put("checkfalse_sum", py.get("checkfalse_sum"));
-				px.put("presc_count", py.get("presc_count"));
+				px.put("order_count", py.get("order_count"));
 				BigDecimal checkfalse_sum = (BigDecimal) py.get("checkfalse_sum");
-				BigDecimal presc_count = (BigDecimal) py.get("presc_count");
+				BigDecimal presc_count = (BigDecimal) py.get("order_count");
 				checkfalse_sum_all= checkfalse_sum_all.add(checkfalse_sum);
 				presc_count_all = presc_count_all.add(presc_count);
 			}
@@ -666,7 +670,7 @@ public class ReportController extends BaseController{
 				if(presc_count_all==null||presc_count_all.doubleValue()==0){
 					px.put("checkfalse_persents2", 0);
 				}else{
-					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("presc_count")).divide(presc_count_all,4,4).doubleValue()*100);
+					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("order_count")).divide(presc_count_all,4,4).doubleValue()*100);
 					px.put("checkfalse_persents2", checkfalse_persents2);
 				}
 			}
@@ -675,7 +679,7 @@ public class ReportController extends BaseController{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mv.setViewName("DoctOrder/report/exceedCommonDoctor");
+		mv.setViewName("DoctOrder/report/exceedCommonOrderDoctor");
 		return  mv; 
 	}
 }
