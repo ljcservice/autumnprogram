@@ -266,7 +266,6 @@ public class ReportController extends BaseController{
 			}
 			mv.addObject("pd", pd);
 			page.setPd(pd);
-			page.setShowCount(9999);
 			List<PageData>	prescList = prescService.prescListPage(page);	//列出专家列表
 			for(PageData pp:prescList){
 				String RS_DRUG_TYPES = pp.getString("RS_DRUG_TYPES");

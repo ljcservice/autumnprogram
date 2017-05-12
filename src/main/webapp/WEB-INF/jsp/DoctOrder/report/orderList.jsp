@@ -39,13 +39,13 @@
 			<div class="main-content-inner">
 				<div class="page-content">
 					<div class="row">
-						<div class="col-xs-12">
+						<div class="col-xs-12" style="margin-top: 5px;">
 						<!-- 检索  -->
 						<div style="width: 100%;height: auto;">
 							<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
 							<thead>
 								<tr>
-									<th class="center" nowrap style="width:35px;">序号</th>
+									<th class="center" nowrap >序号</th>
 									<th class="center" nowrap>患者ID</th>
 									<th class="center" nowrap>患者名称</th>
 									<th class="center" nowrap>诊断结果数</th>

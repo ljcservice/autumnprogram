@@ -305,8 +305,8 @@ function toAddCheckRs(ngroupnum){
 	diag.Drag=true;
 	diag.Title ="编辑点评";
 	diag.URL = url;
-	diag.Width = 650;
-	diag.Height =500;
+	diag.Width = 900;
+	diag.Height =650;
 	diag.CancelEvent = function(){ //关闭事件
 		var ngroupnum = diag.innerFrame.contentWindow.document.getElementById('ngroupnum').value;
 		$("#ngroupnum").val(ngroupnum);
@@ -325,8 +325,8 @@ function editCheckRs(rs_id){
 	diag.Drag=true;
 	diag.Title ="编辑点评";
 	diag.URL = url;
-	diag.Width = 650;
-	diag.Height =500;
+	diag.Width = 900;
+	diag.Height =650;
 	diag.CancelEvent = function(){ //关闭事件
 		diag.close();
 		//遮罩层控制，第三层弹窗使用

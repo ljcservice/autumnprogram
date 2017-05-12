@@ -49,7 +49,7 @@
 									<div class="check-search nav-search" >
 											科室：
 										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords}" placeholder="科室" maxlength="80"/>
+											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="OUT_DEPT_NAME" value="${pd.OUT_DEPT_NAME}" placeholder="科室" maxlength="80"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 											诊断：

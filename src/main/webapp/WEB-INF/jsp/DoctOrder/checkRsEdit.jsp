@@ -71,7 +71,7 @@
 												<tr>
 													<td style="text-align: right;padding-top: 10px;">问题说明:</td>
 													<td rowspan="1">
-														<textarea name="ALERT_HINT" id="ALERT_HINT" rows="5" cols="48">${pd.ALERT_HINT}</textarea>
+														<textarea name="ALERT_HINT" id="ALERT_HINT" rows="5" cols="98">${pd.ALERT_HINT}</textarea>
 													</td>
 												</tr>
 											</table>

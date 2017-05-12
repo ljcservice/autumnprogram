@@ -70,16 +70,8 @@
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
-									<div class="check-search" style="width: 190px;" >
-										问题类别：
-									 	<select class="chosen-select form-control" name="RS_DRUG_TYPE" id="RS_DRUG_TYPE" data-placeholder="问题类别" style="vertical-align:top;width: 110px;" >
-											<option value="" >全部</option>
-											<c:forEach items="${checktypeMap.entrySet()}" var="map" varStatus="vs">
-												<option <c:if test="${map.key == pd.RS_DRUG_TYPE}">selected</c:if> value="${map.key}" >${map.value.RS_TYPE_NAME}</option>
-											</c:forEach>
-										</select>
-									</div>
 								</div>
+							</form>
 						<!-- 检索  -->
 					
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
@@ -125,7 +117,7 @@
 						</tr>
 					</table>
 					</div>
-					</form>
+					
 	
 						</div>
 						<!-- /.col -->
@@ -205,7 +197,7 @@ function detailList(RS_TYPE_CODE){
 	var diag = new top.Dialog();
 	diag.Drag=true;
 	diag.Title ="问题处方列表";
-	diag.URL = path + "/report/prescList.do?type=1&RS_DRUG_TYPE="+RS_TYPE_CODE+"&beginDate="+$("#beginDate").val()+"&endDate="+$("#endDate").val();
+	diag.URL = path + "/report/prescList.do?type=1&RS_DRUG_TYPE="+RS_TYPE_CODE+"&"+$("#searchForm").serialize();
 	diag.Width =  window.screen.width;
 	diag.Height =  window.screen.height;  
 	diag.CancelEvent = function(){ //关闭事件
@@ -218,7 +210,7 @@ function detailListByDoctor(RS_TYPE_CODE){
 	var diag = new top.Dialog();
 	diag.Drag=true;
 	diag.Title ="处方问题统计列表（医生）";
-	diag.URL = path + "/report/prescListByDoctor.do?type=1&RS_DRUG_TYPE="+RS_TYPE_CODE+"&beginDate="+$("#beginDate").val()+"&endDate="+$("#endDate").val();
+	diag.URL = path + "/report/prescListByDoctor.do?type=1&RS_DRUG_TYPE="+RS_TYPE_CODE+"&"+$("#searchForm").serialize();
 	diag.Width =  window.screen.width;
 	diag.Height =  window.screen.height;  
 	diag.CancelEvent = function(){ //关闭事件
@@ -231,7 +223,7 @@ function detailListByDep(RS_TYPE_CODE){
 	var diag = new top.Dialog();
 	diag.Drag=true;
 	diag.Title ="处方问题统计列表（科室）";
-	diag.URL = path + "/report/prescListByDep.do?type=1&RS_DRUG_TYPE="+RS_TYPE_CODE+"&beginDate="+$("#beginDate").val()+"&endDate="+$("#endDate").val();
+	diag.URL = path + "/report/prescListByDep.do?type=1&RS_DRUG_TYPE="+RS_TYPE_CODE+"&"+$("#searchForm").serialize();
 	diag.Width =  window.screen.width;
 	diag.Height =  window.screen.height;  
 	diag.CancelEvent = function(){ //关闭事件

@@ -31,7 +31,10 @@
 				)
 		</if>
 		<if test="pd.ORG_NAME!= null and pd.ORG_NAME != ''">
-			and a. ORG_NAME LIKE CONCAT(CONCAT('%', #{pd.ORG_NAME}),'%')
+			and a.ORG_NAME LIKE CONCAT(CONCAT('%', #{pd.ORG_NAME}),'%')
+		</if>
+		<if test="pd.DOCTOR_NAME != null and pd.DOCTOR_NAME != ''"> <!-- 医生名-->
+			and a.DOCTOR_NAME = #{pd.DOCTOR_NAME}
 		</if>
 		<if test="pd.ISCHECKTRUE != null and pd.ISCHECKTRUE != ''"> <!-- 是否合理-->
 			and a.ISCHECKTRUE = #{pd.ISCHECKTRUE} 
@@ -48,7 +51,12 @@
 		<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
 			and a.ORDER_DATE &lt; #{pd.endDate}
 		</if>
-		
+		<if test="pd.DRUG_NAME != null and pd.DRUG_NAME != ''"> <!-- 药品名-->
+			 and exists( select PRESC_ID from presc_detail q 
+			 	where a.id = q.PRESC_ID 
+				and q.DRUG_NAME = #{pd.DRUG_NAME}
+			 )
+		</if>
 		order by ORDER_DATE desc
 	</select>
 	<!-- 单个处方主要信息 -->

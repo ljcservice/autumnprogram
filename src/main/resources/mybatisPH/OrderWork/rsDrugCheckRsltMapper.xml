@@ -165,11 +165,11 @@
   					select m.rs_id,m.IN_RS_TYPE,m.RS_DRUG_TYPE,n.discharge_date_time
   					FROM RS_DRUG_CHECKRSLT m, pat_visit n 
   					WHERE M.NGROUPNUM = N.NGROUPNUM
-					<if test="DOCTOR_NAME != null and DOCTOR_NAME != ''"> <!-- 医生名-->
-						and n.ATTENDING_DOCTOR =#{DOCTOR_NAME}
+					<if test="ATTENDING_DOCTOR != null and ATTENDING_DOCTOR != ''"> <!-- 医生名-->
+						and n.ATTENDING_DOCTOR =#{ATTENDING_DOCTOR}
 					</if>
-					<if test="ORG_NAME != null and ORG_NAME != ''"> <!-- 科室名-->
-						and(n.in_DEPT_NAME = #{ORG_NAME} or n.out_DEPT_NAME = #{ORG_NAME}) 
+					<if test="OUT_DEPT_NAME != null and OUT_DEPT_NAME != ''"> <!-- 科室名-->
+						and n.OUT_DEPT_NAME = #{OUT_DEPT_NAME}
 					</if>
   				)b
 	  			on ( 
@@ -194,10 +194,16 @@
 		WHERE a.NGROUPNUM = b.NGROUPNUM
 			and a.RS_DRUG_TYPE = #{RS_DRUG_TYPE}
 			<if test="beginDate != null and beginDate != ''"> <!--开始日期-->
-			and b.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
+				and b.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
 			</if>
 			<if test="endDate != null and endDate != ''"> <!--开始日期-->
-			and b.discharge_date_time &lt;= to_date(#{endDate},'yyyy-mm-dd') 
+				and b.discharge_date_time &lt;= to_date(#{endDate},'yyyy-mm-dd') 
+			</if>
+			<if test="OUT_DEPT_NAME != null and OUT_DEPT_NAME != ''"><!-- 关键词检索 -->
+				and b.OUT_DEPT_NAME = #{OUT_DEPT_NAME}
+			</if>
+			<if test="ATTENDING_DOCTOR != null and ATTENDING_DOCTOR != ''"> <!-- 医生名-->
+				and b.ATTENDING_DOCTOR  =#{ATTENDING_DOCTOR}
 			</if>
 		group by b.ATTENDING_DOCTOR
 	</select>
@@ -206,12 +212,18 @@
 		select b.out_dept_name ,count(a.rs_id) count
 		FROM RS_DRUG_CHECKRSLT a ,pat_visit b
 		WHERE a.NGROUPNUM = b.NGROUPNUM
-			and a.RS_DRUG_TYPE = #{RS_DRUG_TYPE}
+				and a.RS_DRUG_TYPE = #{RS_DRUG_TYPE}
 			<if test="beginDate != null and beginDate != ''"> <!--开始日期-->
-			and b.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
+				and b.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
 			</if>
 			<if test="endDate != null and endDate != ''"> <!--开始日期-->
-			and b.discharge_date_time &lt;= to_date(#{endDate},'yyyy-mm-dd') 
+				and b.discharge_date_time &lt;= to_date(#{endDate},'yyyy-mm-dd') 
+			</if>
+			<if test="OUT_DEPT_NAME != null and OUT_DEPT_NAME != ''"><!-- 关键词检索 -->
+				and b.OUT_DEPT_NAME = #{OUT_DEPT_NAME}
+			</if>
+			<if test="ATTENDING_DOCTOR != null and ATTENDING_DOCTOR != ''"> <!-- 医生名-->
+				and b.ATTENDING_DOCTOR  =#{ATTENDING_DOCTOR}
 			</if>
 		group by b.out_dept_name
 	</select>
@@ -228,6 +240,12 @@
 			<if test="endDate != null and endDate != ''"> <!--开始日期-->
 				and b.ORDER_DATE &lt;=  #{endDate} 
 			</if>
+			<if test="ORG_NAME!= null and ORG_NAME != ''"> <!--科室-->
+				and b.ORG_NAME = #{ORG_NAME} 
+			</if>
+			<if test="DOCTOR_NAME != null and DOCTOR_NAME != ''"> <!-- 医生名-->
+				and b.DOCTOR_NAME = #{DOCTOR_NAME}
+			</if>
 		group by b.DOCTOR_CODE,b.DOCTOR_NAME
 	</select>
 	
@@ -242,6 +260,12 @@
 			</if>
 			<if test="endDate != null and endDate != ''"> <!--开始日期-->
 				and b.ORDER_DATE &lt;=  #{endDate} 
+			</if>
+			<if test="ORG_NAME!= null and ORG_NAME != ''"> <!--科室-->
+				and b.ORG_NAME = #{ORG_NAME} 
+			</if>
+			<if test="DOCTOR_NAME != null and DOCTOR_NAME != ''"> <!-- 医生名-->
+				and b.DOCTOR_NAME = #{DOCTOR_NAME}
 			</if>
 		group by b.ORG_CODE,b.ORG_NAME
 	</select>

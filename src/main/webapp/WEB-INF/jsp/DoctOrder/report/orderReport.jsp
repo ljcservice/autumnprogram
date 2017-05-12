@@ -55,7 +55,7 @@
 									<div class="check-search nav-search" style="width: 400px;">
 										科室：
 										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="ORG_NAME" type="text" name="ORG_NAME" value="${pd.ORG_NAME}" placeholder="科室名称" maxlength="32" />
+											<input class="nav-search-input" autocomplete="off" id="OUT_DEPT_NAME" type="text" name="OUT_DEPT_NAME" value="${pd.OUT_DEPT_NAME}" placeholder="科室名称" maxlength="32" />
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 										医生：
@@ -68,15 +68,6 @@
 <!-- 											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="DRUG_NAME" value="${pd.DRUG_NAME}" placeholder="诊断" maxlength="32"/> -->
 <!-- 											<i class="ace-icon fa fa-search nav-search-icon"></i> -->
 <!-- 										</span> -->
-									</div>
-									<div class="check-search" style="width: 190px;" >
-										问题类别：
-									 	<select class="chosen-select form-control" name="RS_DRUG_TYPE" id="RS_DRUG_TYPE" data-placeholder="问题类别" style="vertical-align:top;width: 110px;" >
-											<option value="" >全部</option>
-											<c:forEach items="${checktypeMap.entrySet()}" var="map" varStatus="vs">
-												<option <c:if test="${map.key == pd.RS_DRUG_TYPE}">selected</c:if> value="${map.key}" >${map.value.RS_TYPE_NAME}</option>
-											</c:forEach>
-										</select>
 									</div>
 								</div>
 						<!-- 检索  -->
@@ -204,7 +195,7 @@ function detailList(RS_TYPE_CODE){
 	var diag = new top.Dialog();
 	diag.Drag=true;
 	diag.Title ="问题医嘱列表";
-	diag.URL = path + "/report/orderList.do?type=0&RS_DRUG_TYPE="+RS_TYPE_CODE+"&beginDate="+$("#beginDate").val()+"&endDate="+$("#endDate").val();
+	diag.URL = path + "/report/orderList.do?type=0&RS_DRUG_TYPE="+RS_TYPE_CODE+"&"+$("#searchForm").serialize();
 	diag.Width =  window.screen.width;
 	diag.Height =  window.screen.height;  
 	diag.CancelEvent = function(){ //关闭事件
@@ -217,7 +208,7 @@ function detailListByDoctor(RS_TYPE_CODE){
 	var diag = new top.Dialog();
 	diag.Drag=true;
 	diag.Title ="医嘱问题统计列表(医生)";
-	diag.URL = path + "/report/orderListByDoctor.do?type=0&RS_DRUG_TYPE="+RS_TYPE_CODE+"&beginDate="+$("#beginDate").val()+"&endDate="+$("#endDate").val();
+	diag.URL = path + "/report/orderListByDoctor.do?type=0&RS_DRUG_TYPE="+RS_TYPE_CODE+"&"+$("#searchForm").serialize();
 	diag.Width =  window.screen.width;
 	diag.Height =  window.screen.height;  
 	diag.CancelEvent = function(){ //关闭事件
@@ -230,7 +221,7 @@ function detailListByDep(RS_TYPE_CODE){
 	var diag = new top.Dialog();
 	diag.Drag=true;
 	diag.Title ="医嘱问题统计列表(科室)";
-	diag.URL = path + "/report/orderListByDep.do?type=0&RS_DRUG_TYPE="+RS_TYPE_CODE+"&beginDate="+$("#beginDate").val()+"&endDate="+$("#endDate").val();
+	diag.URL = path + "/report/orderListByDep.do?type=0&RS_DRUG_TYPE="+RS_TYPE_CODE+"&"+$("#searchForm").serialize();
 	diag.Width =  window.screen.width;
 	diag.Height =  window.screen.height;  
 	diag.CancelEvent = function(){ //关闭事件
