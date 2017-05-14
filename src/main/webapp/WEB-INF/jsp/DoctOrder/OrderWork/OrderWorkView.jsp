@@ -181,6 +181,11 @@
 							<table style="width:100%;">
 								<tr>
 									<td>
+										<div id="btnDiv" style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
+											<a title="最大支持导出2万条" class="btn btn-mini btn-success" onclick="orderListExport();">导出</a>
+										</div>
+									</td>
+									<td>
 										<div class="pagination" style="float: right;padding: 0px;margin: 0px;">${page.pageStr}</div>
 									</td>
 								</tr>
@@ -294,6 +299,8 @@ function viewDetail(patId , visitId,ngnum){
 	 diag.show();
 	
 }
-
+function orderListExport(){
+	window.open(path + "/DoctOrder/orderListExport.do"+$("#searchDiv").serialize());
+}
 </script>
 </html>

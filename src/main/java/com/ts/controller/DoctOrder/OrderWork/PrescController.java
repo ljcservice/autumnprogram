@@ -111,7 +111,7 @@ public class PrescController extends BaseController{
 			List<String> titles = new ArrayList<String>();
 			titles.add("处方号");//1
 			titles.add("处方日期");//2
-			titles.add("患者");//3
+			titles.add("患者");	//3
 			titles.add("性别 	");	//4
 			titles.add("科室");	//5
 			titles.add("医生");	//5
@@ -122,42 +122,43 @@ public class PrescController extends BaseController{
 			titles.add("是否合理");	//5
 			titles.add("结果");	//5
 			dataMap.put("titles", titles);
-			
-			List<PageData> varOList =  prescService.prescListPage(page);
-			int TotalPage = page.getTotalPage();
-			//分批查询,最大查询1万条
-			for(int i = 2;i<=TotalPage&&i<=10;i++){
-				page.setCurrentPage(i);
-				List<PageData> newList =  prescService.prescListPage(page);
-				varOList.addAll(newList);
-			}
-			
-			List<PageData> varList = new ArrayList<PageData>();
-			for(int i=0;i<varOList.size();i++){
-				PageData vpd = new PageData();
-				vpd.put("var1", varOList.get(i).getString("PRESC_NO"));	//1
-				vpd.put("var2", varOList.get(i).getString("ORDER_DATE"));	//2
-				vpd.put("var3", varOList.get(i).getString("PATIENT_NAME"));	//3
-				vpd.put("var4", varOList.get(i).getString("PATIENT_SEX"));	//4
-				vpd.put("var5", varOList.get(i).getString("ORG_NAME"));	//5
-				vpd.put("var6", varOList.get(i).getString("DOCTOR_NAME"));	//5
-				vpd.put("var7", varOList.get(i).getString("HASKJ"));	//5
-				vpd.put("var8", varOList.get(i).getString("DIAGNOSIS_NAMES"));	//5
-				vpd.put("var9", varOList.get(i).getDouble("AMOUNT"));	//5
-				vpd.put("var10", varOList.get(i).get("ISORDERCHECK").toString());	//5
-				vpd.put("var11", varOList.get(i).get("ISCHECKTRUE").toString());	//5
-				
-				String RS_DRUG_TYPES = varOList.get(i).getString("RS_DRUG_TYPES");
-				StringBuffer sb = new StringBuffer();
-				if(!Tools.isEmpty(RS_DRUG_TYPES)){
-					String[] RS_DRUG_TYPE = RS_DRUG_TYPES.split("@;@");
-					for(String ss:RS_DRUG_TYPE){
-						String w = DoctorConst.rstypeMap.get(ss );
-						sb.append(w);
+			int TotalPage = 1;
+			List<PageData> varList = null;
+			//分批查询,最大查询2万条
+			for(int pag = 1;pag<=TotalPage&&pag<=20;pag++){
+				page.setCurrentPage(pag);
+				List<PageData> varOList =  prescService.prescListPage(page);
+				TotalPage = page.getTotalPage();
+				if(varList==null){
+					varList = new ArrayList<PageData>(TotalPage*page.getShowCount());
+				}
+				if(varOList!=null){
+					for(int i=0;i<varOList.size();i++){
+						PageData vpd = new PageData();
+						vpd.put("var1", varOList.get(i).getString("PRESC_NO"));		//1
+						vpd.put("var2", varOList.get(i).getString("ORDER_DATE"));	//2
+						vpd.put("var3", varOList.get(i).getString("PATIENT_NAME"));	//3
+						vpd.put("var4", varOList.get(i).getString("PATIENT_SEX"));	//4
+						vpd.put("var5", varOList.get(i).getString("ORG_NAME"));		//5
+						vpd.put("var6", varOList.get(i).getString("DOCTOR_NAME"));	//6
+						vpd.put("var7", "0".equals(varOList.get(i).getString("HASKJ"))?"否":"是");		//7
+						vpd.put("var8", varOList.get(i).getString("DIAGNOSIS_NAMES"));	//8
+						vpd.put("var9", "￥ "+varOList.get(i).getDouble("AMOUNT"));			//9
+						vpd.put("var10", varOList.get(i).get("ISORDERCHECK")==null?"否":("0".equals(varOList.get(i).get("ISORDERCHECK").toString())?"否":"是"));	//10
+						vpd.put("var11", varOList.get(i).get("ISCHECKTRUE")==null?"待定":("0".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"合理":("1".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"不合理":"待定")));	//11
+						String RS_DRUG_TYPES = varOList.get(i).getString("RS_DRUG_TYPES");
+						StringBuffer sb = new StringBuffer();
+						if(!Tools.isEmpty(RS_DRUG_TYPES)){
+							String[] RS_DRUG_TYPE = RS_DRUG_TYPES.split("@;@");
+							for(String ss:RS_DRUG_TYPE){
+								String w = DoctorConst.rstypeMap.get(ss );
+								sb.append(w);
+							}
+						}
+						vpd.put("var12", sb.toString());	//12
+						varList.add(vpd);
 					}
 				}
-				vpd.put("var12", sb.toString());	//5
-				varList.add(vpd);
 			}
 			dataMap.put("varList", varList);
 			ObjectExcelView erv = new ObjectExcelView();

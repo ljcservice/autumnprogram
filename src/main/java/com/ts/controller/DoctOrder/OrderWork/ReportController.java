@@ -16,11 +16,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ts.controller.base.BaseController;
 import com.ts.entity.Page;
-import com.ts.entity.system.User;
 import com.ts.service.DoctOrder.OrderWork.CommonService;
 import com.ts.service.DoctOrder.OrderWork.IOrderWorkService;
 import com.ts.service.DoctOrder.OrderWork.PrescService;
-import com.ts.service.system.user.UserManager;
 import com.ts.util.DateUtil;
 import com.ts.util.MyDecimalFormat;
 import com.ts.util.PageData;
@@ -47,8 +45,6 @@ public class ReportController extends BaseController{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
 		try{
-			// 当前登录专家
-			User user = getCurrentUser();
 			mv.addObject("pd", pd);
 			//处方问题统计
 			List<PageData>	reportList = orderWorkService.ordersReport(pd);
@@ -88,7 +84,6 @@ public class ReportController extends BaseController{
 		PageData pd = this.getPageData();
 		try
 		{
-			String keywords = pd.getString("keywords");			//关键词检索条件
 			String beginDate = pd.getString("beginDate");		//开始时间
 			String endDate = pd.getString("endDate");			//结束时间
 			if(endDate != null && !"".equals(endDate))
@@ -212,7 +207,6 @@ public class ReportController extends BaseController{
 		PageData pd = this.getPageData();
 		try{
 			// 当前登录专家
-			User user = getCurrentUser();
 			mv.addObject("pd", pd);
 			//处方问题统计
 			List<PageData>	reportList = prescService.prescReport(pd);
@@ -264,7 +258,6 @@ public class ReportController extends BaseController{
 				cal.add(Calendar.DAY_OF_MONTH, 1);
 				pd.put("endDate", sdf.format(cal.getTime()));
 			}
-			mv.addObject("pd", pd);
 			page.setPd(pd);
 			List<PageData>	prescList = prescService.prescListPage(page);	//列出专家列表
 			for(PageData pp:prescList){

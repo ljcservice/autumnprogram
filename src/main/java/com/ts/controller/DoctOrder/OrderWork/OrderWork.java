@@ -27,6 +27,7 @@ import com.ts.service.DoctOrder.OrderWork.IOrderWorkService;
 import com.ts.service.DoctOrder.OrderWork.PrescService;
 import com.ts.service.system.user.UserManager;
 import com.ts.util.DateUtil;
+import com.ts.util.ObjectExcelView;
 import com.ts.util.PageData;
 import com.ts.util.Tools;
 import com.ts.util.app.AppUtil;
@@ -122,7 +123,78 @@ public class OrderWork extends BaseController
 		return  mv; 
 	}
 	
-	
+	/**
+	 * 导出到excel
+	 * @return
+	 */
+	@RequestMapping(value="/orderListExport")
+	public ModelAndView orderListExport(Page page){
+		logBefore(logger, "导出orderListExport到excel");
+		ModelAndView mv = new ModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		page.setPd(pd);
+		page.setShowCount(1000);
+		try{
+			Map<String,Object> dataMap = new HashMap<String,Object>();
+			List<String> titles = new ArrayList<String>();
+			titles.add("患者ID");//1
+			titles.add("患者名称");//2
+			titles.add("诊断结果数");	//3
+			titles.add("主治医师");	//4
+			titles.add("入院科室");	//5
+			titles.add("入院时间");	//5
+			titles.add("出院科室");	//5
+			titles.add("出院时间");	//5
+			titles.add("点评");	//5
+			titles.add("合理");	//5
+			titles.add("结果");	//5
+			dataMap.put("titles", titles);
+			int TotalPage = 1;
+			List<PageData> varList = null;
+			//分批查询,最大查询2万条
+			for(int pag = 1;pag<=TotalPage&&pag<=20;pag++){
+				page.setCurrentPage(pag);
+				List<PageData> varOList =  orderWorkService.patientList(page);
+				TotalPage = page.getTotalPage();
+				if(varList==null){
+					varList = new ArrayList<PageData>(TotalPage*page.getShowCount());
+				}
+				if(varOList!=null){
+					for(int i=0;i<varOList.size();i++){
+						PageData vpd = new PageData();
+						vpd.put("var1", varOList.get(i).get("PATIENT_ID").toString()+"（"+varOList.get(i).get("VISIT_ID").toString()+"）");		//1
+						vpd.put("var2", varOList.get(i).getString("NAME"));	//2
+						vpd.put("var3", varOList.get(i).get("DIAGNOSIS_COUNT").toString());	//3
+						vpd.put("var4", varOList.get(i).getString("ATTENDING_DOCTOR"));	//4
+						vpd.put("var5", varOList.get(i).getString("in_dept_name"));		//5
+						vpd.put("var6", varOList.get(i).get("admission_date_time"));	//6
+						vpd.put("var7", varOList.get(i).getString("out_dept_name"));		//7
+						vpd.put("var8", varOList.get(i).get("discharge_date_time"));	//8
+						vpd.put("var10", varOList.get(i).get("ISORDERCHECK")==null?"否":("0".equals(varOList.get(i).get("ISORDERCHECK").toString())?"否":"是"));	//10
+						vpd.put("var11", varOList.get(i).get("ISCHECKTRUE")==null?"待定":("0".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"合理":("1".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"不合理":"待定")));	//11
+						String RS_DRUG_TYPES = varOList.get(i).getString("RS_DRUG_TYPES");
+						StringBuffer sb = new StringBuffer();
+						if(!Tools.isEmpty(RS_DRUG_TYPES)){
+							String[] RS_DRUG_TYPE = RS_DRUG_TYPES.split("@;@");
+							for(String ss:RS_DRUG_TYPE){
+								String w = DoctorConst.rstypeMap.get(ss );
+								sb.append(w);
+							}
+						}
+						vpd.put("var12", sb.toString());	//12
+						varList.add(vpd);
+					}
+				}
+			}
+			dataMap.put("varList", varList);
+			ObjectExcelView erv = new ObjectExcelView();
+			mv = new ModelAndView(erv,dataMap);
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
 	/**
 	 * 医嘱点评工作主页详细信息
 	 * @return
