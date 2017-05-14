@@ -160,7 +160,7 @@
 								<tr>
 									<td>
 										<div id="btnDiv" style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
-											<a class="btn btn-mini btn-success" onclick="prescListExport();">导出</a>
+											<a title="最大支持导出1万条" class="btn btn-mini btn-success" onclick="prescListExport();">导出</a>
 										</div>
 									</td>
 									<td>

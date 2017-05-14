@@ -347,6 +347,12 @@
 		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
 			and a.ORDER_DATE &lt; #{endDate}
 		</if>
+		<if test="ORG_NAME!= null and ORG_NAME != ''">
+			and a.ORG_NAME = #{ORG_NAME} 
+		</if>
+		<if test="DOCTOR_NAME != null and DOCTOR_NAME != ''"> <!-- 医生名-->
+			and a.DOCTOR_NAME = #{DOCTOR_NAME}
+		</if>
 		group by a.ORG_CODE,a.ORG_NAME 
 		order by a.ORG_NAME
 	 </select>
@@ -370,6 +376,12 @@
 		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
 			and a.ORDER_DATE &lt; #{endDate}
 		</if>
+		<if test="ORG_NAME!= null and ORG_NAME != ''">
+			and a.ORG_NAME = #{ORG_NAME} 
+		</if>
+		<if test="DOCTOR_NAME != null and DOCTOR_NAME != ''"> <!-- 医生名-->
+			and a.DOCTOR_NAME = #{DOCTOR_NAME}
+		</if>
 		group by a.DOCTOR_CODE,a.doctor_name
 		order by a.doctor_name
 	 </select>
@@ -391,6 +403,12 @@
 		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
 			and a.ORDER_DATE &lt; #{endDate}
 		</if>
+		<if test="ORG_NAME!= null and ORG_NAME != ''">
+			and a.ORG_NAME = #{ORG_NAME} 
+		</if>
+		<if test="DOCTOR_NAME != null and DOCTOR_NAME != ''"> <!-- 医生名-->
+			and a.DOCTOR_NAME = #{DOCTOR_NAME}
+		</if>
 	 </select>
 	 <select id="prescCountDoctor" parameterType="pd"  resultType="pd">
 	 	select a.DOCTOR_CODE,nvl(sum(decode(ISCHECKTRUE,1,1,0)),0) checkfalse_sum
@@ -402,6 +420,12 @@
 		</if>
 		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
 			and a.ORDER_DATE &lt; #{endDate}
+		</if>
+		<if test="ORG_NAME!= null and ORG_NAME != ''">
+			and a.ORG_NAME = #{ORG_NAME} 
+		</if>
+		<if test="DOCTOR_NAME != null and DOCTOR_NAME != ''"> <!-- 医生名-->
+			and a.DOCTOR_NAME = #{DOCTOR_NAME}
 		</if>
 	 	group by a.DOCTOR_CODE
 	 </select>
@@ -415,6 +439,12 @@
 		</if>
 		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
 			and a.ORDER_DATE &lt; #{endDate}
+		</if>
+		<if test="ORG_NAME!= null and ORG_NAME != ''">
+			and a.ORG_NAME = #{ORG_NAME} 
+		</if>
+		<if test="DOCTOR_NAME != null and DOCTOR_NAME != ''"> <!-- 医生名-->
+			and a.DOCTOR_NAME = #{DOCTOR_NAME}
 		</if>
 	 	group by a.ORG_CODE,a.ORG_NAME
 	 </select>
@@ -434,10 +464,16 @@
 		from pat_visit a,RS_DRUG_CHECKRSLT b
 		where a.ngroupnum = b.ngroupnum(+)
 		<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
-			and t.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
+			and a.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
 		</if>
 		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
-			and t.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+			and a.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+		</if>
+		<if test="OUT_DEPT_NAME != null and OUT_DEPT_NAME != ''"><!-- 关键词检索 -->
+			and a.OUT_DEPT_NAME = #{OUT_DEPT_NAME} 
+		</if>
+		<if test="ATTENDING_DOCTOR != null and ATTENDING_DOCTOR != ''"> <!-- 医生名-->
+			and a.ATTENDING_DOCTOR = #{ATTENDING_DOCTOR} 
 		</if>
 		group by a.out_dept_name
 		order by a.out_dept_name
@@ -457,10 +493,16 @@
 		from pat_visit a,RS_DRUG_CHECKRSLT b
 		where a.ngroupnum = b.ngroupnum(+)
 		<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
-			and t.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
+			and a.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
 		</if>
 		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
-			and t.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+			and a.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+		</if>
+		<if test="OUT_DEPT_NAME != null and OUT_DEPT_NAME != ''"><!-- 关键词检索 -->
+			and a.OUT_DEPT_NAME = #{OUT_DEPT_NAME} 
+		</if>
+		<if test="ATTENDING_DOCTOR != null and ATTENDING_DOCTOR != ''"> <!-- 医生名-->
+			and a.ATTENDING_DOCTOR = #{ATTENDING_DOCTOR} 
 		</if>
 		group by a.ATTENDING_DOCTOR
 		order by a.ATTENDING_DOCTOR
@@ -478,10 +520,16 @@
 		from pat_visit  a,RS_DRUG_CHECKRSLT b
 		where a.ngroupnum = b.ngroupnum
 		<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
-			and t.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
+			and a.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
 		</if>
 		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
-			and t.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+			and a.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+		</if>
+		<if test="OUT_DEPT_NAME != null and OUT_DEPT_NAME != ''"><!-- 关键词检索 -->
+			and a.OUT_DEPT_NAME = #{OUT_DEPT_NAME} 
+		</if>
+		<if test="ATTENDING_DOCTOR != null and ATTENDING_DOCTOR != ''"> <!-- 医生名-->
+			and a.ATTENDING_DOCTOR = #{ATTENDING_DOCTOR} 
 		</if>
 	 </select>
 	 <select id="prescCountOrderDoctor" parameterType="pd"  resultType="pd">
@@ -491,25 +539,37 @@
 	 	from pat_visit a
 	 	WHERE 1=1 
 		<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
-			and t.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
+			and a.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
 		</if>
 		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
-			and t.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+			and a.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+		</if>
+		<if test="OUT_DEPT_NAME != null and OUT_DEPT_NAME != ''"><!-- 关键词检索 -->
+			and OUT_DEPT_NAME = #{OUT_DEPT_NAME} 
+		</if>
+		<if test="ATTENDING_DOCTOR != null and ATTENDING_DOCTOR != ''"> <!-- 医生名-->
+			and ATTENDING_DOCTOR = #{ATTENDING_DOCTOR} 
 		</if>
 	 	group by a.ATTENDING_DOCTOR
 	 </select>
 	 <select id="prescCountOrderDep" parameterType="pd"  resultType="pd">
-	 	select a.out_dept_name,nvl(sum(decode(ISCHECKTRUE,1,1,0)),0) checkfalse_sum
+	 	select out_dept_name,nvl(sum(decode(ISCHECKTRUE,1,1,0)),0) checkfalse_sum
 	 		,count(PATIENT_ID) order_count
 	 	from pat_visit a
 	 	WHERE 1=1
 		<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
-			and t.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
+			and discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
 		</if>
 		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
-			and t.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+			and discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
 		</if>
-	 	group by a.out_dept_name
+		<if test="OUT_DEPT_NAME != null and OUT_DEPT_NAME != ''"><!-- 关键词检索 -->
+			and OUT_DEPT_NAME = #{OUT_DEPT_NAME} 
+		</if>
+		<if test="ATTENDING_DOCTOR != null and ATTENDING_DOCTOR != ''"> <!-- 医生名-->
+			and ATTENDING_DOCTOR = #{ATTENDING_DOCTOR} 
+		</if>
+	 	group by out_dept_name
 	 </select>
 <!--                   超常规统计 end                     -->
 

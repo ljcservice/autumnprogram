@@ -125,8 +125,8 @@ public class PrescController extends BaseController{
 			
 			List<PageData> varOList =  prescService.prescListPage(page);
 			int TotalPage = page.getTotalPage();
-			//分批查询
-			for(int i = 2;i<=TotalPage;i++){
+			//分批查询,最大查询1万条
+			for(int i = 2;i<=TotalPage&&i<=10;i++){
 				page.setCurrentPage(i);
 				List<PageData> newList =  prescService.prescListPage(page);
 				varOList.addAll(newList);

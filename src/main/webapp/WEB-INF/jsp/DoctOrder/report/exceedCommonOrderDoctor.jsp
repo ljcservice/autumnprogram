@@ -41,11 +41,18 @@
 					<div class="row">
 						<div class="col-xs-12">
 							<div id="searchDiv" style="min-height: 35px;">
-							<form action="report/exceedCommonDoctor.do" method="post" name="searchForm" id="searchForm">
+							<form action="report/exceedCommonOrderDoctor.do" method="post" name="searchForm" id="searchForm">
 								<div class="check-search"  >
 									医嘱日期：
 									<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
 									<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.endDate }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
+								</div>
+								<div class="check-search"  >
+									医生：
+									<span class="input-icon">
+										<input class="nav-search-input" autocomplete="off" id="ATTENDING_DOCTOR" type="text" name="ATTENDING_DOCTOR" value="${pd.ATTENDING_DOCTOR}" placeholder="医生" maxlength="80"/>
+										<i class="ace-icon fa fa-search nav-search-icon"></i>
+									</span>
 								</div>
 								<div class="check-search"  >
 									<a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>

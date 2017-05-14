@@ -59,7 +59,7 @@ public class ReportController extends BaseController{
 			}
 			for(PageData p:reportList){
 				BigDecimal count =  (BigDecimal) p.get("count");
-				if(count.doubleValue()==0){
+				if(count==null||count.doubleValue()==0){
 					p.put("percent", "0.00 %");
 				}else{
 					BigDecimal percent = count.multiply(new BigDecimal(100)).divide(new BigDecimal(total),2, BigDecimal.ROUND_HALF_UP);
@@ -144,7 +144,7 @@ public class ReportController extends BaseController{
 			}
 			for(PageData p:list){
 				BigDecimal count =  (BigDecimal) p.get("count");
-				if(count.doubleValue()==0){
+				if(count==null||count.doubleValue()==0){
 					p.put("percent", "0.00 %");
 				}else{
 					BigDecimal percent = count.multiply(new BigDecimal(100)).divide(new BigDecimal(total),2, BigDecimal.ROUND_HALF_UP);
@@ -178,7 +178,7 @@ public class ReportController extends BaseController{
 			}
 			for(PageData p:list){
 				BigDecimal count =  (BigDecimal) p.get("count");
-				if(count.doubleValue()==0){
+				if(count==null||count.doubleValue()==0){
 					p.put("percent", "0.00 %");
 				}else{
 					BigDecimal percent = count.multiply(new BigDecimal(100)).divide(new BigDecimal(total),2, BigDecimal.ROUND_HALF_UP);
@@ -223,7 +223,7 @@ public class ReportController extends BaseController{
 			}
 			for(PageData p:reportList){
 				BigDecimal count =  (BigDecimal) p.get("count");
-				if(count.doubleValue()==0){
+				if(count==null||count.doubleValue()==0){
 					p.put("percent", "0.00 %");
 				}else{
 					BigDecimal percent = count.multiply(new BigDecimal(100)).divide(new BigDecimal(total),2, BigDecimal.ROUND_HALF_UP);
@@ -304,7 +304,7 @@ public class ReportController extends BaseController{
 			}
 			for(PageData p:list){
 				BigDecimal count =  (BigDecimal) p.get("count");
-				if(count.doubleValue()==0){
+				if(count==null||count.doubleValue()==0){
 					p.put("percent", "0.00 %");
 				}else{
 					BigDecimal percent = count.multiply(new BigDecimal(100)).divide(new BigDecimal(total),2, BigDecimal.ROUND_HALF_UP);
@@ -338,7 +338,7 @@ public class ReportController extends BaseController{
 			}
 			for(PageData p:list){
 				BigDecimal count =  (BigDecimal) p.get("count");
-				if(count.doubleValue()==0){
+				if(count==null||count.doubleValue()==0){
 					p.put("percent", "0.00 %");
 				}else{
 					BigDecimal percent = count.multiply(new BigDecimal(100)).divide(new BigDecimal(total),2, BigDecimal.ROUND_HALF_UP);
@@ -491,10 +491,18 @@ public class ReportController extends BaseController{
 			
 			//计算平均值
 			for(PageData px:list){
-				String checkfalse_persents1 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(checkfalse_sum_all,4,4).doubleValue()*100);
-				px.put("checkfalse_persents1", checkfalse_persents1);
-				String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("presc_count")).divide(presc_count_all,4,4).doubleValue()*100);
-				px.put("checkfalse_persents2", checkfalse_persents2);
+				if(checkfalse_sum_all==null||checkfalse_sum_all.doubleValue()==0){
+					px.put("checkfalse_persents1", 0);
+				}else{
+					String checkfalse_persents1 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(checkfalse_sum_all,4,4).doubleValue()*100);
+					px.put("checkfalse_persents1", checkfalse_persents1);
+				}
+				if(presc_count_all==null||presc_count_all.doubleValue()==0){
+					px.put("checkfalse_persents2", 0);
+				}else{
+					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("presc_count")).divide(presc_count_all,4,4).doubleValue()*100);
+					px.put("checkfalse_persents2", checkfalse_persents2);
+				}
 			}
 			
 			mv.addObject("resultList", list);
@@ -600,17 +608,25 @@ public class ReportController extends BaseController{
 				order_count_all = order_count_all.add(order_count);
 			}
 			//汇总统计
-			PageData all = this.prescService.exceedCommonAll(pd);
+			PageData all = this.prescService.exceedCommonOrderAll(pd);
 			all.put("checkfalse_sum_all", checkfalse_sum_all);
 			all.put("order_count_all", order_count_all);
 			mv.addObject("all", all);
 			
 			//计算平均值
 			for(PageData px:list){
-				String checkfalse_persents1 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(checkfalse_sum_all,4,4).doubleValue()*100);
-				px.put("checkfalse_persents1", checkfalse_persents1);
-				String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("order_count")).divide(order_count_all,4,4).doubleValue()*100);
-				px.put("checkfalse_persents2", checkfalse_persents2);
+				if(checkfalse_sum_all==null||checkfalse_sum_all.doubleValue()==0){
+					px.put("checkfalse_persents1", 0);
+				}else{
+					String checkfalse_persents1 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(checkfalse_sum_all,4,4).doubleValue()*100);
+					px.put("checkfalse_persents1", checkfalse_persents1);
+				}
+				if(order_count_all==null||order_count_all.doubleValue()==0){
+					px.put("checkfalse_persents2", 0);
+				}else{
+					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("order_count")).divide(order_count_all,4,4).doubleValue()*100);
+					px.put("checkfalse_persents2", checkfalse_persents2);
+				}
 			}
 			
 			mv.addObject("resultList", list);
@@ -639,7 +655,7 @@ public class ReportController extends BaseController{
 				map.put(DOCTOR_CODE, px);
 			}
 			BigDecimal checkfalse_sum_all = new BigDecimal(0);//不合格处方数汇总
-			BigDecimal presc_count_all =  new BigDecimal(0);//总处方统计-汇总
+			BigDecimal order_count_all =  new BigDecimal(0);//总处方统计-汇总
 			//（医生分组）不合格处方数,总处方统计
 			List<PageData> countlist =  this.prescService.prescCountOrderDoctor(pd);
 			for(PageData py:countlist){
@@ -648,14 +664,14 @@ public class ReportController extends BaseController{
 				px.put("checkfalse_sum", py.get("checkfalse_sum"));
 				px.put("order_count", py.get("order_count"));
 				BigDecimal checkfalse_sum = (BigDecimal) py.get("checkfalse_sum");
-				BigDecimal presc_count = (BigDecimal) py.get("order_count");
+				BigDecimal order_count = (BigDecimal) py.get("order_count");
 				checkfalse_sum_all= checkfalse_sum_all.add(checkfalse_sum);
-				presc_count_all = presc_count_all.add(presc_count);
+				order_count_all = order_count_all.add(order_count);
 			}
 			//汇总统计
-			PageData all = this.prescService.exceedCommonAll(pd);
+			PageData all = this.prescService.exceedCommonOrderAll(pd);
 			all.put("checkfalse_sum_all", checkfalse_sum_all);
-			all.put("presc_count_all", presc_count_all);
+			all.put("order_count_all", order_count_all);
 			mv.addObject("all", all);
 			
 			//计算平均值
@@ -666,10 +682,10 @@ public class ReportController extends BaseController{
 					String checkfalse_persents1 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(checkfalse_sum_all,4,4).doubleValue()*100);
 					px.put("checkfalse_persents1", checkfalse_persents1);
 				}
-				if(presc_count_all==null||presc_count_all.doubleValue()==0){
+				if(order_count_all==null||order_count_all.doubleValue()==0){
 					px.put("checkfalse_persents2", 0);
 				}else{
-					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("order_count")).divide(presc_count_all,4,4).doubleValue()*100);
+					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("order_count")).divide(order_count_all,4,4).doubleValue()*100);
 					px.put("checkfalse_persents2", checkfalse_persents2);
 				}
 			}

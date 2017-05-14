@@ -158,24 +158,24 @@
 								</c:otherwise>
 							</c:choose>
 									<tr>
-										<td>总 计：</td><td>${report.ALL_COUNT}</td><td></td><td></td><td></td>
-										<td></td><td></td><td></td><td></td><td>${report.DRUG_COUNT_SUM }</td>
-										<td>${report.HASZS_SUM }</td><td>${report.HASKJ_SUM }</td>
-										<td>${report.BASEDRUG_COUNT_SUM }</td>
+										<td align="right">总 计：</td><td align="center">${report.ALL_COUNT}</td><td></td><td></td><td></td>
+										<td></td><td></td><td></td><td></td><td align="center">${report.DRUG_COUNT_SUM }</td>
+										<td align="center">${report.HASZS_SUM }</td><td align="center">${report.HASKJ_SUM }</td>
+										<td align="center">${report.BASEDRUG_COUNT_SUM }</td>
 										<td><fmt:formatNumber value="${report.AMOUNT_SUM}" pattern="###,###,##0.00"></fmt:formatNumber></td><td></td>
 									</tr>
 									<tr>
-										<td>平 均：</td><td></td><td></td><td></td><td></td>
-										<td></td><td></td><td></td><td></td><td>${report.DRUG_COUNT_AVG }</td>
+										<td align="right">平 均：</td><td></td><td></td><td></td><td></td>
+										<td></td><td></td><td></td><td></td><td align="center">${report.DRUG_COUNT_AVG }</td>
 										<td></td><td></td>
 										<td></td>
-										<td>${report.AMOUNT_AVG }</td><td></td>
+										<td align="center">${report.AMOUNT_AVG }</td><td></td>
 									</tr>
 									<tr>
-										<td> % </td><td></td><td></td><td></td><td></td>
+										<td align="center"> % </td><td></td><td></td><td></td><td></td>
 										<td></td><td></td><td></td><td></td><td></td>
-										<td>${report.HASZS_PERSENTS }</td><td>${report.HASKJ_PERSENTS}</td>
-										<td>${report.BASEDRUG_COUNT_PERSENTS }</td>
+										<td align="center">${report.HASZS_PERSENTS }</td><td align="center">${report.HASKJ_PERSENTS}</td>
+										<td align="center">${report.BASEDRUG_COUNT_PERSENTS }</td>
 										<td></td><td></td>
 									</tr>
 							</tbody>
