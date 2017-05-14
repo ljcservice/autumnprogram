@@ -2,6 +2,7 @@ package com.ts.controller.DoctOrder.OrderWork;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,7 @@ import com.ts.service.DoctOrder.OrderWork.IOrderWorkService;
 import com.ts.service.DoctOrder.OrderWork.PrescService;
 import com.ts.util.DateUtil;
 import com.ts.util.MyDecimalFormat;
+import com.ts.util.ObjectExcelView;
 import com.ts.util.PageData;
 import com.ts.util.Tools;
 import com.ts.util.doctor.DoctorConst;
@@ -67,6 +69,71 @@ public class ReportController extends BaseController{
 			mv.addObject("checktypeMap", commonService.getCheckTypeDict()); 
 			mv.setViewName("DoctOrder/report/orderReport");
 			
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
+	
+	/**
+	 * 导出到excel
+	 * @return
+	 */
+	@RequestMapping(value="/ordersReportExport")
+	public ModelAndView ordersReportExport(Page page){
+		logBefore(logger, "导出orderListExport到excel");
+		ModelAndView mv = new ModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		page.setPd(pd);
+		page.setShowCount(1000);
+		try{
+			Map<String,PageData> map = commonService.getCheckTypeDict();
+			Map<String,Object> dataMap = new HashMap<String,Object>();
+			List<String> titles = new ArrayList<String>();
+			titles.add("问题");//1
+			titles.add("问题数");//2
+			titles.add("问题占比");	//3
+			dataMap.put("titles", titles);
+			int TotalPage = 1;
+			List<PageData> varList = null;
+			//分批查询,最大查询2万条
+			for(int pag = 1;pag<=TotalPage&&pag<=20;pag++){
+				page.setCurrentPage(pag);
+				List<PageData> varOList = orderWorkService.ordersReport(pd);
+				long total = 0;
+				for(PageData p:varOList){
+					Object count = p.get("count");
+					total += Long.valueOf(count.toString());
+				}
+				for(PageData p:varOList){
+					BigDecimal count =  (BigDecimal) p.get("count");
+					if(count==null||count.doubleValue()==0){
+						p.put("percent", "0.00 %");
+					}else{
+						BigDecimal percent = count.multiply(new BigDecimal(100)).divide(new BigDecimal(total),2, BigDecimal.ROUND_HALF_UP);
+						String percentv = MyDecimalFormat.format(percent.doubleValue());
+						p.put("percent", percentv +" %");
+					}
+				}
+						
+				TotalPage = page.getTotalPage();
+				if(varList==null){
+					varList = new ArrayList<PageData>(TotalPage*page.getShowCount());
+				}
+				if(varOList!=null){
+					for(int i=0;i<varOList.size();i++){
+						PageData vpd = new PageData();
+						vpd.put("var1", map.get(varOList.get(i).get("RS_TYPE_NAME")==null?"":varOList.get(i).get("RS_TYPE_NAME").toString()));	//2
+						vpd.put("var2", varOList.get(i).get("count"));	//4
+						vpd.put("var3", varOList.get(i).get("percent"));		//5
+						varList.add(vpd);
+					}
+				}
+			}
+			dataMap.put("varList", varList);
+			ObjectExcelView erv = new ObjectExcelView();
+			mv = new ModelAndView(erv,dataMap);
 		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
@@ -234,7 +301,70 @@ public class ReportController extends BaseController{
 		}
 		return mv;
 	}
-	
+	/**
+	 * 处方报表列表导出
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/prescReportExport")
+	public ModelAndView prescReportExport(Page page)throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		page.setPd(pd);
+		page.setShowCount(1000);
+		try{
+			Map<String,PageData> map = commonService.getCheckTypeDict();
+			Map<String,Object> dataMap = new HashMap<String,Object>();
+			List<String> titles = new ArrayList<String>();
+			titles.add("问题");//1
+			titles.add("问题数");//2
+			titles.add("问题占比");	//3
+			dataMap.put("titles", titles);
+			int TotalPage = 1;
+			List<PageData> varList = null;
+			//分批查询,最大查询2万条
+			for(int pag = 1;pag<=TotalPage&&pag<=20;pag++){
+				page.setCurrentPage(pag);
+				List<PageData> varOList = prescService.prescReport(pd);
+				long total = 0;
+				for(PageData p:varOList){
+					Object count = p.get("count");
+					total += Long.valueOf(count.toString());
+				}
+				for(PageData p:varOList){
+					BigDecimal count =  (BigDecimal) p.get("count");
+					if(count==null||count.doubleValue()==0){
+						p.put("percent", "0.00 %");
+					}else{
+						BigDecimal percent = count.multiply(new BigDecimal(100)).divide(new BigDecimal(total),2, BigDecimal.ROUND_HALF_UP);
+						String percentv = MyDecimalFormat.format(percent.doubleValue());
+						p.put("percent", percentv +" %");
+					}
+				}
+						
+				TotalPage = page.getTotalPage();
+				if(varList==null){
+					varList = new ArrayList<PageData>(TotalPage*page.getShowCount());
+				}
+				if(varOList!=null){
+					for(int i=0;i<varOList.size();i++){
+						PageData vpd = new PageData();
+						vpd.put("var1", map.get(varOList.get(i).get("RS_TYPE_NAME")==null?"":varOList.get(i).get("RS_TYPE_NAME").toString()));	//2
+						vpd.put("var2", varOList.get(i).get("count"));	//4
+						vpd.put("var3", varOList.get(i).get("percent"));		//5
+						varList.add(vpd);
+					}
+				}
+			}
+			dataMap.put("varList", varList);
+			ObjectExcelView erv = new ObjectExcelView();
+			mv = new ModelAndView(erv,dataMap);
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
 	/**
 	 * 处方报表-处方详细
 	 * @param page

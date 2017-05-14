@@ -69,6 +69,9 @@
 <!-- 											<i class="ace-icon fa fa-search nav-search-icon"></i> -->
 <!-- 										</span> -->
 									</div>
+									<div id="btnDiv" class="check-search">
+											<a title="最大支持导出2万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
+									</div>
 								</div>
 						<!-- 检索  -->
 					
@@ -108,13 +111,6 @@
 							</tbody>
 						</table>
 						
-					<div class="page-header position-relative">
-					<table style="width:100%;">
-						<tr>
-							<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
-						</tr>
-					</table>
-					</div>
 					</form>
 	
 						</div>
@@ -228,6 +224,9 @@ function detailListByDep(RS_TYPE_CODE){
 		diag.close();
 	 };
 	 diag.show();
+}
+function listExport(){
+	window.open(path + "/report/ordersReportExport.do"+$("#searchDiv").serialize());
 }
 </script>
 </html>

@@ -70,6 +70,9 @@
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
+									<div id="btnDiv" class="check-search">
+											<a title="最大支持导出2万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
+									</div>
 								</div>
 							</form>
 						<!-- 检索  -->
@@ -230,6 +233,9 @@ function detailListByDep(RS_TYPE_CODE){
 		diag.close();
 	 };
 	 diag.show();
+}
+function listExport(){
+	window.open(path + "/report/prescReportExport.do"+$("#searchDiv").serialize());
 }
 </script>
 </html>
