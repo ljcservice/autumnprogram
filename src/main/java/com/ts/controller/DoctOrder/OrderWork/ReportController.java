@@ -922,7 +922,7 @@ public class ReportController extends BaseController{
 			List<PageData> varList = new ArrayList<PageData>();
 			for(int i=0;i<list.size();i++){
 				PageData vpd = new PageData();
-				vpd.put("var1", list.get(i).getString("OUT_DEPT_NAME"));		//1
+				vpd.put("var1", list.get(i).getString("ORG_NAME"));		//1
 				vpd.put("var2", list.get(i).getDouble("DOSAGE_SUM"));	//2
 				vpd.put("var3", list.get(i).getDouble("DIAGINFO_SUM"));	//3
 				vpd.put("var4", list.get(i).getDouble("INGREDIEN_SUM"));	//4
@@ -1098,7 +1098,7 @@ public class ReportController extends BaseController{
 			List<PageData> varList = new ArrayList<PageData>();
 			for(int i=0;i<list.size();i++){
 				PageData vpd = new PageData();
-				vpd.put("var1", list.get(i).getString("ATTENDING_DOCTOR"));		//1
+				vpd.put("var1", list.get(i).getString("DOCTOR_NAME"));		//1
 				vpd.put("var2", list.get(i).getDouble("DOSAGE_SUM"));	//2
 				vpd.put("var3", list.get(i).getDouble("DIAGINFO_SUM"));	//3
 				vpd.put("var4", list.get(i).getDouble("INGREDIEN_SUM"));	//4
