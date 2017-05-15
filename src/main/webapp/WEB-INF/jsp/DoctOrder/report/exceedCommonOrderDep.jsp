@@ -31,7 +31,7 @@
 @media Print { .Noprn { DISPLAY: none }}
 </style>
 </head>
-<body class="no-skin">
+<body class="no-skin" style="background-color:white;">
 
 	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
