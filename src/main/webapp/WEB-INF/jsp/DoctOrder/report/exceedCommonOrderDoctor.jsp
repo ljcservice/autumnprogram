@@ -102,7 +102,7 @@
 									<td nowrap class="center">${p1.SPECPEOPLE_SUM }</td>
 									<td nowrap class="center">${p1.MANAGER_SUM }</td>
 									<td nowrap class="center">${p1.CHECKFALSE_SUM }</td>
-									<td nowrap class="center">${p1.PRESC_COUNT }</td>
+									<td nowrap class="center">${p1.ORDER_COUNT }</td>
 									<td nowrap class="center">${p1.CHECKFALSE_PERSENTS1 } %</td>
 									<td nowrap class="center">${p1.CHECKFALSE_PERSENTS2 } %</td>
 								</tr>
@@ -123,7 +123,7 @@
 									<td nowrap class="center">${all.SPECPEOPLE_SUM }</td>
 									<td nowrap class="center">${all.MANAGER_SUM }</td>
 									<td nowrap class="center">${all.CHECKFALSE_SUM_ALL }</td>
-									<td nowrap class="center">${all.PRESC_COUNT_ALL }</td>
+									<td nowrap class="center">${all.ORDER_COUNT_ALL }</td>
 									<td nowrap class="center">&nbsp;</td>
 									<td nowrap class="center">&nbsp;</td>
 								</tr>

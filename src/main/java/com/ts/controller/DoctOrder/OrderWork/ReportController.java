@@ -1161,7 +1161,7 @@ public class ReportController extends BaseController{
 			BigDecimal checkfalse_sum_all = new BigDecimal(0);//不合格处方数汇总
 			BigDecimal order_count_all =  new BigDecimal(0);//总处方统计-汇总
 			//（科室分组）不合格处方数,总处方统计
-			List<PageData> countlist =  this.prescService.prescCountOrderDep(pd);
+			List<PageData> countlist =  this.prescService.orderCountDep(pd);
 			for(PageData py:countlist){
 				String ORG_CODE = py.getString("out_dept_name");
 				PageData px = map.get(ORG_CODE);
@@ -1223,7 +1223,7 @@ public class ReportController extends BaseController{
 			BigDecimal checkfalse_sum_all = new BigDecimal(0);//不合格处方数汇总
 			BigDecimal order_count_all =  new BigDecimal(0);//总处方统计-汇总
 			//（科室分组）不合格处方数,总处方统计
-			List<PageData> countlist =  this.prescService.prescCountOrderDep(pd);
+			List<PageData> countlist =  this.prescService.orderCountDep(pd);
 			for(PageData py:countlist){
 				String ORG_CODE = py.getString("out_dept_name");
 				PageData px = map.get(ORG_CODE);
@@ -1287,7 +1287,7 @@ public class ReportController extends BaseController{
 				vpd.put("var9", list.get(i).getDouble("SPECPEOPLE_SUM"));	//4
 				vpd.put("var10", list.get(i).getDouble("MANAGER_SUM"));	//4
 				vpd.put("var11", list.get(i).getDouble("CHECKFALSE_SUM"));	//4
-				vpd.put("var12", list.get(i).getDouble("PRESC_COUNT"));	//4
+				vpd.put("var12", list.get(i).getDouble("ORDER_COUNT"));	//4
 				vpd.put("var13", list.get(i).getDouble("CHECKFALSE_PERSENTS1") + "%");	//4
 				vpd.put("var14", list.get(i).getDouble("CHECKFALSE_PERSENTS2") + "%");	//4
 				varList.add(vpd);
@@ -1304,7 +1304,7 @@ public class ReportController extends BaseController{
 			vpd.put("var9", all.getDouble("SPECPEOPLE_SUM"));	//4
 			vpd.put("var10", all.getDouble("MANAGER_SUM"));	//4
 			vpd.put("var11", all.getDouble("CHECKFALSE_SUM_ALL"));	//4
-			vpd.put("var12", all.getDouble("PRESC_COUNT_ALL"));	//4
+			vpd.put("var12", all.getDouble("ORDER_COUNT_ALL"));	//4
 			vpd.put("var13", "");	//4
 			vpd.put("var14", "");	//4
 			varList.add(vpd);
@@ -1338,7 +1338,7 @@ public class ReportController extends BaseController{
 			BigDecimal checkfalse_sum_all = new BigDecimal(0);//不合格处方数汇总
 			BigDecimal order_count_all =  new BigDecimal(0);//总处方统计-汇总
 			//（医生分组）不合格处方数,总处方统计
-			List<PageData> countlist =  this.prescService.prescCountOrderDoctor(pd);
+			List<PageData> countlist =  this.prescService.orderCountDoctor(pd);
 			for(PageData py:countlist){
 				String DOCTOR_CODE = py.getString("ATTENDING_DOCTOR");
 				PageData px = map.get(DOCTOR_CODE);
@@ -1399,7 +1399,7 @@ public class ReportController extends BaseController{
 			BigDecimal checkfalse_sum_all = new BigDecimal(0);//不合格处方数汇总
 			BigDecimal order_count_all =  new BigDecimal(0);//总处方统计-汇总
 			//（医生分组）不合格处方数,总处方统计
-			List<PageData> countlist =  this.prescService.prescCountOrderDoctor(pd);
+			List<PageData> countlist =  this.prescService.orderCountDoctor(pd);
 			for(PageData py:countlist){
 				String DOCTOR_CODE = py.getString("ATTENDING_DOCTOR");
 				PageData px = map.get(DOCTOR_CODE);
@@ -1464,7 +1464,7 @@ public class ReportController extends BaseController{
 				vpd.put("var9", list.get(i).getDouble("SPECPEOPLE_SUM"));	//4
 				vpd.put("var10", list.get(i).getDouble("MANAGER_SUM"));	//4
 				vpd.put("var11", list.get(i).getDouble("CHECKFALSE_SUM"));	//4
-				vpd.put("var12", list.get(i).getDouble("PRESC_COUNT"));	//4
+				vpd.put("var12", list.get(i).getDouble("ORDER_COUNT"));	//4
 				vpd.put("var13", list.get(i).getDouble("CHECKFALSE_PERSENTS1") + "%");	//4
 				vpd.put("var14", list.get(i).getDouble("CHECKFALSE_PERSENTS2") + "%");	//4
 				varList.add(vpd);
@@ -1481,7 +1481,7 @@ public class ReportController extends BaseController{
 			vpd.put("var9", all.getDouble("SPECPEOPLE_SUM"));	//4
 			vpd.put("var10", all.getDouble("MANAGER_SUM"));	//4
 			vpd.put("var11", all.getDouble("CHECKFALSE_SUM_ALL"));	//4
-			vpd.put("var12", all.getDouble("PRESC_COUNT_ALL"));	//4
+			vpd.put("var12", all.getDouble("ORDER_COUNT_ALL"));	//4
 			vpd.put("var13", "");	//4
 			vpd.put("var14", "");	//4
 			varList.add(vpd);

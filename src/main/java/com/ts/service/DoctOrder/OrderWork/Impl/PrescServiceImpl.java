@@ -164,7 +164,6 @@ public class PrescServiceImpl implements PrescService{
 	public List<PageData> prescCountDep(PageData pd)throws Exception{
 		return (List<PageData>) daoph.findForList("rsDrugCheckRsltMapper.prescCountDep", pd);
 	}
-
 	
 	public List<PageData> exceedCommonOrderDoctor(PageData pd)throws Exception{
 		return (List<PageData>) daoph.findForList("rsDrugCheckRsltMapper.exceedCommonOrderDoctor", pd);
@@ -173,15 +172,16 @@ public class PrescServiceImpl implements PrescService{
 		return (List<PageData>) daoph.findForList("rsDrugCheckRsltMapper.exceedCommonOrderDep", pd);
 	}
 
-	public List<PageData> prescCountOrderDoctor(PageData pd)throws Exception{
-		return (List<PageData>) daoph.findForList("rsDrugCheckRsltMapper.prescCountOrderDoctor", pd);
+	public List<PageData> orderCountDoctor(PageData pd)throws Exception{
+		return (List<PageData>) daoph.findForList("rsDrugCheckRsltMapper.orderCountDoctor", pd);
 	}
 
+	public List<PageData> orderCountDep(PageData pd)throws Exception{
+		return (List<PageData>) daoph.findForList("rsDrugCheckRsltMapper.orderCountDep", pd);
+	}
+	
 	public PageData exceedCommonOrderAll(PageData pd)throws Exception{
 		return (PageData) daoph.findForObject("rsDrugCheckRsltMapper.exceedCommonOrderAll", pd);
 	}
 
-	public List<PageData> prescCountOrderDep(PageData pd)throws Exception{
-		return (List<PageData>) daoph.findForList("rsDrugCheckRsltMapper.prescCountOrderDep", pd);
-	}
 }

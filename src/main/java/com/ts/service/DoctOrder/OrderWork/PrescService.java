@@ -107,11 +107,12 @@ public interface PrescService {
 	public List<PageData> prescCountDep(PageData pd)throws Exception;
 	
 	public List<PageData> exceedCommonOrderDoctor(PageData pd)throws Exception;
+	
 	public List<PageData> exceedCommonOrderDep(PageData pd)throws Exception;
 
-	public List<PageData> prescCountOrderDoctor(PageData pd)throws Exception;
+	public List<PageData> orderCountDoctor(PageData pd)throws Exception;
 
 	public PageData exceedCommonOrderAll(PageData pd)throws Exception;
 
-	public List<PageData> prescCountOrderDep(PageData pd)throws Exception;
+	public List<PageData> orderCountDep(PageData pd)throws Exception;
 }
