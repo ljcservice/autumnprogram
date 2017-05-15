@@ -269,7 +269,7 @@ function detailPresc(id,NGROUPNUM){
 }
 
 function prescListExport(){
-	window.open(path + "/presc/prescListExport.do"+$("#searchDiv").serialize());
+	window.open(path + "/presc/prescListExport.do?&"+$("#searchForm").serialize());
 }
 </script>
 </html>

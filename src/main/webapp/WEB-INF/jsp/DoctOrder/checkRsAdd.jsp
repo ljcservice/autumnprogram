@@ -35,10 +35,10 @@
 											<input type="hidden" name="ngroupnum" value="${pd.ngroupnum}" id="ngroupnum"/>
 											<div >
 											<div>
-											<table id="table_report" class="table table-bordered table-hover">
+											<table id="table_report" style="width: 100%;" class="table table-bordered table-hover">
 												<tr>
-													<td width="15%;" style="text-align: right;padding-top: 10px;">点评类型:</td>
-													<td width="85%;">
+													<td width="20%;" style="text-align: right;padding-top: 10px;">点评类型:</td>
+													<td width="80%;">
 														<select class="chosen-select form-control" style="vertical-align:top;width: 80px;" name="RS_DRUG_TYPE" id="RS_DRUG_TYPE" onchange="changeType(this);">
 															<c:forEach items="${checkType.entrySet()}" var="partTyp" varStatus="vs">
 																<option value="${partTyp.key}" <c:if test="${partTyp.key == 'iv_effect' }">selected</c:if>>${partTyp.value.rs_type_name}</option>
@@ -77,7 +77,7 @@
 												<tr>
 													<td style="text-align: right;padding-top: 10px;">问题说明:</td>
 													<td >
-														<textarea name="ALERT_HINT" id="ALERT_HINT" rows="5" cols="98">${pd.ALERT_HINT}</textarea>
+														<textarea name="ALERT_HINT" id="ALERT_HINT" rows="5" cols="77">${pd.ALERT_HINT}</textarea>
 													</td>
 												</tr>
 											</table>
@@ -124,8 +124,6 @@
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 </body>
-<script type="text/javascript" src="static/js/ontology/tree.fixer.js?v=2008"></script>
-<script type="text/javascript" src="static/js/ontology/tree.js?v=2018008"></script>
 <script type="text/javascript" src="static/js/ontology/edit.js?v=2018009"></script>
 <script type="text/javascript">
 //保存本体

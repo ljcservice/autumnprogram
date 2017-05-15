@@ -45,8 +45,8 @@
 													<td rowspan="1">${checkType.get(pd.RS_DRUG_TYPE.toString()).RS_TYPE_NAME} </td>
 												</tr>
 												<tr>
-													<td width="15%;" rowspan="2" style="text-align: right;padding-top: 10px;"><c:if test="${pd.business_type==0}">医嘱名称</c:if><c:if test="${pd.business_type==1}">药品名称</c:if>:</td>
-													<td width="35%;">
+													<td width="20%;" rowspan="2" style="text-align: right;padding-top: 10px;"><c:if test="${pd.business_type==0}">医嘱名称</c:if><c:if test="${pd.business_type==1}">药品名称</c:if>:</td>
+													<td width="80%;">
 														<div>
 															${pd.DRUG_ID1_NAME} 
 															<c:if test="${pd.business_type==1}"> 
@@ -71,7 +71,7 @@
 												<tr>
 													<td style="text-align: right;padding-top: 10px;">问题说明:</td>
 													<td rowspan="1">
-														<textarea name="ALERT_HINT" id="ALERT_HINT" rows="5" cols="98">${pd.ALERT_HINT}</textarea>
+														<textarea name="ALERT_HINT" id="ALERT_HINT" rows="5" cols="77">${pd.ALERT_HINT}</textarea>
 													</td>
 												</tr>
 											</table>

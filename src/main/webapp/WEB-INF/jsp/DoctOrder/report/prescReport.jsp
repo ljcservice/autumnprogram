@@ -237,7 +237,7 @@ function detailListByDep(RS_TYPE_CODE){
 	 diag.show();
 }
 function listExport(){
-	window.open(path + "/report/prescReportExport.do"+$("#searchDiv").serialize());
+	window.open(path + "/report/prescReportExport.do?&"+$("#searchForm").serialize());
 }
 </script>
 </html>

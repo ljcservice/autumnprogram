@@ -294,7 +294,7 @@ function detailPresc(id,NGROUPNUM){
 	 diag.show();
 }
 function prescListExport(){
-	window.open(path + "/presc/prescListExport.do"+$("#searchDiv").serialize());
+	window.open(path + "/presc/prescListExport.do?&"+$("#searchDiv").serialize());
 }
 </script>
 </html>

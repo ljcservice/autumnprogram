@@ -190,7 +190,7 @@ function initWidthHeight(){
 	FixTable("simple-table", 1, rr);
 }
 function listExport(){
-	window.open(path + "/report/exceedCommonDoctorExport.do"+$("#searchDiv").serialize());
+	window.open(path + "/report/exceedCommonDoctorExport.do?&"+$("#searchForm").serialize());
 }
 function myprint(){
 	$("#main-container").hide();

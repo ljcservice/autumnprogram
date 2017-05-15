@@ -228,7 +228,7 @@ function detailListByDep(RS_TYPE_CODE){
 	 diag.show();
 }
 function listExport(){
-	window.open(path + "/report/ordersReportExport.do"+$("#searchDiv").serialize());
+	window.open(path + "/report/ordersReportExport.do?&"+$("#searchForm").serialize());
 }
 </script>
 </html>

@@ -95,7 +95,7 @@
 
 											<div class="tab-content" style="padding:2px;max-height: 220px;overflow: auto;">
 												<div id="doctOrder" class="tab-pane fade in active" >
-													<table class="table table-bordered table-striped table-responsive " style="font-size:10px;" >
+													<table class="table table-bordered table-striped table-responsive " style="font-size:10px;margin-bottom: 2px;" >
 														<tbody>
 															<tr>
 																 <td width="10%" class="info">患者ID:</th>

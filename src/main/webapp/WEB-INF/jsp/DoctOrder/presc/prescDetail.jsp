@@ -56,9 +56,9 @@
 												</li>
 											</ul>
 
-											<div class="tab-content" style="overflow-y:auto;height:150px;padding-top: 2px;padding-left: 2px;padding-right: 2px;padding-bottom: 0px;">
+											<div class="tab-content" style="overflow-y:auto;max-height:150px;padding-top: 2px;padding-left: 2px;padding-right: 2px;padding-bottom: 0px;">
 												<div id="doctOrder" class="tab-pane fade in active" >
-													<table class="table table-bordered table-striped table-responsive " style="font-size:10px;margin-bottom:0px;" >
+													<table class="table table-bordered table-striped table-responsive " style="font-size:10px;margin-bottom:3px;" >
 														<tbody>
 															<tr>
 																 <td width="10%" class="info">患者编号:</th>
@@ -99,7 +99,7 @@
 
 												<div id="orderCheck" class="tab-pane fade" >
 													<iframe  name="CheckRsFrame" id="CheckRsFrame" scrolling ="auto"" frameborder="0"
-														src="presc/checkRsView.do?id=${pat.id}&NGROUPNUM=${pat.NGROUPNUM}" style="margin:0px 0px 0px 0px;width:100%;height: 135px;">
+														src="presc/checkRsView.do?id=${pat.id}&NGROUPNUM=${pat.NGROUPNUM}" style="margin:0px 0px 0px 0px;width:100%;height: 140px;">
 													</iframe>
 												</div>
 											</div>

@@ -834,10 +834,11 @@ public class ReportController extends BaseController{
 					String checkfalse_persents1 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(checkfalse_sum_all,4,4).doubleValue()*100);
 					px.put("checkfalse_persents1", checkfalse_persents1);
 				}
-				if(presc_count_all==null||presc_count_all.doubleValue()==0){
+				BigDecimal presc_count = (BigDecimal) px.get("presc_count");
+				if(presc_count==null||presc_count.doubleValue()==0){
 					px.put("checkfalse_persents2", 0);
 				}else{
-					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("presc_count")).divide(presc_count_all,4,4).doubleValue()*100);
+					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(presc_count,4,4).doubleValue()*100);
 					px.put("checkfalse_persents2", checkfalse_persents2);
 				}
 			}
@@ -893,10 +894,11 @@ public class ReportController extends BaseController{
 					String checkfalse_persents1 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(checkfalse_sum_all,4,4).doubleValue()*100);
 					px.put("checkfalse_persents1", checkfalse_persents1);
 				}
-				if(presc_count_all==null||presc_count_all.doubleValue()==0){
+				BigDecimal presc_count = (BigDecimal) px.get("presc_count");
+				if(presc_count==null||presc_count.doubleValue()==0){
 					px.put("checkfalse_persents2", 0);
 				}else{
-					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("presc_count")).divide(presc_count_all,4,4).doubleValue()*100);
+					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(presc_count,4,4).doubleValue()*100);
 					px.put("checkfalse_persents2", checkfalse_persents2);
 				}
 			}
@@ -1009,10 +1011,11 @@ public class ReportController extends BaseController{
 					String checkfalse_persents1 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(checkfalse_sum_all,4,4).doubleValue()*100);
 					px.put("checkfalse_persents1", checkfalse_persents1);
 				}
-				if(presc_count_all==null||presc_count_all.doubleValue()==0){
+				BigDecimal presc_count = (BigDecimal) px.get("presc_count");
+				if(presc_count==null||presc_count.doubleValue()==0){
 					px.put("checkfalse_persents2", 0);
 				}else{
-					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("presc_count")).divide(presc_count_all,4,4).doubleValue()*100);
+					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(presc_count,4,4).doubleValue()*100);
 					px.put("checkfalse_persents2", checkfalse_persents2);
 				}
 			}
@@ -1069,10 +1072,11 @@ public class ReportController extends BaseController{
 					String checkfalse_persents1 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(checkfalse_sum_all,4,4).doubleValue()*100);
 					px.put("checkfalse_persents1", checkfalse_persents1);
 				}
-				if(presc_count_all==null||presc_count_all.doubleValue()==0){
+				BigDecimal presc_count = (BigDecimal) px.get("presc_count");
+				if(presc_count==null||presc_count.doubleValue()==0){
 					px.put("checkfalse_persents2", 0);
 				}else{
-					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("presc_count")).divide(presc_count_all,4,4).doubleValue()*100);
+					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(presc_count,4,4).doubleValue()*100);
 					px.put("checkfalse_persents2", checkfalse_persents2);
 				}
 			}
@@ -1186,10 +1190,11 @@ public class ReportController extends BaseController{
 					String checkfalse_persents1 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(checkfalse_sum_all,4,4).doubleValue()*100);
 					px.put("checkfalse_persents1", checkfalse_persents1);
 				}
-				if(order_count_all==null||order_count_all.doubleValue()==0){
+				BigDecimal order_count = (BigDecimal) px.get("order_count");
+				if(order_count ==null||order_count.doubleValue()==0){
 					px.put("checkfalse_persents2", 0);
 				}else{
-					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("order_count")).divide(order_count_all,4,4).doubleValue()*100);
+					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(order_count,4,4).doubleValue()*100);
 					px.put("checkfalse_persents2", checkfalse_persents2);
 				}
 			}
@@ -1247,10 +1252,11 @@ public class ReportController extends BaseController{
 					String checkfalse_persents1 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(checkfalse_sum_all,4,4).doubleValue()*100);
 					px.put("checkfalse_persents1", checkfalse_persents1);
 				}
-				if(order_count_all==null||order_count_all.doubleValue()==0){
+				BigDecimal order_count = (BigDecimal) px.get("order_count");
+				if(order_count ==null||order_count.doubleValue()==0){
 					px.put("checkfalse_persents2", 0);
 				}else{
-					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("order_count")).divide(order_count_all,4,4).doubleValue()*100);
+					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(order_count,4,4).doubleValue()*100);
 					px.put("checkfalse_persents2", checkfalse_persents2);
 				}
 			}
@@ -1363,10 +1369,11 @@ public class ReportController extends BaseController{
 					String checkfalse_persents1 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(checkfalse_sum_all,4,4).doubleValue()*100);
 					px.put("checkfalse_persents1", checkfalse_persents1);
 				}
-				if(order_count_all==null||order_count_all.doubleValue()==0){
+				BigDecimal order_count = (BigDecimal) px.get("order_count");
+				if(order_count ==null||order_count.doubleValue()==0){
 					px.put("checkfalse_persents2", 0);
 				}else{
-					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("order_count")).divide(order_count_all,4,4).doubleValue()*100);
+					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(order_count,4,4).doubleValue()*100);
 					px.put("checkfalse_persents2", checkfalse_persents2);
 				}
 			}
@@ -1424,10 +1431,11 @@ public class ReportController extends BaseController{
 					String checkfalse_persents1 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(checkfalse_sum_all,4,4).doubleValue()*100);
 					px.put("checkfalse_persents1", checkfalse_persents1);
 				}
-				if(order_count_all==null||order_count_all.doubleValue()==0){
+				BigDecimal order_count = (BigDecimal) px.get("order_count");
+				if(order_count ==null||order_count.doubleValue()==0){
 					px.put("checkfalse_persents2", 0);
 				}else{
-					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("order_count")).divide(order_count_all,4,4).doubleValue()*100);
+					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(order_count,4,4).doubleValue()*100);
 					px.put("checkfalse_persents2", checkfalse_persents2);
 				}
 			}

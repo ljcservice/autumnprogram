@@ -154,6 +154,8 @@ public class OrderWork extends BaseController
 			List<PageData> varList = null;
 			//分批查询,最大查询2万条
 			for(int pag = 1;pag<=TotalPage&&pag<=20;pag++){
+				page.setPd(pd);
+				page.setShowCount(1000);
 				page.setCurrentPage(pag);
 				List<PageData> varOList =  orderWorkService.patientList(page);
 				TotalPage = page.getTotalPage();
@@ -311,7 +313,11 @@ public class OrderWork extends BaseController
 			json = json.replaceAll("TITLE", "title").replaceAll("STARTDATE", "start").replaceAll("ENDDATE", "end").replaceAll("CLASSNAME", "className");
 			mv.addObject("dateNodes",json);
 			String dateStart = orderWorkService.queryOrdersStartDate(pd);
-			mv.addObject("dateStart",dateStart);
+			if(dateStart!=null){
+				mv.addObject("dateStart",dateStart);
+			}else{
+				mv.addObject("dateStart",new Date());
+			}
 			mv.setViewName("DoctOrder/OrderWork/calendar");
 			return mv;
 		}else  if( show_type==3){
@@ -601,14 +607,18 @@ public class OrderWork extends BaseController
 			pd.put("drug_id1_name", drug1[3]);
 			pd.put("rec_main_no1", drug1[0]);
 			pd.put("rec_sub_no1", drug1[1]);
-			pd.put("RELATION_ID1", drug1[4]);
+			if(drug1.length>=5){
+				pd.put("RELATION_ID1", drug1[4]);
+			}
 			if(!Tools.isEmpty(pd.getString("orderDrug2")))
 			{
 				pd.put("drug_id2", drug2[2]);
 				pd.put("drug_id2_name", drug2[3]);
 				pd.put("rec_main_no2", drug2[0]);
 				pd.put("rec_sub_no2", drug2[1]);
-				pd.put("RELATION_ID2", drug2[4]);
+				if(drug2.length>=5){
+					pd.put("RELATION_ID2", drug2[4]);
+				}
 			}
 			int i = orderWorkService.saveCheckResult(pd);
 			map.put("ngroupnum", pd.get("ngroupnum"));

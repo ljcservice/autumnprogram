@@ -300,7 +300,7 @@ function viewDetail(patId , visitId,ngnum){
 	
 }
 function listExport(){
-	window.open(path + "/DoctOrder/orderListExport.do"+$("#searchDiv").serialize());
+	window.open(path + "/DoctOrder/orderListExport.do?&"+$("#searchForm").serialize());
 }
 </script>
 </html>
