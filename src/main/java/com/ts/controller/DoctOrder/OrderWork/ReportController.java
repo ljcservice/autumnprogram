@@ -1,6 +1,9 @@
 package com.ts.controller.DoctOrder.OrderWork;
 
+import java.io.BufferedOutputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -9,7 +12,12 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -572,6 +580,212 @@ public class ReportController extends BaseController{
 		}
 		mv.setViewName("DoctOrder/report/prescStatistics");
 		return  mv; 
+	}
+	
+	/**
+	 * 门(急)诊处方点评汇总,导出
+	 * @return
+	 */
+	@RequestMapping(value="/prescStatisticsExport")
+	public void prescStatisticsExport(HttpServletResponse response){
+		ModelAndView mv = new ModelAndView();
+		PageData pd = this.getPageData();
+		try {
+			
+			mv.addObject("pd", pd);
+			PageData p1 =  this.prescService.prescStatistics1(pd);
+			BigDecimal HASKJ_SUM = (BigDecimal) p1.get("HASKJ_SUM");
+			BigDecimal HASZS_SUM = (BigDecimal) p1.get("HASZS_SUM");
+			BigDecimal CHECKFALSE = (BigDecimal) p1.get("CHECKFALSE");
+			BigDecimal CHECKTRUE = (BigDecimal) p1.get("CHECKTRUE");
+			BigDecimal CHECKPEND = (BigDecimal) p1.get("CHECKPEND");
+			BigDecimal COUNT = (BigDecimal) p1.get("COUNT");
+			//计算百分比  
+			if(COUNT==null||COUNT.doubleValue()==0){
+				p1.put("HASKJ_PERSENTS",0);
+				p1.put("HASZS_PERSENTS",0);
+				p1.put("CHECKFALSE_PERSENTS",0);
+				p1.put("CHECKTRUE_PERSENTS",0);
+				p1.put("CHECKPEND_PERSENTS",0);
+			}else{
+				p1.put("HASKJ_PERSENTS", MyDecimalFormat.format(HASKJ_SUM.divide(COUNT,4,4).doubleValue()*100));
+				p1.put("HASZS_PERSENTS", MyDecimalFormat.format(HASZS_SUM.divide(COUNT,4,4).doubleValue()*100));
+				p1.put("CHECKFALSE_PERSENTS",MyDecimalFormat.format(CHECKFALSE.divide(COUNT,4,4).doubleValue()*100));
+				p1.put("CHECKTRUE_PERSENTS", MyDecimalFormat.format(CHECKTRUE.divide(COUNT,4,4).doubleValue()*100));
+				p1.put("CHECKPEND_PERSENTS", MyDecimalFormat.format(CHECKPEND.divide(COUNT,4,4).doubleValue()*100));
+			}
+			//国家基本药物品种百分比
+			BigDecimal BASEDRUG_COUNT_SUM = (BigDecimal) p1.get("BASEDRUG_COUNT_SUM");
+			BigDecimal DRUG_COUNT_SUM = (BigDecimal) p1.get("DRUG_COUNT_SUM");
+			if(DRUG_COUNT_SUM==null||DRUG_COUNT_SUM.doubleValue()==0){
+				p1.put("BASEDRUG_COUNT_PERSENTS", 0);
+			}else {
+				p1.put("BASEDRUG_COUNT_PERSENTS", MyDecimalFormat.format(BASEDRUG_COUNT_SUM.divide(DRUG_COUNT_SUM,4,4).doubleValue()*100));
+			}
+			
+			//抗菌药金额比例百分比(
+			BigDecimal ANTIDRUGCOSTS_SUM = (BigDecimal) p1.get("ANTIDRUGCOSTS_SUM");
+			BigDecimal AMOUNT_SUM = (BigDecimal) p1.get("AMOUNT_SUM");
+			if(AMOUNT_SUM==null||AMOUNT_SUM.doubleValue()==0){
+				p1.put("ANTIDRUGCOSTS_PERSENTS", 0);
+			}else{
+				p1.put("ANTIDRUGCOSTS_PERSENTS", MyDecimalFormat.format(ANTIDRUGCOSTS_SUM.divide(AMOUNT_SUM,4,4).doubleValue()*100));
+			}
+			
+			PageData p2 =  this.prescService.prescStatistics2(pd);
+			BigDecimal DRUG_COUNT = (BigDecimal) p2.get("DRUG_COUNT");
+			BigDecimal ONE_LEVEL = (BigDecimal) p2.get("ONE_LEVEL");
+			BigDecimal TWO_LEVEL = (BigDecimal) p2.get("TWO_LEVEL");
+			BigDecimal THREE_LEVEL = (BigDecimal) p2.get("THREE_LEVEL");
+			if(DRUG_COUNT==null||DRUG_COUNT.doubleValue()==0){
+				p2.put("ONE_LEVEL_PERSENTS",0);
+				p2.put("TWO_LEVEL_PERSENTS",0);
+				p2.put("THREE_LEVEL_PERSENTS",0);
+			}else{
+				p2.put("ONE_LEVEL_PERSENTS", MyDecimalFormat.format(ONE_LEVEL.divide(DRUG_COUNT,4,4).doubleValue()*100));
+				p2.put("TWO_LEVEL_PERSENTS", MyDecimalFormat.format(TWO_LEVEL.divide(DRUG_COUNT,4,4).doubleValue()*100));
+				p2.put("THREE_LEVEL_PERSENTS", MyDecimalFormat.format(THREE_LEVEL.divide(DRUG_COUNT,4,4).doubleValue()*100));
+			}
+			BigDecimal MAXUSEDAY_SUM = (BigDecimal) p1.get("MAXUSEDAY_SUM");
+			//平均每张处方金额：
+			//计算百分比  
+			if(COUNT==null||COUNT.doubleValue()==0){
+				p1.put("AMOUNT_AVG",0);
+				p1.put("MAXUSEDAY_AVG", 0);
+				p1.put("BASEDRUG_COUNT_AVG", 0);
+			}else {
+				p1.put("AMOUNT_AVG", MyDecimalFormat.format(AMOUNT_SUM.divide(COUNT,4,4).doubleValue()*100));
+				p1.put("MAXUSEDAY_AVG", MyDecimalFormat.format(MAXUSEDAY_SUM.divide(COUNT,4,4).doubleValue()*100));
+				p1.put("BASEDRUG_COUNT_AVG", MyDecimalFormat.format(BASEDRUG_COUNT_SUM.divide(COUNT,4,4).doubleValue()*100));
+			}
+			
+			PageData p3 =  this.prescService.prescStatistics3(pd);
+			BigDecimal PATIENT_ID_COUNT = (BigDecimal) p3.get("PATIENT_ID_COUNT");
+			if(PATIENT_ID_COUNT==null||PATIENT_ID_COUNT.doubleValue()==0){
+				p3.put("PATIENT_ID_AVG",0);
+			}else {
+				p3.put("PATIENT_ID_AVG", MyDecimalFormat.format(BASEDRUG_COUNT_SUM.divide(PATIENT_ID_COUNT,4,4).doubleValue()*100));
+			}
+			
+			//构建EXCEL
+			HSSFWorkbook workbook = new HSSFWorkbook();
+			Sheet sheet = workbook.createSheet();
+			Row titileRow = sheet.createRow(0);
+			titileRow.createCell(0).setCellValue("统计指标");
+			titileRow.createCell(1).setCellValue("数量");
+			titileRow.createCell(2).setCellValue("总数");
+			titileRow.createCell(3).setCellValue("比率");
+			Row row1 = sheet.createRow(1);
+			row1.createCell(0).setCellValue("抗菌药处方百分比(抗菌药处方数/处方总数)：");
+			row1.createCell(1).setCellValue( p1.getDouble("HASKJ_SUM") );
+			row1.createCell(2).setCellValue(p1.getDouble("COUNT") );
+			row1.createCell(3).setCellValue(p1.getDouble("HASKJ_PERSENTS") );
+			
+			Row row2 = sheet.createRow(2);
+			row2.createCell(0).setCellValue("注射剂处方百分比(注射剂处方数/处方总数)：");
+			row2.createCell(1).setCellValue( p1.getDouble("HASZS_SUM") );
+			row2.createCell(2).setCellValue(p1.getDouble("COUNT") );
+			row2.createCell(3).setCellValue(p1.getDouble("HASZS_PERSENTS") );
+			
+			Row row3 = sheet.createRow(3);
+			row3.createCell(0).setCellValue("国家基本药物品种百分比(国家基本药物数/使用药物总数)：");
+			row3.createCell(1).setCellValue( p1.getDouble("BASEDRUG_COUNT_SUM") );
+			row3.createCell(2).setCellValue(p1.getDouble("DRUG_COUNT_SUM") );
+			row3.createCell(3).setCellValue(p1.getDouble("BASEDRUG_COUNT_PERSENTS") );
+			
+			Row row4 = sheet.createRow(4);
+			row4.createCell(0).setCellValue("合理处方百分比(不合格处方数/处方总数)：");
+			row4.createCell(1).setCellValue( p1.getDouble("CHECKTRUE") );
+			row4.createCell(2).setCellValue(p1.getDouble("COUNT") );
+			row4.createCell(3).setCellValue(p1.getDouble("CHECKTRUE_PERSENTS") );
+			
+			Row row5 = sheet.createRow(5);
+			row5.createCell(0).setCellValue("不合理处方百分比(不合格处方数/处方总数)：");
+			row5.createCell(1).setCellValue( p1.getDouble("CHECKFALSE") );
+			row5.createCell(2).setCellValue(p1.getDouble("COUNT") );
+			row5.createCell(3).setCellValue(p1.getDouble("CHECKFALSE_PERSENTS") );
+			
+			Row row6 = sheet.createRow(6);
+			row6.createCell(0).setCellValue("待定处方百分比(待定处方数/处方总数)：");
+			row6.createCell(1).setCellValue( p1.getDouble("CHECKPEND") );
+			row6.createCell(2).setCellValue(p1.getDouble("COUNT") );
+			row6.createCell(3).setCellValue(p1.getDouble("CHECKPEND_PERSENTS") );
+			
+			Row row7 = sheet.createRow(7);
+			row7.createCell(0).setCellValue("非限制级抗菌药百分比(非限制抗菌药/抗菌药总数)：");
+			row7.createCell(1).setCellValue( p2.getDouble("ONE_LEVEL") );
+			row7.createCell(2).setCellValue(p2.getDouble("DRUG_COUNT") );
+			row7.createCell(3).setCellValue(p2.getDouble("ONE_LEVEL_PERSENTS") );
+			
+			Row row8 = sheet.createRow(8);
+			row8.createCell(0).setCellValue("限制级抗菌药百分比（限制抗菌药/抗菌药总数)：");
+			row8.createCell(1).setCellValue( p2.getDouble("TWO_LEVEL") );
+			row8.createCell(2).setCellValue(p2.getDouble("DRUG_COUNT") );
+			row8.createCell(3).setCellValue(p2.getDouble("TWO_LEVEL_PERSENTS").toString()+"%" );
+
+			Row row9 = sheet.createRow(9);
+			row9.createCell(0).setCellValue("特殊级抗菌药百分比(特殊级抗菌药/抗菌药总数)：");
+			row9.createCell(1).setCellValue( p2.getDouble("THREE_LEVEL") );
+			row9.createCell(2).setCellValue(p2.getDouble("DRUG_COUNT") );
+			row9.createCell(3).setCellValue(p2.getDouble("THREE_LEVEL_PERSENTS").toString()+"%" );
+
+			Row row10 = sheet.createRow(10);
+			row10.createCell(0).setCellValue("抗菌药金额比例百分比(使用抗菌药总金额/使用药品总金额)：");
+			row10.createCell(1).setCellValue( p1.getDouble("ANTIDRUGCOSTS_SUM") );
+			row10.createCell(2).setCellValue(p1.getDouble("AMOUNT_SUM") );
+			row10.createCell(3).setCellValue(p1.getDouble("ANTIDRUGCOSTS_PERSENTS").toString()+"%" );
+			
+			Row row11 = sheet.createRow(11);//空白行
+			
+			Row row12 = sheet.createRow(12);
+			row12.createCell(0).setCellValue("统计指标");
+			row12.createCell(1).setCellValue("总数");
+			row12.createCell(2).setCellValue("总处方数");
+			row12.createCell(3).setCellValue("平均值");
+			
+			Row row13 = sheet.createRow(13);
+			row13.createCell(0).setCellValue("抗菌药金额比例百分比(使用抗菌药总金额/使用药品总金额)：");
+			row13.createCell(1).setCellValue( p1.getDouble("BASEDRUG_COUNT_AVG") );
+			row13.createCell(2).setCellValue(p1.getDouble("COUNT") );
+			row13.createCell(3).setCellValue(p1.getDouble("HASKJ_PERSENTS").toString()+"%" );
+			
+			Row row14 = sheet.createRow(14);
+			row14.createCell(0).setCellValue("平均每张处方金额：");
+			row14.createCell(1).setCellValue( p1.getDouble("AMOUNT_SUM") );
+			row14.createCell(2).setCellValue(p1.getDouble("COUNT") );
+			row14.createCell(3).setCellValue(p1.getDouble("AMOUNT_AVG") );
+			
+			Row row15 = sheet.createRow(15);
+			row15.createCell(0).setCellValue("平均处方用药天数：");
+			row15.createCell(1).setCellValue( p1.getDouble("MAXUSEDAY_SUM") );
+			row15.createCell(2).setCellValue(p1.getDouble("COUNT") );
+			row15.createCell(3).setCellValue(p1.getDouble("MAXUSEDAY_AVG") );
+			
+			Row row16 = sheet.createRow(16);//空白行
+			
+			Row row17 = sheet.createRow(17);
+			row17.createCell(0).setCellValue("统计指标");
+			row17.createCell(1).setCellValue("总数");
+			row17.createCell(2).setCellValue("总人次数");
+			row17.createCell(3).setCellValue("平均值");
+			
+			Row row18 = sheet.createRow(18);
+			row18.createCell(0).setCellValue("平均每人次处方金额：");
+			row18.createCell(1).setCellValue( p1.getDouble("AMOUNT_SUM") );
+			row18.createCell(2).setCellValue(p3.getDouble("PATIENT_ID_COUNT") );
+			row18.createCell(3).setCellValue(p3.getDouble("PATIENT_ID_AVG") );
+			
+			
+			response.setContentType("application/vnd.ms-excel;charset=UTF-8");
+			response.setHeader("Content-disposition", "attachment; " + "filename="
+					+ "prescExport" + ".xlsx" );
+			OutputStream response_out = response.getOutputStream();
+			workbook.write(response_out);
+			response_out.flush();
+			response_out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**

@@ -71,6 +71,7 @@
 									</div>
 									<div id="btnDiv" class="check-search">
 											<a title="最大支持导出2万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
+											<a title="" class="btn btn-mini btn-success" onclick="window.print();">打印</a>
 									</div>
 								</div>
 						<!-- 检索  -->

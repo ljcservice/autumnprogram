@@ -49,7 +49,13 @@ public class ObjectExcelView extends AbstractExcelView {
 			HSSFWorkbook workbook, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		Date date = new Date();
-		String filename = Tools.date2Str(date, "yyyyMMddHHmmss");
+		String filename = null;
+		Object nameobj = model.get("filename");
+		if(nameobj!=null){
+			filename = nameobj.toString();
+		}else{
+			filename = Tools.date2Str(date, "yyyyMMddHHmmss");
+		}
 		HSSFSheet sheet;
 		HSSFCell cell;
 		response.setContentType("application/octet-stream");

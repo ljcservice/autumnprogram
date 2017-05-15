@@ -50,6 +50,10 @@
 										<a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
 										<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i></a>
 									</div>
+									<div id="btnDiv" class="check-search">
+											<a title="最大支持导出2万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
+											<a title="" class="btn btn-mini btn-success" onclick="window.print();">打印</a>
+									</div>
 								</form>
 						<!-- 检索  -->
 						<div style="width: 100%;height: auto;">
@@ -211,7 +215,6 @@
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<script type="text/javascript" src="static/js/common/common.js"></script>
 	</body>
-<script type="text/javascript" src="static/js/common/lockTable.js?v=201612"></script>
 <script type="text/javascript">
 $(top.hangge());
 
@@ -248,7 +251,8 @@ $(function() {
 	}
 
 });
-
-
+function listExport(){
+	window.open(path + "/report/prescStatisticsExport.do"+$("#searchDiv").serialize());
+}
 </script>
 </html>
