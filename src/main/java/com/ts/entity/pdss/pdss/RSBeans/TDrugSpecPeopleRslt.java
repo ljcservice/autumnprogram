@@ -156,8 +156,12 @@ public class TDrugSpecPeopleRslt extends TBaseResult implements Serializable{
             {
                 this.renalLevel = "Y";
             }
-            this.drugrenal = (dud); 
         }
+        else
+        {
+            this.renalLevel = "G";
+        }
+        this.drugrenal = (dud); 
         setAlterLevel(this.renalLevel);
         isFlag = true;
     }
@@ -178,8 +182,12 @@ public class TDrugSpecPeopleRslt extends TBaseResult implements Serializable{
             {
                 this.hepaticalLevel = "Y";
             }
-            this.drughepatical = (dud);   
         }
+        else
+        {
+            this.hepaticalLevel = "G";
+        }
+        this.drughepatical = (dud);   
         setAlterLevel(this.hepaticalLevel);
         isFlag = true;
     }
@@ -200,8 +208,12 @@ public class TDrugSpecPeopleRslt extends TBaseResult implements Serializable{
             {
                 this.lactLevel = "Y";
             }
-            this.druglact =(dud);    
         }
+        else
+        {
+            this.lactLevel = "G";
+        }
+        this.druglact =(dud);    
         setAlterLevel(this.lactLevel);
         isFlag = true;
     }
@@ -222,8 +234,12 @@ public class TDrugSpecPeopleRslt extends TBaseResult implements Serializable{
             {
                 this.pregnantLevel = "Y";
             }
-            this.drugpregnant = (dud);    
         }
+        else
+        {
+            this.pregnantLevel = "G";
+        }
+        this.drugpregnant = (dud);    
         setAlterLevel(this.pregnantLevel);
         isFlag = true;
     }
@@ -244,8 +260,12 @@ public class TDrugSpecPeopleRslt extends TBaseResult implements Serializable{
             {
                 this.oldLevel = "Y";
             }
-            this.drugold = (dud);    
         }
+        else
+        {
+            this.oldLevel = "G";
+        }
+        this.drugold = (dud);    
         setAlterLevel(this.oldLevel);
         isFlag = true;
     }
@@ -266,8 +286,12 @@ public class TDrugSpecPeopleRslt extends TBaseResult implements Serializable{
             {
                 this.childLevel = "Y";
             }
-            this.drugchild = (dud);    
         }
+        else
+        {
+            this.childLevel = "G";
+        }
+        this.drugchild = (dud);    
         setAlterLevel(this.childLevel);
         isFlag = true;
     }

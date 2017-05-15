@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="RSAntiDrugUserYF">
+
+	<!--表名  总体审核情况 -->
+	<sql id="tableName">
+		RS_AntiDrugUseRecYf
+	</sql>
+	
+	<sql id="Field">
+	   	yf_id,
+		patient_id,
+		visit_id,
+		dept_code,
+		dept_name,
+		doctor_name,
+		name,
+		sex,
+		age,
+		weight,
+		drug_code,
+		drug_name,
+		dosage,
+		dosage_units,
+		administration,
+		opertor_date,
+		opertor_name,
+		opertor_type,
+		opertor_use_time,
+		drug_use_time,
+		gms,
+		btgms,
+		wxys,
+		kndzbj,
+		kljlanjl,
+		yf_use_drug_yj,
+		tsyq,
+		rec_date,
+		type,
+		order_no,
+		order_sub_no
+
+	</sql>
+	
+	<sql id="FieldValue">
+	    #{yf_id},
+		#{patient_id},
+		#{visit_id},
+		#{dept_code},
+		#{dept_name},
+		#{doctor_name},
+		#{name},
+		#{sex},
+		#{age},
+		#{weight},
+		#{drug_code},
+		#{drug_name},
+		#{dosage},
+		#{dosage_units},
+		#{administration},
+		#{opertor_date},
+		#{opertor_name},
+		#{opertor_type},
+		#{opertor_use_time},
+		#{drug_use_time},
+		#{gms},
+		#{btgms},
+		#{wxys},
+		#{kndzbj},
+		#{kljlanjl},
+		#{yf_use_drug_yj},
+		#{tsyq},
+		#{rec_date},
+		#{type},
+		#{order_no},
+		#{order_sub_no}
+	</sql>
+	
+	<insert id="saveAntiDrugUseRecYf" parameterType="pd"	>
+		insert into 
+		<include refid="tableName"></include>  
+		(
+			<include refid="Field"></include>  
+		)
+        values(
+        	<include refid="FieldValue"></include>
+        )
+	</insert>
+
+	
+</mapper>

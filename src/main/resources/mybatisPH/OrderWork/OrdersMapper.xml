@@ -276,7 +276,7 @@
 			b.stop_order_date_time,b.dept_name,b.clinic_attr,b.outp_or_inp,b.internal_or_sergery,
 			b.link_date,b.ddd_value,
 			c.local_order_class_code local_order_class
-	from myDateTable a,	orders b ,order_class_code c
+	from myDateTable a,	orders b ,dict_order_class c
 	where b.order_class = c.order_class_code 
 		and a.datestr &gt;=to_char(b.start_date_time,'yyyy-MM-dd') 
 		and a.datestr &lt;=to_char(b.stop_date_time,'yyyy-MM-dd')

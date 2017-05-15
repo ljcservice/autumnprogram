@@ -365,7 +365,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                     	param.put("checkDate", CheckTime);
                     	param.put("RS_DRUG_TYPE", "interaction");
 //                    	param.put("type", 1);//互动信息的类型
-                        dao.save("ResultMapper.saveDrugCheckInfo", param);
+                        dao.save("rsDrugCheckRsltMapper.saveCheckRS", param);
                     }
                 }
             }
@@ -422,7 +422,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                     	param.put("In_rs_type", this.in_rs_type);
                     	param.put("checkDate", CheckTime);
                     	param.put("RS_DRUG_TYPE", "iv_effect");//配伍信息的类型
-                        dao.save("ResultMapper.saveDrugCheckInfo", param);
+                        dao.save("rsDrugCheckRsltMapper.saveCheckRS", param);
                     }
                 }
             }
@@ -475,7 +475,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                     	param.put("In_rs_type", this.in_rs_type);
                     	param.put("checkDate", CheckTime);
                     	param.put("RS_DRUG_TYPE", "diaginfo");//禁忌症审查的类型
-                        dao.save("ResultMapper.saveDrugCheckInfo", param);
+                        dao.save("rsDrugCheckRsltMapper.saveCheckRS", param);
                 }
             }
         }
@@ -636,7 +636,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                     	param.put("In_rs_type", this.in_rs_type);
                     	param.put("checkDate", CheckTime);
                     	param.put("RS_DRUG_TYPE", "ingredien");//类型
-                        dao.save("ResultMapper.saveDrugCheckInfo", param);
+                        dao.save("rsDrugCheckRsltMapper.saveCheckRS", param);
                     }
                 }
             }
@@ -694,7 +694,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                 	param.put("In_rs_type", this.in_rs_type);
                 	param.put("checkDate", CheckTime);
                 	param.put("RS_Drug_Type", "administrator");//类型
-                    dao.save("ResultMapper.saveDrugCheckInfo", param);
+                    dao.save("rsDrugCheckRsltMapper.saveCheckRS", param);
                 }
             }
         }
@@ -753,7 +753,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                     	param.put("In_rs_type", this.in_rs_type);
                     	param.put("checkDate", CheckTime);
                     	param.put("type", 7);//类型
-                        dao.save("ResultMapper.saveDrugCheckInfo", param);
+                        dao.save("rsDrugCheckRsltMapper.saveCheckRS", param);
                     }
                 }
             }
@@ -816,7 +816,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                 	param.put("In_rs_type", this.in_rs_type);
                 	param.put("checkDate", CheckTime);
                 	param.put("RS_Drug_Type", "dosage");//类型
-                    dao.save("ResultMapper.saveDrugCheckInfo", param);
+                    dao.save("rsDrugCheckRsltMapper.saveCheckRS", param);
                 }
             }
         }
@@ -873,7 +873,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                 	param.put("In_rs_type", this.in_rs_type);
                 	param.put("checkDate", CheckTime);
                 	param.put("RS_Drug_Type", "side");//类型
-                    dao.save("ResultMapper.saveDrugCheckInfo", param);
+                    dao.save("rsDrugCheckRsltMapper.saveCheckRS", param);
                  }
             }
         }
@@ -1045,7 +1045,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
         	param.put("NHEPATICALRED", NHEPATICALRED);
         	param.put("NHEPATICALYELLOW", NHEPATICALYELLOW);
         	param.put("CHECKDATE", DateUtil.fomatDate2(CheckTime));
-            dao.save("ResultMapper.saveDrugCheckInfoCollection", param);
+            dao.save("RSDCCMapper.saveDrugCheckInfoCollection", param);
         }
         catch (Exception e) 
         {
@@ -1162,7 +1162,10 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
             	param.put("yf_use_drug_yj",p.getYF_USE_DRUG_YJ());
             	param.put("REC_DATE", p.getREC_DATE() );
             	param.put("tsyq", p.getTSYQ()  );
-                dao.save("ResultMapper.saveAntiDrugUseRecYf", param);
+            	param.put("order_no", p.getOrder_no());
+                param.put("order_sub_no", p.getOrder_sub_no());
+                param.put("type", po.getPatType());
+                dao.save("RSAntiDrugUserYF.saveAntiDrugUseRecYf", param);
                 
                 }
                 catch(Exception e)
@@ -1221,7 +1224,10 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                     param.put("xxvalue", p.getXXVALUE());
                     param.put("cvalue", p.getCVALUE());
                     param.put("xxok", p.getXXOK());
-                    dao.save("ResultMapper.saveAntiDrugUseRecZl", param);
+                    param.put("order_no", p.getOrder_no());
+                    param.put("order_sub_no", p.getOrder_sub_no());
+                    param.put("type", po.getPatType());
+                    dao.save("RSAntiDrugUserZL.saveAntiDrugUseRecZl", param);
                 }
                 catch(Exception e )
                 {

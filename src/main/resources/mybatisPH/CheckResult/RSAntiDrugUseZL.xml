@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="RSAntiDrugUserZL">
+
+	<!--表名  总体审核情况 -->
+	<sql id="tableName">
+		rs_anti_drug_use_rec_zl
+	</sql>
+	
+	<sql id="Field">
+	   	zl_id,
+		patient_id,
+		visit_id,
+		dept_code,
+		dept_name,
+		doctor_name,
+		name,
+		sex,
+		age,
+		weight,
+		yyly,
+		zlfl,
+		grbw,
+		zdyj,
+		kndzbj,
+		drug_code,
+		drug_name,
+		dosage,
+		dosage_units,
+		administration,
+		rec_date,
+		twdate,
+		twvalue,
+		twok,
+		xxdate,
+		xxvalue,
+		cvalue,
+		xxok,
+		order_no,
+		order_sub_no,
+		type
+	</sql>
+	
+	<sql id="FieldValue">
+	   	#{zl_id},
+		#{patient_id},
+		#{visit_id},
+		#{dept_code},
+		#{dept_name},
+		#{doctor_name},
+		#{name},
+		#{sex},
+		#{age},
+		#{weight},
+		#{yyly},
+		#{zlfl},
+		#{grbw},
+		#{zdyj},
+		#{kndzbj},
+		#{drug_code},
+		#{drug_name},
+		#{dosage},
+		#{dosage_units},
+		#{administration},
+		#{rec_date},
+		#{twdate},
+		#{twvalue},
+		#{twok},
+		#{xxdate},
+		#{xxvalue},
+		#{cvalue},
+		#{xxok},
+		#{order_no},
+		#{order_sub_no},
+		#{type}
+	</sql>
+	
+	<insert id="saveAntiDrugUseRecZl" parameterType="pd"	>
+		insert into 
+		<include refid="tableName"></include>  
+		(
+			<include refid="Field"></include>  
+		)
+        values(
+        	<include refid="FieldValue"></include>
+        )
+	</insert>
+
+	
+</mapper>

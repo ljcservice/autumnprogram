@@ -18,7 +18,7 @@
 <!-- 		<typeAlias type="com.ts.entity.system.Department" alias="Department"/> -->
 		<typeAlias type="com.ts.util.PageData" alias="pd"/>
 		<!-- 分页 -->
-		<typeAlias type="com.ts.entity.Page" alias="Page"/>
+		<typeAlias type="com.ts.entity.Page" alias="Page"/> 
 	</typeAliases>
 	
 	<plugins>

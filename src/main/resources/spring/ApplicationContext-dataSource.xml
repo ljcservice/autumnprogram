@@ -93,7 +93,14 @@
 	<bean id="sqlSessionFactory_ph" class="org.mybatis.spring.SqlSessionFactoryBean">
     	<property name="dataSource" ref="dataSource_ph" />
         <property name="configLocation" value="classpath:mybatisPH/mybatis-config.xml"></property>
-        <property name="mapperLocations" value="classpath:mybatisPH/*/*.xml"></property>
+         <!-- mapper扫描 -->
+        <property name="mapperLocations" >
+        	<list>
+        		<value>classpath:mybatisPH/*/*.xml</value>
+        		<value>classpath:mybatisPH/*/*/*.xml</value>  
+        	</list>
+        </property>
+<!--         <property name="mapperLocations" value="classpath:mybatisPH/*/*.xml"></property> -->
     </bean>
 	<bean id="dataSource_ph" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">  
          <property name="url" value="${url_ph}" />  
