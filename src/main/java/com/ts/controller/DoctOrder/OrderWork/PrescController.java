@@ -144,7 +144,7 @@ public class PrescController extends BaseController{
 						vpd.put("var7", "0".equals(varOList.get(i).getString("HASKJ"))?"否":"是");		//7
 						vpd.put("var8", varOList.get(i).getString("DIAGNOSIS_NAMES"));	//8
 						vpd.put("var9", "￥ "+varOList.get(i).getDouble("AMOUNT"));			//9
-						vpd.put("var10", varOList.get(i).get("ISORDERCHECK")==null?"否":("0".equals(varOList.get(i).get("ISORDERCHECK").toString())?"否":"是"));	//10
+						vpd.put("var10", varOList.get(i).get("ISORDERCHECK")==null?"未点评":("0".equals(varOList.get(i).get("ISORDERCHECK").toString())?"未点评":"已点评"));	//10
 						vpd.put("var11", varOList.get(i).get("ISCHECKTRUE")==null?"待定":("0".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"合理":("1".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"不合理":"待定")));	//11
 						String RS_DRUG_TYPES = varOList.get(i).getString("RS_DRUG_TYPES");
 						StringBuffer sb = new StringBuffer();

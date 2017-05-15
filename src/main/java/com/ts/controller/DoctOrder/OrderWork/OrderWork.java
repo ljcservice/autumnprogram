@@ -171,8 +171,8 @@ public class OrderWork extends BaseController
 						vpd.put("var6", varOList.get(i).get("admission_date_time"));	//6
 						vpd.put("var7", varOList.get(i).getString("out_dept_name"));		//7
 						vpd.put("var8", varOList.get(i).get("discharge_date_time"));	//8
-						vpd.put("var10", varOList.get(i).get("ISORDERCHECK")==null?"否":("0".equals(varOList.get(i).get("ISORDERCHECK").toString())?"否":"是"));	//10
-						vpd.put("var11", varOList.get(i).get("ISCHECKTRUE")==null?"待定":("0".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"合理":("1".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"不合理":"待定")));	//11
+						vpd.put("var9", varOList.get(i).get("ISORDERCHECK")==null?"未点评":("0".equals(varOList.get(i).get("ISORDERCHECK").toString())?"未点评":"已点评"));	//10
+						vpd.put("var10", varOList.get(i).get("ISCHECKTRUE")==null?"待定":("0".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"合理":("1".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"不合理":"待定")));	//11
 						String RS_DRUG_TYPES = varOList.get(i).getString("RS_DRUG_TYPES");
 						StringBuffer sb = new StringBuffer();
 						if(!Tools.isEmpty(RS_DRUG_TYPES)){
@@ -182,7 +182,7 @@ public class OrderWork extends BaseController
 								sb.append(w);
 							}
 						}
-						vpd.put("var12", sb.toString());	//12
+						vpd.put("var11", sb.toString());	//12
 						varList.add(vpd);
 					}
 				}

@@ -677,63 +677,63 @@ public class ReportController extends BaseController{
 			titileRow.createCell(3).setCellValue("比率");
 			Row row1 = sheet.createRow(1);
 			row1.createCell(0).setCellValue("抗菌药处方百分比(抗菌药处方数/处方总数)：");
-			row1.createCell(1).setCellValue( p1.getDouble("HASKJ_SUM") );
-			row1.createCell(2).setCellValue(p1.getDouble("COUNT") );
-			row1.createCell(3).setCellValue(p1.getDouble("HASKJ_PERSENTS") );
+			row1.createCell(1).setCellValue( p1.get("HASKJ_SUM").toString() );
+			row1.createCell(2).setCellValue(p1.get("COUNT").toString() );
+			row1.createCell(3).setCellValue(p1.get("HASKJ_PERSENTS").toString() +"%");
 			
 			Row row2 = sheet.createRow(2);
 			row2.createCell(0).setCellValue("注射剂处方百分比(注射剂处方数/处方总数)：");
-			row2.createCell(1).setCellValue( p1.getDouble("HASZS_SUM") );
-			row2.createCell(2).setCellValue(p1.getDouble("COUNT") );
-			row2.createCell(3).setCellValue(p1.getDouble("HASZS_PERSENTS") );
+			row2.createCell(1).setCellValue( p1.get("HASZS_SUM").toString() );
+			row2.createCell(2).setCellValue(p1.get("COUNT").toString() );
+			row2.createCell(3).setCellValue(p1.get("HASZS_PERSENTS").toString() +"%");
 			
 			Row row3 = sheet.createRow(3);
 			row3.createCell(0).setCellValue("国家基本药物品种百分比(国家基本药物数/使用药物总数)：");
-			row3.createCell(1).setCellValue( p1.getDouble("BASEDRUG_COUNT_SUM") );
-			row3.createCell(2).setCellValue(p1.getDouble("DRUG_COUNT_SUM") );
-			row3.createCell(3).setCellValue(p1.getDouble("BASEDRUG_COUNT_PERSENTS") );
+			row3.createCell(1).setCellValue( p1.get("BASEDRUG_COUNT_SUM").toString() );
+			row3.createCell(2).setCellValue(p1.get("DRUG_COUNT_SUM").toString() );
+			row3.createCell(3).setCellValue(p1.get("BASEDRUG_COUNT_PERSENTS").toString()+"%" );
 			
 			Row row4 = sheet.createRow(4);
 			row4.createCell(0).setCellValue("合理处方百分比(不合格处方数/处方总数)：");
-			row4.createCell(1).setCellValue( p1.getDouble("CHECKTRUE") );
-			row4.createCell(2).setCellValue(p1.getDouble("COUNT") );
-			row4.createCell(3).setCellValue(p1.getDouble("CHECKTRUE_PERSENTS") );
+			row4.createCell(1).setCellValue( p1.get("CHECKTRUE").toString() );
+			row4.createCell(2).setCellValue(p1.get("COUNT").toString() );
+			row4.createCell(3).setCellValue(p1.get("CHECKTRUE_PERSENTS").toString() +"%");
 			
 			Row row5 = sheet.createRow(5);
 			row5.createCell(0).setCellValue("不合理处方百分比(不合格处方数/处方总数)：");
-			row5.createCell(1).setCellValue( p1.getDouble("CHECKFALSE") );
-			row5.createCell(2).setCellValue(p1.getDouble("COUNT") );
-			row5.createCell(3).setCellValue(p1.getDouble("CHECKFALSE_PERSENTS") );
+			row5.createCell(1).setCellValue( p1.get("CHECKFALSE").toString() );
+			row5.createCell(2).setCellValue(p1.get("COUNT").toString() );
+			row5.createCell(3).setCellValue(p1.get("CHECKFALSE_PERSENTS").toString()+"%");
 			
 			Row row6 = sheet.createRow(6);
 			row6.createCell(0).setCellValue("待定处方百分比(待定处方数/处方总数)：");
-			row6.createCell(1).setCellValue( p1.getDouble("CHECKPEND") );
-			row6.createCell(2).setCellValue(p1.getDouble("COUNT") );
-			row6.createCell(3).setCellValue(p1.getDouble("CHECKPEND_PERSENTS") );
+			row6.createCell(1).setCellValue( p1.get("CHECKPEND").toString() );
+			row6.createCell(2).setCellValue(p1.get("COUNT").toString() );
+			row6.createCell(3).setCellValue(p1.get("CHECKPEND_PERSENTS").toString()+"%" );
 			
 			Row row7 = sheet.createRow(7);
 			row7.createCell(0).setCellValue("非限制级抗菌药百分比(非限制抗菌药/抗菌药总数)：");
-			row7.createCell(1).setCellValue( p2.getDouble("ONE_LEVEL") );
-			row7.createCell(2).setCellValue(p2.getDouble("DRUG_COUNT") );
-			row7.createCell(3).setCellValue(p2.getDouble("ONE_LEVEL_PERSENTS") );
+			row7.createCell(1).setCellValue( p2.get("ONE_LEVEL").toString() );
+			row7.createCell(2).setCellValue(p2.get("DRUG_COUNT").toString() );
+			row7.createCell(3).setCellValue(p2.get("ONE_LEVEL_PERSENTS").toString()+"%" );
 			
 			Row row8 = sheet.createRow(8);
 			row8.createCell(0).setCellValue("限制级抗菌药百分比（限制抗菌药/抗菌药总数)：");
-			row8.createCell(1).setCellValue( p2.getDouble("TWO_LEVEL") );
-			row8.createCell(2).setCellValue(p2.getDouble("DRUG_COUNT") );
-			row8.createCell(3).setCellValue(p2.getDouble("TWO_LEVEL_PERSENTS").toString()+"%" );
+			row8.createCell(1).setCellValue( p2.get("TWO_LEVEL").toString() );
+			row8.createCell(2).setCellValue(p2.get("DRUG_COUNT").toString() );
+			row8.createCell(3).setCellValue(p2.get("TWO_LEVEL_PERSENTS").toString()+"%" );
 
 			Row row9 = sheet.createRow(9);
 			row9.createCell(0).setCellValue("特殊级抗菌药百分比(特殊级抗菌药/抗菌药总数)：");
-			row9.createCell(1).setCellValue( p2.getDouble("THREE_LEVEL") );
-			row9.createCell(2).setCellValue(p2.getDouble("DRUG_COUNT") );
-			row9.createCell(3).setCellValue(p2.getDouble("THREE_LEVEL_PERSENTS").toString()+"%" );
+			row9.createCell(1).setCellValue( p2.get("THREE_LEVEL").toString() );
+			row9.createCell(2).setCellValue(p2.get("DRUG_COUNT").toString() );
+			row9.createCell(3).setCellValue(p2.get("THREE_LEVEL_PERSENTS").toString()+"%" );
 
 			Row row10 = sheet.createRow(10);
 			row10.createCell(0).setCellValue("抗菌药金额比例百分比(使用抗菌药总金额/使用药品总金额)：");
-			row10.createCell(1).setCellValue( p1.getDouble("ANTIDRUGCOSTS_SUM") );
-			row10.createCell(2).setCellValue(p1.getDouble("AMOUNT_SUM") );
-			row10.createCell(3).setCellValue(p1.getDouble("ANTIDRUGCOSTS_PERSENTS").toString()+"%" );
+			row10.createCell(1).setCellValue( p1.get("ANTIDRUGCOSTS_SUM").toString() );
+			row10.createCell(2).setCellValue(p1.get("AMOUNT_SUM").toString() );
+			row10.createCell(3).setCellValue(p1.get("ANTIDRUGCOSTS_PERSENTS").toString()+"%" );
 			
 			Row row11 = sheet.createRow(11);//空白行
 			
@@ -744,22 +744,22 @@ public class ReportController extends BaseController{
 			row12.createCell(3).setCellValue("平均值");
 			
 			Row row13 = sheet.createRow(13);
-			row13.createCell(0).setCellValue("抗菌药金额比例百分比(使用抗菌药总金额/使用药品总金额)：");
-			row13.createCell(1).setCellValue( p1.getDouble("BASEDRUG_COUNT_AVG") );
-			row13.createCell(2).setCellValue(p1.getDouble("COUNT") );
-			row13.createCell(3).setCellValue(p1.getDouble("HASKJ_PERSENTS").toString()+"%" );
+			row13.createCell(0).setCellValue("平均每张处方用药品种数：");
+			row13.createCell(1).setCellValue( p1.get("BASEDRUG_COUNT_SUM").toString() );
+			row13.createCell(2).setCellValue(p1.get("COUNT").toString() );
+			row13.createCell(3).setCellValue(p1.get("BASEDRUG_COUNT_AVG").toString() );
 			
 			Row row14 = sheet.createRow(14);
 			row14.createCell(0).setCellValue("平均每张处方金额：");
-			row14.createCell(1).setCellValue( p1.getDouble("AMOUNT_SUM") );
-			row14.createCell(2).setCellValue(p1.getDouble("COUNT") );
-			row14.createCell(3).setCellValue(p1.getDouble("AMOUNT_AVG") );
+			row14.createCell(1).setCellValue( p1.get("AMOUNT_SUM").toString() );
+			row14.createCell(2).setCellValue(p1.get("COUNT").toString() );
+			row14.createCell(3).setCellValue(p1.get("AMOUNT_AVG").toString() );
 			
 			Row row15 = sheet.createRow(15);
 			row15.createCell(0).setCellValue("平均处方用药天数：");
-			row15.createCell(1).setCellValue( p1.getDouble("MAXUSEDAY_SUM") );
-			row15.createCell(2).setCellValue(p1.getDouble("COUNT") );
-			row15.createCell(3).setCellValue(p1.getDouble("MAXUSEDAY_AVG") );
+			row15.createCell(1).setCellValue( p1.get("MAXUSEDAY_SUM").toString() );
+			row15.createCell(2).setCellValue(p1.get("COUNT").toString() );
+			row15.createCell(3).setCellValue(p1.get("MAXUSEDAY_AVG").toString() );
 			
 			Row row16 = sheet.createRow(16);//空白行
 			
@@ -934,8 +934,8 @@ public class ReportController extends BaseController{
 				vpd.put("var10", list.get(i).getDouble("MANAGER_SUM"));	//4
 				vpd.put("var11", list.get(i).getDouble("CHECKFALSE_SUM"));	//4
 				vpd.put("var12", list.get(i).getDouble("PRESC_COUNT"));	//4
-				vpd.put("var13", list.get(i).getDouble("CHECKFALSE_PERSENTS1") + "%");	//4
-				vpd.put("var14", list.get(i).getDouble("CHECKFALSE_PERSENTS2") + "%");	//4
+				vpd.put("var13", list.get(i).get("CHECKFALSE_PERSENTS1").toString() + "%");	//4
+				vpd.put("var14", list.get(i).get("CHECKFALSE_PERSENTS2").toString() + "%");	//4
 				varList.add(vpd);
 			}
 			PageData vpd = new PageData();
@@ -1110,8 +1110,8 @@ public class ReportController extends BaseController{
 				vpd.put("var10", list.get(i).getDouble("MANAGER_SUM"));	//4
 				vpd.put("var11", list.get(i).getDouble("CHECKFALSE_SUM"));	//4
 				vpd.put("var12", list.get(i).getDouble("PRESC_COUNT"));	//4
-				vpd.put("var13", list.get(i).getDouble("CHECKFALSE_PERSENTS1") + "%");	//4
-				vpd.put("var14", list.get(i).getDouble("CHECKFALSE_PERSENTS2") + "%");	//4
+				vpd.put("var13", list.get(i).get("CHECKFALSE_PERSENTS1").toString() + "%");	//4
+				vpd.put("var14", list.get(i).get("CHECKFALSE_PERSENTS2").toString() + "%");	//4
 				varList.add(vpd);
 			}
 			PageData vpd = new PageData();
@@ -1288,8 +1288,8 @@ public class ReportController extends BaseController{
 				vpd.put("var10", list.get(i).getDouble("MANAGER_SUM"));	//4
 				vpd.put("var11", list.get(i).getDouble("CHECKFALSE_SUM"));	//4
 				vpd.put("var12", list.get(i).getDouble("ORDER_COUNT"));	//4
-				vpd.put("var13", list.get(i).getDouble("CHECKFALSE_PERSENTS1") + "%");	//4
-				vpd.put("var14", list.get(i).getDouble("CHECKFALSE_PERSENTS2") + "%");	//4
+				vpd.put("var13", list.get(i).get("CHECKFALSE_PERSENTS1").toString() + "%");	//4
+				vpd.put("var14", list.get(i).get("CHECKFALSE_PERSENTS2").toString() + "%");	//4
 				varList.add(vpd);
 			}
 			PageData vpd = new PageData();
@@ -1465,8 +1465,8 @@ public class ReportController extends BaseController{
 				vpd.put("var10", list.get(i).getDouble("MANAGER_SUM"));	//4
 				vpd.put("var11", list.get(i).getDouble("CHECKFALSE_SUM"));	//4
 				vpd.put("var12", list.get(i).getDouble("ORDER_COUNT"));	//4
-				vpd.put("var13", list.get(i).getDouble("CHECKFALSE_PERSENTS1") + "%");	//4
-				vpd.put("var14", list.get(i).getDouble("CHECKFALSE_PERSENTS2") + "%");	//4
+				vpd.put("var13", list.get(i).get("CHECKFALSE_PERSENTS1").toString() + "%");	//4
+				vpd.put("var14", list.get(i).get("CHECKFALSE_PERSENTS2").toString() + "%");	//4
 				varList.add(vpd);
 			}
 			PageData vpd = new PageData();
