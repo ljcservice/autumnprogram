@@ -104,6 +104,16 @@ public class PrescController extends BaseController{
 		ModelAndView mv = new ModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		String endDate = pd.getString("endDate");		//结束时间
+		if(endDate != null && !"".equals(endDate))
+		{
+			pd.put("end_Date", endDate);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(DateUtil.fomatDate(endDate));
+			cal.add(Calendar.DAY_OF_MONTH, 1);
+			pd.put("endDate", sdf.format(cal.getTime()));
+		}
 		page.setPd(pd);
 		page.setShowCount(1000);
 		try{
@@ -126,6 +136,7 @@ public class PrescController extends BaseController{
 			List<PageData> varList = null;
 			//分批查询,最大查询2万条
 			for(int pag = 1;pag<=TotalPage&&pag<=20;pag++){
+				page.setPd(pd);
 				page.setCurrentPage(pag);
 				List<PageData> varOList =  prescService.prescListPage(page);
 				TotalPage = page.getTotalPage();
