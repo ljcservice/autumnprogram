@@ -532,7 +532,7 @@
 			and a.ATTENDING_DOCTOR = #{ATTENDING_DOCTOR} 
 		</if>
 	 </select>
-	 <select id="prescCountOrderDoctor" parameterType="pd"  resultType="pd">
+	 <select id="orderCountDoctor" parameterType="pd"  resultType="pd">
 	 	select nvl(a.ATTENDING_DOCTOR,'其他药师') ATTENDING_DOCTOR
 	 		,nvl(sum(decode(ISCHECKTRUE,1,1,0)),0) checkfalse_sum
 	 		,count(PATIENT_ID) order_count
@@ -552,7 +552,7 @@
 		</if>
 	 	group by a.ATTENDING_DOCTOR
 	 </select>
-	 <select id="prescCountOrderDep" parameterType="pd"  resultType="pd">
+	 <select id="orderCountDep" parameterType="pd"  resultType="pd">
 	 	select out_dept_name,nvl(sum(decode(ISCHECKTRUE,1,1,0)),0) checkfalse_sum
 	 		,count(PATIENT_ID) order_count
 	 	from pat_visit a

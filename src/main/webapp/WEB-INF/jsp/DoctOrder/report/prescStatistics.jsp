@@ -146,9 +146,9 @@
 							<tbody>
 								<tr  >
 									<td nowrap align="right" width="40%">平均每张处方用药品种数：</td>
-									<td nowrap class="center">${p1.BASEDRUG_COUNT_AVG }</td>
+									<td nowrap class="center">${p1.BASEDRUG_COUNT_SUM }</td>
 									<td nowrap class="center">${p1.COUNT }</td>
-									<td nowrap class="center">${p1.HASKJ_PERSENTS } %</td>
+									<td nowrap class="center">${p1.BASEDRUG_COUNT_AVG } </td>
 								</tr>
 								<tr  >
 									<td nowrap align="right" width="40%">平均每张处方金额：</td>
