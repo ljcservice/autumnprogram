@@ -249,7 +249,7 @@
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
-										<td colspan="8" class="center">没有相关数据</td>
+										<td colspan="9" class="center">没有相关数据</td>
 									</tr>
 								</c:otherwise>
 							</c:choose>
@@ -262,7 +262,7 @@
 							<thead>
 								<tr>
 									<th class="center" nowrap><c:if test="${page.pd.show_type==3}">手术</c:if>日期</th>
-									<th class="center" nowrap> </th>
+									<th class="center" nowrap><a class="fa fa-flag red bigger-130" title="点评信息"></a></th>
 									<th class="center" nowrap>医嘱名称</th>
 									<th class="center" nowrap>医嘱类型</th>
 									<th class="center" nowrap>医嘱科室</th>
@@ -286,7 +286,7 @@
 											<tr ondblclick="orderCheck(this)"  id="tr${order.order_no}${order.order_sub_no}" class="tr${order.order_no}${order.order_sub_no}" ORDER_CLASS="${order.order_class}"
 												local_order_class="${order.local_order_class}"  order_no="${order.order_no}" order_sub_no="${order.order_sub_no}" order_name="${order.order_Text }" >
 											<c:if test="${myindex==0}">
-												<td nowrap class="center mydateclass" rowspan="${dateMap.value}">${dateMap.key }</td>
+												<td nowrap style="text-align: center;vertical-align: middle;" class="center mydateclass" rowspan="${dateMap.value}">${dateMap.key }</td>
 											</c:if>
 											<c:set var="myindex">${myindex+1}</c:set>
 											<td nowrap class='center' style="padding-bottom: 0px;">
@@ -339,7 +339,7 @@
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
-										<td colspan="8" class="center">没有相关数据</td>
+										<td colspan="9" class="center">没有相关数据</td>
 									</tr>
 								</c:otherwise>
 							</c:choose>
@@ -347,9 +347,12 @@
 						</table>
 						</c:if>
 						</div>
-						<div class="pageStrDiv" id="pageStrDiv" style="height: 40px;padding-top: 10px;">
+						<div class="pageStrDiv" id="pageStrDiv" style="height: 40px;padding-top: 5px;">
 						<table style="width:100%;">
 							<tr>
+								<td align="left">
+									<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">关闭</a>
+								</td>
 								<td>
 									<div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div>
 								</td>

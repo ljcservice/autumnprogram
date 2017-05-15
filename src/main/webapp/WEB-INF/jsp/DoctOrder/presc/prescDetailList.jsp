@@ -147,11 +147,11 @@
 							</tbody>
 						</table>
 						</div>
+						<c:choose>
+							<c:when test="${not empty otherPrescList}">
 						<div style="overflow:visible;height: auto;width: 100%;min-height: 80px;">
 						<div>同日其他处方：</div>
 						<!-- 开始循环 -->	
-						<c:choose>
-							<c:when test="${not empty otherPrescList}">
 							<c:forEach items="${otherPrescList}" var="presc" varStatus="vs">
 							<div  style="margin:1px 1px 15px 1px;padding: 2px;border-width: 1px;border:1px solid #d5d5d5;">
 							<table id="" class="table table-striped table-bordered table-hover"  style="padding: 0;margin: 0;padding-right: 1px;">
@@ -169,7 +169,7 @@
 							</table>
 								<c:choose>
 								<c:when test="${not empty otherPrescDetailMap.get(presc.id)}">
-							<div style="display: none;">
+								<div style="display: none;">
 								<table id="" class="table table-striped table-bordered table-hover"  style="padding: 0;margin: 0;margin-top: 3px;">
 									<thead>
 										<tr>
@@ -232,7 +232,7 @@
 											</c:forEach>
 									</tbody>
 								</table>
-							</div>
+								</div>
 								</c:when>
 								<c:otherwise>
 								</c:otherwise>
@@ -241,11 +241,11 @@
 							</div>
 							</c:forEach>
 								
+						</div>
 							</c:when>
 							<c:otherwise>
 							</c:otherwise>
 						</c:choose>
-						</div>
 						
 						</div>
 						

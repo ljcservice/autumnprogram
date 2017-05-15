@@ -212,7 +212,7 @@
 			and a.startDate &lt;=b.start_date_time 
 			and a.endDate &gt; b.stop_date_time
 			<if test="pd.REPEAT_INDICATOR != null and pd.REPEAT_INDICATOR != ''"> <!-- 医嘱标示 1 长期 0 临时-->  
-				and a.REPEAT_INDICATOR = #{pd.REPEAT_INDICATOR} 
+				and b.REPEAT_INDICATOR = #{pd.REPEAT_INDICATOR} 
 			</if>
 			<if test="pd.order_class != null and pd.order_class != '' ">
 				and c.local_order_class_code = #{pd.order_class}

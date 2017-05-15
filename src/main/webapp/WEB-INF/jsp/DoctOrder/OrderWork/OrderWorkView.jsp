@@ -32,6 +32,9 @@
 	float: left;
 	margin: 4px;
 }
+.popover{
+	z-index: 999999;
+}
 </style>
 </head>
 <body class="no-skin">
@@ -158,7 +161,6 @@
 															${rstypeMap.get(rs_type)}
 														</a>
 													</c:forEach>
-															
 												</div>
 											</td>
 										</tr>
