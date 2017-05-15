@@ -29,6 +29,7 @@
 	margin-top: 2px;
 	margin-bottom: 5px;
 }
+@media Print { .Noprn { DISPLAY: none }}
 </style>
 </head>
 <body class="no-skin">
@@ -43,7 +44,7 @@
 						<div class="col-xs-12">
 						<!-- 检索  -->
 						<form action="report/prescReport.do" method="post" name="searchForm" id="searchForm">
-								<div style="margin-bottom: 5px;">	
+								<div class="Noprn" style="margin-bottom: 5px;">	
 									<div class="check-search" style="width: 250px;" >
 										起止日期：
 										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />

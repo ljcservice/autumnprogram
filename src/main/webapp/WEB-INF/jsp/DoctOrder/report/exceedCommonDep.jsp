@@ -30,7 +30,7 @@
 }
 </style>
 </head>
-<body class="no-skin">
+<body class="no-skin" style="background-color:white;">
 
 	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
@@ -57,6 +57,10 @@
 								<div class="check-search"  >
 									<a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
 									<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i></a>
+								</div>
+								<div id="btnDiv" class="check-search">
+										<a title="最大支持导出2万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
+										<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
 								</div>
 							</form>
 							</div>
@@ -137,7 +141,7 @@
 		<!-- /.main-content -->
 
 		<!-- 返回顶部 -->
-		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse" >
 			<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
 		</a>
 
@@ -185,7 +189,18 @@ function initWidthHeight(){
 	rr[0]="searchDiv";
 	FixTable("simple-table", 1, rr);
 }
-
-
+function listExport(){
+	window.open(path + "/report/exceedCommonDepExport.do"+$("#searchDiv").serialize());
+}
+function myprint(){
+	$("#main-container").hide();
+	var tableFixClone = $("#simple-table").clone(true);
+	$("<div id='myprint' style='width=100%;height=100%;'></div>").appendTo($("body"));
+	tableFixClone.appendTo($("#myprint"));
+	$("#myprint").css("z-index",9999) .css("position","absolute").css("left",0).css("top",0).css("background-color","white");
+	window.print();
+	$("#myprint").remove();
+	$("#main-container").show();
+}
 </script>
 </html>

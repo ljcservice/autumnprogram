@@ -28,6 +28,7 @@
 	float: left;
 	margin: 4px;
 }
+@media Print { .Noprn { DISPLAY: none }}
 </style>
 </head>
 <body class="no-skin">
@@ -40,6 +41,7 @@
 				<div class="page-content">
 					<div class="row">
 						<div class="col-xs-12">
+							<div class="Noprn">
 								<form action="report/prescStatistics.do" method="post" name="searchForm" id="searchForm">
 									<div class="check-search"  >
 										处方日期：
@@ -55,6 +57,7 @@
 											<a title="" class="btn btn-mini btn-success" onclick="window.print();">打印</a>
 									</div>
 								</form>
+							</div>
 						<!-- 检索  -->
 						<div style="width: 100%;height: auto;">
 							<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">

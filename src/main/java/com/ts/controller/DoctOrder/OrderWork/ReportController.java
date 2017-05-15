@@ -850,6 +850,120 @@ public class ReportController extends BaseController{
 		return  mv; 
 	}
 	/**
+	 * 处方超常规统计（科室）导出 excel
+	 * @return
+	 */
+	@RequestMapping(value="/exceedCommonDepExport")
+	public ModelAndView exceedCommonDepExport(){
+		ModelAndView mv = new ModelAndView();
+		PageData pd = this.getPageData();
+		mv.addObject("pd", pd);
+		try {
+			//超常规统计（科室）按照问题类型分组
+			List<PageData> list =  this.prescService.exceedCommonDep(pd);
+			//按照医生分组
+			Map<String,PageData> map = new HashMap<String,PageData>();
+			for(PageData px:list){
+				String ORG_CODE = px.getString("ORG_CODE");
+				map.put(ORG_CODE, px);
+			}
+			BigDecimal checkfalse_sum_all = new BigDecimal(0);//不合格处方数汇总
+			BigDecimal presc_count_all =  new BigDecimal(0);//总处方统计-汇总
+			//（科室分组）不合格处方数,总处方统计
+			List<PageData> countlist =  this.prescService.prescCountDep(pd);
+			for(PageData py:countlist){
+				String ORG_CODE = py.getString("ORG_CODE");
+				PageData px = map.get(ORG_CODE);
+				px.put("checkfalse_sum", py.get("checkfalse_sum"));
+				px.put("presc_count", py.get("presc_count"));
+				BigDecimal checkfalse_sum = (BigDecimal) py.get("checkfalse_sum");
+				BigDecimal presc_count = (BigDecimal) py.get("presc_count");
+				checkfalse_sum_all= checkfalse_sum_all.add(checkfalse_sum);
+				presc_count_all = presc_count_all.add(presc_count);
+			}
+			//汇总统计
+			PageData all = this.prescService.exceedCommonAll(pd);
+			all.put("checkfalse_sum_all", checkfalse_sum_all);
+			all.put("presc_count_all", presc_count_all);
+			//计算平均值
+			for(PageData px:list){
+				if(checkfalse_sum_all==null||checkfalse_sum_all.doubleValue()==0){
+					px.put("checkfalse_persents1", 0);
+				}else{
+					String checkfalse_persents1 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(checkfalse_sum_all,4,4).doubleValue()*100);
+					px.put("checkfalse_persents1", checkfalse_persents1);
+				}
+				if(presc_count_all==null||presc_count_all.doubleValue()==0){
+					px.put("checkfalse_persents2", 0);
+				}else{
+					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("presc_count")).divide(presc_count_all,4,4).doubleValue()*100);
+					px.put("checkfalse_persents2", checkfalse_persents2);
+				}
+			}
+			
+			//导出excel
+			Map<String,Object> dataMap = new HashMap<String,Object>();
+			List<String> titles = new ArrayList<String>();
+			titles.add("科室");//1
+			titles.add("用法用量");//2
+			titles.add("禁忌症");	//3
+			titles.add("重复给药 	");	//4
+			titles.add("相互作用");	//5
+			titles.add("配伍禁忌");	//5
+			titles.add("不良反应");	//5
+			titles.add("给药途径");	//5
+			titles.add("特殊人群");	//5
+			titles.add("管理");	//5
+			titles.add("不合格医嘱数");	//5
+			titles.add("医嘱总医嘱数");	//5
+			titles.add("不合格医嘱数占总不合格医嘱百分比");	//5
+			titles.add("不合格医嘱数占（查询日期内）医生总医嘱数");	//5
+			dataMap.put("titles", titles);
+			List<PageData> varList = new ArrayList<PageData>();
+			for(int i=0;i<list.size();i++){
+				PageData vpd = new PageData();
+				vpd.put("var1", list.get(i).getString("OUT_DEPT_NAME"));		//1
+				vpd.put("var2", list.get(i).getDouble("DOSAGE_SUM"));	//2
+				vpd.put("var3", list.get(i).getDouble("DIAGINFO_SUM"));	//3
+				vpd.put("var4", list.get(i).getDouble("INGREDIEN_SUM"));	//4
+				vpd.put("var5", list.get(i).getDouble("INTERACTION_SUM"));	//4
+				vpd.put("var6", list.get(i).getDouble("IV_EFFECT_SUM"));	//4
+				vpd.put("var7", list.get(i).getDouble("SIDE_SUM"));	//4
+				vpd.put("var8", list.get(i).getDouble("ADMINISTRATOR_SUM"));	//4
+				vpd.put("var9", list.get(i).getDouble("SPECPEOPLE_SUM"));	//4
+				vpd.put("var10", list.get(i).getDouble("MANAGER_SUM"));	//4
+				vpd.put("var11", list.get(i).getDouble("CHECKFALSE_SUM"));	//4
+				vpd.put("var12", list.get(i).getDouble("PRESC_COUNT"));	//4
+				vpd.put("var13", list.get(i).getDouble("CHECKFALSE_PERSENTS1") + "%");	//4
+				vpd.put("var14", list.get(i).getDouble("CHECKFALSE_PERSENTS2") + "%");	//4
+				varList.add(vpd);
+			}
+			PageData vpd = new PageData();
+			vpd.put("var1", "总计：");		//1
+			vpd.put("var2", all.getDouble("DOSAGE_SUM"));
+			vpd.put("var3", all.getDouble("DIAGINFO_SUM"));	//3
+			vpd.put("var4", all.getDouble("INGREDIEN_SUM"));	//4
+			vpd.put("var5", all.getDouble("INTERACTION_SUM"));	//4
+			vpd.put("var6", all.getDouble("IV_EFFECT_SUM"));	//4
+			vpd.put("var7", all.getDouble("SIDE_SUM"));	//4
+			vpd.put("var8", all.getDouble("ADMINISTRATOR_SUM"));	//4
+			vpd.put("var9", all.getDouble("SPECPEOPLE_SUM"));	//4
+			vpd.put("var10", all.getDouble("MANAGER_SUM"));	//4
+			vpd.put("var11", all.getDouble("CHECKFALSE_SUM_ALL"));	//4
+			vpd.put("var12", all.getDouble("PRESC_COUNT_ALL"));	//4
+			vpd.put("var13", "");	//4
+			vpd.put("var14", "");	//4
+			varList.add(vpd);
+			dataMap.put("varList", varList);
+			ObjectExcelView erv = new ObjectExcelView();
+			mv = new ModelAndView(erv,dataMap);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return  mv; 
+	}
+	/**
 	 * 处方超常规统计（医生）
 	 * @return
 	 */
@@ -911,6 +1025,120 @@ public class ReportController extends BaseController{
 		return  mv; 
 	}
 	
+	/**
+	 * 处方超常规统计（医生） excel 导出
+	 * @return
+	 */
+	@RequestMapping(value="/exceedCommonDoctorExport")
+	public ModelAndView exceedCommonDoctorExport(){
+		ModelAndView mv = new ModelAndView();
+		PageData pd = this.getPageData();
+		mv.addObject("pd", pd);
+		try {
+			//超常规统计（医生）按照问题类型分组
+			List<PageData> list =  this.prescService.exceedCommonDoctor(pd);
+			//按照医生分组
+			Map<String,PageData> map = new HashMap<String,PageData>();
+			for(PageData px:list){
+				String DOCTOR_CODE = px.getString("DOCTOR_CODE");
+				map.put(DOCTOR_CODE, px);
+			}
+			BigDecimal checkfalse_sum_all = new BigDecimal(0);//不合格处方数汇总
+			BigDecimal presc_count_all =  new BigDecimal(0);//总处方统计-汇总
+			//（医生分组）不合格处方数,总处方统计
+			List<PageData> countlist =  this.prescService.prescCountDoctor(pd);
+			for(PageData py:countlist){
+				String DOCTOR_CODE = py.getString("DOCTOR_CODE");
+				PageData px = map.get(DOCTOR_CODE);
+				px.put("checkfalse_sum", py.get("checkfalse_sum"));
+				px.put("presc_count", py.get("presc_count"));
+				BigDecimal checkfalse_sum = (BigDecimal) py.get("checkfalse_sum");
+				BigDecimal presc_count = (BigDecimal) py.get("presc_count");
+				checkfalse_sum_all= checkfalse_sum_all.add(checkfalse_sum);
+				presc_count_all = presc_count_all.add(presc_count);
+			}
+			//汇总统计
+			PageData all = this.prescService.exceedCommonAll(pd);
+			all.put("checkfalse_sum_all", checkfalse_sum_all);
+			all.put("presc_count_all", presc_count_all);
+			//计算平均值
+			for(PageData px:list){
+				if(checkfalse_sum_all==null||checkfalse_sum_all.doubleValue()==0){
+					px.put("checkfalse_persents1", 0);
+				}else{
+					String checkfalse_persents1 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(checkfalse_sum_all,4,4).doubleValue()*100);
+					px.put("checkfalse_persents1", checkfalse_persents1);
+				}
+				if(presc_count_all==null||presc_count_all.doubleValue()==0){
+					px.put("checkfalse_persents2", 0);
+				}else{
+					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("presc_count")).divide(presc_count_all,4,4).doubleValue()*100);
+					px.put("checkfalse_persents2", checkfalse_persents2);
+				}
+			}
+
+			//导出excel
+			Map<String,Object> dataMap = new HashMap<String,Object>();
+			List<String> titles = new ArrayList<String>();
+			titles.add("医生名称");//1
+			titles.add("用法用量");//2
+			titles.add("禁忌症");	//3
+			titles.add("重复给药 	");	//4
+			titles.add("相互作用");	//5
+			titles.add("配伍禁忌");	//5
+			titles.add("不良反应");	//5
+			titles.add("给药途径");	//5
+			titles.add("特殊人群");	//5
+			titles.add("管理");	//5
+			titles.add("不合格医嘱数");	//5
+			titles.add("医嘱总医嘱数");	//5
+			titles.add("不合格医嘱数占总不合格医嘱百分比");	//5
+			titles.add("不合格医嘱数占（查询日期内）医生总医嘱数");	//5
+			dataMap.put("titles", titles);
+			List<PageData> varList = new ArrayList<PageData>();
+			for(int i=0;i<list.size();i++){
+				PageData vpd = new PageData();
+				vpd.put("var1", list.get(i).getString("ATTENDING_DOCTOR"));		//1
+				vpd.put("var2", list.get(i).getDouble("DOSAGE_SUM"));	//2
+				vpd.put("var3", list.get(i).getDouble("DIAGINFO_SUM"));	//3
+				vpd.put("var4", list.get(i).getDouble("INGREDIEN_SUM"));	//4
+				vpd.put("var5", list.get(i).getDouble("INTERACTION_SUM"));	//4
+				vpd.put("var6", list.get(i).getDouble("IV_EFFECT_SUM"));	//4
+				vpd.put("var7", list.get(i).getDouble("SIDE_SUM"));	//4
+				vpd.put("var8", list.get(i).getDouble("ADMINISTRATOR_SUM"));	//4
+				vpd.put("var9", list.get(i).getDouble("SPECPEOPLE_SUM"));	//4
+				vpd.put("var10", list.get(i).getDouble("MANAGER_SUM"));	//4
+				vpd.put("var11", list.get(i).getDouble("CHECKFALSE_SUM"));	//4
+				vpd.put("var12", list.get(i).getDouble("PRESC_COUNT"));	//4
+				vpd.put("var13", list.get(i).getDouble("CHECKFALSE_PERSENTS1") + "%");	//4
+				vpd.put("var14", list.get(i).getDouble("CHECKFALSE_PERSENTS2") + "%");	//4
+				varList.add(vpd);
+			}
+			PageData vpd = new PageData();
+			vpd.put("var1", "总计：");						//1
+			vpd.put("var2", all.getDouble("DOSAGE_SUM"));
+			vpd.put("var3", all.getDouble("DIAGINFO_SUM"));	//3
+			vpd.put("var4", all.getDouble("INGREDIEN_SUM"));	//4
+			vpd.put("var5", all.getDouble("INTERACTION_SUM"));	//4
+			vpd.put("var6", all.getDouble("IV_EFFECT_SUM"));	//4
+			vpd.put("var7", all.getDouble("SIDE_SUM"));	//4
+			vpd.put("var8", all.getDouble("ADMINISTRATOR_SUM"));	//4
+			vpd.put("var9", all.getDouble("SPECPEOPLE_SUM"));	//4
+			vpd.put("var10", all.getDouble("MANAGER_SUM"));	//4
+			vpd.put("var11", all.getDouble("CHECKFALSE_SUM_ALL"));	//4
+			vpd.put("var12", all.getDouble("PRESC_COUNT_ALL"));	//4
+			vpd.put("var13", "");	//4
+			vpd.put("var14", "");	//4
+			varList.add(vpd);
+			dataMap.put("varList", varList);
+			ObjectExcelView erv = new ObjectExcelView();
+			mv = new ModelAndView(erv,dataMap);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return  mv; 
+	}
 	
 	/**
 	 * 医嘱超常规统计（科室）
@@ -973,6 +1201,122 @@ public class ReportController extends BaseController{
 		mv.setViewName("DoctOrder/report/exceedCommonOrderDep");
 		return  mv; 
 	}
+	
+	/**
+	 * 医嘱超常规统计（科室）
+	 * @return
+	 */
+	@RequestMapping(value="/exceedCommonOrderDepExport")
+	public ModelAndView exceedCommonOrderDepExport(){
+		ModelAndView mv = new ModelAndView();
+		PageData pd = this.getPageData();
+		mv.addObject("pd", pd);
+		try {
+			//超常规统计（科室）按照问题类型分组
+			List<PageData> list =  this.prescService.exceedCommonOrderDep(pd);
+			//按照医生分组
+			Map<String,PageData> map = new HashMap<String,PageData>();
+			for(PageData px:list){
+				String ORG_CODE = px.getString("out_dept_name");
+				map.put(ORG_CODE, px);
+			}
+			BigDecimal checkfalse_sum_all = new BigDecimal(0);//不合格处方数汇总
+			BigDecimal order_count_all =  new BigDecimal(0);//总处方统计-汇总
+			//（科室分组）不合格处方数,总处方统计
+			List<PageData> countlist =  this.prescService.prescCountOrderDep(pd);
+			for(PageData py:countlist){
+				String ORG_CODE = py.getString("out_dept_name");
+				PageData px = map.get(ORG_CODE);
+				px.put("checkfalse_sum", py.get("checkfalse_sum"));
+				px.put("order_count", py.get("order_count"));
+				BigDecimal checkfalse_sum = (BigDecimal) py.get("checkfalse_sum");
+				BigDecimal order_count = (BigDecimal) py.get("order_count");
+				checkfalse_sum_all= checkfalse_sum_all.add(checkfalse_sum);
+				order_count_all = order_count_all.add(order_count);
+			}
+			//汇总统计
+			PageData all = this.prescService.exceedCommonOrderAll(pd);
+			all.put("checkfalse_sum_all", checkfalse_sum_all);
+			all.put("order_count_all", order_count_all);
+			
+			//计算平均值
+			for(PageData px:list){
+				if(checkfalse_sum_all==null||checkfalse_sum_all.doubleValue()==0){
+					px.put("checkfalse_persents1", 0);
+				}else{
+					String checkfalse_persents1 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(checkfalse_sum_all,4,4).doubleValue()*100);
+					px.put("checkfalse_persents1", checkfalse_persents1);
+				}
+				if(order_count_all==null||order_count_all.doubleValue()==0){
+					px.put("checkfalse_persents2", 0);
+				}else{
+					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("order_count")).divide(order_count_all,4,4).doubleValue()*100);
+					px.put("checkfalse_persents2", checkfalse_persents2);
+				}
+			}
+			
+			//导出excel
+			Map<String,Object> dataMap = new HashMap<String,Object>();
+			List<String> titles = new ArrayList<String>();
+			titles.add("科室");//1
+			titles.add("用法用量");//2
+			titles.add("禁忌症");	//3
+			titles.add("重复给药 	");	//4
+			titles.add("相互作用");	//5
+			titles.add("配伍禁忌");	//5
+			titles.add("不良反应");	//5
+			titles.add("给药途径");	//5
+			titles.add("特殊人群");	//5
+			titles.add("管理");	//5
+			titles.add("不合格医嘱数");	//5
+			titles.add("医嘱总医嘱数");	//5
+			titles.add("不合格医嘱数占总不合格医嘱百分比");	//5
+			titles.add("不合格医嘱数占（查询日期内）医生总医嘱数");	//5
+			dataMap.put("titles", titles);
+			List<PageData> varList = new ArrayList<PageData>();
+			for(int i=0;i<list.size();i++){
+				PageData vpd = new PageData();
+				vpd.put("var1", list.get(i).getString("OUT_DEPT_NAME"));		//1
+				vpd.put("var2", list.get(i).getDouble("DOSAGE_SUM"));	//2
+				vpd.put("var3", list.get(i).getDouble("DIAGINFO_SUM"));	//3
+				vpd.put("var4", list.get(i).getDouble("INGREDIEN_SUM"));	//4
+				vpd.put("var5", list.get(i).getDouble("INTERACTION_SUM"));	//4
+				vpd.put("var6", list.get(i).getDouble("IV_EFFECT_SUM"));	//4
+				vpd.put("var7", list.get(i).getDouble("SIDE_SUM"));	//4
+				vpd.put("var8", list.get(i).getDouble("ADMINISTRATOR_SUM"));	//4
+				vpd.put("var9", list.get(i).getDouble("SPECPEOPLE_SUM"));	//4
+				vpd.put("var10", list.get(i).getDouble("MANAGER_SUM"));	//4
+				vpd.put("var11", list.get(i).getDouble("CHECKFALSE_SUM"));	//4
+				vpd.put("var12", list.get(i).getDouble("PRESC_COUNT"));	//4
+				vpd.put("var13", list.get(i).getDouble("CHECKFALSE_PERSENTS1") + "%");	//4
+				vpd.put("var14", list.get(i).getDouble("CHECKFALSE_PERSENTS2") + "%");	//4
+				varList.add(vpd);
+			}
+			PageData vpd = new PageData();
+			vpd.put("var1", "总计：");		//1
+			vpd.put("var2", all.getDouble("DOSAGE_SUM"));
+			vpd.put("var3", all.getDouble("DIAGINFO_SUM"));	//3
+			vpd.put("var4", all.getDouble("INGREDIEN_SUM"));	//4
+			vpd.put("var5", all.getDouble("INTERACTION_SUM"));	//4
+			vpd.put("var6", all.getDouble("IV_EFFECT_SUM"));	//4
+			vpd.put("var7", all.getDouble("SIDE_SUM"));	//4
+			vpd.put("var8", all.getDouble("ADMINISTRATOR_SUM"));	//4
+			vpd.put("var9", all.getDouble("SPECPEOPLE_SUM"));	//4
+			vpd.put("var10", all.getDouble("MANAGER_SUM"));	//4
+			vpd.put("var11", all.getDouble("CHECKFALSE_SUM_ALL"));	//4
+			vpd.put("var12", all.getDouble("PRESC_COUNT_ALL"));	//4
+			vpd.put("var13", "");	//4
+			vpd.put("var14", "");	//4
+			varList.add(vpd);
+			dataMap.put("varList", varList);
+			ObjectExcelView erv = new ObjectExcelView();
+			mv = new ModelAndView(erv,dataMap);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return  mv; 
+	}
 	/**
 	 * 医嘱超常规统计（医生）
 	 * @return
@@ -1032,6 +1376,122 @@ public class ReportController extends BaseController{
 			e.printStackTrace();
 		}
 		mv.setViewName("DoctOrder/report/exceedCommonOrderDoctor");
+		return  mv; 
+	}
+	/**
+	 * 医嘱超常规统计（医生） 导出excel
+	 * @return
+	 */
+	@RequestMapping(value="/exceedCommonOrderDoctorExport")
+	public ModelAndView exceedCommonOrderDoctorExport(){
+		ModelAndView mv = new ModelAndView();
+		PageData pd = this.getPageData();
+		mv.addObject("pd", pd);
+		try {
+			//超常规统计（医生）按照问题类型分组
+			List<PageData> list =  this.prescService.exceedCommonOrderDoctor(pd);
+			//按照医生分组
+			Map<String,PageData> map = new HashMap<String,PageData>();
+			for(PageData px:list){
+				String DOCTOR_CODE = px.getString("ATTENDING_DOCTOR");
+				map.put(DOCTOR_CODE, px);
+			}
+			BigDecimal checkfalse_sum_all = new BigDecimal(0);//不合格处方数汇总
+			BigDecimal order_count_all =  new BigDecimal(0);//总处方统计-汇总
+			//（医生分组）不合格处方数,总处方统计
+			List<PageData> countlist =  this.prescService.prescCountOrderDoctor(pd);
+			for(PageData py:countlist){
+				String DOCTOR_CODE = py.getString("ATTENDING_DOCTOR");
+				PageData px = map.get(DOCTOR_CODE);
+				px.put("checkfalse_sum", py.get("checkfalse_sum"));
+				px.put("order_count", py.get("order_count"));
+				BigDecimal checkfalse_sum = (BigDecimal) py.get("checkfalse_sum");
+				BigDecimal order_count = (BigDecimal) py.get("order_count");
+				checkfalse_sum_all= checkfalse_sum_all.add(checkfalse_sum);
+				order_count_all = order_count_all.add(order_count);
+			}
+			//汇总统计
+			PageData all = this.prescService.exceedCommonOrderAll(pd);
+			all.put("checkfalse_sum_all", checkfalse_sum_all);
+			all.put("order_count_all", order_count_all);
+			mv.addObject("all", all);
+			
+			//计算平均值
+			for(PageData px:list){
+				if(checkfalse_sum_all==null||checkfalse_sum_all.doubleValue()==0){
+					px.put("checkfalse_persents1", 0);
+				}else{
+					String checkfalse_persents1 = MyDecimalFormat.format(((BigDecimal)px.get("checkfalse_sum")).divide(checkfalse_sum_all,4,4).doubleValue()*100);
+					px.put("checkfalse_persents1", checkfalse_persents1);
+				}
+				if(order_count_all==null||order_count_all.doubleValue()==0){
+					px.put("checkfalse_persents2", 0);
+				}else{
+					String checkfalse_persents2 = MyDecimalFormat.format(((BigDecimal)px.get("order_count")).divide(order_count_all,4,4).doubleValue()*100);
+					px.put("checkfalse_persents2", checkfalse_persents2);
+				}
+			}
+			
+			//导出excel
+			Map<String,Object> dataMap = new HashMap<String,Object>();
+			List<String> titles = new ArrayList<String>();
+			titles.add("医生名称");//1
+			titles.add("用法用量");//2
+			titles.add("禁忌症");	//3
+			titles.add("重复给药 	");	//4
+			titles.add("相互作用");	//5
+			titles.add("配伍禁忌");	//5
+			titles.add("不良反应");	//5
+			titles.add("给药途径");	//5
+			titles.add("特殊人群");	//5
+			titles.add("管理");	//5
+			titles.add("不合格医嘱数");	//5
+			titles.add("医嘱总医嘱数");	//5
+			titles.add("不合格医嘱数占总不合格医嘱百分比");	//5
+			titles.add("不合格医嘱数占（查询日期内）医生总医嘱数");	//5
+			dataMap.put("titles", titles);
+			List<PageData> varList = new ArrayList<PageData>();
+			for(int i=0;i<list.size();i++){
+				PageData vpd = new PageData();
+				vpd.put("var1", list.get(i).getString("ATTENDING_DOCTOR"));		//1
+				vpd.put("var2", list.get(i).getDouble("DOSAGE_SUM"));	//2
+				vpd.put("var3", list.get(i).getDouble("DIAGINFO_SUM"));	//3
+				vpd.put("var4", list.get(i).getDouble("INGREDIEN_SUM"));	//4
+				vpd.put("var5", list.get(i).getDouble("INTERACTION_SUM"));	//4
+				vpd.put("var6", list.get(i).getDouble("IV_EFFECT_SUM"));	//4
+				vpd.put("var7", list.get(i).getDouble("SIDE_SUM"));	//4
+				vpd.put("var8", list.get(i).getDouble("ADMINISTRATOR_SUM"));	//4
+				vpd.put("var9", list.get(i).getDouble("SPECPEOPLE_SUM"));	//4
+				vpd.put("var10", list.get(i).getDouble("MANAGER_SUM"));	//4
+				vpd.put("var11", list.get(i).getDouble("CHECKFALSE_SUM"));	//4
+				vpd.put("var12", list.get(i).getDouble("PRESC_COUNT"));	//4
+				vpd.put("var13", list.get(i).getDouble("CHECKFALSE_PERSENTS1") + "%");	//4
+				vpd.put("var14", list.get(i).getDouble("CHECKFALSE_PERSENTS2") + "%");	//4
+				varList.add(vpd);
+			}
+			PageData vpd = new PageData();
+			vpd.put("var1", "总计：");		//1
+			vpd.put("var2", all.getDouble("DOSAGE_SUM"));
+			vpd.put("var3", all.getDouble("DIAGINFO_SUM"));	//3
+			vpd.put("var4", all.getDouble("INGREDIEN_SUM"));	//4
+			vpd.put("var5", all.getDouble("INTERACTION_SUM"));	//4
+			vpd.put("var6", all.getDouble("IV_EFFECT_SUM"));	//4
+			vpd.put("var7", all.getDouble("SIDE_SUM"));	//4
+			vpd.put("var8", all.getDouble("ADMINISTRATOR_SUM"));	//4
+			vpd.put("var9", all.getDouble("SPECPEOPLE_SUM"));	//4
+			vpd.put("var10", all.getDouble("MANAGER_SUM"));	//4
+			vpd.put("var11", all.getDouble("CHECKFALSE_SUM_ALL"));	//4
+			vpd.put("var12", all.getDouble("PRESC_COUNT_ALL"));	//4
+			vpd.put("var13", "");	//4
+			vpd.put("var14", "");	//4
+			varList.add(vpd);
+			dataMap.put("varList", varList);
+			ObjectExcelView erv = new ObjectExcelView();
+			mv = new ModelAndView(erv,dataMap);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return  mv; 
 	}
 }
