@@ -57,7 +57,7 @@
 											</ul>
 
 											<div class="tab-content" style="overflow-y:auto;max-height:150px;padding-top: 2px;padding-left: 2px;padding-right: 2px;padding-bottom: 0px;">
-												<div id="doctOrder" class="tab-pane fade in active" >
+												<div id="doctOrder" class="tab-pane fade in active" style="height:144px;">
 													<table class="table table-bordered table-striped table-responsive " style="font-size:10px;margin-bottom:3px;" >
 														<tbody>
 															<tr>
@@ -183,7 +183,7 @@ $(function() {
 			 else $('#form-field-select-4').removeClass('tag-input-style');
 		});
 	}
-
+	
 	//重置当前页面高度，自适应浏览器
 	treeFrameT("DoctFrame");
 });
