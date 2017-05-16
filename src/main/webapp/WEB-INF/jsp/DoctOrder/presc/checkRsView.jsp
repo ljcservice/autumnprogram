@@ -105,9 +105,9 @@
 														<font color="red">与</font> ${rs.drug_id2_name }&nbsp;（处方号：${rs.PRESC_NO2}，科室：${rs.ORG_NAME2}，医生：${rs.DOCTOR_NAME2}）
 														 </c:if>
 													</td>
-													<td style="text-align: right;" nowrap>日期：</td>
-													<td rowspan="1" style="text-align: left;vertical-align: middle;">${rs.CHECKDATE}</td>
-													<td rowspan="2" style="text-align: center;vertical-align: middle;width: 100px;">
+													<td style="width: 100px;text-align: right;" nowrap>提交日期：</td>
+													<td rowspan="1" style="width: 100px;text-align: left;vertical-align: middle;">${rs.CHECKDATE}</td>
+													<td rowspan="2" style="width: 100px;text-align: center;vertical-align: middle;">
 														<c:if test="${modifyFlag==1 }">
 														<a class="btn btn-minier btn-danger"  onclick="delCheckRs('${rs.rs_id }');">
 															<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>

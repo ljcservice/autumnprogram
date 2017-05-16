@@ -38,7 +38,7 @@
 							<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
 								<thead>
 									<tr style="padding-top: 0px;padding-bottom: 0px;">
-										<th colspan="5" style="vertical-middle;">
+										<th colspan="6" style="vertical-middle;">
 										
 											<label>
 												<input type="checkbox" name="delAll" id="delAll" class="ace" onclick="setCheckBox(this);">
@@ -94,19 +94,20 @@
 											<c:forEach items="${checkRss}" var="rs" varStatus="vs" >
 												<tr>
 													<td class='center' style="width:30px;vertical-align: middle;" rowspan="2" >
-													<label>
-														<input type="checkbox" name="rs_ids"  class="ace" value="${rs.rs_id }"  >
-														<span class="lbl"></span>
-													</label>
+														<label>
+															<input type="checkbox" name="rs_ids"  class="ace" value="${rs.rs_id }"  >
+															<span class="lbl"></span>
+														</label>
 													</td>
-													<td style="width: 80px;" class='center' > ${rsTypeDict.get(rs.RS_DRUG_TYPE).rs_type_name }</td>
+													<td style="width: 100px;" class='center' > ${rsTypeDict.get(rs.RS_DRUG_TYPE).rs_type_name }</td>
 													<td >${rs.drug_id1_name } 
 														<c:if test="${rsTypeDict.get(rs.RS_DRUG_TYPE).RS_COUNT == 2}"> 
 														<font color="red">与</font> ${rs.drug_id2_name } 
 														 </c:if>
 													</td>
-													<td>${rs.CHECKDATE } </td>
-													<td style="width: 300px;">
+													<td style="width: 100px;text-align: right;" nowrap>提交日期：</td>
+													<td style="width: 100px;text-align: left;vertical-align: middle;">${rs.CHECKDATE } </td>
+													<td rowspan="2" style="width: 100px;text-align: center;vertical-align: middle;">
 														<c:if test="${modifyFlag==1 }">
 														<a class="btn btn-minier btn-danger"  onclick="delCheckRs('${rs.rs_id }');">
 															<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
@@ -118,7 +119,10 @@
 													</td>
 												</tr>
 												<tr>
-													<td colspan="4">&nbsp;&nbsp;&nbsp;&nbsp; ${rs.ALERT_HINT } </td>
+													<td style="text-align: right;" nowrap>问题描述：</td>
+													<td  class="left"  colspan="1">&nbsp;&nbsp;&nbsp;&nbsp; ${rs.ALERT_HINT } </td>
+													<td style="text-align: right;" nowrap>提交人：</td>
+													<td class="left" >${rs.CHECKPEOPLE_NAME }</td>
 												</tr>
 											</c:forEach>
 										</c:when>

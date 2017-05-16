@@ -53,6 +53,7 @@ public class ExpertController extends BaseController{
 		try{
 			// 当前登录专家
 			User user = getCurrentUser();
+			page.setPd(pd);
 			List<PageData>	expertList = expertService.listExperts(page);	//列出专家列表
 			mv.addObject("expertList", expertList);
 			mv.setViewName("DoctOrder/expert/selectExpertList");

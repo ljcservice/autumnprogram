@@ -25,7 +25,7 @@
 				<div class="page-content">
 					<div class="row">
 						<div class="col-xs-12">
-						<form action="" method="post" id="myForm">
+						<form action="expert/selectExpertList.do" method="post" id="searchForm">
 						<input type="hidden" name="patient_id" value="${pd.patient_id}" id="patient_id"/>
 						<input type="hidden" name="visit_id" value="${pd.visit_id}" id="visit_id"/>
 						<input type="hidden" name="id" value="${pd.id}" id="id"/>
@@ -151,6 +151,11 @@ function selectCont(){
 		top.Dialog.close();
    	}});
 	
+}
+//检索
+function searchs(){
+	top.jzts();
+	$("#searchForm").submit();
 }
 </script>
 </html>
