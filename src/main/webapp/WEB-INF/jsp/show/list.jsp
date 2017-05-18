@@ -38,7 +38,7 @@
 							<table style="width: 100%;">
 								<tr>
 									<td align="left"><b >搜索结果</b></td>
-									<td align="right"><b >搜索到含“${pd.name}”的结果共有<font style="color: blue;">${resultList.size()}</font>条 </b>&nbsp;&nbsp;</td>
+									<td align="right"><b >搜索到含“<font style="color: blue;">${pd.name}</font>”的结果共有<font style="color: blue;">${resultList.size()}</font>条 </b>&nbsp;&nbsp;</td>
 								</tr>
 							</table>
 						</div>

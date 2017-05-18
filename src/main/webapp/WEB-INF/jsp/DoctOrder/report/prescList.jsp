@@ -193,6 +193,14 @@ $(top.hangge());
 
 //检索
 function searchs(){
+	if($("#beginDate").val()==""){
+		$("#beginDate").tips({ side:3, msg:'请选择开始日期', bg:'#AE81FF',  time:1   });
+		return;
+	}
+	if($("#endDate").val()==""){
+		$("#endDate").tips({ side:3, msg:'请选择结束日期', bg:'#AE81FF',  time:1   });
+		return;
+	}
 	top.jzts();
 	$("#searchForm").submit();
 }

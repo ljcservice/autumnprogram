@@ -26,7 +26,10 @@
  }
  .check-search{
 	float: left;
-	margin: 4px;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	margin-left: 3px;
+	margin-right: 3px;
 }
 </style>
 </head>
@@ -46,6 +49,7 @@
 									处方日期：
 									<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
 									<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.endDate }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
+									<font style="color: red;">*</font>
 								</div>
 								<div class="check-search"  >
 									医生：
@@ -169,6 +173,14 @@ $(top.hangge());
 
 //检索
 function searchs(){
+	if($("#beginDate").val()==""){
+		$("#beginDate").tips({ side:3, msg:'请选择开始日期', bg:'#AE81FF',  time:1   });
+		return;
+	}
+	if($("#endDate").val()==""){
+		$("#endDate").tips({ side:3, msg:'请选择结束日期', bg:'#AE81FF',  time:1   });
+		return;
+	}
 	top.jzts();
 	$("#searchForm").submit();
 }
