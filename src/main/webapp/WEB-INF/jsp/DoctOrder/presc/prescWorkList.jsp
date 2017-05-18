@@ -77,11 +77,18 @@
 										</select>
 									</div>
 									<div class="check-search"  >
-										是否抗菌：
-									 	<select class="chosen-select form-control" name="HASKJ" id="HASKJ" data-placeholder="是否抗菌" style="vertical-align:top;width: 80px;">
+										药品种类：
+									 	<select class="chosen-select form-control" name="DRUG_TYPE" id="DRUG_TYPE" data-placeholder="是否抗菌" style="vertical-align:top;width: 105px;">
 									 		<option value="">全部</option>
-											<option <c:if test="${pd.HASKJ == '0' }">selected</c:if> value="0" >否</option>
-											<option <c:if test="${pd.HASKJ == '1' }">selected</c:if> value="1" >是</option>
+											<option <c:if test="${pd.DRUG_TYPE == 'HASKJ' }">selected</c:if> value="HASKJ" >抗菌药</option>
+											<option <c:if test="${pd.DRUG_TYPE == 'HASZS' }">selected</c:if> value="HASZS" >注射药</option>
+											<option <c:if test="${pd.DRUG_TYPE == 'ELJSY' }">selected</c:if> value="ELJSY" >二类抗拒药</option>
+											<option <c:if test="${pd.DRUG_TYPE == 'DDRUG' }">selected</c:if> value="DDRUG" >毒性药</option>
+											<option <c:if test="${pd.DRUG_TYPE == 'FSDRUG' }">selected</c:if> value="FSDRUG" >放射性药</option>
+											<option <c:if test="${pd.DRUG_TYPE == 'YLJSY' }">selected</c:if> value="YLJSY" >一类精神药</option>
+											<option <c:if test="${pd.DRUG_TYPE == 'GZDRUG' }">selected</c:if> value="GZDRUG" >贵重药</option>
+											<option <c:if test="${pd.DRUG_TYPE == 'MDRUG' }">selected</c:if> value="MDRUG" >麻药</option>
+											<option <c:if test="${pd.DRUG_TYPE == 'DMDRUG' }">selected</c:if> value="DMDRUG" >毒麻药</option>
 										</select>
 									</div>
 									<div class="check-search"  >
@@ -152,9 +159,6 @@
 									</c:forEach>
 								</c:when>
 								<c:otherwise>
-									<tr class="main_info">
-										<td colspan="12" class="center">没有相关数据</td>
-									</tr>
 								</c:otherwise>
 							</c:choose>
 									<tr>

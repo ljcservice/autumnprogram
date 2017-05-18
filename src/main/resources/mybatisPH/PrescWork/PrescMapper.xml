@@ -42,9 +42,6 @@
 		<if test="pd.ISORDERCHECK != null and pd.ISORDERCHECK != ''"> <!--点评记录-->
 			and a.ISORDERCHECK = #{pd.ISORDERCHECK}
 		</if>
-		<if test="pd.HASKJ != null and pd.HASKJ != ''"> <!-- 是否抗菌 -->
-			and a.HASKJ = #{pd.HASKJ}
-		</if>
 		<if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
 			and a.ORDER_DATE &gt;= #{pd.beginDate} 
 		</if>
@@ -56,6 +53,33 @@
 			 	where a.id = q.PRESC_ID 
 				and q.DRUG_NAME = #{pd.DRUG_NAME}
 			 )
+		</if>
+		<if test="pd.HASKJ != null and pd.HASKJ != ''"> <!-- 是否抗菌 -->
+			and a.HASKJ = #{pd.HASKJ}
+		</if>
+		<if test="pd.HASZS != null and pd.HASZS != ''"> <!-- 是否抗菌 -->
+			and a.HASZS = #{pd.HASZS}
+		</if>
+		<if test="pd.ELJSY != null and pd.ELJSY != ''"> <!-- 是否抗菌 -->
+			and a.ELJSY = #{pd.ELJSY}
+		</if>
+		<if test="pd.DDRUG != null and pd.DDRUG != ''"> <!-- 是否抗菌 -->
+			and a.DDRUG = #{pd.DDRUG}
+		</if>
+		<if test="pd.FSDRUG != null and pd.FSDRUG != ''"> <!-- 是否抗菌 -->
+			and a.FSDRUG = #{pd.FSDRUG}
+		</if>
+		<if test="pd.YLJSY != null and pd.YLJSY != ''"> <!-- 是否抗菌 -->
+			and a.YLJSY = #{pd.YLJSY}
+		</if>
+		<if test="pd.GZDRUG != null and pd.GZDRUG != ''"> <!-- 是否抗菌 -->
+			and a.GZDRUG = #{pd.GZDRUG}
+		</if>
+		<if test="pd.MDRUG != null and pd.MDRUG != ''"> <!-- 是否抗菌 -->
+			and a.MDRUG = #{pd.MDRUG}
+		</if>
+		<if test="pd.DMDRUG != null and pd.DMDRUG != ''"> <!-- 是否抗菌 -->
+			and a.DMDRUG = #{pd.DMDRUG}
 		</if>
 		order by ORDER_DATE desc
 	</select>
@@ -124,7 +148,7 @@
 	<select id="findPrescDetailById" parameterType="String" resultType="pd">
 		select * from presc_detail where PRESC_ID = #{id}
 	</select>
-	
+	<!-- 医嘱工作表统计 -->
 	<select id="prescCountReport" parameterType="pd"  resultType="pd">
 		select count(id) ALL_COUNT,sum(DRUG_COUNT) DRUG_COUNT_SUM,sum(HASZS) HASZS_SUM
 			,sum(BASEDRUG_COUNT) BASEDRUG_COUNT_SUM,sum(AMOUNT) AMOUNT_SUM,sum(HASKJ) HASKJ_SUM
@@ -132,8 +156,67 @@
 			, decode(count(id),0,0.00,round(100*sum(HASZS)/count(id),2)) HASZS_PERSENTS
 			,decode(count(id),0,0.00,round(100*sum(HASKJ)/count(id),2)) HASKJ_PERSENTS
 			,decode(count(id),0,0.00,round(100*sum(BASEDRUG_COUNT)/count(id),2)) BASEDRUG_COUNT_PERSENTS 
-		from presc 
+		from presc a
+		where 1=1
+		<!-- 		关键词检索 -->
+		<if test="keywords!= null and keywords != ''">
+			and
+				(
+					 a. DIAGNOSIS_NAMES LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+				)
+		</if>
+		<if test="ORG_NAME!= null and ORG_NAME != ''">
+			and a.ORG_NAME LIKE CONCAT(CONCAT('%', #{ORG_NAME}),'%')
+		</if>
+		<if test="DOCTOR_NAME != null and DOCTOR_NAME != ''"> <!-- 医生名-->
+			and a.DOCTOR_NAME = #{DOCTOR_NAME}
+		</if>
+		<if test="ISCHECKTRUE != null and ISCHECKTRUE != ''"> <!-- 是否合理-->
+			and a.ISCHECKTRUE = #{ISCHECKTRUE} 
+		</if>
+		<if test="ISORDERCHECK != null and ISORDERCHECK != ''"> <!--点评记录-->
+			and a.ISORDERCHECK = #{ISORDERCHECK}
+		</if>
+		<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
+			and a.ORDER_DATE &gt;= #{beginDate} 
+		</if>
+		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+			and a.ORDER_DATE &lt; #{endDate}
+		</if>
+		<if test="DRUG_NAME != null and DRUG_NAME != ''"> <!-- 药品名-->
+			 and exists( select PRESC_ID from presc_detail q 
+			 	where a.id = q.PRESC_ID 
+				and q.DRUG_NAME = #{DRUG_NAME}
+			 )
+		</if>
+		<if test="HASKJ != null and HASKJ != ''"> <!-- 是否抗菌 -->
+			and a.HASKJ = #{HASKJ}
+		</if>
+		<if test="HASZS != null and HASZS != ''"> <!-- 是否抗菌 -->
+			and a.HASZS = #{HASZS}
+		</if>
+		<if test="ELJSY != null and ELJSY != ''"> <!-- 是否抗菌 -->
+			and a.ELJSY = #{ELJSY}
+		</if>
+		<if test="DDRUG != null and DDRUG != ''"> <!-- 是否抗菌 -->
+			and a.DDRUG = #{DDRUG}
+		</if>
+		<if test="FSDRUG != null and FSDRUG != ''"> <!-- 是否抗菌 -->
+			and a.FSDRUG = #{FSDRUG}
+		</if>
+		<if test="YLJSY != null and YLJSY != ''"> <!-- 是否抗菌 -->
+			and a.YLJSY = #{YLJSY}
+		</if>
+		<if test="GZDRUG != null and GZDRUG != ''"> <!-- 是否抗菌 -->
+			and a.GZDRUG = #{GZDRUG}
+		</if>
+		<if test="MDRUG != null and MDRUG != ''"> <!-- 是否抗菌 -->
+			and a.MDRUG = #{MDRUG}
+		</if>
+		<if test="DMDRUG != null and DMDRUG != ''"> <!-- 是否抗菌 -->
+			and a.DMDRUG = #{DMDRUG}
+		</if>
+		
 	</select>
-	
 
 </mapper>

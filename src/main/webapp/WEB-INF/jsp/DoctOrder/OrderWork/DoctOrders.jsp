@@ -237,7 +237,7 @@
 											<td nowrap class="center " >${order.dept_name}</td>
 											<td nowrap class="center " >${order.frequency }</td>
 											<td nowrap class="center ">
-												<fmt:formatNumber value="${order.dosage }" pattern="#0.00"></fmt:formatNumber>
+												<fmt:formatNumber value="${order.dosage }" pattern="###,###,##0.00"></fmt:formatNumber>
 												${order.dosage_units }
 											</td>
 											<td nowrap class="center " >${order.administration } </td>
@@ -324,7 +324,7 @@
 											<td nowrap class="center " >${order.dept_name}</td>
 											<td nowrap class="center " >${order.frequency }</td>
 											<td nowrap class="center ">
-												<fmt:formatNumber value="${order.dosage }" pattern="#0.00"></fmt:formatNumber>
+												<fmt:formatNumber value="${order.dosage }" pattern="###,###,##0.00"></fmt:formatNumber>
 												${order.dosage_units }
 											</td>
 											<td nowrap class="center " >${order.administration } </td>
