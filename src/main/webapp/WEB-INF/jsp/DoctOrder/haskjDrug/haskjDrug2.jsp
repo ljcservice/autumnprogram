@@ -43,7 +43,7 @@
 				<div class="page-content">
 					<div class="row">
 						<div class="col-xs-12"  >
-							<form action="drugAmount/depAmountPersents.do" method="post" name="searchForm" id="searchForm">
+							<form action="haskjDrug/haskjDrug2.do" method="post" name="searchForm" id="searchForm">
 								<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
 									<div class="check-search"   >
 										起止日期：
@@ -51,28 +51,20 @@
 										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.endDate }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
 										<font style="color: red;">*</font>
 									</div>
-									<div class="check-search"  >
+									<div class="check-search" >
 										<a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
 										<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i></a>
 									</div>
 									<div class="check-search nav-search">
 										科室：
 										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="DEPT_NAME" type="text" name="DEPT_NAME" value="${pd.DEPT_NAME}" placeholder="科室名称" maxlength="80" />
+											<input class="nav-search-input" autocomplete="off" id="ORG_NAME" type="text" name="ORG_NAME" value="${pd.ORG_NAME}" placeholder="科室名称" maxlength="80" />
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
-									<div class="check-search"  >
-										排序：
-									 	<select class="chosen-select form-control" name="sort_type" id="sort_type" data-placeholder="" style="vertical-align:top;width: 110px;" >
-											<option value=""></option>
-											<option <c:if test="${'1' == pd.sort_type}">selected</c:if> value="1" >总费用 ↑</option>
-											<option <c:if test="${'2' == pd.sort_type}">selected</c:if> value="2" >总费用 ↓</option>
-											<option <c:if test="${'3' == pd.sort_type}">selected</c:if> value="3" >药费 ↑</option>
-											<option <c:if test="${'4' == pd.sort_type}">selected</c:if> value="4" >药费 ↓</option>
-											<option <c:if test="${'5' == pd.sort_type}">selected</c:if> value="5" >抗菌药费 ↑</option>
-											<option <c:if test="${'6' == pd.sort_type}">selected</c:if> value="6" >抗菌药费 ↓</option>
-										</select>
+									<div class="check-search">
+										<label><input class="ace"  value="1" name="type" type="radio" <c:if test="${pd.type == null or pd.type==1 }">checked</c:if> >处方数&nbsp;<span class="lbl"></span></label>&nbsp;
+										<label><input class="ace" value="2" name="type" type="radio" <c:if test="${pd.type==2 }">checked</c:if> >处方数(人次)&nbsp;<span class="lbl"></span></label>&nbsp;&nbsp;&nbsp;&nbsp;
 									</div>
 								</div>
 							</form>
@@ -80,16 +72,12 @@
 						<div>
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
 							<thead>
-								<tr style="border-bottom-width:1px;">
-									<th class="center" nowrap rowspan="2"style="background-color: #f1f1f1;">科室</th>
-									<th class="center" nowrap rowspan="2"style="background-color: #f1f1f1;">总费用</th>
-									<th class="center" nowrap colspan="2">药费</th>
-									<th class="center" nowrap colspan="2">抗菌药费</th>
-								</tr>
 								<tr>
-									<th class="center" nowrap >费用</th>
-									<th class="center" nowrap >比例</th>
-									<th class="center" nowrap>费用</th>
+									<th class="center" nowrap>排名</th>
+									<th class="center" nowrap>科室</th>
+									<th class="center" nowrap>医生</th>
+									<th class="center" nowrap>处方数</th>
+									<th class="center" nowrap>抗菌药物处方数</th>
 									<th class="center" nowrap>比例</th>
 								</tr>
 							</thead>
@@ -99,22 +87,15 @@
 								<c:when test="${not empty reportList}">
 									<c:forEach items="${reportList}" var="report" varStatus="vs">
 										<tr >
-											<td class="center">${report.dept_name}</td>
-											<td class="center">￥ ${report.med}</td>
-											<td class="center">￥ ${report.drug} </td>
-											<td class="center">${report.drug_persents} %</td>
-											<td class="center">￥ ${report.anti}</td>
-											<td class="center">${report.anti_persents} %</td>
+											<td class="center">${vs.index+1}</td>
+											<td class="center">${report.org_name}</td>
+											<td class="center">${report.doctor_name}</td>
+											<td class="center">${report.c}</td>
+											<td class="center"> ${report.haskj}</td>
+											<td class="center"><fmt:formatNumber value="${report.rate}" pattern="#0.00"></fmt:formatNumber> %</td>
 										</tr>
+									
 									</c:forEach>
-									<tr >
-										<td class="center">合计：</td>
-										<td class="center">￥ ${count.med_all}</td>
-										<td class="center">￥ ${count.drug_all} </td>
-										<td class="center">${count.drug_all_persents} %</td>
-										<td class="center">￥ ${count.anti_all}</td>
-										<td class="center">${count.anti_all_persents} %</td>
-									</tr>
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
@@ -126,13 +107,6 @@
 						</table>
 						</div>
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">
-							<table style="width:100%;">
-								<tr>
-									<td>
-										<div class="pagination" style="float: right;padding: 0px;margin: 0px;">${page.pageStr}</div>
-									</td>
-								</tr>
-							</table>
 						</div>
 	
 						</div>
@@ -168,7 +142,7 @@
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<script type="text/javascript" src="static/js/common/common.js"></script>
 	</body>
-<script type="text/javascript" src="static/js/common/lockTableBottom.js?v=201612"></script>
+<script type="text/javascript" src="static/js/common/lockTable.js?v=201612"></script>
 <script type="text/javascript">
 $(top.hangge());
 

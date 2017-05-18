@@ -2,6 +2,8 @@ package com.ts.util.ontology;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -15,6 +17,7 @@ import com.ts.entity.system.User;
 import com.ts.util.Const;
 import com.ts.util.Jurisdiction;
 import com.ts.util.PageData;
+import com.ts.util.Tools;
 
 /**
  * 本体管理帮助类
@@ -919,5 +922,16 @@ public class HelpUtil {
 			map.put(OsynConst.FEMALE, "非传染病");
 		}
 		return map;
+	}
+
+	public static void setDefaultDate(PageData pd) {
+		String beginDate = pd.getString("beginDate");
+		String endDate = pd.getString("endDate"); 
+		if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+			Calendar calendar= Calendar.getInstance();
+			int year = calendar.get(Calendar.YEAR);
+			pd.put("beginDate", year+"-01-01");
+			pd.put("endDate", year+"-12-31");
+		}
 	}
 }

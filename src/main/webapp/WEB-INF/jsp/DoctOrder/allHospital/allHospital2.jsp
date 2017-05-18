@@ -43,7 +43,7 @@
 				<div class="page-content">
 					<div class="row">
 						<div class="col-xs-12"  >
-							<form action="drugAmount/depAmountPersents.do" method="post" name="searchForm" id="searchForm">
+							<form action="haskjDrug/haskjDrug2.do" method="post" name="searchForm" id="searchForm">
 								<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
 									<div class="check-search"   >
 										起止日期：
@@ -51,27 +51,25 @@
 										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.endDate }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
 										<font style="color: red;">*</font>
 									</div>
-									<div class="check-search"  >
+									<div class="check-search" >
 										<a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
 										<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i></a>
 									</div>
 									<div class="check-search nav-search">
-										科室：
+										药品名称：
 										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="DEPT_NAME" type="text" name="DEPT_NAME" value="${pd.DEPT_NAME}" placeholder="科室名称" maxlength="80" />
+											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="DRUG_NAME" value="${pd.DRUG_NAME}" placeholder="药品名称" maxlength="80"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
 									<div class="check-search"  >
 										排序：
-									 	<select class="chosen-select form-control" name="sort_type" id="sort_type" data-placeholder="" style="vertical-align:top;width: 110px;" >
-											<option value=""></option>
-											<option <c:if test="${'1' == pd.sort_type}">selected</c:if> value="1" >总费用 ↑</option>
-											<option <c:if test="${'2' == pd.sort_type}">selected</c:if> value="2" >总费用 ↓</option>
-											<option <c:if test="${'3' == pd.sort_type}">selected</c:if> value="3" >药费 ↑</option>
-											<option <c:if test="${'4' == pd.sort_type}">selected</c:if> value="4" >药费 ↓</option>
-											<option <c:if test="${'5' == pd.sort_type}">selected</c:if> value="5" >抗菌药费 ↑</option>
-											<option <c:if test="${'6' == pd.sort_type}">selected</c:if> value="6" >抗菌药费 ↓</option>
+									 	<select class="chosen-select form-control" name="sort_type" id="sort_type" data-placeholder="排序方式" style="vertical-align:top;width: 100px;">
+									 		<option value=""></option>
+											<option <c:if test="${'1' == pd.sort_type}">selected</c:if> value="1" >药名</option>
+											<option <c:if test="${'2' == pd.sort_type}">selected</c:if> value="2" >厂家</option>
+											<option <c:if test="${'3' == pd.sort_type}">selected</c:if> value="3" >金额 ↑</option>
+											<option <c:if test="${'4' == pd.sort_type}">selected</c:if> value="4" >金额 ↓</option>
 										</select>
 									</div>
 								</div>
@@ -80,17 +78,13 @@
 						<div>
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
 							<thead>
-								<tr style="border-bottom-width:1px;">
-									<th class="center" nowrap rowspan="2"style="background-color: #f1f1f1;">科室</th>
-									<th class="center" nowrap rowspan="2"style="background-color: #f1f1f1;">总费用</th>
-									<th class="center" nowrap colspan="2">药费</th>
-									<th class="center" nowrap colspan="2">抗菌药费</th>
-								</tr>
 								<tr>
-									<th class="center" nowrap >费用</th>
-									<th class="center" nowrap >比例</th>
-									<th class="center" nowrap>费用</th>
-									<th class="center" nowrap>比例</th>
+									<th class="center" nowrap>排名</th>
+									<th class="center" nowrap>药品名称</th>
+									<th class="center" nowrap>规格</th>
+									<th class="center" nowrap>厂家</th>
+									<th class="center" nowrap>金额</th>
+									<th class="center" nowrap>使用量</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -99,22 +93,15 @@
 								<c:when test="${not empty reportList}">
 									<c:forEach items="${reportList}" var="report" varStatus="vs">
 										<tr >
-											<td class="center">${report.dept_name}</td>
-											<td class="center">￥ ${report.med}</td>
-											<td class="center">￥ ${report.drug} </td>
-											<td class="center">${report.drug_persents} %</td>
-											<td class="center">￥ ${report.anti}</td>
-											<td class="center">${report.anti_persents} %</td>
+											<td class="center">${vs.index+1}</td>
+											<td class="center">${report.drug_name}</td>
+											<td class="center">${report.package_spec}</td>
+											<td class="center">${report.firm_id}</td>
+											<td class="center">￥ <fmt:formatNumber value="${report.costs}" pattern="###,###,##0.00"></fmt:formatNumber></td>
+											<td class="center">${report.amounts} ${report.units}</td>
 										</tr>
+									
 									</c:forEach>
-									<tr >
-										<td class="center">合计：</td>
-										<td class="center">￥ ${count.med_all}</td>
-										<td class="center">￥ ${count.drug_all} </td>
-										<td class="center">${count.drug_all_persents} %</td>
-										<td class="center">￥ ${count.anti_all}</td>
-										<td class="center">${count.anti_all_persents} %</td>
-									</tr>
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
@@ -168,7 +155,7 @@
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<script type="text/javascript" src="static/js/common/common.js"></script>
 	</body>
-<script type="text/javascript" src="static/js/common/lockTableBottom.js?v=201612"></script>
+<script type="text/javascript" src="static/js/common/lockTable.js?v=201612"></script>
 <script type="text/javascript">
 $(top.hangge());
 

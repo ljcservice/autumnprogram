@@ -16,6 +16,7 @@ import com.ts.service.DoctOrder.OrderWork.CommonService;
 import com.ts.service.DoctOrder.OrderWork.DrugAmountService;
 import com.ts.util.MyDecimalFormat;
 import com.ts.util.PageData;
+import com.ts.util.ontology.HelpUtil;
 /**
  * 门急诊药品费用统计
  * @author silong.xing
@@ -40,6 +41,8 @@ public class DrugAmountReport extends BaseController{
 		PageData pd = this.getPageData();
 		try{
 			mv.addObject("pd", pd);
+			//设置默认日期
+			HelpUtil.setDefaultDate(pd);
 			page.setPd(pd);
 			//门急诊药品费用统计
 			List<PageData>	reportList = drugAmountService.drugAmount(page);
@@ -51,6 +54,7 @@ public class DrugAmountReport extends BaseController{
 		}
 		return mv;
 	}
+
 	/**
 	 * 门急诊药品费用统计 按照科室
 	 * @return
@@ -62,6 +66,8 @@ public class DrugAmountReport extends BaseController{
 		PageData pd = this.getPageData();
 		try{
 			mv.addObject("pd", pd);
+			//设置默认日期
+			HelpUtil.setDefaultDate(pd);
 			page.setPd(pd);
 			//门急诊药品费用统计
 			List<PageData>	reportList = drugAmountService.drugAmountByDep(page);
@@ -85,6 +91,8 @@ public class DrugAmountReport extends BaseController{
 		PageData pd = this.getPageData();
 		try{
 			mv.addObject("pd", pd);
+			//设置默认日期
+			HelpUtil.setDefaultDate(pd);
 			page.setPd(pd);
 			//门急诊药品费用统计
 			List<PageData>	reportList = drugAmountService.drugAmountByDoctor(page);
@@ -107,6 +115,8 @@ public class DrugAmountReport extends BaseController{
 		PageData pd = this.getPageData();
 		try{
 			mv.addObject("pd", pd);
+			//设置默认日期
+			HelpUtil.setDefaultDate(pd);
 			page.setPd(pd);
 			//门急诊药品费用统计
 			List<PageData>	reportList = drugAmountService.drugAmountByPerson(page);
@@ -129,6 +139,8 @@ public class DrugAmountReport extends BaseController{
 		PageData pd = this.getPageData();
 		try{
 			mv.addObject("pd", pd);
+			//设置默认日期
+			HelpUtil.setDefaultDate(pd);
 			page.setPd(pd);
 			//门急诊药品费用统计
 			List<PageData>	reportList = drugAmountService.drugAmountByDrug(page);
@@ -147,6 +159,8 @@ public class DrugAmountReport extends BaseController{
 		PageData pd = this.getPageData();
 		try{
 			mv.addObject("pd", pd);
+			//设置默认日期
+			HelpUtil.setDefaultDate(pd);
 			//汇总
 			BigDecimal med_all =  new BigDecimal(0);
 			BigDecimal drug_all =   new BigDecimal(0);

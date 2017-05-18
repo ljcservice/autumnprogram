@@ -63,6 +63,14 @@
 										</span>
 									</div>
 									<div class="check-search"  >
+										作用范围：
+									 	<select class="chosen-select form-control" name="type" id="type" data-placeholder="" style="vertical-align:top;width: 110px;" >
+											<option value="">全部</option>
+											<option <c:if test="${'1' == pd.type}">selected</c:if> value="1" >住院</option>
+											<option <c:if test="${'2' == pd.type}">selected</c:if> value="2" >门诊</option>
+										</select>
+									</div>
+									<div class="check-search"  >
 										排序：
 									 	<select class="chosen-select form-control" name="sort_type" id="sort_type" data-placeholder="" style="vertical-align:top;width: 110px;" >
 											<option value=""></option>
@@ -95,8 +103,7 @@
 							</thead>
 							<tbody>
 							<!-- 开始循环 -->	
-							<c:choose>
-								<c:when test="${not empty reportList}">
+								<c:if test="${pd.type==null || pd.type=='1' }">
 									<c:forEach items="${reportList}" var="report" varStatus="vs">
 										<tr >
 											<td class="center">${report.dept_name}</td>
@@ -108,31 +115,46 @@
 										</tr>
 									</c:forEach>
 									<tr >
-										<td class="center">合计：</td>
+										<td class="center">住院合计：</td>
 										<td class="center">￥ ${count.med_all}</td>
 										<td class="center">￥ ${count.drug_all} </td>
 										<td class="center">${count.drug_all_persents} %</td>
 										<td class="center">￥ ${count.anti_all}</td>
 										<td class="center">${count.anti_all_persents} %</td>
 									</tr>
-								</c:when>
-								<c:otherwise>
-									<tr class="main_info">
-										<td colspan="12" class="center">没有相关数据</td>
+								</c:if>
+								<c:if test="${pd.type==null || pd.type=='2' }">
+									<c:forEach items="${reportList2}" var="report" varStatus="vs">
+										<tr >
+											<td class="center">${report.dept_name}</td>
+											<td class="center">￥ ${report.med}</td>
+											<td class="center">￥ ${report.drug} </td>
+											<td class="center">${report.drug_persents} %</td>
+											<td class="center">￥ ${report.anti}</td>
+											<td class="center">${report.anti_persents} %</td>
+										</tr>
+									</c:forEach>
+									<tr >
+										<td class="center">门诊合计：</td>
+										<td class="center">￥ ${count2.med_all}</td>
+										<td class="center">￥ ${count2.drug_all} </td>
+										<td class="center">${count2.drug_all_persents} %</td>
+										<td class="center">￥ ${count2.anti_all}</td>
+										<td class="center">${count2.anti_all_persents} %</td>
 									</tr>
-								</c:otherwise>
-							</c:choose>
+								</c:if>
+								<tr >
+									<td class="center">总合计：</td>
+									<td class="center">￥ ${all.med_all}</td>
+									<td class="center">￥ ${all.drug_all} </td>
+									<td class="center">${all.drug_all_persents} %</td>
+									<td class="center">￥ ${all.anti_all}</td>
+									<td class="center">${all.anti_all_persents} %</td>
+								</tr>
 							</tbody>
 						</table>
 						</div>
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">
-							<table style="width:100%;">
-								<tr>
-									<td>
-										<div class="pagination" style="float: right;padding: 0px;margin: 0px;">${page.pageStr}</div>
-									</td>
-								</tr>
-							</table>
 						</div>
 	
 						</div>
