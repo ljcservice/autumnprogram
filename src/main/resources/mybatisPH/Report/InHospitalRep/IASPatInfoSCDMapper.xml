@@ -682,7 +682,7 @@
 	</select>
 	
 	
-	<!-- 	抗菌药品种数及使用率-->
+	<!-- 	科室费用占比统计 -->
 	<select id="findDRNO003" parameterType="pd" resultType="pd">
 		select count(patient_id) pat_count,
 		       count(is_scd) scd,
@@ -743,29 +743,69 @@
 		 order by ranking desc
 	</select>
 	
-	
-	<select id="findDeptDDDInfo">
-		 select scd,
-		       pat_count,
-		       admission_days,
-		       ddds,
-		       spec_ddds,
+	<!-- 	科室费用占比统计 -->
+	<select id="findDRNO008" parameterType="pd" resultType="pd">
+		select count(patient_id) pat_count,
+		       count(is_scd) scd,
+		       sum(costs) med,
+               sum(drug_costs) / sum(costs) ranking,
+		   	   sum(anti_costs) / sum(drug_costs) antiranking,
+		       sum(drug_costs) drug,
+		       sum(anti_costs) anti,
+		       doctor,
 		       dept_name,
 		       dept_code
-		  from (select sum(is_scd) scd,
-		               count(patient_id) pat_count,
-		               sum(funcdays) admission_days,
-		               sum(i.ddd_value) ddds,
-		               sum(i.spec_ddd_value) spec_ddds,
-		               funcdeptcode dept_code,
-		               funcdeptname dept_name
-		          from ias_pat_info_scd i
-		         where 1 = 1
-		           and is_orderflag = 1
-<!-- 		           and i.rpt_date >= to_date('2017-04-01', 'yyyy-MM-dd') -->
-
-<!-- 		           and i.rpt_date <= to_date('2017-04-30', 'yyyy-MM-dd') -->
-		         group by funcdeptcode, funcdeptname)
-		 order by ddds desc
+		  from (select l.is_scd,
+		               sum(l.costs) costs,
+		               sum(l.drug_costs) drug_costs,
+		               sum(l.anti_costs) anti_costs,
+		               l.patient_id,
+		               l.visit_id,
+		               l.doctor,
+		               l.outanticosts,
+		               l.funcdeptcode dept_code,
+		               l.funcdeptname dept_name
+		          from ias_pat_info_scd l
+		         where l.is_orderflag = '1'
+		           	and l.rpt_date &gt;= to_date(#{beginDate} ,'yyyy-mm-dd') 
+          			and l.rpt_date &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
+		           <if test="persionType!= null and persionType != ''">
+		           		<if test="persionType == 'adult'">
+		           			and l.AGE &gt;= 18 
+		           		</if>
+		           		<if test="persionType == 'old'">
+		           			and l.age &gt;= 65
+		           		</if>
+		           		<if test="persionType == 'child'">
+		           			and l.age &lt;= 10
+		           		</if>
+		           		<if test="persionType == 'juvenile'">
+		           			and l.age &lt; 18 and l.age &gt;= 11
+		           		</if>		
+		            </if>
+		            <if test="keywords != null and keywords != ''">
+					  	 and l.funcdeptname like CONCAT(CONCAT('%', #{keywords}),'%')
+					</if>
+					
+					<if test="deptCode != null and deptCode != ''">
+					  	 and l.funcdeptcode = #{deptCode}
+					</if>
+					<if test="DIAGNOSIS_DESC!= null and DIAGNOSIS_DESC != ''">
+					    and l.FIRST_DIAGNOSIS like CONCAT(CONCAT('%', #{DIAGNOSIS_DESC}),'%')
+					</if>
+					<if test="doctor != null and doctor != ''">
+						and l.doctor like CONCAT(CONCAT('%', #{doctor}),'%')
+					</if>
+		         group by l.patient_id,
+		                  l.visit_id,
+		                  l.doctor,
+		                  l.funcdeptcode,
+		                  l.outanticosts,
+		                  l.funcdeptname,
+		                  l.is_scd)
+		 group by dept_code, dept_name,doctor
+		 order by ranking desc
 	</select>
+	
+	
 </mapper>

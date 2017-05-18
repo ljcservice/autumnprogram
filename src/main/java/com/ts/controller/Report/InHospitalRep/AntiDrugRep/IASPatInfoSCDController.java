@@ -216,4 +216,46 @@ public class IASPatInfoSCDController extends BaseController
         mv.setViewName("Reprot/InHospitalRep/DrugRep/DRNO003");
         return mv ;
     }
+    
+    
+    /**
+     * 科室费用占比统计 UI
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value="/DRNO008UI")
+    public ModelAndView DRNO008UI()throws Exception{
+        ModelAndView mv = this.getModelAndView();
+        PageData pd = this.getPageData();
+        try{
+            mv.setViewName("Reprot/InHospitalRep/DrugRep/DRNO008");
+        } catch(Exception e){
+            logger.error(e.toString(), e);
+        }
+        return mv ; 
+    }
+    
+    
+    /**
+     * 科室费用占比统计
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value="/DRNO008")
+    public ModelAndView DRNO008()throws Exception{
+        ModelAndView mv = this.getModelAndView();
+        PageData pd = this.getPageData();
+        try
+        {
+            List<PageData> pds =  patInfo.DRNO008(pd);
+            mv.addObject("patinfos", pds);
+            mv.addObject("pd", pd);
+        }
+        catch(Exception e)
+        {
+            logger.error(e.toString(), e);
+        }
+        mv.setViewName("Reprot/InHospitalRep/DrugRep/DRNO008");
+        return mv ;
+    }
 }

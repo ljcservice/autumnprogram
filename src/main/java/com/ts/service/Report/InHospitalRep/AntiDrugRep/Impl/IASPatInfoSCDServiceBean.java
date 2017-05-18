@@ -97,4 +97,11 @@ public class IASPatInfoSCDServiceBean implements IIASPatInfoSCDService
         
         return (List<PageData>)daoPH.findForList("IASPatInfoSCDMapper.findDRNO003", pd);
     }
+    
+    @Override
+    public List<PageData> DRNO008(PageData pd) throws Exception
+    {
+        
+        return (List<PageData>)daoPH.findForList("IASPatInfoSCDMapper.findDRNO008", pd);
+    }
 }

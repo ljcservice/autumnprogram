@@ -81,4 +81,12 @@ public interface IIASPatInfoSCDService
      * @return
      */
     public List<PageData> DRNO003(PageData pd)throws Exception;
+    
+    /**
+     * 医生费用占比统计
+     * @param pd
+     * @return
+     * @throws Exception
+     */
+    public List<PageData> DRNO008(PageData pd) throws Exception;
 }
