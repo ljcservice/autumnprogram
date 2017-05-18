@@ -126,7 +126,7 @@
 											<td class='center' >
 												${order.DRUG_NAME } ${order.DRUG_SPEC }
 											</td>
-											<td class="center "><fmt:formatNumber value="${order.dosage }" pattern="#0.00"></fmt:formatNumber>${order.DOSAGE_UNITS}</td>
+											<td class="center "><fmt:formatNumber value="${order.dosage }" pattern="###,###,##0.00"></fmt:formatNumber>${order.DOSAGE_UNITS}</td>
 											<td class="center ">${order.ADMINISTRATION }</td>
 											<td class="center " >${order.FREQUENCY}</td>
 											<td class="center " >${order.DRUG_USE_DAYS }</td>
@@ -219,7 +219,7 @@
 													<td class='center' >
 														${order.DRUG_NAME } ${order.DRUG_SPEC }
 													</td>
-													<td class="center "><fmt:formatNumber value="${order.dosage }" pattern="#0.00"></fmt:formatNumber> ${order.DOSAGE_UNITS}</td>
+													<td class="center "><fmt:formatNumber value="${order.dosage }" pattern="###,###,##0.00"></fmt:formatNumber> ${order.DOSAGE_UNITS}</td>
 													<td class="center ">${order.ADMINISTRATION }</td>
 													<td class="center " >${order.FREQUENCY}</td>
 													<td class="center " >${order.DRUG_USE_DAYS }</td>

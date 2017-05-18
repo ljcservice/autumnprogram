@@ -86,10 +86,11 @@ public class ShowController extends BaseController{
 					if(pd.get("IS_LEAF")!=null&&"1".equals(pd.get("IS_LEAF"))){
 						//根节点，增加跳转的iframe标识
 						p.put("target", "treeFrame"); 
-						p.put("url", new StringBuffer("show/list?ONTO_TYPE=").append(type)
-								.append("&id=").append(p.get("ID").toString()).append("&name=")
-								.append(p.getString("name")).toString() );
-//								java.net.URLEncoder.encode(,"UTF-8")
+						p.put("url", new StringBuffer("show/list.do?ONTO_TYPE=").append(type)
+								.append("&id=").append(p.get("ID").toString()).toString() 
+								);
+//								.append("&name=dasdsa")
+//								.append(p.getString("name")).toString() 
 						p.put("isParent", false);
 					}else{
 						p.put("isParent", true);

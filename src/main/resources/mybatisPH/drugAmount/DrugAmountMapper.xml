@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DrugAmountMapper">
+
+	<!--门诊费用统计-->
+	<select id="drugAmountPage" parameterType="page" resultType="pd">
+		select drug_code,
+	        drug_name,
+	        package_spec,
+	        units,
+	        is_anti,
+	        firm_id,
+	        sum(amount) amounts,
+	        sum(cost) costs
+	    from dr_drugdaycost t 
+	    where 1=1 
+	 	 <if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 结束-->
+			and dr_date &gt;= to_date(#{pd.beginDate} ,'yyyy-mm-dd') 
+		</if>
+	    <if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
+			and dr_date &lt;= to_date(#{pd.endDate} ,'yyyy-mm-dd') 
+		</if>
+		<if test="pd.drug_name != null and pd.drug_name != ''"> <!-- 药品-->
+			and drug_name = #{pd.drug_name} 
+		</if>
+		<if test="pd.DEPT_NAME != null and pd.DEPT_NAME != ''"> <!-- 科室 -->
+			and DEPT_NAME  = #{pd.DEPT_NAME} 
+		</if>
+		<if test="pd.DISPENSARY_NAME != null and pd.DISPENSARY_NAME != ''"> <!-- 发药药房 -->
+			and DISPENSARY_NAME = #{pd.DISPENSARY_NAME}
+		</if>
+		<if test="pd.TOXI_PROPERTY != null and pd.TOXI_PROPERTY != ''"> <!-- 类型-->
+			and TOXI_PROPERTY  = #{pd.TOXI_PROPERTY} 
+		</if>
+	  	group by 
+	  		drug_code,drug_name, package_spec,firm_id,is_anti,units
+        <if test="pd.sort_type == null or pd.sort_type == ''">  
+ 	 		order by sum(cost) desc
+ 	 	</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 1"> 
+			order by drug_code 
+		</if>
+	 		<if test="pd.sort_type != null and pd.sort_type == 2"> 
+  			order by firm_id
+  		</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 3"> 
+  			order by sum(cost) asc
+  		</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 4"> 
+  			order by sum(cost) desc
+  		</if>
+	</select>
+	
+	<!--门诊费用统计科室-->
+	<select id="drugAmountPageByDep" parameterType="page" resultType="pd">
+		select dept_code,
+	        dept_name,
+	        units,
+	        drug_code,
+	        drug_name,
+	        package_spec,
+	        firm_id,
+	        is_anti,
+	        toxi_property,
+	        sum(cost) costs,
+	        sum(amount) amounts
+	    from dr_drugdoctordeptcost dg
+	    where  1=1
+	 	<if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 结束-->
+			and dr_date &gt;= to_date(#{pd.beginDate} ,'yyyy-mm-dd') 
+		</if>
+	    <if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
+			and dr_date &lt;= to_date(#{pd.endDate} ,'yyyy-mm-dd') 
+		</if>
+		<if test="pd.drug_name != null and pd.drug_name != ''"> <!-- 药品-->
+			and drug_name = #{pd.drug_name} 
+		</if>
+		<if test="pd.DEPT_NAME != null and pd.DEPT_NAME != ''"> <!-- 科室 -->
+			and DEPT_NAME  = #{pd.DEPT_NAME} 
+		</if>
+		<if test="pd.DISPENSARY_NAME != null and pd.DISPENSARY_NAME != ''"> <!-- 发药药房 -->
+			and DISPENSARY_NAME = #{pd.DISPENSARY_NAME}
+		</if>
+		<if test="pd.TOXI_PROPERTY != null and pd.TOXI_PROPERTY != ''"> <!-- 类型-->
+			and TOXI_PROPERTY  = #{pd.TOXI_PROPERTY} 
+		</if>
+ 	 	group by dept_code,dept_name,units,drug_code,drug_name
+ 	 		,package_spec,firm_id,is_anti,toxi_property
+        <if test="pd.sort_type == null or pd.sort_type == ''">  
+ 	 		order by sum(cost) desc
+ 	 	</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 1"> 
+			order by drug_code 
+		</if>
+	 	<if test="pd.sort_type != null and pd.sort_type == 2"> 
+  			order by firm_id
+  		</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 3"> 
+  			order by sum(cost) asc
+  		</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 4"> 
+  			order by sum(cost) desc
+  		</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 5"> 
+  			order by dept_code 
+  		</if>
+	</select>
+	<!--门诊费用统计 医生-->
+	<select id="drugAmountPageByDoctor" parameterType="page" resultType="pd">
+		select doctor_code,
+		      doctor_name,
+		      drug_code,
+		      drug_name,
+		      package_spec,
+		      firm_id,
+		      is_anti,
+		      units,
+		      toxi_property,
+		      sum(cost) costs,
+		      sum(amount) amounts
+		from dr_drugdoctordeptcost dg
+		where 1=1
+			<if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 结束-->
+				and dr_date &gt;= to_date(#{pd.beginDate} ,'yyyy-mm-dd') 
+			</if>
+		    <if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
+				and dr_date &lt;= to_date(#{pd.endDate} ,'yyyy-mm-dd') 
+			</if>
+			<if test="pd.drug_name != null and pd.drug_name != ''"> <!-- 药品-->
+				and drug_name = #{pd.drug_name} 
+			</if>
+			<if test="pd.DEPT_NAME != null and pd.DEPT_NAME != ''"> <!-- 科室 -->
+				and DEPT_NAME  = #{pd.DEPT_NAME} 
+			</if>
+			<if test="pd.DOCTOR_NAME != null and pd.DOCTOR_NAME != ''"> <!-- 医生 -->
+				and DOCTOR_NAME  = #{pd.DOCTOR_NAME} 
+			</if>
+			<if test="pd.DISPENSARY_NAME != null and pd.DISPENSARY_NAME != ''"> <!-- 发药药房 -->
+				and DISPENSARY_NAME = #{pd.DISPENSARY_NAME}
+			</if>
+			<if test="pd.TOXI_PROPERTY != null and pd.TOXI_PROPERTY != ''"> <!-- 类型-->
+				and TOXI_PROPERTY  = #{pd.TOXI_PROPERTY} 
+			</if>
+		group by doctor_code,doctor_name,
+				drug_code,drug_name,
+				package_spec,firm_id,
+				is_anti,units,toxi_property
+		<if test="pd.sort_type == null or pd.sort_type == ''">  
+ 	 		order by sum(cost) desc
+ 	 	</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 1"> 
+			order by drug_code 
+		</if>
+	 	<if test="pd.sort_type != null and pd.sort_type == 2"> 
+  			order by firm_id
+  		</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 3"> 
+  			order by sum(cost) asc
+  		</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 4"> 
+  			order by sum(cost) desc
+  		</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 5"> 
+  			order by dept_code 
+  		</if>
+	</select>
+<!-- 	门急诊药品费用统计 按照人 -->
+	<select id="drugAmountPageByPerson" parameterType="page" resultType="pd">
+		select patient_id,
+	        identity,
+	        dr_date,
+	        drug_code, DRUG_NAME,
+	        doctor_code,
+	        dept_code,
+	        dept_name,
+	        pat_name,
+	        doctor_name,
+	        units,
+	        package_spec,
+	        firm_id,
+	        is_anti,
+	        toxi_property,
+	        charge_type,
+	        sum(amount) amounts,
+	        sum(cost) costs
+		 from DR_DrugPatDDCost dp
+		where 1 = 1
+			<if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 结束-->
+				and dr_date &gt;= to_date(#{pd.beginDate} ,'yyyy-mm-dd') 
+			</if>
+		    <if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
+				and dr_date &lt;= to_date(#{pd.endDate} ,'yyyy-mm-dd') 
+			</if>
+			<if test="pd.drug_name != null and pd.drug_name != ''"> <!-- 药品-->
+				and drug_name = #{pd.drug_name} 
+			</if>
+			<if test="pd.DEPT_NAME != null and pd.DEPT_NAME != ''"> <!-- 科室 -->
+				and DEPT_NAME  = #{pd.DEPT_NAME} 
+			</if>
+			<if test="pd.DOCTOR_NAME != null and pd.DOCTOR_NAME != ''"> <!-- 医生 -->
+				and DOCTOR_NAME  = #{pd.DOCTOR_NAME} 
+			</if>
+			<if test="pd.DISPENSARY_NAME != null and pd.DISPENSARY_NAME != ''"> <!-- 发药药房 -->
+				and DISPENSARY_NAME = #{pd.DISPENSARY_NAME}
+			</if>
+			<if test="pd.TOXI_PROPERTY != null and pd.TOXI_PROPERTY != ''"> <!-- 类型-->
+				and TOXI_PROPERTY  = #{pd.TOXI_PROPERTY} 
+			</if>
+		group by patient_id,
+           identity,
+           dr_date,
+           drug_code,DRUG_NAME,
+           doctor_code,
+           dept_code,
+           dept_name,
+           pat_name,
+           doctor_name,
+           units,
+           package_spec,
+           firm_id,
+           is_anti,
+           toxi_property,
+           charge_type,
+           drug_name
+  		<if test="pd.sort_type == null or pd.sort_type == ''">  
+ 	 		order by sum(cost) desc
+ 	 	</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 1"> 
+			order by drug_code 
+		</if>
+	 	<if test="pd.sort_type != null and pd.sort_type == 2"> 
+  			order by firm_id
+  		</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 3"> 
+  			order by sum(cost) asc
+  		</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 4"> 
+  			order by sum(cost) desc
+  		</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 5"> 
+  			order by dept_code 
+  		</if>
+	</select>
+	<select id="drugAmountPageByDrug" parameterType="page" resultType="pd">
+		select dr_date,
+	        drug_code,
+	        drug_name,
+	        toxi_property,
+	        package_spec,
+	        firm_id,
+	        units,
+	        sum(cost) costs,
+	        sum(amount) amounts
+	   	  from dr_drugdoctordeptcost dg
+		  where 1=1
+	  		<if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 结束-->
+				and dr_date &gt;= to_date(#{pd.beginDate} ,'yyyy-mm-dd') 
+			</if>
+		    <if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
+				and dr_date &lt;= to_date(#{pd.endDate} ,'yyyy-mm-dd') 
+			</if>
+			<if test="pd.drug_name != null and pd.drug_name != ''"> <!-- 药品-->
+				and drug_name = #{pd.drug_name} 
+			</if>
+			<if test="pd.DEPT_NAME != null and pd.DEPT_NAME != ''"> <!-- 科室 -->
+				and DEPT_NAME  = #{pd.DEPT_NAME} 
+			</if>
+			<if test="pd.DOCTOR_NAME != null and pd.DOCTOR_NAME != ''"> <!-- 医生 -->
+				and DOCTOR_NAME  = #{pd.DOCTOR_NAME} 
+			</if>
+			<if test="pd.DISPENSARY_NAME != null and pd.DISPENSARY_NAME != ''"> <!-- 发药药房 -->
+				and DISPENSARY_NAME = #{pd.DISPENSARY_NAME}
+			</if>
+			<if test="pd.TOXI_PROPERTY != null and pd.TOXI_PROPERTY != ''"> <!-- 类型-->
+				and TOXI_PROPERTY  = #{pd.TOXI_PROPERTY} 
+			</if>
+	 	 group by dr_date,
+           drug_code,
+           drug_name,
+           toxi_property,
+           package_spec,
+           firm_id,
+           units
+	  	<if test="pd.sort_type == null or pd.sort_type == ''">  
+ 	 		order by dr_date
+ 	 	</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 1"> 
+			order by drug_code,dr_date
+		</if>
+	 	<if test="pd.sort_type != null and pd.sort_type == 2"> 
+  			order by firm_id,dr_date
+  		</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 3"> 
+  			order by sum(cost) asc,dr_date
+  		</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 4"> 
+  			order by sum(cost) desc,dr_date
+  		</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 5"> 
+  			order by dept_code ,dr_date
+  		</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 6"> 
+  			order by dr_date,drug_code,dept_code
+  		</if>
+	</select>
+	
+	<select id="depAmountPersents" parameterType="pd" resultType="pd">
+		SELECT s.ordered_by_dept dept_name,
+		       nvl(SUM(s.costs),0) med,
+		       nvl(SUM(DECODE(m.is_anti, '1', s.costs, 0)),0) anti,
+		       nvl(SUM(DECODE(s.item_class, 'A', s.costs, 'B', s.costs, 0)),0) drug,
+		       nvl(COUNT(DISTINCT s.visit_no + s.visit_date),0) pat_sum
+		  FROM OUTP_ORDERS_COSTS s,
+		       (select distinct drug_no_local, is_anti from pdss.drug_map) m
+		 WHERE s.item_code = m.drug_no_local(+)
+		   <if test="beginDate != null and beginDate != ''"> <!-- 更新时间 结束-->
+				and visit_date &gt;= to_date(#{beginDate} ,'yyyy-mm-dd') 
+			</if>
+		    <if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+				and visit_date &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
+			</if>
+			<if test="DEPT_NAME != null and DEPT_NAME != ''"> <!-- 科室 -->
+				and ordered_by_dept  = #{DEPT_NAME} 
+			</if>
+			   AND s.CHARGE_INDICATOR = '1'
+		 GROUP BY s.ordered_by_dept
+		 <if test="sort_type == null or sort_type == ''">  
+ 	 		order by SUM(s.costs)
+ 	 	</if>
+  		<if test="sort_type != null and sort_type == 1"> 
+			order by SUM(s.costs)
+		</if>
+	 	<if test="sort_type != null and sort_type == 2"> 
+  			order by SUM(s.costs) desc
+  		</if>
+  		<if test="sort_type != null and sort_type == 3"> 
+  			order by SUM(DECODE(s.item_class, 'A', s.costs, 'B', s.costs, 0))
+  		</if>
+  		<if test="sort_type != null and sort_type == 4"> 
+  			order by SUM(DECODE(s.item_class, 'A', s.costs, 'B', s.costs, 0)) desc
+  		</if>
+  		<if test="sort_type != null and sort_type == 5"> 
+  			order by SUM(DECODE(m.is_anti, '1', s.costs, 0))
+  		</if>
+  		<if test="sort_type != null and sort_type == 6"> 
+  			order by SUM(DECODE(m.is_anti, '1', s.costs, 0)) desc
+  		</if>
+	</select>
+</mapper>

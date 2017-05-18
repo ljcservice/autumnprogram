@@ -69,6 +69,10 @@ public class PrescController extends BaseController{
 				cal.add(Calendar.DAY_OF_MONTH, 1);
 				pd.put("endDate", sdf.format(cal.getTime()));
 			}
+			String DRUG_TYPE = pd.getString("DRUG_TYPE");	//药品种类
+			if(!Tools.isEmpty(DRUG_TYPE)){
+				pd.put(DRUG_TYPE, 1);
+			}
 			page.setPd(pd);
 			List<PageData>	prescList = prescService.prescListPage(page);	//列出专家列表
 			for(PageData pp:prescList){
@@ -113,6 +117,10 @@ public class PrescController extends BaseController{
 			cal.setTime(DateUtil.fomatDate(endDate));
 			cal.add(Calendar.DAY_OF_MONTH, 1);
 			pd.put("endDate", sdf.format(cal.getTime()));
+		}
+		String DRUG_TYPE = pd.getString("DRUG_TYPE");	//药品种类
+		if(!Tools.isEmpty(DRUG_TYPE)){
+			pd.put(DRUG_TYPE, 1);
 		}
 		page.setPd(pd);
 		page.setShowCount(1000);
@@ -202,6 +210,10 @@ public class PrescController extends BaseController{
 				cal.setTime(DateUtil.fomatDate(endDate));
 				cal.add(Calendar.DAY_OF_MONTH, 1);
 				pd.put("endDate", sdf.format(cal.getTime()));
+			}
+			String DRUG_TYPE = pd.getString("DRUG_TYPE");	//药品种类
+			if(!Tools.isEmpty(DRUG_TYPE)){
+				pd.put(DRUG_TYPE, 1);
 			}
 			page.setPd(pd);
 			List<PageData>	prescList = prescService.prescListPage(page);	//列出专家列表

@@ -79,7 +79,7 @@ img{
 		<table  width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
 			<tr style="">
 				<td>
-					医药信息查询系统
+					医药信息查询中心
 				</td>
 				<td width="200px" style="padding-right: 10px;" align="right">
 					<c:if test="${pd.SYSNAME !=null}"><a href="javascript:toMain();">主页</a></c:if> 

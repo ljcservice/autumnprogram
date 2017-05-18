@@ -26,7 +26,10 @@
  }
  .check-search{
 	float: left;
-	margin: 4px;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	margin-left: 3px;
+	margin-right: 3px;
 }
 </style>
 </head>
@@ -39,42 +42,36 @@
 			<div class="main-content-inner">
 				<div class="page-content">
 					<div class="row">
-						<div class="col-xs-12" style="margin-top: 5px;">
-							<form action="report/prescList.do" method="post" name="searchForm" id="searchForm">
-								<div style="margin-bottom: 5px;display: none;">	
-									<div class="check-search" style="width: 250px;" >
+						<div class="col-xs-12"  >
+							<form action="drugAmount/depAmountPersents.do" method="post" name="searchForm" id="searchForm">
+								<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
+									<div class="check-search"   >
 										起止日期：
 										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
 										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.endDate }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
+										<font style="color: red;">*</font>
 									</div>
-									<div class="check-search" style="width: 77px;">
+									<div class="check-search"  >
 										<a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
 										<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i></a>
 									</div>
-									<div class="check-search nav-search" style="width: 600px;">
+									<div class="check-search nav-search">
 										科室：
 										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="ORG_NAME" type="text" name="ORG_NAME" value="${pd.ORG_NAME}" placeholder="科室名称" maxlength="32" />
-											<i class="ace-icon fa fa-search nav-search-icon"></i>
-										</span>
-										医生：
-										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="DOCTOR_NAME" value="${pd.DOCTOR_NAME}" placeholder="诊断名称" maxlength="32"/>
-											<i class="ace-icon fa fa-search nav-search-icon"></i>
-										</span>
-										药品：
-										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="DRUG_NAME" value="${pd.DRUG_NAME}" placeholder="药品名称" maxlength="32"/>
+											<input class="nav-search-input" autocomplete="off" id="DEPT_NAME" type="text" name="DEPT_NAME" value="${pd.DEPT_NAME}" placeholder="科室名称" maxlength="80" />
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
-									<div class="check-search" style="width: 190px;" >
-										问题类别：
-									 	<select class="chosen-select form-control" name="RS_DRUG_TYPE" id="RS_DRUG_TYPE" data-placeholder="问题类别" style="vertical-align:top;width: 110px;" >
-											<option value="" >全部</option>
-											<c:forEach items="${checktypeMap.entrySet()}" var="map" varStatus="vs">
-												<option <c:if test="${map.key == pd.RS_DRUG_TYPE}">selected</c:if> value="${map.key}" >${map.value.RS_TYPE_NAME}</option>
-											</c:forEach>
+									<div class="check-search"  >
+										排序：
+									 	<select class="chosen-select form-control" name="sort_type" id="sort_type" data-placeholder="问题类别" style="vertical-align:top;width: 110px;" >
+											<option value=""></option>
+											<option <c:if test="${'1' == pd.sort_type}">selected</c:if> value="1" >总费用 ↑</option>
+											<option <c:if test="${'2' == pd.sort_type}">selected</c:if> value="2" >总费用 ↓</option>
+											<option <c:if test="${'3' == pd.sort_type}">selected</c:if> value="3" >药费 ↑</option>
+											<option <c:if test="${'4' == pd.sort_type}">selected</c:if> value="4" >药费 ↓</option>
+											<option <c:if test="${'5' == pd.sort_type}">selected</c:if> value="5" >抗菌药费 ↑</option>
+											<option <c:if test="${'6' == pd.sort_type}">selected</c:if> value="6" >抗菌药费 ↓</option>
 										</select>
 									</div>
 								</div>
@@ -83,56 +80,41 @@
 						<div>
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
 							<thead>
+								<tr style="border-bottom-width:1px;">
+									<th class="center" nowrap rowspan="2"style="background-color: #f1f1f1;">科室</th>
+									<th class="center" nowrap rowspan="2"style="background-color: #f1f1f1;">总费用</th>
+									<th class="center" nowrap colspan="2">药费</th>
+									<th class="center" nowrap colspan="2">抗菌药费</th>
+								</tr>
 								<tr>
-									<th class="center" nowrap>处方号</th>
-									<th class="center" nowrap>处方日期</th>
-									<th class="center" nowrap>患者</th>
-									<th class="center" nowrap>性别</th>
-									<th class="center" nowrap>科室</th>
-									<th class="center" nowrap>医生</th>
-									<th class="center" nowrap>抗菌</th>
-									<th class="center" nowrap>诊断</th>
-									<th class="center" nowrap>药费</th>
-									<th class="center" nowrap>点评</th>
-									<th class="center" nowrap>是否合理</th>
-									<th class="center" nowrap>结果</th>
+									<th class="center" nowrap >费用</th>
+									<th class="center" nowrap >比例</th>
+									<th class="center" nowrap>费用</th>
+									<th class="center" nowrap>比例</th>
 								</tr>
 							</thead>
 							<tbody>
 							<!-- 开始循环 -->	
 							<c:choose>
-								<c:when test="${not empty prescList}">
-									<c:forEach items="${prescList}" var="presc" varStatus="vs">
+								<c:when test="${not empty reportList}">
+									<c:forEach items="${reportList}" var="report" varStatus="vs">
 										<tr >
-											<td class="center">${presc.PRESC_NO}</td>
-											<td class="center">${presc.ORDER_DATE}</td>
-											<td class="center">${presc.PATIENT_NAME}</td>
-											<td class="center">${presc.PATIENT_SEX}</td>
-											<td class="center">${presc.ORG_NAME}</td>
-											<td class="center">${presc.DOCTOR_NAME}</td>
-											<td class="center"><c:if test="${presc.HASKJ==0}">否</c:if><c:if test="${presc.HASKJ==1}">是</c:if></td>
-											<td class="center">${presc.DIAGNOSIS_NAMES}</td>
-											<td class="center">${presc.AMOUNT}</td>
-											<td class="center"><c:if test="${presc.ISORDERCHECK==0}">否</c:if><c:if test="${presc.ISORDERCHECK==1}">是</c:if></td>
-											<td class="center">
-												<c:choose>
-													<c:when test="${presc.ISCHECKTRUE == 0 }"> 合理 </c:when>
-													<c:when test="${presc.ISCHECKTRUE == 1 }"> 不合理</c:when>
-													<c:otherwise>待定</c:otherwise>
-												</c:choose>
-											</td>
-											<td class="center">
-												<div class="hidden-sm hidden-xs btn-group">
-													<c:forEach items="${presc.RS_DRUG_TYPES}" var="rs_type" varStatus="vs" >
-														<a class="btn btn-xs ${rstypeColorMap.get(rs_type)}"  title="${checktypeMap.get(rs_type).RS_TYPE_NAME}" >
-															${rstypeMap.get(rs_type)}
-														</a>
-													</c:forEach>
-												</div>
-											</td>
+											<td class="center">${report.dept_name}</td>
+											<td class="center">￥ ${report.med}</td>
+											<td class="center">￥ ${report.drug} </td>
+											<td class="center">${report.drug_persents} %</td>
+											<td class="center">￥ ${report.anti}</td>
+											<td class="center">${report.anti_persents} %</td>
 										</tr>
-									
 									</c:forEach>
+									<tr >
+										<td class="center">合计：</td>
+										<td class="center">￥ ${count.med_all}</td>
+										<td class="center">￥ ${count.drug_all} </td>
+										<td class="center">${count.drug_all_persents} %</td>
+										<td class="center">￥ ${count.anti_all}</td>
+										<td class="center">${count.anti_all_persents} %</td>
+									</tr>
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
@@ -146,7 +128,6 @@
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">
 							<table style="width:100%;">
 								<tr>
-									<td align="left"><a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">关闭</a></td>
 									<td>
 										<div class="pagination" style="float: right;padding: 0px;margin: 0px;">${page.pageStr}</div>
 									</td>
@@ -187,7 +168,7 @@
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<script type="text/javascript" src="static/js/common/common.js"></script>
 	</body>
-<script type="text/javascript" src="static/js/common/lockTable.js?v=201612"></script>
+<script type="text/javascript" src="static/js/common/lockTableBottom.js?v=201612"></script>
 <script type="text/javascript">
 $(top.hangge());
 

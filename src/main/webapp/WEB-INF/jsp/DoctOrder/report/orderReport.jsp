@@ -27,7 +27,9 @@
  .check-search{
 	float: left;
 	margin-top: 2px;
-	margin-bottom: 5px;
+	margin-bottom: 2px;
+	margin-left: 3px;
+	margin-right: 3px;
 }
 @media Print { .Noprn { DISPLAY: none }}
 </style>
@@ -42,14 +44,15 @@
 					<div class="row">
 						<div class="col-xs-12">
 						<!-- 检索  -->
-						<form action="report/ordersReport.do" method="post" name="searchForm" id="searchForm">
 								<div class="Noprn" style="margin-bottom: 5px;">	
-									<div class="check-search" style="width: 250px;" >
+								<form action="report/ordersReport.do" method="post" name="searchForm" id="searchForm">
+									<div class="check-search"  >
 										起止日期：
 										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
 										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.endDate }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
+										<font style="color: red;">*</font>
 									</div>
-									<div class="check-search" style="width: 77px;">
+									<div class="check-search"  >
 										<a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
 										<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i></a>
 									</div>
@@ -74,6 +77,7 @@
 											<a title="最大支持导出2万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
 											<a title="" class="btn btn-mini btn-success" onclick="window.print();">打印</a>
 									</div>
+								</form>
 								</div>
 						<!-- 检索  -->
 					
@@ -113,8 +117,6 @@
 							</tbody>
 						</table>
 						
-					</form>
-	
 						</div>
 						<!-- /.col -->
 					</div>
@@ -154,6 +156,14 @@ $(top.hangge());
 
 //检索
 function searchs(){
+	if($("#beginDate").val()==""){
+		$("#beginDate").tips({ side:3, msg:'请选择开始日期', bg:'#AE81FF',  time:1   });
+		return;
+	}
+	if($("#endDate").val()==""){
+		$("#endDate").tips({ side:3, msg:'请选择结束日期', bg:'#AE81FF',  time:1   });
+		return;
+	}
 	top.jzts();
 	$("#searchForm").submit();
 }

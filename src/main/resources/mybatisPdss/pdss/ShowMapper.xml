@@ -41,14 +41,18 @@
 	select ddm.*
 	from drug_direction_master ddm
 	left join hospital_direction_rel hdr
-		on (ddm.direction_no = hdr.direction_id and
-		   hdr.hospital_name like CONCAT(CONCAT('%', #{pd.name}),'%') )
+		on (ddm.direction_no = hdr.direction_id 
+<!-- 		and  hdr.hospital_name like CONCAT(CONCAT('%', #{pd.name}),'%')  -->
+		   )
 	where 1 = 1
 		<if test="pd.id!=null and pd.id!=''">
 	  		and ddm.direction_no in
 		      (select distinct ddr.direction_no
 		         from drug_direction_rel ddr
 		        where ddr.drug_Class_id = #{pd.id} )
+	  	</if>
+	  	<if test="pd.name!=null and pd.name!=''">
+		  	and  ddm.drug_name like CONCAT(CONCAT('%', #{pd.name}),'%') 
 	  	</if>
 	order by case
 	when hdr.direction_id is null then  2 else 1  end,  ddm.firm_name ASC
