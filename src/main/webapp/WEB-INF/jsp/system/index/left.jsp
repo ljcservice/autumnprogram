@@ -12,7 +12,7 @@
 							<i class="ace-icon fa fa-pencil"></i>
 						</button>
 						
-						<button class="btn btn-success" title="医药信息查询" onclick="window.open('${path}/show/index');">
+						<button class="btn btn-success" title="医药信息查询中心" onclick="window.open('${path}/show/index');">
 							<i class="ace-icon fa fa-signal"></i>
 						</button>
 
