@@ -45,8 +45,8 @@
 					<div class="row">
 						<div class="col-xs-12" >
 							<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
-								<form name="searchForm" id="searchForm" action="InHospitalRep/DRANO002.do" method="post" > 
-									<div class="check-search nav-search" > 
+								<form name="searchForm" id="searchForm" action="InHospitalRep/DRANO005.do" method="post" > 
+									<div class="check-search nav-search" >
 										<span class="input-icon">
 											<input class="nav-search-input" style="width: 100px;" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords}" placeholder="科室" maxlength="80"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
@@ -101,71 +101,90 @@
 								<tr>
 									<th class="center" nowrap style="width:45px;">序号</th>
 									<th class="center" nowrap>科室</th>
-									<th class="center" nowrap>就诊人数</th>
-									<th class="center" nowrap>转科人数</th>
-									<th class="center" nowrap>医生</th>
-									<th class="center" nowrap>DDD强度</th>
-									<th class="center" nowrap>抗菌药使用率</th>
-									<th class="center" nowrap>限制级强度</th>
-									<th class="center" nowrap>限制级使用率</th>
-									<th class="center" nowrap>特殊级强度</th>
-									<th class="center" nowrap>特殊级使用率</th>
-									<th class="center" nowrap>按类别分解</th>
+									<th class="center" nowrap>抗菌药人次</th>
+									<th class="center" nowrap>抗菌药总费</th>
+									<th class="center" nowrap>药品总费</th>
+									<th class="center" nowrap>人均使用抗菌药物费用</th>
+									<th class="center" nowrap>抗菌药物费用占总药费的百分率</th>
 								</tr>
 							</thead>
 							<tbody>
-								
+							<c:set var="antiCountCost" value="0.00">
+							</c:set>
+							<c:set var="CountCost" value="0.00">
+							</c:set>
 							<!-- 开始循环 -->	 
 							<c:choose>
 								<c:when test="${not empty patinfos}">
 									<c:forEach items="${patinfos}" var="patVisit" varStatus="vs" >
 												
 										<tr ondblclick="">
+											<c:set value="${antiCountCost + patVisit.anti_costs_count }" var="antiCountCost"></c:set>
+											<c:set value="${CountCost + patVisit.drug_costs_count }" var="CountCost"></c:set>
+
 											<td nowrap class='center' style="width: 30px;">${vs.index+1}</td>
 											<td nowrap class="center">${patVisit.dept_name } </td>
-											<td nowrap class="center">${patVisit.pat_count }</td>
-											<td nowrap class="center">${patVisit.scd }</td>
-										
-											<td nowrap class="center">${patVisit.doctor}</td>
-											<td nowrap class="center"> <fmt:formatNumber value="${patVisit.ddd_intensity }" type="number" maxFractionDigits="2"></fmt:formatNumber> </td>
+											<td nowrap class="center">${patVisit.anti_count }</td>
 											<td nowrap class="center">
-												<fmt:formatNumber value="${patVisit.antiuserat * 100}" type="number" maxFractionDigits="2"></fmt:formatNumber>%
+												￥<fmt:formatNumber value="${patVisit.anti_costs_count}" type="number" maxFractionDigits="2"></fmt:formatNumber>
 											</td>
-										
-											<td nowrap class="center">
-												<fmt:formatNumber value="${patVisit.limit_ddd_intensity }" type="number" maxFractionDigits="2"></fmt:formatNumber>
-											</td>  
-											<c:set var="outanti_count" >
-												<fmt:formatNumber value="${patVisit.limit_ddd_count}" type="number" maxFractionDigits="2" pattern="#00.00"></fmt:formatNumber>
-											</c:set>
-											<c:set var="outpat_count" >
-												<fmt:formatNumber value="${patVisit.pat_count }" type="number" maxFractionDigits="2" pattern="#00.00"></fmt:formatNumber>
-											</c:set>
-											<td nowrap class="center">
-												<fmt:formatNumber value="${outanti_count/outpat_count * 100}" type="number" maxFractionDigits="2" ></fmt:formatNumber>%
+											
+											<td nowrap class="center"> 
+												￥<fmt:formatNumber value="${patVisit.drug_costs_count }" type="number" maxFractionDigits="2"></fmt:formatNumber> 
 											</td>
-												
-											<c:set var="outanti_countSpec" >
-												<fmt:formatNumber value="${patVisit.spec_ddd_count}" type="number" maxFractionDigits="2" pattern="#00.00"></fmt:formatNumber>
-											</c:set>
 											
 											<td nowrap class="center">
-												<fmt:formatNumber value="${patVisit.spec_ddd_intensity }" type="number" maxFractionDigits="2"></fmt:formatNumber>
-											</td>
+												￥<fmt:formatNumber value="${patVisit.drug_costs_count / patVisit.anti_count }" type="number" maxFractionDigits="2"></fmt:formatNumber>
+											</td>  
+											
+											<c:set var="outanti_count" >
+												<fmt:formatNumber value="${patVisit.anti_costs_count }" type="number" maxFractionDigits="2" pattern="#00.00"></fmt:formatNumber>
+											</c:set>
+											<c:set var="outpat_count" >
+												<fmt:formatNumber value="${patVisit.drug_costs_count }" type="number" maxFractionDigits="2" pattern="#00.00"></fmt:formatNumber>
+											</c:set>
 											<td nowrap class="center">
-												<fmt:formatNumber value="${outanti_countSpec/outpat_count * 100}" type="number" maxFractionDigits="2" ></fmt:formatNumber>%
+												${outanti_count}/${outpat_count}*100=
+												<fmt:formatNumber value="${outanti_count/outpat_count * 100}" type="number" maxFractionDigits="2" ></fmt:formatNumber>%
 											</td>
-											<td nowrap class="center"></td>
 										</tr>
 									</c:forEach>  
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
-										<td colspan="11" class="center">没有相关数据</td>
+										<td colspan="8" class="center">没有相关数据</td>
 									</tr>
 								</c:otherwise>
 							</c:choose>
 							</tbody>
+							<tfoot>
+								<c:if test="${not empty patinfosum }">
+									<tr style="background-color:orange;" >
+										<td nowrap class="center" colspan="2">合计 </td>
+										<td nowrap class="center">${patinfosum.anticount}</td>
+<%-- 										<c:set var="outanti_countsum" > --%>
+										
+<%-- 											<fmt:formatNumber value="" type="number" maxFractionDigits="2" pattern="#00.00"/> --%>
+<%-- 										</c:set> --%>
+<%-- 										<c:set var="outpat_countsum" > --%>
+<%-- 											<fmt:formatNumber value="${patinfosum.pat_count }" type="number" maxFractionDigits="2" pattern="#00.00"/> --%>
+<%-- 										</c:set> --%>
+										<td nowrap class="center"> 
+											￥<fmt:formatNumber value="${antiCountCost }" type="number" maxFractionDigits="2"/> 
+										</td>
+										<td nowrap class="center">
+											￥<fmt:formatNumber value="${CountCost }" type="number" maxFractionDigits="2"/>
+										</td>  
+										<td nowrap class="center">
+											￥<fmt:formatNumber value="${antiCountCost/patinfosum.anticount }" type="number" maxFractionDigits="2"/>
+										</td> 
+										<td nowrap class="center">
+											${antiCountCost}/${CountCost}*100=
+											<fmt:formatNumber value="${antiCountCost/CountCost * 100}" type="number" maxFractionDigits="2" />%
+										</td>
+									</tr>
+								</c:if>
+							</tfoot>
 						</table>
 						</div>
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">
@@ -180,6 +199,7 @@
 						
 						</div>
 					</div>
+					
 						
 					</div>
 					<!-- /.row -->

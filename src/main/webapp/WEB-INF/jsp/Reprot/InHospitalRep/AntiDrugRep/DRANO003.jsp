@@ -45,18 +45,18 @@
 					<div class="row">
 						<div class="col-xs-12" >
 							<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
-								<form name="searchForm" id="searchForm" action="InHospitalRep/DRANO03.do" method="post" > 
+								<form name="searchForm" id="searchForm" action="InHospitalRep/DRANO003.do" method="post" > 
 									<div class="check-search nav-search" > 
 										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords}" placeholder="科室" maxlength="80"/>
+											<input class="nav-search-input" style="width: 100px;" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords}" placeholder="科室" maxlength="80"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="DIAGNOSIS_DESC" type="text" name="DIAGNOSIS_DESC" value="${pd.DIAGNOSIS_DESC}" placeholder="诊断" maxlength="80"/>
+											<input class="nav-search-input" style="width: 100px;" autocomplete="off" id="DIAGNOSIS_DESC" type="text" name="DIAGNOSIS_DESC" value="${pd.DIAGNOSIS_DESC}" placeholder="诊断" maxlength="80"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="" type="text" name="doctor" value="${pd.doctor}" placeholder="医生" maxlength="80"/>
+											<input class="nav-search-input" style="width: 100px;" autocomplete="off" id="" type="text" name="doctor" value="${pd.doctor}" placeholder="医生" maxlength="80"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>

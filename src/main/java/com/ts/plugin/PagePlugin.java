@@ -78,10 +78,10 @@ public class PagePlugin implements Interceptor {
 					//String countSql = "select count(0) from (" + sql+ ") as tmp_count"; //记录统计
 					String fhsql = sql;
 					//优化Page统计sql，去掉order by
-					int index = sql.toLowerCase().lastIndexOf("order by");
-					if(index!=-1){
-						fhsql = sql.substring(0, index);
-					}
+//					int index = sql.toLowerCase().lastIndexOf("order by");
+//					if(index!=-1){
+//						fhsql = sql.substring(0, index);
+//					}
 					String countSql = "select count(0) from (" + fhsql+ ")  tmp_count"; //记录统计 == oracle 加 as 报错(SQL command not properly ended)
 					PreparedStatement countStmt = connection.prepareStatement(countSql);
 					BoundSql countBS = new BoundSql(mappedStatement.getConfiguration(),countSql,boundSql.getParameterMappings(),parameterObject);

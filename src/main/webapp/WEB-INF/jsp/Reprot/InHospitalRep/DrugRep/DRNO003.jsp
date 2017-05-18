@@ -45,8 +45,8 @@
 					<div class="row">
 						<div class="col-xs-12" >
 							<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
-								<form name="searchForm" id="searchForm" action="InHospitalRep/DRANO002.do" method="post" > 
-									<div class="check-search nav-search" > 
+								<form name="searchForm" id="searchForm" action="InHospitalRep/DRNO003.do" method="post" > 
+									<div class="check-search nav-search" >
 										<span class="input-icon">
 											<input class="nav-search-input" style="width: 100px;" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords}" placeholder="科室" maxlength="80"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
@@ -85,14 +85,14 @@
 										</select>
 									</div>
 									
-									<div class="check-search">
-										抗菌药类型：
-										<select class="chosen-select form-control" name="antitype" id="antitype" data-placeholder="抗菌药类型" style="vertical-align:top;width: 100px;">    
-									 		<option value="">全部</option>
-											<option <c:if test="${pd.antitype == '1' }">selected</c:if> value="1" >限制级</option>
-											<option <c:if test="${pd.antitype == '2' }">selected</c:if> value="2" >特殊级</option>
-										</select>
-									</div>
+<!-- 									<div class="check-search"> -->
+<!-- 										抗菌药类型： -->
+<!-- 										<select class="chosen-select form-control" name="antitype" id="antitype" data-placeholder="抗菌药类型" style="vertical-align:top;width: 100px;">     -->
+<!-- 									 		<option value="">全部</option> -->
+<%-- 											<option <c:if test="${pd.antitype == '1' }">selected</c:if> value="1" >限制级</option> --%>
+<%-- 											<option <c:if test="${pd.antitype == '2' }">selected</c:if> value="2" >特殊级</option> --%>
+<!-- 										</select> -->
+<!-- 									</div> -->
 									</form>
 							</div>
 							<div style="width: 100%;height: auto;">
@@ -101,71 +101,81 @@
 								<tr>
 									<th class="center" nowrap style="width:45px;">序号</th>
 									<th class="center" nowrap>科室</th>
-									<th class="center" nowrap>就诊人数</th>
-									<th class="center" nowrap>转科人数</th>
-									<th class="center" nowrap>医生</th>
-									<th class="center" nowrap>DDD强度</th>
-									<th class="center" nowrap>抗菌药使用率</th>
-									<th class="center" nowrap>限制级强度</th>
-									<th class="center" nowrap>限制级使用率</th>
-									<th class="center" nowrap>特殊级强度</th>
-									<th class="center" nowrap>特殊级使用率</th>
-									<th class="center" nowrap>按类别分解</th>
+									<th class="center" nowrap>总费用</th>
+									<th class="center" nowrap>药费费用</th>
+									<th class="center" nowrap>药费比例</th>
+									<th class="center" nowrap>抗菌费用</th>
+									<th class="center" nowrap>抗菌比例</th>
 								</tr>
 							</thead>
 							<tbody>
-								
+							<c:set var="antiCountCost" value="0.0000">
+							</c:set>
+							<c:set var="drugCountCost" value="0.0000">
+							</c:set>
+							<c:set var="CountCost" value="0.0000">
+							</c:set>
 							<!-- 开始循环 -->	 
 							<c:choose>
 								<c:when test="${not empty patinfos}">
 									<c:forEach items="${patinfos}" var="patVisit" varStatus="vs" >
 												
 										<tr ondblclick="">
+											<c:set value="${antiCountCost + patVisit.anti }" var="antiCountCost"></c:set>
+											<c:set value="${CountCost + patVisit.med }" var="CountCost"></c:set>
+											<c:set value="${drugCountCost + patVisit.drug }" var="drugCountCost"></c:set>
+
 											<td nowrap class='center' style="width: 30px;">${vs.index+1}</td>
 											<td nowrap class="center">${patVisit.dept_name } </td>
-											<td nowrap class="center">${patVisit.pat_count }</td>
-											<td nowrap class="center">${patVisit.scd }</td>
-										
-											<td nowrap class="center">${patVisit.doctor}</td>
-											<td nowrap class="center"> <fmt:formatNumber value="${patVisit.ddd_intensity }" type="number" maxFractionDigits="2"></fmt:formatNumber> </td>
 											<td nowrap class="center">
-												<fmt:formatNumber value="${patVisit.antiuserat * 100}" type="number" maxFractionDigits="2"></fmt:formatNumber>%
+												￥<fmt:formatNumber value="${patVisit.med}" type="number" maxFractionDigits="2" ></fmt:formatNumber>
 											</td>
-										
 											<td nowrap class="center">
-												<fmt:formatNumber value="${patVisit.limit_ddd_intensity }" type="number" maxFractionDigits="2"></fmt:formatNumber>
-											</td>  
-											<c:set var="outanti_count" >
-												<fmt:formatNumber value="${patVisit.limit_ddd_count}" type="number" maxFractionDigits="2" pattern="#00.00"></fmt:formatNumber>
-											</c:set>
-											<c:set var="outpat_count" >
-												<fmt:formatNumber value="${patVisit.pat_count }" type="number" maxFractionDigits="2" pattern="#00.00"></fmt:formatNumber>
-											</c:set>
-											<td nowrap class="center">
-												<fmt:formatNumber value="${outanti_count/outpat_count * 100}" type="number" maxFractionDigits="2" ></fmt:formatNumber>%
+												￥<fmt:formatNumber value="${patVisit.drug}" type="number" maxFractionDigits="2"></fmt:formatNumber>
 											</td>
-												
-											<c:set var="outanti_countSpec" >
-												<fmt:formatNumber value="${patVisit.spec_ddd_count}" type="number" maxFractionDigits="2" pattern="#00.00"></fmt:formatNumber>
-											</c:set>
+											
+											<td nowrap class="center"> 
+												<fmt:formatNumber value="${patVisit.ranking * 100}" type="number" maxFractionDigits="2"></fmt:formatNumber> %
+											</td>
 											
 											<td nowrap class="center">
-												<fmt:formatNumber value="${patVisit.spec_ddd_intensity }" type="number" maxFractionDigits="2"></fmt:formatNumber>
-											</td>
+												￥<fmt:formatNumber value="${patVisit.anti}" type="number" maxFractionDigits="2"></fmt:formatNumber>
+											</td>    
 											<td nowrap class="center">
-												<fmt:formatNumber value="${outanti_countSpec/outpat_count * 100}" type="number" maxFractionDigits="2" ></fmt:formatNumber>%
+												<fmt:formatNumber value="${patVisit.antiranking * 100}" type="number" maxFractionDigits="2" ></fmt:formatNumber>%
 											</td>
-											<td nowrap class="center"></td>
 										</tr>
 									</c:forEach>  
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
-										<td colspan="11" class="center">没有相关数据</td>
+										<td colspan="8" class="center">没有相关数据</td>
 									</tr>
 								</c:otherwise>
 							</c:choose>
 							</tbody>
+							<tfoot>
+									<tr style="background-color:orange;" >
+										<td nowrap class="center" colspan="2">合计 </td>
+										<td nowrap class="center"> 
+											￥<fmt:formatNumber value="${CountCost }" type="number" maxFractionDigits="2"/> 
+										</td>
+										<td nowrap class="center">
+											￥<fmt:formatNumber value="${drugCountCost }" type="number" maxFractionDigits="2"/>
+										</td>  
+										
+										<td nowrap class="center">
+											<fmt:formatNumber value="${drugCountCost/CountCost * 100}" type="number" maxFractionDigits="4" />%
+										</td> 
+										
+										<td nowrap class="center">
+											￥<fmt:formatNumber value="${drugCountCost}" type="number" maxFractionDigits="2"/>
+										</td> 
+										<td nowrap class="center">
+											<fmt:formatNumber value="${antiCountCost/drugCountCost * 100}" type="number" maxFractionDigits="4" />%
+										</td>
+									</tr>
+							</tfoot>
 						</table>
 						</div>
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">
@@ -180,6 +190,7 @@
 						
 						</div>
 					</div>
+					
 						
 					</div>
 					<!-- /.row -->

@@ -38,9 +38,9 @@ public class ScheduleManager
         log.info("门诊处方抓取定时器 启动 .......");
         /* 对门诊及住院处方 的抓取  */
         //一小时执行一次 
-        addJob("0 0/1 * * * ? *","Drug_presc_Master");
+        addJob("0 0 1 * * ? *","Drug_presc_Master");
 //        log.info("住院病历抓取定时器启动.........");
-        addJob("0 0/1 * * * ? *","DataFetcherHospital");
+        addJob("0 0 1 * * ? *","DataFetcherHospital");
         log.info("定时器 启动完毕！ ");
         /* 事后审查   */
         //System.out.println(" 事后审核定时器 启动 ...... ");

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OperationRepMapper">
+
+	<!--手术表 -->
+	<sql id="tableName">   
+		operation
+	</sql>
+	
+	<sql id="Field">
+	   	patient_id,
+		visit_id,
+		operation_no,
+		operation_desc,
+		operation_code,
+		heal,
+		wound_grade,
+		operating_date,
+		anaesthesia_method,
+		operator,
+		first_assistant,
+		second_assistant,
+		anesthesia_doctor,
+		link_date,
+		dept_name,
+		clinic_attr,
+		outp_or_inp,
+		internal_or_sergery,
+		dept_code,
+		has_anti,
+		is_timing,
+		is_treatment,
+		lh,
+		pz,
+		wound_grade_update,
+		id
+	</sql>
+	
+	<sql id="FieldValue">
+	   	#{patient_id},
+		#{visit_id},
+		#{operation_no},
+		#{operation_desc},
+		#{operation_code},
+		#{heal},
+		#{wound_grade},
+		#{operating_date},
+		#{anaesthesia_method},
+		#{operator},
+		#{first_assistant},
+		#{second_assistant},
+		#{anesthesia_doctor},
+		#{link_date},
+		#{dept_name},
+		#{clinic_attr},
+		#{outp_or_inp},
+		#{internal_or_sergery},
+		#{dept_code},
+		#{has_anti},
+		#{is_timing},
+		#{is_treatment},
+		#{lh},
+		#{pz},
+		#{wound_grade_update},
+		#{id}
+	</sql>
+	
+	<insert id="saveOperation" parameterType="pd"	>
+		insert into 
+		<include refid="tableName"></include>  
+		(
+			<include refid="Field"></include>  
+		)
+        values(
+        	<include refid="FieldValue"></include>
+        )
+	</insert>
+
+	<!-- 	围手术期预防用抗菌药  科室手术情况  按人次查询   -->
+    <select id="findDeptOperPersionInfo" parameterType="pd" resultType="pd" >
+    	select dept_name,
+		       dept_code,
+		       sum(decode(v.has_anti, 0, 0, '', 0, 1)) anti,
+		       count(v.patall) coun,
+		       round(sum(decode(v.has_anti, 0, 0, '', 0, 1)) / count(v.patall), 4) ratAnti
+		  from (select dept_name,
+		               visit_id,
+		               dept_code,
+		               sum(t.has_anti) has_anti,
+		               count(*) patall
+		          from OPERATION t
+		         where  
+		         	t.link_date &gt;= to_date(#{beginDate} ,'yyyy-mm-dd')  
+		            and t.link_date &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
+		            <if test="keywords != null and keywords != ''">
+				  	   and t.dept_name like CONCAT(CONCAT('%', #{keywords}),'%')
+				    </if>
+				    <if test="OPERATION_DESC!= null and OPERATION_DESC != ''">
+				  	   and t.OPERATION_DESC like CONCAT(CONCAT('%', #{OPERATION_DESC}),'%')
+				    </if>
+				    <if test="WOUNDTYPE!= null and WOUNDTYPE == 0"> 
+					    <if test="WOUND_GRADE!= null and WOUND_GRADE != ''">
+					  	   and t.WOUND_GRADE = #{WOUND_GRADE}
+					    </if>
+				    </if>
+				    <if test="WOUNDTYPE!= null and WOUNDTYPE == 1"> 
+					    <if test="WOUND_GRADE!= null and WOUND_GRADE != ''">
+					  	   and t.WOUND_GRADE_UPDATE = #{WOUND_GRADE}
+					    </if>
+				    </if>
+		         group by t.patient_id, visit_id, dept_name, dept_code) v
+		 group by dept_name, dept_code
+		 order by ratAnti desc
+    </select>
+    
+    <select id="findDeptOperCountInfo" parameterType="pd" resultType="pd" >
+    	select dept_name,
+		       dept_code,
+		       sum(decode(v.has_anti, 0, 0, '', 0, 1)) anti,
+		       count(v.patall) coun,
+		       round(sum(decode(v.has_anti, 0, 0, '', 0, 1)) / count(v.patall), 4) ratAnti
+		  from (select dept_name,
+		               dept_code,
+		               sum(t.has_anti) has_anti,
+		               count(*) patall
+		          from OPERATION t
+		         where t.link_date &gt;= to_date(#{beginDate} ,'yyyy-mm-dd')  
+		            and t.link_date &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
+		            <if test="keywords != null and keywords != ''">
+				  	   and t.dept_name like CONCAT(CONCAT('%', #{keywords}),'%')
+				    </if>
+				    <if test="OPERATION_DESC!= null and OPERATION_DESC != ''">
+				  	   and t.OPERATION_DESC like CONCAT(CONCAT('%', #{OPERATION_DESC}),'%')
+				    </if>
+				    <if test="WOUNDTYPE!= null and WOUNDTYPE != '0'">
+					    <if test="WOUND_GRADE!= null and WOUND_GRADE != ''">
+					  	   and t.WOUND_GRADE = #{WOUND_GRADE}
+					    </if>
+				    </if>
+				    <if test="WOUNDTYPE!= null and WOUNDTYPE != '1'">
+					    <if test="WOUND_GRADE!= null and WOUND_GRADE != ''">
+					  	   and t.WOUND_GRADE_UPDATE = #{WOUND_GRADE}
+					    </if>
+				    </if>
+		         group by t.patient_id,
+		                  t.visit_id,
+		                  t.operation_no,
+		                  t.operating_date,
+		                  dept_name,
+		                  dept_code) v
+		 group by dept_name, dept_code
+		 order by ratAnti desc
+    </select>
+
+</mapper>

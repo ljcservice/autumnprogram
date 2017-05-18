@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DRDrugSummaryMapper">
+
+	<!--表名  总体审核情况 -->
+	<sql id="tableName">
+		dr_drug_summary
+	</sql>
+	
+	<sql id="Field">
+	   	drug_code,
+		drug_name,
+		costs,
+		drug_units,
+		amount,
+		rpt_date,
+		doctor_code,
+		doctor_name,
+		dept_code,
+		dept_name,
+		drug_spec,
+		firm_id,
+		charges,
+		identity,
+		charge_type,
+		is_anti,
+		patient_id,
+		visit_id,
+		drug_form,
+		is_basedrug,
+		ddd_value
+	</sql>
+	
+	<sql id="FieldValue">
+	   	#{drug_code},
+		#{drug_name},
+		#{costs},
+		#{drug_units},
+		#{amount},
+		#{rpt_date},
+		#{doctor_code},
+		#{doctor_name},
+		#{dept_code},
+		#{dept_name},
+		#{drug_spec},
+		#{firm_id},
+		#{charges},
+		#{identity},
+		#{charge_type},
+		#{is_anti},
+		#{patient_id},
+		#{visit_id},
+		#{drug_form},
+		#{is_basedrug},
+		#{ddd_value}
+	</sql>
+	
+	<insert id="savedrdrugsummary" parameterType="pd"	>
+		insert into 
+		<include refid="tableName"></include>  
+		(
+			<include refid="Field"></include>  
+		)
+        values(
+        	<include refid="FieldValue"></include>
+        )
+	</insert>
+
+	<!-- 住院药物使用统计 -->
+    <select id="findDRNO001Page" parameterType="page" resultType="pd" >
+    	select 
+    		t.drug_code,
+	       	t.drug_name, 
+	       	t.drug_units,
+	       	t.drug_spec,
+	       	t.firm_id,
+	       	t.drug_form，
+	       	sum(t.costs) sumcosts,
+	       	sum(t.amount) sumamount,
+	       	sum(t.is_anti) anti,
+	       	sum(t.is_basedrug) baseDrug
+		  from dr_drug_summary t
+		  where t.rpt_date &gt;= to_date(#{pd.beginDate} ,'yyyy-mm-dd') 
+          			and t.rpt_date &lt;= to_date(#{pd.endDate} ,'yyyy-mm-dd') 
+		  <if test="pd.drugType!= null and pd.drugType == 0">
+		  	 	and is_anti = 1 
+		  </if>
+		  <if test="pd.drugType!= null and pd.drugType == 1">
+		  	 	and is_basedrug = 1 
+		  </if>
+		  <if test="pd.drugType!= null and pd.drugType == 2">
+		  	 	and is_anti != 1 
+		  </if>
+		  
+		  <if test="pd.drug_name!= null and pd.drug_name != ''">
+		  	 and t.drug_name like CONCAT(CONCAT('%', #{pd.pd.drug_name}),'%')
+		  </if>
+		 group by t.drug_code,
+		          t.drug_name,
+		          t.drug_units,
+		          t.drug_spec,
+		          t.firm_id,
+		          t.drug_form
+		order by ${pd.orderBy} desc
+    </select>
+
+	<!-- 	科室药物使用统计  -->
+	<select id="findDRNO002Page" parameterType="page" resultType="pd" >
+    	select *
+		 from (select b.*,
+		              row_number() over(partition by dept_code order by ${pd.orderBy} desc) rk
+		         from (select sum(t.costs) costs,
+		                      sum(t.amount) amount,
+		                      t.drug_units,
+		                      t.drug_spec,
+		                      t.drug_code,
+		                      t.drug_name,
+		                      firm_id,
+		                      dept_code,
+		                      dept_name
+		                 from dr_drug_summary t
+		                where  
+		                		t.rpt_date &gt;= to_date(#{pd.beginDate} ,'yyyy-mm-dd') 
+		          			   and t.rpt_date &lt;= to_date(#{pd.endDate} ,'yyyy-mm-dd') 
+							  <if test="pd.drugType!= null and pd.drugType == 0">
+							  	 	and is_anti = 1 
+							  </if>
+							  <if test="pd.drugType!= null and pd.drugType == 1">
+							  	 	and is_basedrug = 1 
+							  </if>
+							  <if test="pd.drugType!= null and pd.drugType == 2">
+							  	 	and is_anti != 1 
+							  </if>
+							  <if test="pd.drug_name!= null and pd.drug_name != ''">
+							  	 and t.drug_name like CONCAT(CONCAT('%', #{pd.drug_name}),'%')
+							  </if>
+							  <if test="pd.dept_name!= null and pd.dept_name != ''">
+							  	 and t.dept_name like CONCAT(CONCAT('%', #{pd.dept_name}),'%')
+							  </if>
+		                	group by firm_id,
+		                         t.dept_code,
+		                         t.dept_name,
+		                         t.drug_code,
+		                         t.drug_name,
+		                         t.drug_units,
+		                         t.drug_spec  
+		                order by ${pd.orderBy} desc )  b ) w 
+		where w.rk &lt;= ${pd.ranking} 
+    </select>
+	
+	<!--  医生药物使用统计  -->
+	<select id="findDRNO004Page" parameterType="page" resultType="pd" >
+    	select *
+		  from (select b.*,
+		               row_number() over(partition by dept_code order by ${pd.orderBy} desc) rk
+		          from (select sum(t.costs) costs,
+		                       sum(t.amount) amount,
+		                       t.drug_units,
+		                       t.drug_spec,
+		                       t.drug_code,
+		                       t.drug_name,
+		                       t.firm_id,
+		                       t.doctor_name,
+		                       t.dept_name,
+		                       t.dept_code
+		                  from ias.dr_drug_summary t
+		                 where  
+								t.rpt_date &gt;= to_date(#{pd.beginDate} ,'yyyy-mm-dd') 
+		          			   and t.rpt_date &lt;= to_date(#{pd.endDate} ,'yyyy-mm-dd') 
+							  <if test="pd.drugType!= null and pd.drugType == 0">
+							  	 	and is_anti = 1 
+							  </if>
+							  <if test="pd.drugType!= null and pd.drugType == 1">
+							  	 	and is_basedrug = 1 
+							  </if>
+							  <if test="pd.drugType!= null and pd.drugType == 2">
+							  	 	and is_anti != 1 
+							  </if>
+							  <if test="pd.drug_name!= null and pd.drug_name != ''">
+							  	 and t.drug_name like CONCAT(CONCAT('%', #{pd.drug_name}),'%')
+							  </if>
+							  <if test="pd.dept_name!= null and pd.dept_name != ''">
+							  	 and t.dept_name like CONCAT(CONCAT('%', #{pd.dept_name}),'%')
+							  </if>
+							  <if test="pd.doctor_name!= null and pd.doctor_name != ''">
+							  	 and t.doctor_name like CONCAT(CONCAT('%', #{pd.doctor_name}),'%')
+							  </if>
+		                 group by firm_id,
+		                          t.drug_code,
+		                          t.drug_name,
+		                          t.drug_units,
+		                          t.drug_spec,
+		                          t.doctor_name,
+		                          t.dept_code,
+		                          t.dept_name
+		                 order by ${pd.orderBy} desc) b) w
+		 where w.rk &lt;= ${pd.ranking} 
+    </select>
+    
+    
+	<!-- 医生药品费用排名   -->
+    <select id="findDRNO005Page" parameterType="page" resultType="pd" >
+    	select sum(t.costs) costs,
+		       t.doctor_name,
+		       t.dept_name
+		  from dr_drug_summary t
+		 where 
+		 	   t.rpt_date &gt;= to_date(#{pd.beginDate} ,'yyyy-mm-dd') 
+ 			   and t.rpt_date &lt;= to_date(#{pd.endDate} ,'yyyy-mm-dd') 
+			  <if test="pd.drugType!= null and pd.drugType == 0">
+			  	 	and t.is_anti = 1 
+			  </if>
+			  <if test="pd.drugType!= null and pd.drugType == 1">
+			  	 	and t.is_basedrug = 1 
+			  </if>
+			  <if test="pd.drugType!= null and pd.drugType == 2">
+			  	 	and is_anti != 1 
+			  </if>
+			  <if test="pd.dept_name!= null and pd.dept_name != ''">
+			  	 and t.dept_name like CONCAT(CONCAT('%', #{pd.dept_name}),'%')
+			  </if>
+			  <if test="pd.doctor_name!= null and pd.doctor_name != ''">
+			  	 and t.doctor_name like CONCAT(CONCAT('%', #{pd.doctor_name}),'%')
+			  </if>
+		 group by t.doctor_name, t.dept_name
+		 order by costs desc
+    </select>
+
+	<!-- 医生药品费用排名   -->
+    <select id="findDRNO006Page" parameterType="page" resultType="pd" >
+    	select sum(t.costs) costs,
+		       sum(t.amount) amount,
+		       t.drug_code,
+		       t.drug_name,
+		       t.drug_spec,
+		       t.doctor_name,
+		       t.dept_name,
+		       t.drug_units
+		  from dr_drug_summary t
+		 where 
+		 		t.rpt_date &gt;= to_date(#{pd.beginDate} ,'yyyy-mm-dd') 
+   			   and t.rpt_date &lt;= to_date(#{pd.endDate} ,'yyyy-mm-dd') 
+			  <if test="pd.drugType!= null and pd.drugType == 0">
+			  	 	and t.is_anti = 1 
+			  </if>
+			  <if test="pd.drugType!= null and pd.drugType == 1">
+			  	 	and t.is_basedrug = 1 
+			  </if>
+			  <if test="pd.drugType!= null and pd.drugType == 2">
+			  	 	and t.is_anti != 1 
+			  </if>
+			  <if test="pd.drug_name!= null and pd.drug_name != ''">
+			  	 and t.drug_name like CONCAT(CONCAT('%', #{pd.drug_name}),'%')
+			  </if>
+			  <if test="pd.dept_name!= null and pd.dept_name != ''">
+			  	 and t.dept_name like CONCAT(CONCAT('%', #{pd.dept_name}),'%')
+			  </if>
+			  <if test="pd.doctor_name!= null and pd.doctor_name != ''">
+			  	 and t.doctor_name like CONCAT(CONCAT('%', #{pd.doctor_name}),'%')
+			  </if>
+		 group by t.drug_code,t.drug_name, t.doctor_name, t.drug_spec, drug_units, t.dept_name
+		 order by ${pd.orderBy} desc
+    
+    </select>
+    
+
+
+	<!--  药物使用按日统计 -->
+	<select id="findDRNO007Page" parameterType="page" resultType="pd" >
+    	select t.drug_code,
+    		   t.drug_name,
+		       t.drug_units,
+		       t.drug_spec,
+		       t.firm_id,
+		       t.rpt_date,
+		       sum(t.costs) costs,
+		       sum(t.amount) amount
+		  from dr_drug_summary t
+		 where 
+		 	   t.rpt_date &gt;= to_date(#{pd.beginDate} ,'yyyy-mm-dd') 
+   			   and t.rpt_date &lt;= to_date(#{pd.endDate} ,'yyyy-mm-dd') 
+			  <if test="pd.drugType!= null and pd.drugType == 0">
+			  	 	and t.is_anti = 1 
+			  </if>
+			  <if test="pd.drugType!= null and pd.drugType == 1">
+			  	 	and t.is_basedrug = 1 
+			  </if>
+			  <if test="pd.drugType!= null and pd.drugType == 2">
+			  	 	and t.is_anti != 1 
+			  </if>
+			  <if test="pd.drug_name!= null and pd.drug_name != ''">
+			  	 and t.drug_name like CONCAT(CONCAT('%', #{pd.drug_name}),'%')
+			  </if>
+			  <if test="pd.dept_name!= null and pd.dept_name != ''">
+			  	 and t.dept_name like CONCAT(CONCAT('%', #{pd.dept_name}),'%')
+			  </if>
+			  <if test="pd.doctor_name!= null and pd.doctor_name != ''">
+			  	 and t.doctor_name like CONCAT(CONCAT('%', #{pd.doctor_name}),'%')
+			  </if>
+		 group by t.drug_code,t.drug_name, t.drug_units, t.drug_spec, t.firm_id, t.rpt_date
+		 order by ${pd.orderBy} desc
+    </select>
+	
+</mapper>

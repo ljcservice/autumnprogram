@@ -45,16 +45,10 @@
 					<div class="row">
 						<div class="col-xs-12" >
 							<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
-								<form name="searchForm" id="searchForm" action="DoctOrder/OrderWork.do" method="post" > 
-									<div class="check-search nav-search" >
-											科室：
+								<form name="searchForm" id="searchForm" action="InHospitalRep/DRNO001.do" method="post" > 
+									<div class="check-search nav-search" > 
 										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords}" placeholder="科室" maxlength="80"/>
-											<i class="ace-icon fa fa-search nav-search-icon"></i>
-										</span>
-											诊断：
-										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="DIAGNOSIS_DESC" type="text" name="DIAGNOSIS_DESC" value="${pd.DIAGNOSIS_DESC}" placeholder="诊断" maxlength="80"/>
+											<input class="nav-search-input" style="width: 100px;" autocomplete="off" id="nav-search-input" type="text" name="drug_name" value="${pd.drug_name}" placeholder="药品名称" maxlength="80"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
@@ -63,106 +57,73 @@
 										<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i></a>
 									</div>
 									<div class="check-search"  >
-										出院日期：
+										起止日期：
 										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
-										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.end_Date }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
+										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.endDate }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
 									</div>
+<!-- 									<div class="check-search"  >  -->
+<!-- 										作用范围： -->
+<!-- 									 	<select class="chosen-select form-control" name="IS_OPERATION" id="IS_OPERATION" data-placeholder="是否含手术" style="vertical-align:top;width: 80px;"> -->
+<!-- 									 		<option value="">全部</option> -->
+<%-- 											<option <c:if test="${pd.IS_OPERATION == '0' }">selected</c:if> value="0" >否</option> --%>
+<%-- 											<option <c:if test="${pd.IS_OPERATION == '1' }">selected</c:if> value="1" >是</option> --%>
+<!-- 										</select> -->
+<!-- 									</div> -->
+									
 									<div class="check-search"  > 
-										是否含手术：
-									 	<select class="chosen-select form-control" name="IS_OPERATION" id="IS_OPERATION" data-placeholder="是否含手术" style="vertical-align:top;width: 80px;">
-									 		<option value="">全部</option>
-											<option <c:if test="${pd.IS_OPERATION == '0' }">selected</c:if> value="0" >否</option>
-											<option <c:if test="${pd.IS_OPERATION == '1' }">selected</c:if> value="1" >是</option>
+										类型：
+									 	<select class="chosen-select form-control" name="drugType" id="drugType" data-placeholder="类型" style="vertical-align:top;width: 80px;">    
+									 		<option value="-1">全部</option>
+											<option <c:if test="${pd.drugType == '0' }">selected</c:if> value="0" >抗菌药</option>
+											<option <c:if test="${pd.drugType == '1' }">selected</c:if> value="1" >基本药物</option>
+											<option <c:if test="${pd.drugType == '2' }">selected</c:if> value="2" >非抗菌药</option>
+<%-- 											<option <c:if test="${pd.drugType == '3' }">selected</c:if> value="juvenile" >青年(大于10,小于18)</option> --%>
+										</select>
+									</div>  
+									
+									<div class="check-search">
+										排序：
+										<select class="chosen-select form-control" name="orderBy" id="orderBy" data-placeholder="抗菌药类型" style="vertical-align:top;width: 100px;">    
+											<option  value="sumcosts" >金额</option>
+											<option <c:if test="${pd.orderBy == 'sumamount' }">selected</c:if> value="sumamount" >用量</option>
 										</select>
 									</div>
-									<div class="check-search"  > 
-										是否点评：
-									 	<select class="chosen-select form-control" name="ISORDERCHECK" id="ISORDERCHECK" data-placeholder="医嘱是否点评" style="vertical-align:top;width: 80px;"  >
-											<option value="">全部</option>
-											<option <c:if test="${pd.ISORDERCHECK == '0'}">selected</c:if> value="0" >未点评</option>
-											<option <c:if test="${pd.ISORDERCHECK == '1'}">selected</c:if> value="1" >已点评</option>
-										</select> 
-									</div>
-									<div class="check-search"  > 
-										是否合理：
-									 	<select class="chosen-select form-control" name="ISCHECKTRUE" id="ISCHECKTRUE" data-placeholder="医嘱是否合理" style="vertical-align:top;width: 80px;">
-									 		<option value="">全部</option>
-											<option <c:if test="${pd.ISCHECKTRUE == '0' }">selected</c:if> value="0" >合理</option>
-											<option <c:if test="${pd.ISCHECKTRUE == '1' }">selected</c:if> value="1" >不合理</option>
-											<option <c:if test="${pd.ISCHECKTRUE == '2' }">selected</c:if> value="2" >待定</option>
-										</select>
-									</div>
-									</form>
+								</form>
 							</div>
 							<div style="width: 100%;height: auto;">
 							<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
 							<thead>
 								<tr>
-									<th class="center" nowrap style="width:35px;">序号</th>
-									<th class="center" nowrap>科室</th>
-									<th class="center" nowrap>就诊人数</th>
-									<th class="center" nowrap>转科人数</th>
-									<th class="center" nowrap>抗菌药物使用率</th>
-									<th class="center" nowrap>DDD</th>
-									<th class="center" nowrap>使用强度</th>
+									<th class="center" nowrap style="width:45px;">序号</th>
+									<th class="center" nowrap>药名</th>
+									<th class="center" nowrap>规格</th>
+									<th class="center" nowrap>厂家</th>
+									<th class="center" nowrap>金额</th>
+									<th class="center" nowrap>使用量</th>
 									<th class="center" nowrap>按类别分解</th>
 								</tr>
 							</thead>
 							<tbody>
 								
-							<!-- 开始循环 -->	
+							<!-- 开始循环 -->	 
 							<c:choose>
-								<c:when test="${not empty patVisits}">
-									<c:forEach items="${patVisits}" var="patVisit" varStatus="vs" >
-												
-										<tr ondblclick="viewDetail('${patVisit.PATIENT_ID}','${patVisit.VISIT_ID}','${patVisit.ngroupnum}');">
+								<c:when test="${not empty druginfos}">
+									<c:forEach items="${druginfos}" var="druginfo" varStatus="vs" >
+										<tr ondblclick="">
 											<td nowrap class='center' style="width: 30px;">${vs.index+1}</td>
-											<td nowrap class="center"> <a onclick="javascript:viewDetail('${patVisit.PATIENT_ID}','${patVisit.VISIT_ID}','${patVisit.ngroupnum}')" style="cursor:pointer;">${patVisit.PATIENT_ID}(${patVisit.VISIT_ID})</a> </td>
-											<td nowrap class="center">${patVisit.NAME }</td>
-											<td nowrap class="center">${patVisit.DIAGNOSIS_COUNT } &nbsp;
-												<c:if test="${patVisit.DIAGNOSIS_COUNT!=0}">
-														<a class="fa fa-flag"
-																data-rel="popover" 
-																data-placement="right" 
-																title="<i class='ace-icon fa fa-check red'></i> ${patVisit.NAME }" 
-																data-content="<font size='0'>
-																	<c:forEach items="${patVisit.DIAGNOSIS_DESC}" var="rs">
-																		<b>${rs}</b><br>
-																	</c:forEach>	
-																</font>"
-															></a>
-												</c:if>
-											</td>
-											<td nowrap class="center">${patVisit.ATTENDING_DOCTOR }</td>
-											<td nowrap class="center">${patVisit.in_dept_name }</td>
-											<td nowrap class="center"><fmt:formatDate value="${patVisit.admission_date_time }" pattern="yyyy-MM-dd"/> </td>
-											<td nowrap class="center"> ${patVisit.out_dept_name }</td>
-											<td nowrap class="center"><fmt:formatDate value="${patVisit.discharge_date_time}" pattern="yyyy-MM-dd"/> </td> 
+											<td nowrap class="center">${druginfo.drug_name } </td>
+											<td nowrap class="center">${druginfo.drug_spec }</td>
+											<td nowrap class="center">${druginfo.firm_id }</td>
+										
 											<td nowrap class="center">
-												<c:choose>
-													<c:when test="${patVisit.ISORDERCHECK == 0 }">未点评</c:when>
-													<c:otherwise> 已点评 </c:otherwise>
-												</c:choose>
-											</td>
+												<fmt:formatNumber value="${druginfo.sumcosts }" type="number" maxFractionDigits="2"></fmt:formatNumber>
+											</td>  
 											<td nowrap class="center">
-												<c:choose>
-													<c:when test="${patVisit.ISCHECKTRUE == 0 }"> 合理 </c:when>
-													<c:when test="${patVisit.ISORDERCHECK == 1 }"> 不合理</c:when>
-													<c:otherwise>待定</c:otherwise>
-												</c:choose>
+												${druginfo.sumamount }${druginfo.drug_units }
 											</td>
-											<td class="center" nowrap>
-												<div class=" btn-group" style="height: 30px;width: auto;overflow: visible;">
-													<c:forEach items="${patVisit.RS_DRUG_TYPES}" var="rs_type" varStatus="vs" >
-														<a class="btn btn-xs ${rstypeColorMap.get(rs_type)}" style="float:none;"  title="${checktypeMap.get(rs_type).RS_TYPE_NAME}" >
-															${rstypeMap.get(rs_type)}
-														</a>
-													</c:forEach>
-															
-												</div>
-											</td>
+											<td nowrap class="center"></td>
 										</tr>
-									</c:forEach>
+									</c:forEach>  
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
@@ -185,7 +146,6 @@
 						
 						</div>
 					</div>
-					
 						
 					</div>
 					<!-- /.row -->
@@ -199,7 +159,6 @@
 		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
 			<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
 		</a>
-
 	</div>
 	<!-- /.main-container -->
 	<!-- basic scripts -->
@@ -256,7 +215,7 @@ function initWidthHeight(){
 	var rr = new Array;
 	rr[0]="searchDiv";
 	rr[1]="pageStrDiv";
-	FixTable("simple-table", 3, rr);
+	FixTable("simple-table", 0, rr);
 }
 // 查询
 function searchs(){

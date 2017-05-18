@@ -45,14 +45,18 @@
 					<div class="row">
 						<div class="col-xs-12" >
 							<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
-								<form name="searchForm" id="searchForm" action="InHospitalRep/DRANO002.do" method="post" > 
+								<form name="searchForm" id="searchForm" action="InHospitalRep/DRNO004.do" method="post" > 
 									<div class="check-search nav-search" > 
 										<span class="input-icon">
-											<input class="nav-search-input" style="width: 100px;" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords}" placeholder="科室" maxlength="80"/>
+											<input class="nav-search-input" style="width: 100px;"  autocomplete="off" id="nav-search-input" type="text" name="drug_name" value="${pd.drug_name}" placeholder="药品名称" maxlength="80"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 										<span class="input-icon">
-											<input class="nav-search-input" style="width: 100px;" autocomplete="off" id="DIAGNOSIS_DESC" type="text" name="DIAGNOSIS_DESC" value="${pd.DIAGNOSIS_DESC}" placeholder="诊断" maxlength="80"/>
+											<input class="nav-search-input" style="width: 100px;" autocomplete="off" id="nav-search-input" type="text" name="dept_name" value="${pd.dept_name}" placeholder="科室名称" maxlength="80"/>
+											<i class="ace-icon fa fa-search nav-search-icon"></i>
+										</span>
+										<span class="input-icon">
+											<input class="nav-search-input" style="width: 100px;" autocomplete="off" id="nav-search-input" type="text" name="doctor_name" value="${pd.doctor_name}" placeholder="医生名称" maxlength="80"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
@@ -65,51 +69,47 @@
 										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
 										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.endDate }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
 									</div>
-<!-- 									<div class="check-search"  >  -->
-<!-- 										作用范围： -->
-<!-- 									 	<select class="chosen-select form-control" name="IS_OPERATION" id="IS_OPERATION" data-placeholder="是否含手术" style="vertical-align:top;width: 80px;"> -->
-<!-- 									 		<option value="">全部</option> -->
-<%-- 											<option <c:if test="${pd.IS_OPERATION == '0' }">selected</c:if> value="0" >否</option> --%>
-<%-- 											<option <c:if test="${pd.IS_OPERATION == '1' }">selected</c:if> value="1" >是</option> --%>
-<!-- 										</select> -->
-<!-- 									</div> -->
+									<div class="check-search"  > 
+										排名：
+									 	<select class="chosen-select form-control" name="ranking" id="ranking" data-placeholder="排名" style="vertical-align:top;width: 80px;">
+									 		<option value="10">10</option>
+											<option <c:if test="${pd.ranking == '20' }">selected</c:if> value="20" >20</option>
+											<option <c:if test="${pd.ranking == '999999' }">selected</c:if> value="999999" >全部</option>
+										</select>
+									</div>
 									
 									<div class="check-search"  > 
-										人群范围：
-									 	<select class="chosen-select form-control" name="persionType" id="persionType" data-placeholder="人群范围" style="vertical-align:top;width: 150px;">    
-									 		<option value="">全部</option>
-											<option <c:if test="${pd.persionType == 'adult' }">selected</c:if> value="adult" >成人(大于17)</option>
-											<option <c:if test="${pd.persionType == 'old' }">selected</c:if> value="old" >老人(大于64)</option>
-											<option <c:if test="${pd.persionType == 'child' }">selected</c:if> value="child" >儿童(小于11)</option>
-											<option <c:if test="${pd.persionType == 'juvenile' }">selected</c:if> value="juvenile" >青年(大于10,小于18)</option>
+										类型：
+									 	<select class="chosen-select form-control" name="drugType" id="drugType" data-placeholder="类型" style="vertical-align:top;width: 80px;">    
+									 		<option value="-1">全部</option>
+											<option <c:if test="${pd.drugType == '0' }">selected</c:if> value="0" >抗菌药</option>
+											<option <c:if test="${pd.drugType == '1' }">selected</c:if> value="1" >基本药物</option>
+											<option <c:if test="${pd.drugType == '2' }">selected</c:if> value="2" >非抗菌药</option>
+<%-- 											<option <c:if test="${pd.drugType == '3' }">selected</c:if> value="juvenile" >青年(大于10,小于18)</option> --%>
 										</select>
-									</div>
+									</div>  
 									
 									<div class="check-search">
-										抗菌药类型：
-										<select class="chosen-select form-control" name="antitype" id="antitype" data-placeholder="抗菌药类型" style="vertical-align:top;width: 100px;">    
-									 		<option value="">全部</option>
-											<option <c:if test="${pd.antitype == '1' }">selected</c:if> value="1" >限制级</option>
-											<option <c:if test="${pd.antitype == '2' }">selected</c:if> value="2" >特殊级</option>
+										排序：
+										<select class="chosen-select form-control" name="orderBy" id="orderBy" data-placeholder="抗菌药类型" style="vertical-align:top;width: 100px;">    
+											<option  value="costs" >金额</option>
+											<option <c:if test="${pd.orderBy == 'amount' }">selected</c:if> value="amount" >用量</option>
 										</select>
 									</div>
-									</form>
+								</form>
 							</div>
 							<div style="width: 100%;height: auto;">
 							<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
 							<thead>
 								<tr>
 									<th class="center" nowrap style="width:45px;">序号</th>
+									<th class="center" nowrap>药名</th>
+									<th class="center" nowrap>规格</th>
+									<th class="center" nowrap>厂家</th>
+									<th class="center" nowrap>金额</th>
+									<th class="center" nowrap>使用量</th>
 									<th class="center" nowrap>科室</th>
-									<th class="center" nowrap>就诊人数</th>
-									<th class="center" nowrap>转科人数</th>
 									<th class="center" nowrap>医生</th>
-									<th class="center" nowrap>DDD强度</th>
-									<th class="center" nowrap>抗菌药使用率</th>
-									<th class="center" nowrap>限制级强度</th>
-									<th class="center" nowrap>限制级使用率</th>
-									<th class="center" nowrap>特殊级强度</th>
-									<th class="center" nowrap>特殊级使用率</th>
 									<th class="center" nowrap>按类别分解</th>
 								</tr>
 							</thead>
@@ -117,51 +117,29 @@
 								
 							<!-- 开始循环 -->	 
 							<c:choose>
-								<c:when test="${not empty patinfos}">
-									<c:forEach items="${patinfos}" var="patVisit" varStatus="vs" >
-												
+								<c:when test="${not empty druginfos}">
+									<c:forEach items="${druginfos}" var="druginfo" varStatus="vs" >
 										<tr ondblclick="">
 											<td nowrap class='center' style="width: 30px;">${vs.index+1}</td>
-											<td nowrap class="center">${patVisit.dept_name } </td>
-											<td nowrap class="center">${patVisit.pat_count }</td>
-											<td nowrap class="center">${patVisit.scd }</td>
-										
-											<td nowrap class="center">${patVisit.doctor}</td>
-											<td nowrap class="center"> <fmt:formatNumber value="${patVisit.ddd_intensity }" type="number" maxFractionDigits="2"></fmt:formatNumber> </td>
-											<td nowrap class="center">
-												<fmt:formatNumber value="${patVisit.antiuserat * 100}" type="number" maxFractionDigits="2"></fmt:formatNumber>%
-											</td>
+											<td nowrap class="center">${druginfo.drug_name } </td>
+											<td nowrap class="center">${druginfo.drug_spec }</td>
+											<td nowrap class="center">${druginfo.firm_id }</td>
 										
 											<td nowrap class="center">
-												<fmt:formatNumber value="${patVisit.limit_ddd_intensity }" type="number" maxFractionDigits="2"></fmt:formatNumber>
+												<fmt:formatNumber value="${druginfo.costs }" type="number" maxFractionDigits="2"></fmt:formatNumber>
 											</td>  
-											<c:set var="outanti_count" >
-												<fmt:formatNumber value="${patVisit.limit_ddd_count}" type="number" maxFractionDigits="2" pattern="#00.00"></fmt:formatNumber>
-											</c:set>
-											<c:set var="outpat_count" >
-												<fmt:formatNumber value="${patVisit.pat_count }" type="number" maxFractionDigits="2" pattern="#00.00"></fmt:formatNumber>
-											</c:set>
 											<td nowrap class="center">
-												<fmt:formatNumber value="${outanti_count/outpat_count * 100}" type="number" maxFractionDigits="2" ></fmt:formatNumber>%
+												${druginfo.amount }${druginfo.drug_units }
 											</td>
-												
-											<c:set var="outanti_countSpec" >
-												<fmt:formatNumber value="${patVisit.spec_ddd_count}" type="number" maxFractionDigits="2" pattern="#00.00"></fmt:formatNumber>
-											</c:set>
-											
-											<td nowrap class="center">
-												<fmt:formatNumber value="${patVisit.spec_ddd_intensity }" type="number" maxFractionDigits="2"></fmt:formatNumber>
-											</td>
-											<td nowrap class="center">
-												<fmt:formatNumber value="${outanti_countSpec/outpat_count * 100}" type="number" maxFractionDigits="2" ></fmt:formatNumber>%
-											</td>
+											<td nowrap class="center">${druginfo.dept_name }</td>
+											<td nowrap class="center">${druginfo.doctor_name }</td>
 											<td nowrap class="center"></td>
 										</tr>
 									</c:forEach>  
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
-										<td colspan="11" class="center">没有相关数据</td>
+										<td colspan="9" class="center">没有相关数据</td>
 									</tr>
 								</c:otherwise>
 							</c:choose>
