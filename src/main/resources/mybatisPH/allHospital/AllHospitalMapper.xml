@@ -100,7 +100,9 @@
 	     t.units,
 	     sum(cost) costs,
 	     sum(amount) amounts
-	from (select m.drug_code,
+	from (
+	
+	select m.drug_code,
              m.drug_name,
              m.units,
              m.package_spec drug_spec,
@@ -123,15 +125,17 @@
              h.firm_id,
              to_char(h.costs) cost,
              to_char(h.amount) amount
-        from ias.dr_drug h, pdss.Drug_Map d
+        from dr_drug h, pdss.Drug_Map d
        where h.Drug_Code = d.Drug_No_Local
          	<if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
 				and h.rpt_date  &gt;=  to_date(#{pd.beginDate}, 'yyyy-mm-dd')
+			</if>
 			<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
 				and h.rpt_date  &lt; to_date(#{pd.endDate}, 'yyyy-mm-dd')
 			</if>
+		) t
 		group by t.drug_code, t.drug_name,t.drug_spec, t.firm_id, t.units
+		
 		order by costs desc
-
 	</select>
 </mapper>

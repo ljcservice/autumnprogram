@@ -19,7 +19,7 @@ import com.ts.util.PageData;
 import com.ts.util.Tools;
 import com.ts.util.ontology.HelpUtil;
 /**
- * 门急诊药品费用统计
+ * 门急诊药抗菌药统计
  * @author silong.xing
  *
  */
@@ -47,7 +47,7 @@ public class HaskjDrugReport extends BaseController{
 			String type1 = pd.getString("type1");
 			if(Tools.isEmpty(type1)){
 				type1="1";
-				pd.put("type", type1);
+				pd.put("type1", type1);
 			}
 			String type2 = pd.getString("type2");
 			if(Tools.isEmpty(type2)){

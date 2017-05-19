@@ -89,7 +89,7 @@ img{
 		</table>
 		</div>
 	</div>
-	<div class="item_container" style="height: 100%;z-index: 99999;">
+	<div class="item_container" style="height: 100%;z-index: 99999;top:100px;left:300px;">
 		<div class="item_content" id="item_content" style="z-index: 99999;">
 			<div>
 			<ul>
