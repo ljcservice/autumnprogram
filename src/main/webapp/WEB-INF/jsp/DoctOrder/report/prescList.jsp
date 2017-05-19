@@ -26,7 +26,10 @@
  }
  .check-search{
 	float: left;
-	margin: 4px;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	margin-left: 3px;
+	margin-right: 3px;
 }
 </style>
 </head>
@@ -42,16 +45,16 @@
 						<div class="col-xs-12" style="margin-top: 5px;">
 							<form action="report/prescList.do" method="post" name="searchForm" id="searchForm">
 								<div style="margin-bottom: 5px;display: none;">	
-									<div class="check-search" style="width: 250px;" >
+									<div class="check-search"   >
 										起止日期：
 										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
 										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.endDate }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
 									</div>
-									<div class="check-search" style="width: 77px;">
+									<div class="check-search" >
 										<a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
 										<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i></a>
 									</div>
-									<div class="check-search nav-search" style="width: 600px;">
+									<div class="check-search nav-search" >
 										科室：
 										<span class="input-icon">
 											<input class="nav-search-input" autocomplete="off" id="ORG_NAME" type="text" name="ORG_NAME" value="${pd.ORG_NAME}" placeholder="科室名称" maxlength="32" />

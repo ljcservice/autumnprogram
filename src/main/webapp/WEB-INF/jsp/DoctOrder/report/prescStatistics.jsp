@@ -25,6 +25,7 @@
 /* 	background-color: #ffb951;	 */
  }
  .check-search{
+	float: left;
 	margin-top: 2px;
 	margin-bottom: 2px;
 	margin-left: 3px;

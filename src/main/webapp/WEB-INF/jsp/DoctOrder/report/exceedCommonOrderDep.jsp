@@ -52,7 +52,7 @@
 									<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.endDate }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
 									<font style="color: red;">*</font>
 								</div>
-								<div class="check-search"  >
+								<div class="check-search nav-search"  >
 									科室：
 									<span class="input-icon">
 										<input class="nav-search-input" autocomplete="off" id="OUT_DEPT_NAME" type="text" name="OUT_DEPT_NAME" value="${pd.OUT_DEPT_NAME}" placeholder="科室" maxlength="80"/>

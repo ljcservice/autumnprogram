@@ -11,5 +11,6 @@ public interface HaskjDrugService {
 	List<PageData> haskjDrug12(Page page)throws Exception ;
 	List<PageData> haskjDrug13(Page page)throws Exception ;
 	List<PageData> haskjDrug14(Page page)throws Exception ;
-	List<PageData> haskjDrug2(Page page)throws Exception ;
+	List<PageData> haskjDrug21(Page page)throws Exception ;
+	List<PageData> haskjDrug22(Page page)throws Exception ;
 }

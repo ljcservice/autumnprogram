@@ -1,9 +1,7 @@
 package com.ts.controller.DoctOrder.OrderWork;
 
-import java.io.BufferedOutputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -34,6 +31,7 @@ import com.ts.util.ObjectExcelView;
 import com.ts.util.PageData;
 import com.ts.util.Tools;
 import com.ts.util.doctor.DoctorConst;
+import com.ts.util.ontology.HelpUtil;
 
 @Controller
 @RequestMapping(value="/report")
@@ -56,6 +54,7 @@ public class ReportController extends BaseController{
 		PageData pd = this.getPageData();
 		try{
 			mv.addObject("pd", pd);
+			HelpUtil.setDefaultDate(pd);
 			//处方问题统计
 			List<PageData>	reportList = orderWorkService.ordersReport(pd);
 			long total = 0;
@@ -158,7 +157,8 @@ public class ReportController extends BaseController{
 		ModelAndView mv = new ModelAndView();
 		PageData pd = this.getPageData();
 		try
-		{
+		{	
+			HelpUtil.setDefaultDate(pd);
 			String beginDate = pd.getString("beginDate");		//开始时间
 			String endDate = pd.getString("endDate");			//结束时间
 			if(endDate != null && !"".equals(endDate))
@@ -206,6 +206,7 @@ public class ReportController extends BaseController{
 		ModelAndView mv = new ModelAndView();
 		PageData pd = this.getPageData();
 		try {
+			HelpUtil.setDefaultDate(pd);
 			List<PageData> list =  this.orderWorkService.orderListByDoctor(pd);
 			long total = 0;
 			for(PageData p:list){
@@ -240,6 +241,7 @@ public class ReportController extends BaseController{
 		ModelAndView mv = new ModelAndView();
 		PageData pd = this.getPageData();
 		try {
+			HelpUtil.setDefaultDate(pd);
 			List<PageData> list =  this.orderWorkService.orderListByDep(pd);
 			long total = 0;
 			for(PageData p:list){
@@ -283,6 +285,7 @@ public class ReportController extends BaseController{
 		try{
 			// 当前登录专家
 			mv.addObject("pd", pd);
+			HelpUtil.setDefaultDate(pd);
 			//处方问题统计
 			List<PageData>	reportList = prescService.prescReport(pd);
 			long total = 0;
@@ -384,6 +387,7 @@ public class ReportController extends BaseController{
 		PageData pd = this.getPageData();
 		try
 		{
+			HelpUtil.setDefaultDate(pd);
 			String keywords = pd.getString("keywords");			//关键词检索条件
 			String beginDate = pd.getString("beginDate");		//开始时间
 			String endDate = pd.getString("endDate");			//结束时间
@@ -427,6 +431,7 @@ public class ReportController extends BaseController{
 		ModelAndView mv = new ModelAndView();
 		PageData pd = this.getPageData();
 		try {
+			HelpUtil.setDefaultDate(pd);
 			List<PageData> list =  this.prescService.prescListByDoctor(pd);
 			long total = 0;
 			for(PageData p:list){
@@ -461,6 +466,7 @@ public class ReportController extends BaseController{
 		ModelAndView mv = new ModelAndView();
 		PageData pd = this.getPageData();
 		try {
+			HelpUtil.setDefaultDate(pd);
 			List<PageData> list =  this.prescService.prescListByDep(pd);
 			long total = 0;
 			for(PageData p:list){
@@ -496,7 +502,7 @@ public class ReportController extends BaseController{
 		ModelAndView mv = new ModelAndView();
 		PageData pd = this.getPageData();
 		try {
-			
+			HelpUtil.setDefaultDate(pd);
 			mv.addObject("pd", pd);
 			PageData p1 =  this.prescService.prescStatistics1(pd);
 			BigDecimal HASKJ_SUM = (BigDecimal) p1.get("HASKJ_SUM");
@@ -591,7 +597,6 @@ public class ReportController extends BaseController{
 		ModelAndView mv = new ModelAndView();
 		PageData pd = this.getPageData();
 		try {
-			
 			mv.addObject("pd", pd);
 			PageData p1 =  this.prescService.prescStatistics1(pd);
 			BigDecimal HASKJ_SUM = (BigDecimal) p1.get("HASKJ_SUM");
@@ -796,8 +801,9 @@ public class ReportController extends BaseController{
 	public ModelAndView exceedCommonDep(){
 		ModelAndView mv = new ModelAndView();
 		PageData pd = this.getPageData();
-		mv.addObject("pd", pd);
 		try {
+			mv.addObject("pd", pd);
+			HelpUtil.setDefaultDate(pd);
 			//超常规统计（科室）按照问题类型分组
 			List<PageData> list =  this.prescService.exceedCommonDep(pd);
 			//按照医生分组
@@ -973,8 +979,9 @@ public class ReportController extends BaseController{
 	public ModelAndView exceedCommonDoctor(){
 		ModelAndView mv = new ModelAndView();
 		PageData pd = this.getPageData();
-		mv.addObject("pd", pd);
 		try {
+			mv.addObject("pd", pd);
+			HelpUtil.setDefaultDate(pd);
 			//超常规统计（医生）按照问题类型分组
 			List<PageData> list =  this.prescService.exceedCommonDoctor(pd);
 			//按照医生分组
@@ -1036,8 +1043,9 @@ public class ReportController extends BaseController{
 	public ModelAndView exceedCommonDoctorExport(){
 		ModelAndView mv = new ModelAndView();
 		PageData pd = this.getPageData();
-		mv.addObject("pd", pd);
 		try {
+			mv.addObject("pd", pd);
+			HelpUtil.setDefaultDate(pd);
 			//超常规统计（医生）按照问题类型分组
 			List<PageData> list =  this.prescService.exceedCommonDoctor(pd);
 			//按照医生分组
@@ -1152,8 +1160,9 @@ public class ReportController extends BaseController{
 	public ModelAndView exceedCommonOrderDep(){
 		ModelAndView mv = new ModelAndView();
 		PageData pd = this.getPageData();
-		mv.addObject("pd", pd);
 		try {
+			mv.addObject("pd", pd);
+			HelpUtil.setDefaultDate(pd);
 			//超常规统计（科室）按照问题类型分组
 			List<PageData> list =  this.prescService.exceedCommonOrderDep(pd);
 			//按照医生分组
@@ -1331,8 +1340,9 @@ public class ReportController extends BaseController{
 	public ModelAndView exceedCommonOrderDoctor(){
 		ModelAndView mv = new ModelAndView();
 		PageData pd = this.getPageData();
-		mv.addObject("pd", pd);
 		try {
+			mv.addObject("pd", pd);
+			HelpUtil.setDefaultDate(pd);
 			//超常规统计（医生）按照问题类型分组
 			List<PageData> list =  this.prescService.exceedCommonOrderDoctor(pd);
 			//按照医生分组

@@ -24,7 +24,7 @@
 .ztree li a.curSelectedNode {
 /* 	background-color: #ffb951;	 */
  }
- .check-search{
+.check-search{
 	float: left;
 	margin-top: 2px;
 	margin-bottom: 2px;
@@ -57,17 +57,21 @@
 										<a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
 										<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i></a>
 									</div>
-									<div class="check-search nav-search" style="width: 600px;">
+									<div class="check-search nav-search"  >
 										科室：
 										<span class="input-icon">
 											<input class="nav-search-input" autocomplete="off" id="ORG_NAME" type="text" name="ORG_NAME" value="${pd.ORG_NAME}" placeholder="科室名称" maxlength="32" />
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
+									</div>
+									<div class="check-search nav-search"  >
 										医生：
 										<span class="input-icon">
 											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="DOCTOR_NAME" value="${pd.DOCTOR_NAME}" placeholder="诊断名称" maxlength="32"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
+									</div>
+									<div class="check-search nav-search"  >
 										药品：
 										<span class="input-icon">
 											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="DRUG_NAME" value="${pd.DRUG_NAME}" placeholder="药品名称" maxlength="32"/>

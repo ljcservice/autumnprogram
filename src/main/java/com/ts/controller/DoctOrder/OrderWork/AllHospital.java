@@ -64,8 +64,8 @@ public class AllHospital  extends BaseController{
 						pp.put("anti_persents", 0);
 						pp.put("drug_persents", 0);
 					}else{
-						pp.put("anti_persents", MyDecimalFormat.format(anti.divide(med,4,4).doubleValue()*100));
 						pp.put("drug_persents", MyDecimalFormat.format(drug.divide(med,4,4).doubleValue()*100));
+						pp.put("anti_persents", MyDecimalFormat.format(anti.divide(med,4,4).doubleValue()*100));
 					}
 					med_all=med_all.add(med);
 					drug_all=drug_all.add(drug);
@@ -74,6 +74,13 @@ public class AllHospital  extends BaseController{
 				count.put("med_all", med_all);
 				count.put("drug_all", drug_all);
 				count.put("anti_all", anti_all);
+				if(med_all==null||med_all.doubleValue()==0){
+					count.put("anti_persents", 0);
+					count.put("drug_persents", 0);
+				}else{
+					count.put("drug_persents", MyDecimalFormat.format(drug_all.divide(med_all,4,4).doubleValue()*100));
+					count.put("anti_persents", MyDecimalFormat.format(anti_all.divide(med_all,4,4).doubleValue()*100));
+				}
 			}
 			if(reportList2!=null){
 				for(PageData pp:reportList2){
@@ -84,24 +91,41 @@ public class AllHospital  extends BaseController{
 						pp.put("anti_persents", 0);
 						pp.put("drug_persents", 0);
 					}else{
-						pp.put("anti_persents", MyDecimalFormat.format(anti.divide(med,4,4).doubleValue()*100));
 						pp.put("drug_persents", MyDecimalFormat.format(drug.divide(med,4,4).doubleValue()*100));
+						pp.put("anti_persents", MyDecimalFormat.format(anti.divide(med,4,4).doubleValue()*100));
 					}
 					med_all2=med_all2.add(med);
 					drug_all2=drug_all2.add(drug);
 					anti_all2=anti_all2.add(anti);
 				}
-				count2.put("med_all", med_all);
-				count2.put("drug_all", drug_all);
-				count2.put("anti_all", anti_all);
+				count2.put("med_all", med_all2);
+				count2.put("drug_all", drug_all2);
+				count2.put("anti_all", anti_all2);
+				if(med_all2==null||med_all2.doubleValue()==0){
+					count2.put("drug_persents", 0);
+					count2.put("anti_persents", 0);
+				}else{
+					count2.put("drug_persents", MyDecimalFormat.format(drug_all2.divide(med_all2,4,4).doubleValue()*100));
+					count2.put("anti_persents", MyDecimalFormat.format(anti_all2.divide(med_all2,4,4).doubleValue()*100));
+				}
 			}
 			mv.addObject("reportList", reportList);
 			mv.addObject("reportList2", reportList2);
 			//总合计
 			PageData all = new PageData();
-			all.put("med_all", ((BigDecimal)count.get("med_all")).add( (BigDecimal)count2.get("med_all"))  );
-			all.put("drug_all", ((BigDecimal)count.get("drug_all")).add( (BigDecimal)count2.get("drug_all"))  );
-			all.put("anti_all", ((BigDecimal)count.get("anti_all")).add( (BigDecimal)count2.get("anti_all"))  );
+			if("1".equals(type)){
+				all.put("med_all", count.get("med_all")  );
+				all.put("drug_all", count.get("drug_all") );
+				all.put("anti_all", count.get("anti_all") );
+			}else if("2".equals(type)){
+				all.put("med_all", count2.get("med_all")  );
+				all.put("drug_all", count2.get("drug_all") );
+				all.put("anti_all", count2.get("anti_all") );
+			}else{
+				all.put("med_all", ((BigDecimal)count.get("med_all")).add( (BigDecimal)count2.get("med_all"))  );
+				all.put("drug_all", ((BigDecimal)count.get("drug_all")).add( (BigDecimal)count2.get("drug_all"))  );
+				all.put("anti_all", ((BigDecimal)count.get("anti_all")).add( (BigDecimal)count2.get("anti_all"))  );
+			}
 			BigDecimal all_med_all = (BigDecimal)all.get("med_all");
 			BigDecimal all_drug_all = (BigDecimal)all.get("drug_all");
 			BigDecimal all_anti_all = (BigDecimal)all.get("anti_all");
@@ -113,7 +137,9 @@ public class AllHospital  extends BaseController{
 				all.put("drug_persents", MyDecimalFormat.format(all_drug_all.divide(all_med_all,4,4).doubleValue()*100));
 				all.put("anti_persents", MyDecimalFormat.format(all_anti_all.divide(all_med_all,4,4).doubleValue()*100));
 			}
-			
+			mv.addObject("count", count);
+			mv.addObject("count2", count2);
+			mv.addObject("all", all);
 			mv.setViewName("DoctOrder/allHospital/allHospital1");
 		} catch(Exception e){
 			logger.error(e.toString(), e);
@@ -138,8 +164,6 @@ public class AllHospital  extends BaseController{
 			List<PageData>	reportList = null;
 			String type = pd.getString("type");
 			reportList = allHospitalService.allHospital2(page);
-				
-				
 			mv.addObject("reportList", reportList);
 			mv.setViewName("DoctOrder/allHospital/allHospital2");
 		} catch(Exception e){

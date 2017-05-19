@@ -1,9 +1,6 @@
 package com.ts.controller.DoctOrder.OrderWork;
 
-import java.math.BigDecimal;
 import java.util.List;
-
-import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,8 +10,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ts.controller.base.BaseController;
 import com.ts.entity.Page;
 import com.ts.service.DoctOrder.OrderWork.HaskjDrugService;
-import com.ts.service.ontology.manager.CommonManager;
-import com.ts.util.MyDecimalFormat;
 import com.ts.util.PageData;
 import com.ts.util.Tools;
 import com.ts.util.ontology.HelpUtil;
@@ -91,9 +86,20 @@ public class HaskjDrugReport extends BaseController{
 			mv.addObject("pd", pd);
 			HelpUtil.setDefaultDate(pd);
 			page.setPd(pd);
+			String type = pd.getString("type");
+			if(Tools.isEmpty(type)){
+				type="1";
+				pd.put("type", type);
+			}
+			List<PageData>	reportList = null;
 			//门急诊药品费用统计
-			List<PageData>	reportList = haskjDrugService.haskjDrug2(page);
-			
+			if("1".equals(type)){
+				//处方数 
+				reportList = haskjDrugService.haskjDrug21(page);
+			}else if("2".equals(type)){
+				//处方数(人次)  
+				reportList = haskjDrugService.haskjDrug22(page);
+			}
 			mv.addObject("reportList", reportList);
 			mv.setViewName("DoctOrder/haskjDrug/haskjDrug2");
 		} catch(Exception e){

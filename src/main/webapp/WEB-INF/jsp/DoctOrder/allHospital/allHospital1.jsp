@@ -43,7 +43,7 @@
 				<div class="page-content">
 					<div class="row">
 						<div class="col-xs-12"  >
-							<form action="drugAmount/depAmountPersents.do" method="post" name="searchForm" id="searchForm">
+							<form action="allHospital/allHospital1.do" method="post" name="searchForm" id="searchForm">
 								<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
 									<div class="check-search"   >
 										起止日期：
@@ -72,7 +72,7 @@
 									</div>
 									<div class="check-search"  >
 										排序：
-									 	<select class="chosen-select form-control" name="sort_type" id="sort_type" data-placeholder="" style="vertical-align:top;width: 110px;" >
+									 	<select class="chosen-select form-control" name="sort_type" id="sort_type" data-placeholder="排序" style="vertical-align:top;width: 110px;" >
 											<option value=""></option>
 											<option <c:if test="${'1' == pd.sort_type}">selected</c:if> value="1" >总费用 ↑</option>
 											<option <c:if test="${'2' == pd.sort_type}">selected</c:if> value="2" >总费用 ↓</option>
@@ -103,53 +103,53 @@
 							</thead>
 							<tbody>
 							<!-- 开始循环 -->	
-								<c:if test="${pd.type==null || pd.type=='1' }">
+								<c:if test="${pd.type==null or pd.type=='' or pd.type=='1' }">
 									<c:forEach items="${reportList}" var="report" varStatus="vs">
 										<tr >
-											<td class="center">${report.dept_name}</td>
-											<td class="center">￥ ${report.med}</td>
-											<td class="center">￥ ${report.drug} </td>
+											<td class="center">${report.dept_name}（住院）</td>
+											<td class="center">￥ <fmt:formatNumber value="${report.med}" pattern="#,###,###,##0.00"></fmt:formatNumber></td>
+											<td class="center">￥ <fmt:formatNumber value="${report.drug}" pattern="#,###,###,##0.00"></fmt:formatNumber></td>
 											<td class="center">${report.drug_persents} %</td>
-											<td class="center">￥ ${report.anti}</td>
+											<td class="center">￥ <fmt:formatNumber value="${report.anti}" pattern="#,###,###,##0.00"></fmt:formatNumber></td>
 											<td class="center">${report.anti_persents} %</td>
 										</tr>
 									</c:forEach>
 									<tr >
 										<td class="center">住院合计：</td>
-										<td class="center">￥ ${count.med_all}</td>
-										<td class="center">￥ ${count.drug_all} </td>
-										<td class="center">${count.drug_all_persents} %</td>
-										<td class="center">￥ ${count.anti_all}</td>
-										<td class="center">${count.anti_all_persents} %</td>
+										<td class="center">￥ <fmt:formatNumber value="${count.med_all}" pattern="#,###,###,##0.00"></fmt:formatNumber></td>
+										<td class="center">￥ <fmt:formatNumber value="${count.drug_all}" pattern="#,###,###,##0.00"></fmt:formatNumber></td>
+										<td class="center">${count.drug_persents} %</td>
+										<td class="center">￥ <fmt:formatNumber value="${count.anti_all}" pattern="#,###,###,##0.00"></fmt:formatNumber></td>
+										<td class="center">${count.anti_persents} %</td>
 									</tr>
 								</c:if>
-								<c:if test="${pd.type==null || pd.type=='2' }">
+								<c:if test="${pd.type==null or pd.type=='' or pd.type=='2' }">
 									<c:forEach items="${reportList2}" var="report" varStatus="vs">
 										<tr >
-											<td class="center">${report.dept_name}</td>
-											<td class="center">￥ ${report.med}</td>
-											<td class="center">￥ ${report.drug} </td>
+											<td class="center">${report.dept_name}（门诊）</td>
+											<td class="center">￥ <fmt:formatNumber value="${report.med}" pattern="#,###,###,##0.00"></fmt:formatNumber></td>
+											<td class="center">￥ <fmt:formatNumber value="${report.drug}" pattern="#,###,###,##0.00"></fmt:formatNumber></td>
 											<td class="center">${report.drug_persents} %</td>
-											<td class="center">￥ ${report.anti}</td>
+											<td class="center">￥ <fmt:formatNumber value="${report.anti}" pattern="#,###,###,##0.00"></fmt:formatNumber></td>
 											<td class="center">${report.anti_persents} %</td>
 										</tr>
 									</c:forEach>
 									<tr >
 										<td class="center">门诊合计：</td>
-										<td class="center">￥ ${count2.med_all}</td>
-										<td class="center">￥ ${count2.drug_all} </td>
-										<td class="center">${count2.drug_all_persents} %</td>
-										<td class="center">￥ ${count2.anti_all}</td>
-										<td class="center">${count2.anti_all_persents} %</td>
+										<td class="center">￥ <fmt:formatNumber value="${count2.med_all}" pattern="#,###,###,##0.00"></fmt:formatNumber></td>
+										<td class="center">￥ <fmt:formatNumber value="${count2.drug_all}" pattern="#,###,###,##0.00"></fmt:formatNumber></td>
+										<td class="center">${count2.drug_persents} %</td>
+										<td class="center">￥ <fmt:formatNumber value="${count2.anti_all}" pattern="#,###,###,##0.00"></fmt:formatNumber></td>
+										<td class="center">${count2.anti_persents} %</td>
 									</tr>
 								</c:if>
 								<tr >
 									<td class="center">总合计：</td>
-									<td class="center">￥ ${all.med_all}</td>
-									<td class="center">￥ ${all.drug_all} </td>
-									<td class="center">${all.drug_all_persents} %</td>
-									<td class="center">￥ ${all.anti_all}</td>
-									<td class="center">${all.anti_all_persents} %</td>
+									<td class="center">￥ <fmt:formatNumber value="${all.med_all}" pattern="#,###,###,##0.00"></fmt:formatNumber></td>
+									<td class="center">￥ <fmt:formatNumber value="${all.drug_all}" pattern="#,###,###,##0.00"></fmt:formatNumber></td>
+									<td class="center">${all.drug_persents} %</td>
+									<td class="center">￥<fmt:formatNumber value="${all.anti_all}" pattern="#,###,###,##0.00"></fmt:formatNumber></td>
+									<td class="center">${all.anti_persents} %</td>
 								</tr>
 							</tbody>
 						</table>

@@ -924,6 +924,10 @@ public class HelpUtil {
 		return map;
 	}
 
+	/**
+	 * 设置默认查询时间
+	 * @param pd
+	 */
 	public static void setDefaultDate(PageData pd) {
 		String beginDate = pd.getString("beginDate");
 		String endDate = pd.getString("endDate"); 

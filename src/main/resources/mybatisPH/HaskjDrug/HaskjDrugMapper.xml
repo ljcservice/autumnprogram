@@ -120,7 +120,7 @@
 
 	
 	
-	<select id="haskjDrug2" parameterType="page" resultType="pd" >
+	<select id="haskjDrug21" parameterType="page" resultType="pd" >
 		select org_name, org_code, doctor_name, c, haskj, haskj / c rate
 		  from (select org_code, org_name, count(*) c, sum(haskj) haskj, doctor_name
 		          from patienthistory.presc t
@@ -139,4 +139,8 @@
 	
 	</select>
 	
+		
+	<select id="haskjDrug22" parameterType="page" resultType="pd" >
+	
+	</select>
 </mapper>

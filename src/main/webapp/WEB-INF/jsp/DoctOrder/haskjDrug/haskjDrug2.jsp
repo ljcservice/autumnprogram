@@ -160,10 +160,6 @@ function searchs(){
 	$("#searchForm").submit();
 }
 
-function resetForm(){
-	document.getElementById("searchForm").reset();
-}
-
 $(function() {
 	//日期框
 	$('.date-picker').datepicker({autoclose: true,todayHighlight: true});
@@ -199,7 +195,6 @@ function initWidthHeight(){
 	rr[1]="pageStrDiv";
 	FixTable("simple-table", 1, rr);
 }
-
 
 </script>
 </html>

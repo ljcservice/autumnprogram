@@ -3,8 +3,6 @@ package com.ts.controller.DoctOrder.OrderWork;
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +10,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ts.controller.base.BaseController;
 import com.ts.entity.Page;
-import com.ts.service.DoctOrder.OrderWork.CommonService;
 import com.ts.service.DoctOrder.OrderWork.DrugAmountService;
 import com.ts.util.MyDecimalFormat;
 import com.ts.util.PageData;
@@ -25,8 +22,6 @@ import com.ts.util.ontology.HelpUtil;
 @Controller
 @RequestMapping(value="/drugAmount")
 public class DrugAmountReport extends BaseController{
-	@Resource(name="commonServicePdss")
-	private CommonService commonService;
 	@Autowired
 	private DrugAmountService drugAmountService;
 	

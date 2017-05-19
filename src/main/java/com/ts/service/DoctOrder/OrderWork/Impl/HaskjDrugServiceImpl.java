@@ -34,9 +34,12 @@ public class HaskjDrugServiceImpl implements HaskjDrugService {
 	}
 	
 	@Override
-	public List<PageData> haskjDrug2(Page page) throws Exception {
-		return (List<PageData>) daoph.findForList("HaskjDrugMapper.haskjDrug2", page);
+	public List<PageData> haskjDrug21(Page page) throws Exception {
+		return (List<PageData>) daoph.findForList("HaskjDrugMapper.haskjDrug21", page);
 	}
 	
-
+	@Override
+	public List<PageData> haskjDrug22(Page page) throws Exception {
+		return (List<PageData>) daoph.findForList("HaskjDrugMapper.haskjDrug22", page);
+	}
 }

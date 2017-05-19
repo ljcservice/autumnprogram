@@ -9,32 +9,32 @@
 	       dept_name,
 	       dept_code
 	 	from (select sum(l.costs) costs,
-               sum(l.drug_costs) drug_costs,
-               l.patient_id,
-               l.visit_id,
-               l.funcdeptcode dept_code,
-               l.funcdeptname dept_name,
-               sum(l.anti_costs) anti_costs
-         from ias_pat_info_scd l
-         where 1 = 1
-           and is_orderflag = '1'
-           <if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
-				and l.rpt_date &gt;=  to_date(#{pd.beginDate}, 'yyyy-mm-dd')
-			</if>
-			<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
-				and l.rpt_date &lt; to_date(#{pd.endDate}, 'yyyy-mm-dd')
-			</if>
-         group by l.patient_id, l.visit_id, l.funcdeptcode, l.funcdeptname)
+	               sum(l.drug_costs) drug_costs,
+	               l.patient_id,
+	               l.visit_id,
+	               l.funcdeptcode dept_code,
+	               l.funcdeptname dept_name,
+	               sum(l.anti_costs) anti_costs
+	         from ias_pat_info_scd l
+	         where 1 = 1
+	            and is_orderflag = '1'
+	            <if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
+					and l.rpt_date &gt;=  to_date(#{pd.beginDate}, 'yyyy-mm-dd')
+				</if>
+				<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
+					and l.rpt_date &lt; to_date(#{pd.endDate}, 'yyyy-mm-dd')
+				</if>
+	       		group by l.patient_id, l.visit_id, l.funcdeptcode, l.funcdeptname
+        )
  		group by dept_code, dept_name 
- 		
  		<if test="pd.sort_type == null or pd.sort_type == ''">  
- 	 		order by SUM(s.costs)
+ 	 		order by SUM(costs)
  	 	</if>
   		<if test="pd.sort_type != null and pd.sort_type == 1"> 
-			order by SUM(s.costs)
+			order by SUM(costs)
 		</if>
 	 	<if test="pd.sort_type != null and pd.sort_type == 2"> 
-  			order by SUM(s.costs) desc
+  			order by SUM(costs) desc
   		</if>
   		<if test="pd.sort_type != null and pd.sort_type == 3"> 
   			order by sum(drug_costs)
@@ -51,91 +51,131 @@
 	</select>
 	
 	<select id="allHospital12" parameterType="page" resultType="pd" >
-		select sum(decode(t.item_class, 'A', t.costs, 0)) drug,
-	       sum(t.costs) med,
+		select sum(t.costs) med,
+	       sum(decode(t.item_class, 'A', t.costs, 0)) drug,
 	       sum(decode(t.item_class, 'A', decode(t.is_anti, '1', t.costs, 0), 0)) anti,
 	       t.ordered_by_dept dept_name,
 	       t.ordered_by_dept_code dept_code
-	  from outp_orders_costs t,
-	       (select drug_no_local
-	          from pdss.drug_map
-	         where 1 = 1
-	         group by drug_no_local) d
-	 where t.item_code = d.Drug_No_Local
+	   from outp_orders_costs t,
+	       (select drug_no_local  from pdss.drug_map  where 1 = 1 group by drug_no_local) d
+	   		where t.item_code = d.Drug_No_Local
              <if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
 				and trunc(t.visit_date) &gt;=  to_date(#{pd.beginDate}, 'yyyy-mm-dd')
 			</if>
 			<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
 				and trunc(t.visit_date) &lt; to_date(#{pd.endDate}, 'yyyy-mm-dd')
 			</if>
-	 group by t.ordered_by_dept, t.ordered_by_dept_code
-	 <if test="pd.sort_type == null or pd.sort_type == ''">  
- 	 		order by SUM(s.costs)
- 	 	</if>
-  		<if test="pd.sort_type != null and pd.sort_type == 1"> 
-			order by SUM(s.costs)
-		</if>
-	 	<if test="pd.sort_type != null and pd.sort_type == 2"> 
-  			order by SUM(s.costs) desc
-  		</if>
-  		<if test="pd.sort_type != null and pd.sort_type == 3"> 
-  			order by sum(drug_costs)
-  		</if>
-  		<if test="pd.sort_type != null and pd.sort_type == 4"> 
-  			order by sum(drug_costs) desc
-  		</if>
-  		<if test="pd.sort_type != null and pd.sort_type == 5"> 
-  			order by sum(anti_costs)
-  		</if>
-  		<if test="pd.sort_type != null and pd.sort_type == 6"> 
-  			order by sum(anti_costs) desc
-  		</if>
+	   group by t.ordered_by_dept, t.ordered_by_dept_code
+		    <if test="pd.sort_type == null or pd.sort_type == ''">  
+	 	 		order by SUM(costs)
+	 	 	</if>
+	  		<if test="pd.sort_type != null and pd.sort_type == 1"> 
+				order by SUM(costs)
+			</if>
+		 	<if test="pd.sort_type != null and pd.sort_type == 2"> 
+	  			order by SUM(costs) desc
+	  		</if>
+	  		<if test="pd.sort_type != null and pd.sort_type == 3"> 
+	  			order by sum(decode(t.item_class, 'A', t.costs, 0))
+	  		</if>
+	  		<if test="pd.sort_type != null and pd.sort_type == 4"> 
+	  			order by sum(decode(t.item_class, 'A', t.costs, 0)) desc
+	  		</if>
+	  		<if test="pd.sort_type != null and pd.sort_type == 5"> 
+	  			order by sum(decode(t.item_class, 'A', decode(t.is_anti, '1', t.costs, 0), 0))
+	  		</if>
+	  		<if test="pd.sort_type != null and pd.sort_type == 6"> 
+	  			order by sum(decode(t.item_class, 'A', decode(t.is_anti, '1', t.costs, 0), 0)) desc
+	  		</if>
 	</select>
 		
-	<select id="allHospital2" parameterType="page" resultType="pd" >
-			select t.drug_code,
-	      t.drug_name,
-	     t.drug_spec,
-	     t.firm_id,
-	     t.units,
-	     sum(cost) costs,
-	     sum(amount) amounts
-	from (
-	
-	select m.drug_code,
-             m.drug_name,
-             m.units,
-             m.package_spec drug_spec,
-             m.firm_id,
-             m.cost         cost,
-             m.amount       amount
-        from PEAAS.Dr_Drugdaycost m, pdss.Drug_Map d
-       where m.Drug_Code = d.Drug_No_Local
-           <if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
-				and m.dr_date &gt;=  to_date(#{pd.beginDate}, 'yyyy-mm-dd')
-			</if>
-			<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
-				and m.dr_date &lt; to_date(#{pd.endDate}, 'yyyy-mm-dd')
-			</if>
-      union all
-      select h.drug_code,
-             h.drug_name,
-             h.drug_units units,
-             h.drug_spec drug_spec,
-             h.firm_id,
-             to_char(h.costs) cost,
-             to_char(h.amount) amount
-        from dr_drug h, pdss.Drug_Map d
-       where h.Drug_Code = d.Drug_No_Local
-         	<if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
-				and h.rpt_date  &gt;=  to_date(#{pd.beginDate}, 'yyyy-mm-dd')
-			</if>
-			<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
-				and h.rpt_date  &lt; to_date(#{pd.endDate}, 'yyyy-mm-dd')
-			</if>
-		) t
-		group by t.drug_code, t.drug_name,t.drug_spec, t.firm_id, t.units
-		
-		order by costs desc
+	<select id="allHospital2Page" parameterType="page" resultType="pd" >
+		select t.drug_code,
+		     t.drug_name,
+		     t.drug_spec,
+		     t.firm_id,
+		     t.units,
+		     sum(cost) costs,
+		     sum(amount) amounts
+		from (
+					select m.drug_code,
+			             m.drug_name,
+			             m.units,
+			             m.package_spec drug_spec,
+			             m.firm_id,
+			             m.cost         cost,
+			             m.amount       amount
+			        from Dr_Drugdaycost m, pdss.Drug_Map d
+			       where m.Drug_Code = d.Drug_No_Local
+			           <if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
+							and m.dr_date &gt;=  to_date(#{pd.beginDate}, 'yyyy-mm-dd')
+						</if>
+						<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
+							and m.dr_date &lt; to_date(#{pd.endDate}, 'yyyy-mm-dd')
+						</if>
+						<if test="pd.drug_name != null and pd.drug_name != ''"> <!-- 药品-->
+							and m.drug_name = #{pd.drug_name} 
+						</if>
+						<if test="pd.drugType != null and pd.drugType == 0"> <!-- 抗菌-->
+							and d.IS_ANTI = 1
+						</if>
+						<if test="pd.drugType != null and pd.drugType == 1"> <!-- 基本药物-->
+							and d.IS_BASEDRUG = 1
+						</if>
+						<if test="pd.drugType != null and pd.drugType == 2"> <!-- 非抗菌-->
+							and d.IS_ANTI != 1
+						</if>
+			      union all
+			      select h.drug_code,
+			             h.drug_name,
+			             h.drug_units units,
+			             h.drug_spec drug_spec,
+			             h.firm_id,
+			             to_char(h.costs) cost,
+			             to_char(h.amount) amount
+			        from dr_drug_summary h, pdss.Drug_Map d
+			       where h.Drug_Code = d.Drug_No_Local
+			         	<if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
+							and h.rpt_date  &gt;=  to_date(#{pd.beginDate}, 'yyyy-mm-dd')
+						</if>
+						<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
+							and h.rpt_date  &lt; to_date(#{pd.endDate}, 'yyyy-mm-dd')
+						</if>
+						<if test="pd.drug_name != null and pd.drug_name != ''"> <!-- 药品-->
+							and h.drug_name = #{pd.drug_name} 
+						</if>
+						<if test="pd.drugType != null and pd.drugType == 0"> <!-- 抗菌-->
+							and h.IS_ANTI = 1
+						</if>
+						<if test="pd.drugType != null and pd.drugType == 1"> <!-- 抗菌-->
+							and h.IS_BASEDRUG = 1
+						</if>
+						<if test="pd.drugType != null and pd.drugType == 2"> <!-- 抗菌-->
+							and h.IS_ANTI != 1
+						</if>
+			) t
+			group by t.drug_code, t.drug_name,t.drug_spec, t.firm_id, t.units
+			
+		<if test="pd.sort_type == null or pd.sort_type == ''">  
+ 	 		order by drug_code
+ 	 	</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 1"> 
+			order by drug_code 
+		</if>
+	 		<if test="pd.sort_type != null and pd.sort_type == 2"> 
+  			order by firm_id
+  		</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 3"> 
+  			order by sum(cost) asc
+  		</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 4"> 
+  			order by sum(cost) desc
+  		</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 6"> 
+  			order by sum(amount)  
+  		</if>
+  		<if test="pd.sort_type != null and pd.sort_type == 7"> 
+  			order by sum(amount)  desc
+  		</if>
 	</select>
 </mapper>

@@ -43,7 +43,7 @@
 				<div class="page-content">
 					<div class="row">
 						<div class="col-xs-12"  >
-							<form action="haskjDrug/haskjDrug2.do" method="post" name="searchForm" id="searchForm">
+							<form action="allHospital/allHospital2.do" method="post" name="searchForm" id="searchForm">
 								<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
 									<div class="check-search"   >
 										起止日期：
@@ -62,6 +62,16 @@
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
+									<div class="check-search"  > 
+										类型：
+									 	<select class="chosen-select form-control" name="drugType" id="drugType" data-placeholder="类型" style="vertical-align:top;width: 80px;">    
+									 		<option value="">全部</option>
+											<option <c:if test="${pd.drugType == '0' }">selected</c:if> value="0" >抗菌药</option>
+											<option <c:if test="${pd.drugType == '1' }">selected</c:if> value="1" >基本药物</option>
+											<option <c:if test="${pd.drugType == '2' }">selected</c:if> value="2" >非抗菌药</option>
+<%-- 											<option <c:if test="${pd.drugType == '3' }">selected</c:if> value="juvenile" >青年(大于10,小于18)</option> --%>
+										</select>
+									</div>  
 									<div class="check-search"  >
 										排序：
 									 	<select class="chosen-select form-control" name="sort_type" id="sort_type" data-placeholder="排序方式" style="vertical-align:top;width: 100px;">
@@ -95,7 +105,7 @@
 										<tr >
 											<td class="center">${vs.index+1}</td>
 											<td class="center">${report.drug_name}</td>
-											<td class="center">${report.package_spec}</td>
+											<td class="center">${report.drug_spec}</td>
 											<td class="center">${report.firm_id}</td>
 											<td class="center">￥ <fmt:formatNumber value="${report.costs}" pattern="###,###,##0.00"></fmt:formatNumber></td>
 											<td class="center">${report.amounts} ${report.units}</td>

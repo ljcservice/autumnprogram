@@ -26,6 +26,6 @@ public class AllHospitalServiceImpl implements AllHospitalService {
 	}
 	@Override
 	public List<PageData> allHospital2(Page page) throws Exception {
-		return (List<PageData>) daoph.findForList("AllHospitalMapper.allHospital2", page);
+		return (List<PageData>) daoph.findForList("AllHospitalMapper.allHospital2Page", page);
 	}
 }
