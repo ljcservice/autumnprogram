@@ -163,7 +163,6 @@ public class OntologyController extends BaseController {
 				sqlName = "op";
 			}else if (OsynConst.DIAG.equals(ontoType)){
 				//诊断
-				sqlName = "diag";
 				Map<String,String> partMap = HelpUtil.getPartBodyMap(0);
 				Map<String,String> crowsMap = HelpUtil.getPartBodyMap(1);
 				Map<String,String> disMap = HelpUtil.getPartBodyMap(2);

@@ -1,0 +1,44 @@
+input, select, textarea, button, 
+.CAPXOUS_AutoComplete * {
+	font:	12px "Segoe UI", Verdana, Arial, Helvetica, sans-serif;	
+	line-height:	1.2em;
+}
+
+.CAPXOUS_AutoComplete {
+	background-color:	#fcfcfc;
+	border:	1px solid #333;
+	padding:	0;
+	margin:	0;
+	text-align:	left;
+	z-index:	999;
+}
+
+.CAPXOUS_AutoComplete_waiting {
+	background:transparent url(indicator.gif) no-repeat right;
+}
+
+.CAPXOUS_AutoComplete .selectable {
+	padding:	2px;
+	text-align:	left;
+	cursor:	pointer;
+}
+
+.CAPXOUS_AutoComplete .current {
+	background-color:#2A78B9;
+	color:#FFFFFF;
+}
+
+.CAPXOUS_AutoComplete .informal {
+	color:	#444;
+	float:	right;
+}
+
+.CAPXOUS_AutoComplete a {
+	margin:	2px;
+	color:	#000;
+	font-weight:bold;
+}
+
+.CAPXOUS_AutoComplete a:hover {
+	color:#2A78B9;
+}

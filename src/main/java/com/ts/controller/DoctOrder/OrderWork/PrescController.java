@@ -36,7 +36,7 @@ import com.ts.util.doctor.DoctorConst;
  */
 @Controller
 @RequestMapping(value="/presc")
-public class PrescController extends BaseController{
+public class PrescController extends BaseController {
 	@Resource(name="commonServicePdss")
 	private CommonService commonService;
 	@Autowired
