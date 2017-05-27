@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.hitzd.DBUtils.CommonMapper;
 import com.hitzd.DBUtils.JDBCQueryImpl;
@@ -26,7 +28,10 @@ import com.hitzd.his.Web.base.PubServlet;
 import com.hitzd.his.casehistory.helper.CaseHistoryFactory;
 import com.hitzd.his.casehistory.helper.CaseHistoryHelperUtils;
 import com.hitzd.his.casehistory.helper.ICaseHistoryHelper;
+import com.ts.controller.base.BaseController;
+import com.ts.entity.Page;
 import com.ts.service.matcher.IDataMatcherService;
+import com.ts.util.PageData;
 
 /**
  * Author: apachexiong
@@ -45,48 +50,46 @@ import com.ts.service.matcher.IDataMatcherService;
  * 配码程序增加新的功能。
  */
 
-@Controller("FetchDataFromDrugDict")
-public class FetchDataFromDrugDict extends PubServlet {
+@Controller
+@RequestMapping(value="/FetchDataFromDrugDict")
+public class FetchDataFromDrugDict  extends BaseController   {
 
     @Resource(name = "drugMatcherServiceImpl")
     private IDataMatcherService drugMatcherServiceImpl;
 
 
-    @Override
-    protected List<TCommonRecord> modify(HttpServletRequest request, HttpServletResponse response) {
-        return super.modify(request, response);    //To change body of overridden methods use File | Settings | File Templates.
-    }
-
-    @Override
-    protected List<TCommonRecord> update(HttpServletRequest request, HttpServletResponse response) {
-        return super.update(request, response);    //To change body of overridden methods use File | Settings | File Templates.
-    }
-
-    @Override
-    protected List<TCommonRecord> delete(HttpServletRequest request, HttpServletResponse response) {
-        return super.delete(request, response);    //To change body of overridden methods use File | Settings | File Templates.
-    }
-
-    @Override
-    protected List<TCommonRecord> addNew(HttpServletRequest request, HttpServletResponse response) {
-        return super.addNew(request, response);    //To change body of overridden methods use File | Settings | File Templates.
-    }
-
-    @Override
-    protected List<TCommonRecord> query(HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value="/query")
+    protected ModelAndView query(Page page,HttpServletRequest request, HttpServletResponse response) {
         /**
          * 查询数据并且把这些数据放入到Session中
          */
-
-        String pageStr = CommonUtils.getRequestParameter(request, "page", "");
-        int page = Integer.valueOf(pageStr==null||"".equals(pageStr)?"1":pageStr);
+    	ModelAndView mv = this.getModelAndView();
+        PageData pd = this.getPageData();
+        String currentPage       = CommonUtils.getRequestParameter(request, "currentPage", "1");
+        int iPage         = 1;
+        try
+        {
+        	if(currentPage==null){
+        		iPage=1;
+        	}
+            iPage = Integer.parseInt(currentPage);
+        }
+        catch (Exception ex)
+        {
+            iPage = 1;
+        }
+//        String pageStr = CommonUtils.getRequestParameter(request, "page", "");
+//        int page = Integer.valueOf(pageStr==null||"".equals(pageStr)?"1":pageStr);
 
         String p_drug_code = CommonUtils.getRequestParameter(request, "q_drug_code", "");
         request.setAttribute("q_drug_code",p_drug_code);
+        mv.addObject("q_drug_code", p_drug_code);
         String p_drug_name = CommonUtils.getRequestParameter(request, "q_drug_name", "");
         request.setAttribute("q_drug_name",p_drug_name);
+        mv.addObject("q_drug_name", p_drug_name);
         String toxi_propertyStr = CommonUtils.getRequestParameter(request,"toxi_property","");
         request.setAttribute("toxi_property",toxi_propertyStr);
+        mv.addObject("toxi_property", toxi_propertyStr);
         String[] toxi_property = null;
         if(!"".equals(toxi_propertyStr)) {
         	toxi_property = toxi_propertyStr.indexOf(",")>0?toxi_propertyStr.split(","):new String[]{toxi_propertyStr};
@@ -104,7 +107,7 @@ public class FetchDataFromDrugDict extends PubServlet {
             session.setAttribute("toxiPropertyList",propertyList);
         }
         request.setAttribute("toxiPropertyList",propertyList);//放入返回值中
-
+        mv.addObject("toxiPropertyList", propertyList);
         if(null == newDrug || newDrug.size() <=0 )
         {
             //所有的医院药品
@@ -115,9 +118,12 @@ public class FetchDataFromDrugDict extends PubServlet {
 
             newDrug = getNoMapDrug(param);
             session.setAttribute("allNewDrug",newDrug);
+            mv.addObject("allNewDrug", newDrug);
         }
         List<TCommonRecord> allNewDrug = new ArrayList<TCommonRecord>();
-        allNewDrug.addAll(newDrug.values());
+        if(newDrug!=null){
+        	allNewDrug.addAll(newDrug.values());
+        }
         
         //按条件筛选结果集来模仿数据库查询
         //药品编码
@@ -153,24 +159,31 @@ public class FetchDataFromDrugDict extends PubServlet {
         } 
         
         //对筛选后的结果进行分页
-        PageView<TCommonRecord> pageView = new PageView<TCommonRecord>(12,page);
+        PageView<TCommonRecord> pageView = new PageView<TCommonRecord>(page.getShowCount(),iPage);
         QueryResult<TCommonRecord> queryResult = new QueryResult<TCommonRecord>();
         queryResult.setTotalrecord(allNewDrug.size());
 
-        queryResult.setResultlist(allNewDrug.subList(pageView.getMaxresult()*(page-1),
-        		(allNewDrug.size()>pageView.getMaxresult()*page)?pageView.getMaxresult()*page:allNewDrug.size()));
+        queryResult.setResultlist(allNewDrug.subList(pageView.getMaxresult()*(iPage-1),
+        		(allNewDrug.size()>pageView.getMaxresult()*iPage)?pageView.getMaxresult()*iPage:allNewDrug.size()));
         pageView.setQueryResult(queryResult);
-
-        request.setAttribute("pageView", pageView);
-        this.forword = "/WebPage/FetchDataFromDrugDict/FetchDataFromDrugDict.jsp";
-        return super.query(request, response);
+        
+        List<TCommonRecord> list = pageView.getRecords();
+        mv.addObject("resultList", list);
+        page.setCurrentPage(pageView.getCurrentpage());
+        page.setCurrentResult((int)pageView.getPageindex().getStartindex());
+        page.setTotalResult((int)pageView.getTotalrecord());
+        page.setTotalPage((int)pageView.getTotalpage());
+        page.setEntityOrField(true);
+//        mv.addObject("page", page);
+        mv.addObject("pd", pd);
+        mv.setViewName("matcher/FetchDataFromDrugDict/FetchDataFromDrugDict");
+        return mv;
     }
-
-    @Override
-    protected List<TCommonRecord> option(String o, HttpServletRequest request, HttpServletResponse response) {
+    
+    @RequestMapping(value="/transferAll")
+    protected void transferAll(String o, HttpServletRequest request, HttpServletResponse response) {
         HttpSession session  = request.getSession();
         //抓取所有的map
-        if("transferAll".equals(o)){
             Map<String,TCommonRecord> newDrug = (Map<String,TCommonRecord>)session.getAttribute("allNewDrug");//所有的药品
             List<TCommonRecord> drugList  = new ArrayList<TCommonRecord>();
             drugList.addAll(newDrug.values());
@@ -178,9 +191,13 @@ public class FetchDataFromDrugDict extends PubServlet {
             for(TCommonRecord drug: drugList){
                 saveDataToDrugMap(drug);
             }
-            newDrug.clear();//清空缓存
-        }else if("transferSingle".equals(o))
-        {
+            newDrug.clear(); //清空缓存
+    }
+        
+    @RequestMapping(value="/transferSingle")
+    protected void transferSingle(String o, HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session  = request.getSession();
+        //抓取所有的map
             String drugCode = CommonUtils.getRequestParameter(request,"drug_code","");
             String drugSpec = CommonUtils.getRequestParameter(request,"drug_spec","").replace(" ", "");
             String drugname = CommonUtils.getRequestParameter(request,"drug_name","").replace(" ", "");
@@ -192,9 +209,6 @@ public class FetchDataFromDrugDict extends PubServlet {
                 newDrug.remove(drugCode + drugSpec + drugname);
                 saveDataToDrugMap(drug);
             }
-        }
-        query(request,response);
-        return super.option(o, request, response);
     }
 
     /**

@@ -1410,7 +1410,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	@Override
 	public List<TCommonRecord> fetchDrugDict2CR(String strFields,  List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception
 	{
-		String tableName = this.getTableName("comm.drug_dict", lsWheres);
+		String tableName = this.getTableName("pdss.drug_dict", lsWheres);
 		String dbUrl = getDbUrl(tableName).trim();
 		if (dbUrl != null && !"".equals(dbUrl))
 			srcQuery = DBQueryFactory.getQuery(dbUrl);
