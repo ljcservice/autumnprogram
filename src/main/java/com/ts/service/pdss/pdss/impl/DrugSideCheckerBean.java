@@ -1,10 +1,8 @@
 package com.ts.service.pdss.pdss.impl;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import javax.annotation.Resource; 
+import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -21,12 +19,7 @@ import com.ts.entity.pdss.pdss.Beans.TDrugSideDict;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugHarmfulRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
 import com.ts.service.pdss.pdss.Cache.PdssCache;
-import com.ts.service.pdss.pdss.RowMapper.DrugSideDictMapper;
-import com.ts.service.pdss.pdss.Utils.CommonUtils;
-import com.ts.service.pdss.pdss.Utils.QuerySingleUtils;
-import com.ts.service.pdss.pdss.Utils.QueryUtils;
 import com.ts.service.pdss.pdss.manager.IDrugSideChecker;
-import com.ts.util.PageData;
 
 /**
  * 异常信号审查子模块 不良反应审查
@@ -69,10 +62,10 @@ public class DrugSideCheckerBean extends Persistent4DB implements IDrugSideCheck
 	        TPatOrderDrug[] pods = po.getPatOrderDrugs();
 	        
 	        TPatOrderDiagnosis[] patOds = po.getPatOrderDiagnosiss();
-	        Map<String, TDrug> mapDrugs = pdssCache.queryDrugMap(pods);
+//	        Map<String, TDrug> mapDrugs = pdssCache.queryDrugMap(pods);
             for(TPatOrderDrug pod : pods)
 	        {
-	        	TDrug drug =  mapDrugs.get(pod.getDrugID());// pdssCache.queryDrugById(pod.getDrugID());
+	        	TDrug drug =   po.getDrugMap(pod.getDrugID());// pdssCache.queryDrugById(pod.getDrugID());
 	        	TAdministration admin = pdssCache.queryAdministrationByName(pod.getAdministrationID());
 	        	if(admin  == null || drug == null) continue;
 	        	List<TDrugSideDict> drugSDs =  pdssCache.queryDSD(drug.getDRUG_CLASS_ID(), admin.getADMINISTRATION_ID());
@@ -82,7 +75,8 @@ public class DrugSideCheckerBean extends Persistent4DB implements IDrugSideCheck
 //	        		PageData  pd = pdssCache.queryDiagnosisDictById(dsd.getDIAGNOSIS_DICT_ID());
 	        		for(TPatOrderDiagnosis patOd : patOds)
 	        		{
-	        			if(patOd.getDiagnosisName().indexOf(dsd.getDiagnosis_name()) != -1){
+	        			if(patOd.getDiagnosisName().indexOf(dsd.getDiagnosis_name()) != -1 
+	        			        || dsd.getDiagnosis_name().indexOf(patOd.getDiagnosisName())!= -1){
 	        				TDrugHarmfulRslt harmfulRslt = new TDrugHarmfulRslt();
 	        	            /* 对每一个返回的药品标注上 医嘱序号 */
 	        	            drug.setRecMainNo(pod.getRecMainNo());

@@ -60,15 +60,15 @@ public class DrugSpecPeopleCheckerBean extends Persistent4DB implements IDrugSpe
 	        // List<TDrug> drugs = QueryUtils.queryDrug(drugids, null, query);
 	        // 利用map去掉重复的药品
 	        //Map<String, TDrug> drugMap = QueryUtils.queryDrug(po.getPatOrderDrugs(), null, query);
-	        Map<String, TDrug> drugMap = pdssCache.queryDrugMap(po.getPatOrderDrugs());
+//	        Map<String, TDrug> drugMap = pdssCache.queryDrugMap(po.getPatOrderDrugs());
 	        
 	        //Map<String, TDrugUseDetail> duds = QueryUtils.queryDrugDud(drugMap, query);
-	        Map<String, TDrugUseDetail> duds = pdssCache.queryDrugDudMap(drugMap);
+	        Map<String, TDrugUseDetail> duds = pdssCache.queryDrugDudMap(po.DrugMap()); 
 	        
 	        for(TPatOrderDrug pod : po.getPatOrderDrugs())
 	        {
 	            /* 得到药品*/ 
-	            TDrug drug = drugMap.get(pod.getDrugID()); // CommonUtils.getDrugInfoOne(drugs, pod);
+	            TDrug drug =  po.getDrugMap(pod.getDrugID()); // CommonUtils.getDrugInfoOne(drugs, pod);
 	            if(drug == null)
 	                continue;
 	            /* 药品信息*/

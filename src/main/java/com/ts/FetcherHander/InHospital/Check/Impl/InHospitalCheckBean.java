@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,11 +20,13 @@ import com.hitzd.his.Beans.TPatientOrder;
 import com.hitzd.his.Utils.DateUtils;
 import com.ts.FetcherHander.InHospital.Check.InHospitalCheck;
 import com.ts.dao.DAO;
+import com.ts.entity.pdss.SaveER.SaveOperaction;
 import com.ts.entity.pdss.Saver.QueueBean;
 import com.ts.entity.pdss.Saver.SaveBeanRS;
 import com.ts.entity.pdss.pdss.RSBeans.TCheckResultCollection;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
 import com.ts.service.pdss.pdss.manager.IDrugSecurityChecker;
+import com.ts.util.Logger;
 import com.ts.util.PageData;
 
 /**
@@ -43,8 +44,7 @@ public class InHospitalCheckBean implements InHospitalCheck
     IDrugSecurityChecker drugSecuity;
     @Resource(name="daoSupportPH")
     DAO dao;
-    
-    private Logger logger  = Logger.getLogger(InHospitalCheckBean.class);
+    private static final Logger logger = Logger.getLogger(InHospitalCheckBean.class);
     
     @SuppressWarnings ("unchecked")
     @Override
@@ -63,6 +63,8 @@ public class InHospitalCheckBean implements InHospitalCheck
         pdInp.put("endDate", dateTime2);
         try
         {
+            // 删除 审核结果 
+            dao.delete("PatVisitMapper.deleteDrugCheckRslt", pdInp);
             List<PageData> pdPatVisits = (List<PageData>)dao.findForList("PatVisitMapper.queryPatVisitByDate", pdInp);
             // 判断审核是否有问题 false为存在问题， true：不存在问题。 
             boolean checkFlag = false;
@@ -75,7 +77,7 @@ public class InHospitalCheckBean implements InHospitalCheck
                 //4 ： 标示为医嘱点评  
                 po.setPatType("4");
                 //增加基本信息  TODO 目前没有增加手术部分，后续需要考虑 
-                this.setPatientOrder(po, pd);
+                this.setPatientOrder(po, pd); 
                 String date = null;
                 List<PageData> orderDrug = new ArrayList<PageData>();
                 for(PageData pdOrder : listPd){
@@ -153,9 +155,9 @@ public class InHospitalCheckBean implements InHospitalCheck
             TPatOrderDiagnosis d = new TPatOrderDiagnosis();
             d.setDiagnosisDictID(diag.getString("DIAGNOSIS_DESC"));
             d.setDiagnosisName(diag.getString("DIAGNOSIS_DESC"));
-            patOrderDiagnosiss.add(new TPatOrderDiagnosis());
+            patOrderDiagnosiss.add(d);
         }
-        po.setPatOrderDiagnosiss(patOrderDiagnosiss.toArray(new TPatOrderDiagnosis[0]));
+        po.setPatOrderDiagnosiss(patOrderDiagnosiss.toArray(new TPatOrderDiagnosis[0]));  
         TPatOrderVisitInfo patVisitInfo = new TPatOrderVisitInfo();
         patVisitInfo.setVisitID(pd.getObjectString("VISIT_ID"));
         patVisitInfo.setPatientID(pd.getString("PATIENT_ID"));

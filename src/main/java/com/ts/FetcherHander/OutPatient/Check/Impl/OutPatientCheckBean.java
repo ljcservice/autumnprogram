@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import com.hitzd.his.Beans.TPatOrderVisitInfo;
 import com.hitzd.his.Beans.TPatient;
 import com.hitzd.his.Beans.TPatientOrder;
 import com.hitzd.his.Utils.DateUtils;
+import com.ts.FetcherHander.InHospital.Check.Impl.InHospitalCheckBean;
 import com.ts.FetcherHander.OutPatient.Check.IOutPatientCheck;
 import com.ts.dao.DAO;
 import com.ts.entity.pdss.Saver.QueueBean;
@@ -38,6 +40,8 @@ public class OutPatientCheckBean implements IOutPatientCheck
     @Resource(name="daoSupportPH")
     DAO dao;
     
+    private static final Logger logger = Logger.getLogger(OutPatientCheckBean.class);
+
     @SuppressWarnings ("unchecked")
     @Override
     public Object OutPatientCheck(Object... value)
@@ -52,6 +56,7 @@ public class OutPatientCheckBean implements IOutPatientCheck
         pdInp.put("ORDER_DATE", dateTime);
         try
         {
+            dao.delete("PrescMapper.deleteDrugCheckRslt", pdInp);
             List<PageData> pds = (List<PageData>)dao.findForList("PrescMapper.findByDate", pdInp);
             for(PageData pd : pds)
             {
@@ -125,6 +130,7 @@ public class OutPatientCheckBean implements IOutPatientCheck
             TPatOrderDiagnosis diag = new TPatOrderDiagnosis();
             //diag.setDiagnosisDictID(diagCode[i]);
             diag.setDiagnosisName(diagName[i]);
+            patOrderDiagnosiss.add(diag);
         }
         po.setPatOrderDiagnosiss(patOrderDiagnosiss.toArray(new TPatOrderDiagnosis[0]));
         

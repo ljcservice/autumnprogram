@@ -407,5 +407,16 @@
 			where 
 			patient_id =#{patient_id} and visit_id = #{visit_id}
 	</select>
+	
+	<select id="deleteDrugCheckRslt" parameterType="pd" >
+		delete rs_drug_checkrslt  
+		where ngroupnum in (
+			select t.ngroupnum from pat_visit t 
+		where 
+			t.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
+			and t.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+			and ngroupnum is not null
+		)
+	</select>
 		
 </mapper>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DrugRepeatMapper">
+<!--表名  总体审核情况 -->
+	<sql id="tableName">
+		DRUG_REPEAT
+	</sql>
+	
+	<sql id="Field">
+	   	drug_name_1,
+		drug_name_2 ,
+		refer_info ,
+		effect  ,
+		effect_indi,
+		source ,
+		source_tag,
+		drug_class_1,
+		drug_class_2,
+		id
+	</sql>
+	
+	<sql id="FieldValue">
+	   	#{drug_name_1},
+		#{drug_name_2 },
+		#{refer_info},
+		#{effect},
+		#{effect_indi},
+		#{source},
+		#{source_tag},
+		#{drug_class_1},
+		#{drug_class_2},
+		#{id}
+	</sql>
+	
+	<select id="findDrugRepeat" parameterType="page" resultType="pd">
+		select 
+			drug_name_1,
+			drug_name_2,
+			refer_info,
+			effect,
+			effect_indi,
+			source,
+			source_tag,
+			drug_class_1,
+			drug_class_2,
+			id
+		from 
+			DRUG_REPEAT
+	</select>
+	
+	<update id="updateDrugClass" parameterType="pd">
+		update 
+			<include refid="tableName"></include>
+			set drug_class_1 = #{drug_class_1} , drug_class_2 = #{drug_class_2} 
+		where 
+			id = #{id}
+	</update>
+
+	<select id="findDrug" parameterType="pd" resultType="pd">
+		select t.DRUG_CLASS_ID from drug t where t.drug_name like #{drug_name} 
+	</select>
+
+</mapper>

@@ -2,6 +2,8 @@ package com.ts.FetcherHander.OutPatient.dayReport;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.hitzd.DBUtils.CommonMapper;
 import com.hitzd.DBUtils.JDBCQueryImpl;
 import com.hitzd.DBUtils.TCommonRecord;
@@ -21,6 +23,8 @@ import com.hitzd.persistent.Persistent4DB;
  */
 public class DR_OutDrugCostInfo_Force extends Persistent4DB implements IReportBuilder
 {
+    
+    private static final Logger logger = Logger.getLogger(DR_OutDrugCostInfo_Force.class);
     @Override
     public String getLogFileName()
     {

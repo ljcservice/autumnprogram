@@ -58,7 +58,7 @@ public class DrugInteractionCheckerBean extends Persistent4DB implements  IDrugI
             /* 查找drugs 中的所有要药品*/
             TPatOrderDrug[] pods = po.getPatOrderDrugs();
             // 通过map过滤掉重复的药品码
-            Map<String, TDrug> drugs  = pdssCache.queryDrugMap(pods);
+//            Map<String, TDrug> drugs  = pdssCache.queryDrugMap(pods);
 //            List<String> ids = new ArrayList<String>();
 //            for(TPatOrderDrug tp:pods){
 //            	ids.add(tp.getDrugID());
@@ -72,14 +72,14 @@ public class DrugInteractionCheckerBean extends Persistent4DB implements  IDrugI
             for (int i = 0; i < pods.length; i++)
             {
             	TPatOrderDrug podA = pods[i];
-            	TDrug drugA = drugs.get(podA.getDrugID());
+            	TDrug drugA =  po.getDrugMap(podA.getDrugID());
             	if(drugA == null || "".equals(drugA.getDRUG_ID())) continue;
             	Long ff = System.currentTimeMillis();
             	for (int j = i + 1 ; j < pods.length; j++)
             	{
             		if (i == j) continue;
             		TPatOrderDrug podB = pods[j];
-            		TDrug drugB = drugs.get(podB.getDrugID());
+            		TDrug drugB =  po.getDrugMap(podB.getDrugID());
             		if(drugB == null || "".equals(drugB.getDRUG_ID())) continue;
             		if (podA.getDrugID().equalsIgnoreCase(podB.getDrugID()))
             			continue;

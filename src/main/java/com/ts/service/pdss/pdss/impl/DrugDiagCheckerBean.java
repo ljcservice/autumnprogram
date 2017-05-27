@@ -57,10 +57,10 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
 	        /* 诊断id*/
 	        TPatOrderDiagnosis[] patOds = po.getPatOrderDiagnosiss();
 	        TDrugSecurityRslt result = new TDrugSecurityRslt();
-	        Map<String, TDrug> drugs  = pdssCache.queryDrugMap(pods);
+//	        Map<String, TDrug> drugs  = pdssCache.queryDrugMap(pods);
 	        for(TPatOrderDrug pod : pods){
 	        	// 获得药品信息
-	        	TDrug  drug =  drugs.get(pod.getDrugID());
+	        	TDrug  drug =  po.getDrugMap(pod.getDrugID());
 	        	if( drug == null) continue;
 	        	// 获得给药途径信息
 	        	TAdministration drugAdmin = pdssCache.queryAdministration(pod.getAdministrationID());
@@ -75,7 +75,8 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
 	        	for(TDrugDiagInfo ddi : ddis){
 	        		for(TPatOrderDiagnosis patOd  : patOds)
 	        		{
-	        			if(patOd.getDiagnosisName().indexOf(ddi.getDIAG_DESC()) != -1)
+	        			if(patOd.getDiagnosisName().indexOf(ddi.getDIAG_DESC()) != -1
+	        			        || ddi.getDIAG_DESC().indexOf(patOd.getDiagnosisName()) != -1)
 	        			{
 	    	        		TDrugDiagRslt diarslt = new TDrugDiagRslt();
 	    	        		drug.setRecMainNo(pod.getRecMainNo());

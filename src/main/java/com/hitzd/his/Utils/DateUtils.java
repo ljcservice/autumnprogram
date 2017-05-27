@@ -16,7 +16,7 @@ public class DateUtils extends Object {
     public static final String DATE_FOREVER = "9999-12-31";
     /** 时间格式 */
     public static final String FORMAT_DATETIME = "yyyy-MM-dd HH:mm:ss";
-    
+    public static final String FORMAT_DATE_SPRIT  = "yyyy/MM/dd";
 
     /** 全时间格式 */
     private static final String FORMAT_FULLTIME = "yyMMddHHmmssSSS";
@@ -415,13 +415,17 @@ public class DateUtils extends Object {
         return getCertainDate(dateString, iCount);
     }
     
+    
     /**
      * 将指定格式的字符串格式化为日期
      * @param s 字符串内容
      * @return 日期
      */
     public static Date getDateFromString(String s) {
-        return getDateFromString(s, FORMAT_DATE);
+        Date d = getDateFromString(s, FORMAT_DATE);
+        if(d == null)
+          d = getDateFromString(s, FORMAT_DATE_SPRIT);
+        return d;
     }
     
     /**

@@ -148,6 +148,15 @@
 	<select id="findPrescDetailById" parameterType="String" resultType="pd">
 		select * from presc_detail where PRESC_ID = #{id}
 	</select>
+	
+	<delete id="deleteDrugCheckRslt" parameterType="pd">
+		delete rs_drug_checkrslt  
+			where ngroupnum in (
+				select ngroupnum from  presc  where order_date = #{order_date} and ngroupnum is not null
+			)
+	</delete>
+	
+	
 	<!-- 医嘱工作表统计 -->
 	<select id="prescCountReport" parameterType="pd"  resultType="pd">
 		select count(id) ALL_COUNT,sum(DRUG_COUNT) DRUG_COUNT_SUM,sum(HASZS) HASZS_SUM

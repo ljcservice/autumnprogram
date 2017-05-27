@@ -47,8 +47,8 @@ import com.ts.util.LoggerFileSaveUtil;
  */
 public class DataFetcherNew extends ReportScheduler  {
 
-	private Logger logger  = Logger.getLogger(DataFetcherNew.class);
-	
+    private static final Logger logger = Logger.getLogger(DataFetcherNew.class);
+
 	/*
 	 * 当前日期前一天
 	 * 改用现成的日期工具类获取

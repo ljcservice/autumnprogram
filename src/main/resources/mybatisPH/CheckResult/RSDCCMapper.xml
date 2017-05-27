@@ -5,7 +5,7 @@
 
 	<!--表名  总体审核情况 -->
 	<sql id="tableName">
-		RS_DRUG_CHECKRSLT
+		RS_DRUG_CHECKINFO_COLLECT
 	</sql>
 	
 	<sql id="Field">
@@ -45,7 +45,8 @@
 	   NHEPATICALYELLOW,
 	   NSIDERED,
 	   NSIDEYELLOW,
-	   CHECKDATE
+	   CHECKDATE,
+	   IN_RS_TYPE
 	</sql>
 	
 	<sql id="FieldValue">
@@ -85,7 +86,8 @@
 	   #{NHEPATICALYELLOW,jdbcType=NUMERIC},
 	   #{NSIDERED,jdbcType=NUMERIC},
 	   #{NSIDEYELLOW,jdbcType=NUMERIC},
-	   #{CHECKDATE,jdbcType=TIMESTAMP})
+	   #{CHECKDATE,jdbcType=TIMESTAMP},
+	   #{IN_RS_TYPE,jdbcType=VARCHAR}
 	</sql>
 	
 	<insert id="saveDrugCheckInfoCollection" parameterType="pd"	>
@@ -99,5 +101,4 @@
         )
 	</insert>
 
-	
 </mapper>

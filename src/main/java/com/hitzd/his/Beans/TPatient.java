@@ -92,9 +92,10 @@ public class TPatient implements java.io.Serializable
         Long days = new Long(0);
         if (this.dateOfBirth == null)
             return days;
+        
         Long currentTime = Calendar.getInstance().getTime().getTime();
-        if(dateOfBirth.length() > 10)
-        	this.dateOfBirth = this.dateOfBirth.substring(0,10);
+//        if(dateOfBirth.length() > 10)
+//        	this.dateOfBirth = this.dateOfBirth.substring(0,10);
         Long dob = DateUtils.getDateFromString(dateOfBirth).getTime();
         days = (currentTime - dob) / 1000  / (24 * 60 * 60);
         return days;

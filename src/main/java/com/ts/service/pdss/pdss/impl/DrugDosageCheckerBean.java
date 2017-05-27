@@ -71,18 +71,19 @@ public class DrugDosageCheckerBean extends Persistent4DB implements IDrugDosageC
 	            TPatOrderDrug pod = po.getPatOrderDrugs()[i];
 	            /* 每次使用剂量 */
 	            Double dosage = new Double((Double) (pod.getDosage()== null || "".equals(pod.getDosage())?0d : Double.parseDouble(pod.getDosage())));
+	            String doseUnits  = pod.getDoseUnits();
 	            /* 药品*/
-	            TDrug drug = pdssCache.queryDrugById(pod.getDrugID());
+	            TDrug drug =  po.getDrugMap(pod.getDrugID());
 	            TAdministration administr = pdssCache.queryAdministration(pod.getAdministrationID()) ;//(new String[]{pod.getAdministrationID()}, null, query);
 	            if(drug == null || administr == null || drug.getDOSE_CLASS_ID() == null) 	continue;
 	            /* 将缓存中 获取 剂量  */
 	            List<TDrugDosage> ddgs = pdssCache.getDdg(drug.getDOSE_CLASS_ID(), administr.getADMINISTRATION_ID());
-	            if(ddgs.size() <= 0)  continue;
+	            if(ddgs == null || ddgs.size() <= 0)  continue;
 	            TDrugDosage ddg = null;
 	            for(int ddgI = 0 ; ddgI < ddgs.size() ; ddgI++ )
 	            {
 	                TDrugDosage ddgx = ddgs.get(ddgI);
-	                if(Integer.parseInt(ddgx.getAGE_LOW()) < day && Integer.parseInt(ddgx.getAGE_HIGH()) > day)
+	                if(Integer.parseInt(ddgx.getAGE_LOW()) <= day && Integer.parseInt(ddgx.getAGE_HIGH()) >= day)
 	                {
 	                    ddg  = ddgx;
 	                    ddgx = null;
@@ -110,7 +111,7 @@ public class DrugDosageCheckerBean extends Persistent4DB implements IDrugDosageC
 	            if(weight != 0 && height != 0)
                 {
 	                /* 每次剂量  */
-	                int eachDoseResult = checkDoseEach(ddg, dosage, weight, height);
+	                int eachDoseResult = checkDoseEach(ddg, dosage, weight, height,doseUnits);
 	                if(eachDoseResult<0)
 	                {
 	                    dosageInfo.add("低于每次最小剂量");
@@ -122,28 +123,31 @@ public class DrugDosageCheckerBean extends Persistent4DB implements IDrugDosageC
                 }
 	            /* 频率标准码 次数 */
 	            TDrugPerformFreqDict drugperform = pdssCache.queryDrugPerfom(pod.getPerformFreqDictID());
-	            if(drugperform == null) continue;
-	            Double frequency = Double.parseDouble(drugperform.getFREQ_COUNTER());
-	            /* 每天剂量 */
-	            int eachDayDoseResult = checkDoseDay(ddg, dosage, frequency);
-	            if(eachDayDoseResult < 0)
+	            Double frequency = null;
+	            if(drugperform != null) 
 	            {
-	                dosageInfo.add("低于每天最小剂量");
-	            }
-	            else 
-	            if(eachDayDoseResult > 0)
-	            {
-	                dosageInfo.add("高于每天最大剂量");
-	            }
-	            /* 每天频次 */
-	            if(frequency != null)
-	            {
-	                if(frequency < Double.parseDouble(ddg.getDOSE_FREQ_LOW())){
-	                    dosageInfo.add("低于每天最小频次");
-	                    
-	                }else if(frequency > Double.parseDouble(ddg.getDOSE_FREQ_HIGH())){
-	                    dosageInfo.add("高于每天最大频次");
-	                }
+    	            frequency = Double.parseDouble(drugperform.getFREQ_COUNTER());
+    	            /* 每天剂量 */
+    	            int eachDayDoseResult = checkDoseDay(ddg, dosage, frequency,doseUnits);
+    	            if(eachDayDoseResult < 0)
+    	            {
+    	                dosageInfo.add("低于每天最小剂量");
+    	            }
+    	            else 
+    	            if(eachDayDoseResult > 0)
+    	            {
+    	                dosageInfo.add("高于每天最大剂量");
+    	            }
+    	            /* 每天频次 */
+    	            if(frequency != null)
+    	            {
+    	                if(ddg.getDOSE_FREQ_LOW() != null && frequency < Double.parseDouble(ddg.getDOSE_FREQ_LOW())){
+    	                    dosageInfo.add("低于每天最小频次");
+    	                    
+    	                }else if(ddg.getDOSE_FREQ_HIGH() != null && frequency > Double.parseDouble(ddg.getDOSE_FREQ_HIGH())){
+    	                    dosageInfo.add("高于每天最大频次");
+    	                }
+    	            }
 	            }
 	            /* 用药 开始与结束时间 不为空 */
 	            if(pod.getStartDateTime() != null && !"".equals(pod.getStartDateTime()) 
@@ -166,7 +170,7 @@ public class DrugDosageCheckerBean extends Persistent4DB implements IDrugDosageC
 	                    dosageInfo.add("高于最大用药天数");
 	                }
 	                //3.7最大剂量
-	                if(Double.parseDouble(ddg.getDOSE_MAX_HIGH())!=0)
+	                if(ddg.getDOSE_MAX_HIGH() != null && Double.parseDouble(ddg.getDOSE_MAX_HIGH())!=0)
 	                {
 	                    int durDay;
 	                    if(eTime==null)
@@ -181,7 +185,9 @@ public class DrugDosageCheckerBean extends Persistent4DB implements IDrugDosageC
 	                    {
 	                        frequency = 1.0;
 	                    }
-	                    if(frequency * dosage*durDay>Double.parseDouble(ddg.getDOSE_MAX_HIGH())&& Double.parseDouble(ddg.getDOSE_MAX_HIGH()) > 0){
+	                    if(frequency * dosage*durDay > Double.parseDouble(ddg.getDOSE_MAX_HIGH()) 
+	                            && Double.parseDouble(ddg.getDOSE_MAX_HIGH()) > 0)
+	                    {
 	                        dosageInfo.add("高于最大剂量");
 	                    }
 	                }
@@ -223,10 +229,12 @@ public class DrugDosageCheckerBean extends Persistent4DB implements IDrugDosageC
      * @param dosage 
      * @param weight 体重
      * @param height 身高
+     * @param doseUnits 剂量单位
      * @return
      */
-    private int checkDoseEach(TDrugDosage drugDosage,Double dosage, Double weight,  Double height) 
+    private int checkDoseEach(TDrugDosage drugDosage,Double dosage, Double weight,  Double height,String doseUnits) 
     {
+        double dosa = setDosageUnit(drugDosage.getDOSE_EACH_UNIT(), dosage, doseUnits);
         //下限
         Double low = null;
         if (drugDosage.getCAL_INDI().equals("1")) 
@@ -251,7 +259,7 @@ public class DrugDosageCheckerBean extends Persistent4DB implements IDrugDosageC
         	//每次最高剂量（计算出） = 体重 * 每次最高剂量（数据库中字段）
             low = weight * Double.parseDouble(drugDosage.getDOSE_EACH_LOW());
         }
-        if (low != null && dosage < low)
+        if (low != null && dosa < low)
             return -1;
 
         //上限
@@ -270,7 +278,7 @@ public class DrugDosageCheckerBean extends Persistent4DB implements IDrugDosageC
             high = weight * Double.parseDouble(drugDosage.getDOSE_EACH_HIGH());
         }
 
-        if (high != null && dosage > high)
+        if (high != null && dosa > high)
             return 1;
         
         return 0;
@@ -283,16 +291,43 @@ public class DrugDosageCheckerBean extends Persistent4DB implements IDrugDosageC
      * @param frequency
      * @return
      */
-    private int checkDoseDay(TDrugDosage drugDosage,Double dosage, Double frequency)
+    private int checkDoseDay(TDrugDosage drugDosage,Double dosage, Double frequency,String doseUnits)
     {
+        if(drugDosage.getDOSE_DAY_LOW()== null || drugDosage.getDOSE_DAY_HIGH() == null) return 0;
+        double  dos = setDosageUnit(drugDosage.getDOSE_DAY_UNIT(),dosage,doseUnits) ;
         if(frequency==null)
             return 0;
-        if ((frequency * dosage) < Double.parseDouble(drugDosage.getDOSE_DAY_LOW()))
+        if ((frequency * dos) < Double.parseDouble(drugDosage.getDOSE_DAY_LOW()))
             return -1;
-        if (((frequency * dosage) > Double.parseDouble(drugDosage.getDOSE_DAY_HIGH()))
+        if (((frequency * dos) > Double.parseDouble(drugDosage.getDOSE_DAY_HIGH()))
                     && Double.parseDouble(drugDosage.getDOSE_DAY_HIGH()) > 0)
             return 1;
         return 0;
+    }
+    
+    private double  setDosageUnit(String ddunit , double dosage ,String doseUnits)
+    {
+        if(ddunit == null) return dosage;
+        if("mg".toUpperCase().equals(doseUnits.toUpperCase()))
+        {
+            if(ddunit.toUpperCase().indexOf("mg".toUpperCase()) != -1)
+            {
+                return dosage;
+            }
+            else if(ddunit.toUpperCase().indexOf("g".toUpperCase()) != -1){
+                return dosage / 1000;
+            }
+        }else if("g".toUpperCase().equals(doseUnits.toUpperCase()))
+        {
+            if(ddunit.toUpperCase().indexOf("mg".toUpperCase()) != -1)
+            {
+                return dosage * 1000;
+            }
+            else if(ddunit.toUpperCase().indexOf("g".toUpperCase()) != -1){ 
+                return dosage ;
+            }
+        }
+        return dosage;
     }
     
     /**
@@ -304,9 +339,9 @@ public class DrugDosageCheckerBean extends Persistent4DB implements IDrugDosageC
      */
     private int checkDur(TDrugDosage drugDosage,Date eTime, Date sTime){
         if (sTime != null && eTime != null){
-            if (getDrugUseDay(sTime, eTime) < Double.parseDouble(drugDosage.getDUR_LOW())){
+            if (drugDosage.getDUR_LOW()!=null && getDrugUseDay(sTime, eTime) < Double.parseDouble(drugDosage.getDUR_LOW())){
                 return -1;
-            }else if ((getDrugUseDay(sTime, eTime) > Double.parseDouble(drugDosage.getDUR_HIGH()))
+            }else if (drugDosage.getDUR_HIGH() != null && (getDrugUseDay(sTime, eTime) > Double.parseDouble(drugDosage.getDUR_HIGH()))
                     && Double.parseDouble(drugDosage.getDUR_HIGH()) > 0){
                 return 1;
             }

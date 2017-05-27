@@ -23,6 +23,7 @@ import com.ts.entity.pdss.pdss.Beans.TDrugDosage;
 import com.ts.entity.pdss.pdss.Beans.TDrugInteractionInfo;
 import com.ts.entity.pdss.pdss.Beans.TDrugIvEffect;
 import com.ts.entity.pdss.pdss.Beans.TDrugPerformFreqDict;
+import com.ts.entity.pdss.pdss.Beans.TDrugRepeat;
 import com.ts.entity.pdss.pdss.Beans.TDrugSideDict;
 import com.ts.entity.pdss.pdss.Beans.TDrugUseDetail;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugInteractionRslt;
@@ -49,12 +50,14 @@ public class InitPdssCache {
 		try
 		{
 			log.info("内容构建");
+			log.info("重复给药");
+			setDrugRepeat();
 //			log.info("药物禁忌症对应");
 //			setDrugDiagRel();
 //			log.info("药物禁忌症信息");
 //			setDrugDiagInfo();
-//			log.info("用药途径单个缓存");
-//			setAdministration();
+			log.info("用药途径单个缓存");
+			setAdministration();
 //			log.info("相互作用");
 ////	暂时不用 		setDrugInteractionInfo();
 //			setDrugInteractionMap();
@@ -70,8 +73,8 @@ public class InitPdssCache {
 //			setDdg();
 			log.info("不良反应");
 			setDrugSideDict();
-//			log.info("医嘱执行频率");
-//			setDrugPerfom();
+			log.info("医嘱执行频率");
+			setDrugPerfom();
 //			log.info("特殊人群");
 //			setDud();
 //			log.info("医保内容");
@@ -86,6 +89,30 @@ public class InitPdssCache {
 		}
 	}
 
+	/**
+	 * 重复用药
+	 * @throws Exception
+	 */
+	public void setDrugRepeat() throws Exception{
+	    
+	    Page page = new Page();
+        int pageNum = 1;
+        page.setShowCount(showCount);
+        page.setTotalPage(pageNum);
+        while( pageNum == 1 || pageNum <= page.getTotalPage()){
+            page.setCurrentPage(pageNum);
+            List<TDrugRepeat> res = (List<TDrugRepeat>) dao.findForList("DrugMapper.queryDrugRepeatPage", page);
+            if (res == null)
+                return;
+            for (TDrugRepeat repeat : res) {
+                cacheTemplate.setObject(PdssCache.drugRepeatCache, repeat.getDrug_class_1() + "_" + repeat.getDrug_class_2(),-1, repeat);
+            }
+            pageNum = page.getCurrentPage() + 1;
+            log.info("药物重复给药-- 第" + pageNum +"页");
+        }
+	}
+	
+	
 	/**
 	 * 药物禁忌症对应
 	 * 

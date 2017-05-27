@@ -153,12 +153,12 @@ public class TPatOrderDrug implements Serializable
         String admin = administrationID;
         /* 过滤一下 传入的是否是 code 为 1 时 administrationID 则是名字 需要转换 
          * */
-        DictCache dc = DictCache.getNewInstance();
-        if (Config.getParamValue("admin_conv_flag").equals("1"))
-        {
-            admin = dc.getAdminByName(administrationID).get("administration_code");
-            this.setAdminName(administrationID);
-        }
+//        DictCache dc = DictCache.getNewInstance();
+//        if (Config.getParamValue("admin_conv_flag").equals("1"))
+//        {
+//            admin = dc.getAdminByName(administrationID).get("administration_code");
+//            this.setAdminName(administrationID);
+//        }
         this.administrationID = admin;
     }
 
@@ -213,12 +213,12 @@ public class TPatOrderDrug implements Serializable
          /* 过滤一下 传入的是否是 code 为 1 时 performFreqDictID 则是名字 需要转换 
           * 1为 频次的名字  
           * */
-         DictCache dc = DictCache.getNewInstance();
-         if (Config.getParamValue("perform_conv_flag").equals("1"))
-         {
-        	 performFreq = dc.getPerformMapByName(performFreqDictID).get("serial_no");
-             this.setPerformFreqDictText(performFreqDictID);
-         }
+//         DictCache dc = DictCache.getNewInstance();
+//         if (Config.getParamValue("perform_conv_flag").equals("1"))
+//         {
+//        	 performFreq = dc.getPerformMapByName(performFreqDictID).get("serial_no");
+//             this.setPerformFreqDictText(performFreqDictID);
+//         }
          this.performFreqDictID = performFreq;
     }
 

@@ -75,6 +75,10 @@ public class TPatientOrder implements java.io.Serializable
         return null;
     }
     
+    public Map<String, TDrug> DrugMap(){
+        return drugMap;
+    }
+    
     public void setPatType(String patType)
     {
         this.patType = patType;

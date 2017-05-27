@@ -3,6 +3,8 @@ package com.ts.FetcherHander.OutPatient.dayReport;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.hitzd.DBUtils.CommonMapper;
 import com.hitzd.DBUtils.JDBCQueryImpl;
 import com.hitzd.DBUtils.TCommonRecord;
@@ -21,6 +23,7 @@ import com.hitzd.his.casehistory.helper.CaseHistoryHelperUtils;
 import com.hitzd.his.casehistory.helper.ICaseHistoryHelper;
 import com.hitzd.his.task.Task;
 import com.hitzd.persistent.Persistent4DB;
+import com.ts.FetcherHander.OutPatient.DataFetcherNew;
 
 /**
  * 药品统计支持部队医院 军委一号的情况 
@@ -29,6 +32,7 @@ import com.hitzd.persistent.Persistent4DB;
  */
 public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IReportBuilder
 {
+    private static final Logger logger = Logger.getLogger(DR_OutDrugCostInfo_BillItems.class);
     @Override
     public String getLogFileName()
     {
@@ -142,7 +146,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                         + ",'" + t.get("units",true) + "'"
                         + " )";
                     query.update(sql);
-                    System.out.println("=====添加数量为" + listDDC.size() + "/" + (++i) + "====");
+                    logger.debug("=====添加数量为" + listDDC.size() + "/" + (++i) + "====");
                 }
                 cmr       = null;
                 query     = null;
@@ -256,7 +260,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                             ",'" + t.get("units",true)            + "'" +
                             ")";
                     query.update(sql);
-                    System.out.println("=====添加数量为" + listDDDC.size() + "/" + (++i) + "====");
+                    logger.debug("=====添加数量为" + listDDDC.size() + "/" + (++i) + "====");
                 }
                 
                 cmr       = null;
@@ -342,7 +346,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                 gensql = ichr.genSQL(strFields, gensql, null, lsGroups, null);
                 List<TCommonRecord> listDDDC = his.query(gensql, cmr);
                 query.update("delete DR_DRUGPATDDCOST where  dr_date = to_date('" + ADate + "','yyyy-mm-dd')");
-                System.out.println(" DR_DRUGPATDDCOST-总条数:" + listDDDC.size());
+                logger.debug(" DR_DRUGPATDDCOST-总条数:" + listDDDC.size());
                 int i = 0;
                 for(TCommonRecord t : listDDDC)
                 {
@@ -400,7 +404,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                             + ",'" + dc.getDeptName( t.get("performed_by")) + "'"
                             + ")";
                     query.update(sql);
-                    System.out.println("=====添加数量为" + listDDDC.size() + "/" + (++i) + "====");
+                    logger.debug("=====添加数量为" + listDDDC.size() + "/" + (++i) + "====");
                 }
                 cmr       = null;
                 query     = null;

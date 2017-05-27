@@ -228,7 +228,11 @@ public class HisAuditor implements IHisAuditor
 	    {
 //	        po.setPreveUseDrug(CommonUtils.getPreveUseDrug(PreveUseInfo));
 	    	po.setPreveUseDrug(preveUseInfo);
-	        pscr.savePreveUseDrug(po);
+	        SaveBeanRS sbRS = new SaveBeanRS();
+	        sbRS.setPo(po);
+	        sbRS.setCheckRC(new TCheckResultCollection());
+	        QueueBean.setSaveBeanRS(sbRS);
+//	        pscr.savePreveUseDrug(po);
 	    }
 	    catch(Exception e)
 	    {
@@ -256,7 +260,11 @@ public class HisAuditor implements IHisAuditor
 	    {
 //	        po.setTreatUseDrug(CommonUtils.getTreatUseDrug(TreatUseInfo));
 	    	po.setTreatUseDrug(TreatUseInfo);
-	        pscr.saveTreatUseDrug(po);
+            SaveBeanRS sbRS = new SaveBeanRS();
+            sbRS.setPo(po);
+            sbRS.setCheckRC(new TCheckResultCollection());
+            QueueBean.setSaveBeanRS(sbRS);
+//	        pscr.saveTreatUseDrug(po);
 	    }
 	    catch(Exception e )
 	    {

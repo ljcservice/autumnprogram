@@ -6,24 +6,31 @@
 	<select id="getCheckPatient" parameterType="String"	resultType="Integer">
 		select count(*) c  from rs_check_patient where patient_id = #{patient_id}
 	</select>
+	
 	<insert id="insertCheckPatient" parameterType="pd"	>
 		insert into rs_check_patient(NAME,SEX,DATE_OF_BIRTH,BIRTH_PLACE,NATION,PATIENT_ID, NGROUPNUM,checkDate)
-        values(#{NAME},#{SEX},#{DATE_OF_BIRTH},#{BIRTH_PLACE},#{NATION},#{PATIENT_ID}, #{NGROUPNUM},#{checkDate})
+        values(#{NAME},#{SEX},#{DATE_OF_BIRTH,jdbcType=DATE},#{BIRTH_PLACE},#{NATION},#{PATIENT_ID}, #{NGROUPNUM},#{checkDate})
 	</insert>
+	
 	<update id="updateCheckPatient"  parameterType="pd">
 		update rs_check_patient 
 		set checkDate=#{CheckTime},NGROUPNUM=#{ngroupnum}  where patient_id=#{patient_id}
 	</update>
 	
-	<insert id="insertCheckPtaOrderVisi" parameterType="pd"	>
-		insert into RS_CHECK_PAT_ORDER_VISITINFO
-			(VISIT_ID,IN_DEPT,IN_DATE,IN_MODE,PAT_ADM_CONDITION,OUT_DEPT,NGROUPNUM,checkDate,patient_id)
-        values(#{VISIT_ID},#{IN_DEPT},#{IN_DATE,jdbcType=TIMESTAMP},#{IN_MODE},#{PAT_ADM_CONDITION},#{OUT_DEPT}, #{NGROUPNUM},#{checkDate},#{patient_id})
-	</insert>
 	<!-- 	审查病人住院信息表 -->
 	<select id="getCheckPtaOrderVisi" parameterType="pd"	resultType="Integer">
 		select count(*) c  from RS_CHECK_PAT_ORDER_VISITINFO where patient_id=#{patient_id} and visit_id=#{visit_id}
 	</select>
+	
+	<insert id="insertCheckPtaOrderVisi" parameterType="pd"	>
+		insert into RS_CHECK_PAT_ORDER_VISITINFO
+			(VISIT_ID,IN_DEPT,IN_DATE,IN_MODE,PAT_ADM_CONDITION,OUT_DEPT,NGROUPNUM,checkDate,patient_id)
+        values(#{VISIT_ID,jdbcType=VARCHAR},#{IN_DEPT,jdbcType=VARCHAR},#{IN_DATE,jdbcType=TIMESTAMP},#{IN_MODE,jdbcType=VARCHAR}
+        	,#{PAT_ADM_CONDITION,jdbcType=VARCHAR},#{OUT_DEPT,jdbcType=VARCHAR}, #{NGROUPNUM,jdbcType=VARCHAR}
+        	,#{checkDate,jdbcType=VARCHAR},#{patient_id,jdbcType=VARCHAR})
+	</insert>
+	
+	
 	<!-- 	审查病人扩展信息表 -->
 	<insert id="insertCheckPtaOrderInfoExt" parameterType="pd"	>
 		insert into rs_check_pat_order_info_ext(is_lact,is_pregnant,insureance_type,insurance_no,is_liverwhole,is_kidneywhole,height,weight,ngroupnum,checkdate,patient_id,visit_id)
@@ -40,33 +47,34 @@
 	 	values (#{patient_id}, #{visit_id}, #{check_date}, #{ngroupnum})
 	</insert>
 	<!-- 	 病人用药记录 -->
-	<insert id="insertCheckPatOrderDrug"  parameterType="pd"	>
+	<insert id="insertCheckPatOrderDrug"  parameterType="pd">
 		insert into rs_check_pat_order_drug
 				(DOCTOR_DEPT,IS_GROUP,ADMINISTRATION_ID,PERFORM_FREQ_DICT_ID
 				,DRUG_ID,REC_MAIN_NO,REC_SUB_NO,PERFORM_FREQ_DICT_NAME
 				,DOSAGE,DOSE_UNITS,START_DATE_TIME,STOP_DATE_TIME,DOCTOR
 				,NGROUPNUM,checkDate,USETYPE,USECAUSE,DRUG_NAME,check_Result)
-     	values (#{DOCTOR_DEPT},#{IS_GROUP},#{ADMINISTRATION_ID},#{PERFORM_FREQ_DICT_ID}
-				,#{DRUG_ID},#{REC_MAIN_NO},#{REC_SUB_NO},#{PERFORM_FREQ_DICT_NAME}
-				,#{DOSAGE},#{DOSE_UNITS},#{START_DATE_TIME,jdbcType=TIMESTAMP},#{STOP_DATE_TIME,jdbcType=TIMESTAMP},#{DOCTOR}
-				,#{NGROUPNUM},#{checkDate},#{USETYPE,jdbcType=VARCHAR},#{USECAUSE,jdbcType=VARCHAR},#{DRUG_NAME},#{check_Result})
+     	values (#{DOCTOR_DEPT,jdbcType=VARCHAR},#{IS_GROUP,jdbcType=VARCHAR},#{ADMINISTRATION_ID,jdbcType=VARCHAR},#{PERFORM_FREQ_DICT_ID,jdbcType=VARCHAR}
+				,#{DRUG_ID,jdbcType=VARCHAR},#{REC_MAIN_NO,jdbcType=VARCHAR},#{REC_SUB_NO,jdbcType=VARCHAR},#{PERFORM_FREQ_DICT_NAME,jdbcType=VARCHAR}
+				,#{DOSAGE,jdbcType=VARCHAR},#{DOSE_UNITS,jdbcType=VARCHAR},#{START_DATE_TIME,jdbcType=VARCHAR},#{STOP_DATE_TIME,jdbcType=VARCHAR},#{DOCTOR,jdbcType=VARCHAR}
+				,#{NGROUPNUM,jdbcType=VARCHAR},#{checkDate,jdbcType=VARCHAR},#{USETYPE,jdbcType=VARCHAR},#{USECAUSE,jdbcType=VARCHAR},#{DRUG_NAME,jdbcType=VARCHAR},#{check_Result,jdbcType=VARCHAR})
 	</insert>
 	<!-- 	 审查医嘱诊断表 -->
-	<insert id="insertCheckPatOrderDiagnosis"  parameterType="pd"	>
+	<insert id="insertCheckPatOrderDiagnosis"  parameterType="pd">
 		insert into rs_check_pat_order_diagnosis(DIAGNOSIS_DICT_ID,NGROUPNUM,DIAGNOSIS_NAME,checkDate)
 		values (#{DIAGNOSIS_DICT_ID},#{NGROUPNUM},#{DIAGNOSIS_NAME},#{checkDate})
 	</insert>
 	
 	<!-- 审查医嘱过敏表 -->
-	<insert id="insertCheckPatOrderDrugSensitive"  parameterType="pd"	>
-		insert into rs_CHECK_PAT_ORDER_DRUG_SENSITIVE(DRUG_ALLERGEN_ID,NGROUPNUM,checkDate)
-    	values(#{DRUG_ALLERGEN_ID},#{NGROUPNUM},#{checkDate});
+	<insert id="insertCheckPatOrderDrugSensitive"  parameterType="pd">
+		insert into RS_CHECK_PAT_ODS(DRUG_ALLERGEN_ID,NGROUPNUM,checkDate)
+    	values(#{DRUG_ALLERGEN_ID,jdbcType=VARCHAR},#{NGROUPNUM,jdbcType=VARCHAR},#{checkDate,jdbcType=VARCHAR})
 	</insert>
 	
 	<!-- 体征信息保存  -->
-	<insert id="insertCheckPatSigns"  parameterType="pd"	>
+	<insert id="insertCheckPatSigns"  parameterType="pd">
 		insert into rs_check_pat_signs(ngroupnum,twdate, twvalue, twok, xxdate, xxvalue, cvalue, xxok) 
-		values (#{ngroupnum},#{twdate}, #{twvalue}, #{twok}, #{xxdate}, #{xxvalue}, #{cvalue}, #{xxok})
+		values (#{ngroupnum,jdbcType=VARCHAR},#{twdate,jdbcType=VARCHAR}, #{twvalue,jdbcType=VARCHAR}, #{twok,jdbcType=VARCHAR}
+				, #{xxdate,jdbcType=VARCHAR}, #{xxvalue,jdbcType=VARCHAR}, #{cvalue,jdbcType=VARCHAR}, #{xxok,jdbcType=VARCHAR})
 	</insert>
 	
 </mapper>

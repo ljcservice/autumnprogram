@@ -31,6 +31,7 @@ import com.ts.entity.pdss.pdss.Beans.TDrugDosage;
 import com.ts.entity.pdss.pdss.Beans.TDrugInteractionInfo;
 import com.ts.entity.pdss.pdss.Beans.TDrugIvEffect;
 import com.ts.entity.pdss.pdss.Beans.TDrugPerformFreqDict;
+import com.ts.entity.pdss.pdss.Beans.TDrugRepeat;
 import com.ts.entity.pdss.pdss.Beans.TDrugSideDict;
 import com.ts.entity.pdss.pdss.Beans.TDrugUseDetail;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugInteractionRslt;
@@ -47,6 +48,7 @@ public class PdssCache {
 	public static String DiseageVsDiag    = "DiseageVsDiag";	//诊断对应的疾病key
 	public static String drugadmini       = "drugadmini";		//用药途径key
 	public static String ddrCache         = "ddrCache";			// 药物禁忌症对应key
+	public static String drugRepeatCache  = "drugRepeatCache";  // 重复给药key
 	public static String ddisCache        = "ddisCache"; 		// 药物禁忌信息
 	public static String drugIvEffect     = "drugIvEffect";		// 配伍信息
 	public static String dudCache         = "dudCache";			// 特殊人群
@@ -91,6 +93,23 @@ public class PdssCache {
 //        return list;	
 //    	
 //    }
+	
+	
+	
+	/**
+	 * 药品重复给药 
+	 * @param drugClassId1
+	 * @param drugClassId2
+	 * @return
+	 * @throws Exception
+	 */
+	public TDrugRepeat queryDrugRepeat(final String drugClassId1,final String drugClassId2) throws Exception{
+	    TDrugRepeat t = cacheTemplate.cache(drugRepeatCache , drugClassId1 + "_" + drugClassId2, null);
+	    if (t == null)
+	        t = cacheTemplate.cache(drugRepeatCache ,  drugClassId2 + "_" + drugClassId1, null);
+        return t;
+    }
+	
     /**
      * 药物禁忌症对应，已应用数据库快照
      * @param DrugClassID
@@ -457,7 +476,7 @@ public class PdssCache {
         	Entry<String, TDrug> entry = (Entry<String, TDrug>)it.next();
         	TDrug drug = (TDrug)entry.getValue();
         	TDrugUseDetail dud = (TDrugUseDetail)getDud(drug.getDRUG_CLASS_ID());
-        
+        	if(dud == null) continue;
             if(!map.containsKey(dud.getDRUG_CLASS_ID())){
             	map.put(dud.getDRUG_CLASS_ID(), dud);
             }
@@ -619,6 +638,8 @@ public class PdssCache {
      */
     public  TDrugPerformFreqDict queryDrugPerfom(final String performID  ) throws Exception {
     	TDrugPerformFreqDict t = cacheTemplate.cache(drugPerform, "code_" + performID,null);
+    	if(t == null)
+    	       t = cacheTemplate.cache(drugPerform,"name_" + performID , null);
 //    	, new CacheProcessor<TDrugPerformFreqDict>() {
 //			@Override
 //			public TDrugPerformFreqDict handle() throws Exception {

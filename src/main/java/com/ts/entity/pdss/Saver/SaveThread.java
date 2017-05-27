@@ -5,6 +5,7 @@ import com.hitzd.springBeanManager.SpringBeanUtil;
 import com.ts.entity.pdss.pdss.RSBeans.TCheckResultCollection;
 import com.ts.service.pdss.pdss.impl.PatientSaveCheckResult;
 import com.ts.service.pdss.pdss.manager.IPatientSaveCheckResult;
+import com.ts.util.Logger;
 
 /**
  * 队列保存保存信息 
@@ -14,6 +15,7 @@ import com.ts.service.pdss.pdss.manager.IPatientSaveCheckResult;
 public class SaveThread implements Runnable 
 {
 
+    private final static Logger logger = Logger.getLogger("SaveThread");
 	public SaveThread() {}
 	
 	// 审核保存
@@ -66,20 +68,25 @@ public class SaveThread implements Runnable
 				        patientSaveBean.savePreveUseDrug(po);
 				        /* 治疗用药信息保存  */
 				        patientSaveBean.saveTreatUseDrug(po);
+				        logger.debug("处理完毕队列信息：医生名称 :" + po.getDoctorName() + ";部门名称:" + po.getDoctorDeptName() + ";病人id:" + po.getPatVisitInfo().getPatientID() + ";住院号:" + po.getPatVisitInfo().getVisitID());
 					}
 					catch (Exception ex)
 					{
 						ex.printStackTrace();
 					}
+//					finally {
+//                        this.notify();
+//                    }
 				}
-				System.out.println("处理完毕队列信息：医生名称 :" + po.getDoctorName() + ";部门名称:" + po.getDoctorDeptName() + ";病人id:" + po.getPatVisitInfo().getPatientID() + ";住院号:" + po.getPatVisitInfo().getVisitID());
+//				System.out.println("处理完毕队列信息：医生名称 :" + po.getDoctorName() + ";部门名称:" + po.getDoctorDeptName() + ";病人id:" + po.getPatVisitInfo().getPatientID() + ";住院号:" + po.getPatVisitInfo().getVisitID());
 			}
 			else
 			{
+			    logger.debug("扫描没有猎物等待5秒后继续 扫描 ");
 				//System.out.println("扫描没有猎物等待5秒后继续 扫描 ");
 				try
 				{
-					Thread.sleep(5000);
+					Thread.sleep(5000); 
 				}
 				catch(Exception e)
 				{

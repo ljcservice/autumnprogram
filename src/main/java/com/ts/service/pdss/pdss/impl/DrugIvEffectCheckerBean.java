@@ -55,7 +55,7 @@ public class DrugIvEffectCheckerBean extends Persistent4DB implements  IDrugIvEf
 //	        this.setQueryCode("PDSS");
 	        TDrugSecurityRslt Result = new TDrugSecurityRslt();
 	    	TPatOrderDrug[] pods = po.getPatOrderDrugs();
-	    	Map<String, TDrug> mapDrugs = pdssCache.queryDrugMap(pods);
+//	    	Map<String, TDrug> mapDrugs = pdssCache.queryDrugMap(pods);
 	    	// 药品分组
 	    	Map<String, List<TPatOrderDrug>> group = new HashMap<String, List<TPatOrderDrug>>(); 
 	    	for (int i = 0; i < pods.length; i++)
@@ -97,13 +97,13 @@ public class DrugIvEffectCheckerBean extends Persistent4DB implements  IDrugIvEf
 		        for (int i = 0; i < indexList.size(); i++)
 		        {
 		        	TPatOrderDrug podDrugA = indexList.get(i);
-		        	TDrug drugA        = mapDrugs.get(podDrugA.getDrugID());//pdssCache.queryDrugById(podDrugA.getDrugID());
+		        	TDrug drugA        =  po.getDrugMap(podDrugA.getDrugID());//pdssCache.queryDrugById(podDrugA.getDrugID());
 		        	if(drugA == null || drugA.getIV_CLASS_CODE() == null || "".equals(drugA.getIV_CLASS_CODE())) continue;
 		        	String drugIvCode1 = drugA.getIV_CLASS_CODE();
 		        	for (int j = i + 1; j < indexList.size(); j++)
 		        	{
 		        		TPatOrderDrug podDrugB = indexList.get(j);
-		        		TDrug drugB = mapDrugs.get(podDrugB.getDrugID()); //pdssCache.queryDrugById(podDrugB.getDrugID());
+		        		TDrug drugB =  po.getDrugMap(podDrugB.getDrugID()); //pdssCache.queryDrugById(podDrugB.getDrugID());
 		        		if(drugB == null || drugB.getIV_CLASS_CODE() == null || "".equals(drugB.getIV_CLASS_CODE())) continue;
 		        		String drugIvCode2 = drugB.getIV_CLASS_CODE();
 		        		/* 数据集缓存中寻找*/

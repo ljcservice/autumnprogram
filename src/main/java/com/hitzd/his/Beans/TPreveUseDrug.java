@@ -72,6 +72,8 @@ public class TPreveUseDrug extends TBaseBean
     private String            TSYQ;
     /* 记录时间 */
     private String REC_DATE;
+    /* 指明审核数据的来源，1，门诊事实 2，门诊处方点评，3，临床医嘱事实 4，临床医嘱点评  */
+    private String  patType;
     
     public String getREC_DATE()
     {
@@ -368,4 +370,14 @@ public class TPreveUseDrug extends TBaseBean
 	public void setOrder_sub_no(String order_sub_no) {
 		this.order_sub_no = order_sub_no;
 	}
+
+    public String getPatType()
+    {
+        return patType;
+    }
+
+    public void setPatType(String patType)
+    {
+        this.patType = patType;
+    }
 }
