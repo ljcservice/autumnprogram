@@ -65,9 +65,9 @@
 							
     <form name="searchForm" id="searchForm"  action="${path}/FetchDataFromDrugDict/query.do" method="post">
         <input name="o" type="hidden" value="query"/>
-        <input type="hidden" name="drug_code" value=""/>
-        <input type="hidden" name="drug_spec" value=""/>
-        <input type="hidden" name="drug_name" value=""/>
+        <input type="hidden" name="drug_code" id="drug_code"  value=""/>
+        <input type="hidden" name="drug_spec" id="drug_spec" value=""/>
+        <input type="hidden" name="drug_name" id="drug_name" value=""/>
         <div class="check-search nav-search"  >
         	药品代码:
        		 <span class="input-icon">
@@ -120,7 +120,8 @@
 			<c:when test="${not empty resultList}">
 	      	  <c:forEach items="${resultList}" var="tcr" varStatus="vs">
 		      <tr>
-		          <td>${i + 1 + (page.getCurrentpage() - 1) * page.showCount}
+		          <td>
+		          	${vs.index + 1 + pageIndex}
 		          </td>
 		          <td>${tcr.get("drug_code")}
 		          </td>
@@ -197,8 +198,9 @@
 					全部
 				</label>
 					<c:forEach items="${toxiPropertyList}" var="obj" varStatus="vs">
-						<label style="width:90px;">
-							<input type="checkbox" value='${obj }' name="ORG_CODE" class="ORG_CODE" onclick="setValue();" nameValue="${obj }"/>
+						<label style="width:90px;"> 
+							
+							<input type="checkbox" value='${obj }' name="ORG_CODE" class="ORG_CODE" onclick="setValue();" nameValue="${obj }" <c:if test="${pd.toxi_property.contains(obj)==true }">checked="checked" </c:if>/>
 							${obj }
 						</label>
 					</c:forEach>
@@ -276,24 +278,41 @@ function ThisTransfer() {
 				dataType:'json',
 				cache: false,
 				success: function(data){
-						nextPage($("#currentPage").val());
 					if(data.result=="success"){
+						nextPage($("#currentPage").val());
 					}else{
-						
+						bootbox.dialog({
+							message: "<span class='bigger-110'>操作失败</span>",
+							buttons: 			
+							{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+						});
 					}
 				}
             });
     }
 }
 function transferSingle(_drugCode, _drugSpec,_drug_name) {
-    with (formPost) {
-        o.value = "transferSingle";
         drug_code.value = _drugCode;
         drug_spec.value = _drugSpec;
         drug_name.value = _drug_name;
-        submit();
-    }
-
+       $.ajax({
+			type: "POST",
+			url: '${path}/FetchDataFromDrugDict/transferSingle.do',
+	    	data: $("#searchForm").serialize(),
+			dataType:'json',
+			cache: false,
+			success: function(data){
+				if(data.result=="success"){
+					nextPage($("#currentPage").val());
+				}else{
+					bootbox.dialog({
+						message: "<span class='bigger-110'>操作失败</span>",
+						buttons: 			
+						{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+					});
+				}
+			}
+        });
 }
 var mm = 0;
 function showCont(){
