@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.hitzd.DBUtils.CommonMapper;
@@ -32,6 +33,7 @@ import com.ts.controller.base.BaseController;
 import com.ts.entity.Page;
 import com.ts.service.matcher.IDataMatcherService;
 import com.ts.util.PageData;
+import com.ts.util.app.AppUtil;
 
 /**
  * Author: apachexiong
@@ -94,7 +96,6 @@ public class FetchDataFromDrugDict  extends BaseController   {
         if(!"".equals(toxi_propertyStr)) {
         	toxi_property = toxi_propertyStr.indexOf(",")>0?toxi_propertyStr.split(","):new String[]{toxi_propertyStr};
         }
-
         HttpSession session = request.getSession();
 
         //所有的毒理分类
@@ -174,30 +175,43 @@ public class FetchDataFromDrugDict  extends BaseController   {
         page.setTotalResult((int)pageView.getTotalrecord());
         page.setTotalPage((int)pageView.getTotalpage());
         page.setEntityOrField(true);
-//        mv.addObject("page", page);
+        mv.addObject("pageIndex", ((page.getCurrentPage() - 1) * page.getShowCount()));
         mv.addObject("pd", pd);
         mv.setViewName("matcher/FetchDataFromDrugDict/FetchDataFromDrugDict");
         return mv;
     }
     
     @RequestMapping(value="/transferAll")
-    protected void transferAll(String o, HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session  = request.getSession();
-        //抓取所有的map
-            Map<String,TCommonRecord> newDrug = (Map<String,TCommonRecord>)session.getAttribute("allNewDrug");//所有的药品
-            List<TCommonRecord> drugList  = new ArrayList<TCommonRecord>();
-            drugList.addAll(newDrug.values());
+    @ResponseBody
+	public Object transferAll(String o, HttpServletRequest request, HttpServletResponse response) {
+    	String errInfo = "success";
+    	Map<String,Object> map = new HashMap<String,Object>();
+        try {
+			HttpSession session  = request.getSession();
+			//抓取所有的map
+			Map<String,TCommonRecord> newDrug = (Map<String,TCommonRecord>)session.getAttribute("allNewDrug");//所有的药品
+			List<TCommonRecord> drugList  = new ArrayList<TCommonRecord>();
+			drugList.addAll(newDrug.values());
 
-            for(TCommonRecord drug: drugList){
-                saveDataToDrugMap(drug);
-            }
-            newDrug.clear(); //清空缓存
+			for(TCommonRecord drug: drugList){
+			    saveDataToDrugMap(drug);
+			}
+			newDrug.clear(); //清空缓存
+		} catch (Exception e) {
+			errInfo = "操作失败！";
+		}
+        map.put("result",errInfo);
+		return  map ;            
     }
         
     @RequestMapping(value="/transferSingle")
-    protected void transferSingle(String o, HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session  = request.getSession();
-        //抓取所有的map
+    @ResponseBody
+   	public Object  transferSingle(String o, HttpServletRequest request, HttpServletResponse response) {
+    	String errInfo = "success";
+    	Map<String,Object> map = new HashMap<String,Object>();
+        try {
+        	HttpSession session  = request.getSession();
+        	//抓取所有的map
             String drugCode = CommonUtils.getRequestParameter(request,"drug_code","");
             String drugSpec = CommonUtils.getRequestParameter(request,"drug_spec","").replace(" ", "");
             String drugname = CommonUtils.getRequestParameter(request,"drug_name","").replace(" ", "");
@@ -209,6 +223,11 @@ public class FetchDataFromDrugDict  extends BaseController   {
                 newDrug.remove(drugCode + drugSpec + drugname);
                 saveDataToDrugMap(drug);
             }
+        } catch (Exception e) {
+			errInfo = "操作失败！";
+		}
+        map.put("result",errInfo);
+		return  map ;  
     }
 
     /**
