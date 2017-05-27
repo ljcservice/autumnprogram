@@ -57,7 +57,7 @@
 		<td style="text-align: right;">单位：</td>
 		<td style="text-align: left;">${cr.get('Units')}</td>
 	</tr>
-<form name="formMatcher" method="post" action="${path}/DrugMatcher/update" target="submitSelf">
+<form name="formMatcher" id="formMatcher" method="post" action="${path}/DrugMatcher/update" target="submitSelf">
 	<input type="Hidden" name="Oper"/>
 	<input type="Hidden" name="drug_map_id" value="${drug_map_id}"/>
 <%--	<input type="Hidden" name="page" value="${CommonUtils.getRequestParameter(request, "page", "1')}"/> --%>
@@ -374,7 +374,7 @@ $(top.hangge());
 //检索
 function searchs(){
 	top.jzts();
-	$("#searchForm").submit();
+	$("#formMatcher").submit();
 }
 $(function() {
 	//日期框
@@ -408,9 +408,16 @@ function SaveIt()
 			if(!confirm("抗菌药物信息填写不全，是否继续保存!"))return							
 		}
 	}
-	formMatcher.submit();
-	top.Dialog.close();
-	parent.nextPage(1);
+	$.ajax({
+		type: "POST",
+		url: '${path}/DrugMatcher/update.do',
+    	data: $("#formMatcher").serialize(),
+		dataType:'json',
+		cache: false,
+		success: function(data){
+			top.Dialog.close();
+		}
+	});
 }
 
 window.name="submitSelf";

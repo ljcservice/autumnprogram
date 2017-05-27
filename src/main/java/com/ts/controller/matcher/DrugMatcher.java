@@ -1,5 +1,6 @@
 package com.ts.controller.matcher;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.hitzd.DBUtils.CommonMapper;
@@ -284,7 +286,8 @@ public class DrugMatcher extends BaseController {
 
 
     @RequestMapping(value="/update")
-    protected void update(HttpServletRequest request, HttpServletResponse response) {
+    @ResponseBody
+	public Object  update(HttpServletRequest request, HttpServletResponse response) {
     	com.ts.entity.system.User user = getCurrentUser();
         String ybNumStr = CommonUtils.getRequestParameter(request, "ybnum", "");
         int ybNum = Integer.parseInt(ybNumStr);
@@ -353,7 +356,7 @@ public class DrugMatcher extends BaseController {
                 "' where drug_map_id = '" + CommonUtils.getRequestParameter(request, "drug_map_id", "") + "'";
         JDBCQueryImpl query      = DBQueryFactory.getQuery("PDSS");
         int x = query.update(sql);
-
+        return new HashMap<String,Object>();
     }
 
     protected ModelAndView matchAuto(HttpServletRequest request, HttpServletResponse response) {
