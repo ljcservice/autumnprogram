@@ -30,6 +30,7 @@
 	margin-bottom: 2px;
 	margin-left: 3px;
 	margin-right: 3px;
+	height: 35px;
 }
 </style>
 </head>
