@@ -34,7 +34,6 @@ import com.ts.service.matcher.MatcherService;
 import com.ts.util.MyDecimalFormat;
 import com.ts.util.PageData;
 import com.ts.util.Tools;
-import com.ts.util.ontology.CodeUtil;
 
 /**
  * 药品配码
@@ -197,8 +196,8 @@ public class DrugMatcher extends BaseController {
 	    }
 	    start.stop();
 	    start.getTime();
-	    map.put("msg","药品总数："+totalCount+"。匹配成功数："+matcherSuccess+"。匹配成功率："+persent+"%" +
-	    		" 。耗时："+start.getTime()/(1000*60)+"分"+start.getTime()/1000+"秒"
+	    map.put("msg","当前条件下药品总数："+totalCount+"，匹配成功数："+matcherSuccess+"，匹配成功率："+persent+"%，耗时："
+	    		+start.getTime()/(1000*60)+"分"+start.getTime()/1000+"秒"
 	    		);
 		return  map ; 
     }
