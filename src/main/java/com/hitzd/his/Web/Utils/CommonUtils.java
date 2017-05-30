@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.hitzd.his.Beans.frame.User;
 import com.hitzd.his.sso.SSOController;
 import com.hitzd.his.tree.TreeNode;
+import com.ts.util.PageData;
 
 /**
  * 共通的方法
@@ -71,6 +72,13 @@ public final class CommonUtils
         return (request.getParameter(parameterName)!= null && !"".equals(request.getParameter(parameterName)))? request.getParameter(parameterName).trim(): defaultValue;
     }
     
+	public static String getRequestParameter(PageData matcher,String parameterName, String defaultValue) {
+		 if("".equals(parameterName))
+	            new RuntimeException("参数名字不能为空");
+		Object obj =  matcher.get(parameterName);
+	      return obj== null?defaultValue: ("".equals(obj.toString().trim())?defaultValue:(matcher.get(parameterName).toString().trim()));
+    }
+    
     /**
      * 返回当先日期 
      * @return
@@ -98,5 +106,7 @@ public final class CommonUtils
        BigDecimal b1 = new BigDecimal(Double.toString(v1));
        BigDecimal b2 = new BigDecimal(Double.toString(v2));
        return b1.divide(b2, scale, BigDecimal.ROUND_HALF_UP).doubleValue();
-    } 
+    }
+
+
 }

@@ -1,5 +1,9 @@
 package com.ts.controller.matcher;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -10,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.time.StopWatch;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,8 +30,11 @@ import com.hitzd.his.Web.Utils.CommonUtils;
 import com.ts.controller.base.BaseController;
 import com.ts.entity.Page;
 import com.ts.service.matcher.IDataMatcherService;
+import com.ts.service.matcher.MatcherService;
+import com.ts.util.MyDecimalFormat;
 import com.ts.util.PageData;
 import com.ts.util.Tools;
+import com.ts.util.ontology.CodeUtil;
 
 /**
  * 药品配码
@@ -39,9 +47,253 @@ public class DrugMatcher extends BaseController {
     private static final long serialVersionUID = 1L;
     @Resource(name = "drugMatcherServiceImpl")
     private IDataMatcherService drugMatcherServiceImpl;
+    @Resource
+    private MatcherService matcherService;
     private int drug_map_id = 0;
 
-    /**
+    @RequestMapping(value="/autoMatcher")
+    @ResponseBody
+    public Object autoMatcher(Page page){
+    	StopWatch start = new StopWatch();
+    	start.start();
+    	String errInfo = "success";
+    	Map<String,Object> map = new HashMap<String,Object>();
+    	List<PageData> waitingUpdateList = new ArrayList<PageData>();
+    	int totalCount = 0;
+    	int matcherSuccess = 0;
+        try {
+        	//查询出列表
+        	page.setShowCount(100);
+        	page.setCurrentPage(1);
+        	page.setTotalResult(1000);
+        	for(int i=1;i<=page.getTotalPage();i++){
+        		page.setCurrentPage(i);
+        		List<PageData>	drugMaplist = matcherService.drugMapListPage(page); 
+        		if(i==1){totalCount=page.getTotalResult();}
+        		List<PageData> drugList = null;
+        		try {
+        			//自动匹配
+        			for(PageData drugmap:drugMaplist){
+	        			PageData s = new PageData();
+	        			//汉字去除 "注射液"去掉（ ( 内容
+	        			s.put("DRUG_NAME", controlName( drugmap.getString("DRUG_NAME_LOCAL")));
+	        			//根据成查询此出所有的相似药品
+	        			drugList = matcherService.drugList( s);
+	        			List<PageData> drugList2 = new ArrayList<PageData>();
+	            		List<PageData> drugList3 = new ArrayList<PageData>();
+	        			if(drugList==null||drugList.size()==0){
+	        				continue;
+	        			}
+	        			// DRUG_SPEC UNITS DRUG_FORM
+	        			String DRUG_SPEC = drugmap.getString("DRUG_SPEC");
+	        			String UNITS = drugmap.getString("UNITS");
+	        			String DRUG_FORM = drugmap.getString("DRUG_FORM");
+	        			PageData matcher = null;
+	        			for(PageData drug : drugList){
+	        				//规则1 
+	        				if(DRUG_SPEC!=null && DRUG_SPEC.equals(drug.getString("DRUG_SPEC"))
+	        						&& UNITS!=null && DRUG_SPEC.equals(drug.getString("UNITS"))
+	        						&& DRUG_FORM!=null && DRUG_SPEC.equals(drug.getString("DRUG_FORM"))
+	        					){
+	        					matcher = drug;break;
+	        				}else{
+	        					//规则2
+	        					if(DRUG_SPEC!=null && DRUG_SPEC.equals(drug.getString("DRUG_SPEC"))
+		        						&& UNITS!=null && DRUG_SPEC.equals(drug.getString("UNITS"))
+		        					){
+		        					matcher = drug;break;
+		        				}else if(DRUG_SPEC!=null && DRUG_SPEC.equals(drug.getString("DRUG_SPEC"))
+		        						&& DRUG_FORM!=null && DRUG_SPEC.equals(drug.getString("DRUG_FORM"))
+		        					){
+		        					matcher = drug;break;
+		        				}else if( UNITS!=null && DRUG_SPEC.equals(drug.getString("UNITS"))
+		        						&& DRUG_FORM!=null && DRUG_SPEC.equals(drug.getString("DRUG_FORM"))
+		        					){
+		        					matcher = drug;break;
+		        				}else{
+		        					//规则3 
+		        					if(DRUG_SPEC!=null && DRUG_SPEC.equals(drug.getString("DRUG_SPEC"))
+			        						|| UNITS!=null && DRUG_SPEC.equals(drug.getString("UNITS"))
+			        						|| DRUG_FORM!=null && DRUG_SPEC.equals(drug.getString("DRUG_FORM"))
+			        					){
+			        					matcher = drug;break;
+			        				}
+		        				}
+	        				}
+	        				if(drug.get("dose_class_id")==null || Tools.isEmpty(drug.get("dose_class_id").toString()) ){
+	        					drugList3.add(drug);
+	        				}else{
+	        					drugList2.add(drug);
+	        				}
+	        			}
+	        			//规则4
+	        			if(matcher==null && drugList2.size()>0){
+		        			//排序
+		        			Collections.sort(drugList2, new Comparator<PageData>() {
+		    					@Override
+		    					public int compare(PageData p1, PageData p2) {
+		    						String DRUG_SPEC = p1.getString("DRUG_SPEC");
+		    						String UNITS = p1.getString("UNITS");
+		    						String DRUG_FORM = p1.getString("DRUG_FORM");
+		    						
+		    						String DRUG_SPEC2 = p2.getString("DRUG_SPEC");
+		    						String UNITS2 = p2.getString("UNITS");
+		    						String DRUG_FORM2 = p2.getString("DRUG_FORM");
+		    						Integer m = countNotNull(DRUG_SPEC,UNITS,DRUG_FORM);
+		    						Integer n = countNotNull(DRUG_SPEC2,UNITS2,DRUG_FORM2);
+		    						return -1 * m.compareTo(n);
+		    					}
+		    				});
+		        			//排序完成后，取值最多的一个
+		        			matcher = drugList2.get(0);
+	        			}
+	        			//规则5
+	        			if(matcher==null && drugList3.size()>0){
+		        			//排序
+		        			Collections.sort(drugList3, new Comparator<PageData>() {
+		    					@Override
+		    					public int compare(PageData p1, PageData p2) {
+		    						String DRUG_SPEC = p1.getString("DRUG_SPEC");
+		    						String UNITS = p1.getString("UNITS");
+		    						String DRUG_FORM = p1.getString("DRUG_FORM");
+		    						
+		    						String DRUG_SPEC2 = p2.getString("DRUG_SPEC");
+		    						String UNITS2 = p2.getString("UNITS");
+		    						String DRUG_FORM2 = p2.getString("DRUG_FORM");
+		    						Integer m = countNotNull(DRUG_SPEC,UNITS,DRUG_FORM);
+		    						Integer n = countNotNull(DRUG_SPEC2,UNITS2,DRUG_FORM2);
+		    						return -1 * m.compareTo(n);
+		    					}
+		    				});
+		        			//排序完成后，取值最多的一个
+		        			matcher = drugList3.get(0);
+	        			}
+	        			if(matcher==null ){
+	        				//前面啥都匹配不上，列表只能为空了，不存在这种情况
+	        			}
+	        			//匹配成功更新
+	        			if(matcher!=null){
+	        				matcherSuccess++;
+	        				matcher.put("drug_map_id", drugmap.get("drug_map_id"));
+	        				waitingUpdateList.add(matcher);
+	        			}
+	        			//电脑也需要休息啊
+	        			Thread.sleep(200);
+	        		}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+        	}
+        	for(PageData po:waitingUpdateList){
+        		update(po);
+        	}
+	    } catch (Exception e) {
+			errInfo = "操作失败！";
+		}
+	    map.put("result",errInfo);
+	    String persent = "0";
+	    if(totalCount!=0){
+	    	persent = MyDecimalFormat.format( new BigDecimal(matcherSuccess).divide(new BigDecimal(page.getTotalResult()),4,4).doubleValue()*100);
+	    }
+	    start.stop();
+	    start.getTime();
+	    map.put("msg","药品总数："+totalCount+"。匹配成功数："+matcherSuccess+"。匹配成功率："+persent+"%" +
+	    		" 。耗时："+start.getTime()/(1000*60)+"分"+start.getTime()/1000+"秒"
+	    		);
+		return  map ; 
+    }
+    
+    private void update(PageData matcher) {
+    	String drug_map_id = matcher.get("drug_map_id").toString();
+    	if(drug_map_id==null){
+    		return;
+    	}
+    	String is_part = CommonUtils.getRequestParameter(matcher,"is_part","0");//0 全身 1 局部
+        // 是否是外用药
+        String is_external = CommonUtils.getRequestParameter(matcher,"is_external","0");//0 全身； 1 局部
+        //是否是抗菌药
+        String is_anti = CommonUtils.getRequestParameter(matcher,"is_anti","0"); //1抗菌药，0非抗菌药
+
+    /*处理逻辑
+    抗菌药分为外用和内用，全身就是内用，外用就是局部，当是抗菌药时is_part起作用，当不是抗菌药时is_external 起作用。
+     */
+        if("1".equals(is_anti)){
+            is_external = is_part;
+        }
+
+        String sql = "update drug_map set oper_user = '" + getCurrentUser().getUSERNAME()+
+                "', oper_time=sysdate, last_date_time=sysdate, drug_id='" + CommonUtils.getRequestParameter(matcher, "drug_id", "") +
+                "', drug_name='" +  CommonUtils.getRequestParameter(matcher, "drug_name", "")  +
+                "', drug_spec_pdss='" + CommonUtils.getRequestParameter(matcher, "drug_spec", "") +
+                "', units_pdss='" + CommonUtils.getRequestParameter(matcher, "units", "") +
+                "', drug_form_pdss='" + CommonUtils.getRequestParameter(matcher, "drug_form", "") +
+                "', dose_per_unit_pdss='" + CommonUtils.getRequestParameter(matcher, "dose_per_unit", "") +
+                "', dose_units_pdss='" + CommonUtils.getRequestParameter(matcher, "dose_units", "") +
+                "', drug_indicator_pdss='" + CommonUtils.getRequestParameter(matcher, "drug_indicator", "") +
+                "', toxi_property_pdss='" + CommonUtils.getRequestParameter(matcher, "toxi_property", "") +
+                "', is_anti='" + CommonUtils.getRequestParameter(matcher, "is_anti", "") +
+                "', is_basedrug='" + CommonUtils.getRequestParameter(matcher, "is_basedrug", "") +
+                "', ddd_value='" + CommonUtils.getRequestParameter(matcher, "ddd_value", "") +
+                "', ddd_unit='" + CommonUtils.getRequestParameter(matcher, "ddd_unit", "") +
+                "', ddd_per_unit='" + CommonUtils.getRequestParameter(matcher, "ddd_per_unit", "") +
+                "', is_exhilarant='" + CommonUtils.getRequestParameter(matcher, "is_exhilarant", "") +
+                "', is_injection='" + CommonUtils.getRequestParameter(matcher, "is_injection", "") +
+                "', is_oral='" + CommonUtils.getRequestParameter(matcher, "is_oral", "") +
+                "', is_impregnant='" + CommonUtils.getRequestParameter(matcher, "is_impregnant", "") +
+                "', pharm_catalog='" + CommonUtils.getRequestParameter(matcher, "pharm_catalog", "") +
+                "', drug_catalog='" + CommonUtils.getRequestParameter(matcher, "drug_catalog", "") +
+                "', is_external='" + is_external +
+                "', is_chinesedrug='" + CommonUtils.getRequestParameter(matcher, "is_chinesedrug", "") +
+                "', is_allergy='" + CommonUtils.getRequestParameter(matcher, "is_allergy", "") +
+                "', ddd_value_x='" + CommonUtils.getRequestParameter(matcher, "ddd_value_x", "") +
+                "', is_medcare_country='" + CommonUtils.getRequestParameter(matcher, "is_medcare_country", "") +
+                "', is_medcare_local='" + CommonUtils.getRequestParameter(matcher, "is_medcare_local", "") +
+                "', is_patentdrug='" + CommonUtils.getRequestParameter(matcher, "is_patentdrug", "") +
+                "', is_tumor='" + CommonUtils.getRequestParameter(matcher, "is_tumor", "") +
+                "', is_poison='" + CommonUtils.getRequestParameter(matcher, "is_poison", "") +
+                "', is_psychotic='" + CommonUtils.getRequestParameter(matcher, "is_psychotic", "") +
+                "', is_habitforming='" + CommonUtils.getRequestParameter(matcher, "is_habitforming", "") +
+                "', is_radiation='" + CommonUtils.getRequestParameter(matcher, "is_radiation", "") +
+                "', is_precious='" + CommonUtils.getRequestParameter(matcher, "is_precious", "") +
+                "', is_danger='" + CommonUtils.getRequestParameter(matcher, "is_danger", "") +
+                "', is_otc='" + CommonUtils.getRequestParameter(matcher, "is_otc", "") +
+                "', anti_level='" + CommonUtils.getRequestParameter(matcher, "anti_level", "") +
+                "', is_hormone='" + CommonUtils.getRequestParameter(matcher, "is_hormone", "") +
+                "', is_cardiovascular='" + CommonUtils.getRequestParameter(matcher, "is_cardiovascular", "") +
+                "', is_digestive='" + CommonUtils.getRequestParameter(matcher, "is_digestive", "") +
+                "', is_biological='" + CommonUtils.getRequestParameter(matcher, "is_biological", "") +
+                //"', is_medcare='" + yb +
+                "', is_chinese_drug='" + CommonUtils.getRequestParameter(matcher, "is_patentdrug", "") +
+                "', is_assist='" + CommonUtils.getRequestParameter(matcher, "is_assist", "") +
+                "', is_albumin='" + CommonUtils.getRequestParameter(matcher, "is_albumin", "") +
+                "' where drug_map_id = '" + CommonUtils.getRequestParameter(matcher, "drug_map_id", "") + "'";
+        JDBCQueryImpl query      = DBQueryFactory.getQuery("PDSS");
+        int x = query.update(sql);
+	}
+
+	//统计数组中不为空的个数
+    protected Integer countNotNull(String... drug_spec ) {
+    	Integer x = 0;
+    	for(String str:drug_spec){
+    		if(!Tools.isEmpty(str)){
+    			x++;
+    		}
+    	}
+		return x;
+	}
+
+
+	private String controlName(String str) {
+    	try {
+			str = str.replaceAll("注射液", "");
+			str = str.substring(0, str.indexOf("(") );
+			str = str.substring(0, str.indexOf("（") );
+		} catch (Exception e) {
+		}
+		return str;
+	}
+
+	/**
      * 药品 配对查询
      * @param page
      * @param request
@@ -233,30 +485,25 @@ public class DrugMatcher extends BaseController {
     	ModelAndView mv = this.getModelAndView();
     	mv.setViewName("matcher/drugMatcher/DictQuery");
         PageData pd = this.getPageData();
-      response.setHeader("Pragma","No-cache");
-      response.setHeader("Cache-Control","no-cache");
-      response.setDateHeader("Expires", 0);
-      if(CommonUtils.getRequestParameter(request, "drugName", "").equals("")){//判断为空则直接返回,
-      	return mv;
-      }
-      JDBCQueryImpl query      = DBQueryFactory.getQuery("PDSS");
-      String sql               = "select * from Drug";
-      String DrugName          = new String(CommonUtils.getRequestParameter(request, "drugName", ""));
-      String where             = " 1=1 ";
-      if (DrugName.length() > 0) where += " and drug_Name like '%" + DrugName + "%'";
-      if (" 1=1 ".equalsIgnoreCase(where))
-          where = " 1 <> 1 ";
-      sql += " where " + where;
-      sql += " order by drug_id";
-      List<TCommonRecord> list = query.query(sql, new CommonMapper());
-      mv.addObject("drugList",list);
-      return mv;
-  }
-    
-    
-    
-    
-    
+	      response.setHeader("Pragma","No-cache");
+	      response.setHeader("Cache-Control","no-cache");
+	      response.setDateHeader("Expires", 0);
+	      if(CommonUtils.getRequestParameter(request, "drugName", "").equals("")){//判断为空则直接返回,
+	      	return mv;
+	      }
+	      JDBCQueryImpl query      = DBQueryFactory.getQuery("PDSS");
+	      String sql               = "select * from Drug";
+	      String DrugName          = new String(CommonUtils.getRequestParameter(request, "drugName", ""));
+	      String where             = " 1=1 ";
+	      if (DrugName.length() > 0) where += " and drug_Name like '%" + DrugName + "%'";
+	      if (" 1=1 ".equalsIgnoreCase(where))
+	          where = " 1 <> 1 ";
+	      sql += " where " + where;
+	      sql += " order by drug_id";
+	      List<TCommonRecord> list = query.query(sql, new CommonMapper());
+	      mv.addObject("drugList",list);
+	      return mv;
+   }
     
     
     @RequestMapping(value="/modify")
@@ -353,6 +600,8 @@ public class DrugMatcher extends BaseController {
                 "', is_biological='" + CommonUtils.getRequestParameter(request, "is_biological", "") +
                 "', is_medcare='" + yb +
                 "', is_chinese_drug='" + CommonUtils.getRequestParameter(request, "is_patentdrug", "") +
+                "', is_assist='" + CommonUtils.getRequestParameter(request, "is_assist", "") +
+                "', is_albumin='" + CommonUtils.getRequestParameter(request, "is_albumin", "") +
                 "' where drug_map_id = '" + CommonUtils.getRequestParameter(request, "drug_map_id", "") + "'";
         JDBCQueryImpl query      = DBQueryFactory.getQuery("PDSS");
         int x = query.update(sql);
@@ -458,4 +707,16 @@ public class DrugMatcher extends BaseController {
         query(null,request,response);
 //        this.forword = "/WebPage/DrugMatcher/DrugMatcher_Excel.jsp";
     }
+    
+    public static void main(String[] args) {
+    	StopWatch start = new StopWatch();
+    	start.start();
+    	try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+		}
+    	start.stop();
+	    start.getTime();
+    	System.out.println(2);
+	}
 }

@@ -205,9 +205,14 @@
             </select>
 		</td>
 		<td  style="text-align: right;">OTC:</td>
-		<td style="text-align: left;" colspan="3">
+		<td style="text-align: left;" colspan="1">
 			<input type="radio" class="noline" name="is_otc" value="1" <c:if test="${'1'==cr.get('is_otc')}" > checked='checked' </c:if>>是
 			<input type="radio" class="noline" name="is_otc" value="0" <c:if test="${'0'==cr.get('is_otc')}" > checked='checked' </c:if>>否
+		</td>
+		<td  style="text-align: right;">是否辅助用药:</td>
+		<td style="text-align: left;" colspan="1">
+			<input type="radio" class="noline" name="is_assist" value="1" <c:if test="${'1'==cr.get('is_assist')}" > checked='checked' </c:if>>是
+			<input type="radio" class="noline" name="is_assist" value="0" <c:if test="${'0'==cr.get('is_assist')}" > checked='checked' </c:if>>否
 		</td>
 	</tr>
     <tr height="22">
@@ -292,17 +297,17 @@
 	<tr>
 		<td  style="text-align: right;">DDD值:</td>
 		<td style="text-align: left;">
-			<input  type="text"  name="ddd_value" id="ddd_value" <c:if test="${'1'==cr.get('is_anti')}"> disabled='disabled'</c:if> value="${cr.get('ddd_value')}" size="15" ondragenter="return false" style="ime-mode:disabled" />
+			<input  type="text"  name="ddd_value" id="ddd_value" <c:if test="${''== cr.get('is_anti') || '1'==cr.get('is_anti')}"> disabled='disabled'</c:if> value="${cr.get('ddd_value')}" size="15" ondragenter="return false" style="ime-mode:disabled" />
 		</td>
 		<td  style="text-align: right;" nowrap="nowrap">DDD剂量单位</td>
 		<td style="text-align: left;">
-			<input  type="text"  name="ddd_per_unit" id="ddd_per_unit" <c:if test="${'1'==cr.get('is_anti')}"> disabled='disabled'</c:if> value="${cr.get('ddd_per_unit')}" size="15" maxlength="10" />
-			<input  class="noline" name="ddd_unit" id="ddd_unit_g"  <c:if test="${'1'==cr.get('is_anti')}"> disabled='disabled'</c:if> value="g" checked="checked" type="radio">g </input>
-			<input  class="noline" name="ddd_unit" id="ddd_unit_mg" <c:if test="${'1'==cr.get('is_anti')}"> disabled='disabled'</c:if> value="mg" <c:if test="${'mg'==cr.get('ddd_unit')}"> checked='checked' </c:if> type="radio">mg</input>
+			<input  type="text"  name="ddd_per_unit" id="ddd_per_unit" <c:if test="${''== cr.get('is_anti') || '1'==cr.get('is_anti')}"> disabled='disabled'</c:if> value="${cr.get('ddd_per_unit')}" size="15" maxlength="10" />
+			<input  class="noline" name="ddd_unit" id="ddd_unit_g"  <c:if test="${''== cr.get('is_anti') || '1'==cr.get('is_anti')}"> disabled='disabled'</c:if> value="g" checked="checked" type="radio">g </input>
+			<input  class="noline" name="ddd_unit" id="ddd_unit_mg" <c:if test="${''== cr.get('is_anti') || '1'==cr.get('is_anti')}"> disabled='disabled'</c:if> value="mg" <c:if test="${'mg'==cr.get('ddd_unit')}"> checked='checked' </c:if> type="radio">mg</input>
 		</td>
 		<td  style="text-align: right;"  nowrap="nowrap">单日最大剂量:</td>
 		<td style="text-align: left;" colspan="3">
-			<input  type="text"  name="ddd_value_x" id="ddd_value_x" <c:if test="${'1'==cr.get('is_anti')}"> disabled='disabled' </c:if> value="${cr.get('ddd_value_x')}" size="15" style="ime-mode:disabled" />
+			<input  type="text"  name="ddd_value_x" id="ddd_value_x" <c:if test="${''== cr.get('is_anti') || '1'==cr.get('is_anti')}"> disabled='disabled' </c:if> value="${cr.get('ddd_value_x')}" size="15" style="ime-mode:disabled" />
 		</td>
 	</tr>
 	<tr height="22">

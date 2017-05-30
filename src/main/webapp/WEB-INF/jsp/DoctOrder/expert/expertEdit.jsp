@@ -73,10 +73,10 @@
 										<tr>
 											<td style="text-align: center;" colspan="10">
 												<c:if test="${MSG=='add'}">
-													<ts:rights code="expert/add"><a class="btn btn-mini btn-primary" onclick="save();">保存</a></ts:rights>
+													<a class="btn btn-mini btn-primary" onclick="save();">保存</a>
 												</c:if>
 												<c:if test="${MSG=='edit'}">
-													<ts:rights code="expert/edit"><a class="btn btn-mini btn-primary" onclick="save();">保存</a></ts:rights>
+													<a class="btn btn-mini btn-primary" onclick="save();">保存</a>
 												</c:if>
 												<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>
 											</td>

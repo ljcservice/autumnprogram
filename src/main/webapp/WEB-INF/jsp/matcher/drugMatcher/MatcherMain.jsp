@@ -146,7 +146,9 @@
 							               <option value="is null" <c:if test="${'is null'==matched}">selected='selected'</c:if>>未配对</option>
 							           </select>
 									</div>
-									
+									<div class="check-search"  id="autoMatcherBtn" >
+										<a class="btn btn-mini btn-primary" onclick="autoMatcher();">自动匹配</a>
+									</div>
 								</form>
 								</div>
 						<!-- 检索  -->
@@ -328,6 +330,20 @@ function MatchIt(drug_map_id) {
   		diag.close();
   	 };
   	 diag.show();
+}
+function autoMatcher(){
+	$("#autoMatcherBtn").html("自动匹配中......");
+	$.ajax({
+		type: "POST",
+		url: '${path}/DrugMatcher/autoMatcher.do',
+		dataType:'json',
+		async:true,
+		cache: false,
+		success: function(data){
+			alert(data.msg);
+			nextPage(${page.currentPage});
+		}
+    });
 }
 </script>
 </html>

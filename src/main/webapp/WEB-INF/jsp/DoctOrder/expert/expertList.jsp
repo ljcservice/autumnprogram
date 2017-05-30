@@ -81,16 +81,12 @@
 											<td class="center">${user.remark}</td>
 											<td>
 												<div class=" btn-group" style="height: 30px;width: auto;overflow: visible;">
-													<ts:rights code="expert/toEdit">
 														<a class="btn btn-xs btn-success" title="编辑" onclick="editUser('${user.USER_ID}');">
 															<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
 														</a>
-													</ts:rights>
-													<ts:rights code="expert/delete">
 														<a class="btn btn-xs btn-danger" onclick="delUser('${user.USER_ID }','${user.USERNAME }');">
 															<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
 														</a>
-													</ts:rights>
 												</div>
 											</td>
 										</tr>
@@ -110,12 +106,8 @@
 					<table style="width:100%;">
 						<tr>
 							<td style="vertical-align:top;">
-								<ts:rights code="expert/toAdd">
 									<a class="btn btn-mini btn-success" onclick="add();">新增</a>
-								</ts:rights>
-								<ts:rights code="expert/deleteAll">
 									<a title="批量删除" class="btn btn-mini btn-danger" onclick="makeAll('确定要删除选中的专家吗?');" ><i class='ace-icon fa fa-trash-o bigger-120'></i></a>
-								</ts:rights>
 							</td>
 							<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
 						</tr>
