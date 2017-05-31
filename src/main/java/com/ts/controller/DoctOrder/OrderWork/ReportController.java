@@ -132,7 +132,7 @@ public class ReportController extends BaseController{
 					for(int i=0;i<varOList.size();i++){
 						PageData vpd = new PageData();
 						vpd.put("var1", varOList.get(i).get("RS_TYPE_NAME")==null?"":varOList.get(i).get("RS_TYPE_NAME").toString());	//2
-						vpd.put("var2", varOList.get(i).getDouble("count"));	//4
+						vpd.put("var2", varOList.get(i).get("count"));	//4
 						vpd.put("var3", varOList.get(i).get("percent"));		//5
 						varList.add(vpd);
 					}
