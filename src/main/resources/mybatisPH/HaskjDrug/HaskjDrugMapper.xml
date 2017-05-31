@@ -125,7 +125,7 @@
 		  from (select org_code, org_name, count(*) c, sum(haskj) haskj, doctor_name
 		          from patienthistory.presc t
 		         where t.order_type = 1
-		           <if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
+		        <if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
 					and t.ORDER_DATE &gt;= #{pd.beginDate} 
 				</if>
 				<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
@@ -141,6 +141,27 @@
 	
 		
 	<select id="haskjDrug22" parameterType="page" resultType="pd" >
-	
+		select doctor_name,
+	       sum(haskj) haskj,
+	       sum(haskj) / count(patient_id) rate,
+	       org_code,
+	       org_name,
+	       count(distinct patient_id) c
+  		from (select org_code,
+               patient_id,
+               decode(sum(haskj), 0, 0, 1) haskj,
+               doctor_name,
+               org_name
+	         from presc t
+	         where order_type = 1
+	            <if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
+					and t.ORDER_DATE &gt;= #{pd.beginDate} 
+				</if>
+				<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
+					and t.ORDER_DATE &lt; #{pd.endDate}
+				</if>
+	         group by org_code, patient_id, doctor_name, org_name)
+		 group by org_code, doctor_name, org_name
+		 order by rate desc
 	</select>
 </mapper>

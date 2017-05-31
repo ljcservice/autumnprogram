@@ -5,8 +5,55 @@
 <!-- 查询药品未匹配信息 -->
 <select id="drugMapListPage" parameterType="page" resultType="pd">
 	 select * from drug_map a where DRUG_ID is null
+	 <if test="pd.drugCode != null and pd.drugCode != ''">
+	 	and drug_no_local LIKE CONCAT(CONCAT('%', #{pd.drugCode}),'%')
+	 </if>
+	 <if test="pd.drugName != null and pd.drugName != ''">
+	 	and drug_no_local  LIKE CONCAT(CONCAT('%', #{pd.drugName}),'%')
+	 </if>
+	  <if test="pd.whereValue != null and pd.whereValue != ''">
+	 	and pd.whereField LIKE CONCAT(CONCAT('%', #{pd.whereValue}),'%')
+	 </if>
+	 <if test="pd.q_is_anti != null and pd.q_is_anti == '0'">
+	 	and is_anti='1'
+	 </if>
+	 <if test="pd.q_is_anti != null and pd.q_is_anti == '4'">
+	 	and is_anti='1' and is_external='1'
+	 </if>
+	 <if test="pd.q_is_anti != null and pd.q_is_anti == '5'">
+	 	and is_anti='1' and is_external='0'
+	 </if>
+	 <if test="pd.q_is_anti != null and pd.q_is_anti != '' and pd.q_is_anti != '0' and pd.q_is_anti != '4' and pd.q_is_anti != '5'">
+	 	and is_anti='1' and anti_level=#{pd.q_is_anti}
+	 </if>
 	 
+	 <if test="pd.q_is_psychotic != null and pd.q_is_psychotic == '0'">
+	 	 and (is_psychotic = '1' or is_psychotic = '2') 
+	 </if>
+	 <if test="pd.q_is_psychotic != null and pd.q_is_psychotic == '1'">
+	 	and is_psychotic = '1'
+	 </if>
+	 <if test="pd.q_is_psychotic != null and pd.q_is_psychotic == '2'">
+	 	and is_psychotic = '2'
+	 </if>
 	 
+	 <if test="pd.q_is_danger != null and pd.q_is_danger == '0'">
+		and (is_danger='1' or is_danger='2' or is_danger='3') 
+	 </if>
+	 <if test="pd.q_is_danger != null and pd.q_is_danger == '1'">
+		and is_danger='1' 
+	 </if>
+	 <if test="pd.q_is_danger != null and pd.q_is_danger == '2'">
+	 	and is_danger='2' 
+	 </if>
+	 <if test="pd.q_is_danger != null and pd.q_is_danger == '3'">
+	 	and is_danger='3'
+	 </if>
+	 
+	 <if test="pd.matched != null and pd.matched == '3'">
+	 	and drug_id =#{matched}
+	 </if>
+	 order by drug_no_local asc
 </select>
 
 <select id="drugList" parameterType="pd" resultType="pd">
