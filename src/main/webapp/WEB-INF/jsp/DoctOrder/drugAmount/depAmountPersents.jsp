@@ -64,7 +64,7 @@
 									</div>
 									<div class="check-search"  >
 										排序：
-									 	<select class="chosen-select form-control" name="sort_type" id="sort_type" data-placeholder="" style="vertical-align:top;width: 110px;" >
+									 	<select class="chosen-select form-control" name="sort_type" id="sort_type" data-placeholder=" " style="vertical-align:top;width: 110px;" >
 											<option value=""></option>
 											<option <c:if test="${'1' == pd.sort_type}">selected</c:if> value="1" >总费用 ↑</option>
 											<option <c:if test="${'2' == pd.sort_type}">selected</c:if> value="2" >总费用 ↓</option>
@@ -74,6 +74,10 @@
 											<option <c:if test="${'6' == pd.sort_type}">selected</c:if> value="6" >抗菌药费 ↓</option>
 										</select>
 									</div>
+									<div id="btnDiv" class="check-search">
+											<a title="最大支持导出2万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
+											<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
+										</div>
 								</div>
 							</form>
 						<!-- 检索  -->
@@ -124,15 +128,6 @@
 							</c:choose>
 							</tbody>
 						</table>
-						</div>
-						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">
-							<table style="width:100%;">
-								<tr>
-									<td>
-										<div class="pagination" style="float: right;padding: 0px;margin: 0px;">${page.pageStr}</div>
-									</td>
-								</tr>
-							</table>
 						</div>
 	
 						</div>
@@ -226,6 +221,18 @@ function initWidthHeight(){
 	FixTable("simple-table", 1, rr);
 }
 
-
+function listExport(){
+	window.open(path + "/drugAmount/depAmountPersentsExport.do?&"+$("#searchForm").serialize());
+}
+function myprint(){
+	$("#main-container").hide();
+	var tableFixClone = $("#simple-table").clone(true);
+	$("<div id='myprint' style='width=100%;height=100%;'></div>").appendTo($("body"));
+	tableFixClone.appendTo($("#myprint"));
+	$("#myprint").css("z-index",9999) .css("position","absolute").css("left",0).css("top",0).css("background-color","white");
+	window.print();
+	$("#myprint").remove();
+	$("#main-container").show();
+}
 </script>
 </html>

@@ -143,6 +143,12 @@
 							<table style="width:100%;">
 								<tr>
 									<td>
+										<div id="btnDiv" class="check-search">
+											<a title="最大支持导出2万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
+											<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
+										</div>
+									</td>
+									<td>
 										<div class="pagination" style="float: right;padding: 0px;margin: 0px;">${page.pageStr}</div>
 									</td>
 								</tr>
@@ -239,7 +245,19 @@ function initWidthHeight(){
 	rr[1]="pageStrDiv";
 	FixTable("simple-table", 1, rr);
 }
-
+function listExport(){
+	window.open(path + "/drugAmount/drugAmountByDepExport.do?&"+$("#searchForm").serialize());
+}
+function myprint(){
+	$("#main-container").hide();
+	var tableFixClone = $("#simple-table").clone(true);
+	$("<div id='myprint' style='width=100%;height=100%;'></div>").appendTo($("body"));
+	tableFixClone.appendTo($("#myprint"));
+	$("#myprint").css("z-index",9999) .css("position","absolute").css("left",0).css("top",0).css("background-color","white");
+	window.print();
+	$("#myprint").remove();
+	$("#main-container").show();
+}
 
 </script>
 </html>

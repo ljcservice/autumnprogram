@@ -121,22 +121,15 @@
 			<input type="radio" class="noline" name="is_impregnant" value="1" <c:if test="${'1'==cr.get('is_impregnant')}"  >checked='checked' </c:if>>是
 			<input type="radio" class="noline" name="is_impregnant" value="0" <c:if test="${'0'==cr.get('is_impregnant')}"  >checked='checked' </c:if>>否
 		</td>
-		<td  style="text-align: right;">药理分类:</td>
-		<td style="text-align: left;">
-			<select name="pharm_catalog">
-				<option value=""></option>
-				<option value="1" <c:if test="${'1'==cr.get('pharm_catalog')}"> selected='selected' </c:if> >药品</option>
-				<option value="2" <c:if test="${'2'==cr.get('pharm_catalog')}"> selected='selected' </c:if> >中草药</option>
-				<option value="3" <c:if test="${'3'==cr.get('pharm_catalog')}"> selected='selected' </c:if> >中成药</option>
-				<option value="4" <c:if test="${'4'==cr.get('pharm_catalog')}"> selected='selected' </c:if> >原料</option>
-				<option value="5" <c:if test="${'5'==cr.get('pharm_catalog')}"> selected='selected' </c:if> >化学试剂</option>
-				<option value="6" <c:if test="${'6'==cr.get('pharm_catalog')}"> selected='selected' </c:if> >敷料</option>
-				<option value="9" <c:if test="${'9'==cr.get('pharm_catalog')}"> selected='selected' </c:if> >其它</option>
-			</select>
+		<td  style="text-align: right;">OTC:</td>
+		<td style="text-align: left;" colspan="1">
+			<input type="radio" class="noline" name="is_otc" value="1" <c:if test="${'1'==cr.get('is_otc')}" > checked='checked' </c:if>>是
+			<input type="radio" class="noline" name="is_otc" value="0" <c:if test="${'0'==cr.get('is_otc')}" > checked='checked' </c:if>>否
 		</td>
-		<td  style="text-align: right;">分类标识:</td>
-		<td style="text-align: left;">
-			<input type="text" name="drug_catalog"   value="${cr.get('drug_catalog')}" maxlength="50"  />
+		<td  style="text-align: right;">辅助用药:</td>
+		<td style="text-align: left;" colspan="1">
+			<input type="radio" class="noline" name="is_assist" value="1" <c:if test="${'1'==cr.get('is_assist')}" > checked='checked' </c:if>>是
+			<input type="radio" class="noline" name="is_assist" value="0" <c:if test="${'0'==cr.get('is_assist')}" > checked='checked' </c:if>>否
 		</td>
 		<td  style="text-align: right;">外用:</td>
 		<td style="text-align: left;">
@@ -204,15 +197,24 @@
                 <option value="3" <c:if test="${'3'==cr.get('is_danger')}" > selected='selected' </c:if> >C级</option>
             </select>
 		</td>
-		<td  style="text-align: right;">OTC:</td>
-		<td style="text-align: left;" colspan="1">
-			<input type="radio" class="noline" name="is_otc" value="1" <c:if test="${'1'==cr.get('is_otc')}" > checked='checked' </c:if>>是
-			<input type="radio" class="noline" name="is_otc" value="0" <c:if test="${'0'==cr.get('is_otc')}" > checked='checked' </c:if>>否
+		<td  style="text-align: right;">药理分类:</td>
+		<td style="text-align: left;">
+			<select name="pharm_catalog">
+				<option value=""></option>
+				<option value="1" <c:if test="${'1'==cr.get('pharm_catalog')}"> selected='selected' </c:if> >药品</option>
+				<option value="2" <c:if test="${'2'==cr.get('pharm_catalog')}"> selected='selected' </c:if> >中草药</option>
+				<option value="3" <c:if test="${'3'==cr.get('pharm_catalog')}"> selected='selected' </c:if> >中成药</option>
+				<option value="4" <c:if test="${'4'==cr.get('pharm_catalog')}"> selected='selected' </c:if> >原料</option>
+				<option value="5" <c:if test="${'5'==cr.get('pharm_catalog')}"> selected='selected' </c:if> >化学试剂</option>
+				<option value="6" <c:if test="${'6'==cr.get('pharm_catalog')}"> selected='selected' </c:if> >敷料</option>
+				<option value="9" <c:if test="${'9'==cr.get('pharm_catalog')}"> selected='selected' </c:if> >其它</option>
+			</select>
 		</td>
-		<td  style="text-align: right;">是否辅助用药:</td>
-		<td style="text-align: left;" colspan="1">
-			<input type="radio" class="noline" name="is_assist" value="1" <c:if test="${'1'==cr.get('is_assist')}" > checked='checked' </c:if>>是
-			<input type="radio" class="noline" name="is_assist" value="0" <c:if test="${'0'==cr.get('is_assist')}" > checked='checked' </c:if>>否
+	</tr>
+	<tr>
+		<td  style="text-align: right;">分类标识:</td>
+		<td style="text-align: left;" colspan="7">
+			<input type="text" name="drug_catalog" width="100%;"  value="${cr.get('drug_catalog')}" maxlength="50"  />
 		</td>
 	</tr>
     <tr height="22">
