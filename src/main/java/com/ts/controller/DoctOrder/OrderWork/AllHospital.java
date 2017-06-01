@@ -280,47 +280,47 @@ public class AllHospital  extends BaseController{
 			dataMap.put("titles", titles);
 			for(int i=0;i<reportList.size();i++){
 				PageData vpd = new PageData();
-				vpd.put("var1", reportList.get(i).get("dept_name"));	//2
-				vpd.put("var2", reportList.get(i).get("med").toString());	//4
-				vpd.put("var3", reportList.get(i).get("drug"));		//5
-				vpd.put("var4", reportList.get(i).get("drug_persents"));		//5
-				vpd.put("var5", reportList.get(i).get("anti"));		//5
-				vpd.put("var6", reportList.get(i).get("anti_persents"));		//5
+				vpd.put("var1", reportList.get(i).get("dept_name").toString());	//2
+				vpd.put("var2", "￥ "+ reportList.get(i).get("med").toString());	//4
+				vpd.put("var3", "￥ "+ reportList.get(i).get("drug").toString());		//5
+				vpd.put("var4", reportList.get(i).get("drug_persents")+" %");		//5
+				vpd.put("var5", "￥ "+ reportList.get(i).get("anti").toString());		//5
+				vpd.put("var6", reportList.get(i).get("anti_persents")+" %");		//5
 				varList.add(vpd);
 			}
 			PageData vpd1 = new PageData();
 			vpd1.put("var1", "住院合计：");	//2
-			vpd1.put("var2", count.get("med_all"));	//4
-			vpd1.put("var3", count.get("drug_all"));		//5
-			vpd1.put("var4", count.get("drug_persents"));		//5
-			vpd1.put("var5", count.get("anti"));		//5
-			vpd1.put("var6", count.get("anti_persents"));		//5
+			vpd1.put("var2", "￥ "+ count.get("med_all").toString());	//4
+			vpd1.put("var3", "￥ "+ count.get("drug_all").toString());		//5
+			vpd1.put("var4", count.get("drug_persents")+" %");		//5
+			vpd1.put("var5", "￥ "+ count.get("anti_all").toString());		//5
+			vpd1.put("var6", count.get("anti_persents")+" %");		//5
 			varList.add(vpd1);
 			for(int i=0;i<reportList2.size();i++){
 				PageData vpd = new PageData();
-				vpd.put("var1", reportList2.get(i).get("dept_name"));	//2
-				vpd.put("var2", reportList2.get(i).get("med").toString());	//4
-				vpd.put("var3", reportList2.get(i).get("drug"));		//5
-				vpd.put("var4", reportList2.get(i).get("drug_persents"));		//5
-				vpd.put("var5", reportList2.get(i).get("anti"));		//5
-				vpd.put("var6", reportList2.get(i).get("anti_persents"));		//5
+				vpd.put("var1", "￥ "+ reportList2.get(i).get("dept_name"));	//2
+				vpd.put("var2", "￥ "+ reportList2.get(i).get("med").toString());	//4
+				vpd.put("var3", "￥ "+ reportList2.get(i).get("drug").toString());		//5
+				vpd.put("var4", reportList2.get(i).get("drug_persents")+" %");		//5
+				vpd.put("var5", "￥ "+ reportList2.get(i).get("anti").toString());		//5
+				vpd.put("var6", reportList2.get(i).get("anti_persents")+" %");		//5
 				varList.add(vpd);
 			}
 			PageData vpd2 = new PageData();
 			vpd2.put("var1", "门诊合计：");	//2
-			vpd2.put("var2", count2.get("med_all"));	//4
-			vpd2.put("var3", count2.get("drug_all"));		//5
-			vpd2.put("var4", count2.get("drug_persents"));		//5
-			vpd2.put("var5", count2.get("anti"));		//5
-			vpd2.put("var6", count2.get("anti_persents"));		//5
+			vpd2.put("var2", "￥ "+count2.get("med_all").toString());	//4
+			vpd2.put("var3", "￥ "+ count2.get("drug_all").toString());		//5
+			vpd2.put("var4", count2.get("drug_persents")+" %");		//5
+			vpd2.put("var5", "￥ "+ count2.get("anti_all").toString());		//5
+			vpd2.put("var6", count2.get("anti_persents")+" %");		//5
 			varList.add(vpd2);
 			PageData allpd = new PageData();
 			allpd.put("var1", "总合计：");	//2
-			allpd.put("var2", all.get("med_all"));	//4
-			allpd.put("var3", all.get("drug_all"));		//5
-			allpd.put("var4", all.get("drug_persents"));		//5
-			allpd.put("var5", all.get("anti"));		//5
-			allpd.put("var6", all.get("anti_persents"));		//5
+			allpd.put("var2", "￥ "+ all.get("med_all").toString());	//4
+			allpd.put("var3", "￥ "+ all.get("drug_all").toString());		//5
+			allpd.put("var4", all.get("drug_persents")+" %");		//5
+			allpd.put("var5", "￥ "+ all.get("anti_all").toString());		//5
+			allpd.put("var6", all.get("anti_persents")+" %");		//5
 			varList.add(allpd);
 			dataMap.put("varList", varList);
 			ObjectExcelView erv = new ObjectExcelView();
@@ -345,7 +345,6 @@ public class AllHospital  extends BaseController{
 			page.setPd(pd);
 			//门急诊药品费用统计
 			List<PageData>	reportList = null;
-			String type = pd.getString("type");
 			reportList = allHospitalService.allHospital2(page);
 			mv.addObject("reportList", reportList);
 			mv.setViewName("DoctOrder/allHospital/allHospital2");
@@ -370,7 +369,17 @@ public class AllHospital  extends BaseController{
 			page.setPd(pd);
 			Map<String,Object> dataMap = new HashMap<String,Object>();
 			//门急诊药品费用统计
-			List<PageData>	varOList =  allHospitalService.allHospital2(page);
+			page.setShowCount(1000);
+			int TotalPage = 1;
+			List<PageData>	varOList =  new ArrayList<PageData>();
+			for(int pag = 1;pag<=TotalPage&&pag<=60;pag++){
+				page.setCurrentPage(pag);
+				List<PageData> mylist =  allHospitalService.allHospital2(page);
+				if(mylist!=null){
+					varOList.addAll(mylist);
+				}
+				TotalPage = page.getTotalPage();
+			}
 			List<PageData>	varList = new ArrayList<PageData>();
 			List<String> titles = new ArrayList<String>();
 			titles.add("排名");//2
@@ -386,7 +395,7 @@ public class AllHospital  extends BaseController{
 				vpd.put("var2", varOList.get(i).get("drug_name"));	//2
 				vpd.put("var3", varOList.get(i).get("drug_spec"));	//4
 				vpd.put("var4", varOList.get(i).get("firm_id"));		//5
-				vpd.put("var5", varOList.get(i).get("costs"));		//5
+				vpd.put("var5", "￥ "+varOList.get(i).get("costs").toString());		//5
 				vpd.put("var6", varOList.get(i).get("amounts").toString() + varOList.get(i).get("units").toString());		//5
 				varList.add(vpd);
 			}			

@@ -104,8 +104,8 @@ public class ReportController extends BaseController{
 			dataMap.put("titles", titles);
 			int TotalPage = 1;
 			List<PageData> varList = null;
-			//分批查询,最大查询2万条
-			for(int pag = 1;pag<=TotalPage&&pag<=20;pag++){
+			//分批查询,最大查询6万条
+			for(int pag = 1;pag<=TotalPage&&pag<=60;pag++){
 				page.setCurrentPage(pag);
 				List<PageData> varOList = orderWorkService.ordersReport(pd);
 				long total = 0;

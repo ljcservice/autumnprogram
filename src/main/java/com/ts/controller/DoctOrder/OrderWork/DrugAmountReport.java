@@ -68,7 +68,18 @@ public class DrugAmountReport extends BaseController{
 			HelpUtil.setDefaultDate(pd);
 			page.setPd(pd);
 			//门急诊药品费用统计
-			List<PageData>	reportList = drugAmountService.drugAmount(page);
+			
+			page.setShowCount(1000);
+			int TotalPage = 1;
+			List<PageData>	reportList =  new ArrayList<PageData>();
+			for(int pag = 1;pag<=TotalPage&&pag<=60;pag++){
+				page.setCurrentPage(pag);
+				List<PageData> mylist =  drugAmountService.drugAmount(page);
+				if(mylist!=null){
+					reportList.addAll(mylist);
+				}
+				TotalPage = page.getTotalPage();
+			}
 			
 			Map<String,Object> dataMap = new HashMap<String,Object>();
 			//门急诊药品费用统计
@@ -79,13 +90,15 @@ public class DrugAmountReport extends BaseController{
 			titles.add("厂家");	//3
 			titles.add("金额");//2
 			titles.add("使用量");//2
+			dataMap.put("titles", titles);
 			for(int i=0;i<reportList.size();i++){
 				PageData vpd = new PageData();
 				vpd.put("var1", reportList.get(i).get("drug_name"));	//4
 				vpd.put("var2", reportList.get(i).get("package_spec"));	//4
 				vpd.put("var3", reportList.get(i).get("firm_id"));		//5
-				vpd.put("var4", reportList.get(i).get("costs"));		//5
+				vpd.put("var4","￥ "+ MyDecimalFormat.format(((BigDecimal)reportList.get(i).get("costs")).doubleValue() ));		//5
 				vpd.put("var5", reportList.get(i).get("amounts").toString()+reportList.get(i).get("units").toString());		//5
+				varList.add(vpd);
 			}
 			dataMap.put("varList", varList);
 			ObjectExcelView erv = new ObjectExcelView();
@@ -134,7 +147,17 @@ public class DrugAmountReport extends BaseController{
 			HelpUtil.setDefaultDate(pd);
 			page.setPd(pd);
 			//门急诊药品费用统计
-			List<PageData>	reportList = drugAmountService.drugAmountByDep(page);
+			page.setShowCount(1000);
+			int TotalPage = 1;
+			List<PageData>	reportList =  new ArrayList<PageData>();
+			for(int pag = 1;pag<=TotalPage&&pag<=60;pag++){
+				page.setCurrentPage(pag);
+				List<PageData> mylist =  drugAmountService.drugAmountByDep(page);
+				if(mylist!=null){
+					reportList.addAll(mylist);
+				}
+				TotalPage = page.getTotalPage();
+			}
 			Map<String,Object> dataMap = new HashMap<String,Object>();
 			List<PageData>	varList = new ArrayList<PageData>();
 			List<String> titles = new ArrayList<String>();
@@ -145,15 +168,17 @@ public class DrugAmountReport extends BaseController{
 			titles.add("金额");//2
 			titles.add("使用量");//2
 			titles.add("药品属性");//2
+			dataMap.put("titles", titles);
 			for(int i=0;i<reportList.size();i++){
 				PageData vpd = new PageData();
 				vpd.put("var1", reportList.get(i).get("dept_name"));	//4
 				vpd.put("var2", reportList.get(i).get("drug_name"));	//4
 				vpd.put("var3", reportList.get(i).get("package_spec"));		//5
 				vpd.put("var4", reportList.get(i).get("firm_id"));		//5
-				vpd.put("var5", reportList.get(i).get("costs"));		//5
-				vpd.put("var6", reportList.get(i).get("amounts"));		//5
+				vpd.put("var5", "￥ "+MyDecimalFormat.format(((BigDecimal)reportList.get(i).get("costs")).doubleValue() ));		//5
+				vpd.put("var6", reportList.get(i).get("amounts").toString()+reportList.get(i).get("units").toString());		//5
 				vpd.put("var7", reportList.get(i).get("TOXI_PROPERTY"));		//5
+				varList.add(vpd);
 			}
 			dataMap.put("varList", varList);
 			ObjectExcelView erv = new ObjectExcelView();
@@ -202,8 +227,17 @@ public class DrugAmountReport extends BaseController{
 			HelpUtil.setDefaultDate(pd);
 			page.setPd(pd);
 			//门急诊药品费用统计
-			List<PageData>	reportList = drugAmountService.drugAmountByDoctor(page);
-			
+			page.setShowCount(1000);
+			int TotalPage = 1;
+			List<PageData>	reportList =  new ArrayList<PageData>();
+			for(int pag = 1;pag<=TotalPage&&pag<=60;pag++){
+				page.setCurrentPage(pag);
+				List<PageData> mylist =  drugAmountService.drugAmountByDoctor(page);
+				if(mylist!=null){
+					reportList.addAll(mylist);
+				}
+				TotalPage = page.getTotalPage();
+			}
 			Map<String,Object> dataMap = new HashMap<String,Object>();
 			List<PageData>	varList = new ArrayList<PageData>();
 			List<String> titles = new ArrayList<String>();
@@ -214,15 +248,17 @@ public class DrugAmountReport extends BaseController{
 			titles.add("金额");//2
 			titles.add("使用量");//2
 			titles.add("药品属性");//2
+			dataMap.put("titles", titles);
 			for(int i=0;i<reportList.size();i++){
 				PageData vpd = new PageData();
 				vpd.put("var1", reportList.get(i).get("DOCTOR_NAME"));	//4
 				vpd.put("var2", reportList.get(i).get("drug_name"));	//4
 				vpd.put("var3", reportList.get(i).get("package_spec"));		//5
 				vpd.put("var4", reportList.get(i).get("firm_id"));		//5
-				vpd.put("var5", reportList.get(i).get("costs"));		//5
-				vpd.put("var6", reportList.get(i).get("amounts"));		//5
+				vpd.put("var5", "￥ "+MyDecimalFormat.format(((BigDecimal)reportList.get(i).get("costs")).doubleValue() ) );		//5
+				vpd.put("var6", reportList.get(i).get("amounts").toString()+reportList.get(i).get("units").toString() );		//5
 				vpd.put("var7", reportList.get(i).get("TOXI_PROPERTY"));		//5
+				varList.add(vpd);
 			}
 			dataMap.put("varList", varList);
 			ObjectExcelView erv = new ObjectExcelView();
@@ -271,7 +307,17 @@ public class DrugAmountReport extends BaseController{
 			HelpUtil.setDefaultDate(pd);
 			page.setPd(pd);
 			//门急诊药品费用统计
-			List<PageData>	reportList = drugAmountService.drugAmountByPerson(page);
+			page.setShowCount(1000);
+			int TotalPage = 1;
+			List<PageData>	reportList =  new ArrayList<PageData>();
+			for(int pag = 1;pag<=TotalPage&&pag<=60;pag++){
+				page.setCurrentPage(pag);
+				List<PageData> mylist =  drugAmountService.drugAmountByPerson(page);
+				if(mylist!=null){
+					reportList.addAll(mylist);
+				}
+				TotalPage = page.getTotalPage();
+			}
 			Map<String,Object> dataMap = new HashMap<String,Object>();
 			List<PageData>	varList = new ArrayList<PageData>();
 			List<String> titles = new ArrayList<String>();
@@ -287,6 +333,7 @@ public class DrugAmountReport extends BaseController{
 			titles.add("金额");//2
 			titles.add("使用量");//2
 			titles.add("药品属性");//2
+			dataMap.put("titles", titles);
 			for(int i=0;i<reportList.size();i++){
 				PageData vpd = new PageData();
 				vpd.put("var1", reportList.get(i).get("PAT_NAME"));	//4
@@ -298,9 +345,10 @@ public class DrugAmountReport extends BaseController{
 				vpd.put("var7", reportList.get(i).get("drug_name"));	//4
 				vpd.put("var8", reportList.get(i).get("package_spec"));		//5
 				vpd.put("var9", reportList.get(i).get("firm_id"));		//5
-				vpd.put("var10", reportList.get(i).get("costs"));		//5
-				vpd.put("var11", reportList.get(i).get("amounts"));		//5
+				vpd.put("var10", "￥ "+MyDecimalFormat.format(((BigDecimal)reportList.get(i).get("costs")).doubleValue() ) );		//5
+				vpd.put("var11", reportList.get(i).get("amounts").toString()+reportList.get(i).get("units").toString());		//5
 				vpd.put("var12", reportList.get(i).get("TOXI_PROPERTY"));		//5
+				varList.add(vpd);
 			}
 			dataMap.put("varList", varList);
 			ObjectExcelView erv = new ObjectExcelView();
@@ -348,8 +396,17 @@ public class DrugAmountReport extends BaseController{
 			HelpUtil.setDefaultDate(pd);
 			page.setPd(pd);
 			//门急诊药品费用统计
-			List<PageData>	reportList = drugAmountService.drugAmountByDrug(page);
-
+			page.setShowCount(1000);
+			int TotalPage = 1;
+			List<PageData>	reportList =  new ArrayList<PageData>();
+			for(int pag = 1;pag<=TotalPage&&pag<=60;pag++){
+				page.setCurrentPage(pag);
+				List<PageData> mylist =  drugAmountService.drugAmountByDrug(page);
+				if(mylist!=null){
+					reportList.addAll(mylist);
+				}
+				TotalPage = page.getTotalPage();
+			}
 			Map<String,Object> dataMap = new HashMap<String,Object>();
 			//门急诊药品费用统计
 			List<PageData>	varList = new ArrayList<PageData>();
@@ -361,15 +418,17 @@ public class DrugAmountReport extends BaseController{
 			titles.add("金额");//2
 			titles.add("使用量");//2
 			titles.add("药品属性");//2
+			dataMap.put("titles", titles);
 			for(int i=0;i<reportList.size();i++){
 				PageData vpd = new PageData();
 				vpd.put("var1", reportList.get(i).get("DR_DATE"));	//4
 				vpd.put("var2", reportList.get(i).get("drug_name"));	//4
 				vpd.put("var3", reportList.get(i).get("package_spec"));	//4
 				vpd.put("var4", reportList.get(i).get("firm_id"));		//5
-				vpd.put("var5", reportList.get(i).get("costs"));		//5
+				vpd.put("var5","￥ "+ MyDecimalFormat.format(((BigDecimal)reportList.get(i).get("costs")).doubleValue() ));		//5
 				vpd.put("var6", reportList.get(i).get("amounts").toString()+reportList.get(i).get("units").toString());		//5
 				vpd.put("var7", reportList.get(i).get("TOXI_PROPERTY"));	//4
+				varList.add(vpd);
 			}
 			dataMap.put("varList", varList);
 			ObjectExcelView erv = new ObjectExcelView();
@@ -444,6 +503,7 @@ public class DrugAmountReport extends BaseController{
 				BigDecimal anti_all =   new BigDecimal(0);
 				//门急诊药品费用统计
 				List<PageData>	reportList = drugAmountService.depAmountPersents(pd);
+				
 				for(PageData pp:reportList){
 					BigDecimal med =  (BigDecimal) pp.get("med");
 					BigDecimal drug =  (BigDecimal) pp.get("drug");
@@ -484,22 +544,24 @@ public class DrugAmountReport extends BaseController{
 				titles.add("药费比例");//2
 				titles.add("抗菌药费费用");//2
 				titles.add("抗菌药费比例");//2
+				dataMap.put("titles", titles);
 				for(int i=0;i<reportList.size();i++){
 					PageData vpd = new PageData();
 					vpd.put("var1", reportList.get(i).get("dept_name"));	//2
-					vpd.put("var2", reportList.get(i).get("med"));	//4
-					vpd.put("var3", reportList.get(i).get("drug"));		//5
-					vpd.put("var4", reportList.get(i).get("drug_persents"));		//5
-					vpd.put("var5", reportList.get(i).get("anti"));		//5
-					vpd.put("var6", reportList.get(i).get("anti_persents"));		//4
+					vpd.put("var2", "￥ "+ MyDecimalFormat.format(((BigDecimal)reportList.get(i).get("med")).doubleValue()));	//4
+					vpd.put("var3", "￥ "+ MyDecimalFormat.format(((BigDecimal)reportList.get(i).get("drug")).doubleValue()));		//5
+					vpd.put("var4", reportList.get(i).get("drug_persents") +" %");		//5
+					vpd.put("var5", "￥ "+ MyDecimalFormat.format(((BigDecimal)reportList.get(i).get("anti")).doubleValue()));		//5
+					vpd.put("var6", reportList.get(i).get("anti_persents") +" %");		//4
+					varList.add(vpd);
 				}
 				PageData vpd1 = new PageData();
-				vpd1.put("var1", "住院合计：");	//2
-				vpd1.put("var2", count.get("med_all"));	//4
-				vpd1.put("var3", count.get("drug_all"));		//5
-				vpd1.put("var4", count.get("drug_all_persents"));		//5
-				vpd1.put("var5", count.get("anti"));		//5
-				vpd1.put("var6", count.get("anti_all_persents"));		//5
+				vpd1.put("var1", "合计：");	//2
+				vpd1.put("var2", "￥ "+ MyDecimalFormat.format(((BigDecimal)count.get("med_all")).doubleValue()) );	//4
+				vpd1.put("var3", "￥ "+ MyDecimalFormat.format(((BigDecimal)count.get("drug_all")).doubleValue()) );		//5
+				vpd1.put("var4", count.get("drug_all_persents") +" %");		//5
+				vpd1.put("var5", "￥ "+ MyDecimalFormat.format(((BigDecimal)count.get("anti_all")).doubleValue()) );		//5
+				vpd1.put("var6", count.get("anti_all_persents") +" %");		//5
 				varList.add(vpd1);
 				dataMap.put("varList", varList);
 				ObjectExcelView erv = new ObjectExcelView();

@@ -1,5 +1,6 @@
 package com.ts.controller.DoctOrder.OrderWork;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ts.controller.base.BaseController;
 import com.ts.entity.Page;
 import com.ts.service.DoctOrder.OrderWork.HaskjDrugService;
+import com.ts.util.MyDecimalFormat;
 import com.ts.util.ObjectExcelView;
 import com.ts.util.PageData;
 import com.ts.util.Tools;
@@ -132,13 +134,15 @@ public class HaskjDrugReport extends BaseController{
 			titles.add("处方数");//2
 			titles.add("抗菌药物处方数");//2
 			titles.add("比例");//2
+			dataMap.put("titles", titles);
 			for(int i=0;i<reportList.size();i++){
 				PageData vpd = new PageData();
 				vpd.put("var1", i+1);	//2
 				vpd.put("var2", reportList.get(i).get("dept_name"));	//4
-				vpd.put("var3", reportList.get(i).get("c"));		//5
-				vpd.put("var4", reportList.get(i).get("haskj"));		//5
-				vpd.put("var5", reportList.get(i).get("rate"));		//5
+				vpd.put("var3",  MyDecimalFormat.format(((BigDecimal)reportList.get(i).get("c")).doubleValue() ));		//5
+				vpd.put("var4", MyDecimalFormat.format(((BigDecimal)reportList.get(i).get("haskj")).doubleValue() )  );		//5
+				vpd.put("var5", MyDecimalFormat.format(((BigDecimal)reportList.get(i).get("rate")).doubleValue() )  +"%");		//5
+				varList.add(vpd);
 			}
 			dataMap.put("varList", varList);
 			ObjectExcelView erv = new ObjectExcelView();
@@ -222,14 +226,16 @@ public class HaskjDrugReport extends BaseController{
 			titles.add("处方数");//2
 			titles.add("抗菌药物处方数");//2
 			titles.add("比例");//2
+			dataMap.put("titles", titles);
 			for(int i=0;i<reportList.size();i++){
 				PageData vpd = new PageData();
 				vpd.put("var1", i+1);	//2
 				vpd.put("var2", reportList.get(i).get("org_name"));	//4
 				vpd.put("var3", reportList.get(i).get("doctor_name"));	//4
-				vpd.put("var4", reportList.get(i).get("c"));		//5
-				vpd.put("var5", reportList.get(i).get("haskj"));		//5
-				vpd.put("var6", reportList.get(i).get("rate"));		//5
+				vpd.put("var4",  MyDecimalFormat.format(((BigDecimal)reportList.get(i).get("c")).doubleValue() ));		//5
+				vpd.put("var5", MyDecimalFormat.format(((BigDecimal)reportList.get(i).get("haskj")).doubleValue() )  );		//5
+				vpd.put("var6", MyDecimalFormat.format(((BigDecimal)reportList.get(i).get("rate")).doubleValue() )  +"%");		//5
+				varList.add(vpd);
 			}
 			dataMap.put("varList", varList);
 			ObjectExcelView erv = new ObjectExcelView();
