@@ -24,6 +24,9 @@
 				<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
 					and l.rpt_date &lt; to_date(#{pd.endDate}, 'yyyy-mm-dd')
 				</if>
+				<if test="pd.dept_name != null and pd.dept_name != ''"> <!--  科室 -->
+					and  l.funcdeptname like  CONCAT(CONCAT('%', #{pd.dept_name}),'%') 
+				</if>
 	       		group by l.patient_id, l.visit_id, l.funcdeptcode, l.funcdeptname
         )
  		group by dept_code, dept_name 
@@ -59,6 +62,9 @@
 	   from outp_orders_costs t,
 	       (select drug_no_local  from pdss.drug_map  where 1 = 1 group by drug_no_local) d
 	   		where t.item_code = d.Drug_No_Local
+	   		<if test="pd.dept_name != null and pd.dept_name != ''"> <!--  科室 -->
+				and  t.ordered_by_dept like  CONCAT(CONCAT('%', #{pd.dept_name}),'%') 
+			</if>
              <if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
 				and trunc(t.visit_date) &gt;=  to_date(#{pd.beginDate}, 'yyyy-mm-dd')
 			</if>

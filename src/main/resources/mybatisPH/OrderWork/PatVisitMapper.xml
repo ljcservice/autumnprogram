@@ -291,7 +291,6 @@
 		<if test="pd.IS_OPERATION != null and pd.IS_OPERATION != ''"> <!-- 是否含有手术-->
 			and t.IS_OPERATION = #{pd.IS_OPERATION} 
 		</if>
-		
 		<if test="pd.ISORDERCHECK != null and pd.ISORDERCHECK != ''"> <!--点评记录-->
 			and t.ISORDERCHECK = #{pd.ISORDERCHECK}
 		</if>

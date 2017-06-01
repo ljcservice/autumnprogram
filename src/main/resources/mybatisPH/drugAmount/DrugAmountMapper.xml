@@ -192,6 +192,15 @@
 		    <if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
 				and dr_date &lt;= to_date(#{pd.endDate} ,'yyyy-mm-dd') 
 			</if>
+			<if test="pd.PATIENT_ID != null and pd.PATIENT_ID != ''"> <!-- 病人ID -->
+				and PATIENT_ID = #{pd.PATIENT_ID} 
+			</if>
+			<if test="pd.CHARGE_TYPE != null and pd.CHARGE_TYPE != ''"> <!-- 费别-->
+				and CHARGE_TYPE = #{pd.CHARGE_TYPE} 
+			</if>
+			<if test="pd.IDENTITY != null and pd.IDENTITY != ''"> <!-- 身份-->
+				and IDENTITY = #{pd.IDENTITY} 
+			</if>
 			<if test="pd.drug_name != null and pd.drug_name != ''"> <!-- 药品-->
 				and drug_name = #{pd.drug_name} 
 			</if>
