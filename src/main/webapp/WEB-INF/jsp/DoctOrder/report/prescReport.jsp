@@ -80,20 +80,20 @@
 									</div>
 									<div id="btnDiv" class="check-search">
 											<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
-											<a title="" class="btn btn-mini btn-success" onclick="window.print();">打印</a>
+											<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
 									</div>
 								</div>
 							</form>
 						<!-- 检索  -->
-					
-						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
+						<div style="width: 100%;height: auto;margin-top: 2px;"  >
+						<table id="simple-table" class="table table-striped table-bordered table-hover"  >
 							<thead>
 								<tr>
 									<th class="center" nowrap>问题</th>
 									<th class="center" nowrap>问题数</th>
 									<th class="center" nowrap>问题占比</th>
-									<th class="center" nowrap>细分</th>
-									<th class="center" nowrap>处方列表</th>
+									<th class="center Noprn" nowrap>细分</th>
+									<th class="center Noprn" nowrap>处方列表</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -105,32 +105,23 @@
 											<td class="center">${presc.RS_TYPE_NAME}</td>
 											<td class="center">${presc.count}</td>
 											<td class="center">${presc.percent}</td>
-											<td class="center">
+											<td class="center Noprn">
 												<a onclick="detailListByDep('${presc.RS_TYPE_CODE}');" href="javascript:void(0);">科室</a>
 												<a onclick="detailListByDoctor('${presc.RS_TYPE_CODE}');" href="javascript:void(0);">医生</a>
 											</td>
-											<td class="center"><a onclick="detailList('${presc.RS_TYPE_CODE}');" href="javascript:void(0);">处方列表</a></td>
+											<td class="center Noprn"><a onclick="detailList('${presc.RS_TYPE_CODE}');" href="javascript:void(0);">处方列表</a></td>
 										</tr>
 									</c:forEach>
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
-										<td colspan="5"  class="center">没有相关数据</td>
+										<td colspan="*"  class="center">没有相关数据</td>
 									</tr>
 								</c:otherwise>
 							</c:choose>
 							</tbody>
 						</table>
-						
-					<div class="page-header position-relative">
-					<table style="width:100%;">
-						<tr>
-							<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
-						</tr>
-					</table>
-					</div>
-					
-	
+						</div>
 						</div>
 						<!-- /.col -->
 					</div>
@@ -252,7 +243,17 @@ function detailListByDep(RS_TYPE_CODE){
 	 diag.show();
 }
 function listExport(){
-	window.open(path + "/report/prescReportExport.do?&"+$("#searchForm").serialize());
+	window.location.href=path + "/report/prescReportExport.do?&"+$("#searchForm").serialize();
+}
+function myprint(){
+	$("#main-container").hide();
+	var tableFixClone = $("#simple-table").clone(true);
+	$("<div id='myprint' style='width=100%;height=100%;'></div>").appendTo($("body"));
+	tableFixClone.appendTo($("#myprint"));
+	$("#myprint").css("z-index",9999) .css("position","absolute").css("left",0).css("top",0).css("background-color","white");
+	window.print();
+	$("#myprint").remove();
+	$("#main-container").show();
 }
 </script>
 </html>

@@ -36,9 +36,17 @@
 		<if test="pd.DOCTOR_NAME != null and pd.DOCTOR_NAME != ''"> <!-- 医生名-->
 			and a.DOCTOR_NAME = #{pd.DOCTOR_NAME}
 		</if>
-		<if test="pd.ISCHECKTRUE != null and pd.ISCHECKTRUE != ''"> <!-- 是否合理-->
-			and a.ISCHECKTRUE = #{pd.ISCHECKTRUE} 
-		</if>
+		<!-- 是否合理 -->
+		<choose>
+			<when test="pd.ISCHECKTRUE!= null and pd.ISCHECKTRUE==2">
+				and ( a.ISCHECKTRUE =2	or a.ISCHECKTRUE  is null )
+			</when>
+			<otherwise>
+				<if test="pd.ISCHECKTRUE  != null and pd.ISCHECKTRUE  != ''">  
+					and a.ISCHECKTRUE  = #{pd.ISCHECKTRUE }
+				</if>
+			</otherwise>
+		</choose>
 		<if test="pd.ISORDERCHECK != null and pd.ISORDERCHECK != ''"> <!--点评记录-->
 			and a.ISORDERCHECK = #{pd.ISORDERCHECK}
 		</if>

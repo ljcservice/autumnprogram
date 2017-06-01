@@ -135,13 +135,15 @@
 											<td class="center">${presc.BASEDRUG_COUNT}</td>
 											<td class="center">${presc.AMOUNT}</td>
 											<td class="center">
-												<c:if test="${presc.ISORDERCHECK==0}">未点评</c:if>
-												<c:if test="${presc.ISORDERCHECK==1}">已点评</c:if>
+												<c:if test="${presc.ISORDERCHECK=='0'}">未点评</c:if>
+												<c:if test="${presc.ISORDERCHECK=='1'}">已点评</c:if>
 											</td>
 											<td class="center">
-												<c:if test="${presc.ISCHECKTRUE == 0 }"> 合理 </c:if>
-												<c:if test="${presc.ISCHECKTRUE == 1 }"> 不合理</c:if>
-												<c:if test="${presc.ISCHECKTRUE == 2 }"> 待定 </c:if>
+												<c:choose>
+													<c:when test="${presc.ISCHECKTRUE == '0' }">合理 </c:when>
+													<c:when test="${presc.ISCHECKTRUE == '1' }">不合理</c:when>
+													<c:otherwise>待定</c:otherwise>
+												</c:choose>
 											</td>
 											<td class="center">
 												<div class="hidden-sm hidden-xs btn-group">

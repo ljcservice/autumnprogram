@@ -293,7 +293,7 @@ public class DrugMatcher extends BaseController {
                 "', is_assist='" + CommonUtils.getRequestParameter(matcher, "is_assist", "") +
                 "', is_albumin='" + CommonUtils.getRequestParameter(matcher, "is_albumin", "") +
                 "' where drug_map_id = '" + CommonUtils.getRequestParameter(matcher, "drug_map_id", "") + "'";
-        JDBCQueryImpl query      = DBQueryFactory.getQuery("PDSS");
+        JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
         int x = query.update(sql);
 	}
 

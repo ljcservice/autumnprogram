@@ -31,6 +31,9 @@
 	margin-left: 3px;
 	margin-right: 3px;
 }
+.popover{
+	z-index: 999;
+}
 </style>
 </head>
 <body class="no-skin">
@@ -42,17 +45,14 @@
 			<div class="main-content-inner">
 				<div class="page-content">
 					<div class="row">
-						<div class="col-xs-12" style="margin-top: 5px;">
-						<div class="Noprn" style="margin-bottom: 5px;display: none;">	
+						<div class="col-xs-12" >
+							<div id="searchDiv" class="Noprn" style="margin-top: 5px;display: none;">	
 								<form action="report/orderList.do" method="post" name="searchForm" id="searchForm">
+									<input type="hidden" name="RS_DRUG_TYPE" value="${pd.RS_DRUG_TYPE}">
 									<div class="check-search"   >
 										起止日期：
 										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
 										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.endDate }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
-									</div>
-									<div class="check-search" style="width: 77px;">
-										<a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
-										<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i></a>
 									</div>
 									<div class="check-search nav-search" >
 										科室：
@@ -68,15 +68,11 @@
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
-									<div id="btnDiv" class="check-search">
-											<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
-											<a title="" class="btn btn-mini btn-success" onclick="window.print();">打印</a>
-									</div>
 								</form>
-								</div>
+							</div>
 						<!-- 检索  -->
-						<div style="width: 100%;height: auto;">
-							<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
+						<div style="width: 100%;height: auto;margin-top: 2px;">
+							<table id="simple-table" class="table table-striped table-bordered table-hover"  >
 							<thead>
 								<tr>
 									<th class="center" nowrap >序号</th>
@@ -126,7 +122,8 @@
 											<td nowrap class="center">
 												<c:choose>
 													<c:when test="${patVisit.ISORDERCHECK == 0 }">未点评</c:when>
-													<c:otherwise> 已点评 </c:otherwise>
+													<c:when test="${patVisit.ISORDERCHECK == 1}">已点评</c:when>
+													<c:otherwise>  </c:otherwise>
 												</c:choose>
 											</td>
 											<td nowrap class="center">
@@ -143,7 +140,6 @@
 															${rstypeMap.get(rs_type)}
 														</a>
 													</c:forEach>
-															
 												</div>
 											</td>
 										</tr>
@@ -151,17 +147,21 @@
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
-										<td colspan="11" class="center">没有相关数据</td>
+										<td colspan="12" class="center">没有相关数据</td>
 									</tr>
 								</c:otherwise>
 							</c:choose>
 							</tbody>
 						</table>
 						</div>
-						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">
+						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 3px;padding-bottom: 3px;">
 							<table style="width:100%;">
 								<tr>
-									<td align="left"><a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">关闭</a></td>
+									<td align="left">
+										<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
+										<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
+										<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">关闭</a></td>
+									</td>
 									<td>
 										<div class="pagination" style="float: right;padding: 0px;margin: 0px;">${page.pageStr}</div>
 									</td>
@@ -178,11 +178,6 @@
 			</div>
 		</div>
 		<!-- /.main-content -->
-
-		<!-- 返回顶部 -->
-		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-			<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
-		</a>
 
 	</div>
 	<!-- /.main-container -->
@@ -205,7 +200,10 @@
 <script type="text/javascript" src="static/js/common/lockTable.js?v=201612"></script>
 <script type="text/javascript">
 $(top.hangge());
-
+$(function() {
+	$('[data-rel=tooltip]').tooltip();
+	$('[data-rel=popover]').popover({html:true});
+});
 //检索
 function searchs(){
 	top.jzts();
@@ -266,6 +264,18 @@ function detailPresc(id,NGROUPNUM){
 	 };
 	 diag.show();
 }
-
+function listExport(){
+	window.open(path + "/report/orderListExport.do?&"+$("#searchForm").serialize());
+}
+function myprint(){
+	$("#main-container").hide();
+	var tableFixClone = $("#simple-table").clone(true);
+	$("<div id='myprint' style='width=100%;height=100%;'></div>").appendTo($("body"));
+	tableFixClone.appendTo($("#myprint"));
+	$("#myprint").css("z-index",9999) .css("position","absolute").css("left",0).css("top",0).css("background-color","white");
+	window.print();
+	$("#myprint").remove();
+	$("#main-container").show();
+}
 </script>
 </html>

@@ -77,7 +77,7 @@
 									</div>
 									<div id="btnDiv" class="check-search">
 											<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
-											<a title="" class="btn btn-mini btn-success" onclick="window.print();">打印</a>
+											<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
 									</div>
 								</form>
 								</div>
@@ -241,6 +241,16 @@ function detailListByDep(RS_TYPE_CODE){
 }
 function listExport(){
 	window.open(path + "/report/ordersReportExport.do?&"+$("#searchForm").serialize());
+}
+function myprint(){
+	$("#main-container").hide();
+	var tableFixClone = $("#simple-table").clone(true);
+	$("<div id='myprint' style='width=100%;height=100%;'></div>").appendTo($("body"));
+	tableFixClone.appendTo($("#myprint"));
+	$("#myprint").css("z-index",9999) .css("position","absolute").css("left",0).css("top",0).css("background-color","white");
+	window.print();
+	$("#myprint").remove();
+	$("#main-container").show();
 }
 </script>
 </html>

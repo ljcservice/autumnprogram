@@ -136,8 +136,8 @@
 											<td class="center"><c:if test="${presc.ISORDERCHECK==0}">否</c:if><c:if test="${presc.ISORDERCHECK==1}">是</c:if></td>
 											<td class="center">
 												<c:choose>
-													<c:when test="${presc.ISCHECKTRUE == 0 }"> 合理 </c:when>
-													<c:when test="${presc.ISCHECKTRUE == 1 }"> 不合理</c:when>
+													<c:when test="${presc.ISCHECKTRUE == 0 }">合理 </c:when>
+													<c:when test="${presc.ISCHECKTRUE == 1 }">不合理</c:when>
 													<c:otherwise>待定</c:otherwise>
 												</c:choose>
 											</td>

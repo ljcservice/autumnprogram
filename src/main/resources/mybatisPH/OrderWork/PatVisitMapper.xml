@@ -285,15 +285,23 @@
 		<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
 			and t.discharge_date_time &lt; to_date(#{pd.endDate} ,'yyyy-mm-dd') 
 		</if>
-		<if test="pd.ISCHECKTRUE != null and pd.ISCHECKTRUE != ''"> <!-- 是否合理-->
-			and t.ISCHECKTRUE = #{pd.ISCHECKTRUE} 
-		</if>
 		<if test="pd.IS_OPERATION != null and pd.IS_OPERATION != ''"> <!-- 是否含有手术-->
 			and t.IS_OPERATION = #{pd.IS_OPERATION} 
 		</if>
-		<if test="pd.ISORDERCHECK != null and pd.ISORDERCHECK != ''"> <!--点评记录-->
-			and t.ISORDERCHECK = #{pd.ISORDERCHECK}
+		<if test="pd.ISORDERCHECK != null and pd.ISORDERCHECK != ''"> <!-- 是否合理-->
+			and t.ISORDERCHECK = #{pd.ISORDERCHECK} 
 		</if>
+		<!-- 是否合理 -->
+		<choose>
+			<when test="pd.ISCHECKTRUE!= null and pd.ISCHECKTRUE==2">
+				and ( t.ISCHECKTRUE =2	or t.ISCHECKTRUE  is null )
+			</when>
+			<otherwise>
+				<if test="pd.ISCHECKTRUE != null and pd.ISCHECKTRUE  != ''"> <!--点评记录-->
+					and t.ISCHECKTRUE  = #{pd.ISCHECKTRUE }
+				</if>
+			</otherwise>
+		</choose>
 		Order by t.discharge_date_time 
 	</select>
 	

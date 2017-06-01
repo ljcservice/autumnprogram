@@ -146,13 +146,15 @@
 											<td nowrap class="center"> ${patVisit.out_dept_name }</td>
 											<td nowrap class="center"><fmt:formatDate value="${patVisit.discharge_date_time}" pattern="yyyy-MM-dd"/> </td> 
 											<td nowrap class="center">
-												<c:if test="${patVisit.ISORDERCHECK==0}">未点评</c:if>
-												<c:if test="${patVisit.ISORDERCHECK==1}">已点评</c:if>
+												<c:if test="${patVisit.ISORDERCHECK=='0'}">未点评</c:if>
+												<c:if test="${patVisit.ISORDERCHECK=='1'}">已点评</c:if>
 											</td>
-											<td nowrap class="center">
-													<c:if test="${patVisit.ISCHECKTRUE == 0 }">合理 </c:if>
-													<c:if test="${patVisit.ISORDERCHECK == 1 }">不合理</c:if>
-													<c:if test="${patVisit.ISORDERCHECK == 2 }">待定</c:if>
+											<td nowrap class="center"> 
+												<c:choose>
+													<c:when test="${patVisit.ISCHECKTRUE == '0' }">合理 </c:when>
+													<c:when test="${patVisit.ISCHECKTRUE == '1' }">不合理</c:when>
+													<c:otherwise>待定</c:otherwise>
+												</c:choose>
 											</td>
 											<td class="center" nowrap>
 												<div class=" btn-group" style="height: 30px;width: auto;overflow: visible;">

@@ -198,6 +198,88 @@ public class ReportController extends BaseController{
 		return  mv; 
 	}
 	/**
+	 * 医嘱报表-医嘱详细
+	 * @param page
+	 * @return
+	 */
+	@RequestMapping(value="/orderListExport")
+	public ModelAndView orderListExport(Page page){
+		ModelAndView mv = new ModelAndView();
+		PageData pd = this.getPageData();
+		try
+		{	
+			HelpUtil.setDefaultDate(pd);
+			String beginDate = pd.getString("beginDate");		//开始时间
+			String endDate = pd.getString("endDate");			//结束时间
+			if(endDate != null && !"".equals(endDate))
+			{
+				pd.put("end_Date", endDate);
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(DateUtil.fomatDate(endDate));
+				cal.add(Calendar.DAY_OF_MONTH, 1);
+				pd.put("endDate", sdf.format(cal.getTime()));
+			}
+			mv.addObject("pd", pd);
+			page.setPd(pd);
+			page.setShowCount(1000);
+			int TotalPage = 1;
+			List<PageData>	reportList =  new ArrayList<PageData>();
+			for(int pag = 1;pag<=TotalPage&&pag<=60;pag++){
+				page.setCurrentPage(pag);
+				List<PageData> mylist =  this.orderWorkService.patientList(page);
+				if(mylist!=null){
+					reportList.addAll(mylist);
+				}
+				TotalPage = page.getTotalPage();
+			}
+//			mv.addObject("rstypeMap", DoctorConst.rstypeMap); 
+//			mv.addObject("rstypeColorMap", DoctorConst.rstypeColorMap); 
+//			mv.addObject("checktypeMap", commonService.getCheckTypeDict()); 
+//			mv.addObject("patVisits", entity);
+//			mv.setViewName("DoctOrder/report/orderList");
+			
+			Map<String,Object> dataMap = new HashMap<String,Object>();
+			//门急诊药品费用统计
+			List<PageData>	varList = new ArrayList<PageData>();
+			List<String> titles = new ArrayList<String>();
+			titles.add("序号");
+			titles.add("患者ID"); 
+			titles.add("患者名称");
+			titles.add("诊断结果数 	");
+			titles.add("主治医师");
+			titles.add("入院科室");
+			titles.add("入院时间");
+			titles.add("出院科室");
+			titles.add("出院时间");
+			titles.add("点评");
+			titles.add("合理");
+			dataMap.put("titles", titles);
+			int i = 0;
+			for(PageData pp:reportList){
+				PageData vpd = new PageData();
+				vpd.put("var1", i++);	
+				vpd.put("var2", pp.get("PATIENT_ID")+"（"+pp.get("VISIT_ID")+"）");	
+				vpd.put("var3", pp.get("NAME"));	
+				vpd.put("var4", pp.get("DIAGNOSIS_COUNT").toString());	
+				vpd.put("var5", pp.get("ATTENDING_DOCTOR"));	
+				vpd.put("var6", pp.get("in_dept_name"));	
+				vpd.put("var7", pp.get("admission_date_time"));	
+				vpd.put("var8", pp.get("out_dept_name"));	
+				vpd.put("var9", pp.get("discharge_date_time"));	
+				vpd.put("var10", "1".equals(pp.get("ISORDERCHECK")==null?"":pp.get("ISORDERCHECK").toString())?"已点评":"未点评");	
+				vpd.put("var11","0".equals(pp.get("ISCHECKTRUE")==null?"":pp.get("ISCHECKTRUE").toString())?"合理":("1".equals(pp.get("ISCHECKTRUE")==null?"":pp.get("ISCHECKTRUE").toString())?"合理":"待定"));	
+				varList.add(vpd);
+			}
+			dataMap.put("varList", varList);
+			ObjectExcelView erv = new ObjectExcelView();
+			mv = new ModelAndView(erv,dataMap);
+		}catch(Exception e ) {
+			logger.error(e.toString(), e);
+		}
+		return  mv; 
+	}
+	/**
 	 * 医嘱医生维度报表
 	 * @return
 	 */
@@ -230,6 +312,63 @@ public class ReportController extends BaseController{
 			e.printStackTrace();
 		}
 		mv.setViewName("DoctOrder/report/orderListByDoctor");
+		return  mv; 
+	}
+	/**
+	 * 医嘱医生维度报表
+	 * @return
+	 */
+	@RequestMapping(value="/orderListByDoctorExport")
+	public ModelAndView orderListByDoctorExport(){
+		ModelAndView mv = new ModelAndView();
+		PageData pd = this.getPageData();
+		try {
+			HelpUtil.setDefaultDate(pd);
+			List<PageData> list =  this.orderWorkService.orderListByDoctor(pd);
+			long total = 0;
+			for(PageData p:list){
+				Object count = p.get("count");
+				total += Long.valueOf(count.toString());
+			}
+			for(PageData p:list){
+				BigDecimal count =  (BigDecimal) p.get("count");
+				if(count==null||count.doubleValue()==0){
+					p.put("percent", "0.00 %");
+				}else{
+					BigDecimal percent = count.multiply(new BigDecimal(100)).divide(new BigDecimal(total),2, BigDecimal.ROUND_HALF_UP);
+					String percentv = MyDecimalFormat.format(percent.doubleValue());
+					p.put("percent", percentv +" %");
+				}
+			}
+//			mv.addObject("pd", pd);
+//			mv.addObject("resultList", list);
+//			mv.addObject("checktypeMap", commonService.getCheckTypeDict()); 
+			
+			Map<String,Object> dataMap = new HashMap<String,Object>();
+			//门急诊药品费用统计
+			List<PageData>	varList = new ArrayList<PageData>();
+			List<String> titles = new ArrayList<String>();
+			titles.add("医生");
+			titles.add("问题类型"); 
+			titles.add("问题数");
+			titles.add("问题占比");
+			dataMap.put("titles", titles);
+			int i = 0;
+			for(PageData pp:list){
+				PageData vpd = new PageData();
+				vpd.put("var1", pp.get("ATTENDING_DOCTOR"));	
+				vpd.put("var2",  commonService.getCheckTypeDict().get(pd.getString("RS_DRUG_TYPE")).getString("RS_TYPE_NAME"));	
+				vpd.put("var3", pp.get("count").toString());	
+				vpd.put("var4", pp.get("percent"));	
+				varList.add(vpd);
+			}
+			dataMap.put("varList", varList);
+			ObjectExcelView erv = new ObjectExcelView();
+			mv = new ModelAndView(erv,dataMap);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return  mv; 
 	}
 	/**
@@ -268,7 +407,63 @@ public class ReportController extends BaseController{
 		return  mv; 
 	}
 	
-	
+	/**
+	 * 医嘱 出院科室报表
+	 * @return
+	 */
+	@RequestMapping(value="/orderListByDepExport")
+	public ModelAndView orderListByDepExport(){
+		ModelAndView mv = new ModelAndView();
+		PageData pd = this.getPageData();
+		try {
+			HelpUtil.setDefaultDate(pd);
+			List<PageData> list =  this.orderWorkService.orderListByDep(pd);
+			long total = 0;
+			for(PageData p:list){
+				Object count = p.get("count");
+				total += Long.valueOf(count.toString());
+			}
+			for(PageData p:list){
+				BigDecimal count =  (BigDecimal) p.get("count");
+				if(count==null||count.doubleValue()==0){
+					p.put("percent", "0.00 %");
+				}else{
+					BigDecimal percent = count.multiply(new BigDecimal(100)).divide(new BigDecimal(total),2, BigDecimal.ROUND_HALF_UP);
+					String percentv = MyDecimalFormat.format(percent.doubleValue());
+					p.put("percent", percentv +" %");
+				}
+			}
+//			mv.addObject("pd", pd);
+//			mv.addObject("resultList", list);
+//			mv.addObject("checktypeMap", commonService.getCheckTypeDict()); 
+			
+			Map<String,Object> dataMap = new HashMap<String,Object>();
+			//门急诊药品费用统计
+			List<PageData>	varList = new ArrayList<PageData>();
+			List<String> titles = new ArrayList<String>();
+			titles.add("出院科室");
+			titles.add("问题类型"); 
+			titles.add("问题数");
+			titles.add("问题占比");
+			dataMap.put("titles", titles);
+			int i = 0;
+			for(PageData pp:list){
+				PageData vpd = new PageData();
+				vpd.put("var1", pp.get("out_dept_name"));	
+				vpd.put("var2",  commonService.getCheckTypeDict().get(pd.get("RS_DRUG_TYPE").toString()).getString("RS_TYPE_NAME"));	
+				vpd.put("var3", pp.get("count").toString());	
+				vpd.put("var4", pp.get("percent"));	
+				varList.add(vpd);
+			}
+			dataMap.put("varList", varList);
+			ObjectExcelView erv = new ObjectExcelView();
+			mv = new ModelAndView(erv,dataMap);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+//		mv.setViewName("DoctOrder/report/orderListByDep");
+		return  mv; 
+	}
 	
 /*	-------------------------------------------------------------   */
 	/**
@@ -376,6 +571,7 @@ public class ReportController extends BaseController{
 		}
 		return mv;
 	}
+	
 	/**
 	 * 处方报表-处方详细
 	 * @param page
@@ -385,8 +581,7 @@ public class ReportController extends BaseController{
 	public ModelAndView prescList(Page page){
 		ModelAndView mv = new ModelAndView();
 		PageData pd = this.getPageData();
-		try
-		{
+		try {
 			HelpUtil.setDefaultDate(pd);
 			String keywords = pd.getString("keywords");			//关键词检索条件
 			String beginDate = pd.getString("beginDate");		//开始时间
@@ -413,7 +608,6 @@ public class ReportController extends BaseController{
 			mv.addObject("rstypeColorMap", DoctorConst.rstypeColorMap); 
 			mv.addObject("checktypeMap", commonService.getCheckTypeDict()); 
 			mv.addObject("prescList", prescList);
-			mv.setViewName("DoctOrder/presc/prescWorkList");
 			mv.addObject("pd", pd);
 		}catch(Exception e )
 		{
@@ -422,6 +616,95 @@ public class ReportController extends BaseController{
 		mv.setViewName("DoctOrder/report/prescList");
 		return  mv; 
 	}
+	
+	/**
+	 * 处方报表-处方详细
+	 * @param page
+	 * @return
+	 */
+	@RequestMapping(value="/prescListExport")
+	public ModelAndView prescListExport(Page page){
+		ModelAndView mv = new ModelAndView();
+		PageData pd = this.getPageData();
+		try
+		{
+			HelpUtil.setDefaultDate(pd);
+			String keywords = pd.getString("keywords");			//关键词检索条件
+			String beginDate = pd.getString("beginDate");		//开始时间
+			String endDate = pd.getString("endDate");			//结束时间
+			if(endDate != null && !"".equals(endDate))
+			{
+				pd.put("end_Date", endDate);
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(DateUtil.fomatDate(endDate));
+				cal.add(Calendar.DAY_OF_MONTH, 1);
+				pd.put("endDate", sdf.format(cal.getTime()));
+			}
+			page.setPd(pd);
+
+			page.setPd(pd);
+			page.setShowCount(1000);
+			int TotalPage = 1;
+			List<PageData>	reportList =  new ArrayList<PageData>();
+			for(int pag = 1;pag<=TotalPage&&pag<=60;pag++){
+				page.setCurrentPage(pag);
+				List<PageData> mylist =  prescService.prescListPage(page);
+				if(mylist!=null){
+					reportList.addAll(mylist);
+				}
+				TotalPage = page.getTotalPage();
+			}
+			//			mv.addObject("rstypeMap", DoctorConst.rstypeMap); 
+//			mv.addObject("rstypeColorMap", DoctorConst.rstypeColorMap); 
+//			mv.addObject("checktypeMap", commonService.getCheckTypeDict()); 
+//			mv.addObject("prescList", prescList);
+//			mv.setViewName("DoctOrder/presc/prescWorkList");
+//			mv.addObject("pd", pd);
+			
+			Map<String,Object> dataMap = new HashMap<String,Object>();
+			//门急诊药品费用统计
+			List<PageData>	varList = new ArrayList<PageData>();
+			List<String> titles = new ArrayList<String>();
+			titles.add("处方号");
+			titles.add("处方日期"); 
+			titles.add("患者名称");
+			titles.add("性别 ");
+			titles.add("科室");
+			titles.add("医生");
+			titles.add("抗菌");
+			titles.add("诊断");
+			titles.add("药费");
+			titles.add("点评");
+			titles.add("合理");
+			dataMap.put("titles", titles);
+			for(PageData pp:reportList){
+				PageData vpd = new PageData();
+				vpd.put("var1", pp.get("PRESC_NO"));	
+				vpd.put("var2", pp.get("ORDER_DATE") );	
+				vpd.put("var3", pp.get("PATIENT_NAME"));	
+				vpd.put("var4", pp.get("PATIENT_SEX"));	
+				vpd.put("var5", pp.get("ORG_NAME"));	
+				vpd.put("var6", pp.get("DOCTOR_NAME"));	
+				vpd.put("var7", "1".equals(pp.get("HASKJ")==null?"":pp.get("HASKJ").toString())?"是":"否" );	
+				vpd.put("var8", pp.get("DIAGNOSIS_NAMES"));	
+				vpd.put("var9", pp.get("AMOUNT").toString());	
+				vpd.put("var10", "1".equals(pp.get("ISORDERCHECK")==null?"":pp.get("ISORDERCHECK").toString())?"已点评":"未点评");	
+				vpd.put("var11","0".equals(pp.get("ISCHECKTRUE")==null?"":pp.get("ISCHECKTRUE").toString())?"合理":("1".equals(pp.get("ISCHECKTRUE")==null?"":pp.get("ISCHECKTRUE").toString())?"合理":"待定"));	
+				varList.add(vpd);
+			}
+			dataMap.put("varList", varList);
+			ObjectExcelView erv = new ObjectExcelView();
+			mv = new ModelAndView(erv,dataMap);
+			
+		}catch(Exception e )
+		{
+			logger.error(e.toString(), e);
+		}
+//		mv.setViewName("DoctOrder/report/prescList");
+		return  mv; 
+	}
+	
 	/**
 	 * 处方医生维度报表
 	 * @return
@@ -457,6 +740,64 @@ public class ReportController extends BaseController{
 		mv.setViewName("DoctOrder/report/prescListByDoctor");
 		return  mv; 
 	}
+	
+	/**
+	 * 处方医生维度报表
+	 * @return
+	 */
+	@RequestMapping(value="/prescListByDoctorExport")
+	public ModelAndView prescListByDoctorExport(){
+		ModelAndView mv = new ModelAndView();
+		PageData pd = this.getPageData();
+		try {
+			HelpUtil.setDefaultDate(pd);
+			List<PageData> list =  this.prescService.prescListByDoctor(pd);
+			long total = 0;
+			for(PageData p:list){
+				Object count = p.get("count");
+				total += Long.valueOf(count.toString());
+			}
+			for(PageData p:list){
+				BigDecimal count =  (BigDecimal) p.get("count");
+				if(count==null||count.doubleValue()==0){
+					p.put("percent", "0.00 %");
+				}else{
+					BigDecimal percent = count.multiply(new BigDecimal(100)).divide(new BigDecimal(total),2, BigDecimal.ROUND_HALF_UP);
+					String percentv = MyDecimalFormat.format(percent.doubleValue());
+					p.put("percent", percentv +" %");
+				}
+			}
+//			mv.addObject("pd", pd);
+//			mv.addObject("resultList", list);
+//			mv.addObject("checktypeMap", commonService.getCheckTypeDict()); 
+			
+			Map<String,Object> dataMap = new HashMap<String,Object>();
+			//门急诊药品费用统计
+			List<PageData>	varList = new ArrayList<PageData>();
+			List<String> titles = new ArrayList<String>();
+			titles.add("医生");
+			titles.add("问题类型"); 
+			titles.add("问题数");
+			titles.add("问题占比");
+			dataMap.put("titles", titles);
+			int i = 0;
+			for(PageData pp:list){
+				PageData vpd = new PageData();
+				vpd.put("var1", pp.get("DOCTOR_NAME"));	
+				vpd.put("var2",  commonService.getCheckTypeDict().get(pd.getString("RS_DRUG_TYPE")).getString("RS_TYPE_NAME"));	
+				vpd.put("var3", pp.get("count").toString());	
+				vpd.put("var4", pp.get("percent"));	
+				varList.add(vpd);
+			}
+			dataMap.put("varList", varList);
+			ObjectExcelView erv = new ObjectExcelView();
+			mv = new ModelAndView(erv,dataMap);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+//		mv.setViewName("DoctOrder/report/prescListByDoctor");
+		return  mv; 
+	}
 	/**
 	 * 处方 出院科室报表
 	 * @return
@@ -490,6 +831,64 @@ public class ReportController extends BaseController{
 			e.printStackTrace();
 		}
 		mv.setViewName("DoctOrder/report/prescListByDep");
+		return  mv; 
+	}
+	
+	/**
+	 * 处方 出院科室报表
+	 * @return
+	 */
+	@RequestMapping(value="/prescListByDepExport")
+	public ModelAndView prescListByDepExport(){
+		ModelAndView mv = new ModelAndView();
+		PageData pd = this.getPageData();
+		try {
+			HelpUtil.setDefaultDate(pd);
+			List<PageData> list =  this.prescService.prescListByDep(pd);
+			long total = 0;
+			for(PageData p:list){
+				Object count = p.get("count");
+				total += Long.valueOf(count.toString());
+			}
+			for(PageData p:list){
+				BigDecimal count =  (BigDecimal) p.get("count");
+				if(count==null||count.doubleValue()==0){
+					p.put("percent", "0.00 %");
+				}else{
+					BigDecimal percent = count.multiply(new BigDecimal(100)).divide(new BigDecimal(total),2, BigDecimal.ROUND_HALF_UP);
+					String percentv = MyDecimalFormat.format(percent.doubleValue());
+					p.put("percent", percentv +" %");
+				}
+			}
+			
+			Map<String,Object> dataMap = new HashMap<String,Object>();
+			//门急诊药品费用统计
+			List<PageData>	varList = new ArrayList<PageData>();
+			List<String> titles = new ArrayList<String>();
+			titles.add("出院科室");
+			titles.add("问题类型"); 
+			titles.add("问题数");
+			titles.add("问题占比");
+			dataMap.put("titles", titles);
+			int i = 0;
+			for(PageData pp:list){
+				PageData vpd = new PageData();
+				vpd.put("var1", pp.get("ORG_NAME"));	
+				vpd.put("var2",  commonService.getCheckTypeDict().get(pd.getString("RS_DRUG_TYPE")).getString("RS_TYPE_NAME"));	
+				vpd.put("var3", pp.get("count").toString());	
+				vpd.put("var4", pp.get("percent"));	
+				varList.add(vpd);
+			}
+			dataMap.put("varList", varList);
+			ObjectExcelView erv = new ObjectExcelView();
+			mv = new ModelAndView(erv,dataMap);
+//			mv.addObject("pd", pd);
+//			mv.addObject("resultList", list);
+//			mv.addObject("checktypeMap", commonService.getCheckTypeDict()); 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+//		mv.setViewName("DoctOrder/report/prescListByDep");
 		return  mv; 
 	}
 	
