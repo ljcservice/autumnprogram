@@ -127,7 +127,7 @@
 								<tr>
 									<td>
 										<div id="btnDiv" class="check-search">
-											<a title="最大支持导出2万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
+											<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
 											<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
 										</div>
 									</td>

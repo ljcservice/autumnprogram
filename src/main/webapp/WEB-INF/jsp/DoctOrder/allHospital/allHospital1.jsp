@@ -83,7 +83,7 @@
 										</select>
 									</div>
 									<div id="btnDiv" class="check-search">
-											<a title="最大支持导出2万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
+											<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
 											<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
 										</div>
 								</div>
@@ -250,7 +250,7 @@ function initWidthHeight(){
 	FixTable("simple-table", 1, rr);
 }
 function listExport(){
-	window.open(path + "/allHospital/allHospital2Export.do?&"+$("#searchForm").serialize());
+	window.open(path + "/allHospital/allHospital1Export.do?&"+$("#searchForm").serialize());
 }
 function myprint(){
 	$("#main-container").hide();

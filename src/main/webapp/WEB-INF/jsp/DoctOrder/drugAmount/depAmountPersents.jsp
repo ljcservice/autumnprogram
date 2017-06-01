@@ -44,7 +44,7 @@
 					<div class="row">
 						<div class="col-xs-12"  >
 							<form action="drugAmount/depAmountPersents.do" method="post" name="searchForm" id="searchForm">
-								<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
+								<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 2px;padding-bottom: 2px;width: 100%;">
 									<div class="check-search"   >
 										起止日期：
 										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
@@ -75,14 +75,14 @@
 										</select>
 									</div>
 									<div id="btnDiv" class="check-search">
-											<a title="最大支持导出2万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
+											<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
 											<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
 										</div>
 								</div>
 							</form>
 						<!-- 检索  -->
 						<div>
-						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
+						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:2px;">
 							<thead>
 								<tr style="border-bottom-width:1px;">
 									<th class="center" nowrap rowspan="2"style="background-color: #f1f1f1;">科室</th>
@@ -104,19 +104,19 @@
 									<c:forEach items="${reportList}" var="report" varStatus="vs">
 										<tr >
 											<td class="center">${report.dept_name}</td>
-											<td class="center">￥ ${report.med}</td>
-											<td class="center">￥ ${report.drug} </td>
+											<td class="center">￥ <fmt:formatNumber value="${report.med}" pattern="###,###,##0.00"></fmt:formatNumber></td>
+											<td class="center">￥ <fmt:formatNumber value="${report.drug}" pattern="###,###,##0.00"></fmt:formatNumber></td>
 											<td class="center">${report.drug_persents} %</td>
-											<td class="center">￥ ${report.anti}</td>
+											<td class="center">￥ <fmt:formatNumber value="${report.anti}" pattern="###,###,##0.00"></fmt:formatNumber></td>
 											<td class="center">${report.anti_persents} %</td>
 										</tr>
 									</c:forEach>
 									<tr >
 										<td class="center">合计：</td>
-										<td class="center">￥ ${count.med_all}</td>
-										<td class="center">￥ ${count.drug_all} </td>
+										<td class="center">￥ <fmt:formatNumber value="${count.med_all}" pattern="###,###,##0.00"></fmt:formatNumber></td>
+										<td class="center">￥ <fmt:formatNumber value="${count.drug_all}" pattern="###,###,##0.00"></fmt:formatNumber></td>
 										<td class="center">${count.drug_all_persents} %</td>
-										<td class="center">￥ ${count.anti_all}</td>
+										<td class="center">￥  <fmt:formatNumber value="${count.anti_all}" pattern="###,###,##0.00"></fmt:formatNumber></td>
 										<td class="center">${count.anti_all_persents} %</td>
 									</tr>
 								</c:when>

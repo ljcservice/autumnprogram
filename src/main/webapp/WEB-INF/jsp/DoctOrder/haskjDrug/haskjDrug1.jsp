@@ -71,7 +71,7 @@
 										<label><input class="ace" value="2" name="type2" type="radio" <c:if test="${pd.type2==2 }">checked</c:if> >不含外用&nbsp;<span class="lbl"></span></label>
 									</div>
 									<div id="btnDiv" class="check-search">
-											<a title="最大支持导出2万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
+											<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
 											<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
 										</div>
 								</div>

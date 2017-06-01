@@ -44,7 +44,7 @@
 					<div class="row">
 						<div class="col-xs-12"  >
 							<form action="drugAmount/drugAmountByDep.do" method="post" name="searchForm" id="searchForm">
-								<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
+								<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 2px;padding-bottom: 2px;width: 100%;">
 									<div class="check-search"  >
 										起止日期：
 										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
@@ -99,7 +99,7 @@
 							</form>
 						<!-- 检索  -->
 						<div>
-						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
+						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:2px;">
 							<thead>
 								<tr>
 									<th class="center" nowrap>科室</th>
@@ -144,7 +144,7 @@
 								<tr>
 									<td>
 										<div id="btnDiv" class="check-search">
-											<a title="最大支持导出2万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
+											<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
 											<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
 										</div>
 									</td>
