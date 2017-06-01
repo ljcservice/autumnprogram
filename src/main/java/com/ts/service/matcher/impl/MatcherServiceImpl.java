@@ -25,6 +25,11 @@ public class MatcherServiceImpl  implements MatcherService
 		return (List<PageData>)dao.findForList("MatcherMapper.drugList", pd);
 	}
 	
+
+	public PageData countMatcherSum() throws Exception{
+		return (PageData)dao.findForObject("MatcherMapper.countMatcherSum", new PageData());
+	}
+	
 	
 	
 }

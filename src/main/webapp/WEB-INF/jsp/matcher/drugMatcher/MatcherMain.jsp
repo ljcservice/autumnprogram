@@ -147,7 +147,14 @@
 							           </select>
 									</div>
 									<div class="check-search"  id="autoMatcherBtn" >
-										<a class="btn btn-mini btn-primary" onclick="autoMatcher();">自动匹配</a>
+										<c:choose>
+										<c:when test="${autoMatcher!=null and autoMatcher!='' }">
+											自动匹配中......
+										</c:when>
+										<c:otherwise>
+											<a class="btn btn-mini btn-primary" onclick="autoMatcher();">自动匹配</a>
+										</c:otherwise>
+										</c:choose>
 									</div>
 								</form>
 								</div>
@@ -213,6 +220,9 @@
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">
 							<table style="width:100%;">
 								<tr>
+									<td>
+										<b>药品总数：<font color="#428bca">${matcherCount.drug_all}</font> &nbsp;&nbsp;  已匹配总数： <font color="#428bca">${matcherCount.success}</font></b>
+									</td>
 									<td>
 										<div class="pagination" style="float: right;padding: 0px;margin: 0px;">${page.pageStr}</div>
 									</td>
@@ -336,6 +346,7 @@ function autoMatcher(){
 	$.ajax({
 		type: "POST",
 		url: '${path}/DrugMatcher/autoMatcher.do',
+		data:$("#searchForm").serialize(),
 		dataType:'json',
 		async:true,
 		cache: false,

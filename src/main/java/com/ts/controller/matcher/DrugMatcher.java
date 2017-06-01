@@ -52,11 +52,19 @@ public class DrugMatcher extends BaseController {
 
     @RequestMapping(value="/autoMatcher")
     @ResponseBody
-    public Object autoMatcher(Page page){
+    public Object autoMatcher(Page page){ 
+    	Map<String,Object> map = new HashMap<String,Object>();
+    	HttpSession session = getRequest().getSession();
+    	Object autoMatcher = session.getAttribute("autoMatcher");
+    	if(autoMatcher!=null){
+    		map.put("result","正在匹配中，请稍后再试...");
+    		return map;
+    	}
+    	session.setAttribute("autoMatcher", 1);
+    	PageData pd = this.getPageData();
     	StopWatch start = new StopWatch();
     	start.start();
     	String errInfo = "success";
-    	Map<String,Object> map = new HashMap<String,Object>();
     	List<PageData> waitingUpdateList = new ArrayList<PageData>();
     	int totalCount = 0;
     	int matcherSuccess = 0;
@@ -66,6 +74,7 @@ public class DrugMatcher extends BaseController {
         	page.setCurrentPage(1);
         	page.setTotalResult(1000);
         	for(int i=1;i<=page.getTotalPage();i++){
+        		page.setPd(pd);
         		page.setCurrentPage(i);
         		List<PageData>	drugMaplist = matcherService.drugMapListPage(page); 
         		if(i==1){totalCount=page.getTotalResult();}
@@ -74,10 +83,27 @@ public class DrugMatcher extends BaseController {
         			//自动匹配
         			for(PageData drugmap:drugMaplist){
 	        			PageData s = new PageData();
-	        			//汉字去除 "注射液"去掉（ ( 内容
-	        			s.put("DRUG_NAME", controlName( drugmap.getString("DRUG_NAME_LOCAL")));
-	        			//根据成查询此出所有的相似药品
+	        			s.put("STAD_DRUG_NAME",drugmap.getString("DRUG_NAME_LOCAL"));
+	        			//完全匹配药品
 	        			drugList = matcherService.drugList( s);
+	        			if(drugList==null || drugList.size()==0){
+	        				s = new PageData();
+	        				//汉字去掉（ ( 内容
+	        				String newName = controlName(s, drugmap.getString("DRUG_NAME_LOCAL"));
+	        				if(!drugmap.getString("DRUG_NAME_LOCAL").equals(newName)){
+	        					s.put("STAD_DRUG_NAME", newName);
+	        					//完全匹配药品
+	        					drugList = matcherService.drugList( s);
+	        				}
+	        			}
+	        			if(drugList==null || drugList.size()==0){
+	        				s = new PageData();
+	        				//汉字去掉（ ( 内容
+	        				s.put("DRUG_NAME", controlName(s, drugmap.getString("DRUG_NAME_LOCAL")));
+	        				//模糊 查询 相似药品
+	        				drugList = matcherService.drugList( s);
+	        			}
+	        			
 	        			List<PageData> drugList2 = new ArrayList<PageData>();
 	            		List<PageData> drugList3 = new ArrayList<PageData>();
 	        			if(drugList==null||drugList.size()==0){
@@ -177,7 +203,7 @@ public class DrugMatcher extends BaseController {
 	        				waitingUpdateList.add(matcher);
 	        			}
 	        			//电脑也需要休息啊
-	        			Thread.sleep(200);
+	        			Thread.sleep(100);
 	        		}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -189,6 +215,7 @@ public class DrugMatcher extends BaseController {
 	    } catch (Exception e) {
 			errInfo = "操作失败！";
 		}
+        session.removeAttribute("autoMatcher");
 	    map.put("result",errInfo);
 	    String persent = "0";
 	    if(totalCount!=0){
@@ -282,9 +309,15 @@ public class DrugMatcher extends BaseController {
 	}
 
 
-	private String controlName(String str) {
+	private String controlName(PageData p,String str) {
     	try {
-			str = str.replaceAll("注射液", "");
+    		if(str==null)return null;
+    		str = str.trim();
+			//str = str.replaceAll("注射液", "");
+//    		if(str.contains("(")){
+//    			String w = str.substring(str.indexOf("("),str.length()-1);
+//    			
+//    		}
 			str = str.substring(0, str.indexOf("(") );
 			str = str.substring(0, str.indexOf("（") );
 		} catch (Exception e) {
@@ -396,6 +429,15 @@ public class DrugMatcher extends BaseController {
 //        mv.addObject("page", page);
         mv.addObject("pd", pd);
     	mv.setViewName("matcher/drugMatcher/MatcherMain");
+    	
+    	//统计匹配数量
+    	try {
+			mv.addObject("matcherCount", matcherService.countMatcherSum());
+		} catch (Exception e) {
+		}
+    	HttpSession session = getRequest().getSession();
+    	Object autoMatcher = session.getAttribute("autoMatcher");
+    	mv.addObject("autoMatcher",autoMatcher);
         return mv;
     }
     

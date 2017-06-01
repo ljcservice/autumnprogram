@@ -62,9 +62,15 @@
 	<if test="DRUG_NAME != null and DRUG_NAME != ''">
 		and DRUG_NAME  like CONCAT(CONCAT('%', #{DRUG_NAME}),'%')  
 	</if>
+	<if test="STAD_DRUG_NAME != null and STAD_DRUG_NAME != ''">
+		and DRUG_NAME  = #{STAD_DRUG_NAME}
+	</if>
+	
 	 order by a.DRUG_NAME,a.DRUG_FORM,a.UNITS,a.DOSE_UNITS,DOSE_PER_UNIT
 </select>
 
-
-
+<select id="countMatcherSum" parameterType="pd" resultType="pd">
+	select nvl(count(DRUG_MAP_ID),0) drug_all, nvl(sum(decode(DRUG_ID,null,0,'',0,1)),0) success
+	from drug_map a 
+</select>
 </mapper>
