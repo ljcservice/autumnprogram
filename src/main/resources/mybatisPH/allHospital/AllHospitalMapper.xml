@@ -111,18 +111,18 @@
 							and m.dr_date &gt;=  to_date(#{pd.beginDate}, 'yyyy-mm-dd')
 						</if>
 						<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
-							and m.dr_date &lt; to_date(#{pd.endDate}, 'yyyy-mm-dd')
+							and m.dr_date &lt;= to_date(#{pd.endDate}, 'yyyy-mm-dd')
 						</if>
 						<if test="pd.drug_name != null and pd.drug_name != ''"> <!-- 药品-->
 							and m.drug_name = #{pd.drug_name} 
 						</if>
-						<if test="pd.drugType != null and pd.drugType == 0"> <!-- 抗菌-->
+						<if test="pd.drugType != null and pd.drugType != '' and pd.drugType == 0"> <!-- 抗菌-->
 							and d.IS_ANTI = 1
 						</if>
-						<if test="pd.drugType != null and pd.drugType == 1"> <!-- 基本药物-->
+						<if test="pd.drugType != null and pd.drugType != '' and  pd.drugType == 1"> <!-- 基本药物-->
 							and d.IS_BASEDRUG = 1
 						</if>
-						<if test="pd.drugType != null and pd.drugType == 2"> <!-- 非抗菌-->
+						<if test="pd.drugType != null and pd.drugType != '' and  pd.drugType == 2"> <!-- 非抗菌-->
 							and d.IS_ANTI != 1
 						</if>
 			      union all
@@ -139,18 +139,18 @@
 							and h.rpt_date  &gt;=  to_date(#{pd.beginDate}, 'yyyy-mm-dd')
 						</if>
 						<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
-							and h.rpt_date  &lt; to_date(#{pd.endDate}, 'yyyy-mm-dd')
+							and h.rpt_date  &lt;= to_date(#{pd.endDate}, 'yyyy-mm-dd')
 						</if>
 						<if test="pd.drug_name != null and pd.drug_name != ''"> <!-- 药品-->
 							and h.drug_name = #{pd.drug_name} 
 						</if>
-						<if test="pd.drugType != null and pd.drugType == 0"> <!-- 抗菌-->
+						<if test="pd.drugType != null and pd.drugType != '' and  pd.drugType == 0"> <!-- 抗菌-->
 							and h.IS_ANTI = 1
 						</if>
-						<if test="pd.drugType != null and pd.drugType == 1"> <!-- 抗菌-->
+						<if test="pd.drugType != null and pd.drugType != '' and  pd.drugType == 1"> <!-- 基本药物-->
 							and h.IS_BASEDRUG = 1
 						</if>
-						<if test="pd.drugType != null and pd.drugType == 2"> <!-- 抗菌-->
+						<if test="pd.drugType != null and pd.drugType != '' and  pd.drugType == 2"> <!-- 抗菌-->
 							and h.IS_ANTI != 1
 						</if>
 			) t
