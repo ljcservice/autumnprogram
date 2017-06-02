@@ -26,7 +26,7 @@
  }
  .check-search{
 	float: left;
-	margin: 4px;
+	margin: 2px;
 }
 </style>
 </head>
@@ -41,7 +41,7 @@
 					<div class="row">
 						<div class="col-xs-12">
 						<!-- 检索  -->
-								<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
+								<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 2px;padding-bottom: 2px;width: 100%;">
 								<form action="presc/prescWorkListPage.do" method="post" name="searchForm" id="searchForm">
 									<div class="check-search nav-search"  >
 										科室：
@@ -100,7 +100,7 @@
 								</div>
 						<!-- 检索  -->
 						<div>
-						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
+						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:2px;">
 							<thead>
 								<tr>
 									<th class="center" nowrap>处方号</th>
@@ -191,6 +191,7 @@
 									<td>
 										<div id="btnDiv" style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
 											<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="prescListExport();">导出</a>
+											<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
 										</div>
 									</td>
 									<td>
@@ -298,7 +299,17 @@ function detailPresc(id,NGROUPNUM){
 	 diag.show();
 }
 function prescListExport(){
-	window.open(path + "/presc/prescListExport.do?&"+$("#searchDiv").serialize());
+	window.open(path + "/presc/prescListExport.do?work=1&"+$("#searchDiv").serialize());
+}
+function myprint(){
+	$("#main-container").hide();
+	var tableFixClone = $("#simple-table").clone(true);
+	$("<div id='myprint' style='width=100%;height=100%;'></div>").appendTo($("body"));
+	tableFixClone.appendTo($("#myprint"));
+	$("#myprint").css("z-index",9999) .css("position","absolute").css("left",0).css("top",0).css("background-color","white");
+	window.print();
+	$("#myprint").remove();
+	$("#main-container").show();
 }
 </script>
 </html>

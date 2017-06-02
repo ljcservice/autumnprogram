@@ -30,7 +30,7 @@
  }
 .check-search{
 	float: left;
-	margin: 4px;
+	margin: 2px;
 }
 .popover{
 	z-index: 999999;
@@ -47,7 +47,7 @@
 				<div class="page-content">
 					<div class="row">
 						<div class="col-xs-12" >
-							<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
+							<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 2px;padding-bottom: 2px;width: 100%;">
 								<form name="searchForm" id="searchForm" action="DoctOrder/OrderWork.do" method="post" > 
 									<div class="check-search nav-search" >
 											科室：
@@ -98,7 +98,7 @@
 									</form>
 							</div>
 							<div style="width: 100%;height: auto;">
-							<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
+							<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:2px;">
 							<thead>
 								<tr>
 									<th class="center" nowrap style="width:35px;">序号</th>
@@ -183,6 +183,7 @@
 									<td>
 										<div id="btnDiv" style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
 											<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
+											<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
 										</div>
 									</td>
 									<td>
@@ -301,6 +302,16 @@ function viewDetail(patId , visitId,ngnum){
 }
 function listExport(){
 	window.open(path + "/DoctOrder/orderListExport.do?&"+$("#searchForm").serialize());
+}
+function myprint(){
+	$("#main-container").hide();
+	var tableFixClone = $("#simple-table").clone(true);
+	$("<div id='myprint' style='width=100%;height=100%;'></div>").appendTo($("body"));
+	tableFixClone.appendTo($("#myprint"));
+	$("#myprint").css("z-index",9999) .css("position","absolute").css("left",0).css("top",0).css("background-color","white");
+	window.print();
+	$("#myprint").remove();
+	$("#main-container").show();
 }
 </script>
 </html>

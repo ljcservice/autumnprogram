@@ -190,10 +190,10 @@ public class OrderWork extends BaseController
 							String[] RS_DRUG_TYPE = RS_DRUG_TYPES.split("@;@");
 							for(String ss:RS_DRUG_TYPE){
 								String w = DoctorConst.rstypeMap.get(ss );
-								sb.append(w);
+								sb.append(w+";");
 							}
 						}
-						vpd.put("var11", sb.toString());	//12
+						vpd.put("var12", sb.length()>0?sb.substring(0, sb.length()-1):"");	//12
 						varList.add(vpd);
 					}
 				}
