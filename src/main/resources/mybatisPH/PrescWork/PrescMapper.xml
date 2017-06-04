@@ -47,8 +47,11 @@
 				</if>
 			</otherwise>
 		</choose>
-		<if test="pd.ISORDERCHECK != null and pd.ISORDERCHECK != ''"> <!--点评记录-->
-			and a.ISORDERCHECK = #{pd.ISORDERCHECK}
+		<if test="pd.ISORDERCHECK != null and pd.ISORDERCHECK == '1'"> <!--点评记录-->
+			and a.ISORDERCHECK = 1
+		</if>
+		<if test="pd.ISORDERCHECK != null and pd.ISORDERCHECK == '0'"> <!--点评记录-->
+			and (a.ISORDERCHECK = 0 or a.ISORDERCHECK is null ) 
 		</if>
 		<if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
 			and a.ORDER_DATE &gt;= #{pd.beginDate} 
@@ -89,7 +92,14 @@
 		<if test="pd.DMDRUG != null and pd.DMDRUG != ''"> <!-- 是否抗菌 -->
 			and a.DMDRUG = #{pd.DMDRUG}
 		</if>
-		order by ORDER_DATE desc
+		<choose>
+			<when test="pd.randomflag!= null and pd.randomflag==1">
+				Order by DBMS_RANDOM.VALUE 
+			</when>
+			<otherwise>
+				Order by ORDER_DATE desc
+			</otherwise>
+		</choose>
 	</select>
 	<!-- 单个处方主要信息 -->
 	<select id="findPrescById" parameterType="pd" resultType="pd" >

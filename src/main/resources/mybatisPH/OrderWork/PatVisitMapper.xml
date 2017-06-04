@@ -288,10 +288,12 @@
 		<if test="pd.IS_OPERATION != null and pd.IS_OPERATION != ''"> <!-- 是否含有手术-->
 			and t.IS_OPERATION = #{pd.IS_OPERATION} 
 		</if>
-		<if test="pd.ISORDERCHECK != null and pd.ISORDERCHECK != ''"> <!-- 是否合理-->
-			and t.ISORDERCHECK = #{pd.ISORDERCHECK} 
+		<if test="pd.ISORDERCHECK != null and pd.ISORDERCHECK == '1'"> <!--点评记录-->
+			and t.ISORDERCHECK = 1
 		</if>
-		<!-- 是否合理 -->
+		<if test="pd.ISORDERCHECK != null and pd.ISORDERCHECK == '0'"> <!--点评记录-->
+			and (t.ISORDERCHECK = 0 or t.ISORDERCHECK is null ) 
+		</if>
 		<choose>
 			<when test="pd.ISCHECKTRUE!= null and pd.ISCHECKTRUE==2">
 				and ( t.ISCHECKTRUE =2	or t.ISCHECKTRUE  is null )
@@ -302,7 +304,14 @@
 				</if>
 			</otherwise>
 		</choose>
-		Order by t.discharge_date_time 
+		<choose>
+			<when test="pd.randomflag!= null and pd.randomflag==1">
+				Order by DBMS_RANDOM.VALUE 
+			</when>
+			<otherwise>
+				Order by t.discharge_date_time  desc
+			</otherwise>
+		</choose>
 	</select>
 	
 	<select id="patVisitById" parameterType="pd" resultType="pd">

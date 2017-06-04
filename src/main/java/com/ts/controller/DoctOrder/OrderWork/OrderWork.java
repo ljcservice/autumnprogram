@@ -98,7 +98,19 @@ public class OrderWork extends BaseController
 			}
 			mv.addObject("pd", pd);
 			page.setPd(pd);
+			String RANDOM_NUM = pd.getString("RANDOM_NUM");
+			if(Tools.isEmpty(RANDOM_NUM)){
+				pd.put("RANDOM_NUM", 50);
+			}
+			if("1".equals(pd.getString("randomflag"))){
+				int showCount = Integer.parseInt(RANDOM_NUM);
+				page.setShowCount(showCount);
+			}
 			List<PageData> entity =  this.orderWorkService.patientList(page);
+			if("1".equals(pd.getString("randomflag"))){
+				getRequest().getSession().setAttribute("ExportList", entity);
+			}
+			page = null;
 			for(PageData pp:entity){
 				String RS_DRUG_TYPES = pp.getString("RS_DRUG_TYPES");
 				if(!Tools.isEmpty(RS_DRUG_TYPES)){
@@ -115,6 +127,7 @@ public class OrderWork extends BaseController
 			mv.addObject("rstypeColorMap", DoctorConst.rstypeColorMap); 
 			mv.addObject("checktypeMap", commonService.getCheckTypeDict()); 
 			mv.addObject("patVisits", entity);
+			mv.addObject("pd", pd);
 		}catch(Exception e )
 		{
 			logger.error(e.toString(), e);
@@ -122,6 +135,7 @@ public class OrderWork extends BaseController
 		mv.setViewName("DoctOrder/OrderWork/OrderWorkView");
 		return  mv; 
 	}
+	
 	
 	/**
 	 * 导出到excel
@@ -133,6 +147,7 @@ public class OrderWork extends BaseController
 		ModelAndView mv = new ModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		
 		String endDate = pd.getString("endDate");		//结束时间
 		if(endDate != null && !"".equals(endDate))
 		{
@@ -144,6 +159,9 @@ public class OrderWork extends BaseController
 			pd.put("endDate", sdf.format(cal.getTime()));
 		}
 		page.setPd(pd);
+		if("1".equals(pd.getString("randomflag"))){
+			return orderListExport2(mv);
+		}
 		page.setShowCount(1000);
 		try{
 			Map<String,Object> dataMap = new HashMap<String,Object>();
@@ -193,7 +211,7 @@ public class OrderWork extends BaseController
 								sb.append(w+";");
 							}
 						}
-						vpd.put("var12", sb.length()>0?sb.substring(0, sb.length()-1):"");	//12
+						vpd.put("var11", sb.length()>0?sb.substring(0, sb.length()-1):"");	//12
 						varList.add(vpd);
 					}
 				}
@@ -206,6 +224,56 @@ public class OrderWork extends BaseController
 		}
 		return mv;
 	}
+	private ModelAndView orderListExport2(ModelAndView mv) {
+		Map<String,Object> dataMap = new HashMap<String,Object>();
+		List<String> titles = new ArrayList<String>();
+		titles.add("患者ID");//1
+		titles.add("患者名称");//2
+		titles.add("诊断结果数");	//3
+		titles.add("主治医师");	//4
+		titles.add("入院科室");	//5
+		titles.add("入院时间");	//5
+		titles.add("出院科室");	//5
+		titles.add("出院时间");	//5
+		titles.add("点评");	//5
+		titles.add("合理");	//5
+		titles.add("结果");	//5
+		dataMap.put("titles", titles);
+		//分批查询,最大查询2万条
+		List<PageData> varOList =  (List<PageData>) getRequest().getSession().getAttribute("ExportList" );
+		List<PageData> varList = new ArrayList<PageData>();
+		if(varOList!=null){
+			for(int i=0;i<varOList.size();i++){
+				PageData vpd = new PageData();
+				vpd.put("var1", varOList.get(i).get("PATIENT_ID").toString()+"（"+varOList.get(i).get("VISIT_ID").toString()+"）");		//1
+				vpd.put("var2", varOList.get(i).getString("NAME"));	//2
+				vpd.put("var3", varOList.get(i).get("DIAGNOSIS_COUNT").toString());	//3
+				vpd.put("var4", varOList.get(i).getString("ATTENDING_DOCTOR"));	//4
+				vpd.put("var5", varOList.get(i).getString("in_dept_name"));		//5
+				vpd.put("var6", varOList.get(i).get("admission_date_time"));	//6
+				vpd.put("var7", varOList.get(i).getString("out_dept_name"));		//7
+				vpd.put("var8", varOList.get(i).get("discharge_date_time"));	//8
+				vpd.put("var9", varOList.get(i).get("ISORDERCHECK")==null?"未点评":("0".equals(varOList.get(i).get("ISORDERCHECK").toString())?"未点评":"已点评"));	//10
+				vpd.put("var10", varOList.get(i).get("ISCHECKTRUE")==null?"待定":("0".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"合理":("1".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"不合理":"待定")));	//11
+				String[] RS_DRUG_TYPE = (String[]) varOList.get(i).get("RS_DRUG_TYPES");
+				if(RS_DRUG_TYPE!=null){
+					StringBuffer sb = new StringBuffer();
+					for(String ss:RS_DRUG_TYPE){
+						String w = DoctorConst.rstypeMap.get(ss );
+						sb.append(w+";");
+					}
+					vpd.put("var11", sb.length()>0?sb.substring(0, sb.length()-1):"");	//12
+				}
+				varList.add(vpd);
+			}
+		}
+		dataMap.put("varList", varList);
+		ObjectExcelView erv = new ObjectExcelView();
+		mv = new ModelAndView(erv,dataMap);
+		return mv;
+	}
+		
+	
 	/**
 	 * 医嘱点评工作主页详细信息
 	 * @return

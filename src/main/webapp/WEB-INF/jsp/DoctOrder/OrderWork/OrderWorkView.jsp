@@ -95,6 +95,14 @@
 											<option <c:if test="${pd.ISCHECKTRUE == '2' }">selected</c:if> value="2" >待定</option>
 										</select>
 									</div>
+									<div class="check-search"  >
+										<a title="随机抽取" class="btn btn-mini btn-info" onclick="randomQuery();">随机抽取</a>
+										<input type="number" placeholder="抽取数量" class="ace" name="RANDOM_NUM" value="${pd.RANDOM_NUM}" width="20px;" onchange="changeNum(this)">
+									</div>
+									<div class="check-search" id="btnDiv" >
+										<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
+										<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
+									</div>
 									</form>
 							</div>
 							<div style="width: 100%;height: auto;">
@@ -146,7 +154,7 @@
 											<td nowrap class="center"> ${patVisit.out_dept_name }</td>
 											<td nowrap class="center"><fmt:formatDate value="${patVisit.discharge_date_time}" pattern="yyyy-MM-dd"/> </td> 
 											<td nowrap class="center">
-												<c:if test="${patVisit.ISORDERCHECK=='0'}">未点评</c:if>
+												<c:if test="${patVisit.ISORDERCHECK!='1'}">未点评</c:if>
 												<c:if test="${patVisit.ISORDERCHECK=='1'}">已点评</c:if>
 											</td>
 											<td nowrap class="center"> 
@@ -177,21 +185,17 @@
 							</tbody>
 						</table>
 						</div>
+						<c:if test="${pd.randomflag!=1}">
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">
 							<table style="width:100%;">
 								<tr>
-									<td>
-										<div id="btnDiv" style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
-											<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
-											<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
-										</div>
-									</td>
 									<td>
 										<div class="pagination" style="float: right;padding: 0px;margin: 0px;">${page.pageStr}</div>
 									</td>
 								</tr>
 							</table>
 						</div>
+						</c:if>
 						
 						</div>
 					</div>
@@ -301,7 +305,7 @@ function viewDetail(patId , visitId,ngnum){
 	
 }
 function listExport(){
-	window.open(path + "/DoctOrder/orderListExport.do?&"+$("#searchForm").serialize());
+	window.open(path + "/DoctOrder/orderListExport.do?"+$("#searchForm").serialize()+"&randomFlag="+'${pd.randomFlag}');
 }
 function myprint(){
 	$("#main-container").hide();
@@ -312,6 +316,22 @@ function myprint(){
 	window.print();
 	$("#myprint").remove();
 	$("#main-container").show();
+}
+function randomQuery(){
+	window.location.href=path + "/DoctOrder/OrderWork.do?randomFlag=1&"+$("#searchForm").serialize();
+}
+function changeNum(obj){
+	var mynum = $(obj).val();
+	if(isNaN(obj)){
+		if(mynum.indexOf("\.")!=-1){
+			$(obj).val(50);
+		}
+		if(mynum>200){
+			$(obj).val(200);
+		}
+	}else{
+		$(obj).val(50);
+	}
 }
 </script>
 </html>

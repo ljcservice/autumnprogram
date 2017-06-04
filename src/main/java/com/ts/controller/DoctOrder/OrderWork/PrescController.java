@@ -74,7 +74,18 @@ public class PrescController extends BaseController {
 				pd.put(DRUG_TYPE, 1);
 			}
 			page.setPd(pd);
+			String RANDOM_NUM = pd.getString("RANDOM_NUM");
+			if(Tools.isEmpty(RANDOM_NUM)){
+				pd.put("RANDOM_NUM", 50);
+			}
+			if("1".equals(pd.getString("randomflag"))){
+				int showCount = Integer.parseInt(RANDOM_NUM);
+				page.setShowCount(showCount);
+			}
 			List<PageData>	prescList = prescService.prescListPage(page);	//列出专家列表
+			if("1".equals(pd.getString("randomflag"))){
+				getRequest().getSession().setAttribute("prescExportList", prescList);
+			}
 			for(PageData pp:prescList){
 				String RS_DRUG_TYPES = pp.getString("RS_DRUG_TYPES");
 				if(!Tools.isEmpty(RS_DRUG_TYPES)){
@@ -92,6 +103,9 @@ public class PrescController extends BaseController {
 			//统计
 			PageData report = prescService.prescCountReport(pd); 
 			mv.addObject("report", report);
+			if("1".equals(pd.getString("randomflag"))){
+				getRequest().getSession().setAttribute("prescReportCount", report);
+			}
 		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
@@ -124,6 +138,9 @@ public class PrescController extends BaseController {
 		}
 		page.setPd(pd);
 		page.setShowCount(1000);
+		if("1".equals(pd.getString("randomflag"))){
+			return prescListExport2(mv);
+		}
 		try{
 			Map<String,Object> dataMap = new HashMap<String,Object>();
 			List<String> titles = new ArrayList<String>();
@@ -219,7 +236,91 @@ public class PrescController extends BaseController {
 		}
 		return mv;
 	}
-	
+	public ModelAndView prescListExport2(ModelAndView mv){
+		try{
+			Map<String,Object> dataMap = new HashMap<String,Object>();
+			List<String> titles = new ArrayList<String>();
+			titles.add("处方号");//1
+			titles.add("处方日期");//2
+			titles.add("患者");	//3
+			titles.add("性别 	");	//4
+			titles.add("科室");	//5
+			titles.add("医生");	//5
+			titles.add("诊断");	//5
+			titles.add("点评");	//5
+			titles.add("是否合理");	//5
+			titles.add("品种");	//5
+			titles.add("抗菌");	//5
+			titles.add("注射");	//5
+			titles.add("基药数");	//5
+			titles.add("金额");	//5
+			titles.add("存在问题");	//5
+			dataMap.put("titles", titles);
+			int TotalPage = 1;
+			List<PageData> varList  = new ArrayList<PageData>();
+			//分批查询,最大查询2万条
+				List<PageData> varOList =   (List<PageData>) getRequest().getSession().getAttribute("prescExportList" );
+				if(varOList!=null){
+					for(int i=0;i<varOList.size();i++){
+						PageData vpd = new PageData();
+						vpd.put("var1", varOList.get(i).getString("PRESC_NO"));		//1
+						vpd.put("var2", varOList.get(i).getString("ORDER_DATE"));	//2
+						vpd.put("var3", varOList.get(i).getString("PATIENT_NAME"));	//3
+						vpd.put("var4", varOList.get(i).getString("PATIENT_SEX"));	//4
+						vpd.put("var5", varOList.get(i).getString("ORG_NAME"));		//5
+						vpd.put("var6", varOList.get(i).getString("DOCTOR_NAME"));	//6
+						vpd.put("var7", varOList.get(i).getString("DIAGNOSIS_NAMES"));	//8
+						vpd.put("var8", varOList.get(i).get("ISORDERCHECK")==null?"未点评":("0".equals(varOList.get(i).get("ISORDERCHECK").toString())?"未点评":"已点评"));	//10
+						vpd.put("var9", varOList.get(i).get("ISCHECKTRUE")==null?"待定":("0".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"合理":("1".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"不合理":"待定")));	//11
+						vpd.put("var10", varOList.get(i).get("DRUG_COUNT").toString());	//6
+						vpd.put("var11", "0".equals(varOList.get(i).getString("HASKJ"))?"否":"是");		//7
+						vpd.put("var12", varOList.get(i).getString("HASZS"));		//5
+						vpd.put("var13", varOList.get(i).get("BASEDRUG_COUNT").toString());	
+						vpd.put("var14", "￥ "+varOList.get(i).getDouble("AMOUNT"));			//9
+						
+						String[] RS_DRUG_TYPES = (String[]) varOList.get(i).get("RS_DRUG_TYPES");
+						StringBuffer sb = new StringBuffer();
+						if(RS_DRUG_TYPES!=null){
+							for(String ss:RS_DRUG_TYPES){
+								String w = DoctorConst.rstypeMap.get(ss );
+								sb.append(w).append(";");
+							}
+							vpd.put("var15", sb.length()>0?sb.substring(0, sb.length()-1):"");	//12
+						}
+						varList.add(vpd);
+					}
+			}
+				//统计
+				PageData report = (PageData) getRequest().getSession().getAttribute("prescReportCount" );
+				mv.addObject("report", report);
+				PageData p1 = new PageData();
+				p1.put("var1", "总 计：");	 
+				p1.put("var2", report.get("ALL_COUNT").toString()); 
+				p1.put("var10", report.get("DRUG_COUNT_SUM").toString()); 
+				p1.put("var11", report.get("HASZS_SUM").toString()); 
+				p1.put("var12", report.get("HASKJ_SUM").toString()); 
+				p1.put("var13", report.get("BASEDRUG_COUNT_SUM").toString()); 
+				p1.put("var14", report.get("AMOUNT_SUM").toString()); 
+				PageData p2 = new PageData();
+				p2.put("var1", "平 均：");	
+				p2.put("var10", report.get("DRUG_COUNT_AVG").toString()); 
+				p2.put("var14", report.get("AMOUNT_AVG").toString()); 
+				PageData p3 = new PageData();
+				p3.put("var1", "% ");	
+				p3.put("var11", report.get("HASZS_PERSENTS").toString()); 
+				p3.put("var12", report.get("HASKJ_PERSENTS").toString()); 
+				p3.put("var13", report.get("BASEDRUG_COUNT_PERSENTS").toString()); 
+				varList.add(p1);
+				varList.add(p2);
+				varList.add(p3);
+			dataMap.put("varList", varList);
+			ObjectExcelView erv = new ObjectExcelView();
+			mv = new ModelAndView(erv,dataMap);
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
 	/**
 	 * 处方列表
 	 * @return
