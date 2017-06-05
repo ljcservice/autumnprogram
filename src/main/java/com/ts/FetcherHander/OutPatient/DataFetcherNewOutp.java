@@ -971,6 +971,8 @@ public class DataFetcherNewOutp extends ReportScheduler  {
 			public void ExceuteSqlRecord() {
 				JDBCQueryImpl query = DBQueryFactory.getQuery("PEAAS");
 				// DecimalFormat d = new DecimalFormat("#0.00");
+				//给药途径  静脉输液标示
+                String[] adminName = Config.getParamValue("IntravenousInfusion").split(",");
 				String sql = null;
 				HashMap<String, String> pzMap = new HashMap<String, String>();
 				int impDrugCount = 0;
@@ -1002,6 +1004,10 @@ public class DataFetcherNewOutp extends ReportScheduler  {
 				boolean DMDrug = false;
 				// 检查处方中 是否有外用
 				boolean ExteDrug = false;
+				//静脉输液
+                boolean adminJMSY = false;
+                //抗菌药物 静脉输液 
+                boolean adminAntiJMSY = false;
 				/* 总费用 */
 				float DrugCosts = 0f;
 				/* 抗菌药药物费用 */
@@ -1116,6 +1122,17 @@ public class DataFetcherNewOutp extends ReportScheduler  {
 					if (!CDZS)  CDZS = DrugUtils.isCenterDrugZS(crs.get("drug_code"),crs.get("DRUG_Spec"));
 					/* 抗菌药费 */
 					if(DrugUtils.isKJDrug(crs.get("drug_code"))) AntiDrugCosts += crs.getDouble("Costs");
+					for(String s :adminName)
+                    {
+                        if(crs.get("administration").contains(s))
+                        {
+                            adminJMSY = true ;
+                            if(HasKJ){
+                                adminAntiJMSY = true;
+                            }
+                            break;
+                        }
+                    } 
 				}
 				/* 药品种数 */
 				DrugCount = pzMap.size();
@@ -1143,46 +1160,49 @@ public class DataFetcherNewOutp extends ReportScheduler  {
 				sql = "insert into PRESC"
 						+ "(ID, PATIENT_ID, PATIENT_AGE, VISIT_NO, ORG_CODE, ORG_NAME, DOCTOR_CODE, DOCTOR_NAME, ORDER_DATE, AMOUNT, DIAGNOSIS_CODES, "
 						+ "DIAGNOSIS_NAMES, Drug_Count, BaseDrug_Count, HasKJ, HasZS, CDZS,ELJSY,DDRUG,MDrug,FSDrug,YLJSY,GZDrug,DMDrug,ExteDrug,PRESCTYPE,"
-						+ "PRESCTYPENAME,PATIENT_NAME,PATIENT_SEX,PATIENT_BIRTH,CHARGES,DISPENSARY,DISPENSARYNAME,IDENTITY,presc_no,ORDER_TYPE,allcosts,ANTIDRUGCOSTS) "
-						+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-				sqlParams.add(id);                                                                             // ID
-				sqlParams.add(crm.get("PATIENT_ID"));                                                            // PATIENT_ID 病人id
-				sqlParams.add(patAge);                                                                           // PATIENT_AGE 病人年龄
-				sqlParams.add(crm.get("VISIT_NO"));                                                              // VISIT_NO 就诊id
-				sqlParams.add(crm.get("ORDERED_BY"));                                                            // ORG_CODE 诊断部门代码
-				sqlParams.add(DictCache.getNewInstance().getDeptName(crm.get("ORDERED_BY")));           // ORG_NAME 诊断部门名称
-				sqlParams.add(DictCache.getNewInstance().getDoctorCode(hisQuery,crm.get("PRESCRIBED_BY")));      // DOCTOR_CODE 医生代码
-				sqlParams.add(crm.get("PRESCRIBED_BY"));                                                         // DOCTOR_NAME 医生名称
-				sqlParams.add(dt);                                                                              // ORDER_DATE 医嘱日期
-				sqlParams.add(("".equals(crm.get("Costs")) ? DrugCosts : crm.get("Costs")) + "");                     // AMOUNT 总计花费
-				sqlParams.add(diag.get("diag_code"));                                                            // DIAGNOSIS_CODES 诊断代码
-				sqlParams.add(diag.get("diag_desc"));                                                            // DIAGNOSIS_NAMES 诊断名称
-				sqlParams.add(DrugCount + "");                                                                       // 品种数
-				sqlParams.add(baseDrugCount + "");                                                                 // 基本药品种数
-				sqlParams.add((HasKJ ? "1" : "0"));                                                              // 是否有抗菌药
-				sqlParams.add((HasZS ? "1" : "0"));                                                              // 是否有注射剂
-				sqlParams.add((CDZS ? "1" : "0"));                                                               // 是否有中药注射剂
-				sqlParams.add((ELJSY ? "1" : "0"));                                                              // 是否有二类精神药物
-				sqlParams.add((DDrug ? "1" : "0"));                                                              // 是否有毒性药物
-				sqlParams.add((MDrug ? "1" : "0"));                                                              // 是否有麻醉药品
-				sqlParams.add((FSDrug ? "1" : "0"));                                                             // 是否有放射药品
-				sqlParams.add((YLJSY ? "1" : "0"));                                                              // 是否有一类精神药品
-				sqlParams.add((GZDrug ? "1" : "0"));                                                             // 是否有贵重药品
-				sqlParams.add((DMDrug ? "1" : "0"));                                                             // 是否有毒麻药品
-				sqlParams.add((ExteDrug ? "1" : "0"));                                                           // 是否有外用药品
-				sqlParams.add(prescType);                                                                        // 处方类型 1:军人处方 ,2: 医保处方 ,3:自费处方 ,9 :其他
+						+ "PRESCTYPENAME,PATIENT_NAME,PATIENT_SEX,PATIENT_BIRTH,CHARGES,DISPENSARY,DISPENSARYNAME,IDENTITY,presc_no,ORDER_TYPE,allcosts,ANTIDRUGCOSTS,ADMINJMSY,ADMINANTIJMSY) "
+						+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				sqlParams.add(id);                                                                                // ID
+				sqlParams.add(crm.get("PATIENT_ID"));                                                             // PATIENT_ID 病人id
+				sqlParams.add(patAge);                                                                            // PATIENT_AGE 病人年龄
+				sqlParams.add(crm.get("VISIT_NO"));                                                               // VISIT_NO 就诊id
+				sqlParams.add(crm.get("ORDERED_BY"));                                                             // ORG_CODE 诊断部门代码
+				sqlParams.add(DictCache.getNewInstance().getDeptName(crm.get("ORDERED_BY")));                     // ORG_NAME 诊断部门名称
+				sqlParams.add(DictCache.getNewInstance().getDoctorCode(hisQuery,crm.get("PRESCRIBED_BY")));       // DOCTOR_CODE 医生代码
+				sqlParams.add(crm.get("PRESCRIBED_BY"));                                                          // DOCTOR_NAME 医生名称
+				sqlParams.add(dt);                                                                                // ORDER_DATE 医嘱日期
+				sqlParams.add(("".equals(crm.get("Costs")) ? DrugCosts : crm.get("Costs")) + "");                 // AMOUNT 总计花费
+				sqlParams.add(diag.get("diag_code"));                                                             // DIAGNOSIS_CODES 诊断代码
+				sqlParams.add(diag.get("diag_desc"));                                                             // DIAGNOSIS_NAMES 诊断名称
+				sqlParams.add(DrugCount + "");                                                                    // 品种数
+				sqlParams.add(baseDrugCount + "");                                                                // 基本药品种数
+				sqlParams.add((HasKJ ? "1" : "0"));                                                               // 是否有抗菌药
+				sqlParams.add((HasZS ? "1" : "0"));                                                               // 是否有注射剂
+				sqlParams.add((CDZS ? "1" : "0"));                                                                // 是否有中药注射剂
+				sqlParams.add((ELJSY ? "1" : "0"));                                                               // 是否有二类精神药物
+				sqlParams.add((DDrug ? "1" : "0"));                                                               // 是否有毒性药物
+				sqlParams.add((MDrug ? "1" : "0"));                                                               // 是否有麻醉药品
+				sqlParams.add((FSDrug ? "1" : "0"));                                                              // 是否有放射药品
+				sqlParams.add((YLJSY ? "1" : "0"));                                                               // 是否有一类精神药品
+				sqlParams.add((GZDrug ? "1" : "0"));                                                              // 是否有贵重药品
+				sqlParams.add((DMDrug ? "1" : "0"));                                                              // 是否有毒麻药品
+				sqlParams.add((ExteDrug ? "1" : "0"));                                                            // 是否有外用药品
+				sqlParams.add(prescType);                                                                         // 处方类型 1:军人处方 ,2: 医保处方 ,3:自费处方 ,9 :其他
 				sqlParams.add(tCom.get("CHARGE_TYPE"));                                                           // 费别名字
-				sqlParams.add(tCom.get("NAME"));                                                                 // 病人名称
-				sqlParams.add(tCom.get("SEX"));                                                                  // 病人性别
-				sqlParams.add(tCom.get("DATE_OF_BIRTH"));                                                        // 病人出生日期
-				sqlParams.add(crm.get("PAYMENTS"));                                                              // 实际收取费用
-				sqlParams.add(("".equals(crm.get("DISPENSARY")) ? DISPENSARY : crm.get("DISPENSARY")));          // 发药药局
-				sqlParams.add(DictCache.getNewInstance().getDeptName(crm.get("DISPENSARY")));                    // 发药药局
+				sqlParams.add(tCom.get("NAME"));                                                                  // 病人名称
+				sqlParams.add(tCom.get("SEX"));                                                                   // 病人性别
+				sqlParams.add(tCom.get("DATE_OF_BIRTH"));                                                         // 病人出生日期
+				sqlParams.add(crm.get("PAYMENTS"));                                                               // 实际收取费用
+				sqlParams.add(("".equals(crm.get("DISPENSARY")) ? DISPENSARY : crm.get("DISPENSARY")));           // 发药药局
+				sqlParams.add(DictCache.getNewInstance().getDeptName(crm.get("DISPENSARY")));                     // 发药药局
 				sqlParams.add(tCom.get("IDENTITY"));                                                              // 病人身份
-				sqlParams.add(crm.get("presc_no"));                                                              // 病人身份
-				sqlParams.add("1");                                                                              // ORDER_TYP 医嘱类型，住院or门诊
-				sqlParams.add((("".equals(crm.get("Costs")) ? DrugCosts: crm.getDouble("Costs"))) + "");            // 治疗费+药费
+				sqlParams.add(crm.get("presc_no"));                                                               // 病人身份
+				sqlParams.add("1");                                                                               // ORDER_TYP 医嘱类型，住院or门诊
+				sqlParams.add((("".equals(crm.get("Costs")) ? DrugCosts: crm.getDouble("Costs"))) + "");          // 治疗费+药费
 				sqlParams.add(AntiDrugCosts + "");    
+                sqlParams.add((adminJMSY ? "1" : "0"));                                                           //静脉输液
+                sqlParams.add((adminAntiJMSY ? "1" : "0"));                                                       // 抗菌药 静脉输液
+				
 				query.update(sql,sqlParams.toArray());
 				CounterI1++;
 				pzMap = null;

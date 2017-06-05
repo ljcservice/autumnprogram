@@ -8,6 +8,7 @@ import com.hitzd.Annotations.MHPerformProp;
 import com.hitzd.DBUtils.CommonMapper;
 import com.hitzd.DBUtils.JDBCQueryImpl;
 import com.hitzd.DBUtils.TCommonRecord;
+import com.hitzd.his.DDD.DDDUtils;
 import com.hitzd.his.Utils.Config;
 import com.hitzd.his.Utils.DateUtils;
 import com.hitzd.his.Utils.DictCache;
@@ -16,9 +17,12 @@ import com.hitzd.his.casehistory.helper.CaseHistoryFactory;
 import com.hitzd.his.casehistory.helper.CaseHistoryFunction;
 import com.hitzd.his.casehistory.helper.CaseHistoryHelperUtils;
 import com.hitzd.his.casehistory.helper.ICaseHistoryHelper;
+import com.ts.util.Logger;
 
 public class MH4OUTP_BILL_ITEMS
 {
+    Logger logger = Logger.getLogger("MH4OUTP_BILL_ITEMS");
+    
     @MHPerformProp(MethodParam={String.class,JDBCQueryImpl.class,JDBCQueryImpl.class})
     public void run(String aDate,JDBCQueryImpl hisQuery,JDBCQueryImpl query)
     {
@@ -50,8 +54,8 @@ public class MH4OUTP_BILL_ITEMS
                         sql = "INSERT INTO OUTP_ORDERS_COSTS " +
                                 "(PATIENT_ID, VISIT_DATE, VISIT_NO, SERIAL_NO, ORDER_CLASS, ORDER_NO, ORDER_SUB_NO,ITEM_CLASS, ITEM_NO, ITEM_NAME, ITEM_CODE, ITEM_SPEC, UNITS, REPETITION, " +
                                 "AMOUNT, ORDERED_BY_DEPT, ORDERED_BY_DOCTOR, PERFORMED_BY, CLASS_ON_RCPT, COSTS, CHARGES, RCPT_NO, BILL_DESC_NO, BILL_ITEM_NO, "
-                                + "ORDERED_BY_DEPT_CODE,PERFORMED_BY_CODE,is_anti,CHARGE_INDICATOR)" +
-                                " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                                + "ORDERED_BY_DEPT_CODE,PERFORMED_BY_CODE,is_anti,CHARGE_INDICATOR,ddd_value)" +
+                                " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         				sqlParams.add(t.get("PATIENT_ID"));
         				Timestamp dateTime = new Timestamp(DateUtils.getDateFromString(t.getDateString("VISIT_DATE")).getTime());
     					sqlParams.add(dateTime);
@@ -79,9 +83,25 @@ public class MH4OUTP_BILL_ITEMS
                         sqlParams.add(t.get("BILL_ITEM_NO")        );
                         sqlParams.add(t.get("ORDERED_BY_DEPT")     );
                         sqlParams.add(t.get("PERFORMED_BY")        );
-                        sqlParams.add((t.get("ITEM_CLASS").equals(Config.getParamValue("Drug_In_Order"))?(DrugUtils.isKJDrug(t.get("ITEM_CODE"))?"1":"0"):"0") );
-                        sqlParams.add("1");    
-                        
+                        String is_anti = "0";
+                        double dddValue = 0d;
+                        if(t.get("ITEM_CLASS").equals(Config.getParamValue("Drug_In_Order")))
+                        {
+                            if(DrugUtils.isKJDrug(t.get("ITEM_CODE")))
+                            {
+                                is_anti = "1";
+                                dddValue = DDDUtils.CalcDDD(
+                                        t.get("item_code"),
+                                        t.get("item_spec"), t.get("units"),
+                                        t.get("Firm_ID"), t.get("amount"),
+                                        t.get("COSTS"));
+                                logger.info("存在抗菌药" + t.get("item_code") + "●●●"
+                                        + t.get("item_spec") + "●●●" + dddValue);
+                            }
+                        }
+                        sqlParams.add(is_anti);
+                        sqlParams.add("1");
+                        sqlParams.add(dddValue);    
                         query.update(sql,sqlParams.toArray());
                     }
                     catch (Exception e) 

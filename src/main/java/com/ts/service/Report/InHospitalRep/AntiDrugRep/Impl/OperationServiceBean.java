@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.ts.dao.DAO;
+import com.ts.entity.Page;
 import com.ts.service.Report.InHospitalRep.AntiDrugRep.IOperationService;
 import com.ts.util.PageData;
 
@@ -30,5 +31,30 @@ public class OperationServiceBean  implements IOperationService
             pds = (List<PageData>)daoPH.findForList("OperationRepMapper.findDeptOperCountInfo", pd);
         }
         return pds;
+    }
+
+    @Override
+    public List<PageData> DRANO007(Page page) throws Exception
+    {
+        List<PageData> pd = (List<PageData>)daoPH.findForList("OperationRepMapper.findDRANO007Page", page);
+        return pd;
+    }
+    
+    @Override
+    public void updateDRANO007(PageData pd) throws Exception
+    {
+        daoPH.update("OperationRepMapper.updateDRANO007", pd);
+    }
+    
+    @Override
+    public List<PageData> DRANO008(PageData pd) throws Exception
+    {
+        return (List<PageData>)daoPH.findForList("OperationRepMapper.findDRANO008", pd);
+    }
+    
+    @Override
+    public List<PageData> DRANO009(PageData pd) throws Exception
+    {
+        return (List<PageData>)daoPH.findForList("OperationRepMapper.findDRANO009", pd);
     }
 }

@@ -27,10 +27,12 @@ public class JdbcTemplateHander implements InvocationHandler
     private JdbcOperations warpedJdbcTemplate;
     private String DBName ;
     private File debugger = null;
+    private boolean isDebug = false;
 
     public JdbcTemplateHander()  
     {
     	debugger = new File("debugger");
+    	if(debugger.exists()) isDebug = true;
     } 
 
     public JdbcOperations bind(JdbcTemplate _JdbcTemplate,String DBName)
@@ -46,7 +48,7 @@ public class JdbcTemplateHander implements InvocationHandler
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
     {
-    	if(debugger.exists())
+    	if(isDebug)
     	{
         	if(args != null && args.length > 0 )
         	{

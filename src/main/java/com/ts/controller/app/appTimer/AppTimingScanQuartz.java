@@ -36,36 +36,36 @@ public class AppTimingScanQuartz extends BaseController{
 		Long dates = System.currentTimeMillis(); // 获取当前时间戳
 		Calendar now = new GregorianCalendar();
 		String Calendar_Key = ReadPropertiesFiles.getValue("token.Calendar_Key");
-		if("HOUR_OF_DAY".equals(Calendar_Key)){
-			now.add(Calendar.HOUR_OF_DAY,Integer.parseInt(ReadPropertiesFiles.getValue("token.rToken")) );
-		}else if("DAY_OF_MONTH".equals(Calendar_Key)){
-			now.add(Calendar.DAY_OF_MONTH,Integer.parseInt(ReadPropertiesFiles.getValue("token.rToken")) );	
-		}else if("MINUTE".equals(Calendar_Key)){
-			now.add(Calendar.MINUTE,Integer.parseInt(ReadPropertiesFiles.getValue("token.rToken")) );	
-		}else if("SECOND".equals(Calendar_Key)){
-			now.add(Calendar.SECOND,Integer.parseInt(ReadPropertiesFiles.getValue("token.rToken")) );		
-		}else{
-			logBefore(logger, "时间设置错误！");
-		}
+//		if("HOUR_OF_DAY".equals(Calendar_Key)){
+//			now.add(Calendar.HOUR_OF_DAY,Integer.parseInt(ReadPropertiesFiles.getValue("token.rToken")) );
+//		}else if("DAY_OF_MONTH".equals(Calendar_Key)){
+//			now.add(Calendar.DAY_OF_MONTH,Integer.parseInt(ReadPropertiesFiles.getValue("token.rToken")) );	
+//		}else if("MINUTE".equals(Calendar_Key)){
+//			now.add(Calendar.MINUTE,Integer.parseInt(ReadPropertiesFiles.getValue("token.rToken")) );	
+//		}else if("SECOND".equals(Calendar_Key)){
+//			now.add(Calendar.SECOND,Integer.parseInt(ReadPropertiesFiles.getValue("token.rToken")) );		
+//		}else{
+//			logBefore(logger, "时间设置错误！");
+//		}
 		String sdate = String.valueOf(dates);
 		String times = String.valueOf(now.getTimeInMillis());
 		logBefore(logger, "令牌队列数>>>:"+AppUserQueue.getQueueAppTokenSize() );
 		try {
-			while(AppUserQueue.getQueueAppTokenSize() > 0 )
-			{
-				AppToken appToken = AppUserQueue.getQueueAppToken();
-				sti.setTI_ID(UuidUtil.get32UUID());
-				sti.setUSER_ID(appToken.getAppUser().getUSER_ID());
-				sti.setTOKEN_INFO(appToken.getRefresh_token());
-				sti.setVALIDITY(times);
-				sti.setCREATE_TIME(sdate);
-				pd.put("ti_id", sti.getTI_ID());
-				pd.put("user_id", sti.getUSER_ID());
-				pd.put("token_info", sti.getTOKEN_INFO());
-				pd.put("validity", sti.getVALIDITY());
-				pd.put("CREATE_TIME", sti.getCREATE_TIME());
-				appTokenService.save(pd);
-			}
+//			while(AppUserQueue.getQueueAppTokenSize() > 0 )
+//			{
+//				AppToken appToken = AppUserQueue.getQueueAppToken();
+//				sti.setTI_ID(UuidUtil.get32UUID());
+//				sti.setUSER_ID(appToken.getAppUser().getUSER_ID());
+//				sti.setTOKEN_INFO(appToken.getRefresh_token());
+//				sti.setVALIDITY(times);
+//				sti.setCREATE_TIME(sdate);
+//				pd.put("ti_id", sti.getTI_ID());
+//				pd.put("user_id", sti.getUSER_ID());
+//				pd.put("token_info", sti.getTOKEN_INFO());
+//				pd.put("validity", sti.getVALIDITY());
+//				pd.put("CREATE_TIME", sti.getCREATE_TIME());
+//				appTokenService.save(pd);
+//			}
 			logBefore(logger, "令牌队列为空等待中！！！");
 
 		} catch (Exception  e) {

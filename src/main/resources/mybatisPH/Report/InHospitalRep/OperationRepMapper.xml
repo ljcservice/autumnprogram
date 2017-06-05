@@ -133,12 +133,12 @@
 				    <if test="OPERATION_DESC!= null and OPERATION_DESC != ''">
 				  	   and t.OPERATION_DESC like CONCAT(CONCAT('%', #{OPERATION_DESC}),'%')
 				    </if>
-				    <if test="WOUNDTYPE!= null and WOUNDTYPE != '0'">
+				    <if test="WOUNDTYPE!= null and WOUNDTYPE == 0"> 
 					    <if test="WOUND_GRADE!= null and WOUND_GRADE != ''">
 					  	   and t.WOUND_GRADE = #{WOUND_GRADE}
 					    </if>
 				    </if>
-				    <if test="WOUNDTYPE!= null and WOUNDTYPE != '1'">
+				    <if test="WOUNDTYPE!= null and WOUNDTYPE == 1"> 
 					    <if test="WOUND_GRADE!= null and WOUND_GRADE != ''">
 					  	   and t.WOUND_GRADE_UPDATE = #{WOUND_GRADE}
 					    </if>
@@ -153,4 +153,221 @@
 		 order by ratAnti desc
     </select>
 
+	<select id="findDRANO007Page" parameterType="page" resultType="pd">
+			select
+				t.patient_id,
+				t.visit_id,
+				t.operation_no,
+				t.operation_desc,
+				t.operation_code,
+				t.heal,
+				t.wound_grade,
+				t.operating_date,
+				t.anaesthesia_method,
+				t.operator,
+				t.first_assistant,
+				t.second_assistant,
+				t.anesthesia_doctor,
+				t.link_date,
+				t.dept_name,
+				t.clinic_attr,
+				t.outp_or_inp,
+				t.internal_or_sergery,
+				t.dept_code,
+				t.has_anti,
+				t.is_timing,
+				t.is_treatment,
+				t.lh,
+				t.pz,
+				t.wound_grade_update,
+				t.id,
+				m.name
+			from 
+				<include refid="tableName"></include> t 
+			left join pat_master_index m on m.patient_id = t.patient_id 
+			where 
+				t.link_date &gt;= to_date(#{pd.beginDate} ,'yyyy-mm-dd')  
+	            and t.link_date &lt;= to_date(#{pd.endDate} ,'yyyy-mm-dd') 
+	            <if test="pd.keywords != null and pd.keywords != ''">
+			  	   and t.dept_name like CONCAT(CONCAT('%', #{pd.keywords}),'%')
+			    </if>
+			    <if test="pd.OPERATION_DESC!= null and pd.OPERATION_DESC != ''">
+			  	   and t.OPERATION_DESC like CONCAT(CONCAT('%', #{pd.OPERATION_DESC}),'%')
+			    </if>
+			    <if test="pd.WOUNDTYPE!= null and pd.WOUNDTYPE == 0"> 
+				    <if test="pd.WOUND_GRADE!= null and pd.WOUND_GRADE != ''">
+				  	   and t.WOUND_GRADE = #{pd.WOUND_GRADE}  
+				    </if>
+			    </if>
+			    <if test="pd.WOUNDTYPE!= null and pd.WOUNDTYPE == 1"> 
+				    <if test="pd.WOUND_GRADE!= null and pd.WOUND_GRADE != ''">
+				  	   and t.WOUND_GRADE_UPDATE = #{pd.WOUND_GRADE} 
+				    </if>
+			    </if>
+			order by t.operating_date
+	</select>
+	
+	<update id="updateDRANO007" parameterType="pd">
+		update <include refid="tableName"></include> 
+		set 
+			HAS_ANTI = #{HAS_ANTI},
+			IS_TIMING = #{IS_TIMING},
+			IS_TREATMENT = #{IS_TREATMENT},
+			LH = #{LH},
+			PZ = #{PZ},
+			WOUND_GRADE_UPDATE = #{WOUND_GRADE_UPDATE,jdbcType=VARCHAR}
+		where  
+			id = #{id}
+	</update>
+	
+	<select id="findDRANO007By">
+	  	select　* from (
+			select
+					t.patient_id,
+					t.visit_id,
+					t.operation_no,
+					t.operation_desc,
+					t.operation_code,
+					t.heal,
+					t.wound_grade,
+					t.operating_date,
+					t.anaesthesia_method,
+					t.operator,
+					t.first_assistant,
+					t.second_assistant,
+					t.anesthesia_doctor,
+					t.link_date,
+					t.dept_name,
+					t.clinic_attr,
+					t.outp_or_inp,
+					t.internal_or_sergery,
+					t.dept_code,
+					t.has_anti,
+					t.is_timing,
+					t.is_treatment,
+					t.lh,
+					t.pz,
+					t.wound_grade_update,
+					t.id,
+					m.name,
+					rownum  num
+				from 
+					<include refid="tableName"></include> t 
+				left join pat_master_index m on m.patient_id = t.patient_id 
+				where 
+					t.link_date &gt;= to_date(#{pd.beginDate} ,'yyyy-mm-dd')  
+		            and t.link_date &lt;= to_date(#{pd.endDate} ,'yyyy-mm-dd') 
+		            <if test="pd.keywords != null and pd.keywords != ''">
+				  	   and t.dept_name like CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				    </if>
+				    <if test="pd.OPERATION_DESC!= null and pd.OPERATION_DESC != ''">
+				  	   and t.OPERATION_DESC like CONCAT(CONCAT('%', #{pd.OPERATION_DESC}),'%')
+				    </if>
+				    <if test="pd.WOUNDTYPE!= null and pd.WOUNDTYPE == 0"> 
+					    <if test="pd.WOUND_GRADE!= null and pd.WOUND_GRADE != ''">
+					  	   and t.WOUND_GRADE = #{pd.WOUND_GRADE}  
+					    </if>
+				    </if>
+				    <if test="pd.WOUNDTYPE!= null and pd.WOUNDTYPE == 1"> 
+					    <if test="pd.WOUND_GRADE!= null and pd.WOUND_GRADE != ''">
+					  	   and t.WOUND_GRADE_UPDATE = #{pd.WOUND_GRADE} 
+					    </if>
+				    </if>
+				    
+				order by t.link_date
+				)  m
+				where  m.num = #{num}
+	</select>
+	
+	
+	<select id="findDRANO008" parameterType="pd" resultType="pd">
+		select 
+     	   	t.dept_code,
+     	   	t.dept_name,
+	       	count(*) patsum,
+	 	   	sum(t.has_anti) hasantisum,
+       		sum(t.has_anti) / count(*) ranking,
+	       	sum(t.is_timing) timingsum,
+	       	sum(t.is_timing) /count(*) timingranking,
+	       	sum(t.is_treatment) treatsum,
+	       	sum(t.is_treatment) / count(*) treatranking,
+	       	sum(t.pz) pzsum,
+	       	sum(t.pz)/count(*) pzranking,
+	       	sum(decode(t.lh, 1, 1, 0)) lh1sum,
+	       	sum(decode(t.lh, 1, 1, 0)) /count(*) lh1ranking,
+	      	sum(decode(t.lh, 2, 1, 0)) lh2sum,
+	       	sum(decode(t.lh, 2, 1, 0)) / count(*) lh2ranking,
+	       	sum(decode(t.lh, 3, 1, 0)) lh3sum,
+	       	sum(decode(t.lh, 3, 1, 0)) / count(*) lh3ranking,
+	       	sum(decode(t.lh, 4, 1, 0)) lh4sum,
+	       	sum(decode(t.lh, 4, 1, 0)) / count(*) lh4ranking
+		  from operation t
+		  where t.link_date &gt;= to_date(#{beginDate} ,'yyyy-mm-dd')  
+	            and t.link_date &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
+	            <if test="keywords != null and keywords != ''">
+			  	   and t.dept_name like CONCAT(CONCAT('%', #{keywords}),'%')
+			    </if>
+			    <if test="OPERATION_DESC!= null and OPERATION_DESC != ''">
+			  	   and t.OPERATION_DESC like CONCAT(CONCAT('%', #{OPERATION_DESC}),'%')
+			    </if>
+			    <if test="WOUNDTYPE!= null and WOUNDTYPE == 0"> 
+				    <if test="WOUND_GRADE!= null and WOUND_GRADE != ''">
+				  	   and t.WOUND_GRADE = #{WOUND_GRADE}
+				    </if>
+			    </if>
+			    <if test="WOUNDTYPE!= null and WOUNDTYPE == 1"> 
+				    <if test="WOUND_GRADE!= null and WOUND_GRADE != ''">
+				  	   and t.WOUND_GRADE_UPDATE = #{WOUND_GRADE}
+				    </if>
+			    </if>
+		 group by t.dept_code, t.dept_name 
+		 order by ranking desc
+	</select>
+	
+	
+	<select id="findDRANO009" parameterType="pd" resultType="pd">
+		select 
+     	   t.dept_code,
+     	   t.dept_name,
+     	   t.operator,
+	       count(*) patsum,
+	 	   	sum(t.has_anti) hasantisum,
+       		sum(t.has_anti) / count(*) ranking,
+	       	sum(t.is_timing) timingsum,
+	       	sum(t.is_timing) /count(*) timingranking,
+	       	sum(t.is_treatment) treatsum,
+	       	sum(t.is_treatment) / count(*) treatranking,
+	       	sum(t.pz) pzsum,
+	       	sum(t.pz)/count(*) pzranking,
+	       	sum(decode(t.lh, 1, 1, 0)) lh1sum,
+	       	sum(decode(t.lh, 1, 1, 0)) /count(*) lh1ranking,
+	      	sum(decode(t.lh, 2, 1, 0)) lh2sum,
+	       	sum(decode(t.lh, 2, 1, 0)) / count(*) lh2ranking,
+	       	sum(decode(t.lh, 3, 1, 0)) lh3sum,
+	       	sum(decode(t.lh, 3, 1, 0)) / count(*) lh3ranking,
+	       	sum(decode(t.lh, 4, 1, 0)) lh4sum,
+	       	sum(decode(t.lh, 4, 1, 0)) / count(*) lh4ranking
+		  from operation t
+		  where t.link_date &gt;= to_date(#{beginDate} ,'yyyy-mm-dd')  
+	            and t.link_date &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
+	            <if test="keywords != null and keywords != ''">
+			  	   and t.dept_name like CONCAT(CONCAT('%', #{keywords}),'%')
+			    </if>
+			    <if test="OPERATION_DESC!= null and OPERATION_DESC != ''">
+			  	   and t.OPERATION_DESC like CONCAT(CONCAT('%', #{OPERATION_DESC}),'%')
+			    </if>
+			    <if test="WOUNDTYPE!= null and WOUNDTYPE == 0"> 
+				    <if test="WOUND_GRADE!= null and WOUND_GRADE != ''">
+				  	   and t.WOUND_GRADE = #{WOUND_GRADE}
+				    </if>
+			    </if>
+			    <if test="WOUNDTYPE!= null and WOUNDTYPE == 1"> 
+				    <if test="WOUND_GRADE!= null and WOUND_GRADE != ''">
+				  	   and t.WOUND_GRADE_UPDATE = #{WOUND_GRADE}
+				    </if>
+			    </if>
+		 group by t.operator,t.dept_code, t.dept_name 
+		 order by ranking desc
+	</select>
+	
 </mapper>

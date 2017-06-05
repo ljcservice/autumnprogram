@@ -807,5 +807,281 @@
 		 order by ranking desc
 	</select>
 	
+	<!-- 	病原学送检统计-科室   -->
+	<select id="findDRANO010" parameterType="pd" resultType="pd">
+		select anti_count,
+		       submit_count,
+		       submit_count/decode(anti_count,0,1,anti_count)  antiranking,
+		       dept_name,
+		       dept_code,
+		       limit_anti_count,
+		       limit_submit_count,
+		       limit_submit_count/decode(limit_anti_count,0,1,limit_anti_count) linitranking,
+		       spec_anti_count,
+		       spec_submit_count,
+		       spec_submit_count/decode(spec_anti_count,0,1,spec_anti_count) specranking
+		  from (select sum(i.is_anti) anti_count,
+		               sum(submit_count) submit_count,
+		               sum(decode(limit_ddd_value, 0, 0, 1)) limit_anti_count,
+		               sum(decode(submit_count, 0, 0, decode(limit_ddd_value, 0, 0, 1))) limit_submit_count,
+		               sum(decode(spec_ddd_value, 0, 0, 1)) spec_anti_count,
+		               sum(decode(submit_count, 0,0, decode(spec_ddd_value, 0, 0, 1))) spec_submit_count,
+		               funcdeptcode dept_code,
+		               funcdeptname dept_name
+		          from ias.ias_pat_info_scd i
+		         where is_orderflag = '1'
+		           	and i.rpt_date &gt;= to_date(#{beginDate} ,'yyyy-mm-dd') 
+          			and i.rpt_date &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
+		           <if test="persionType!= null and persionType != ''">
+		           		<if test="persionType == 'adult'">
+		           			and i.AGE &gt;= 18 
+		           		</if>
+		           		<if test="persionType == 'old'">
+		           			and i.age &gt;= 65
+		           		</if>
+		           		<if test="persionType == 'child'">
+		           			and i.age &lt;= 10
+		           		</if>
+		           		<if test="persionType == 'juvenile'">
+		           			and i.age &lt; 18 and i.age &gt;= 11
+		           		</if>		
+		            </if>
+		            <if test="keywords != null and keywords != ''">
+					  	 and i.funcdeptname like CONCAT(CONCAT('%', #{keywords}),'%')
+					</if>
+					
+					<if test="deptCode != null and deptCode != ''">
+					  	 and i.funcdeptcode = #{deptCode}
+					</if>
+					<if test="DIAGNOSIS_DESC!= null and DIAGNOSIS_DESC != ''">
+					    and i.FIRST_DIAGNOSIS like CONCAT(CONCAT('%', #{DIAGNOSIS_DESC}),'%')
+					</if>
+					<if test="doctor != null and doctor != ''">
+						and i.doctor like CONCAT(CONCAT('%', #{doctor}),'%')
+					</if>
+		         group by funcdeptcode, funcdeptname)
+		 order by anti_count desc
+	</select>
+	<!-- 	病原学送检统计-科室   合计 -->
+	<select id="findDRANO010~011sum" parameterType="pd" resultType="pd">
+			select 
+				   count(pat_count) allpat_count,
+			       sum(decode(limit_count, 0, 0, 1)) limit_count,
+			       sum(decode(spec_count, 0, 0, 1)) spec_count,
+			       sum(submit_count) submit_count,
+			       sum(decode(spec_submit_count, 0, 0, 1)) spec_submit_count,
+			        sum(decode(spec_submit_count, 0, 0, 1))/sum(decode(spec_count, 0, 0, 1)) specranking,
+			       sum(decode(limit_submit_count, 0, 0, 1)) limit_submit_count,
+			       sum(decode(limit_submit_count, 0, 0, 1))/sum(decode(limit_count, 0, 0, 1)) limitranking,
+			       sum(decode(anti_count, 0, 0, 1)) anti_count,
+			       sum(submit_count)/sum(decode(anti_count, 0, 0, 1)) antiranking ,
+			       sum(days) outdays,
+			       sum(decode(scd_count, 0, 0, 1)) changedept_count
+		  from (select count(*) pat_count,
+		               i.days,
+		               sum(i.is_scd) scd_count,sum(decode(i.submit_count, 0, 0, 1)) submit_count,
+		               sum(decode(i.limit_ddd_value, 0, 0, 1)) limit_count,
+		               sum(decode(i.spec_ddd_value, 0, 0, 1)) spec_count,
+		               sum(decode(submit_count,0,0,decode(spec_ddd_value, 0, 0, 1))) spec_submit_count,
+		               sum(decode(submit_count,0,0,decode(limit_ddd_value, 0, 0, 1))) limit_submit_count,
+		               sum(i.is_anti) anti_count
+		          from ias.ias_pat_info_scd i
+		         where 
+		         	i.rpt_date &gt;= to_date(#{beginDate} ,'yyyy-mm-dd') 
+          			and i.rpt_date &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
+		            <if test="persionType!= null and persionType != ''">
+		           		<if test="persionType == 'adult'">
+		           			and i.AGE &gt;= 18 
+		           		</if>
+		           		<if test="persionType == 'old'">
+		           			and i.age &gt;= 65
+		           		</if>
+		           		<if test="persionType == 'child'">
+		           			and i.age &lt;= 10
+		           		</if>
+		           		<if test="persionType == 'juvenile'">
+		           			and i.age &lt; 18 and i.age &gt;= 11
+		           		</if>		
+		            </if>
+		            <if test="keywords != null and keywords != ''">
+					  	 and i.funcdeptname like CONCAT(CONCAT('%', #{keywords}),'%')
+					</if>
+					
+					<if test="deptCode != null and deptCode != ''">
+					  	 and i.funcdeptcode = #{deptCode}
+					</if>
+					<if test="DIAGNOSIS_DESC!= null and DIAGNOSIS_DESC != ''">
+					    and i.FIRST_DIAGNOSIS like CONCAT(CONCAT('%', #{DIAGNOSIS_DESC}),'%')
+					</if>
+					<if test="doctor != null and doctor != ''">
+						and i.doctor like CONCAT(CONCAT('%', #{doctor}),'%')
+					</if>
+		         group by i.pat_funct_no, i.days)
+	</select>
+	
+	<!-- 	病原学送检统计-医生   -->
+	<select id="findDRANO011Page" parameterType="page" resultType="pd">
+		select anti_count,
+		       submit_count,
+		       submit_count/decode(anti_count,0,1,anti_count)  antiranking,
+		       doctor,
+		       dept_name,
+		       dept_code,
+		       limit_anti_count,
+		       limit_submit_count,
+		       limit_submit_count/decode(limit_anti_count,0,1,limit_anti_count) linitranking,
+		       spec_anti_count,
+		       spec_submit_count,
+		       spec_submit_count/decode(spec_anti_count,0,1,spec_anti_count) specranking
+		  from (select sum(i.is_anti) anti_count,
+		               sum(submit_count) submit_count,
+		               sum(decode(limit_ddd_value, 0, 0, 1)) limit_anti_count,
+		               sum(decode(submit_count, 0, 0, decode(limit_ddd_value, 0, 0, 1))) limit_submit_count,
+		               sum(decode(spec_ddd_value, 0, 0, 1)) spec_anti_count,
+		               sum(decode(submit_count, 0,0, decode(spec_ddd_value, 0, 0, 1))) spec_submit_count,
+		               funcdeptcode dept_code,
+		               funcdeptname dept_name,
+		               doctor
+		          from ias.ias_pat_info_scd i
+		         where is_orderflag = '1'
+		           	and i.rpt_date &gt;= to_date(#{pd.beginDate} ,'yyyy-mm-dd') 
+          			and i.rpt_date &lt;= to_date(#{pd.endDate} ,'yyyy-mm-dd') 
+		           <if test="pd.persionType!= null and pd.persionType != ''">
+		           		<if test="pd.persionType == 'adult'">
+		           			and i.AGE &gt;= 18 
+		           		</if>
+		           		<if test="pd.persionType == 'old'">
+		           			and i.age &gt;= 65
+		           		</if>
+		           		<if test="pd.persionType == 'child'">
+		           			and i.age &lt;= 10
+		           		</if>
+		           		<if test="pd.persionType == 'juvenile'">
+		           			and i.age &lt; 18 and i.age &gt;= 11
+		           		</if>		
+		            </if>
+		            <if test="pd.keywords != null and pd.keywords != ''">
+					  	 and i.funcdeptname like CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					</if>
+					
+					<if test="pd.deptCode != null and pd.deptCode != ''">
+					  	 and i.funcdeptcode = #{pd.deptCode}
+					</if>
+					<if test="pd.DIAGNOSIS_DESC!= null and pd.DIAGNOSIS_DESC != ''">
+					    and i.FIRST_DIAGNOSIS like CONCAT(CONCAT('%', #{pd.DIAGNOSIS_DESC}),'%')
+					</if>
+					<if test="pd.doctor != null and pd.doctor != ''">
+						and i.doctor like CONCAT(CONCAT('%', #{pd.doctor}),'%')
+					</if>
+		         group by doctor, funcdeptcode, funcdeptname)
+		 order by anti_count desc
+	</select>
+	
+	
+	<!-- 	静脉输液使用情况 -->
+	<select id="findDRANO012" parameterType="pd" resultType="pd">
+		select scd,
+		       pat_count,
+		       anti_count,
+		       ddd_values,
+		       admission_days,
+		       decode(adminjmsysum, null, 0, (adminjmsysum / pat_count * 100)) intensity,
+		       decode(adminantijmsysum, null,0,(adminantijmsysum / adminjmsysum * 100)) intensityanti,
+		       dept_code,
+		       dept_name,
+		       decode(adminjmsysum, null, 0, adminjmsysum) adminjmsysum,
+		       decode(adminantijmsysum, null, 0, adminantijmsysum) adminantijmsysum
+		  from (select count(patient_id) pat_count,
+		               sum(i.is_scd) scd,
+		               sum(i.funcdays) admission_days,
+		               sum(is_anti) anti_count,
+		               sum(i.ddd_value) ddd_values,
+		               sum(i.adminjmsy) adminjmsysum,
+		               sum(i.adminantijmsy) adminantijmsysum,
+		               funcdeptcode dept_code,
+		               funcdeptname dept_name
+		          from Ias_Pat_Info_scd i
+		         where i.is_orderflag = '1'
+		           and i.rpt_date &gt;= to_date(#{beginDate} ,'yyyy-mm-dd')  
+		           and i.rpt_date &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
+		           <if test="persionType!= null and persionType != ''">
+		           		<if test="persionType == 'adult'">
+		           			and i.AGE &gt;= 18 
+		           		</if>
+		           		<if test="persionType == 'old'">
+		           			and i.age &gt;= 65
+		           		</if>
+		           		<if test="persionType == 'child'">
+		           			and i.age &lt;= 10
+		           		</if>
+		           		<if test="persionType == 'juvenile'">
+		           			and i.age &lt; 18 and i.age &gt;= 11
+		           		</if>		
+		           </if>
+		           <if test="keywords != null and keywords != ''">
+				  	 and i.funcdeptname like CONCAT(CONCAT('%', #{keywords}),'%')
+				  </if>
+				  <if test="DIAGNOSIS_DESC!= null and DIAGNOSIS_DESC != ''">
+				  	 and i.FIRST_DIAGNOSIS like CONCAT(CONCAT('%', #{DIAGNOSIS_DESC}),'%')
+				  </if>
+		         group by funcdeptcode, funcdeptname)
+		 order by intensity desc
+	</select>
+	
+	
+	<!-- 	静脉输液使用情况  合计    -->
+	<select id="findDRANO012sum" parameterType="pd" resultType="pd">
+		select scd,
+	           pat_count,
+	           anti_count,
+	           ddd_values,
+	           admission_days,
+	              decode(adminjmsysum, null, 0, (adminjmsysum / pat_count * 100)) intensity,
+	           decode(adminantijmsysum, null, 0, (adminantijmsysum / adminjmsysum * 100)) intensityanti,
+	           adminjmsysum,
+	           adminantijmsysum
+	      from (select count(b.patient_id) pat_count,
+	                   sum(b.is_anti) anti_count,
+	                   sum(b.is_scd) scd,
+	                   sum(b.funcdays) admission_days,
+	                   sum(b.ddd_value) ddd_values,
+	                   sum(adminjmsysum) adminjmsysum ,
+	                   sum(adminantijmsysum) adminantijmsysum ,
+	                   ''
+	              from (select count(*) patient_id,
+	                           i.days funcdays,
+	                           decode(sum(decode(i.is_anti, 1, 1, 0)), 0, 0, 1) is_anti,
+	                           decode(sum(i.is_scd), 0, 0, 1) is_scd,
+	                           sum(i.ddd_value) ddd_value,
+	                           sum(i.adminjmsy) adminjmsysum,
+	                           sum(i.adminantijmsy) adminantijmsysum,
+	                           sum(i.OUTANTIDDD) outantiDDD
+	                      from Ias_Pat_Info_scd i
+			                 where 1=1
+			               and i.rpt_date &gt;= to_date(#{beginDate} ,'yyyy-mm-dd')  
+				           and i.rpt_date &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
+				           <if test="persionType!= null and persionType != ''">
+				           		<if test="persionType == 'adult'">
+				           			and i.AGE &gt;= 18 
+				           		</if>
+				           		<if test="persionType == 'old'">
+				           			and i.age &gt;= 65
+				           		</if>
+				           		<if test="persionType == 'child'">
+				           			and i.age &lt;= 10
+				           		</if>
+				           		<if test="persionType == 'juvenile'">
+				           			and i.age &lt; 18 and i.age &gt;= 11
+				           		</if>		
+				           </if>
+				           <if test="keywords != null and keywords != ''">
+						  	 and i.funcdeptname like CONCAT(CONCAT('%', #{keywords}),'%')
+						  </if>
+						  <if test="DIAGNOSIS_DESC!= null and DIAGNOSIS_DESC != ''">
+						  	 and i.FIRST_DIAGNOSIS like CONCAT(CONCAT('%', #{DIAGNOSIS_DESC}),'%')
+						  </if>
+			      group by i.pat_funct_no, i.days) b)
+			 order by intensity desc
+	</select>
 	
 </mapper>

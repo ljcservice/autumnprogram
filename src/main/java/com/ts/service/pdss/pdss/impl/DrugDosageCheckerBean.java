@@ -93,34 +93,46 @@ public class DrugDosageCheckerBean extends Persistent4DB implements IDrugDosageC
 	            if(ddg == null) continue;
 	            /* 警告信息 */
 	            List<String> dosageInfo = new ArrayList<String>();
-	            if(weight != 0 )
-	            {
-	                /* 体重检查 */
-	                if("1".equals(ddg.getWEIGHT_INDI())&& !"0".equals(ddg.getWEIGHT_HIGH()) && !"0".equals(ddg.getWEIGHT_LOW()))
-	                {
-	                    Double weightHigh = 0d;
-	                    Double weightLow  = 0d;
-	                    if(ddg.getWEIGHT_HIGH()!= null)
-	                        weightHigh = new Double(ddg.getWEIGHT_HIGH());
-	                    if(ddg.getWEIGHT_LOW() != null)
-	                        weightLow  = new Double(ddg.getWEIGHT_LOW());
-	                    if(weightHigh < weight || weightLow > weight)
-	                        dosageInfo.add("体重受限,体重范围应为" + weightLow + "~" + weightHigh);
-	                }
-	            }
-	            if(weight != 0 && height != 0)
+//	            if(weight != 0 )
+//	            {
+//	                /* 体重检查 */
+//	                if("1".equals(ddg.getWEIGHT_INDI())&& !"0".equals(ddg.getWEIGHT_HIGH()) && !"0".equals(ddg.getWEIGHT_LOW()))
+//	                {
+//	                    Double weightHigh = 0d;
+//	                    Double weightLow  = 0d;
+//	                    if(ddg.getWEIGHT_HIGH()!= null)
+//	                        weightHigh = new Double(ddg.getWEIGHT_HIGH());
+//	                    if(ddg.getWEIGHT_LOW() != null)
+//	                        weightLow  = new Double(ddg.getWEIGHT_LOW());
+//	                    if(weightHigh < weight || weightLow > weight)
+//	                        dosageInfo.add("体重受限,体重范围应为" + weightLow + "~" + weightHigh);
+//	                }
+//	            }
+	            
+	            /* 每次剂量  */
+                int eachDoseResult = checkDoseEach(ddg, dosage, weight, height,doseUnits);
+                if(eachDoseResult<0)
                 {
-	                /* 每次剂量  */
-	                int eachDoseResult = checkDoseEach(ddg, dosage, weight, height,doseUnits);
-	                if(eachDoseResult<0)
-	                {
-	                    dosageInfo.add("低于每次最小剂量");
-	                }
-	                else if(eachDoseResult>0)
-	                {
-	                    dosageInfo.add("高于每次最大剂量");
-	                }
+                    dosageInfo.add("低于每次最小剂量,标准每次最小剂量为:" + ddg.getDOSE_EACH_LOW() + ddg.getDOSE_EACH_UNIT());
                 }
+                else if(eachDoseResult>0)
+                {
+                    dosageInfo.add("高于每次最大剂量,标准每次最大剂量为:" + ddg.getDOSE_EACH_HIGH() + ddg.getDOSE_EACH_UNIT());
+                }
+	            
+//	            if(weight != 0 && height != 0)
+//                {
+//	                /* 每次剂量  */
+//	                int eachDoseResult = checkDoseEach(ddg, dosage, weight, height,doseUnits);
+//	                if(eachDoseResult<0)
+//	                {
+//	                    dosageInfo.add("低于每次最小剂量,标准每次最小剂量为:" + ddg.getDOSE_EACH_LOW() + ddg.getDOSE_EACH_UNIT());
+//	                }
+//	                else if(eachDoseResult>0)
+//	                {
+//	                    dosageInfo.add("高于每次最大剂量,标准每次最大剂量为:" + ddg.getDOSE_EACH_HIGH() + ddg.getDOSE_EACH_UNIT());
+//	                }
+//                }
 	            /* 频率标准码 次数 */
 	            TDrugPerformFreqDict drugperform = pdssCache.queryDrugPerfom(pod.getPerformFreqDictID());
 	            Double frequency = null;
@@ -131,64 +143,52 @@ public class DrugDosageCheckerBean extends Persistent4DB implements IDrugDosageC
     	            int eachDayDoseResult = checkDoseDay(ddg, dosage, frequency,doseUnits);
     	            if(eachDayDoseResult < 0)
     	            {
-    	                dosageInfo.add("低于每天最小剂量");
+    	                dosageInfo.add("低于每天最小剂量,标准每天最小剂量为:" + ddg.getDOSE_DAY_LOW() + ddg.getDOSE_DAY_UNIT());
     	            }
     	            else 
     	            if(eachDayDoseResult > 0)
     	            {
-    	                dosageInfo.add("高于每天最大剂量");
+    	                dosageInfo.add("高于每天最大剂量,标准每天最大剂量为:" + ddg.getDOSE_DAY_HIGH() + ddg.getDOSE_DAY_UNIT());
     	            }
     	            /* 每天频次 */
     	            if(frequency != null)
     	            {
     	                if(ddg.getDOSE_FREQ_LOW() != null && frequency < Double.parseDouble(ddg.getDOSE_FREQ_LOW())){
-    	                    dosageInfo.add("低于每天最小频次");
+    	                    dosageInfo.add("低于每天最小频次,标准每天最小频次为:" + ddg.getDOSE_FREQ_LOW());
     	                    
     	                }else if(ddg.getDOSE_FREQ_HIGH() != null && frequency > Double.parseDouble(ddg.getDOSE_FREQ_HIGH())){
-    	                    dosageInfo.add("高于每天最大频次");
+    	                    dosageInfo.add("高于每天最大频次,标准每天最大频次为:" + ddg.getDOSE_FREQ_HIGH());
     	                }
     	            }
 	            }
 	            /* 用药 开始与结束时间 不为空 */
-	            if(pod.getStartDateTime() != null && !"".equals(pod.getStartDateTime()) 
-	                    && pod.getStopDateTime() != null && !"".equals(pod.getStopDateTime())) 
+	            Long useDrugDay = pod.getUseDrugDay();
+	            if( useDrugDay != null) 
 	            {
-	                Date sTime = DateUtils.getDateFromString(pod.getStartDateTime(),DateUtils.FORMAT_DATETIME);//开始用药时间
-	                Date eTime = null;//结束用药时间
-	                if (pod.getStopDateTime() != null && !pod.getStopDateTime().equals("")) 
-	                {
-	                    eTime = DateUtils.getDateFromString(pod.getStopDateTime(),DateUtils.FORMAT_DATETIME);
-	                }
 	                /* 用药天数  */
-	                int durResult = checkDur(ddg, eTime, sTime);
+	                int durResult = checkDur(ddg, useDrugDay);
 	                if(durResult<0)
 	                {
-	                    dosageInfo.add("用药天为:" + getDrugUseDay(sTime, eTime) + "天,低于最小用药天数，最小天数为: " + ddg.getDUR_LOW() + "天");
+	                    dosageInfo.add("低于最小用药天数,用药天为:" + useDrugDay + "天,标准最小天数为: " + ddg.getDUR_LOW() + "天");
 	                }
 	                else if(durResult>0)
 	                {
-	                    dosageInfo.add("高于最大用药天数");
+	                    dosageInfo.add("高于最大用药天数,用药天为:" + useDrugDay + "天,标准最大天数为: " + ddg.getDUR_HIGH() + "天");
 	                }
 	                //3.7最大剂量
 	                if(ddg.getDOSE_MAX_HIGH() != null && Double.parseDouble(ddg.getDOSE_MAX_HIGH())!=0)
 	                {
-	                    int durDay;
-	                    if(eTime==null)
-	                    {
-	                        durDay = 1;
-	                    }
-	                    else
-	                    {
-	                        durDay=(int)getDrugUseDay(sTime, eTime);
-	                    }
+	                    long durDay;
+	                    durDay=useDrugDay;
 	                    if(frequency == null)
 	                    {
 	                        frequency = 1.0;
 	                    }
-	                    if(frequency * dosage*durDay > Double.parseDouble(ddg.getDOSE_MAX_HIGH()) 
-	                            && Double.parseDouble(ddg.getDOSE_MAX_HIGH()) > 0)
+	                    Double dosa = setDosageUnit(ddg.getDOSE_MAX_UNIT(), dosage, doseUnits);
+	                    if(dosa != null && Double.parseDouble(ddg.getDOSE_MAX_HIGH()) > 0 
+	                            && frequency * dosa * durDay > Double.parseDouble(ddg.getDOSE_MAX_HIGH()))
 	                    {
-	                        dosageInfo.add("高于最大剂量");
+	                        dosageInfo.add("高于最大剂量,标准最大剂量为:" + ddg.getDOSE_MAX_HIGH() + ddg.getDOSE_MAX_UNIT());
 	                    }
 	                }
 	            }
@@ -234,52 +234,59 @@ public class DrugDosageCheckerBean extends Persistent4DB implements IDrugDosageC
      */
     private int checkDoseEach(TDrugDosage drugDosage,Double dosage, Double weight,  Double height,String doseUnits) 
     {
-        double dosa = setDosageUnit(drugDosage.getDOSE_EACH_UNIT(), dosage, doseUnits);
+        Double dosa = setDosageUnit(drugDosage.getDOSE_EACH_UNIT(), dosage, doseUnits);
+        if(dosa== null) return 0;
         //下限
-        Double low = null;
-        if (drugDosage.getCAL_INDI().equals("1")) 
-        {
-        	//体重小于10公斤  面积（m2）= 0.035 * 体重（kg） + 0.1
-        	//体重大于10公斤  面积= 0.0061 * 身高 + 0.0128 * 体重- 0.1529
-        	//每次最小剂量（计算出） = 面积 * 每次最小剂量（数据库中字段）
-        	//每次最高剂量（计算出） = 面积 * 每次最高剂量（数据库中字段）
-            if (weight < 10) 
-            {
-                low = (0.035 * weight + 0.1) * Double.parseDouble(drugDosage.getDOSE_EACH_LOW());
-            }
-            if (weight > 10)
-            {
-                low = (0.0061 * height + 0.0128 * weight - 0.1529) * Double.parseDouble(drugDosage.getDOSE_EACH_LOW());
-            }
-        }
-        else
-        if (drugDosage.getCAL_INDI().equals("2")) 
-        {
-        	//每次最小剂量（计算出） = 体重 * 每次最小剂量（数据库中字段）
-        	//每次最高剂量（计算出） = 体重 * 每次最高剂量（数据库中字段）
-            low = weight * Double.parseDouble(drugDosage.getDOSE_EACH_LOW());
-        }
-        if (low != null && dosa < low)
+        if (drugDosage.getDOSE_EACH_LOW() != null && dosa < Double.parseDouble(drugDosage.getDOSE_EACH_LOW()))
             return -1;
-
-        //上限
-        Double high = null;
-        if (drugDosage.getCAL_INDI().equals("1")) 
-        {
-            if (weight < 10)
-                high = (0.035 * weight + 0.1) * Double.parseDouble(drugDosage.getDOSE_EACH_HIGH());
-
-            if (weight > 10)
-                high = (0.0061 * height + 0.0128 * weight - 0.1529) * Double.parseDouble(drugDosage.getDOSE_EACH_HIGH());
-
-        }
-        if (drugDosage.getCAL_INDI().equals("2")) 
-        {
-            high = weight * Double.parseDouble(drugDosage.getDOSE_EACH_HIGH());
-        }
-
-        if (high != null && dosa > high)
+        if (drugDosage.getDOSE_EACH_HIGH() != null && dosa > Double.parseDouble(drugDosage.getDOSE_EACH_HIGH()))
             return 1;
+//        TODO 刘璟聪 注释掉，暂时不和体重和身高有关联。
+//        //下限
+//        Double low = null;
+//        if (drugDosage.getCAL_INDI().equals("1")) 
+//        {
+//        	//体重小于10公斤  面积（m2）= 0.035 * 体重（kg） + 0.1
+//        	//体重大于10公斤  面积= 0.0061 * 身高 + 0.0128 * 体重- 0.1529
+//        	//每次最小剂量（计算出） = 面积 * 每次最小剂量（数据库中字段）
+//        	//每次最高剂量（计算出） = 面积 * 每次最高剂量（数据库中字段）
+//            if (weight < 10) 
+//            {
+//                low = (0.035 * weight + 0.1) * Double.parseDouble(drugDosage.getDOSE_EACH_LOW());
+//            }
+//            if (weight > 10)
+//            {
+//                low = (0.0061 * height + 0.0128 * weight - 0.1529) * Double.parseDouble(drugDosage.getDOSE_EACH_LOW());
+//            }
+//        }
+//        else
+//        if (drugDosage.getCAL_INDI().equals("2")) 
+//        {
+//        	//每次最小剂量（计算出） = 体重 * 每次最小剂量（数据库中字段）
+//        	//每次最高剂量（计算出） = 体重 * 每次最高剂量（数据库中字段）
+//            low = weight * Double.parseDouble(drugDosage.getDOSE_EACH_LOW());
+//        }
+//        if (low != null && dosa < low)
+//            return -1;
+//
+//        //上限
+//        Double high = null;
+//        if (drugDosage.getCAL_INDI().equals("1")) 
+//        {
+//            if (weight < 10)
+//                high = (0.035 * weight + 0.1) * Double.parseDouble(drugDosage.getDOSE_EACH_HIGH());
+//
+//            if (weight > 10)
+//                high = (0.0061 * height + 0.0128 * weight - 0.1529) * Double.parseDouble(drugDosage.getDOSE_EACH_HIGH());
+//
+//        }
+//        if (drugDosage.getCAL_INDI().equals("2")) 
+//        {
+//            high = weight * Double.parseDouble(drugDosage.getDOSE_EACH_HIGH());
+//        }
+//
+//        if (high != null && dosa > high)
+//            return 1;
         
         return 0;
     }
@@ -294,8 +301,8 @@ public class DrugDosageCheckerBean extends Persistent4DB implements IDrugDosageC
     private int checkDoseDay(TDrugDosage drugDosage,Double dosage, Double frequency,String doseUnits)
     {
         if(drugDosage.getDOSE_DAY_LOW()== null || drugDosage.getDOSE_DAY_HIGH() == null) return 0;
-        double  dos = setDosageUnit(drugDosage.getDOSE_DAY_UNIT(),dosage,doseUnits) ;
-        if(frequency==null)
+        Double  dos = setDosageUnit(drugDosage.getDOSE_DAY_UNIT(),dosage,doseUnits) ;
+        if(frequency==null || dos == null)
             return 0;
         if ((frequency * dos) < Double.parseDouble(drugDosage.getDOSE_DAY_LOW()))
             return -1;
@@ -305,9 +312,10 @@ public class DrugDosageCheckerBean extends Persistent4DB implements IDrugDosageC
         return 0;
     }
     
-    private double  setDosageUnit(String ddunit , double dosage ,String doseUnits)
+    private Double setDosageUnit(String ddunit , double dosage ,String doseUnits)
     {
-        if(ddunit == null) return dosage;
+        // TODO　需要处理其他　规格单位　
+        if(ddunit == null) return null;
         if("mg".toUpperCase().equals(doseUnits.toUpperCase()))
         {
             if(ddunit.toUpperCase().indexOf("mg".toUpperCase()) != -1)
@@ -326,8 +334,11 @@ public class DrugDosageCheckerBean extends Persistent4DB implements IDrugDosageC
             else if(ddunit.toUpperCase().indexOf("g".toUpperCase()) != -1){ 
                 return dosage ;
             }
+        }else if(ddunit.toUpperCase().equals(doseUnits.toUpperCase()))
+        {
+            return dosage;
         }
-        return dosage;
+        return null;
     }
     
     /**
@@ -337,15 +348,15 @@ public class DrugDosageCheckerBean extends Persistent4DB implements IDrugDosageC
      * @param sTime
      * @return
      */
-    private int checkDur(TDrugDosage drugDosage,Date eTime, Date sTime){
-        if (sTime != null && eTime != null){
-            if (drugDosage.getDUR_LOW()!=null && getDrugUseDay(sTime, eTime) < Double.parseDouble(drugDosage.getDUR_LOW())){
-                return -1;
-            }else if (drugDosage.getDUR_HIGH() != null && (getDrugUseDay(sTime, eTime) > Double.parseDouble(drugDosage.getDUR_HIGH()))
-                    && Double.parseDouble(drugDosage.getDUR_HIGH()) > 0){
-                return 1;
-            }
+    private int checkDur(TDrugDosage drugDosage,long useDrugDay){
+//        if (sTime != null && eTime != null){
+        if (drugDosage.getDUR_LOW()!=null && useDrugDay < Double.parseDouble(drugDosage.getDUR_LOW())){
+            return -1;
+        }else if (drugDosage.getDUR_HIGH() != null && (useDrugDay > Double.parseDouble(drugDosage.getDUR_HIGH()))
+                && Double.parseDouble(drugDosage.getDUR_HIGH()) > 0){
+            return 1;
         }
+//        }
         return 0;
     }
 

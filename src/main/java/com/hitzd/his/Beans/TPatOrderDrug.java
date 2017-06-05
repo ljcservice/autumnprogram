@@ -1,10 +1,12 @@
 package com.hitzd.his.Beans;
 
 import java.io.Serializable;
+import java.util.Date;
 
 //import org.codehaus.xfire.aegis.type.java5.IgnoreProperty;
 
 import com.hitzd.his.Utils.Config;
+import com.hitzd.his.Utils.DateUtils;
 import com.hitzd.his.Utils.DictCache;
 
 /**
@@ -63,6 +65,22 @@ public class TPatOrderDrug implements Serializable
     /* 使用原因 */
     private String            useCause;
     
+    
+    /**
+     * 返回使用药品的天数 
+     * @return
+     */
+    public Long getUseDrugDay(){
+        Date begin =  DateUtils.getDateFromString(startDateTime,DateUtils.FORMAT_DATETIME);//开始用药时间
+        Date stop =  DateUtils.getDateFromString(stopDateTime,DateUtils.FORMAT_DATETIME);//结束用药时间
+        if(begin == null || stop == null)
+        {
+            //TODO 此处计划处理 门诊用药天数的计算
+            return null;
+        }
+        Long  UseDay =  (stop.getTime() - begin.getTime()) / 1000 / (24 * 60 * 60);
+        return UseDay;
+    }
     
     /* 门诊需要的信息bean Begin */
     /* 处方序号 */
