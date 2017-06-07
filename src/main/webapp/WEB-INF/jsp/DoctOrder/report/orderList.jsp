@@ -265,7 +265,7 @@ function detailPresc(id,NGROUPNUM){
 	 diag.show();
 }
 function listExport(){
-	window.open(path + "/report/orderListExport.do?&"+$("#searchForm").serialize());
+	window.open(path + "/report/orderListExport.do?"+$("#searchForm").serialize());
 }
 function myprint(){
 	$("#main-container").hide();

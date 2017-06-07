@@ -158,7 +158,7 @@
 $(top.hangge());
 
 function listExport(){
-	window.open(path + "/report/prescListByDoctorExport.do?&"+$("#searchForm").serialize());
+	window.open(path + "/report/prescListByDoctorExport.do?"+$("#searchForm").serialize());
 }
 function myprint(){
 	$("#main-container").hide();

@@ -246,7 +246,7 @@ function initWidthHeight(){
 	FixTable("simple-table", 1, rr);
 }
 function listExport(){
-	window.open(path + "/drugAmount/drugAmountByDoctorExport.do?&"+$("#searchForm").serialize());
+	window.open(path + "/drugAmount/drugAmountByDoctorExport.do?"+$("#searchForm").serialize());
 }
 function myprint(){
 	$("#main-container").hide();

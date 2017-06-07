@@ -146,7 +146,7 @@
 $(top.hangge());
 
 function listExport(){
-	window.open(path + "/report/orderListByDoctorExport.do?&"+$("#searchForm").serialize());
+	window.open(path + "/report/orderListByDoctorExport.do?"+$("#searchForm").serialize());
 }
 function myprint(){
 	$("#main-container").hide();

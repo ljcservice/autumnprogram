@@ -222,7 +222,7 @@ function initWidthHeight(){
 }
 
 function listExport(){
-	window.open(path + "/drugAmount/depAmountPersentsExport.do?&"+$("#searchForm").serialize());
+	window.open(path + "/drugAmount/depAmountPersentsExport.do?"+$("#searchForm").serialize());
 }
 function myprint(){
 	$("#main-container").hide();

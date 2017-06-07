@@ -146,7 +146,7 @@
 $(top.hangge());
 
 function listExport(){
-	window.open(path + "/report/orderListByDepExport.do?&"+$("#searchForm").serialize());
+	window.open(path + "/report/orderListByDepExport.do?"+$("#searchForm").serialize());
 }
 function myprint(){
 	$("#main-container").hide();

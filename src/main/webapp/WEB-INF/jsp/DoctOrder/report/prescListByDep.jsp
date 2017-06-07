@@ -157,7 +157,7 @@
 <script type="text/javascript">
 $(top.hangge());
 function listExport(){
-	window.open(path + "/report/prescListByDepExport.do?&"+$("#searchForm").serialize());
+	window.open(path + "/report/prescListByDepExport.do?"+$("#searchForm").serialize());
 }
 function myprint(){
 	$("#main-container").hide();

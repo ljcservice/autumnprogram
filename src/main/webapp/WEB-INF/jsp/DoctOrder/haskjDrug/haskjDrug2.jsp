@@ -200,7 +200,7 @@ function initWidthHeight(){
 	FixTable("simple-table", 1, rr);
 }
 function listExport(){
-	window.open(path + "/haskjDrug/haskjDrug2Export.do?&"+$("#searchForm").serialize());
+	window.open(path + "/haskjDrug/haskjDrug2Export.do?"+$("#searchForm").serialize());
 }
 function myprint(){
 	$("#main-container").hide();

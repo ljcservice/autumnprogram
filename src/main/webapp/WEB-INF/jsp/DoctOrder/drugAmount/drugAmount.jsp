@@ -242,7 +242,7 @@ function initWidthHeight(){
 }
 
 function listExport(){
-	window.open(path + "/drugAmount/drugAmountExport.do?&"+$("#searchForm").serialize());
+	window.open(path + "/drugAmount/drugAmountExport.do?"+$("#searchForm").serialize());
 }
 function myprint(){
 	$("#main-container").hide();

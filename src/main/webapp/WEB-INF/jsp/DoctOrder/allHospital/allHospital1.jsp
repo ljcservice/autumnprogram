@@ -250,7 +250,7 @@ function initWidthHeight(){
 	FixTable("simple-table", 1, rr);
 }
 function listExport(){
-	window.open(path + "/allHospital/allHospital1Export.do?&"+$("#searchForm").serialize());
+	window.open(path + "/allHospital/allHospital1Export.do?"+$("#searchForm").serialize());
 }
 function myprint(){
 	$("#main-container").hide();

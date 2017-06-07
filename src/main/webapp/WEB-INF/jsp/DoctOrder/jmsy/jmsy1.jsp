@@ -24,14 +24,13 @@
 .ztree li a.curSelectedNode {
 /* 	background-color: #ffb951;	 */
  }
-.check-search{
+ .check-search{
 	float: left;
 	margin-top: 2px;
 	margin-bottom: 2px;
 	margin-left: 3px;
 	margin-right: 3px;
 }
-@media Print { .Noprn { DISPLAY: none }}
 </style>
 </head>
 <body class="no-skin">
@@ -43,85 +42,75 @@
 			<div class="main-content-inner">
 				<div class="page-content">
 					<div class="row">
-						<div class="col-xs-12">
-						<!-- 检索  -->
-						<form action="report/prescReport.do" method="post" name="searchForm" id="searchForm">
-								<div class="Noprn" style="margin-bottom: 5px;">	
-									<div class="check-search" >
+						<div class="col-xs-12"  >
+							<form action="jmsy/jmsy1.do" method="post" name="searchForm" id="searchForm">
+								<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
+									<div class="check-search"   >
 										起止日期：
 										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
 										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.endDate }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
 										<font style="color: red;">*</font>
 									</div>
-									<div class="check-search"  >
+									<div class="check-search" >
 										<a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
 										<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i></a>
 									</div>
-									<div class="check-search nav-search"  >
+									<div class="check-search nav-search">
 										科室：
 										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="ORG_NAME" type="text" name="ORG_NAME" value="${pd.ORG_NAME}" placeholder="科室名称" maxlength="32" />
+											<input class="nav-search-input" autocomplete="off" id="ORG_NAME" type="text" name="ORG_NAME" value="${pd.ORG_NAME}" placeholder="科室名称" maxlength="80" />
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
-									<div class="check-search nav-search"  >
-										医生：
-										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="DOCTOR_NAME" value="${pd.DOCTOR_NAME}" placeholder="诊断名称" maxlength="32"/>
-											<i class="ace-icon fa fa-search nav-search-icon"></i>
-										</span>
-									</div>
-									<div class="check-search nav-search"  >
-										药品：
-										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="DRUG_NAME" value="${pd.DRUG_NAME}" placeholder="药品名称" maxlength="32"/>
-											<i class="ace-icon fa fa-search nav-search-icon"></i>
-										</span>
+									<div class="check-search">
+										<label><input class="ace"  value="1" name="type1" type="radio" <c:if test="${pd.type1 == null or pd.type1==1 }">checked</c:if> >处方数&nbsp;<span class="lbl"></span></label>&nbsp;
+										<label><input class="ace" value="2" name="type1" type="radio" <c:if test="${pd.type1 ==2 }">checked</c:if> >处方数(人次)&nbsp;<span class="lbl"></span></label>&nbsp;&nbsp;&nbsp;&nbsp;
 									</div>
 									<div id="btnDiv" class="check-search">
 											<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
 											<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
-									</div>
+										</div>
 								</div>
 							</form>
 						<!-- 检索  -->
-						<div style="width: 100%;height: auto;margin-top: 2px;"  >
-						<table id="simple-table" class="table table-striped table-bordered table-hover"  >
+						<div>
+						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
 							<thead>
 								<tr>
-									<th class="center" nowrap>问题</th>
-									<th class="center" nowrap>问题数</th>
-									<th class="center" nowrap>问题占比</th>
-									<th class="center Noprn" nowrap>细分</th>
-									<th class="center Noprn" nowrap>处方列表</th>
+									<th class="center" nowrap>排名</th>
+									<th class="center" nowrap>科室</th>
+									<th class="center" nowrap>处方数</th>
+									<th class="center" nowrap>静脉输液数</th>
+									<th class="center" nowrap>比例</th>
 								</tr>
 							</thead>
 							<tbody>
 							<!-- 开始循环 -->	
 							<c:choose>
 								<c:when test="${not empty reportList}">
-									<c:forEach items="${reportList}" var="presc" varStatus="vs">
-										<tr  >
-											<td class="center">${presc.RS_TYPE_NAME}</td>
-											<td class="center">${presc.count}</td>
-											<td class="center">${presc.percent}</td>
-											<td class="center Noprn">
-												<a onclick="detailListByDep('${presc.RS_TYPE_CODE}');" href="javascript:void(0);">科室</a>
-												<a onclick="detailListByDoctor('${presc.RS_TYPE_CODE}');" href="javascript:void(0);">医生</a>
-											</td>
-											<td class="center Noprn"><a onclick="detailList('${presc.RS_TYPE_CODE}');" href="javascript:void(0);">处方列表</a></td>
+									<c:forEach items="${reportList}" var="report" varStatus="vs">
+										<tr >
+											<td class="center">${vs.index+1}</td>
+											<td class="center">${report.dept_name}</td>
+											<td class="center">${report.c}</td>
+											<td class="center"> ${report.haskj}</td>
+											<td class="center"><fmt:formatNumber value="${report.rate}" pattern="#0.00"></fmt:formatNumber> %</td>
 										</tr>
+									
 									</c:forEach>
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
-										<td colspan="*"  class="center">没有相关数据</td>
+										<td colspan="12" class="center">没有相关数据</td>
 									</tr>
 								</c:otherwise>
 							</c:choose>
 							</tbody>
 						</table>
 						</div>
+						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">
+						</div>
+	
 						</div>
 						<!-- /.col -->
 					</div>
@@ -155,7 +144,7 @@
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<script type="text/javascript" src="static/js/common/common.js"></script>
 	</body>
-
+<script type="text/javascript" src="static/js/common/lockTable.js?v=201612"></script>
 <script type="text/javascript">
 $(top.hangge());
 
@@ -199,51 +188,21 @@ $(function() {
 		});
 	}
 
-	
-
+	//重置当前页面高度，自适应浏览器
+	initWidthHeight();
+	$(window).off('resize').on('resize', function() {
+		initWidthHeight();
+	}).trigger('resize');
 });
-//
-function detailList(RS_TYPE_CODE){
-	top.jzts();
-	var diag = new top.Dialog();
-	diag.Drag=true;
-	diag.Title ="问题处方列表";
-	diag.URL = path + "/report/prescList.do?type=1&RS_DRUG_TYPE="+RS_TYPE_CODE+"&"+$("#searchForm").serialize();
-	diag.Width =  window.screen.width;
-	diag.Height =  window.screen.height;  
-	diag.CancelEvent = function(){ //关闭事件
-		diag.close();
-	 };
-	 diag.show();
-}
-function detailListByDoctor(RS_TYPE_CODE){
-	top.jzts();
-	var diag = new top.Dialog();
-	diag.Drag=true;
-	diag.Title ="处方问题统计列表（医生）";
-	diag.URL = path + "/report/prescListByDoctor.do?type=1&RS_DRUG_TYPE="+RS_TYPE_CODE+"&"+$("#searchForm").serialize();
-	diag.Width =  window.screen.width;
-	diag.Height =  window.screen.height;  
-	diag.CancelEvent = function(){ //关闭事件
-		diag.close();
-	 };
-	 diag.show();
-}
-function detailListByDep(RS_TYPE_CODE){
-	top.jzts();
-	var diag = new top.Dialog();
-	diag.Drag=true;
-	diag.Title ="处方问题统计列表（科室）";
-	diag.URL = path + "/report/prescListByDep.do?type=1&RS_DRUG_TYPE="+RS_TYPE_CODE+"&"+$("#searchForm").serialize();
-	diag.Width =  window.screen.width;
-	diag.Height =  window.screen.height;  
-	diag.CancelEvent = function(){ //关闭事件
-		diag.close();
-	 };
-	 diag.show();
+//重置当前页面高度，自适应浏览器
+function initWidthHeight(){
+	var rr = new Array;
+	rr[0]="searchDiv";
+	rr[1]="pageStrDiv";
+	FixTable("simple-table", 1, rr);
 }
 function listExport(){
-	window.open(path + "/report/prescReportExport.do?"+$("#searchForm").serialize() );
+	window.open(path + "/jmsy/jmsy1Export.do?"+$("#searchForm").serialize());
 }
 function myprint(){
 	$("#main-container").hide();
@@ -255,5 +214,6 @@ function myprint(){
 	$("#myprint").remove();
 	$("#main-container").show();
 }
+
 </script>
 </html>

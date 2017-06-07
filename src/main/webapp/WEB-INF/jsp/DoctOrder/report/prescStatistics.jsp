@@ -267,7 +267,7 @@ $(function() {
 
 });
 function listExport(){
-	window.open(path + "/report/prescStatisticsExport.do?&"+$("#searchForm").serialize());
+	window.open(path + "/report/prescStatisticsExport.do?"+$("#searchForm").serialize());
 }
 </script>
 </html>

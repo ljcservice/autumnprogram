@@ -240,7 +240,7 @@ function detailListByDep(RS_TYPE_CODE){
 	 diag.show();
 }
 function listExport(){
-	window.open(path + "/report/ordersReportExport.do?&"+$("#searchForm").serialize());
+	window.open(path + "/report/ordersReportExport.do?"+$("#searchForm").serialize());
 }
 function myprint(){
 	$("#main-container").hide();
