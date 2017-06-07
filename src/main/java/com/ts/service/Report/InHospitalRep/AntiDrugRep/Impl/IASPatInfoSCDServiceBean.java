@@ -91,6 +91,7 @@ public class IASPatInfoSCDServiceBean implements IIASPatInfoSCDService
         return  (PageData)daoPH.findForObject("IASPatInfoSCDMapper.findDRANO006sum", pd);
     }
 
+    @SuppressWarnings ("unchecked")
     @Override
     public List<PageData> DRNO003(PageData pd) throws Exception
     {
@@ -98,10 +99,50 @@ public class IASPatInfoSCDServiceBean implements IIASPatInfoSCDService
         return (List<PageData>)daoPH.findForList("IASPatInfoSCDMapper.findDRNO003", pd);
     }
     
+    @SuppressWarnings ("unchecked")
     @Override
     public List<PageData> DRNO008(PageData pd) throws Exception
     {
         
         return (List<PageData>)daoPH.findForList("IASPatInfoSCDMapper.findDRNO008", pd);
+    }
+
+    @SuppressWarnings ("unchecked")
+    @Override
+    public List<PageData> DRANO010(PageData pd) throws Exception
+    {
+        return (List<PageData>)daoPH.findForList("IASPatInfoSCDMapper.findDRANO010", pd);
+    }
+
+    @Override
+    public PageData DRANO010sum(PageData pd) throws Exception
+    {
+        return (PageData)daoPH.findForObject("IASPatInfoSCDMapper.findDRANO010~011sum", pd);
+    }
+
+    @SuppressWarnings ("unchecked")
+    @Override
+    public List<PageData> DRANO011(Page page) throws Exception
+    {
+        return (List<PageData>)daoPH.findForList("IASPatInfoSCDMapper.findDRANO011Page", page);
+    }
+
+    @Override
+    public PageData DRANO011sum(PageData pd) throws Exception
+    {
+        return (PageData)daoPH.findForObject("IASPatInfoSCDMapper.findDRANO010~011sum", pd);
+    }
+    
+    @SuppressWarnings ("unchecked")
+    @Override
+    public List<PageData> DRANO012(PageData pd) throws Exception
+    {
+        return (List<PageData>) daoPH.findForList("IASPatInfoSCDMapper.findDRANO012", pd);
+    }
+    
+    @Override
+    public PageData DRANO012sum(PageData pd) throws Exception
+    {
+        return (PageData) daoPH.findForObject("IASPatInfoSCDMapper.findDRANO012sum", pd);
     }
 }

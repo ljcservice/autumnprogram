@@ -258,4 +258,125 @@ public class IASPatInfoSCDController extends BaseController
         mv.setViewName("Reprot/InHospitalRep/DrugRep/DRNO008");
         return mv ;
     }
+    
+    
+    /**
+     * 病原学送检统计-科室 
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value="/DRANO010UI")
+    public ModelAndView DRANO010UI()throws Exception{
+        ModelAndView mv = this.getModelAndView();
+        PageData pd = this.getPageData();
+        try{
+            mv.setViewName("Reprot/InHospitalRep/AntiDrugRep/DRANO010");
+        } catch(Exception e){
+            logger.error(e.toString(), e);
+        }
+        return mv ;
+    }
+    
+    
+    /**
+     * 病原学送检统计-科室 
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value="/DRANO010")
+    public ModelAndView DRANO010()throws Exception{
+        ModelAndView mv = this.getModelAndView();
+        PageData pd = this.getPageData();
+        try
+        {
+            List<PageData> pds =  patInfo.DRANO010(pd);
+            PageData       pdsum = patInfo.DRANO010sum(pd);
+            mv.addObject("patinfos", pds);
+            mv.addObject("patinfosum",pdsum);
+            mv.addObject("pd", pd);
+        }
+        catch(Exception e)
+        {
+            logger.error(e.toString(), e);
+        }
+        mv.setViewName("Reprot/InHospitalRep/AntiDrugRep/DRANO010");
+        return mv ;
+    }
+    
+    
+    /**
+     * 病原学送检统计-医生
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value="/DRANO011UI")
+    public ModelAndView DRANO011UI()throws Exception{
+        ModelAndView mv = this.getModelAndView();
+        PageData pd = this.getPageData();
+        try{
+            mv.setViewName("Reprot/InHospitalRep/AntiDrugRep/DRANO011");
+        } catch(Exception e){
+            logger.error(e.toString(), e);
+        }
+        return mv ;
+    }
+    
+    /**
+     * 病原学送检统计-医生 
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value="/DRANO011")
+    public ModelAndView DRANO011(Page page)throws Exception{
+        ModelAndView mv = this.getModelAndView();
+        PageData pd = this.getPageData();
+        try
+        {
+            page.setPd(pd);
+            List<PageData> pds =  patInfo.DRANO011(page);
+            PageData       pdsum = patInfo.DRANO011sum(pd);
+            mv.addObject("patinfos", pds);
+            mv.addObject("patinfosum",pdsum);
+            mv.addObject("pd", pd);
+        }
+        catch(Exception e)
+        {
+            logger.error(e.toString(), e);
+        }
+        mv.setViewName("Reprot/InHospitalRep/AntiDrugRep/DRANO011");
+        return mv ;
+    }
+    
+    @RequestMapping(value="/DRANO012UI")
+    public ModelAndView DRANO012UI()throws Exception{
+        ModelAndView mv = this.getModelAndView();
+        PageData pd = this.getPageData();
+        try{
+            mv.setViewName("Reprot/InHospitalRep/AntiDrugRep/DRANO012");
+        } catch(Exception e){
+            logger.error(e.toString(), e);
+        }
+        return mv ;
+    }
+    
+    @RequestMapping(value="/DRANO012")
+    public ModelAndView DRANO012()throws Exception{
+        ModelAndView mv = this.getModelAndView();
+        PageData pd = this.getPageData();
+        try
+        {
+            List<PageData> pds =  patInfo.DRANO012(pd);
+            PageData       pdsum = patInfo.DRANO012sum(pd);
+            mv.addObject("patinfos", pds);
+            mv.addObject("patinfosum",pdsum);
+            mv.addObject("pd", pd);
+        }
+        catch(Exception e)
+        {
+            logger.error(e.toString(), e);
+        }
+        mv.setViewName("Reprot/InHospitalRep/AntiDrugRep/DRANO012");
+        return mv ;
+    }
+    
 }

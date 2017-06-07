@@ -424,6 +424,7 @@
 			patient_id =#{patient_id} and visit_id = #{visit_id}
 	</select>
 	
+	<!-- 	清空审核数据 -->
 	<select id="deleteDrugCheckRslt" parameterType="pd" >
 		delete rs_drug_checkrslt  
 		where ngroupnum in (
@@ -433,6 +434,24 @@
 			and t.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
 			and ngroupnum is not null
 		)
+	</select>
+	
+	<!-- 	查询审核结果去除药品重复结果 -->
+	<select id="queryGroupDrugCheckRs" parameterType="pd" resultType="pd">
+		select 
+			drug_id1,drug_id1_name,rec_main_no1,rec_sub_no1,drug_id2,drug_id2_name,rec_main_no2,rec_sub_no2,ngroupnum,
+			rs_drug_type,in_rs_type,alert_level,alert_hint,alert_cause,checkpeople,relation_id1,relation_id2
+		  from rs_drug_checkrslt t
+		 where ngroupnum in (
+	 			select t.ngroupnum from pat_visit t 
+				where 
+					t.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
+					and t.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+					and ngroupnum is not null
+		 )
+		 group by 
+			drug_id1,drug_id1_name,rec_main_no1,rec_sub_no1,drug_id2,drug_id2_name,rec_main_no2,rec_sub_no2,ngroupnum,
+			rs_drug_type,in_rs_type,alert_level,alert_hint,alert_cause,checkpeople,relation_id1,relation_id2
 	</select>
 		
 </mapper>

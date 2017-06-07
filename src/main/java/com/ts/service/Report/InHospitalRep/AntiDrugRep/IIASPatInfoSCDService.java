@@ -89,4 +89,46 @@ public interface IIASPatInfoSCDService
      * @throws Exception
      */
     public List<PageData> DRNO008(PageData pd) throws Exception;
+    
+    /**
+     * 病原学送检统计-科室 
+     * @param pd
+     * @return
+     */
+    public List<PageData> DRANO010(PageData pd)throws Exception;
+    
+    /**
+     * 病原学送检统计-科室  合计
+     * @param pd
+     * @return
+     */
+    public PageData DRANO010sum(PageData pd) throws Exception;
+    
+    /**
+     * 病原学送检统计-医生  
+     * @param pd
+     * @return
+     */
+    public List<PageData> DRANO011(Page page)throws Exception;
+    
+    /**
+     * 病原学送检统计-医生  合计
+     * @param pd
+     * @return
+     */
+    public PageData DRANO011sum(PageData pd) throws Exception;
+    
+    /**
+     * 静脉输液使用情况 
+     * @param pd
+     * @return
+     */
+    public List<PageData> DRANO012(PageData pd)throws Exception ;
+    
+    /**
+     * 静脉输液使用情况  合计
+     * @param pd
+     * @return
+     */
+    public PageData DRANO012sum(PageData pd) throws Exception ;
 }

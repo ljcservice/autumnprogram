@@ -135,16 +135,8 @@ public class DrOperation implements IReportBuilder
             where = CaseHistoryHelperUtils.genWhereCR("repeat_indicator", "0",
                     "Char", "", "2", "");
             lsWheres.add(where);
-            where = CaseHistoryHelperUtils
-                    .genWhereCR("start_date_time",
-                            CaseHistoryFunction.genRToDate("ordadm.orders",
-                                    "start_date_time", "'"
-                                            + DateUtils.getDateAdded(-1,
-                                                    o.getDateString(
-                                                            "OPERATING_DATE"))
-                                            + "'",
-                                    "yyyy-mm-dd"),
-                            "", ">=", "2", "");
+            where = CaseHistoryHelperUtils.genWhereCR("start_date_time",CaseHistoryFunction.genRToDate("ordadm.orders","start_date_time"
+                            , "'" + DateUtils.getDateAdded(-1,o.getDateString("OPERATING_DATE"))+ "'","yyyy-mm-dd"),"", ">=", "2", "");
             lsWheres.add(where);
             where = CaseHistoryHelperUtils
                     .genWhereCR("start_date_time",

@@ -69,8 +69,8 @@ public class InitPdssCache {
 //			setDrugIvEffect();
 //			log.info("药物成分、药敏、药物分类与药物对照字典  目前放弃");
 //			setAid();
-//			log.info("药品剂量使用字典");
-//			setDdg();
+			log.info("药品剂量使用字典");
+			setDdg();
 			log.info("不良反应");
 			setDrugSideDict();
 			log.info("医嘱执行频率");

@@ -28,6 +28,7 @@ import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
 import com.ts.service.pdss.pdss.manager.IDrugSecurityChecker;
 import com.ts.util.Logger;
 import com.ts.util.PageData;
+import com.ts.util.UuidUtil;
 
 /**
  * 住院
@@ -44,7 +45,7 @@ public class InHospitalCheckBean implements InHospitalCheck
     IDrugSecurityChecker drugSecuity;
     @Resource(name="daoSupportPH")
     DAO dao;
-    private static final Logger logger = Logger.getLogger(InHospitalCheckBean.class);
+    private static final Logger logger = Logger.getLogger("InHospitalCheckBean");
     
     @SuppressWarnings ("unchecked")
     @Override
@@ -111,13 +112,53 @@ public class InHospitalCheckBean implements InHospitalCheck
             }
             // 批量保存数据 
             dao.batchUpdate("PatVisitMapper.UpdatePatVisitNgroupnum", pdOut);
+            
+            setDrugCheckRS(pdInp);
+            
         }
         catch (Exception e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return true;
+    }
+
+    private void setDrugCheckRS(PageData pdInp) throws Exception
+    {
+        while(true)
+        {
+            if(QueueBean.getSaveBeanRSSize() == 0)
+            {
+                try
+                {
+                    logger.debug("等待5秒，去除重复药品审核结果");
+                    Thread.sleep(5000);    
+                }
+                catch(Exception e )
+                {
+                    e.printStackTrace();
+                }
+                // 审核结果去重处理 
+                List<PageData> checkRs = (List<PageData>)dao.findForList("PatVisitMapper.queryGroupDrugCheckRs", pdInp);
+                // 删除 审核结果  为了后面去重复为主
+                dao.delete("PatVisitMapper.deleteDrugCheckRslt", pdInp);
+                for(PageData pd : checkRs){
+                    pd.put("RS_ID",UuidUtil.get32UUID());
+                    pd.put("checkDate", DateUtils.formatDate(DateUtils.FORMAT_DATETIME));
+                    dao.save("rsDrugCheckRsltMapper.saveCheckRS", pd);
+                }    
+                return ;
+            }
+            try
+            {
+                Thread.sleep(5000);    
+            }
+            catch(Exception e )
+            {
+                e.printStackTrace();
+            }
+            
+        }
     }
 
     /**

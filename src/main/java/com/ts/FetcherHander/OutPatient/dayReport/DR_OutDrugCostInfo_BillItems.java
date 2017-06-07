@@ -12,6 +12,7 @@ import com.hitzd.Factory.DBQueryFactory;
 import com.hitzd.Transaction.TransaCallback;
 import com.hitzd.Transaction.TransactionTemp;
 import com.hitzd.Utils.StringUtils;
+import com.hitzd.his.DDD.DDDUtils;
 import com.hitzd.his.ReportBuilder.Interfaces.IReportBuilder;
 import com.hitzd.his.Utils.Config;
 import com.hitzd.his.Utils.DateUtils;
@@ -126,10 +127,20 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                 {
                     StringUtils.execCF(supplier, t);
                     t.set("is_anti","0" );
+                    double dddValue = 0d;
                     if(DrugUtils.isKJDrug(t.get("item_code")))
+                    {
+                        dddValue = DDDUtils.CalcDDD(
+                                t.get("item_code"),
+                                t.get("item_spec"), t.get("units"),
+                                t.get("Firm_ID"), t.get("amount"),
+                                t.get("COSTS"));
                         t.set("is_anti", "1");
+                        logger.info("存在抗菌药" + t.get("item_code") + "●●●"
+                                + t.get("item_spec") + "●●●" + dddValue);
+                    }
                     TCommonRecord tCom = dc.getDrugDictInfo(t.get("item_code"));
-                    String sql = "insert into dr_drugDayCost(dr_date,drug_code, drug_name, cost, package_spec, amount, firm_id, dept_code, dept_name, dispensary, toxi_property, is_anti, dispensary_name, units) values ( "
+                    String sql = "insert into dr_drugDayCost(dr_date,drug_code, drug_name, cost, package_spec, amount, firm_id, dept_code, dept_name, dispensary, toxi_property, is_anti, dispensary_name, units,ddd_value) values ( "
                         + "to_date('"  + ADate + "','yyyy-mm-dd')"
                         + ",'" + t.get("item_code",true) + "'"
                         + ",'" + t.get("item_name",true) + "'"
@@ -144,6 +155,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                         + ",'" + t.get("is_anti",true) + "'"
                         + ",'" + dc.getDeptName(t.get("performed_by")) + "'"
                         + ",'" + t.get("units",true) + "'"
+                        + ",'" + dddValue + "'"
                         + " )";
                     query.update(sql);
                     logger.debug("=====添加数量为" + listDDC.size() + "/" + (++i) + "====");
@@ -221,8 +233,18 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                 {
                     StringUtils.execCF(supplier, t);
                     t.set("is_anti","0" );
+                    double dddValue = 0d;
                     if(DrugUtils.isKJDrug(t.get("item_code")))
+                    {
+                        dddValue = DDDUtils.CalcDDD(
+                                t.get("item_code"),
+                                t.get("item_spec"), t.get("units"),
+                                t.get("Firm_ID"), t.get("amount"),
+                                t.get("COSTS"));
                         t.set("is_anti", "1");
+                        logger.info("存在抗菌药" + t.get("item_code") + "●●●"
+                                + t.get("item_spec") + "●●●" + dddValue);
+                    }
                     TCommonRecord tCom = dc.getDrugDictInfo(t.get("item_code"));
                     String sql = "insert into DR_DRUGDOCTORDEPTCOST(" 
                             + " dr_date"        
@@ -240,7 +262,9 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                             + ",is_anti"        
                             + ",dispensary"     
                             + ",dispensary_name"
-                            + ",units ) " + 
+                            + ",units"
+                            + ",ddd_value"
+                            + " ) " + 
                             " values(" +
                             "to_date('" + ADate  + "','yyyy-mm-dd')" +
                             ",'" + t.get("item_code",true)        + "'" +
@@ -251,13 +275,14 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                             ",'" + t.get("costs",true)            + "'" +
                             ",'" + t.get("item_spec",true)     + "'" +
                             ",'" + t.get("ordered_by_dept",true)  + "'" +
-                            ",'" + dc.getDeptName(t.get("ordered_by_dept"))         + "'" +
+                            ",'" + dc.getDeptName(t.get("ordered_by_dept")) + "'" +
                             ",'" + tCom.get("toxi_property",true) + "'" +
                             ",'" + t.get("firm_id",true)          + "'" +
                             ",'" + t.get("is_anti",true)     + "'" +
                             ",'" + t.get("performed_by",true)       + "'" +
                             ",'" + dc.getDeptName(t.get("performed_by"))  + "'" +
                             ",'" + t.get("units",true)            + "'" +
+                            ",'" + dddValue + "'" +
                             ")";
                     query.update(sql);
                     logger.debug("=====添加数量为" + listDDDC.size() + "/" + (++i) + "====");
@@ -352,8 +377,18 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                 {
                     StringUtils.execCF(supplier, t);
                     t.set("is_anti","0" );
+                    double dddValue = 0d;
                     if(DrugUtils.isKJDrug(t.get("item_code")))
+                    {
+                        dddValue = DDDUtils.CalcDDD(
+                                t.get("item_code"),
+                                t.get("item_spec"), t.get("units"),
+                                t.get("Firm_ID"), t.get("amount"),
+                                t.get("COSTS"));
                         t.set("is_anti", "1");
+                        logger.info("存在抗菌药" + t.get("item_code") + "●●●"
+                                + t.get("item_spec") + "●●●" + dddValue);
+                    }
                     TCommonRecord tCom = dc.getDrugDictInfo(t.get("item_code"));
                     String sql = "insert into DR_DRUGPATDDCOST(" 
                             + "dr_date"     
@@ -378,6 +413,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                             + ",toxi_property"  
                             + ",dispensary"     
                             + ",dispensary_name"
+                            + ",ddd_value"
                             +
                             ") values(" 
                             + "to_date('"  + ADate     + "','yyyy-mm-dd')"
@@ -402,6 +438,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                             + ",'" + tCom.get("toxi_property",true) + "'"
                             + ",'" + t.get("performed_by",true)     + "'"
                             + ",'" + dc.getDeptName( t.get("performed_by")) + "'"
+                            + ",'" + dddValue + "'"
                             + ")";
                     query.update(sql);
                     logger.debug("=====添加数量为" + listDDDC.size() + "/" + (++i) + "====");

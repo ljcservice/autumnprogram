@@ -43,17 +43,17 @@ public class TPatOrderDiagnosis
     public void setDiagnosisDictID(String diagnosisDictID)
     {
     	String diagId = diagnosisDictID;
-    	this.diagnosisDictID = diagId; 
-    	if(Config.getParamValue("diag_icd9_conv_flag").equals("1") || Config.getParamValue("diag_icd10_conv_flag").equals("1") )
-    	{
-    	    this.diagnosisDictID = diagnosisDictID ;
-    	}
-    	else
-    	if(Config.getParamValue("diagnosis_conv_flag").equals("1"))
-        {
-    		diagId = DictCache.getNewInstance().getDiagnosisByName(diagId).get("diagnosis_code");
-    		this.setDiagnosisName(diagnosisDictID);
-        }
+//    	this.diagnosisDictID = diagId; 
+//    	if(Config.getParamValue("diag_icd9_conv_flag").equals("1") || Config.getParamValue("diag_icd10_conv_flag").equals("1") )
+//    	{
+//    	    this.diagnosisDictID = diagnosisDictID ;
+//    	}
+//    	else
+//    	if(Config.getParamValue("diagnosis_conv_flag").equals("1"))
+//        {
+//    		diagId = DictCache.getNewInstance().getDiagnosisByName(diagId).get("diagnosis_code");
+//    		this.setDiagnosisName(diagnosisDictID);
+//        }
     	if(!"".equals(diagId)&& diagId != null) this.diagnosisDictID = diagId;
     }
 

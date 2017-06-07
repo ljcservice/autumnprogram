@@ -45,7 +45,7 @@
 					<div class="row">
 						<div class="col-xs-12" >
 							<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
-								<form name="searchForm" id="searchForm" action="InHospitalRep/DRANO004.do" method="post" >  
+								<form name="searchForm" id="searchForm" action="InHospitalRep/DRANO008.do" method="post" >  
 									<div class="check-search nav-search" >
 										<span class="input-icon">
 											<input class="nav-search-input" style="width: 100px;" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords}" placeholder="科室" maxlength="80"/>
@@ -83,13 +83,13 @@
 										</select>
 									</div>
   
-									<div class="check-search">
-										查询方式： 
-										<select class="chosen-select form-control" name="findType" id="findType" data-placeholder="查询方式" style="vertical-align:top;width: 100px;">    
-											<option  value="persion" >按人次查询</option>
-											<option <c:if test="${pd.findType == 'count' }">selected</c:if> value="count" >按例数查询</option>
-										</select>
-									</div>
+<!-- 									<div class="check-search"> -->
+<!-- 										查询方式：  -->
+<!-- 										<select class="chosen-select form-control" name="findType" id="findType" data-placeholder="查询方式" style="vertical-align:top;width: 100px;">     -->
+<!-- 											<option  value="persion" >按人次查询</option> -->
+<%-- 											<option <c:if test="${pd.findType == 'count' }">selected</c:if> value="count" >按例数查询</option> --%>
+<!-- 										</select> -->
+<!-- 									</div> -->
 									</form>
 							</div>
 							<div style="width: 100%;height: auto;">
@@ -98,33 +98,58 @@
 								<tr>
 									<th class="center" nowrap style="width:45px;">序号</th>
 									<th class="center" nowrap>科室</th>
-									<th class="center" nowrap>${pd.findType == 'count'?'手术总例数':'手术总人次' }</th>  
-									<th class="center" nowrap>${pd.findType == 'count'?'使用抗菌药例数':'使用抗菌药人次数' }</th>
-									<th class="center" nowrap>比例</th>
+									<th class="center" nowrap>手术总例数</th>  
+									<th class="center" nowrap>抗菌药使用率</th>
+									<th class="center" nowrap>时机合理率</th>
+									<th class="center" nowrap>疗程合理率</th>
+									<th class="center" nowrap>品种合理率</th>
+									<th class="center" nowrap>一联使用率</th>
+									<th class="center" nowrap>二联使用率</th>
+									<th class="center" nowrap>三联使用率</th>
+									<th class="center" nowrap>多联使用率</th>
 									<th class="center" nowrap>分解</th>
 								</tr>
 							</thead>
 							<tbody>
-							<c:set var="count" value="0">
-									
-							</c:set>
-							<c:set var="antiCount" value="0" >
-								
-							</c:set>
 							<!-- 开始循环 -->	 
 							<c:choose>
 								<c:when test="${not empty opers}">
 									<c:forEach items="${opers}" var="oper" varStatus="vs" >
-										
 										<tr ondblclick="">
-										<c:set value="${count + oper.coun }" var="count" />  
-										<c:set value="${antiCount + oper.anti}" var="antiCount" />  
 											<td nowrap class='center' style="width: 30px;">${vs.index+1}</td>
 											<td nowrap class="center">${oper.dept_name } </td>
-											<td nowrap class="center">${oper.coun }</td>
-											<td nowrap class="center">${oper.anti }</td>
-											<td nowrap class="center"> 
-												<fmt:formatNumber value="${oper.ratAnti * 100}" type="number" maxFractionDigits="2"></fmt:formatNumber>% 
+											<td nowrap class="center">${oper.patsum}</td>
+											<td nowrap class="center">
+												${oper.hasantisum}/${oper.patsum}=
+												<fmt:formatNumber value="${oper.ranking * 100}" type="number" maxFractionDigits="2"></fmt:formatNumber>%
+											</td>
+											<td nowrap class="center">  
+												${oper.timingsum}/${oper.patsum}=
+												<fmt:formatNumber value="${oper.timingranking * 100}" type="number" maxFractionDigits="2"></fmt:formatNumber>%
+											</td>  
+											<td nowrap class="center">
+												${oper.treatsum}/${oper.patsum}=
+												<fmt:formatNumber value="${oper.treatranking * 100}" type="number" maxFractionDigits="2"></fmt:formatNumber>%
+											</td>
+											<td nowrap class="center">
+												${oper.pzsum}/${oper.patsum}=
+												<fmt:formatNumber value="${oper.pzranking * 100}" type="number" maxFractionDigits="2"></fmt:formatNumber>%
+											</td>
+											<td nowrap class="center">
+												${oper.lh1sum}/${oper.patsum}=
+												<fmt:formatNumber value="${oper.lh1ranking * 100}" type="number" maxFractionDigits="2"></fmt:formatNumber>%
+											</td>
+											<td nowrap class="center">
+												${oper.lh2sum}/${oper.patsum}=
+												<fmt:formatNumber value="${oper.lh2ranking * 100}" type="number" maxFractionDigits="2"></fmt:formatNumber>%
+											</td>
+											<td nowrap class="center">
+												${oper.lh3sum}/${oper.patsum}=
+												<fmt:formatNumber value="${oper.lh3ranking * 100}" type="number" maxFractionDigits="2"></fmt:formatNumber>%
+											</td>
+											<td nowrap class="center">
+												${oper.lh4sum}/${oper.patsum}=
+												<fmt:formatNumber value="${oper.lh4ranking * 100}" type="number" maxFractionDigits="2"></fmt:formatNumber>%
 											</td>
 											<td nowrap class="center"></td> 
 										</tr>
@@ -132,28 +157,11 @@
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
-										<td colspan="8" class="center">没有相关数据</td>
+										<td colspan="12" class="center">没有相关数据</td>
 									</tr>
 								</c:otherwise>
 							</c:choose>
 							</tbody>
-							<tfoot>
-								<td nowrap class="center" colspan="2">合计</td>
-								<td nowrap class="center">${count } </td>
-								<td nowrap class="center">${antiCount } </td>
-								<c:set var="doubleCount">
-									<fmt:formatNumber value="${count}" type="number" maxFractionDigits="2"></fmt:formatNumber>
-								</c:set>
-								<c:set var="doubleantiCount">
-									<fmt:formatNumber value="${antiCount}" type="number" maxFractionDigits="2"></fmt:formatNumber>
-								</c:set>
-								
-								<td nowrap class="center">
-									<fmt:formatNumber value="${doubleantiCount / doubleCount * 100}" type="number" maxFractionDigits="2"></fmt:formatNumber>
-								 </td>
-								<td nowrap class="center"></td>
-							
-							</tfoot>
 						</table>
 						</div>
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">

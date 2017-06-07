@@ -85,6 +85,8 @@ public class DDDCountByBill_SCD implements IReportBuilder
             double outspecDDDS = 0; // 局部特殊级抗生素使用频度
             double outlimitDDDS = 0; // 局部限制级抗生素使用频度
             double outordinaryDDDS = 0; // 局部普通级抗生素使用频度
+            boolean adminJMSY = false; // 是否  静脉输液
+            boolean adminAntiJMSY = false;// 是否 抗菌药物静脉输液
 
             if (BillDetail != null && BillDetail.size() > 0)
             {
@@ -100,6 +102,11 @@ public class DDDCountByBill_SCD implements IReportBuilder
                 {
                     TCommonRecord bill = BillDetail.get(i);
                     bill.set("is_anti", "0");
+                    // 不同科室 查询一下 静脉输液 药品 
+                    if(!drDept.equals(bill.get("ordered_by")))
+                    {
+                        this.getAdministratorjmsy(queryHIS, bill);
+                    }
                     if (!"".equals(drDept)
                             && !drDept.equals(bill.get("ordered_by")))
                     {
@@ -107,6 +114,10 @@ public class DDDCountByBill_SCD implements IReportBuilder
                             is_scd = true;
                         /* 复制对象 */
                         TCommonRecord rs = (TCommonRecord) cr.deepClone();
+                        // 给药途径静脉输液
+                        rs.set("adminJMSY", adminJMSY ? "1" : "0");
+                        // 抗菌药物  给药途径静脉输液
+                        rs.set("adminAntiJMSY", adminAntiJMSY ? "1" : "0");
                         // 转科标示
                         rs.set("IS_SCD", is_scd ? "1" : "0");
                         // 病人过程唯一号
@@ -114,8 +125,7 @@ public class DDDCountByBill_SCD implements IReportBuilder
                         // 过程科室code
                         rs.set("FUNCDEPTCODE", drDept);
                         // 过程科室名称
-                        rs.set("FUNCDEPTNAME",
-                                DictCache.getNewInstance().getDeptName(drDept));
+                        rs.set("FUNCDEPTNAME",DictCache.getNewInstance().getDeptName(drDept));
                         /* 设置病人计算信息 */
                         SetPatInfo(ADate, queryHIS, zl, antiCount, specDDDS,
                                 limitDDDS, ordinaryDDDS, ddd, charges, costs,
@@ -145,6 +155,8 @@ public class DDDCountByBill_SCD implements IReportBuilder
                         outordinaryDDDS = 0; // 局部普通级抗生素使用频度
                         outdrug_costs = 0; // 局部应收药费--中药西药
                         outdrug_charges = 0; // 局部实收是非--中药西药
+                        adminAntiJMSY = false; // 静脉输液抗菌药 
+                        adminJMSY = false ; // 静脉输液
                     } // End 添加病人信息
                     costs += bill.getDouble("costs");
                     charges += bill.getDouble("charges");
@@ -154,9 +166,9 @@ public class DDDCountByBill_SCD implements IReportBuilder
                         drug_charges += bill.getDouble("charges");
                         drug_costs += bill.getDouble("costs");
                     }
-                    else if (Config.getParamValue("Drug_In_Order")
-                            .equals(bill.get("item_class"))) // 西药费用
+                    else if (Config.getParamValue("Drug_In_Order").equals(bill.get("item_class"))) // 西药费用
                     {
+                        if(!adminJMSY && this.adminOrderMap.containsKey(bill.getObj("item_code"))) adminJMSY = true;
                         boolean isOutAnti = false;
                         if (DrugUtils.isExternalDrug(bill.get("item_code"),
                                 bill.get("item_spec")))
@@ -172,6 +184,8 @@ public class DDDCountByBill_SCD implements IReportBuilder
 
                         if (DrugUtils.isKJDrug(bill.get("item_code")))
                         {
+                            
+                            if(!adminAntiJMSY && this.adminOrderMap.containsKey(bill.getObj("item_code"))) adminAntiJMSY = true;
                             // 外用抗菌药物
                             if (isOutAnti)
                             {
@@ -224,18 +238,10 @@ public class DDDCountByBill_SCD implements IReportBuilder
                                     bill.get("COSTS"));
                             bill.set("is_anti", "1");
                             bill.set("DDD", dddValue + "");
-                            String mapKey = buildMapKey(bill.get("item_code"),
-                                    bill.get("item_spec"));
-                            initializeExternalAntiDrugMap(mapKey, antiDrugInfo,
-                                    bill);
-                            logger.info("存在抗菌药" + bill.get("item_code") + "●●●"
-                                    + bill.get("item_spec") + "●●●" + dddValue);
+                            String mapKey = buildMapKey(bill.get("item_code"), bill.get("item_spec"));initializeExternalAntiDrugMap(mapKey, antiDrugInfo, bill);
+                            logger.info("存在抗菌药" + bill.get("item_code") + "●●●" + bill.get("item_spec") + "●●●" + dddValue);
                             ddd += dddValue;
-                            antiDrugInfo.get(mapKey)
-                                    .set("OUTANTIDDD",
-                                            dddValue + antiDrugInfo.get(mapKey)
-                                                    .getDouble("OUTANTIDDD")
-                                                    + "");
+                            antiDrugInfo.get(mapKey).set("OUTANTIDDD",dddValue + antiDrugInfo.get(mapKey).getDouble("OUTANTIDDD") + "");
                             // 外用抗菌药物
                             if (isOutAnti)
                             {
@@ -813,6 +819,68 @@ public class DDDCountByBill_SCD implements IReportBuilder
         return resultData;
     }
 
+    
+    //静脉输液 药品集合
+    private Map<String, TCommonRecord> adminOrderMap = new HashMap<String, TCommonRecord>();
+    /**
+     * 选取静脉输液药品
+     * @param query
+     * @param cr
+     * @param orders
+     */
+    public void getAdministratorjmsy(JDBCQueryImpl query, TCommonRecord cr)
+    {
+        logger.info("查询 patient_id=" + cr.get("patient_id") + " visit_id=" + cr.get("visit_id") + ",过程科室=" + cr.get("ordered_by")
+                + " 静脉输液");
+        // 中间层替换——李果
+        ICaseHistoryHelper chhr = CaseHistoryFactory.getCaseHistoryHelper();
+        List<TCommonRecord> result = Collections.emptyList();
+        try
+        {
+            String strFields = " * ";
+            List<TCommonRecord> lsWheres = new ArrayList<TCommonRecord>();
+            TCommonRecord where = CaseHistoryHelperUtils.genWhereCR("patient_id", cr.get("patient_id"), "Char", "", "", "");
+            lsWheres.add(where);
+            where = CaseHistoryHelperUtils.genWhereCR("visit_id", cr.get("visit_id"), "Char", "", "", "");
+            lsWheres.add(where);
+            where = CaseHistoryHelperUtils.genWhereCR("ordering_dept", cr.get("ordered_by"), "Char", "", "", "");
+            lsWheres.add(where);
+//            CaseHistoryHelperUtils.genWhereGbkCR("", cr.get(""), "char", "in", "", "");
+            List<TCommonRecord> lsOrders = new ArrayList<TCommonRecord>();
+            TCommonRecord order = CaseHistoryHelperUtils.genOrderCR("start_date_time", "");
+            lsOrders.add(order);
+            result = chhr.fetchOrders2CR(strFields, lsWheres, null, lsOrders, query);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            chhr = null;
+        }
+        
+        String[] adminName = Config.getParamValue("IntravenousInfusion").split(",");
+        for(int i = 0; i < result.size(); i++)
+        {
+            TCommonRecord r = result.get(i);
+            {
+                for(String s :adminName)
+                {
+                    if(r.get("administration").contains(s))
+                    {
+                        if(!adminOrderMap.containsKey(r.get("order_code")))
+                        {
+                           adminOrderMap.put(r.get("order_code"), r); 
+                        }
+                        break;
+                    }
+                }    
+            }
+        }
+        
+    }
+    
     /***
      * 查询病人病原学送检例数 以及 确认专科医生
      * 
@@ -824,8 +892,7 @@ public class DDDCountByBill_SCD implements IReportBuilder
     public int getEtiologySubmitCount(JDBCQueryImpl query, TCommonRecord cr,
             List<TCommonRecord> orders)
     {
-        logger.info("查询 patient_id=" + cr.get("patient_id") + " visit_id="
-                + cr.get("visit_id") + ",过程科室=" + cr.get("FUNCDEPTCODE")
+        logger.info("查询 patient_id=" + cr.get("patient_id") + " visit_id=" + cr.get("visit_id") + ",过程科室=" + cr.get("FUNCDEPTCODE")
                 + " 病原学送检例数");
         // 中间层替换——李果
         ICaseHistoryHelper chhr = CaseHistoryFactory.getCaseHistoryHelper();
@@ -834,21 +901,16 @@ public class DDDCountByBill_SCD implements IReportBuilder
         {
             String strFields = " * ";
             List<TCommonRecord> lsWheres = new ArrayList<TCommonRecord>();
-            TCommonRecord where = CaseHistoryHelperUtils.genWhereCR(
-                    "patient_id", cr.get("patient_id"), "Char", "", "", "");
+            TCommonRecord where = CaseHistoryHelperUtils.genWhereCR("patient_id", cr.get("patient_id"), "Char", "", "", "");
             lsWheres.add(where);
-            where = CaseHistoryHelperUtils.genWhereCR("visit_id",
-                    cr.get("visit_id"), "Char", "", "", "");
+            where = CaseHistoryHelperUtils.genWhereCR("visit_id", cr.get("visit_id"), "Char", "", "", "");
             lsWheres.add(where);
-            where = CaseHistoryHelperUtils.genWhereCR("ordering_dept",
-                    cr.get("FUNCDEPTCODE"), "Char", "", "", "");
+            where = CaseHistoryHelperUtils.genWhereCR("ordering_dept", cr.get("FUNCDEPTCODE"), "Char", "", "", "");
             lsWheres.add(where);
             List<TCommonRecord> lsOrders = new ArrayList<TCommonRecord>();
-            TCommonRecord order = CaseHistoryHelperUtils
-                    .genOrderCR("start_date_time", "");
+            TCommonRecord order = CaseHistoryHelperUtils.genOrderCR("start_date_time", "");
             lsOrders.add(order);
-            result = chhr.fetchOrders2CR(strFields, lsWheres, null, lsOrders,
-                    query);
+            result = chhr.fetchOrders2CR(strFields, lsWheres, null, lsOrders, query);
         }
         catch (Exception e)
         {
@@ -863,8 +925,7 @@ public class DDDCountByBill_SCD implements IReportBuilder
         String endDate = "";
         String DeptDoct = "";
         String isOrderFlag = "0";
-        boolean tranBool = this.getTransfer(cr.get("FUNCDEPTCODE"),
-                cr.get("patient_id"), cr.get("visit_id"), cr);
+        boolean tranBool = this.getTransfer(cr.get("FUNCDEPTCODE"),cr.get("patient_id"), cr.get("visit_id"), cr);
         String[] etiologys = Config.getParamValue("EtiologySend").split(",");
         int iCount = 0;
         for (int i = 0; i < result.size(); i++)
@@ -890,11 +951,8 @@ public class DDDCountByBill_SCD implements IReportBuilder
                 beginDate = r.get("START_DATE_TIME");
                 if (!"".equals(endDate))
                 {
-                    Date admiDateTime = DateUtils.getDateFromString(
-                            cr.get("admission_date_time"),
-                            DateUtils.FORMAT_DATETIME);
-                    Date beginDatetime = DateUtils.getDateFromString(beginDate,
-                            DateUtils.FORMAT_DATETIME);
+                    Date admiDateTime = DateUtils.getDateFromString(cr.get("admission_date_time"),DateUtils.FORMAT_DATETIME);
+                    Date beginDatetime = DateUtils.getDateFromString(beginDate,DateUtils.FORMAT_DATETIME);
                     if (admiDateTime.getTime() > beginDatetime.getTime())
                         beginDate = cr.get("admission_date_time");
                 }
@@ -902,15 +960,11 @@ public class DDDCountByBill_SCD implements IReportBuilder
             }
             if ((i + 1) == result.size())
             {
-                endDate = "".equals(r.get("STOP_DATE_TIME"))
-                        ? r.get("START_DATE_TIME") : r.get("STOP_DATE_TIME");
+                endDate = "".equals(r.get("STOP_DATE_TIME"))? r.get("START_DATE_TIME") : r.get("STOP_DATE_TIME");
                 if (!"".equals(endDate))
                 {
-                    Date disDateTime = DateUtils.getDateFromString(
-                            cr.get("discharge_Date_time"),
-                            DateUtils.FORMAT_DATETIME);
-                    Date endDatetime = DateUtils.getDateFromString(endDate,
-                            DateUtils.FORMAT_DATETIME);
+                    Date disDateTime = DateUtils.getDateFromString(cr.get("discharge_Date_time"),DateUtils.FORMAT_DATETIME);
+                    Date endDatetime = DateUtils.getDateFromString(endDate,DateUtils.FORMAT_DATETIME);
                     if (disDateTime.getTime() < endDatetime.getTime())
                         endDate = cr.get("discharge_Date_time");
                 }
@@ -926,8 +980,7 @@ public class DDDCountByBill_SCD implements IReportBuilder
                 // 过程结束时间
                 cr.set("FUNCDEPTENDDATE", endDate);
                 // 过程科室住院天数
-                cr.set("FUNCDAYS", String
-                        .valueOf(CalcuateAgeUtil.getQuot(beginDate, endDate)));
+                cr.set("FUNCDAYS", String.valueOf(CalcuateAgeUtil.getQuot(beginDate, endDate)));
                 // 根据医嘱确定医生
                 cr.set("DOCTOR", DeptDoct);
             }
@@ -938,8 +991,7 @@ public class DDDCountByBill_SCD implements IReportBuilder
             }
         }
         cr.set("IS_ORDERFLAG", isOrderFlag);
-        logger.info("查询 patient_id=" + cr.get("patient_id") + " visit_id="
-                + cr.get("visit_id") + " 病原学送检例数 :" + iCount);
+        logger.info("查询 patient_id=" + cr.get("patient_id") + " visit_id=" + cr.get("visit_id") + " 病原学送检例数 :" + iCount);
         return iCount;
     }
 
@@ -1039,7 +1091,7 @@ public class DDDCountByBill_SCD implements IReportBuilder
             @Override
             public void ExceuteSqlRecord()
             {
-                JDBCQueryImpl ph = DBQueryFactory.getQuery("PatientHistory");
+                JDBCQueryImpl ph = DBQueryFactory.getQuery("ph");
                 DDDCountByBill_SCD.this.deleteOldOperation(ph,
                         (TCommonRecord) (this.getTranParm().getObj("tcr")));
                 int has_anti = 0;
@@ -1213,12 +1265,12 @@ public class DDDCountByBill_SCD implements IReportBuilder
     {
         TCommonRecord tc = new TCommonRecord();
         tc.set("ADate", ADate);
-        TransactionTemp tt = new TransactionTemp("IAS");
+        TransactionTemp tt = new TransactionTemp("ph");
         tt.execute(new TransaCallback(tc) {
             @Override
             public void ExceuteSqlRecord()
             {
-                JDBCQueryImpl Jquery = DBQueryFactory.getQuery("IAS");
+                JDBCQueryImpl Jquery = DBQueryFactory.getQuery("ph");
                 /* 删除旧数据 */
                 DDDCountByBill_SCD.this.DeleteRsSplit(Jquery,
                         this.getTranParm().get("ADate"));
@@ -1235,9 +1287,9 @@ public class DDDCountByBill_SCD implements IReportBuilder
                     sql.append(
                             " limit_ddd_value, doctor, max_drug_aday, ordinaryDDDS, is_anti, identity, charge_type, costs, charges, drug_costs, drug_charges, anti_costs, anti_charges, "
                                     + "outdrug_costs,outdrug_charges,outAntiDDD,outAntiCosts,outAntiCharges,outspecDDDS,outlimitDDDS,outordinaryDDDS,is_out,"
-                                    + "FUNCDEPTCODE,FUNCDEPTNAME,FUNCDEPTBEGINDATE,FUNCDEPTENDDATE,FUNCDAYS,IS_SCD,PAT_FUNCT_NO,IS_ORDERFLAG,submit_count,first_diagnosis");
+                                    + "FUNCDEPTCODE,FUNCDEPTNAME,FUNCDEPTBEGINDATE,FUNCDEPTENDDATE,FUNCDAYS,IS_SCD,PAT_FUNCT_NO,IS_ORDERFLAG,submit_count,first_diagnosis,ADMINJMSY,ADMINANTIJMSY");
                     sql.append(
-                            ") values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                            ") values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
                     Timestamp dateTime = new Timestamp(DateUtils
                             .getDateFromString(getTranParm().get("ADate"))
                             .getTime());
@@ -1294,6 +1346,9 @@ public class DDDCountByBill_SCD implements IReportBuilder
                     sqlParams.add(cr.get("submit_count"));
                     sqlParams.add(cr.get("diagnosis_desc"));
 
+                    sqlParams.add(cr.get("ADMINJMSY")); // 静脉输液
+                    sqlParams.add(cr.get("ADMINANTIJMSY"));// 静脉输液 抗菌药物
+                    
                     String tempKey = cr.get("patient_id") + "_"
                             + cr.get("visit_id") + "_"
                             + this.getTranParm().get("ADate") + "_"
@@ -1324,12 +1379,12 @@ public class DDDCountByBill_SCD implements IReportBuilder
     {
         TCommonRecord tc = new TCommonRecord();
         tc.set("ADate", ADate);
-        TransactionTemp tt = new TransactionTemp("IAS");
+        TransactionTemp tt = new TransactionTemp("ph");
         tt.execute(new TransaCallback(tc) {
             @Override
             public void ExceuteSqlRecord()
             {
-                JDBCQueryImpl Jquery = DBQueryFactory.getQuery("IAS");
+                JDBCQueryImpl Jquery = DBQueryFactory.getQuery("ph");
                 /* 删除旧数据 */
                 DDDCountByBill_SCD.this.deleteBillDetail(Jquery,
                         this.getTranParm().get("ADate"));

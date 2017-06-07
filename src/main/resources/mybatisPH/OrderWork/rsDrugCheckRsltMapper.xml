@@ -54,7 +54,7 @@
 		#{RELATION_ID2,jdbcType=VARCHAR}
 	</sql>
 	
-<!-- 	保存审核结果 -->
+	<!-- 	保存审核结果 -->
 	<insert id="saveCheckRS" parameterType="pd" >
 		insert into 
 		<include refid="tableName"></include>

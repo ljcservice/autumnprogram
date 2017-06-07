@@ -12,6 +12,7 @@ import com.hitzd.Factory.DBQueryFactory;
 import com.hitzd.Transaction.TransaCallback;
 import com.hitzd.Transaction.TransactionTemp;
 import com.hitzd.Utils.StringUtils;
+import com.hitzd.his.DDD.DDDUtils;
 import com.hitzd.his.ReportBuilder.Interfaces.IReportBuilder;
 import com.hitzd.his.Utils.Config;
 import com.hitzd.his.Utils.DateUtils;
@@ -28,13 +29,12 @@ import com.ts.util.LoggerFileSaveUtil;
 /**
  * 适用于307医院,304医院，北京军区总院，上海长征医院
  * 
- * @author tangyl
+ * @author 
  *
  */
 public class DrDeptDoctDrugEx implements IReportBuilder
 {
-    private Logger              logger    = Logger
-            .getLogger(DrDeptDoctDrugEx.class);
+    private Logger logger    = Logger.getLogger("DrDeptDoctDrugEx");
     private List<TCommonRecord> resultSet = new ArrayList<TCommonRecord>();
     private List<TCommonRecord> supplier  = new ArrayList<TCommonRecord>();
 
@@ -341,8 +341,8 @@ public class DrDeptDoctDrugEx implements IReportBuilder
     public void saveDr_Drug_Summary(JDBCQueryImpl queryIAS)
     {
         logger.info("保存患者每天用药信息");
-        String sql = " insert into dr_drug_summary(FIRM_ID, drug_code, DRUG_FORM, drug_name, patient_id, visit_id, costs, drug_units, amount, rpt_date, doctor_code, doctor_name, dept_code,  dept_name, drug_spec,  charges, identity, charge_type, is_basedrug ,is_anti)"
-                + "select FIRM_ID, drug_code, DRUG_FORM, drug_name, patient_id, visit_id, costs, drug_units, amount, rpt_date, doctor_code, doctor_name, dept_code,  dept_name, drug_spec,  charges, identity, charge_type, is_basedrug ,is_anti from dr_drug_summary_out";
+        String sql = " insert into dr_drug_summary(FIRM_ID, drug_code, DRUG_FORM, drug_name, patient_id, visit_id, costs, drug_units, amount, rpt_date, doctor_code, doctor_name, dept_code,  dept_name, drug_spec,  charges, identity, charge_type, is_basedrug ,is_anti,ddd_value)"
+                + "select FIRM_ID, drug_code, DRUG_FORM, drug_name, patient_id, visit_id, costs, drug_units, amount, rpt_date, doctor_code, doctor_name, dept_code,  dept_name, drug_spec,  charges, identity, charge_type, is_basedrug ,is_anti ,ddd_value from dr_drug_summary_out";
         queryIAS.update(sql);
         sql = null;
     }
@@ -393,8 +393,8 @@ public class DrDeptDoctDrugEx implements IReportBuilder
                     logger.info("第-----" + i + "-----共-----"
                             + DrDeptDoctDrugEx.this.resultSet.size() + "药品统计");
                     List<Object> sqlParams = new ArrayList<Object>();
-                    String sql = " insert into dr_drug_summary_out(drug_code, FIRM_ID, DRUG_FORM, drug_name, patient_id, visit_id, costs, drug_units, amount, rpt_date, doctor_code, doctor_name, dept_code,  dept_name, drug_spec,  charges, identity, charge_type, is_basedrug ,is_anti) "
-                            + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    String sql = " insert into dr_drug_summary_out(drug_code, FIRM_ID, DRUG_FORM, drug_name, patient_id, visit_id, costs, drug_units, amount, rpt_date, doctor_code, doctor_name, dept_code,  dept_name, drug_spec,  charges, identity, charge_type, is_basedrug ,is_anti,DDD_VALUE) "
+                            + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
                     sqlParams.add(cr.get("item_code"));
                     sqlParams.add(cr.get("FIRM_ID"));
                     sqlParams.add(cr.get("drug_FORM"));
@@ -404,9 +404,7 @@ public class DrDeptDoctDrugEx implements IReportBuilder
                     sqlParams.add(cr.getDouble("costs"));
                     sqlParams.add(cr.get("units"));
                     sqlParams.add(cr.getDouble("amount"));
-                    Timestamp dateTime = new Timestamp(DateUtils
-                            .getDateFromString(getTranParm().get("ADate"))
-                            .getTime());
+                    Timestamp dateTime = new Timestamp(DateUtils.getDateFromString(getTranParm().get("ADate")).getTime());
                     sqlParams.add(dateTime);
                     sqlParams.add(cr.get("doctor_code"));
                     sqlParams.add(cr.get("doctor_name"));
@@ -418,7 +416,18 @@ public class DrDeptDoctDrugEx implements IReportBuilder
                     sqlParams.add(cr.get("charge_type"));
                     sqlParams.add(cr.get("is_basedrug"));
                     sqlParams.add(cr.getInt("is_anti"));
-
+                    double dddValue  = 0d;
+                    if (cr.getInt("is_anti") == 1)
+                    {
+                        dddValue = DDDUtils.CalcDDD(
+                                cr.get("item_code"),
+                                cr.get("item_spec"), cr.get("units"),
+                                cr.get("Firm_ID"), cr.get("amount"),
+                                cr.get("COSTS"));
+                        logger.info("存在抗菌药" + cr.get("item_code") + "●●●" + cr.get("item_spec") + "●●●" + dddValue);
+                    }
+                    // 计算出ddd值 
+                    sqlParams.add(dddValue);
                     Jquery.update(sql, sqlParams.toArray());
                     i++;
                 }

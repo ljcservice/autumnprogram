@@ -641,7 +641,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                     	param.put("REC_MAIN_NO2",drug.getRecMainNo());
                     	param.put("REC_SUB_NO2", drug.getRecSubNo());
                     	param.put("NGROUPNUM", this.ngroupnum);
-                    	param.put("ALERT_HINT", "重复用药");
+                    	param.put("ALERT_HINT", did[j].getDrugRepeat()[x].getRefer_info());
                     	param.put("ALERT_LEVEL", did[j].getAlertLevel());
                     	param.put("ALERT_CAUSE", "系统审核");
                     	param.put("In_rs_type", this.in_rs_type);
@@ -902,6 +902,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
     }
 
     /**
+     *  保存汇总 
      * 类型
      * @param po
      * @param dsr
@@ -921,7 +922,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
             int didRedCount     = 0, didYellowCount = 0;            //重复成份审查结果                  
             int diaRedCount     = 0, diaYellowCount = 0;            //相互作用审查结果                  
             int dieRedCount     = 0, dieYellowCount = 0;            //配伍审查结果                        
-            //int dhfRedCount   = 0, dhfYellowCount = 0;            //不良反应审查结果                  
+            int dhfRedCount   = 0, dhfYellowCount = 0;            //不良反应审查结果                  
             int NOLDRED         = 0, NOLDYELLOW = 0;                //老人红色,老人黄色 
             int NKIDRED         = 0, NKIDYELLOW = 0;                //小孩红色,小孩黄色
             int NPREGNANTRED    = 0, NPREGNANTYELLOW = 0;           //孕妇红色,孕妇黄色
@@ -945,6 +946,8 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                 diaYellowCount   = diaYellowCount + tcr.getDiaYellowCount();
                 dieRedCount      = dieRedCount + tcr.getDieRedCount();
                 dieYellowCount   = dieYellowCount + tcr.getDieYellowCount();
+                dhfRedCount      = dhfRedCount + tcr.getDhfRedCount();
+                dhfYellowCount   = dhfYellowCount + tcr.getDhfYellowCount();
                 
                 TDrugSpecPeopleRslt[] dsp = tcr.getDrugSpecPeopleRslt();
                 if(dsp != null && dsp.length != 0)
@@ -1006,9 +1009,9 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                 i++;
             }
             int redCount     =  dagRedCount + dieRedCount + ddiRedCount + diaRedCount + admRedCount + ddgRedCount + 
-                                didRedCount + NOLDRED + NKIDRED + NPREGNANTRED + NLACTATIONRED + NRENALRED + NHEPATICALRED;
+                                didRedCount + NOLDRED + NKIDRED + NPREGNANTRED + NLACTATIONRED + NRENALRED + NHEPATICALRED + dhfRedCount;
             int yellowCount  =  dagYellowCount + dieYellowCount + ddiYellowCount + diaYellowCount + admYellowCount + ddgYellowCount +
-                                didYellowCount + NOLDYELLOW + NKIDYELLOW + NPREGNANTYELLOW + NLACTATIONYELLOW + NRENALYELLOW + NHEPATICALYELLOW;    
+                                didYellowCount + NOLDYELLOW + NKIDYELLOW + NPREGNANTYELLOW + NLACTATIONYELLOW + NRENALYELLOW + NHEPATICALYELLOW + dhfYellowCount ;    
 //            sql.append(" insert into DRUG_CHECKINFO_COLLECT(NGROUPNUM,NADVICENUM,NREDADVICEQUESSUM,NYELLOWADVICEQUESSUM");//批次号、医嘱数、红色问题医嘱数、黄色问题医嘱数
 //            sql.append(",VDOCTORCODE,VDOCTORNAME");                                         //医生编码、医生姓名
 //            sql.append(",VORGCODE,VORGNAME");                                               //组织编码、组织名称
@@ -1028,44 +1031,46 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
             //sql.append(",NSIDERED,NSIDEYELLOW");                                          //异常信号红色,异常信号黄色
             
             PageData param = new PageData();
-            param.put("NGROUPNUM", this.ngroupnum); 
-            param.put("NADVICENUM", i); 
-            param.put("NREDADVICEQUESSUM", redCount); 
-            param.put("NYELLOWADVICEQUESSUM", yellowCount); 
-            param.put("VDOCTORCODE", po.getDoctorID()); 
-            param.put("VDOCTORNAME", po.getDoctorName()); 
-            param.put("VORGCODE", po.getDoctorDeptID()); 
-            param.put("VORGNAME", po.getDoctorDeptName()); 
-            param.put("dagRedCount", dagRedCount); 
-            param.put("dagYellowCount",dagYellowCount );
-            param.put("dieRedCount",dieRedCount );
-            param.put("dieYellowCount", dieYellowCount);
-            param.put("ddiRedCount", ddiRedCount);
-            param.put("ddiYellowCount", ddiYellowCount);
-            param.put("diaRedCount", diaRedCount);
-            param.put("diaYellowCount", diaYellowCount);
-            param.put("admRedCount", admRedCount);
-            param.put("admYellowCount", admYellowCount);
-            param.put("ddgRedCount", ddgRedCount);
-            param.put("ddgYellowCount", ddgYellowCount);
-            param.put("didRedCount", didRedCount);
-        	param.put("didYellowCount", didYellowCount);
-        	param.put("NOLDRED", NOLDRED);
-        	param.put("NOLDYELLOW", NOLDYELLOW);
-        	param.put("NKIDRED",NKIDRED );
-        	param.put("NKIDYELLOW",NKIDYELLOW );
-        	param.put("NPREGNANTRED", NPREGNANTRED);
-        	param.put("NPREGNANTYELLOW", NPREGNANTYELLOW);
-        	param.put("NLACTATIONRED", NLACTATIONRED);
-        	param.put("NLACTATIONYELLOW", NLACTATIONYELLOW);
-        	param.put("NRENALRED", NRENALRED);
-        	param.put("NRENALYELLOW", NRENALYELLOW);
-        	param.put("NHEPATICALRED", NHEPATICALRED);
-        	param.put("NHEPATICALYELLOW", NHEPATICALYELLOW);
-        	param.put("CHECKDATE", DateUtil.fomatDate2(CheckTime));
-        	param.put("In_rs_type", this.in_rs_type);
-            dao.save("RSDCCMapper.saveDrugCheckInfoCollection", param);
-        }
+            param.put("NGROUPNUM", this.ngroupnum);                                           
+            param.put("NADVICENUM", i);                                                   	  
+            param.put("NREDADVICEQUESSUM", redCount);                                     	  
+            param.put("NYELLOWADVICEQUESSUM", yellowCount);                               	  
+            param.put("VDOCTORCODE", po.getDoctorID());                                   	  
+            param.put("VDOCTORNAME", po.getDoctorName());                                 	  
+            param.put("VORGCODE", po.getDoctorDeptID());                                  	  
+            param.put("VORGNAME", po.getDoctorDeptName());                                	  
+            param.put("NALLERGENRED", dagRedCount);                                        	  
+            param.put("NALLERGENYELLOW",dagYellowCount );                                  	  
+            param.put("NIVEFFECTRED",dieRedCount );                                        	  
+            param.put("NIVEFFECTYELLOW", dieYellowCount);                                  	  
+            param.put("NDIAGINFORED", ddiRedCount);                                        	  
+            param.put("NDIAGINFOYELLOW", ddiYellowCount);                                  	  
+            param.put("NINTERACTIONRED", diaRedCount);                                       
+            param.put("NINTERACTIONYELLOW", diaYellowCount);                                 
+            param.put("NADMINISTRATIONRED", admRedCount);                                     
+            param.put("NADMINISTRATIONYELLOW", admYellowCount);                               
+            param.put("NDOSAGECHECKRED", ddgRedCount);                                       
+            param.put("NDOSAGECHECKYELLOW", ddgYellowCount);                                 
+            param.put("NINGREDIENTRED", didRedCount);                                        
+        	param.put("NINGREDIENTYELLOW", didYellowCount);                                  
+        	param.put("NOLDRED", NOLDRED);                                                	  
+        	param.put("NOLDYELLOW", NOLDYELLOW);                                          	  
+        	param.put("NKIDRED",NKIDRED );                                                	  
+        	param.put("NKIDYELLOW",NKIDYELLOW );                                          	  
+        	param.put("NPREGNANTRED", NPREGNANTRED);                                      	  
+        	param.put("NPREGNANTYELLOW", NPREGNANTYELLOW);                                	  
+        	param.put("NLACTATIONRED", NLACTATIONRED);                                    	  
+        	param.put("NLACTATIONYELLOW", NLACTATIONYELLOW);                              	  
+        	param.put("NRENALRED", NRENALRED);                                            	  
+        	param.put("NRENALYELLOW", NRENALYELLOW);                                      	  
+        	param.put("NHEPATICALRED", NHEPATICALRED);                                    	  
+        	param.put("NHEPATICALYELLOW", NHEPATICALYELLOW);                              	  
+        	param.put("NSIDERED", dhfRedCount);  
+        	param.put("NSIDEYELLOW", dhfYellowCount);  
+        	param.put("CHECKDATE", DateUtil.fomatDate2(CheckTime));                       	  
+        	param.put("In_rs_type", this.in_rs_type);                                     	  
+            dao.save("RSDCCMapper.saveDrugCheckInfoCollection", param);                   	  
+        }                                                                                 	  
         catch (Exception e) 
         {
             e.printStackTrace();

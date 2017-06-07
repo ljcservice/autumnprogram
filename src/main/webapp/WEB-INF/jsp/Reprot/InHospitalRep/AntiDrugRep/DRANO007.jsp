@@ -24,6 +24,10 @@
 <%@ include file="/WEB-INF/jsp/system/index/top.jsp"%>
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
+<!-- 提示 -->
+<link rel="stylesheet" href="static/ace/css/jquery.gritter.css" />
+<link rel="stylesheet" href="static/ace/css/jquery-ui.custom.css" />
+
 <style>
 .ztree li a.curSelectedNode {
 /* 	background-color: #ffb951;	 */
@@ -45,7 +49,7 @@
 					<div class="row">
 						<div class="col-xs-12" >
 							<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
-								<form name="searchForm" id="searchForm" action="InHospitalRep/DRANO004.do" method="post" >  
+								<form name="searchForm" id="searchForm" action="InHospitalRep/DRANO007.do" method="post" >  
 									<div class="check-search nav-search" >
 										<span class="input-icon">
 											<input class="nav-search-input" style="width: 100px;" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords}" placeholder="科室" maxlength="80"/>
@@ -83,25 +87,34 @@
 										</select>
 									</div>
   
-									<div class="check-search">
-										查询方式： 
-										<select class="chosen-select form-control" name="findType" id="findType" data-placeholder="查询方式" style="vertical-align:top;width: 100px;">    
-											<option  value="persion" >按人次查询</option>
-											<option <c:if test="${pd.findType == 'count' }">selected</c:if> value="count" >按例数查询</option>
-										</select>
-									</div>
+<!-- 									<div class="check-search"> -->
+<!-- 										查询方式：  -->
+<!-- 										<select class="chosen-select form-control" name="findType" id="findType" data-placeholder="查询方式" style="vertical-align:top;width: 100px;">     -->
+<!-- 											<option  value="persion" >按人次查询</option> -->
+<%-- 											<option <c:if test="${pd.findType == 'count' }">selected</c:if> value="count" >按例数查询</option> --%>
+<!-- 										</select> -->
+<!-- 									</div> -->
+									
 									</form>
 							</div>
+							
 							<div style="width: 100%;height: auto;">
 							<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
 							<thead>
 								<tr>
-									<th class="center" nowrap style="width:45px;">序号</th>
-									<th class="center" nowrap>科室</th>
-									<th class="center" nowrap>${pd.findType == 'count'?'手术总例数':'手术总人次' }</th>  
-									<th class="center" nowrap>${pd.findType == 'count'?'使用抗菌药例数':'使用抗菌药人次数' }</th>
-									<th class="center" nowrap>比例</th>
-									<th class="center" nowrap>分解</th>
+									<th class="center" nowrap >患者姓名</th>
+									<th class="center" nowrap >手术式</th>  
+									<th class="center" nowrap>医生姓名</th>
+									<th class="center" nowrap>住院科室</th>
+									<th class="center" nowrap>手术日期</th>
+									<th class="center" nowrap>原切口类型</th>
+									<th class="center" nowrap>现切口类型</th>
+									<th class="center" nowrap>抗菌药</th>
+									<th class="center" nowrap>联合用药</th>
+									<th class="center" nowrap>品种 </th>
+									<th class="center" nowrap>疗程</th>
+									<th class="center" nowrap>时机</th>
+									<th class="center" nowrap>操作</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -117,43 +130,68 @@
 									<c:forEach items="${opers}" var="oper" varStatus="vs" >
 										
 										<tr ondblclick="">
-										<c:set value="${count + oper.coun }" var="count" />  
-										<c:set value="${antiCount + oper.anti}" var="antiCount" />  
-											<td nowrap class='center' style="width: 30px;">${vs.index+1}</td>
-											<td nowrap class="center">${oper.dept_name } </td>
-											<td nowrap class="center">${oper.coun }</td>
-											<td nowrap class="center">${oper.anti }</td>
-											<td nowrap class="center"> 
-												<fmt:formatNumber value="${oper.ratAnti * 100}" type="number" maxFractionDigits="2"></fmt:formatNumber>% 
+											<td nowrap class="center">${oper.name } </td>
+											<td nowrap class="center">${oper.OPERATION_DESC }</td>
+											<td nowrap class="center">${oper.OPERATOR }</td>
+											<td nowrap class="center">${oper.dept_name }</td>
+											<td nowrap class="center">
+											     <fmt:formatDate value="${oper.OPERATING_DATE }" pattern="yyyy-MM-dd"/>	
 											</td>
-											<td nowrap class="center"></td> 
+											<td nowrap class="center">${oper.WOUND_GRADE }</td>
+											<td nowrap class="center" >
+												<select name="WOUND_GRADE_UPDATE_${oper.patient_id}_${oper.visit_id}" id="WOUND_GRADE_UPDATE_${oper.patient_id}_${oper.visit_id}" >
+													<option value=""></option>
+													<option <c:if test="${oper.WOUND_GRADE_UPDATE == 'Ⅰ' }">selected</c:if> value="Ⅰ" >Ⅰ</option>
+													<option <c:if test="${oper.WOUND_GRADE_UPDATE == 'Ⅱ' }">selected</c:if> value="Ⅱ" >Ⅱ</option>
+													<option <c:if test="${oper.WOUND_GRADE_UPDATE == 'Ⅲ' }">selected</c:if> value="Ⅲ" >Ⅲ</option>
+												</select>
+											</td>
+											<td nowrap class="center">
+												<select name="HAS_ANTI_${oper.patient_id}_${oper.visit_id}" id="HAS_ANTI_${oper.patient_id}_${oper.visit_id}" >
+													<option value="0"></option>  
+													<option <c:if test="${oper.HAS_ANTI == '1' }">selected</c:if> value="1" >是</option>
+												</select>
+											</td>
+											<td nowrap class="center">
+												<select name="LH_${oper.patient_id}_${oper.visit_id}" id="LH_${oper.patient_id}_${oper.visit_id}">
+													<option value="0"></option>  
+													<option <c:if test="${oper.LH == '1' }">selected</c:if> value="1" >一联</option>
+													<option <c:if test="${oper.LH == '2' }">selected</c:if> value="2">二联</option>
+													<option <c:if test="${oper.LH == '3' }">selected</c:if> value="3">三联</option>
+													<option <c:if test="${oper.LH == '4' }">selected</c:if> value="4">多联</option>
+												</select>
+											</td>
+											<td nowrap class="center">
+												<select name="PZ_${oper.patient_id}_${oper.visit_id}" id="PZ_${oper.patient_id}_${oper.visit_id}">
+													<option value="0"></option>  
+													<option <c:if test="${oper.PZ == '1' }">selected</c:if> value="1" >是</option>
+												</select>
+											</td>
+											<td nowrap class="center">
+												<select name="IS_TREATMENT_${oper.patient_id}_${oper.visit_id}" id="IS_TREATMENT_${oper.patient_id}_${oper.visit_id}">
+													<option value="0"></option>  
+													<option <c:if test="${oper.IS_TREATMENT == '1' }">selected</c:if> value="1" >是</option>
+												</select> 
+											</td>
+											<td nowrap class="center">
+												<select name="IS_TIMING_${oper.patient_id}_${oper.visit_id}" id="IS_TIMING_${oper.patient_id}_${oper.visit_id}">
+													<option value="0"></option>  
+													<option <c:if test="${oper.IS_TIMING == '1' }">selected</c:if> value="1" >是</option>
+												</select>
+											</td>
+											<td nowrap class="center">
+												<button class="btn btn-success" onclick="funSave('${oper.patient_id}','${oper.visit_id}','${oper.id}','${oper.name}')">保存</button>
+											</td> 
 										</tr>
 									</c:forEach>  
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
-										<td colspan="8" class="center">没有相关数据</td>
+										<td colspan="14" class="center">没有相关数据</td>
 									</tr>
 								</c:otherwise>
 							</c:choose>
 							</tbody>
-							<tfoot>
-								<td nowrap class="center" colspan="2">合计</td>
-								<td nowrap class="center">${count } </td>
-								<td nowrap class="center">${antiCount } </td>
-								<c:set var="doubleCount">
-									<fmt:formatNumber value="${count}" type="number" maxFractionDigits="2"></fmt:formatNumber>
-								</c:set>
-								<c:set var="doubleantiCount">
-									<fmt:formatNumber value="${antiCount}" type="number" maxFractionDigits="2"></fmt:formatNumber>
-								</c:set>
-								
-								<td nowrap class="center">
-									<fmt:formatNumber value="${doubleantiCount / doubleCount * 100}" type="number" maxFractionDigits="2"></fmt:formatNumber>
-								 </td>
-								<td nowrap class="center"></td>
-							
-							</tfoot>
 						</table>
 						</div>
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">
@@ -165,7 +203,6 @@
 								</tr>
 							</table>
 						</div>
-						
 						</div>
 					</div>
 					</div>
@@ -195,6 +232,10 @@
 	<script src="static/ace/js/chosen.jquery.js?v=2008001"></script>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
+	<script src="static/ace/js/jquery.gritter.js"></script>
+	
+ 	 
+	
 </body>
 <script type="text/javascript" src="static/js/common/common.js"></script>
 <script type="text/javascript" src="static/js/common/lockTable.js?v=20161"></script>
@@ -236,7 +277,7 @@ function initWidthHeight(){
 	var rr = new Array;
 	rr[0]="searchDiv";
 	rr[1]="pageStrDiv";
-	FixTable("simple-table", 0, rr);
+	FixTable("simple-table", 4, rr); 
 }
 // 查询
 function searchs(){
@@ -245,12 +286,61 @@ function searchs(){
 	
 }
 
+//var map = new Hash(object)
+
+var HAS_ANTI  = "";
+var IS_TIMING = "";
+var IS_TREATMENT = "";
+var LH = "";
+var PZ = "";
+var WOUND_GRADE_UPDATE = ""; 
+
+function funSave(pat,vist,idx,patName){
+	
+	var HAS_ANTI = $("#simple-table #HAS_ANTI_" + pat + "_" + vist).val();
+	var IS_TIMING = $("#simple-table #IS_TIMING_" + pat + "_" + vist).val();
+	var IS_TREATMENT = $("#simple-table #IS_TREATMENT_" + pat + "_" + vist).val();
+	var LH = $("#simple-table #LH_" + pat + "_" + vist).val();
+	var PZ = $("#simple-table #PZ_" + pat + "_" + vist).val();
+	var WOUND_GRADE_UPDATE = $("#simple-table #WOUND_GRADE_UPDATE_" + pat + "_" + vist).val();
+	var id = idx;
+	var titlename = "患者:" + patName;
+	
+	
+	$.ajax({
+		type: "POST",
+		url: basePath + 'InHospitalRep/DRANO07_Ajax01.do', 
+    	data: {HAS_ANTI:HAS_ANTI,IS_TIMING:IS_TIMING,IS_TREATMENT:IS_TREATMENT,LH:LH,PZ:PZ,WOUND_GRADE_UPDATE:WOUND_GRADE_UPDATE,id:id},
+		dataType:'json',
+		async:false,
+		cache: false,
+		success: function(data){
+			var strRs = "保存成功！";
+			if(data.result!="ok")strRs = "保存失败！";
+			
+			$.gritter.add({
+				// (string | mandatory) the heading of the notification
+				title: titlename ,
+				// (string | mandatory) the text inside the notification
+				text: strRs,
+				class_name: 'gritter-success gritter-light'
+			});
+		},
+		error:function (XMLHttpRequest, textStatus, errorThrown) {
+			mycun =0;    			
+		 	alert('网络异常，请稍后重试');
+		}
+	});
+
+	
+}
+
 function viewDetail(patId , visitId,ngnum){
 	top.jzts();
 	var diag = new top.Dialog();
 	diag.Drag=true;
 	diag.Title ="医嘱点评";
-	diag.URL = "<%=path%>/DoctOrder/OrderWorkDetailUI.do?patient_id=" + patId + "&visit_Id=" + visitId + "&ngroupnum=" + ngnum;    
+	diag.URL = "<%=path%>/InHospitalRep/DRAN007DetailView.do?patient_id=" + patId + "&visit_Id=" + visitId + "&ngroupnum=" + ngnum;    
 	diag.Width = window.screen.width;
 	diag.Height = window.screen.height;  
 	diag.CancelEvent = function(){ //关闭事件

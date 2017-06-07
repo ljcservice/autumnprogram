@@ -359,6 +359,10 @@ public class iasDataFetcherEx extends ReportScheduler implements  IScheduler
      */
     public void SavePatVisit(JDBCQueryImpl hisQuery, JDBCQueryImpl patQuery, TCommonRecord patV, TCommonRecord crPatMasterIndex, TCommonRecord PatientInfo)
     {
+        TCommonRecord crVisit = (TCommonRecord)crPatMasterIndex.getObj(ICaseHistoryHelper.Key_PatVisit);
+        List<TCommonRecord> Operation = (List<TCommonRecord>)crVisit.getObj(ICaseHistoryHelper.Key_Operation);
+        boolean isOperation = false;
+        if (Operation != null && Operation.size() > 0 )  isOperation = true;
     	// 入院科室信息
     	TCommonRecord cr = DictCache.getNewInstance().getDeptInfo(hisQuery, patV.get("DEPT_ADMISSION_TO"));
     	PatientInfo.set("IN_DEPT_NAME", cr.get("DEPT_NAME"));
@@ -387,9 +391,9 @@ public class iasDataFetcherEx extends ReportScheduler implements  IScheduler
     			"MR_INFECT_REPORT, INFECT_INDICATOR, BODY_WEIGHT, BODY_HEIGHT, INTERNAL_NO, IDENTITY_CLASS, HBSAG_INDICATOR, HCV_AB_INDICATOR, " +
     			"HIV_AB_INDICATOR, CHIEF_DOCTOR, ADVANCED_STUDIES_DOCTOR, PRACTICE_DOCTOR_OF_GRADUATE, PRACTICE_DOCTOR, " +
     			"DOCTOR_OF_CONTROL_QUALITY, NURSE_OF_CONTROL_QUALITY, DATE_OF_CONTROL_QUALITY, FIRST_CASE_INDICATOR, THIRD_LEVEL_NURS_DAYS, " +
-    			"X_EXAM_NO, MEDICAL_PAY_WAY, FIRST_AID_INDICATOR, TRAINING_INJURY_INDICATOR, SETTLE_INDI, LINK_DATE) " + 
+    			"X_EXAM_NO, MEDICAL_PAY_WAY, FIRST_AID_INDICATOR, TRAINING_INJURY_INDICATOR, SETTLE_INDI, LINK_DATE,IS_OPERATION) " + 
     			"values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?" + 
-    			",?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    			",?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		sqlParams.add(patV.get("PATIENT_ID")                     );
 		sqlParams.add(patV.get("VISIT_ID")                       );
 		sqlParams.add(patV.get("DEPT_ADMISSION_TO")              );
@@ -494,6 +498,7 @@ public class iasDataFetcherEx extends ReportScheduler implements  IScheduler
 		sqlParams.add(patV.get("SETTLE_INDI")                    );
 		dateTime = new Timestamp(DateUtils.getDateFromString(PatientInfo.get("LINK_DATE")).getTime());
 		sqlParams.add(dateTime);
+		sqlParams.add(isOperation?"1":"0");
     	Log(30, dstSQL);
 		try
 		{
