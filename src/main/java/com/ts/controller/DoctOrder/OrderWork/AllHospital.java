@@ -69,7 +69,7 @@ public class AllHospital  extends BaseController{
 						pp.put("drug_persents", 0);
 					}else{
 						pp.put("drug_persents", MyDecimalFormat.format(drug.divide(med,4,4).doubleValue()*100));
-						pp.put("anti_persents", MyDecimalFormat.format(anti.divide(med,4,4).doubleValue()*100));
+						pp.put("anti_persents", MyDecimalFormat.format(anti.divide(drug,4,4).doubleValue()*100));
 					}
 					med_all=med_all.add(med);
 					drug_all=drug_all.add(drug);
@@ -83,7 +83,7 @@ public class AllHospital  extends BaseController{
 					count.put("drug_persents", 0);
 				}else{
 					count.put("drug_persents", MyDecimalFormat.format(drug_all.divide(med_all,4,4).doubleValue()*100));
-					count.put("anti_persents", MyDecimalFormat.format(anti_all.divide(med_all,4,4).doubleValue()*100));
+					count.put("anti_persents", MyDecimalFormat.format(anti_all.divide(drug_all,4,4).doubleValue()*100));
 				}
 			}
 			if(reportList2!=null){
@@ -96,7 +96,7 @@ public class AllHospital  extends BaseController{
 						pp.put("drug_persents", 0);
 					}else{
 						pp.put("drug_persents", MyDecimalFormat.format(drug.divide(med,4,4).doubleValue()*100));
-						pp.put("anti_persents", MyDecimalFormat.format(anti.divide(med,4,4).doubleValue()*100));
+						pp.put("anti_persents", MyDecimalFormat.format(anti.divide(drug,4,4).doubleValue()*100));
 					}
 					med_all2=med_all2.add(med);
 					drug_all2=drug_all2.add(drug);
@@ -110,7 +110,7 @@ public class AllHospital  extends BaseController{
 					count2.put("anti_persents", 0);
 				}else{
 					count2.put("drug_persents", MyDecimalFormat.format(drug_all2.divide(med_all2,4,4).doubleValue()*100));
-					count2.put("anti_persents", MyDecimalFormat.format(anti_all2.divide(med_all2,4,4).doubleValue()*100));
+					count2.put("anti_persents", MyDecimalFormat.format(anti_all2.divide(drug_all2,4,4).doubleValue()*100));
 				}
 			}
 			mv.addObject("reportList", reportList);
@@ -139,7 +139,7 @@ public class AllHospital  extends BaseController{
 				all.put("drug_persents", 0);
 			}else{
 				all.put("drug_persents", MyDecimalFormat.format(all_drug_all.divide(all_med_all,4,4).doubleValue()*100));
-				all.put("anti_persents", MyDecimalFormat.format(all_anti_all.divide(all_med_all,4,4).doubleValue()*100));
+				all.put("anti_persents", MyDecimalFormat.format(all_anti_all.divide(all_drug_all,4,4).doubleValue()*100));
 			}
 			mv.addObject("count", count);
 			mv.addObject("count2", count2);
@@ -190,7 +190,7 @@ public class AllHospital  extends BaseController{
 						pp.put("drug_persents", 0);
 					}else{
 						pp.put("drug_persents", MyDecimalFormat.format(drug.divide(med,4,4).doubleValue()*100));
-						pp.put("anti_persents", MyDecimalFormat.format(anti.divide(med,4,4).doubleValue()*100));
+						pp.put("anti_persents", MyDecimalFormat.format(anti.divide(drug,4,4).doubleValue()*100));
 					}
 					med_all=med_all.add(med);
 					drug_all=drug_all.add(drug);
@@ -204,7 +204,7 @@ public class AllHospital  extends BaseController{
 					count.put("drug_persents", 0);
 				}else{
 					count.put("drug_persents", MyDecimalFormat.format(drug_all.divide(med_all,4,4).doubleValue()*100));
-					count.put("anti_persents", MyDecimalFormat.format(anti_all.divide(med_all,4,4).doubleValue()*100));
+					count.put("anti_persents", MyDecimalFormat.format(anti_all.divide(drug_all,4,4).doubleValue()*100));
 				}
 			}
 			if(reportList2!=null){
@@ -217,7 +217,7 @@ public class AllHospital  extends BaseController{
 						pp.put("drug_persents", 0);
 					}else{
 						pp.put("drug_persents", MyDecimalFormat.format(drug.divide(med,4,4).doubleValue()*100));
-						pp.put("anti_persents", MyDecimalFormat.format(anti.divide(med,4,4).doubleValue()*100));
+						pp.put("anti_persents", MyDecimalFormat.format(anti.divide(drug,4,4).doubleValue()*100));
 					}
 					med_all2=med_all2.add(med);
 					drug_all2=drug_all2.add(drug);
@@ -231,7 +231,7 @@ public class AllHospital  extends BaseController{
 					count2.put("anti_persents", 0);
 				}else{
 					count2.put("drug_persents", MyDecimalFormat.format(drug_all2.divide(med_all2,4,4).doubleValue()*100));
-					count2.put("anti_persents", MyDecimalFormat.format(anti_all2.divide(med_all2,4,4).doubleValue()*100));
+					count2.put("anti_persents", MyDecimalFormat.format(anti_all2.divide(drug_all2,4,4).doubleValue()*100));
 				}
 			}
 			mv.addObject("reportList", reportList);
@@ -260,7 +260,7 @@ public class AllHospital  extends BaseController{
 				all.put("drug_persents", 0);
 			}else{
 				all.put("drug_persents", MyDecimalFormat.format(all_drug_all.divide(all_med_all,4,4).doubleValue()*100));
-				all.put("anti_persents", MyDecimalFormat.format(all_anti_all.divide(all_med_all,4,4).doubleValue()*100));
+				all.put("anti_persents", MyDecimalFormat.format(all_anti_all.divide(all_drug_all,4,4).doubleValue()*100));
 			}
 //			mv.addObject("count", count);
 //			mv.addObject("count2", count2);

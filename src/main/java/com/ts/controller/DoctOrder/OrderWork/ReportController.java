@@ -93,7 +93,6 @@ public class ReportController extends BaseController{
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		page.setPd(pd);
-		page.setShowCount(1000);
 		try{
 			Map<String,PageData> map = commonService.getCheckTypeDict();
 			Map<String,Object> dataMap = new HashMap<String,Object>();
@@ -102,9 +101,10 @@ public class ReportController extends BaseController{
 			titles.add("问题数");//2
 			titles.add("问题占比");	//3
 			dataMap.put("titles", titles);
-			int TotalPage = 1;
 			List<PageData> varList = null;
 			//分批查询,最大查询6万条
+			int TotalPage = 1;
+			page.setShowCount(1000);
 			for(int pag = 1;pag<=TotalPage&&pag<=60;pag++){
 				page.setCurrentPage(pag);
 				List<PageData> varOList = orderWorkService.ordersReport(pd);

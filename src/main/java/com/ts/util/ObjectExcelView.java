@@ -1,6 +1,7 @@
 package com.ts.util;
 
 import java.io.Reader;
+import java.math.BigDecimal;
 import java.sql.Clob;
 import java.sql.SQLException;
 import java.util.Date;
@@ -126,6 +127,11 @@ public class ObjectExcelView extends AbstractExcelView {
 					Integer val = vpd.get(key) == null ? 0 : (Integer) vpd.get(key);
 					countVal += val;
 					cell.setCellValue(val);
+				} else if (obj instanceof BigDecimal) {
+					cellCountFlag = true;
+					BigDecimal val = vpd.get(key) == null ? new BigDecimal(0) : (BigDecimal) vpd.get(key);
+					countVal += val.doubleValue();
+					cell.setCellValue(val.doubleValue());
 				} else if (obj instanceof Double) {
 					cellCountFlag = true;
 					Double val = vpd.get(key) == null ? 0 : (Double) vpd.get(key);
