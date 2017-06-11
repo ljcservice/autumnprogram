@@ -93,6 +93,10 @@
 <%-- 											<option <c:if test="${pd.antitype == '2' }">selected</c:if> value="2" >特殊级</option> --%>
 <!-- 										</select> -->
 <!-- 									</div> -->
+									<div class="check-search">
+										<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
+										<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
+									</div>
 									</form>
 							</div>
 							<div style="width: 100%;height: auto;">
@@ -165,14 +169,14 @@
 										</td>  
 										
 										<td nowrap class="center">
-											<fmt:formatNumber value="${drugCountCost/CountCost * 100}" type="number" maxFractionDigits="4" />%
+											<fmt:formatNumber value="${100 * drugCountCost/CountCost }" type="number" maxFractionDigits="4" />%
 										</td> 
 										
 										<td nowrap class="center">
-											￥<fmt:formatNumber value="${drugCountCost}" type="number" maxFractionDigits="2"/>
+											￥<fmt:formatNumber value="${antiCountCost}" type="number" maxFractionDigits="2"/>
 										</td> 
 										<td nowrap class="center">
-											<fmt:formatNumber value="${antiCountCost/drugCountCost * 100}" type="number" maxFractionDigits="4" />%
+											<fmt:formatNumber value="${100 * antiCountCost/drugCountCost  }" type="number" maxFractionDigits="4" /> %
 										</td>
 									</tr>
 							</tfoot>
@@ -294,6 +298,18 @@ function viewDetail(patId , visitId,ngnum){
 	 diag.show();
 	
 }
-
+function listExport(){
+	window.open(path + "/InHospitalRep/DRNO003Export.do?"+$("#searchForm").serialize());
+}
+function myprint(){
+	$("#main-container").hide();
+	var tableFixClone = $("#simple-table").clone(true);
+	$("<div id='myprint' style='width=100%;height=100%;'></div>").appendTo($("body"));
+	tableFixClone.appendTo($("#myprint"));
+	$("#myprint").css("z-index",9999) .css("position","absolute").css("left",0).css("top",0).css("background-color","white");
+	window.print();
+	$("#myprint").remove();
+	$("#main-container").show();
+}
 </script>
 </html>

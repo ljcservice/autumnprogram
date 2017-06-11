@@ -93,6 +93,10 @@
 											<option <c:if test="${pd.antitype == '2' }">selected</c:if> value="2" >特殊级</option>
 										</select>
 									</div>
+									<div class="check-search">
+										<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
+										<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
+									</div>
 									</form>
 							</div>
 							<div style="width: 100%;height: auto;">
@@ -301,6 +305,18 @@ function viewDetail(patId , visitId,ngnum){
 	 diag.show();
 	
 }
-
+function listExport(){
+	window.open(path + "/InHospitalRep/DRANO001Export.do?"+$("#searchForm").serialize());
+}
+function myprint(){
+	$("#main-container").hide();
+	var tableFixClone = $("#simple-table").clone(true);
+	$("<div id='myprint' style='width=100%;height=100%;'></div>").appendTo($("body"));
+	tableFixClone.appendTo($("#myprint"));
+	$("#myprint").css("z-index",9999) .css("position","absolute").css("left",0).css("top",0).css("background-color","white");
+	window.print();
+	$("#myprint").remove();
+	$("#main-container").show();
+}
 </script>
 </html>
