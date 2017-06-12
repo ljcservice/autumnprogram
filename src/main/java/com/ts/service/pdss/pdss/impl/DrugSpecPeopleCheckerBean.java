@@ -49,8 +49,8 @@ public class DrugSpecPeopleCheckerBean extends Persistent4DB implements IDrugSpe
 	        TPatient patient = po.getPatient();
 	        /* 病人扩展信息*/
 	        TPatOrderInfoExt poiext = po.getPatInfoExt();
-	        if(patient == null || poiext == null)
-	            return result;
+	        if(patient == null )  return result;
+	        if(poiext == null) poiext = new TPatOrderInfoExt();
 	        if (!(poiext.TheIsKidneyWhole() || poiext.TheIsLiverWhole() || 
 	        	  poiext.TheIsPregnant() || poiext.TheIsLact() || 
 	        	  patient.getChild() || patient.getOldMan()))

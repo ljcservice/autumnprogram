@@ -34,6 +34,7 @@ import com.ts.entity.pdss.pdss.Beans.TDrugPerformFreqDict;
 import com.ts.entity.pdss.pdss.Beans.TDrugRepeat;
 import com.ts.entity.pdss.pdss.Beans.TDrugSideDict;
 import com.ts.entity.pdss.pdss.Beans.TDrugUseDetail;
+import com.ts.entity.pdss.pdss.Beans.ias.TOperationDrugInfo;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugInteractionRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TMedicareRslt;
 import com.ts.service.cache.CacheProcessor;
@@ -60,6 +61,7 @@ public class PdssCache {
     public static String drugMedicare     = "drugMedicare";		// 公用缓存
     public static String diagnosisDict    = "diagnosisDict";    // 诊断字典
     public static String drugSideDict     = "drugSideDict";     // 不良反应
+    public static String OperationDrug    = "operationdrug";    // 手术使用药品
 	@Autowired
 	private CacheTemplate cacheTemplate;
 	
@@ -95,6 +97,17 @@ public class PdssCache {
 //    }
 	
 	
+	/**
+	 * 手术药品管理  - 手术编码 或者 名字 
+	 * @param key
+	 * @return
+	 * @throws Exception
+	 */
+	public List<TOperationDrugInfo> queryOperationDrugByCode(final String key ) throws Exception
+	{
+	    return cacheTemplate.cache(OperationDrug, key , null);
+	}
+	
 	
 	/**
 	 * 药品重复给药 
@@ -104,9 +117,15 @@ public class PdssCache {
 	 * @throws Exception
 	 */
 	public TDrugRepeat queryDrugRepeat(final String drugClassId1,final String drugClassId2) throws Exception{
-	    TDrugRepeat t = cacheTemplate.cache(drugRepeatCache , drugClassId1 + "_" + drugClassId2, null);
-	    if (t == null)
-	        t = cacheTemplate.cache(drugRepeatCache ,  drugClassId2 + "_" + drugClassId1, null);
+	    
+	    String drugClassIdx1 = drugClassId1;
+        String drugClassIdx2 = drugClassId2;
+        if(drugClassId1.compareTo(drugClassId2) > 0)
+        {
+            drugClassIdx1 = drugClassId2;
+            drugClassIdx2 = drugClassId1;
+        }
+	    TDrugRepeat t = cacheTemplate.cache(drugRepeatCache , drugClassIdx1 + "_" + drugClassIdx2, null);
         return t;
     }
 	
@@ -223,15 +242,15 @@ public class PdssCache {
     	if(drugA == null || drugB == null) return null;
     	String key1 = drugA.getDRUG_NO_LOCAL();
         String key2 = drugB.getDRUG_NO_LOCAL();
-        if (drugA.getDRUG_NO_LOCAL().compareTo(drugB.getDRUG_NO_LOCAL()) > 0)
+        if (key1.compareTo(key2) > 0)
         {
         	key1 = drugB.getDRUG_NO_LOCAL();
             key2 = drugA.getDRUG_NO_LOCAL();
         }
 //        Long l = System.currentTimeMillis();
     	TDrugInteractionRslt t = cacheTemplate.cache(drugInteraction , key1 + "_" + key2, null );
-    	if(t == null)
-    		t = cacheTemplate.cache(drugInteraction , key2 + "_" + key1, null );
+//    	if(t == null)
+//    		t = cacheTemplate.cache(drugInteraction , key2 + "_" + key1, null );
 //    	new CacheProcessor<TDrugInteractionRslt>() {
 //			@Override 
 //			public TDrugInteractionRslt handle() {

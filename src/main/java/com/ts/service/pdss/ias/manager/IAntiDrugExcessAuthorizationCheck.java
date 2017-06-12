@@ -8,6 +8,7 @@ import com.ts.entity.pdss.ias.RSBeans.TAntiDrugSecurityCheckResult;
  * @author Administrator
  *
  */
+@Deprecated
 public interface IAntiDrugExcessAuthorizationCheck 
 {
 	public TAntiDrugSecurityCheckResult Checker(TAntiDrugInput antiDrugInp);

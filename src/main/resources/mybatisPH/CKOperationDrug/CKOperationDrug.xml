@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CKOperationDrug">
+	
+	<!--表名   手术表-->
+	<sql id="tableName">
+		ck_operation_drug
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		o_id,
+		o_code,
+		o_name,
+		o_level,
+		o_drug_code,
+		o_drug_name,
+		o_drug_spce,
+		o_drug_form,
+		o_dept_code,
+		o_dept_name,
+		o_doctor_code,
+		o_doctor_name,
+		is_use,
+		createdate,
+		operatordate,
+		operatoruser
+	</sql>
+	<sql id="FieldValue">
+		#{o_id},
+		#{o_code},
+		#{o_name},
+		#{o_level},
+		#{o_drug_code},
+		#{o_drug_name},
+		#{o_drug_spce},
+		#{o_drug_form},
+		#{o_dept_code},
+		#{o_dept_name},
+		#{o_doctor_code},
+		#{o_doctor_name},
+		#{is_use},
+		#{createdate},
+		#{operatordate},
+		#{operatoruser}
+	</sql>
+	
+	
+	<select id="ckOperationDrugPage" parameterType="page" resultType="TOperationDrugInfo">
+		select 
+			<include refid="Field"></include>
+		from 
+		    <include refid="tableName"></include>
+		order by O_Code,o_dept_code, is_use desc 
+	</select>
+	
+	
+</mapper>

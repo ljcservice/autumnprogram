@@ -58,7 +58,8 @@ public class DrugIvEffectCheckerBean extends Persistent4DB implements  IDrugIvEf
 //	    	Map<String, TDrug> mapDrugs = pdssCache.queryDrugMap(pods);
 	    	// 药品分组
 	    	Map<String, List<TPatOrderDrug>> group = new HashMap<String, List<TPatOrderDrug>>(); 
-	    	for (int i = 0; i < pods.length; i++)
+	    	int counter = pods.length;
+	    	for (int i = 0; i < counter; i++)
 	    	{
 	    		TPatOrderDrug pod = pods[i];
 	    		TAdministration adm = pdssCache.queryAdministration(pod.getAdministrationID());
@@ -70,8 +71,7 @@ public class DrugIvEffectCheckerBean extends Persistent4DB implements  IDrugIvEf
 	    		if (configAdmin.indexOf(adm.getADMINISTRATION_ID() + ",") != -1)
 	    		{
 	    			List<TPatOrderDrug> list = group.get(pod.getRecMainNo());
-	    			if (list == null)
-	    				list = new ArrayList<TPatOrderDrug>();
+	    			if (list == null) list = new ArrayList<TPatOrderDrug>();
 	    			list.add(pod);
 	    			group.put(pod.getRecMainNo(), list);
 	    		}
@@ -93,14 +93,15 @@ public class DrugIvEffectCheckerBean extends Persistent4DB implements  IDrugIvEf
 	    		
 		        //Map<String, TDrug> drugs  = QueryUtils.queryDrug(pods, null, query);
 	            //TDrug[] arrDrugs = drugs.values().toArray(new TDrug[0]);
+	    		counter = indexList.size();
 		        // 药品分组配对
-		        for (int i = 0; i < indexList.size(); i++)
+		        for (int i = 0; i < counter; i++)
 		        {
 		        	TPatOrderDrug podDrugA = indexList.get(i);
 		        	TDrug drugA        =  po.getDrugMap(podDrugA.getDrugID());//pdssCache.queryDrugById(podDrugA.getDrugID());
 		        	if(drugA == null || drugA.getIV_CLASS_CODE() == null || "".equals(drugA.getIV_CLASS_CODE())) continue;
 		        	String drugIvCode1 = drugA.getIV_CLASS_CODE();
-		        	for (int j = i + 1; j < indexList.size(); j++)
+		        	for (int j = i + 1; j < counter; j++)
 		        	{
 		        		TPatOrderDrug podDrugB = indexList.get(j);
 		        		TDrug drugB =  po.getDrugMap(podDrugB.getDrugID()); //pdssCache.queryDrugById(podDrugB.getDrugID());

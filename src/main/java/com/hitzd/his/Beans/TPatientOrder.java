@@ -70,7 +70,7 @@ public class TPatientOrder implements java.io.Serializable
     public TDrug getDrugMap(String drugCode){
         if(drugMap.containsKey(drugCode))
         {
-            return drugMap.get(drugCode);
+            return new TDrug(drugMap.get(drugCode));
         }
         return null;
     }

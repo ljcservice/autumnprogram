@@ -25,6 +25,7 @@ import com.ts.service.pdss.pdss.Utils.QuerySingleUtils;
  */
 @Service
 @Transactional
+@Deprecated
 public class AntiDrugExcessAuthorizationCheckBean extends Persistent4DB implements IAntiDrugExcessAuthorizationCheck 
 {
     @Override
@@ -61,14 +62,14 @@ public class AntiDrugExcessAuthorizationCheckBean extends Persistent4DB implemen
                 case 3:
                     drugInfo = "特殊级抗菌药物";
                     if("E".equals(doctorLvl)|| "D".equals(doctorLvl) 
-                                || "C".equals(doctorLvl)  || "3".equals(doctorLvl))
+                                || "C".equals(doctorLvl)  || "1".equals(doctorLvl))
                     {
                         flag = true;
                     }
                     break;
                 case 2:
                     drugInfo = "限制级抗菌药物";
-                    if(!("A".equals(doctorLvl) || "1".equals(doctorLvl)))
+                    if(!("A".equals(doctorLvl) || "2".equals(doctorLvl)))
                     {
                         flag = true;
                     }

@@ -333,9 +333,9 @@ public class HttpUtil {
      * 测试方法 
      * @param args 
      */  
-    public static void main(String[] args) throws Exception {  
+    public static void main(String[] args) throws Exception {   
         
         String str =  HttpUtil.doPostSSL("https://10.10.50.13/app/oauth/verify.do", "{\"user\":\"kl\",\"pwd\":\"1\"}");
-        System.out.println(str);
+        System.out.println(str);  
     }  
 }

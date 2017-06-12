@@ -48,7 +48,8 @@ public class DrugAdministrationCheckerBean extends Persistent4DB implements IDru
 	        TPatOrderDrug[] pods = po.getPatOrderDrugs();
 //	        Map<String, TDrug> mapDrug = pdssCache.queryDrugMap(pods);
 	        if(pods == null) return new TDrugSecurityRslt();
-	        for (int i = 0; i < pods.length; i++)
+	        int counter = pods.length;
+	        for (int i = 0; i < counter; i++)
 	        {
 	        	TPatOrderDrug pod     = pods[i];
 	        	TDrug drug            =  po.getDrugMap(pod.getDrugID());

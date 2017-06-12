@@ -40,6 +40,8 @@ import com.ts.entity.pdss.pdss.RSBeans.TDrugInteractionRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugIvEffectRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSpecPeopleRslt;
+import com.ts.entity.pdss.pdss.RSBeans.ias.TAntiDrugCheckResult;
+import com.ts.entity.pdss.pdss.RSBeans.ias.TAntiDrugRslt;
 import com.ts.service.pdss.pdss.manager.IPatientSaveCheckResult;
 import com.ts.util.DateUtil;
 import com.ts.util.Logger;
@@ -901,6 +903,79 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
         }
     }
 
+    /**
+     * 抗菌药物审核 
+     * @param dsr
+     */
+    @Override
+    public void saveAntiDrugCheckInfo(TDrugSecurityRslt dsr)
+    {
+        try
+        {
+            if(dsr == null)
+            {
+                return ;
+            }
+            if(dsr.getCheckResults() == null)
+            {
+                return ;
+            }
+            TCheckResult[] tcrs = dsr.getCheckResults();
+            for(int i = 0 ; i<tcrs.length ;i++)
+            {
+                TCheckResult tcr = tcrs[i];
+                TAntiDrugCheckResult[] adcrs = tcr.getAdcrRslt();
+                if(adcrs == null || adcrs.length == 0)
+                {
+                    continue;
+                }
+                for(TAntiDrugCheckResult adcr : adcrs)
+                {
+                    List<TAntiDrugRslt> rslts = adcr.getAntiRs();
+                    for(TAntiDrugRslt rs : rslts)
+                    {
+                        if(rs.isResult()) continue;
+                        String checkType = "G";
+                        switch (rs.getCheckType())
+                        {
+                            case "AntiDrugExcessAuthorizationCheck":
+                                checkType = "R";
+                                break;
+                            case "AntiDrugSpecCheck":
+                                checkType = "G";
+                                break;
+                        }
+                        PageData param = new PageData();
+                        param.put("RS_ID",UuidUtil.get32UUID());
+                        param.put("DRUG_ID1", adcr.getDrug().getDRUG_NO_LOCAL());
+                        param.put("DRUG_ID1_Name", adcr.getDrug().getDRUG_NAME_LOCAL());
+                        param.put("REC_MAIN_NO1", adcr.getDrug().getRecMainNo());
+                        param.put("REC_SUB_NO1",adcr.getDrug().getRecSubNo());
+                        param.put("DRUG_ID2", "");
+                        param.put("DRUG_ID2_Name", "");
+                        param.put("REC_MAIN_NO2","");
+                        param.put("REC_SUB_NO2", "");
+                        param.put("NGROUPNUM", this.ngroupnum);
+                        param.put("ALERT_HINT",rs.getMemo());
+                        param.put("ALERT_LEVEL", checkType);
+                        param.put("ALERT_CAUSE", "系统审核");
+                        param.put("In_rs_type", this.in_rs_type);
+                        param.put("checkDate", CheckTime);
+                        param.put("RS_Drug_Type", "manager");//类型
+                        param.put("checkpeople", "");
+                        dao.save("rsDrugCheckRsltMapper.saveCheckRS", param);
+                    }
+                    
+                }
+            }
+        }
+        catch(Exception e )
+        {
+            
+        }
+    }
+    
+    
     /**
      *  保存汇总 
      * 类型

@@ -19,6 +19,7 @@ import com.ts.service.pdss.pdss.Utils.QuerySingleUtils;
  */
 @Service
 @Transactional
+@Deprecated
 public class AntiDrugSpecCheckBean extends Persistent4DB implements IAntiDrugSpecCheck
 {
     @Override
@@ -49,7 +50,7 @@ public class AntiDrugSpecCheckBean extends Persistent4DB implements IAntiDrugSpe
                 antiDrug.setDrug_name(antiDrugInp.getDrugName());
                 antiDrug.setOrder_No(antiDrugInp.getRecMainNo());
                 antiDrug.setOrder_Sub_No(antiDrugInp.getRecSubNo());
-                antiDrug.addAntiDrugResult(new TAntiDrugResult(TAntiDrugResult.AntiDrugSpecCheck,"该药品为特殊药品请及时送检标本！",false,"抗菌药"));
+                antiDrug.addAntiDrugResult(new TAntiDrugResult(TAntiDrugResult.AntiDrugSpecCheck,"该药品为[特殊级抗菌药品]使用前 请及时送检标本！并且用药前请进行会诊！",false,"抗菌药"));
             }
             else
             {

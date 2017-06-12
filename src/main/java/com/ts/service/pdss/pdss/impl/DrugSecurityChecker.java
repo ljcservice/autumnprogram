@@ -1,6 +1,5 @@
 package com.ts.service.pdss.pdss.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -17,6 +16,7 @@ import com.ts.entity.pdss.pdss.RSBeans.TCheckResult;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
 import com.ts.service.pdss.pdss.Utils.CommonUtils;
 import com.ts.service.pdss.pdss.Utils.QueryUtils;
+import com.ts.service.pdss.pdss.manager.IAntiDrugSecurityChecker;
 import com.ts.service.pdss.pdss.manager.IDrugAdministrationChecker;
 import com.ts.service.pdss.pdss.manager.IDrugAllergenChecker;
 import com.ts.service.pdss.pdss.manager.IDrugDiagChecker;
@@ -29,6 +29,7 @@ import com.ts.service.pdss.pdss.manager.IDrugSideChecker;
 import com.ts.service.pdss.pdss.manager.IDrugSpecPeopleChecker;
 import com.ts.service.pdss.pdss.manager.IMedicareChecker;
 import com.ts.service.pdss.pdss.manager.IPatientSaveCheckResult;
+import com.ts.util.Logger;
 
 /**
  * 用药安全检查模块，该模块可以检查所有安全检查子项 包括相互作用、配伍、禁忌等
@@ -39,6 +40,8 @@ import com.ts.service.pdss.pdss.manager.IPatientSaveCheckResult;
 @Service
 public class DrugSecurityChecker implements IDrugSecurityChecker
 {
+    
+    Logger logger = Logger.getLogger("DrugSecurityChecker");
     /* 相互作用检查 */
     @Resource(name = "drugInteractionCheckerBean")
     private IDrugInteractionChecker drugInteractionCheckerBean;
@@ -231,7 +234,7 @@ public class DrugSecurityChecker implements IDrugSecurityChecker
     {
     	return this.drugSideCheckerBean.Check(DrugIds, AdminIds, SensitIds);
     }
-    /* 相互作用检查 */
+    /* 医保检查 */
     @Resource(name = "medicareChecker")
     private IMedicareChecker medicareCheckerBean;
     
@@ -245,6 +248,16 @@ public class DrugSecurityChecker implements IDrugSecurityChecker
 	{
 		return null;
 	}
+	
+	@Resource(name="antiDrugSecurityChecker")
+	private IAntiDrugSecurityChecker adsc;
+	
+	@Override
+    public TDrugSecurityRslt AntiDrugChecker(TPatientOrder po) 
+    {
+        return adsc.Check(po);
+    }
+	
     /**
      * 参数字符串及字符串数组
      * @param doctorInfo    -- doctorDeptID,doctorDeptName,doctorID,doctorName,doctorTitleID,doctorTitleName
@@ -275,47 +288,54 @@ public class DrugSecurityChecker implements IDrugSecurityChecker
     public TDrugSecurityRslt DrugSecurityCheck(TPatientOrder po)
     {
         TDrugSecurityRslt dsr = new TDrugSecurityRslt();
+        StringBuffer sb = new StringBuffer();
+        long l = System.currentTimeMillis();
         /* 相互作用检查 */
         long xx = System.currentTimeMillis();
         this.drugInteractionCheckerBean.Check(po).CopyInteractionCheckResultTo(dsr);
-        System.out.println("互动信息:" + (System.currentTimeMillis() - xx));
+        sb.append(" 互动信息:" + (System.currentTimeMillis() - xx));
         /* 配伍审查 */
         xx = System.currentTimeMillis();
         this.drugIvEffectCheckerBean.Check(po).CopyIvEffectCheckResultTo(dsr);
-        System.out.println("配伍审查:" + (System.currentTimeMillis() - xx));
+        sb.append(" 配伍审查:" + (System.currentTimeMillis() - xx));
         /* 禁忌症审查 */
         xx = System.currentTimeMillis();
 //        //   TODO     
         this.drugDiagCheckerBean.Check(po).CopyDrugDiagInfoRsltTo(dsr);
-        System.out.println("禁忌症  :" + (System.currentTimeMillis() - xx));
+        sb.append(" 禁忌症  :" + (System.currentTimeMillis() - xx));
         /* 特殊人群审查 */
         xx = System.currentTimeMillis();
         this.drugSpecPeopleCheckerBean.Check(po).CopyDrugSpecPeopleRsltTo(dsr);
-        System.out.println("特殊人群:" + (System.currentTimeMillis() - xx));
+        sb.append(" 特殊人群:" + (System.currentTimeMillis() - xx));
         /* 重复成份审查 */
         xx = System.currentTimeMillis();
         this.drugIngredientCheckerBean.check(po).CopyDrugIngreDientCheckRsltTo(dsr);
-        System.out.println("重复成份:" + (System.currentTimeMillis() - xx));
+        sb.append(" 重复成份:" + (System.currentTimeMillis() - xx));
         /* 用药途径审查 */
         xx = System.currentTimeMillis();
         this.drugAdministrationCheckerBean.Check(po).CopyAdministrationCheckRsltTo(dsr);
-        System.out.println("用药途径:" + (System.currentTimeMillis() - xx));
+        sb.append(" 用药途径:" + (System.currentTimeMillis() - xx));
         /* 过敏药物审查 */
         xx = System.currentTimeMillis();
         this.drugAllergenCheckerBean.Check(po).CopyDrugAllergenCheckRsltTo(dsr);
-        System.out.println("过敏药物:" + (System.currentTimeMillis() - xx));
+        sb.append(" 过敏药物:" + (System.currentTimeMillis() - xx));
         /* 药物剂量审查 */
         xx = System.currentTimeMillis();
         this.drugDosageCheckerBean.Check(po).CopyDrugDosageCheckRsltTo(dsr);
-        System.out.println("药物剂量:" + (System.currentTimeMillis() - xx));
+        sb.append(" 药物剂量:" + (System.currentTimeMillis() - xx));
         /* 异常信号审查 */
         xx = System.currentTimeMillis();
         this.drugSideCheckerBean.Check(po).CopySideCheckRsltTo(dsr);
-        System.out.println("不良反应:" + (System.currentTimeMillis() - xx));
+        sb.append(" 不良反应:" + (System.currentTimeMillis() - xx));
 //        /* 医保审查 */
 //        xx = System.currentTimeMillis();
 //        this.medicareCheckerBean.Check(po).CopyMedicareCheckResultTo(dsr);
 //        System.out.println("医保用药:" + (System.currentTimeMillis() - xx));
+        xx = System.currentTimeMillis();
+        this.adsc.Check(po).CopyAdcrCheckRsltTo(dsr);
+        sb.append(" 抗拒药物:" + (System.currentTimeMillis() - xx));
+        sb.append(" 总时长：" + (System.currentTimeMillis() - l));
+        logger.debug(sb.toString());
         return dsr;
     }
     
@@ -365,12 +385,12 @@ public class DrugSecurityChecker implements IDrugSecurityChecker
     		crtInfo += " 特殊人群审查结果对象:"		+ crt.getDrugSpecPeopleRslt().length  	+ " 个," + charNR;
     		crtInfo += " 不良反应审查结果对象:"		+ crt.getSideRslt().length            	+ " 个," + charNR;
     		crtInfo += " 医保审查:"					+ crt.getMedicareRslt().length			+ " 个," + charNR;
-    		System.out.println("====================== 检查药品信息 ======================");
-    		System.out.println(" [ " + rsInfo + " ] ");
-    		System.out.println("====================== 检查结果信息  ======================");
-    		System.out.println(crt.getCheckResult());
-    		System.out.println("====================== 检查各结构个数  ====================");
-    		System.out.println(crtInfo);
+    		logger.debug("====================== 检查药品信息 ======================");
+    		logger.debug(" [ " + rsInfo + " ] ");
+    		logger.debug("====================== 检查结果信息  ======================");
+    		logger.debug(crt.getCheckResult());
+    		logger.debug("====================== 检查各结构个数  ====================");
+    		logger.debug(crtInfo);
     	}
     }
     

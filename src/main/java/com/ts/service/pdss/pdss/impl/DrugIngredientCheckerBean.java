@@ -27,7 +27,6 @@ import com.ts.service.pdss.pdss.manager.IDrugIngredientChecker;
  *
  */
 @Service
-@Transactional
 public class DrugIngredientCheckerBean extends Persistent4DB implements IDrugIngredientChecker
 {
 	private final static Logger log = Logger.getLogger(DrugIngredientCheckerBean.class);
@@ -37,7 +36,7 @@ public class DrugIngredientCheckerBean extends Persistent4DB implements IDrugIng
 	
     @Override
     /**
-     *  审查方法
+     *  重复成分审查方法
      *  po 医嘱
      *  改造完毕
      */
@@ -45,54 +44,40 @@ public class DrugIngredientCheckerBean extends Persistent4DB implements IDrugIng
     {
     	try
     	{
-	        //setQueryCode("PDSS");
 	        TDrugSecurityRslt result = new TDrugSecurityRslt();
 	        TPatOrderDrug[] pods = po.getPatOrderDrugs();
-	        String[] drugIDS   = new String[pods.length];
-	        for(int i = 0 ;i<pods.length;i++)
-	        {
-	            TPatOrderDrug pod = pods[i];
-	            drugIDS[i] = pod.getDrugID();
-	        }
-	        //List<TDrug> drugs = (List<TDrug>)QueryUtils.queryDrug(drugIDS, null, query);
-	        //Map<String, TDrug> drugMap = (Map<String, TDrug>)QueryUtils.queryDrug(pods, null, query);
-//	        Map<String, TDrug> drugMap = 
-	        
 	        //for(TPatOrderDrug pod :pods)
-	        for (int i = 0; i < pods.length; i++)
+	        int counter = pods.length;
+	        for (int i = 0; i < counter; i++)
 	        {
 	        	TPatOrderDrug podA = pods[i];
 	        	// 此处要修改drugA的医嘱号，所以得new一个新的drug
 	        	TDrug drugA = po.getDrugMap(podA.getDrugID()); // CommonUtils.getDrugInfoOne(drugs, pod);drugMap.get(podA.getDrugID());
-	        	if(drugA == null)
-	        		continue;
-	        	drugA = new TDrug(drugA);
+	        	if(drugA == null) continue;
+//	        	drugA = new TDrug(drugA);
 	        	List<TDrug> listdrugs      = new ArrayList<TDrug>(); 
 	        	List<TDrugRepeat> listInfo = new ArrayList<TDrugRepeat>();
-	        	for (int j = i+1; j < pods.length; j++ )
+	        	for (int j = i + 1; j < counter; j++ )
 	        	{
-	        		if (i == j) continue;
+//	        		if (i == j) continue;
 	        		// TODO: 此处可以继续优化，A和B重复时，直接将结果放到A和B的里面即可
 	        		// 有空时再优化
 		        	TPatOrderDrug podB = pods[j];
 		        	// 此处要修改drugB的医嘱号，所以得new一个新的drug
 	        		TDrug drugB =  po.getDrugMap(podB.getDrugID());
-	        		if(drugB == null)continue;
-	        		drugB = new TDrug(drugB);
-	        		
-	        		if(drugA.getDRUG_NO_LOCAL().equals(drugB.getDRUG_NO_LOCAL())) continue;
+	        		if(drugB == null) continue;
+	        		if (podA.getDrugID().equalsIgnoreCase(podB.getDrugID()))  continue;
+//	        		drugB = new TDrug(drugB);
+//	        		if(drugA.getDRUG_NO_LOCAL().equalsIgnoreCase(drugB.getDRUG_NO_LOCAL())) continue;
 	        		String drugClassIdA = drugA.getDRUG_CLASS_ID();
 	        		String drugClassIdB = drugB.getDRUG_CLASS_ID();
 	        		if(drugClassIdA == null || drugClassIdB == null) continue;
-	        		
 	        		TDrugRepeat drugRep = pdssCache.queryDrugRepeat(drugClassIdA, drugClassIdB);
 	        		if(drugRep == null) continue;
-	        		
 	        		drugB.setRecMainNo(podB.getRecMainNo());
 	        		drugB.setRecSubNo(podB.getRecSubNo());
 	        		listdrugs.add(drugB);
 	        		listInfo.add(drugRep);
-	        		
 //	        		if(drugA.getDRUG_CLASS_ID().equals(drugB.getDRUG_CLASS_ID()))
 //	        		{
 //	        			drugB.setRecMainNo(podB.getRecMainNo());
@@ -112,7 +97,6 @@ public class DrugIngredientCheckerBean extends Persistent4DB implements IDrugIng
 	        		result.regIngredientCheckResult(drugA, igRs);    
 	        	}
 	        }
-	        //drugs = null;
 	        return result;
     	}
     	catch(Exception e)

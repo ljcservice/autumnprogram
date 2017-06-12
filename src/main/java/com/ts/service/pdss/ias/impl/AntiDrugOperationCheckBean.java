@@ -16,8 +16,7 @@ import com.ts.service.pdss.ias.manager.IAntiDrugOperationCheck;
  * 手术 抗菌药品审查 
  * @author Administrator
  */
-@Service
-@Transactional
+@Deprecated
 public class AntiDrugOperationCheckBean extends Persistent4DB implements IAntiDrugOperationCheck
 {
 

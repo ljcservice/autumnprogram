@@ -1,33 +1,21 @@
 package com.ts.service.pdss.pdss.impl;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.hitzd.his.Beans.TPatOrderDrug;
 import com.hitzd.his.Beans.TPatientOrder;
 import com.hitzd.persistent.Persistent4DB;
-import com.ts.dao.DaoSupportPdss;
 import com.ts.entity.pdss.pdss.Beans.TDrug;
 import com.ts.entity.pdss.pdss.Beans.TDrugInteractionInfo;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugInteractionRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
-import com.ts.service.cache.CacheProcessor;
-import com.ts.service.cache.CacheTemplate;
-import com.ts.service.pdss.pdss.Cache.DBSnapshot;
 import com.ts.service.pdss.pdss.Cache.PdssCache;
-import com.ts.service.pdss.pdss.Utils.QueryUtils;
 import com.ts.service.pdss.pdss.manager.IDrugInteractionChecker;
-import com.ts.util.PageData;
+import com.ts.util.Logger;
 
 /**
  * 相互作用审查子模块
@@ -37,7 +25,7 @@ import com.ts.util.PageData;
 @Service
 public class DrugInteractionCheckerBean extends Persistent4DB implements  IDrugInteractionChecker
 {
-    private final static Logger log = Logger.getLogger(DrugInteractionCheckerBean.class);
+    private final static Logger log = Logger.getLogger("DrugInteractionCheckerBean");
     
 	@Resource(name = "pdssCache")
 	private PdssCache pdssCache; 
@@ -64,60 +52,73 @@ public class DrugInteractionCheckerBean extends Persistent4DB implements  IDrugI
 //            	ids.add(tp.getDrugID());
 //            }
 //            List<TDrug> drugs = pdssCache.queryDrugListByIds(ids);
-            
+            int count = 0;
             // 下面循环无重复的药品码之间的配对
             // 将配对结果放入缓存中
             // 后面所有的审查结果从缓存中取出来
             // 只有这个循环读取数据库
-            for (int i = 0; i < pods.length; i++)
+            long l1 = System.currentTimeMillis() ;
+            int counter = pods.length;
+            for (int i = 0; i < counter; i++)
             {
             	TPatOrderDrug podA = pods[i];
             	TDrug drugA =  po.getDrugMap(podA.getDrugID());
-            	if(drugA == null || "".equals(drugA.getDRUG_ID())) continue;
-            	Long ff = System.currentTimeMillis();
-            	for (int j = i + 1 ; j < pods.length; j++)
+            	if(drugA == null) continue;
+            	for (int j = i + 1 ; j < counter; j++)
             	{
-            		if (i == j) continue;
+            		//if (i == j) continue;
             		TPatOrderDrug podB = pods[j];
             		TDrug drugB =  po.getDrugMap(podB.getDrugID());
-            		if(drugB == null || "".equals(drugB.getDRUG_ID())) continue;
+            		if(drugB == null ) continue; 
             		if (podA.getDrugID().equalsIgnoreCase(podB.getDrugID()))
             			continue;
                     // 此处从缓存中取结果=====================================
-                    String key1 = podA.getDrugID();
-                    String key2 = podB.getDrugID();
+//                    String key1 = podA.getDrugID();
+//                    String key2 = podB.getDrugID();
 //                    TDrug drugA = pdssCache.queryDrugById(key1);
 //                    TDrug drugB = pdssCache.queryDrugById(key2);
                     TDrugInteractionRslt diRslt = pdssCache.queryDrugInteraction(drugA,drugB);
                     if ((diRslt != null) && (diRslt.getDrugInteractionInfo().length > 0))
                     {
-                        TDrugInteractionRslt copyCache = diRslt.deepClone();
-                    	copyCache.setRecMainNo(podA.getRecMainNo());
-                    	copyCache.setRecSubNo(podA.getRecSubNo());
-                    	copyCache.setRecMainNo2(podB.getRecMainNo());
-                    	copyCache.setRecSubNo2(podB.getRecSubNo());
+                        TDrugInteractionRslt copyCache = diRslt;//diRslt.deepClone();
                     	/* 对每一个返回的药品标注上 医嘱序号 */
                     	// 需要判断diRslt中的drugA和这里的drugA是否一样，不一样的话需要互换一下
                     	// 确保这里的A始终在diRslt的A上面
-                        if (!copyCache.getDrugA().getDRUG_NO_LOCAL().equals(podA.getDrugID()))
-                        {
-                        	TDrug drugTemp = copyCache.getDrugB();
-                        	copyCache.setDrugB(copyCache.getDrugA());
-                        	copyCache.setDrugA(drugTemp);
-                        }
-                        copyCache.getDrugA().setRecMainNo(podA.getRecMainNo());
-                       	copyCache.getDrugA().setRecSubNo(podA.getRecSubNo());
-                       	/* 对每一个返回的药品标注上 医嘱序号 */
-                       	copyCache.getDrugB().setRecMainNo(podB.getRecMainNo());
-                       	copyCache.getDrugB().setRecSubNo(podB.getRecSubNo());
+//                        if (!copyCache.getDrugA().getDRUG_NO_LOCAL().equals(podA.getDrugID()))
+//                        {
+//                        	TDrug drugTemp = copyCache.getDrugB();
+//                        	copyCache.setDrugB(copyCache.getDrugA());
+//                        	copyCache.setDrugA(drugTemp);
+//                        }
+//                        copyCache.setRecMainNo(podA.getRecMainNo());
+//                        copyCache.setRecSubNo(podA.getRecSubNo());
+//                        copyCache.setRecMainNo2(podB.getRecMainNo());
+//                        copyCache.setRecSubNo2(podB.getRecSubNo());
+//                        copyCache.getDrugA().setRecMainNo(podA.getRecMainNo());
+//                       	copyCache.getDrugA().setRecSubNo(podA.getRecSubNo());
+//                       	/* 对每一个返回的药品标注上 医嘱序号 */
+//                       	copyCache.getDrugB().setRecMainNo(podB.getRecMainNo());
+//                       	copyCache.getDrugB().setRecSubNo(podB.getRecSubNo());
+                        
+                        
+                        copyCache.setRecMainNo(podA.getRecMainNo());
+                        copyCache.setRecSubNo(podA.getRecSubNo());
+                        copyCache.setRecMainNo2(podB.getRecMainNo());
+                        copyCache.setRecSubNo2(podB.getRecSubNo());
+                        drugA.setRecMainNo(podA.getRecMainNo());
+                        drugA.setRecSubNo(podA.getRecSubNo());
+                        drugB.setRecMainNo(podB.getRecMainNo());
+                        drugB.setRecSubNo(podB.getRecSubNo());
+                        copyCache.setDrugA(drugA);
+                        copyCache.setDrugB(drugB);
                        	dsr.regInteractionCheckResult(copyCache.getDrugA(), copyCache.getDrugB(), copyCache);
                     }
+                    count++;
             	}
-            	
-            	System.out.println("次循环结束时间 ： " + (System.currentTimeMillis() - ff));
             }
+            log.debug("执行次数:" + count + ":" + (System.currentTimeMillis() - l1));
 //            drugs = null;
-            return  dsr;
+             return  dsr;
     	}
     	catch(Exception e)
     	{

@@ -44,6 +44,7 @@ public class DrugAllergenCheckerBean  implements IDrugAllergenChecker
     	{
 	        //this.setQueryCode("PDSS");
 	        TDrugSecurityRslt result = new TDrugSecurityRslt();
+	        if(true)return result;
 	        /* 医嘱药物所有过敏信息类 */
 	        TPatOrderDrugSensitive[] podsensitive = po.getPatOrderDrugSensitives();
 	        if (podsensitive == null)

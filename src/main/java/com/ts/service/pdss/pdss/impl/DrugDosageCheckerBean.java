@@ -66,7 +66,8 @@ public class DrugDosageCheckerBean extends Persistent4DB implements IDrugDosageC
 	        Integer day = po.getPatient().calAgeDays().intValue();  
 	        /* 如果检测参数为空 则不进行检查  weight == 0 && height == 0 &&  */
 	        if(day == 0) return new TDrugSecurityRslt();
-	        for(int i = 0 ;i<po.getPatOrderDrugs().length;i++)
+	        int counter = po.getPatOrderDrugs().length;
+	        for(int i = 0 ; i < counter ; i++)
 	        {
 	            TPatOrderDrug pod = po.getPatOrderDrugs()[i];
 	            /* 每次使用剂量 */

@@ -159,6 +159,12 @@ public interface IDrugSecurityChecker
     public TDrugSecurityRslt MedicareCheckerA(String[] doctorInfo, String[] patientInfo, String[][] drugInfo, String[][] diagnosisInfo, String[][] sensitiveInfo,String[][] patSigns,String[] patOperation);
     
     /**
+     * 抗菌药物审核
+     * @param po
+     * @return
+     */
+    public TDrugSecurityRslt AntiDrugChecker(TPatientOrder po);
+    /**
      * 返回单个药品信息 
      * @param drugCode
      * @return

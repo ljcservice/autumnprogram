@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 
+import com.ts.entity.pdss.pdss.RSBeans.ias.TAntiDrugCheckResult;
+
 public class TCheckResult 
 {
 	private String enter = "#A#D";
@@ -314,6 +316,37 @@ public class TCheckResult
 		return dhfList.toArray(new TDrugHarmfulRslt[0]);
 	}
 
+	
+	// 抗菌药物
+	private List<TAntiDrugCheckResult> adcrList = new ArrayList<TAntiDrugCheckResult>();
+	public void addTAntiDrugCheckResult(TAntiDrugCheckResult adcr)
+	{
+	    this.adcrList.add(adcr);
+	    if("R".equals(adcr.alertLevel))
+            this.adcrRedCount++;
+        else if("Y".equals(adcr.alertLevel))
+            this.adcrYellowCount++;
+    }
+    private int adcrRedCount = 0;
+    private int adcrYellowCount = 0;
+    public void CopyADCRRsltTo(TCheckResult cr)
+    {
+        cr.adcrList = this.adcrList;
+        cr.adcrRedCount = this.adcrRedCount;
+        cr.adcrYellowCount = this.adcrYellowCount ;
+    }
+    
+    /**
+     * 抗菌药物 审查结果对象
+     * @return
+     */
+    @XmlElement(name="getAdcrRslt")
+    public TAntiDrugCheckResult[] getAdcrRslt()
+    {
+        return adcrList.toArray(new TAntiDrugCheckResult[0]);
+    }
+
+    
 	//医保审查
 	private List<TMedicareRslt> mcareList = new ArrayList<TMedicareRslt>();
 	public void addMedicareRslt(TMedicareRslt mcare)
@@ -334,6 +367,19 @@ public class TCheckResult
 	{
 	    return (TMedicareRslt[])mcareList.toArray(new TMedicareRslt[0]);
 	}
+	
+	@XmlElement(name="getAdcrRedCount")
+	public int getAdcrRedCount()
+    {
+        return adcrRedCount;
+    }
+
+	@XmlElement(name="getAdcrYellowCount")
+    public int getAdcrYellowCount()
+    {
+        return adcrYellowCount;
+    }
+    
 	
 	@XmlElement(name="getAdmRedCount")
 	public int getAdmRedCount() {

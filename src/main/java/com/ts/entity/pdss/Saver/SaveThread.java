@@ -60,10 +60,12 @@ public class SaveThread implements Runnable
 				        patientSaveBean.saveDrugDosageCheckInfo(crc.getDsr());
 				        /* 异常信号审查 */
 				        patientSaveBean.saveDrugSideCheckInfo(crc.getDsr());
+				        /* 抗菌药物审查*/
+				        patientSaveBean.saveAntiDrugCheckInfo(crc.getDsr());
 				        /* 保存审查总体结构 */
 				        patientSaveBean.saveDrugSecurityCheckInfo(po, crc.getDsr());
 				        /* 抗菌药物 审查  结果保存 */
-				        patientSaveBean.saveAntiDrugSecutity(po,crc.getAdsr());
+//				        patientSaveBean.saveAntiDrugSecutity(po,crc.getAdsr());
 				        /* 预防用药信息保存  */
 				        patientSaveBean.savePreveUseDrug(po);
 				        /* 治疗用药信息保存  */

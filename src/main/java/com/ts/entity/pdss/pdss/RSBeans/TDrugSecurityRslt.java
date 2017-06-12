@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlElement;
 
 import com.ts.entity.pdss.pdss.Beans.TDrug;
 import com.ts.entity.pdss.pdss.Beans.TDrugCheckInfoCollet;
+import com.ts.entity.pdss.pdss.RSBeans.ias.TAntiDrugCheckResult;
 
 /**
  * 药物安全审查 结果集
@@ -203,6 +204,21 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
             dsr.chkRslt.put(drugs[i], cr1);
         }
     }
+    
+    /** 抗菌药物审查结果复制  */
+    public void CopyAdcrCheckRsltTo(TDrugSecurityRslt dsr)
+    {
+        TDrug[] drugs = getDrugs();
+        for (int i = 0; i < drugs.length; i++)
+        {
+            TCheckResult cr = chkRslt.get(drugs[i]);
+            TCheckResult cr1 = dsr.chkRslt.get(drugs[i]);
+            if (cr1 == null)
+                cr1 = new TCheckResult();
+            cr.CopyADCRRsltTo(cr1); 
+            dsr.chkRslt.put(drugs[i], cr1);
+        }
+    }
 
     /**
      * 注册注册相互作用检查结果
@@ -373,6 +389,23 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
             chkRslt.put(drug, cr);
         }
         cr.addDrugSpecPeopleRslt(dspr);
+    }
+    
+    /**
+     * 注册抗菌药物信息
+     * 
+     * @param drug
+     * @param dspr
+     */
+    public void regAntiDrugCheckResult(TDrug drug,TAntiDrugCheckResult adcr)
+    {
+        TCheckResult cr = chkRslt.get(drug);
+        if (cr == null)
+        {
+            cr = new TCheckResult();
+            chkRslt.put(drug, cr);
+        }
+        cr.addTAntiDrugCheckResult(adcr);
     }
 
     /**

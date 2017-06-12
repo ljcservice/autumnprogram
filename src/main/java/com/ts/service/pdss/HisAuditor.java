@@ -26,6 +26,7 @@ import com.hitzd.his.Beans.TPatOperation;
 import com.hitzd.his.Beans.TPatOrderDiagnosis;
 import com.hitzd.his.Beans.TPatOrderDrug;
 import com.hitzd.his.Beans.TPatOrderDrugSensitive;
+import com.hitzd.his.Beans.TPatOrderVisitInfo;
 import com.hitzd.his.Beans.TPatVitalSigns;
 import com.hitzd.his.Beans.TPatientOrder;
 import com.hitzd.his.Beans.TPreveUseDrug;
@@ -227,6 +228,12 @@ public class HisAuditor implements IHisAuditor
 	    try
 	    {
 //	        po.setPreveUseDrug(CommonUtils.getPreveUseDrug(PreveUseInfo));
+	        po.setDoctorDeptName(preveUseInfo[0].getDEPT_NAME());
+	        po.setDoctorName(preveUseInfo[0].getDOCTOR_NAME());
+	        TPatOrderVisitInfo  patVisit =  new TPatOrderVisitInfo();
+	        patVisit.setPatientID(preveUseInfo[0].getPATIENT_ID());
+	        patVisit.setVisitID(preveUseInfo[0].getVISIT_ID());
+	        po.setPatVisitInfo(patVisit);
 	    	po.setPreveUseDrug(preveUseInfo);
 	        SaveBeanRS sbRS = new SaveBeanRS();
 	        sbRS.setPo(po);
@@ -258,7 +265,12 @@ public class HisAuditor implements IHisAuditor
 	    pscr.setNgroupnum(UUID.randomUUID().toString());
 	    try
 	    {
-//	        po.setTreatUseDrug(CommonUtils.getTreatUseDrug(TreatUseInfo));
+	        po.setDoctorDeptName(TreatUseInfo[0].getDEPT_NAME());
+            po.setDoctorName(TreatUseInfo[0].getDOCTOR_NAME());
+            TPatOrderVisitInfo  patVisit =  new TPatOrderVisitInfo();
+            patVisit.setPatientID(TreatUseInfo[0].getPATIENT_ID());
+            patVisit.setVisitID(TreatUseInfo[0].getVISIT_ID());
+            po.setPatVisitInfo(patVisit);
 	    	po.setTreatUseDrug(TreatUseInfo);
             SaveBeanRS sbRS = new SaveBeanRS();
             sbRS.setPo(po);
@@ -574,87 +586,87 @@ public class HisAuditor implements IHisAuditor
 	        tcr.set("DRUG_OVER", String.valueOf(System.currentTimeMillis() - x1));                //药物安全审查结束
 		}
 		/* TODO 让前端进行过滤 ，  判断是否开启  抗菌物安全审查  */
-		if(Config.getIntParamValue("ADSSSwitcher") == 1) 
-        {
-		    x1 = System.currentTimeMillis();
-		    
-    		/* 抗菌药物审查数据组织 */
-    		TPatOrderDiagnosis[] podi = po.getPatOrderDiagnosiss();
-    		String[] diagnosis = new String[podi.length];
-    		for(int i = 0 ; i < podi.length ; i++)
-    		{
-    			diagnosis[i] = podi[i].getDiagnosisDictID();
-    		}
-    		String[] doctorInfo = new String[6]; 
-            doctorInfo[0] = po.getDoctorDeptID();
-            doctorInfo[1] = po.getDoctorDeptName();
-            doctorInfo[2] = po.getDoctorID();
-            doctorInfo[3] = po.getDoctorName();
-            doctorInfo[4] = po.getDoctorTitleID();
-            doctorInfo[5] = po.getDoctorTitleName();
-            /* 手术记录信息 */
-            String[] patOper = new String[5];
-            TPatOperation[] operator = po.getPatOperation();
-            if(operator != null && operator.length  > 0)
-            {
-                patOper[0] = operator[0].getOperCode();
-                patOper[1] = operator[0].getOperName(); 
-                patOper[2] = operator[0].getOperLevel(); 
-                patOper[3] = operator[0].getOperStartTime(); 
-                patOper[4] = operator[0].getOperEndTime();
-            }
-    		List<TAntiDrugSecurityResult> list = new ArrayList<TAntiDrugSecurityResult>();
-    		int count = 0 ;
-    		for(TPatOrderDrug pod : po.getPatOrderDrugs())
-    		{
-    			String[]  orderDrug = new String[7];
-    			/* 判断是否 为抗菌药物  */
-    			if(!DrugUtils.isKJDrug(pod.getDrugID()))
-    				continue;
-    			count++;
-    			orderDrug[0] = pod.getDrugID();
-    			orderDrug[1] = pod.getDrugName();
-    			orderDrug[2] = pod.getRecMainNo();
-    			orderDrug[3] = pod.getRecSubNo();
-    			orderDrug[4] = pod.getStartDateTime();
-    			orderDrug[5] = pod.getStopDateTime();
-    			orderDrug[6] = pod.getUseType();
-    			TAntiDrugSecurityResult adsr = AntiDrugSecurityCheckerA(doctorInfo, diagnosis, patOper, orderDrug, new String[]{po.getPatVisitInfo().getPatientID(),po.getPatVisitInfo().getVisitID()});
-    			/* 去掉安全用药的无用审核
-    			if(crc.getDsr() == null)
-    			{
-    				TDrugSecurityRslt drugsr1 = null;
-    				TPatientOrder po1 = CommonUtils.getPatientOrder(doctorInfo, new String[]{}, new String[][]{}, new String[][]{}, new String[][]{}, new String[][]{},patOper);
-    				po1.setPatOrderDrugs(new TPatOrderDrug[]{pod});
-    				drugsr1  = this.DrugSpecPeopleCheck(po1);
-    				if(drugsr1.getCheckResults() != null)adsr.setDspList(drugsr1.getCheckResults()[0].getDrugSpecPeopleRslt());
-    				drugsr1  =  this.DrugAllergenCheck(po1);
-    				if(drugsr1.getCheckResults() != null)adsr.setAllergenRslt(drugsr1.getCheckResults()[0].getDrugAllergenRslt()); 
-    				drugsr1  = this.DrugDosageCheck(po1);
-    				if(drugsr1.getCheckResults() != null)adsr.setDosageRslt(drugsr1.getCheckResults()[0].getDrugDosageRslt());
-    			}
-    			else
-    			{
-    				TDrugSecurityRslt drugsr1 = crc.getDsr();
-    				TDrug drug = new TDrug();
-    				drug.setDRUG_NO_LOCAL(pod.getDrugID());
-    				drug.setRecMainNo(pod.getRecMainNo());
-    				drug.setRecSubNo(pod.getRecSubNo());
-    				if(drugsr1.getCheckResult(drug) != null){
-	    				adsr.setDspList(drugsr1.getCheckResult(drug).getDrugSpecPeopleRslt());
-	    				adsr.setAllergenRslt(drugsr1.getCheckResult(drug).getDrugAllergenRslt());
-	    				adsr.setDosageRslt(drugsr1.getCheckResult(drug).getDrugDosageRslt());
-	    			}
-    			}
-    			*/
-    			// 在不存在问题情况下不保存 
-    			if(adsr.getTAntiDrugSecurity().length != 0) list.add(adsr);
-    		}
-    		crc.setAdsr((TAntiDrugSecurityResult[])list.toArray(new TAntiDrugSecurityResult[0]));
-    		System.out.println("抗菌药物审查结束:" + (System.currentTimeMillis() - x1) + "抗菌药物数量: " + count);
-    		tcr.set("ANTI_OVER", String.valueOf(System.currentTimeMillis() - x1));                //抗菌药物审查结束
-    		tcr.set("ANTI_NUM", String.valueOf(count));                                           //抗菌药物数量
-        }
+//		if(Config.getIntParamValue("ADSSSwitcher") == 1) 
+//        {
+//		    x1 = System.currentTimeMillis();
+//		    
+//    		/* 抗菌药物审查数据组织 */
+//    		TPatOrderDiagnosis[] podi = po.getPatOrderDiagnosiss();
+//    		String[] diagnosis = new String[podi.length];
+//    		for(int i = 0 ; i < podi.length ; i++)
+//    		{
+//    			diagnosis[i] = podi[i].getDiagnosisDictID();
+//    		}
+//    		String[] doctorInfo = new String[6]; 
+//            doctorInfo[0] = po.getDoctorDeptID();
+//            doctorInfo[1] = po.getDoctorDeptName();
+//            doctorInfo[2] = po.getDoctorID();
+//            doctorInfo[3] = po.getDoctorName();
+//            doctorInfo[4] = po.getDoctorTitleID();
+//            doctorInfo[5] = po.getDoctorTitleName();
+//            /* 手术记录信息 */
+//            String[] patOper = new String[5];
+//            TPatOperation[] operator = po.getPatOperation();
+//            if(operator != null && operator.length  > 0)
+//            {
+//                patOper[0] = operator[0].getOperCode();
+//                patOper[1] = operator[0].getOperName(); 
+//                patOper[2] = operator[0].getOperLevel(); 
+//                patOper[3] = operator[0].getOperStartTime(); 
+//                patOper[4] = operator[0].getOperEndTime();
+//            }
+//    		List<TAntiDrugSecurityResult> list = new ArrayList<TAntiDrugSecurityResult>();
+//    		int count = 0 ;
+//    		for(TPatOrderDrug pod : po.getPatOrderDrugs())
+//    		{
+//    			String[]  orderDrug = new String[7];
+//    			/* 判断是否 为抗菌药物  */
+//    			if(!DrugUtils.isKJDrug(pod.getDrugID()))
+//    				continue;
+//    			count++;
+//    			orderDrug[0] = pod.getDrugID();
+//    			orderDrug[1] = pod.getDrugName();
+//    			orderDrug[2] = pod.getRecMainNo();
+//    			orderDrug[3] = pod.getRecSubNo();
+//    			orderDrug[4] = pod.getStartDateTime();
+//    			orderDrug[5] = pod.getStopDateTime();
+//    			orderDrug[6] = pod.getUseType();
+//    			TAntiDrugSecurityResult adsr = AntiDrugSecurityCheckerA(doctorInfo, diagnosis, patOper, orderDrug, new String[]{po.getPatVisitInfo().getPatientID(),po.getPatVisitInfo().getVisitID()});
+//    			/* 去掉安全用药的无用审核
+//    			if(crc.getDsr() == null)
+//    			{
+//    				TDrugSecurityRslt drugsr1 = null;
+//    				TPatientOrder po1 = CommonUtils.getPatientOrder(doctorInfo, new String[]{}, new String[][]{}, new String[][]{}, new String[][]{}, new String[][]{},patOper);
+//    				po1.setPatOrderDrugs(new TPatOrderDrug[]{pod});
+//    				drugsr1  = this.DrugSpecPeopleCheck(po1);
+//    				if(drugsr1.getCheckResults() != null)adsr.setDspList(drugsr1.getCheckResults()[0].getDrugSpecPeopleRslt());
+//    				drugsr1  =  this.DrugAllergenCheck(po1);
+//    				if(drugsr1.getCheckResults() != null)adsr.setAllergenRslt(drugsr1.getCheckResults()[0].getDrugAllergenRslt()); 
+//    				drugsr1  = this.DrugDosageCheck(po1);
+//    				if(drugsr1.getCheckResults() != null)adsr.setDosageRslt(drugsr1.getCheckResults()[0].getDrugDosageRslt());
+//    			}
+//    			else
+//    			{
+//    				TDrugSecurityRslt drugsr1 = crc.getDsr();
+//    				TDrug drug = new TDrug();
+//    				drug.setDRUG_NO_LOCAL(pod.getDrugID());
+//    				drug.setRecMainNo(pod.getRecMainNo());
+//    				drug.setRecSubNo(pod.getRecSubNo());
+//    				if(drugsr1.getCheckResult(drug) != null){
+//	    				adsr.setDspList(drugsr1.getCheckResult(drug).getDrugSpecPeopleRslt());
+//	    				adsr.setAllergenRslt(drugsr1.getCheckResult(drug).getDrugAllergenRslt());
+//	    				adsr.setDosageRslt(drugsr1.getCheckResult(drug).getDrugDosageRslt());
+//	    			}
+//    			}
+//    			*/
+//    			// 在不存在问题情况下不保存 
+//    			if(adsr.getTAntiDrugSecurity().length != 0) list.add(adsr);
+//    		}
+//    		crc.setAdsr((TAntiDrugSecurityResult[])list.toArray(new TAntiDrugSecurityResult[0]));
+//    		System.out.println("抗菌药物审查结束:" + (System.currentTimeMillis() - x1) + "抗菌药物数量: " + count);
+//    		tcr.set("ANTI_OVER", String.valueOf(System.currentTimeMillis() - x1));                //抗菌药物审查结束
+//    		tcr.set("ANTI_NUM", String.valueOf(count));                                           //抗菌药物数量
+//        }
 		/* TODO 彻底不用考虑他了， 判断是否开启 大处方处方  */
 	    if(Config.getIntParamValue("PESSSwitcher") == 1)
         {

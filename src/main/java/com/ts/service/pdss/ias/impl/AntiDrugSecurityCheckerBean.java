@@ -119,7 +119,7 @@ public class AntiDrugSecurityCheckerBean implements IAntiDrugSecurityChecker
 		return this.AntiDrugOverRate.Checker(WebServiceUtils.getDrugInfo( doctorInfo,diagnosis,operInfo,drugInfo,patientInfo));
 	}
 	
-	@Resource(name="antiDrugOperationCheckBean")
+//	@Resource(name="antiDrugOperationCheckBean")
     private IAntiDrugOperationCheck AntiDrugOperation;
     public TAntiDrugSecurityCheckResult antiDrugOperationA(String[] doctorInfo, String[] diagnosis, String[] operInfo,   String[] drugInfo,String[] patientInfo) 
     {

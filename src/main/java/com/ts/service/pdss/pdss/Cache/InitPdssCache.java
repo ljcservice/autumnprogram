@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.hitzd.his.Utils.DrugUtils;
+import com.ts.dao.DaoSupportPH;
 import com.ts.dao.DaoSupportPdss;
 import org.apache.log4j.Logger;
 import com.ts.entity.Page;
@@ -26,6 +29,7 @@ import com.ts.entity.pdss.pdss.Beans.TDrugPerformFreqDict;
 import com.ts.entity.pdss.pdss.Beans.TDrugRepeat;
 import com.ts.entity.pdss.pdss.Beans.TDrugSideDict;
 import com.ts.entity.pdss.pdss.Beans.TDrugUseDetail;
+import com.ts.entity.pdss.pdss.Beans.ias.TOperationDrugInfo;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugInteractionRslt;
 import com.ts.service.cache.CacheProcessor;
 import com.ts.service.cache.CacheTemplate;
@@ -43,21 +47,39 @@ public class InitPdssCache {
 
 	@Resource(name = "daoSupportPdss")
 	private DaoSupportPdss dao;
+	@Resource(name="daoSupportPH")
+	private DaoSupportPH  daoPH;
 	
 	private int showCount = 5000;
 //	@PostConstruct()
 	public void bulidRedisCache(){
+	    
+	    
 		try
 		{
+//		    Long l = System.currentTimeMillis();
+////		    for(int i =0 ; i < 100;i++){
+//		        
+//		        TDrug t = cacheTemplate.cache(PdssCache.drugCacheByLocal, "3101054IJ0", null);
+////		    }
+//		    System.out.println("redis" + (System.currentTimeMillis() - l));
+//		    l = System.currentTimeMillis();
+////		    for(int i =0 ; i < 100;i++){
+//		        DrugUtils.isKJDrug("3101054IJ0");
+////		    }
+//		    System.out.println("sysCache" + (System.currentTimeMillis() - l));
+//	        if(true) return ;
 			log.info("内容构建");
-			log.info("重复给药");
-			setDrugRepeat();
+			log.info("手术用药");
+			setOperationDrug();
+//			log.info("重复给药");
+//			setDrugRepeat();
 //			log.info("药物禁忌症对应");
 //			setDrugDiagRel();
 //			log.info("药物禁忌症信息");
 //			setDrugDiagInfo();
-			log.info("用药途径单个缓存");
-			setAdministration();
+//			log.info("用药途径单个缓存");
+//			setAdministration();
 //			log.info("相互作用");
 ////	暂时不用 		setDrugInteractionInfo();
 //			setDrugInteractionMap();
@@ -69,12 +91,12 @@ public class InitPdssCache {
 //			setDrugIvEffect();
 //			log.info("药物成分、药敏、药物分类与药物对照字典  目前放弃");
 //			setAid();
-			log.info("药品剂量使用字典");
-			setDdg();
-			log.info("不良反应");
-			setDrugSideDict();
-			log.info("医嘱执行频率");
-			setDrugPerfom();
+//			log.info("药品剂量使用字典");
+//			setDdg();
+//			log.info("不良反应");
+//			setDrugSideDict();
+//			log.info("医嘱执行频率");
+//			setDrugPerfom();
 //			log.info("特殊人群");
 //			setDud();
 //			log.info("医保内容");
@@ -89,6 +111,41 @@ public class InitPdssCache {
 		}
 	}
 
+	
+	/**
+	 * 手术药品管理
+	 * @throws Exception
+	 */
+	public void setOperationDrug() throws Exception
+	{
+	    Page page = new Page();
+	    int pageNum = 1;
+	    page.setShowCount(showCount);
+	    page.setTotalPage(pageNum);
+	    String key = null;
+	    String keyName = null;
+        List<TOperationDrugInfo> odinfo = new ArrayList<TOperationDrugInfo>();
+        while( pageNum == 1 || pageNum <= page.getTotalPage()){
+            page.setCurrentPage(pageNum);
+            List<TOperationDrugInfo> ods = (List<TOperationDrugInfo>) daoPH.findForList("CKOperationDrug.ckOperationDrugPage", page);
+            for(TOperationDrugInfo od : ods){
+                if(key != null && !key.equals(od.getO_code()))
+                {
+                    cacheTemplate.setObject(PdssCache.OperationDrug, key ,-1, odinfo);
+                    cacheTemplate.setObject(PdssCache.OperationDrug, keyName ,-1, odinfo);
+                    odinfo = new ArrayList<TOperationDrugInfo>();
+                }
+                key = od.getO_code();
+                keyName = od.getO_name();
+                odinfo.add(od);
+            }
+            pageNum = page.getCurrentPage() + 1;
+        }
+        cacheTemplate.setObject(PdssCache.OperationDrug, key ,-1, odinfo);
+        cacheTemplate.setObject(PdssCache.OperationDrug, keyName ,-1, odinfo);
+//        odinfo = new ArrayList<TOperationDrugInfo>();
+	}
+	
 	/**
 	 * 重复用药
 	 * @throws Exception
@@ -105,6 +162,13 @@ public class InitPdssCache {
             if (res == null)
                 return;
             for (TDrugRepeat repeat : res) {
+                String drugClassId1 = repeat.getDrug_class_1();
+                String drugClassId2 = repeat.getDrug_class_2();
+                if(drugClassId1.compareTo(drugClassId2) > 0)
+                {
+                    drugClassId1 = repeat.getDrug_class_2();
+                    drugClassId2 = repeat.getDrug_class_1();
+                }
                 cacheTemplate.setObject(PdssCache.drugRepeatCache, repeat.getDrug_class_1() + "_" + repeat.getDrug_class_2(),-1, repeat);
             }
             pageNum = page.getCurrentPage() + 1;
@@ -148,8 +212,8 @@ public class InitPdssCache {
 		page.setTotalPage(pageNum);
 		String key = null;
 		List<TDrugDiagInfo> ddiRs = new ArrayList<TDrugDiagInfo>();
-//		while( pageNum == 1 || pageNum <= page.getTotalPage()){
-//			page.setCurrentPage(pageNum);
+		while( pageNum == 1 || pageNum <= page.getTotalPage()){
+			page.setCurrentPage(pageNum);
 			List<TDrugDiagInfo> ddis = (List<TDrugDiagInfo>) dao.findForList("DrugMapper.getDrugDiagInfos", page);
 			for(TDrugDiagInfo ddi : ddis){
 				if(key != null && !key.equals(ddi.getCONTRAIND_ID()) ){
@@ -159,8 +223,9 @@ public class InitPdssCache {
 				key = ddi.getCONTRAIND_ID();
 				ddiRs.add(ddi);
 			}
-//			pageNum = page.getCurrentPage() + 1;
-//		}
+			pageNum = page.getCurrentPage() + 1;
+		}
+		cacheTemplate.setObject(PdssCache.ddisCache, key ,-1, ddiRs);
 	}
 	
 	
@@ -220,6 +285,16 @@ public class InitPdssCache {
 		}
 	}
 	
+	
+	/**
+     * 相互作用 
+     * 
+     * 
+     * @param Code1
+     * @param Code2
+     * @return
+     * @throws Exception
+     */
 	public void setDrugInteractionMap()	throws Exception {
 		
 		Page page = new Page();
@@ -235,6 +310,11 @@ public class InitPdssCache {
 				final TDrug drugB = drugs.get(j);
 				String key1 = drugA.getDRUG_NO_LOCAL();
 				String key2 = drugB.getDRUG_NO_LOCAL();
+				if(key1.compareTo(key2) > 0)
+				{
+				    key1 = drugB.getDRUG_NO_LOCAL();
+				    key2 = drugA.getDRUG_NO_LOCAL();
+				}
 //				TDrugInteractionRslt t = 
 				cacheTemplate.cache(PdssCache.drugInteraction , key1 + "_" + key2,-1, new CacheProcessor<TDrugInteractionRslt>() {
 					@Override
@@ -379,6 +459,7 @@ public class InitPdssCache {
 			pageNum = page.getCurrentPage() + 1;
 			log.info("配伍信息,使用缓存-- 第" + pageNum +"页");
 		}
+		cacheTemplate.setObject(PdssCache.drugIvEffect, key1 + "_" + key2, -1,dieRs);
 //		while( pageNum == 1 || pageNum <= page.getTotalPage()){
 //			page.setCurrentPage(pageNum);	
 //			List<PageData>  pd = (List<PageData>) dao.findForList("DrugMapper.queryDrugIvEffectGroupPage",page);
@@ -424,7 +505,7 @@ public class InitPdssCache {
 			pageNum = page.getCurrentPage() + 1;
 			log.info(" 不良反应 所有信息 使用缓存-- 第" + pageNum +"页");
 		}
-		
+		cacheTemplate.setObject(PdssCache.drugSideDict,key1 + "_" + key2, -1,dsdRs);
 //		for(TDrugIvEffect die  : list){
 //			if(key1 != null && key2 != null && (!key1.equals(die.getIV_CLASS_CODE1())|| !key2.equals(die.getIV_CLASS_CODE2()))){
 //				cacheTemplate.setObject(PdssCache.drugIvEffect, key1 + "_" + key2, -1,list);
@@ -528,6 +609,7 @@ public class InitPdssCache {
 			pageNum = page.getCurrentPage() + 1;
 			log.info("药品剂量使用字典-- 第" + pageNum +"页");
 		}
+		cacheTemplate.setObject(PdssCache.ddgCache,key1 + "_" + key2, -1,ddgRs);
 	}
 
 	/**
