@@ -28,35 +28,35 @@
 			<div class="main-content-inner">
 				<div class="page-content">
 					<div class="row">
+						<form action="show/list.do" method="post" id="myform" name="myform">  
 						<div class="col-xs-12">
-						<form action="show/list.do" method="post" id="myform" name="myform">
 							<input type="hidden" name="id" value="${pd.id}" id="id"/>
 							<input type="hidden" name="name" value="${pd.name}" id="name"/>
 							<input type="hidden" name="ONTO_TYPE" value="${pd.ONTO_TYPE}" id="ONTO_TYPE"/>
-						</form>
-						<div id="myTitle">
-							<table style="width: 100%;">
-								<tr>
-									<td align="left"><b >搜索结果</b></td>
-									<td align="right"><b >搜索到含“<font style="color: blue;">${pd.name}</font>”的结果共有<font style="color: blue;">${resultList.size()}</font>条 </b>&nbsp;&nbsp;</td>
-								</tr>
-							</table>
-						</div>
-						<div id="resultDiv" style="overflow: auto;">
-							<c:forEach items="${resultList}" var="item" varStatus="vs">
-								<div style="padding: 5px;">
-									<h4 style="color: blue;"><a href="javascript:detailPage('${item.DIRECTION_NO }');">${item.drug_name } - ${item.firm_name }</a></h4>
-									<div>
-										<div>[成分]：${item.INGREDIENT }
+							<input type="hidden" name="currentjztsFlag" value="1" id="currentjztsFlag"/>   
+							<div id="myTitle">
+								<table style="width: 100%;">
+									<tr>
+										<td align="left"><b >搜索结果</b></td>
+										<td align="right"><b >搜索到含“<font style="color: blue;">${pd.name}</font>”的结果共有<font style="color: blue;">${resultList.size()}</font>条 </b>&nbsp;&nbsp;</td>
+									</tr>
+								</table>
+							</div>
+							<div id="resultDiv" style="overflow: auto;">
+								<c:forEach items="${resultList}" var="item" varStatus="vs">
+									<div style="padding: 5px;">
+										<h4 style="color: blue;"><a href="javascript:detailPage('${item.DIRECTION_NO }');">${item.drug_name } - ${item.firm_name }</a></h4>
+										<div>
+											<div>[成分]：${item.INGREDIENT }
+											</div>
+											<div>[适应症]：${item.INDICATION }
+											</div>
 										</div>
-										<div>[适应症]：${item.INDICATION }
-										</div>
+										<div style="width:100%;height:2px;border-bottom: 1px dotted #e2e2e2;"></div>
 									</div>
-									<div style="width:100%;height:2px;border-bottom: 1px dotted #e2e2e2;"></div>
-								</div>
-							</c:forEach>
-						</div>
-						</div></div></div>
+								</c:forEach>
+							</div>
+						
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding : 3px;">
 							<table style="width:100%;">
 								<tr>
@@ -68,6 +68,7 @@
 						</div>
 						
 						</div>
+						</form>
 						<!-- /.col -->
 					</div>
 					<!-- /.row -->
@@ -114,6 +115,33 @@ function initWidthHeight(){
 }
 function detailPage(DIRECTION_NO){
 	window.location.href =  '<%=basePath%>'+"show/detail.do?DIRECTION_NO="+ DIRECTION_NO +"&"+$("#myform").serialize()+"&tm="+new Date().getTime();
+}
+
+//单页遮罩层
+var bgObj = null;
+function closeBG()
+{
+	if(bgObj != null)
+	{
+		document.body.removeChild(bgObj);
+	}
+	bgObj = null;
+}
+function showBG()
+{
+	document.body.style.margin = "0";
+	bgObj   = document.createElement("div");
+	bgObj.setAttribute('id', 'bgDiv');
+	bgObj.style.position   = "absolute";
+	bgObj.style.top        = "0";
+	bgObj.style.background = "#777";
+	bgObj.style.filter     = "progid:DXImageTransform.Microsoft.Alpha(opacity=50)";
+	bgObj.style.opacity    = "0.4";
+	bgObj.style.left       = "0";
+	bgObj.style.width      = "100%";
+	bgObj.style.height     = "100%";
+	bgObj.style.zIndex     = "1000";
+	document.body.appendChild(bgObj);
 }
 </script>
 </html>

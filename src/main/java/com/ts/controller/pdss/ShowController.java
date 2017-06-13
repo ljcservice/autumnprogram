@@ -136,6 +136,8 @@ public class ShowController extends BaseController{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
 		try{
+		    //liujc  增加 
+		    page.setCurrentjztsFlag(1);
 			User user = getCurrentUser();
 			page.setPd(pd);
 			getRequest().getHeaderNames();

@@ -80,9 +80,9 @@ public class AntiDrugOperationCheckBean implements IAntiDrugOperationCheck
                     {
                         //TODO 组织结果返回问题
                         rs.setResult(false);
-                        rs.setTilte( patO.getOperCode() + ",|" + patO.getOperName() );
+                        rs.setTilte( patO.getOperCode() + ",," + patO.getOperName() );
                         rs.setCheckType(TAntiDrugResult.AntiDrugOperationCheck);
-                        rs.setMemo("药品:" + poDrug.getDrugName() + ",[超出]医院管理手术可用药品范围!" );
+                        rs.setMemo("药品:" + poDrug.getDrugName() + ",[超出]医院管理手术可用药品范围!请适当的调整用药." );
                         rsList.add(rs);
                         break;
                     }
@@ -90,9 +90,9 @@ public class AntiDrugOperationCheckBean implements IAntiDrugOperationCheck
                     {
                         //TODO 组织结果返回问题
                         rs.setResult(false);
-                        rs.setTilte( patO.getOperCode() + ",|" + patO.getOperName() );
+                        rs.setTilte( patO.getOperCode() + ",," + patO.getOperName() );
                         rs.setCheckType(TAntiDrugResult.AntiDrugOperationCheck);
-                        rs.setMemo("药品:" + poDrug.getDrugName() + ",[超出]医院管理手术可用药品范围!请适当的调整用药。" );
+                        rs.setMemo("药品:" + poDrug.getDrugName() + ",[超出]医院管理手术可用药品范围!请适当的调整用药." );
                         //添加到数据
                         rsList.add(rs);
                     }

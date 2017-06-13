@@ -55,6 +55,7 @@ import com.ts.service.pdss.pdss.impl.PatientSaveCheckResult;
 import com.ts.service.pdss.pdss.manager.IDrugSecurityChecker;
 import com.ts.service.pdss.pdss.manager.IPatientSaveCheckResult;
 import com.ts.service.pdss.peaas.manager.IPrescSecurityChecker;
+import com.ts.util.Logger;
 
 /**
  * 
@@ -69,7 +70,7 @@ import com.ts.service.pdss.peaas.manager.IPrescSecurityChecker;
 @Service("hisAuditor")
 public class HisAuditor implements IHisAuditor 
 {
-	//private final static Logger log = Logger.getLogger(HisAuditor.class);
+	private final static Logger log = Logger.getLogger("HisAuditor");
 	public HisAuditor(){}
 
 	private String WebClientIP ;
@@ -567,13 +568,13 @@ public class HisAuditor implements IHisAuditor
 	{
 		TCommonRecord tcr = new TCommonRecord();                                                  //审查时间监控
 		tcr.set("CHECK_START_TIME",DateUtils.getDateTime());      								  //审查开始时间
-		System.out.println("--------------------------------------------------------------------");
-		System.out.println("用户地址:" + this.getRemoteAddrIp());
+		log.debug("--------------------------------------------------------------------");
+		log.debug("用户地址:" + this.getRemoteAddrIp());
 //		tcr.set("IP", XFireServletController.getRequest().getRemoteAddr());                       //用户地址
 		tcr.set("IP", this.getRemoteAddrIp());                       //用户地址
 		long xx =  System.currentTimeMillis();
 		TCheckResultCollection crc = new TCheckResultCollection();
-		System.out.println("创建医嘱对象:" + (System.currentTimeMillis() - xx));
+		log.debug("创建医嘱对象:" + (System.currentTimeMillis() - xx));
 		tcr.set("ORDERS_OBJ", String.valueOf(System.currentTimeMillis() - xx));                   //创建医嘱对象
 		long x1 = System.currentTimeMillis();
 		/* 判断是否开启药物安全审查  */
@@ -582,7 +583,7 @@ public class HisAuditor implements IHisAuditor
 		    /* 药物安全审查结果 */
 		    TDrugSecurityRslt drugsr = DrugSecurityCheck(po);
 	        crc.setDsr(drugsr);
-	        System.out.println("药物安全审查结束:" + (System.currentTimeMillis() - x1));
+	        log.debug("药物安全审查结束:" + (System.currentTimeMillis() - x1));
 	        tcr.set("DRUG_OVER", String.valueOf(System.currentTimeMillis() - x1));                //药物安全审查结束
 		}
 		/* TODO 让前端进行过滤 ，  判断是否开启  抗菌物安全审查  */
@@ -668,28 +669,28 @@ public class HisAuditor implements IHisAuditor
 //    		tcr.set("ANTI_NUM", String.valueOf(count));                                           //抗菌药物数量
 //        }
 		/* TODO 彻底不用考虑他了， 判断是否开启 大处方处方  */
-	    if(Config.getIntParamValue("PESSSwitcher") == 1)
-        {
-	        x1 = System.currentTimeMillis();
-	        crc.setPsr(presc.PrescSecurityCheck(po));
-	        System.out.println("大处方安全审查结束:" + (System.currentTimeMillis() - x1));
-	        tcr.set("BIG_DRUG_OVER", String.valueOf(System.currentTimeMillis() - x1));            //大处方安全审查结束
-        }
-	    /* 判断是否开启 医保审查   */
-        if(Config.getIntParamValue("MASSSwitcher") == 1)
-        {
-            x1 = System.currentTimeMillis();
-            System.out.println("医保审查结束:" + (System.currentTimeMillis() - x1));
-            tcr.set("MEDICAL_OVER", String.valueOf(System.currentTimeMillis() - x1));             //医保审查结束
-        }
+//	    if(Config.getIntParamValue("PESSSwitcher") == 1)
+//        {
+//	        x1 = System.currentTimeMillis();
+//	        crc.setPsr(presc.PrescSecurityCheck(po));
+//	        System.out.println("大处方安全审查结束:" + (System.currentTimeMillis() - x1));
+//	        tcr.set("BIG_DRUG_OVER", String.valueOf(System.currentTimeMillis() - x1));            //大处方安全审查结束
+//        }
+//	    /* 判断是否开启 医保审查   */
+//        if(Config.getIntParamValue("MASSSwitcher") == 1)
+//        {
+//            x1 = System.currentTimeMillis();
+//            System.out.println("医保审查结束:" + (System.currentTimeMillis() - x1));
+//            tcr.set("MEDICAL_OVER", String.valueOf(System.currentTimeMillis() - x1));             //医保审查结束
+//        }
 		/* 保存信息到队列中  */
 		SaveBeanRS sbRS = new SaveBeanRS();
 		sbRS.setPo(po);
 		sbRS.setCheckRC(crc);
 		QueueBean.setSaveBeanRS(sbRS);
 		
-		System.out.println("审查总消耗时间:" + (System.currentTimeMillis() - xx));
-		System.out.println("药物医嘱个数 :"  + po.getPatOrderDrugs().length);
+		log.debug("审查总消耗时间:" + (System.currentTimeMillis() - xx));
+		log.debug("药物医嘱个数 :"  + po.getPatOrderDrugs().length);
 		
 		tcr.set("ID", sbRS.getID());
 		tcr.set("EXA_DATE", String.valueOf(System.currentTimeMillis() - xx));                     //审查总消耗时间
@@ -701,7 +702,6 @@ public class HisAuditor implements IHisAuditor
 		tcr.set("OPERATION_DATE",DateUtils.getDateTime());                                        //操作时间
 		tcr.set("AllSingleCheckTime","0");                     //单项审查时间总汇
 //		tcr.set("AllSingleCheckTime", HisSubCheckTime.getSubCheckTimeInfo());                     //单项审查时间总汇
-		
 		/* 审查信息列队中 */
 		QueueBeanTCR.setSaveBeanRS(tcr);
 		return crc;
