@@ -305,7 +305,7 @@ public class DDDCountByBill_SCD implements IReportBuilder
                     drDept = bill.get("ordered_by");
                     if ((i + 1) == BillDetail.size())
                     {
-                        /* 复制对象 */
+                    	/* 复制对象 */
                         TCommonRecord rs = (TCommonRecord) cr.deepClone();
                         // 给药途径静脉输液
                         rs.set("adminJMSY", adminJMSY ? "1" : "0");
