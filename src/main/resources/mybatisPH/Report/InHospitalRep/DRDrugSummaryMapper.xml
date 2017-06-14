@@ -76,10 +76,10 @@
 	       	t.drug_spec,
 	       	t.firm_id,
 	       	t.drug_form，
-	       	sum(t.costs) sumcosts,
-	       	sum(t.amount) sumamount,
-	       	sum(t.is_anti) anti,
-	       	sum(t.is_basedrug) baseDrug
+	       	nvl(sum(t.costs),0) sumcosts,
+	       	nvl(sum(t.amount),0) sumamount,
+	       	nvl(sum(t.is_anti),0) anti,
+	       	nvl(sum(t.is_basedrug),0) baseDrug
 		  from dr_drug_summary t
 		  where t.rpt_date &gt;= to_date(#{pd.beginDate} ,'yyyy-mm-dd') 
           			and t.rpt_date &lt;= to_date(#{pd.endDate} ,'yyyy-mm-dd') 
@@ -110,8 +110,8 @@
     	select *
 		 from (select b.*,
 		              row_number() over(partition by dept_code order by ${pd.orderBy} desc) rk
-		         from (select sum(t.costs) costs,
-		                      sum(t.amount) amount,
+		         from (select nvl(sum(t.costs),0) costs,
+		                      nvl(sum(t.amount),0) amount,
 		                      t.drug_units,
 		                      t.drug_spec,
 		                      t.drug_code,
@@ -154,8 +154,8 @@
     	select *
 		  from (select b.*,
 		               row_number() over(partition by dept_code order by ${pd.orderBy} desc) rk
-		          from (select sum(t.costs) costs,
-		                       sum(t.amount) amount,
+		          from (select nvl(sum(t.costs),0) costs,
+		                       nvl(sum(t.amount),0) amount,
 		                       t.drug_units,
 		                       t.drug_spec,
 		                       t.drug_code,
@@ -201,7 +201,7 @@
     
 	<!-- 医生药品费用排名   -->
     <select id="findDRNO005Page" parameterType="page" resultType="pd" >
-    	select sum(t.costs) costs,
+    	select nvl(sum(t.costs),0) costs,
 		       t.doctor_name,
 		       t.dept_name
 		  from dr_drug_summary t
@@ -229,8 +229,8 @@
 
 	<!-- 医生药品费用排名   -->
     <select id="findDRNO006Page" parameterType="page" resultType="pd" >
-    	select sum(t.costs) costs,
-		       sum(t.amount) amount,
+    	select nvl(sum(t.costs),0) costs,
+		       nvl(sum(t.amount),0) amount,
 		       t.drug_code,
 		       t.drug_name,
 		       t.drug_spec,
@@ -274,8 +274,8 @@
 		       t.drug_spec,
 		       t.firm_id,
 		       t.rpt_date,
-		       sum(t.costs) costs,
-		       sum(t.amount) amount
+		       nvl(sum(t.costs),0) costs,
+		       nvl(sum(t.amount),0) amount
 		  from dr_drug_summary t
 		 where 
 		 	   t.rpt_date &gt;= to_date(#{pd.beginDate} ,'yyyy-mm-dd') 

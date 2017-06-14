@@ -63,6 +63,8 @@
 	from drug_direction a ,drug_reg_title_dict b 
 	where b.title_num = a.title_no 
       and a.direction_no = #{direction_no}
+      and b.reg_class_code = '3'
+	order by a.title_index
 </select>
  <select id="drugDirectionImage" parameterType="pd" resultMap="DirectionImageMap" >
 	select DIRECT_IMAGE_SERIAL,IMAGE
