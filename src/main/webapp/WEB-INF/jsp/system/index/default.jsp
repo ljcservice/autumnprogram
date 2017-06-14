@@ -35,7 +35,7 @@
 									<i class="ace-icon fa fa-times"></i>
 								</button>
 								<i class="ace-icon fa fa-check green"></i>
-								欢迎使用 TS 协同业务管理平台&nbsp;&nbsp;
+								欢迎使用 Autumn 医院药事信息化系统 &nbsp;&nbsp;
 								<strong class="green">
 									&nbsp;
 									<a href="#" target="_blank"><small></small></a>
@@ -51,7 +51,7 @@
 						        // 指定图表的配置项和数据
 								var option = {
 						            title: {
-						                text: 'TS平台 用户统计'
+						                text: 'Autumn平台 用户统计'
 						            },
 						            tooltip: {},
 						            xAxis: {

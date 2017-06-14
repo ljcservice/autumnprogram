@@ -68,7 +68,7 @@
 			<form action="" method="post" name="loginForm"
 				id="loginForm">
 				<div class="control-group normal_text">
-					<h3>
+					<h3> 
 						<img src="static/login/logo.png" alt="Logo" />
 					</h3>
 				</div>
@@ -120,7 +120,7 @@
 			</form>
 			<div class="controls">
 				<div class="main_input_box">
-					<font color="white"><span id="nameerr">Copyright © TS 黑龙江特士信息技术有限公司   2016</span></font>
+					<font color="white"><span id="nameerr">Copyright © Autumn 2016</span></font>
 				</div>
 			</div>
 		</div>
