@@ -87,6 +87,7 @@ public class DDDCountByBill_SCD implements IReportBuilder
             double outordinaryDDDS = 0; // 局部普通级抗生素使用频度
             boolean adminJMSY = false; // 是否  静脉输液
             boolean adminAntiJMSY = false;// 是否 抗菌药物静脉输液
+            
 
             if (BillDetail != null && BillDetail.size() > 0)
             {
@@ -306,6 +307,11 @@ public class DDDCountByBill_SCD implements IReportBuilder
                     {
                         /* 复制对象 */
                         TCommonRecord rs = (TCommonRecord) cr.deepClone();
+                        // 给药途径静脉输液
+                        rs.set("adminJMSY", adminJMSY ? "1" : "0");
+                        // 抗菌药物  给药途径静脉输液
+                        rs.set("adminAntiJMSY", adminAntiJMSY ? "1" : "0");
+                        
                         // 转科标示
                         rs.set("IS_SCD", is_scd ? "1" : "0");
                         // 病人过程唯一号
@@ -313,8 +319,7 @@ public class DDDCountByBill_SCD implements IReportBuilder
                         // 过程科室code
                         rs.set("FUNCDEPTCODE", drDept);
                         // 过程科室名称
-                        rs.set("FUNCDEPTNAME",
-                                DictCache.getNewInstance().getDeptName(drDept));
+                        rs.set("FUNCDEPTNAME",DictCache.getNewInstance().getDeptName(drDept));
                         /* 设置病人计算信息 */
                         SetPatInfo(ADate, queryHIS, zl, antiCount, specDDDS,
                                 limitDDDS, ordinaryDDDS, ddd, charges, costs,
