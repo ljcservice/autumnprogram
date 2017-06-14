@@ -32,7 +32,7 @@ import com.ts.util.ai.AILogs;
 import com.ts.util.app.AppUtil;
 
 /**
- * 问题单校验 -- 
+ * 问题单校验
  * @ClassName: CheckQuestionController 
  * @Description: TODO(这里用一句话描述这个类的作用) 
  * @author xsl 

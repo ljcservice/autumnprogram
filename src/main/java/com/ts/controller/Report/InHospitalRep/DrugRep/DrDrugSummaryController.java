@@ -169,8 +169,8 @@ public class DrDrugSummaryController extends BaseController
 					vpd.put("var2", varOList.get(i).get("drug_name"));	//4
 					vpd.put("var3", varOList.get(i).get("drug_spec"));		//5
 					vpd.put("var4", varOList.get(i).get("firm_id"));
-					vpd.put("var5", "￥ "+varOList.get(i).get("sumcosts").toString());
-					vpd.put("var6", varOList.get(i).get("sumamount").toString()+varOList.get(i).get("drug_units").toString());
+					vpd.put("var5", varOList.get(i).get("costs"));
+					vpd.put("var6", varOList.get(i).get("amount").toString()+varOList.get(i).get("drug_units").toString());
 					vpd.put("var7", varOList.get(i).get("dept_name"));
 					 varList.add(vpd);
 				}
