@@ -929,13 +929,13 @@ public class HelpUtil {
 	 * @param pd
 	 */
 	public static void setDefaultDate(PageData pd) {
-		String beginDate = pd.getString("beginDate");
-		String endDate = pd.getString("endDate"); 
-		if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
-			Calendar calendar= Calendar.getInstance();
-			int year = calendar.get(Calendar.YEAR);
-			pd.put("beginDate", year+"-01-01");
-			pd.put("endDate", year+"-12-31");
-		}
+//		String beginDate = pd.getString("beginDate");
+//		String endDate = pd.getString("endDate"); 
+//		if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+//			Calendar calendar= Calendar.getInstance();
+//			int year = calendar.get(Calendar.YEAR);
+//			pd.put("beginDate", year+"-01-01");
+//			pd.put("endDate", year+"-12-31");
+//		}
 	}
 }

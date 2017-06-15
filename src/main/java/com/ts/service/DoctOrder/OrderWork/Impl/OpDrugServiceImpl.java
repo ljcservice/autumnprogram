@@ -31,6 +31,11 @@ public class OpDrugServiceImpl implements OpDrugService {
 	}
 	
 
+	public String updateOpDrug(PageData pd)throws Exception {
+		daoph.update("CKOperationDrug.updateOpDrug", pd);
+		return "success";
+	}	
+
 	public void deleteAllOpDrug(String[] arrayUSER_IDS) throws Exception {
 		for(String o_id:arrayUSER_IDS ){
 			PageData pd = new PageData();

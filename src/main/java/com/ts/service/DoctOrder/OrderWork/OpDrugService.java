@@ -12,6 +12,8 @@ public interface OpDrugService {
 	public PageData selectOpdrugInfo(PageData pd) throws Exception ;
 
 	public String saveOpDrug(PageData pd) throws Exception ;
+	
+	public String updateOpDrug(PageData pd)throws Exception ;
 
 	public void deleteAllOpDrug(String[] arrayUSER_IDS) throws Exception ;
 
