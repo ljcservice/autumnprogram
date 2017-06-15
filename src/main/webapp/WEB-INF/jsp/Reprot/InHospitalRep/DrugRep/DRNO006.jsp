@@ -230,12 +230,6 @@ function initWidthHeight(){
 	rr[1]="pageStrDiv";
 	FixTable("simple-table", 0, rr);
 }
-// 查询
-function searchs(){
-	top.jzts();
-	$("#searchForm").submit();
-	
-}
 
 function viewDetail(patId , visitId,ngnum){
 	top.jzts();

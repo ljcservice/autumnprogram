@@ -282,12 +282,6 @@ function initWidthHeight(){
 	rr[1]="pageStrDiv";
 	FixTable("simple-table", 4, rr); 
 }
-// 查询
-function searchs(){
-	top.jzts();
-	$("#searchForm").submit();
-	
-}
 
 //var map = new Hash(object)
 
