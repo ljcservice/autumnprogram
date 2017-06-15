@@ -27,8 +27,9 @@
 				<div class="page-content">
 					<div class="row">
 						<div class="col-xs-12">
-								<form action="expert/${MSG }.do" name="userForm" id="userForm" method="post">
+								<form action="opDrug/edit.do" name="userForm" id="userForm" method="post">
 									<div id="zhongxin" style="padding-top: 13px;">
+									<input type="hidden" name="O_ID" value="${pd.O_ID }">
 									<table id="table_report" class="table table-striped table-bordered table-hover">
 										<tr>
 											<td style="width:100px;text-align: right;padding-top: 13px;">手术名称:</td>
@@ -80,6 +81,11 @@
 												<input type="text" name="O_DRUG_FORM" id="O_DRUG_FORM" value="${pd.O_DRUG_FORM }" style="width:99%;"/>
 											</td>
 										</tr>
+										<td style="text-align: right;padding-top: 10px;">是否可用:</td>
+										<td>
+											<label><input class="ace" id="u3897_input" value="0" name="IS_USE" type="radio" <c:if test="${pd.IS_USE==0 || pd.IS_USE == null}">checked</c:if> >不可用&nbsp;<span class="lbl"></span></label>&nbsp;&nbsp;
+											<label><input class="ace" id="u3897_input" value="1" name="IS_USE" type="radio" <c:if test="${pd.IS_USE==1 }">checked</c:if> >可用&nbsp;<span class="lbl"></span></label>
+										</td>
 										<tr>
 											<td style="text-align: center;" colspan="10">
 													<a class="btn btn-mini btn-primary" onclick="save();">保存</a>
@@ -119,13 +125,13 @@
 	});
 	//保存
 	function save(){
+		var O_CODE = $("#O_CODE").val();
+		var O_DRUG_CODE = $("#O_DRUG_CODE").val();
+		var O_DEPT_CODE = $("#O_DEPT_CODE").val();
+		var O_DOCTOR_CODE = $("#O_DOCTOR_CODE").val();
+	
 		if($("#user_id").val()==""){
-			$("#juese").tips({
-				side:3,
-	            msg:'选择一个用户',
-	            bg:'#AE81FF',
-	            time:2
-	        });
+			$("#juese").tips({ side:3,  msg:'选择一个用户',  bg:'#AE81FF',   time:2   });
 			return false;
 		}
 		if($("#user_id").val()==""){

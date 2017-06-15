@@ -26,17 +26,13 @@
 					<div class="row">
 						<div class="col-xs-12">
 						<form action="expert/selectExpertList.do" method="post" id="searchForm">
-						<input type="hidden" name="patient_id" value="${pd.patient_id}" id="patient_id"/>
-						<input type="hidden" name="visit_id" value="${pd.visit_id}" id="visit_id"/>
-						<input type="hidden" name="id" value="${pd.id}" id="id"/>
-						<input type="hidden" name="business_type" value="${pd.business_type}" id="business_type"/>
+						<input type="hidden" name="onto_type" value="${pd.onto_type}" id="onto_type"/>
 						<div id="zhongxin" style="padding-top: 13px;">
-							<input type="hidden" name="osynType" value="${osynType}" id="osynType"/>
 							<table style="margin-top:5px;">
 								<tr>
 									<td>
 										<div class="nav-search">
-										专家名称：
+										名称：
 										<span class="input-icon">
 											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords }" placeholder="专家名称 " />
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
@@ -58,11 +54,8 @@
 									<th class="center" style="width:35px;">
 										<label class="pos-rel"></label>
 									</th>
-									<th class="center" nowrap>专家用户名</th>
-									<th class="center" nowrap>专家姓名</th>
-									<th class="center" nowrap>医嘱专家</th>
-									<th class="center" nowrap>处方专家</th>
-									<th class="center" nowrap>更新时间</th>
+									<th class="center" nowrap>编码</th>
+									<th class="center" nowrap>名称</th>
 								</tr>
 							</thead>
 													
@@ -75,13 +68,11 @@
 												
 										<tr onclick="clickTr(this);">
 											<td class='center' style="width: 30px;">
-												<label><input type="radio" class="ace" name='userIs' value="${diag.user_id}" /><span class="lbl"></span></label>
+												<label><input type="radio" class="ace" name='${diag.name}' value="${diag.id}" code="${diag.code}"/><span class="lbl"></span></label>
 											</td>
-											<td class="center">${diag.username}</td>
+											<td class="center">${diag.code}</td>
 											<td class="center">${diag.name}</td>
-											<td class="center"><c:if test="${diag.IS_ORDERS==0}">否</c:if><c:if test="${diag.IS_ORDERS==1}">是</c:if></td>
-											<td class="center"><c:if test="${diag.IS_RECIPE==0}">否</c:if><c:if test="${diag.IS_RECIPE==1}">是</c:if></td>
-											<td class="center"><fmt:formatDate value="${diag.UPDATE_TIME}" type="both" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+<%--											<td class="center"><fmt:formatDate value="${diag.UPDATE_TIME}" type="both" pattern="yyyy-MM-dd HH:mm:ss"/></td>--%>
 										</tr>
 									
 									</c:forEach>
@@ -146,11 +137,23 @@ function selectCont(){
 	}
 	var mydocument = parent.$("#_DialogFrame_0")[0].contentWindow.document;
 	//设置为专家点评
-	var url  = path + "/expert/setExpertPatVisit.do?expert_id="+osyn.eq(0).val()+"&"+$("#myForm").serialize();
-	$.ajax({ url: url, success: function(){
-		top.Dialog.close();
-   	}});
-	
+	var onto_type = $("#onto_type").val();
+	if(onto_type==100){
+		mydocument.$("O_CODE").val(onto_type.attr("code"));
+		mydocument.$("O_NAME").val(onto_type.attr("name"));
+	}
+	if(onto_type==101){
+		mydocument.$("O_DRUG_CODE").val(onto_type.attr("code"));
+		mydocument.$("O_DRUG_NAME").val(onto_type.attr("name"));
+	}
+	if(onto_type==102){
+		mydocument.$("O_DEPT_CODE").val(onto_type.attr("code"));
+		mydocument.$("O_DEPT_NAME").val(onto_type.attr("name"));
+	}
+	if(onto_type==103){
+		mydocument.$("O_DOCTOR_CODE").val(onto_type.attr("code"));
+		mydocument.$("O_DOCTOR_NAME").val(onto_type.attr("name"));
+	}
 }
 //检索
 function searchs(){
