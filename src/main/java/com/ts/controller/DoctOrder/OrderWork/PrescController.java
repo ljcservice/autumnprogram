@@ -56,6 +56,7 @@ public class PrescController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
 		try{
+			mv.setViewName("DoctOrder/presc/prescWorkList");
 			// 当前登录专家
 			User user = getCurrentUser();
 			String beginDate = pd.getString("beginDate");	//开始时间
@@ -69,6 +70,7 @@ public class PrescController extends BaseController {
 				cal.add(Calendar.DAY_OF_MONTH, 1);
 				pd.put("endDate", sdf.format(cal.getTime()));
 			}
+			
 			String DRUG_TYPE = pd.getString("DRUG_TYPE");	//药品种类
 			if(!Tools.isEmpty(DRUG_TYPE)){
 				pd.put(DRUG_TYPE, 1);
@@ -81,6 +83,10 @@ public class PrescController extends BaseController {
 			if("1".equals(pd.getString("randomflag"))){
 				int showCount = Integer.parseInt(RANDOM_NUM);
 				page.setShowCount(showCount);
+			}else{
+				if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+					return mv;
+				}
 			}
 			List<PageData>	prescList = prescService.prescListPage(page);	//列出专家列表
 			if("1".equals(pd.getString("randomflag"))){
@@ -97,7 +103,6 @@ public class PrescController extends BaseController {
 			mv.addObject("rstypeColorMap", DoctorConst.rstypeColorMap); 
 			mv.addObject("checktypeMap", commonService.getCheckTypeDict()); 
 			mv.addObject("prescList", prescList);
-			mv.setViewName("DoctOrder/presc/prescWorkList");
 			mv.addObject("pd", pd);
 			
 			//统计
@@ -331,6 +336,7 @@ public class PrescController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
 		try{
+			mv.setViewName("DoctOrder/presc/prescList");
 			// 当前登录专家
 			User user = getCurrentUser();
 			String beginDate = pd.getString("beginDate");	//开始时间
@@ -343,6 +349,9 @@ public class PrescController extends BaseController {
 				cal.setTime(DateUtil.fomatDate(endDate));
 				cal.add(Calendar.DAY_OF_MONTH, 1);
 				pd.put("endDate", sdf.format(cal.getTime()));
+			}
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
 			}
 			String DRUG_TYPE = pd.getString("DRUG_TYPE");	//药品种类
 			if(!Tools.isEmpty(DRUG_TYPE)){
@@ -361,7 +370,6 @@ public class PrescController extends BaseController {
 			mv.addObject("rstypeColorMap", DoctorConst.rstypeColorMap); 
 			mv.addObject("checktypeMap", commonService.getCheckTypeDict()); 
 			mv.addObject("prescList", prescList);
-			mv.setViewName("DoctOrder/presc/prescList");
 			mv.addObject("pd", pd);
 			
 		} catch(Exception e){

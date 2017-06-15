@@ -17,6 +17,7 @@ import com.ts.service.DoctOrder.OrderWork.DrugAmountService;
 import com.ts.util.MyDecimalFormat;
 import com.ts.util.ObjectExcelView;
 import com.ts.util.PageData;
+import com.ts.util.Tools;
 import com.ts.util.ontology.HelpUtil;
 /**
  * 门急诊药品费用统计
@@ -39,15 +40,18 @@ public class DrugAmountReport extends BaseController{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
 		try{
+			mv.setViewName("DoctOrder/drugAmount/drugAmount");
 			mv.addObject("pd", pd);
-			//设置默认日期
-			HelpUtil.setDefaultDate(pd);
+			String beginDate = pd.getString("beginDate");
+			String endDate = pd.getString("endDate"); 
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
+			}
 			page.setPd(pd);
 			//门急诊药品费用统计
 			List<PageData>	reportList = drugAmountService.drugAmount(page);
 			
 			mv.addObject("reportList", reportList);
-			mv.setViewName("DoctOrder/drugAmount/drugAmount");
 		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
@@ -118,15 +122,18 @@ public class DrugAmountReport extends BaseController{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
 		try{
+			mv.setViewName("DoctOrder/drugAmount/drugAmountByDep");
 			mv.addObject("pd", pd);
-			//设置默认日期
-			HelpUtil.setDefaultDate(pd);
+			String beginDate = pd.getString("beginDate");
+			String endDate = pd.getString("endDate"); 
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
+			}
 			page.setPd(pd);
 			//门急诊药品费用统计
 			List<PageData>	reportList = drugAmountService.drugAmountByDep(page);
 			
 			mv.addObject("reportList", reportList);
-			mv.setViewName("DoctOrder/drugAmount/drugAmountByDep");
 		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
@@ -198,15 +205,18 @@ public class DrugAmountReport extends BaseController{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
 		try{
+			mv.setViewName("DoctOrder/drugAmount/drugAmountByDoctor");
 			mv.addObject("pd", pd);
-			//设置默认日期
-			HelpUtil.setDefaultDate(pd);
+			String beginDate = pd.getString("beginDate");
+			String endDate = pd.getString("endDate"); 
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
+			}
 			page.setPd(pd);
 			//门急诊药品费用统计
 			List<PageData>	reportList = drugAmountService.drugAmountByDoctor(page);
 			
 			mv.addObject("reportList", reportList);
-			mv.setViewName("DoctOrder/drugAmount/drugAmountByDoctor");
 		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
@@ -278,15 +288,17 @@ public class DrugAmountReport extends BaseController{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
 		try{
+			mv.setViewName("DoctOrder/drugAmount/drugAmountByPerson");
 			mv.addObject("pd", pd);
-			//设置默认日期
-			HelpUtil.setDefaultDate(pd);
+			String beginDate = pd.getString("beginDate");
+			String endDate = pd.getString("endDate"); 
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
+			}
 			page.setPd(pd);
 			//门急诊药品费用统计
 			List<PageData>	reportList = drugAmountService.drugAmountByPerson(page);
-			
 			mv.addObject("reportList", reportList);
-			mv.setViewName("DoctOrder/drugAmount/drugAmountByPerson");
 		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
@@ -368,14 +380,17 @@ public class DrugAmountReport extends BaseController{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
 		try{
+			mv.setViewName("DoctOrder/drugAmount/drugAmountByDrug");
 			mv.addObject("pd", pd);
-			//设置默认日期
-			HelpUtil.setDefaultDate(pd);
+			String beginDate = pd.getString("beginDate");
+			String endDate = pd.getString("endDate"); 
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
+			}
 			page.setPd(pd);
 			//门急诊药品费用统计
 			List<PageData>	reportList = drugAmountService.drugAmountByDrug(page);
 			mv.addObject("reportList", reportList);
-			mv.setViewName("DoctOrder/drugAmount/drugAmountByDrug");
 		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
@@ -445,9 +460,13 @@ public class DrugAmountReport extends BaseController{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
 		try{
+			mv.setViewName("DoctOrder/drugAmount/depAmountPersents");
 			mv.addObject("pd", pd);
-			//设置默认日期
-			HelpUtil.setDefaultDate(pd);
+			String beginDate = pd.getString("beginDate");
+			String endDate = pd.getString("endDate"); 
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
+			}
 			//汇总
 			BigDecimal med_all =  new BigDecimal(0);
 			BigDecimal drug_all =   new BigDecimal(0);
@@ -470,7 +489,6 @@ public class DrugAmountReport extends BaseController{
 				anti_all=anti_all.add(anti);
 			}
 			mv.addObject("reportList", reportList);
-			mv.setViewName("DoctOrder/drugAmount/depAmountPersents");
 			PageData count = new PageData();
 			count.put("med_all", med_all);
 			count.put("drug_all", drug_all);

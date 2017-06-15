@@ -53,8 +53,13 @@ public class ReportController extends BaseController{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
 		try{
+			mv.setViewName("DoctOrder/report/orderReport");
 			mv.addObject("pd", pd);
-			HelpUtil.setDefaultDate(pd);
+			String beginDate = pd.getString("beginDate");
+			String endDate = pd.getString("endDate"); 
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
+			}
 			//处方问题统计
 			List<PageData>	reportList = orderWorkService.ordersReport(pd);
 			long total = 0;
@@ -74,7 +79,6 @@ public class ReportController extends BaseController{
 			}
 			mv.addObject("reportList", reportList);
 			mv.addObject("checktypeMap", commonService.getCheckTypeDict()); 
-			mv.setViewName("DoctOrder/report/orderReport");
 			
 		} catch(Exception e){
 			logger.error(e.toString(), e);
@@ -158,6 +162,7 @@ public class ReportController extends BaseController{
 		PageData pd = this.getPageData();
 		try
 		{	
+			mv.setViewName("DoctOrder/report/orderList");
 			HelpUtil.setDefaultDate(pd);
 			String beginDate = pd.getString("beginDate");		//开始时间
 			String endDate = pd.getString("endDate");			//结束时间
@@ -169,6 +174,9 @@ public class ReportController extends BaseController{
 				cal.setTime(DateUtil.fomatDate(endDate));
 				cal.add(Calendar.DAY_OF_MONTH, 1);
 				pd.put("endDate", sdf.format(cal.getTime()));
+			}
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
 			}
 			mv.addObject("pd", pd);
 			page.setPd(pd);
@@ -194,7 +202,6 @@ public class ReportController extends BaseController{
 		{
 			logger.error(e.toString(), e);
 		}
-		mv.setViewName("DoctOrder/report/orderList");
 		return  mv; 
 	}
 	/**
@@ -286,9 +293,14 @@ public class ReportController extends BaseController{
 	@RequestMapping(value="/orderListByDoctor")
 	public ModelAndView orderListByDoctor(){
 		ModelAndView mv = new ModelAndView();
-		PageData pd = this.getPageData();
 		try {
-			HelpUtil.setDefaultDate(pd);
+			PageData pd = this.getPageData();
+			mv.setViewName("DoctOrder/report/orderListByDoctor");
+			String beginDate = pd.getString("beginDate");
+			String endDate = pd.getString("endDate"); 
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
+			}
 			List<PageData> list =  this.orderWorkService.orderListByDoctor(pd);
 			long total = 0;
 			for(PageData p:list){
@@ -311,7 +323,6 @@ public class ReportController extends BaseController{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mv.setViewName("DoctOrder/report/orderListByDoctor");
 		return  mv; 
 	}
 	/**
@@ -378,9 +389,14 @@ public class ReportController extends BaseController{
 	@RequestMapping(value="/orderListByDep")
 	public ModelAndView orderListByDep(){
 		ModelAndView mv = new ModelAndView();
-		PageData pd = this.getPageData();
 		try {
-			HelpUtil.setDefaultDate(pd);
+			PageData pd = this.getPageData();
+			mv.setViewName("DoctOrder/report/orderListByDep");
+			String beginDate = pd.getString("beginDate");
+			String endDate = pd.getString("endDate"); 
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
+			}
 			List<PageData> list =  this.orderWorkService.orderListByDep(pd);
 			long total = 0;
 			for(PageData p:list){
@@ -403,7 +419,6 @@ public class ReportController extends BaseController{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mv.setViewName("DoctOrder/report/orderListByDep");
 		return  mv; 
 	}
 	
@@ -476,11 +491,16 @@ public class ReportController extends BaseController{
 //		PrescService s = (PrescService) ApplicationUtil.getBean("prescService");
 //		System.out.println(s.prescListPage(new Page()));
 		ModelAndView mv = this.getModelAndView();
-		PageData pd = this.getPageData();
 		try{
+			mv.setViewName("DoctOrder/report/prescReport");
+			PageData pd = this.getPageData();
 			// 当前登录专家
 			mv.addObject("pd", pd);
-			HelpUtil.setDefaultDate(pd);
+			String beginDate = pd.getString("beginDate");
+			String endDate = pd.getString("endDate"); 
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
+			}
 			//处方问题统计
 			List<PageData>	reportList = prescService.prescReport(pd);
 			long total = 0;
@@ -500,7 +520,6 @@ public class ReportController extends BaseController{
 			}
 			mv.addObject("reportList", reportList);
 			mv.addObject("checktypeMap", commonService.getCheckTypeDict()); 
-			mv.setViewName("DoctOrder/report/prescReport");
 			
 		} catch(Exception e){
 			logger.error(e.toString(), e);
@@ -580,8 +599,9 @@ public class ReportController extends BaseController{
 	@RequestMapping(value="/prescList")
 	public ModelAndView prescList(Page page){
 		ModelAndView mv = new ModelAndView();
-		PageData pd = this.getPageData();
 		try {
+			PageData pd = this.getPageData();
+			mv.setViewName("DoctOrder/report/prescList");
 			HelpUtil.setDefaultDate(pd);
 			String keywords = pd.getString("keywords");			//关键词检索条件
 			String beginDate = pd.getString("beginDate");		//开始时间
@@ -594,6 +614,9 @@ public class ReportController extends BaseController{
 				cal.setTime(DateUtil.fomatDate(endDate));
 				cal.add(Calendar.DAY_OF_MONTH, 1);
 				pd.put("endDate", sdf.format(cal.getTime()));
+			}
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
 			}
 			page.setPd(pd);
 			List<PageData>	prescList = prescService.prescListPage(page);	//列出专家列表
@@ -613,7 +636,6 @@ public class ReportController extends BaseController{
 		{
 			logger.error(e.toString(), e);
 		}
-		mv.setViewName("DoctOrder/report/prescList");
 		return  mv; 
 	}
 	
@@ -712,9 +734,14 @@ public class ReportController extends BaseController{
 	@RequestMapping(value="/prescListByDoctor")
 	public ModelAndView prescListByDoctor(){
 		ModelAndView mv = new ModelAndView();
-		PageData pd = this.getPageData();
 		try {
-			HelpUtil.setDefaultDate(pd);
+			mv.setViewName("DoctOrder/report/prescListByDoctor");
+			PageData pd = this.getPageData();
+			String beginDate = pd.getString("beginDate");
+			String endDate = pd.getString("endDate"); 
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
+			}
 			List<PageData> list =  this.prescService.prescListByDoctor(pd);
 			long total = 0;
 			for(PageData p:list){
@@ -737,7 +764,6 @@ public class ReportController extends BaseController{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mv.setViewName("DoctOrder/report/prescListByDoctor");
 		return  mv; 
 	}
 	
@@ -807,7 +833,12 @@ public class ReportController extends BaseController{
 		ModelAndView mv = new ModelAndView();
 		PageData pd = this.getPageData();
 		try {
-			HelpUtil.setDefaultDate(pd);
+			mv.setViewName("DoctOrder/report/prescListByDep");
+			String beginDate = pd.getString("beginDate");
+			String endDate = pd.getString("endDate"); 
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
+			}
 			List<PageData> list =  this.prescService.prescListByDep(pd);
 			long total = 0;
 			for(PageData p:list){
@@ -830,7 +861,6 @@ public class ReportController extends BaseController{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mv.setViewName("DoctOrder/report/prescListByDep");
 		return  mv; 
 	}
 	
@@ -901,7 +931,12 @@ public class ReportController extends BaseController{
 		ModelAndView mv = new ModelAndView();
 		PageData pd = this.getPageData();
 		try {
-			HelpUtil.setDefaultDate(pd);
+			mv.setViewName("DoctOrder/report/prescStatistics");
+			String beginDate = pd.getString("beginDate");
+			String endDate = pd.getString("endDate"); 
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
+			}
 			mv.addObject("pd", pd);
 			PageData p1 =  this.prescService.prescStatistics1(pd);
 			BigDecimal HASKJ_SUM = (BigDecimal) p1.get("HASKJ_SUM");
@@ -983,7 +1018,6 @@ public class ReportController extends BaseController{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mv.setViewName("DoctOrder/report/prescStatistics");
 		return  mv; 
 	}
 	
@@ -1201,8 +1235,13 @@ public class ReportController extends BaseController{
 		ModelAndView mv = new ModelAndView();
 		PageData pd = this.getPageData();
 		try {
+			mv.setViewName("DoctOrder/report/exceedCommonDep");
 			mv.addObject("pd", pd);
-			HelpUtil.setDefaultDate(pd);
+			String beginDate = pd.getString("beginDate");
+			String endDate = pd.getString("endDate"); 
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
+			}
 			//超常规统计（科室）按照问题类型分组
 			List<PageData> list =  this.prescService.exceedCommonDep(pd);
 			//按照医生分组
@@ -1252,7 +1291,6 @@ public class ReportController extends BaseController{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mv.setViewName("DoctOrder/report/exceedCommonDep");
 		return  mv; 
 	}
 	/**
@@ -1379,8 +1417,13 @@ public class ReportController extends BaseController{
 		ModelAndView mv = new ModelAndView();
 		PageData pd = this.getPageData();
 		try {
+			mv.setViewName("DoctOrder/report/exceedCommonDoctor");
 			mv.addObject("pd", pd);
-			HelpUtil.setDefaultDate(pd);
+			String beginDate = pd.getString("beginDate");
+			String endDate = pd.getString("endDate"); 
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
+			}
 			//超常规统计（医生）按照问题类型分组
 			List<PageData> list =  this.prescService.exceedCommonDoctor(pd);
 			//按照医生分组
@@ -1430,7 +1473,6 @@ public class ReportController extends BaseController{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mv.setViewName("DoctOrder/report/exceedCommonDoctor");
 		return  mv; 
 	}
 	
@@ -1444,7 +1486,6 @@ public class ReportController extends BaseController{
 		PageData pd = this.getPageData();
 		try {
 			mv.addObject("pd", pd);
-			HelpUtil.setDefaultDate(pd);
 			//超常规统计（医生）按照问题类型分组
 			List<PageData> list =  this.prescService.exceedCommonDoctor(pd);
 			//按照医生分组
@@ -1560,8 +1601,13 @@ public class ReportController extends BaseController{
 		ModelAndView mv = new ModelAndView();
 		PageData pd = this.getPageData();
 		try {
+			mv.setViewName("DoctOrder/report/exceedCommonOrderDep");
 			mv.addObject("pd", pd);
-			HelpUtil.setDefaultDate(pd);
+			String beginDate = pd.getString("beginDate");
+			String endDate = pd.getString("endDate"); 
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
+			}
 			//超常规统计（科室）按照问题类型分组
 			List<PageData> list =  this.prescService.exceedCommonOrderDep(pd);
 			//按照医生分组
@@ -1611,7 +1657,6 @@ public class ReportController extends BaseController{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mv.setViewName("DoctOrder/report/exceedCommonOrderDep");
 		return  mv; 
 	}
 	
@@ -1740,8 +1785,13 @@ public class ReportController extends BaseController{
 		ModelAndView mv = new ModelAndView();
 		PageData pd = this.getPageData();
 		try {
+			mv.setViewName("DoctOrder/report/exceedCommonOrderDoctor");
 			mv.addObject("pd", pd);
-			HelpUtil.setDefaultDate(pd);
+			String beginDate = pd.getString("beginDate");
+			String endDate = pd.getString("endDate"); 
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
+			}
 			//超常规统计（医生）按照问题类型分组
 			List<PageData> list =  this.prescService.exceedCommonOrderDoctor(pd);
 			//按照医生分组
@@ -1791,7 +1841,6 @@ public class ReportController extends BaseController{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mv.setViewName("DoctOrder/report/exceedCommonOrderDoctor");
 		return  mv; 
 	}
 	/**

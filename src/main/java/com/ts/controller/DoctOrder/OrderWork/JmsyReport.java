@@ -40,8 +40,13 @@ public class JmsyReport extends BaseController{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
 		try{
+			mv.setViewName("DoctOrder/jmsy/jmsy1");
 			mv.addObject("pd", pd);
-			HelpUtil.setDefaultDate(pd);
+			String beginDate = pd.getString("beginDate");
+			String endDate = pd.getString("endDate"); 
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
+			}
 			//门急诊药品费用统计
 			List<PageData>	reportList = null;
 			String type1 = pd.getString("type1");
@@ -55,7 +60,6 @@ public class JmsyReport extends BaseController{
 				reportList = jmsyService.jmsy12(pd);
 			}
 			mv.addObject("reportList", reportList);
-			mv.setViewName("DoctOrder/jmsy/jmsy1");
 		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
@@ -124,8 +128,13 @@ public class JmsyReport extends BaseController{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
 		try{
+			mv.setViewName("DoctOrder/jmsy/jmsy2");
 			mv.addObject("pd", pd);
-			HelpUtil.setDefaultDate(pd);
+			String beginDate = pd.getString("beginDate");
+			String endDate = pd.getString("endDate"); 
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
+			}
 			//门急诊药品费用统计
 			List<PageData>	reportList = null;
 			String type1 = pd.getString("type1");
@@ -141,7 +150,6 @@ public class JmsyReport extends BaseController{
 				reportList = jmsyService.jmsy22(pd);
 			}
 			mv.addObject("reportList", reportList);
-			mv.setViewName("DoctOrder/jmsy/jmsy2");
 		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}

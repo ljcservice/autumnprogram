@@ -78,8 +78,8 @@ public class OrderWork extends BaseController
 	 */
 	@RequestMapping(value="/OrderWork")
 	public ModelAndView OrderWorkSelect(Page page){
-		
 		ModelAndView mv = new ModelAndView();
+		mv.setViewName("DoctOrder/OrderWork/OrderWorkView");
 		PageData pd = this.getPageData();
 		
 		try
@@ -105,6 +105,10 @@ public class OrderWork extends BaseController
 			if("1".equals(pd.getString("randomflag"))){
 				int showCount = Integer.parseInt(RANDOM_NUM);
 				page.setShowCount(showCount);
+			}else{
+				if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+					return mv;
+				}
 			}
 			List<PageData> entity =  this.orderWorkService.patientList(page);
 			if("1".equals(pd.getString("randomflag"))){
@@ -132,7 +136,6 @@ public class OrderWork extends BaseController
 		{
 			logger.error(e.toString(), e);
 		}
-		mv.setViewName("DoctOrder/OrderWork/OrderWorkView");
 		return  mv; 
 	}
 	

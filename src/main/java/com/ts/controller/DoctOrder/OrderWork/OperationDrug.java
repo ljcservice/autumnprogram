@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,8 +17,11 @@ import com.ts.controller.base.BaseController;
 import com.ts.entity.Page;
 import com.ts.entity.system.User;
 import com.ts.service.DoctOrder.OrderWork.OpDrugService;
+import com.ts.util.DateUtil;
 import com.ts.util.Jurisdiction;
 import com.ts.util.PageData;
+import com.ts.util.Tools;
+import com.ts.util.UuidUtil;
 import com.ts.util.app.AppUtil;
 
 @Controller
@@ -106,8 +110,16 @@ public class OperationDrug  extends BaseController{
 			PageData pd = this.getPageData();
 			// 当前登录专家
 			User user = getCurrentUser();
-			errInfo = opDrugService.saveOpDrug(pd);
-			map.put("result",errInfo);
+			String O_ID = pd.getString("O_ID");
+			pd.put("OPERATORDATE", DateUtil.getTime());
+			pd.put("OPERATORUSER", user.getUSER_ID());
+			if(Tools.isEmpty(O_ID)){
+				pd.put("O_ID",  UuidUtil.get32UUID());
+				errInfo = opDrugService.saveOpDrug(pd);
+			}else{
+				errInfo = opDrugService.updateOpDrug(pd);
+			}
+			map.put("pd",errInfo);
 		} catch(Exception e){
 			map.put("result","操作失败");
 			logger.error(e.toString(), e);

@@ -40,8 +40,13 @@ public class HaskjDrugReport extends BaseController{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
 		try{
+			mv.setViewName("DoctOrder/haskjDrug/haskjDrug1");
 			mv.addObject("pd", pd);
-			HelpUtil.setDefaultDate(pd);
+			String beginDate = pd.getString("beginDate");
+			String endDate = pd.getString("endDate"); 
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
+			}
 			page.setPd(pd);
 			//门急诊药品费用统计
 			List<PageData>	reportList = null;
@@ -73,7 +78,6 @@ public class HaskjDrugReport extends BaseController{
 				}
 			}
 			mv.addObject("reportList", reportList);
-			mv.setViewName("DoctOrder/haskjDrug/haskjDrug1");
 		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
@@ -162,8 +166,13 @@ public class HaskjDrugReport extends BaseController{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
 		try{
+			mv.setViewName("DoctOrder/haskjDrug/haskjDrug2");
 			mv.addObject("pd", pd);
-			HelpUtil.setDefaultDate(pd);
+			String beginDate = pd.getString("beginDate");
+			String endDate = pd.getString("endDate"); 
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
+			}
 			page.setPd(pd);
 			String type = pd.getString("type");
 			if(Tools.isEmpty(type)){
@@ -180,7 +189,6 @@ public class HaskjDrugReport extends BaseController{
 				reportList = haskjDrugService.haskjDrug22(page);
 			}
 			mv.addObject("reportList", reportList);
-			mv.setViewName("DoctOrder/haskjDrug/haskjDrug2");
 		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}

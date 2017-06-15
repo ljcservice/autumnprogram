@@ -17,6 +17,7 @@ import com.ts.service.DoctOrder.OrderWork.AllHospitalService;
 import com.ts.util.MyDecimalFormat;
 import com.ts.util.ObjectExcelView;
 import com.ts.util.PageData;
+import com.ts.util.Tools;
 import com.ts.util.ontology.HelpUtil;
 
 @Controller
@@ -30,12 +31,17 @@ public class AllHospital  extends BaseController{
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/allHospital1")
-	public ModelAndView allHospital3(Page page)throws Exception{
+	public ModelAndView allHospital1(Page page)throws Exception{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
 		try{
+			mv.setViewName("DoctOrder/allHospital/allHospital1");
 			mv.addObject("pd", pd);
-			HelpUtil.setDefaultDate(pd);
+			String beginDate = pd.getString("beginDate");	//开始时间
+			String endDate = pd.getString("endDate");		//结束时间
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
+			}
 			page.setPd(pd);
 			//门急诊药品费用统计
 			List<PageData>	reportList = null;
@@ -64,7 +70,7 @@ public class AllHospital  extends BaseController{
 					BigDecimal med =  (BigDecimal) pp.get("med");
 					BigDecimal drug =  (BigDecimal) pp.get("drug");
 					BigDecimal anti =  (BigDecimal) pp.get("anti");
-					if(med==null||med.doubleValue()==0){
+					if(med==null||med.doubleValue()==0||drug==null||drug.doubleValue()==0){
 						pp.put("anti_persents", 0);
 						pp.put("drug_persents", 0);
 					}else{
@@ -91,7 +97,7 @@ public class AllHospital  extends BaseController{
 					BigDecimal med =  (BigDecimal) pp.get("med");
 					BigDecimal drug =  (BigDecimal) pp.get("drug");
 					BigDecimal anti =  (BigDecimal) pp.get("anti");
-					if(med==null||med.doubleValue()==0){
+					if(med==null||med.doubleValue()==0||drug==null||drug.doubleValue()==0){
 						pp.put("anti_persents", 0);
 						pp.put("drug_persents", 0);
 					}else{
@@ -134,7 +140,7 @@ public class AllHospital  extends BaseController{
 			BigDecimal all_drug_all = (BigDecimal)all.get("drug_all");
 			BigDecimal all_anti_all = (BigDecimal)all.get("anti_all");
 			//总合计百分比
-			if(all_med_all==null||all_med_all.doubleValue()==0){
+			if(all_med_all==null||all_med_all.doubleValue()==0||all_drug_all==null||all_drug_all.doubleValue()==0){
 				all.put("anti_persents", 0);
 				all.put("drug_persents", 0);
 			}else{
@@ -144,7 +150,6 @@ public class AllHospital  extends BaseController{
 			mv.addObject("count", count);
 			mv.addObject("count2", count2);
 			mv.addObject("all", all);
-			mv.setViewName("DoctOrder/allHospital/allHospital1");
 		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
@@ -185,7 +190,7 @@ public class AllHospital  extends BaseController{
 					BigDecimal med =  (BigDecimal) pp.get("med");
 					BigDecimal drug =  (BigDecimal) pp.get("drug");
 					BigDecimal anti =  (BigDecimal) pp.get("anti");
-					if(med==null||med.doubleValue()==0){
+					if(med==null||med.doubleValue()==0||drug==null||drug.doubleValue()==0){
 						pp.put("anti_persents", 0);
 						pp.put("drug_persents", 0);
 					}else{
@@ -199,7 +204,7 @@ public class AllHospital  extends BaseController{
 				count.put("med_all", med_all);
 				count.put("drug_all", drug_all);
 				count.put("anti_all", anti_all);
-				if(med_all==null||med_all.doubleValue()==0){
+				if(med_all==null||med_all.doubleValue()==0||drug_all==null||drug_all.doubleValue()==0){
 					count.put("anti_persents", 0);
 					count.put("drug_persents", 0);
 				}else{
@@ -212,7 +217,7 @@ public class AllHospital  extends BaseController{
 					BigDecimal med =  (BigDecimal) pp.get("med");
 					BigDecimal drug =  (BigDecimal) pp.get("drug");
 					BigDecimal anti =  (BigDecimal) pp.get("anti");
-					if(med==null||med.doubleValue()==0){
+					if(med==null||med.doubleValue()==0||drug==null||drug.doubleValue()==0){
 						pp.put("anti_persents", 0);
 						pp.put("drug_persents", 0);
 					}else{
@@ -226,7 +231,7 @@ public class AllHospital  extends BaseController{
 				count2.put("med_all", med_all2);
 				count2.put("drug_all", drug_all2);
 				count2.put("anti_all", anti_all2);
-				if(med_all2==null||med_all2.doubleValue()==0){
+				if(med_all2==null||med_all2.doubleValue()==0||drug_all2==null||drug_all2.doubleValue()==0){
 					count2.put("drug_persents", 0);
 					count2.put("anti_persents", 0);
 				}else{
@@ -255,7 +260,7 @@ public class AllHospital  extends BaseController{
 			BigDecimal all_drug_all = (BigDecimal)all.get("drug_all");
 			BigDecimal all_anti_all = (BigDecimal)all.get("anti_all");
 			//总合计百分比
-			if(all_med_all==null||all_med_all.doubleValue()==0){
+			if(all_med_all==null||all_med_all.doubleValue()==0||all_drug_all==null||all_drug_all.doubleValue()==0){
 				all.put("anti_persents", 0);
 				all.put("drug_persents", 0);
 			}else{
@@ -340,14 +345,18 @@ public class AllHospital  extends BaseController{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
 		try{
+			mv.setViewName("DoctOrder/allHospital/allHospital2");
 			mv.addObject("pd", pd);
-			HelpUtil.setDefaultDate(pd);
+			String beginDate = pd.getString("beginDate");	//开始时间
+			String endDate = pd.getString("endDate");		//结束时间
+			if(Tools.isEmpty(beginDate)&&Tools.isEmpty(endDate)){
+				return mv;
+			}
 			page.setPd(pd);
 			//门急诊药品费用统计
 			List<PageData>	reportList = null;
 			reportList = allHospitalService.allHospital2(page);
 			mv.addObject("reportList", reportList);
-			mv.setViewName("DoctOrder/allHospital/allHospital2");
 		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
