@@ -38,19 +38,19 @@
 		</if>
 		<!-- 是否合理 -->
 		<choose>
-			<when test="pd.ISCHECKTRUE!= null and pd.ISCHECKTRUE==2">
+			<when test="pd.ISCHECKTRUE!= null and pd.ISCHECKTRUE!='' and pd.ISCHECKTRUE==2">
 				and ( a.ISCHECKTRUE =2	or a.ISCHECKTRUE  is null )
 			</when>
 			<otherwise>
-				<if test="pd.ISCHECKTRUE  != null and pd.ISCHECKTRUE  != ''">  
+				<if test="pd.ISCHECKTRUE!= null and pd.ISCHECKTRUE  != ''">  
 					and a.ISCHECKTRUE  = #{pd.ISCHECKTRUE }
 				</if>
 			</otherwise>
 		</choose>
-		<if test="pd.ISORDERCHECK != null and pd.ISORDERCHECK == '1'"> <!--点评记录-->
+		<if test="pd.ISORDERCHECK!= null and pd.ISORDERCHECK!='' and pd.ISORDERCHECK == '1'"> <!--点评记录-->
 			and a.ISORDERCHECK = 1
 		</if>
-		<if test="pd.ISORDERCHECK != null and pd.ISORDERCHECK == '0'"> <!--点评记录-->
+		<if test="pd.ISORDERCHECK!= null and pd.ISORDERCHECK!='' and pd.ISORDERCHECK == '0'"> <!--点评记录-->
 			and (a.ISORDERCHECK = 0 or a.ISORDERCHECK is null ) 
 		</if>
 		<if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  

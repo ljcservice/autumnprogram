@@ -288,18 +288,18 @@
 		<if test="pd.IS_OPERATION != null and pd.IS_OPERATION != ''"> <!-- 是否含有手术-->
 			and t.IS_OPERATION = #{pd.IS_OPERATION} 
 		</if>
-		<if test="pd.ISORDERCHECK != null and pd.ISORDERCHECK == '1'"> <!--点评记录-->
+		<if test="pd.ISORDERCHECK!=null and pd.ISORDERCHECK!='' and pd.ISORDERCHECK==1"> <!--点评记录-->
 			and t.ISORDERCHECK = 1
 		</if>
-		<if test="pd.ISORDERCHECK != null and pd.ISORDERCHECK == '0'"> <!--点评记录-->
-			and (t.ISORDERCHECK = 0 or t.ISORDERCHECK is null ) 
+		<if test="pd.ISORDERCHECK!=null and pd.ISORDERCHECK!='' and pd.ISORDERCHECK==0"> <!--点评记录-->
+			and (t.ISORDERCHECK= 0 or t.ISORDERCHECK is null ) 
 		</if>
 		<choose>
-			<when test="pd.ISCHECKTRUE!= null and pd.ISCHECKTRUE==2">
+			<when test="pd.ISCHECKTRUE!=null and pd.ISCHECKTRUE!='' and pd.ISCHECKTRUE==2">
 				and ( t.ISCHECKTRUE =2	or t.ISCHECKTRUE  is null )
 			</when>
 			<otherwise>
-				<if test="pd.ISCHECKTRUE != null and pd.ISCHECKTRUE  != ''"> <!--点评记录-->
+				<if test="pd.ISCHECKTRUE!=null and pd.ISCHECKTRUE!='' and pd.ISCHECKTRUE  != ''"> <!--点评记录-->
 					and t.ISCHECKTRUE  = #{pd.ISCHECKTRUE }
 				</if>
 			</otherwise>
