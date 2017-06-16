@@ -113,23 +113,22 @@
 									<th class="center" nowrap>按类别分解</th>
 								</tr>
 							</thead>
-							<tbody>
 								
 							<!-- 开始循环 -->	 
 							<c:choose>
 								<c:when test="${not empty patinfos}">
+									<tbody>
 									<c:forEach items="${patinfos}" var="patVisit" varStatus="vs" >
-												
 										<tr ondblclick="">
 											<td nowrap class='center' style="width: 30px;">${vs.index+1}</td>
 											<td nowrap class="center">${patVisit.dept_name } </td>
 											<td nowrap class="center">${patVisit.pat_count }</td>
 											<td nowrap class="center">${patVisit.scd }</td>
 											<c:set var="outanti_count" >
-												<fmt:formatNumber value="${patVisit.anti_count }" type="number" maxFractionDigits="2" pattern="#00.00"></fmt:formatNumber>
+												<fmt:formatNumber value="${patVisit.anti_count }" type="number" maxFractionDigits="2" pattern="#0.00"></fmt:formatNumber>
 											</c:set>
 											<c:set var="outpat_count" >
-												<fmt:formatNumber value="${patVisit.pat_count }" type="number" maxFractionDigits="2" pattern="#00.00"></fmt:formatNumber>
+												<fmt:formatNumber value="${patVisit.pat_count }" type="number" maxFractionDigits="2" pattern="#0.00"></fmt:formatNumber>
 											</c:set>
 											<td nowrap class="center">
 												${patVisit.anti_count}/${patVisit.pat_count}*100=
@@ -140,53 +139,55 @@
 											<td nowrap class="center"></td> 
 										</tr>
 									</c:forEach>  
+									</tbody>
+									<tfoot>
+										<tr  style="background-color:orange;">
+											<td nowrap class='center' style="width: 30px;" rowspan="2">总计</td>
+											<td nowrap class="center">总出院人数</td>
+											<td nowrap class="center">转科人数</td>
+											<td nowrap class="center">总使用抗菌药人数</td>
+											<td nowrap class="center">抗菌药物使用率</td>
+											<td nowrap class="center">DDD(全部)</td>
+											<td nowrap class="center">总住院天数(全部)</td>   
+											<td nowrap class="center">使用强度</td> 
+											
+										</tr>
+										<c:if test="${not empty patinfosum }">
+											<tr style="background-color:orange;" >
+												<td nowrap class="center">${patinfosum.pat_count } </td>
+												<td nowrap class="center">${patinfosum.scd }</td>
+												<td nowrap class="center">${patinfosum.anti_count }</td>
+												<c:set var="outanti_countsum" >
+													<fmt:formatNumber value="${patinfosum.anti_count }" type="number" maxFractionDigits="2" pattern="#0.00"/>
+												</c:set>
+												<c:set var="outpat_countsum" >
+													<fmt:formatNumber value="${patinfosum.pat_count }" type="number" maxFractionDigits="2" pattern="#0.00"/>
+												</c:set>
+												<td nowrap class="center">
+													${patinfosum.anti_count}/${patinfosum.pat_count}*100=
+													<fmt:formatNumber value="${outanti_countsum/outpat_countsum * 100}" type="number" maxFractionDigits="2" />%
+												</td>
+												<td nowrap class="center"> 
+													<fmt:formatNumber value="${patinfosum.ddd_values }" type="number" maxFractionDigits="2"/> 
+												</td>
+												<td nowrap class="center">
+													<fmt:formatNumber value="${patinfosum.admission_days }" type="number" maxFractionDigits="2"/>
+												</td>  
+												<td nowrap class="center">
+													<fmt:formatNumber value="${patinfosum.intensity }" type="number" maxFractionDigits="2"/>
+												</td> 
+											</tr>
+										</c:if>
+									</tfoot>
 								</c:when>
 								<c:otherwise>
+									<tbody>
 									<tr class="main_info">
 										<td colspan="8" class="center">没有相关数据</td>
-									</tr>
+									</tr></tbody>
 								</c:otherwise>
 							</c:choose>
-							</tbody>
-							<tfoot>
-								<tr  style="background-color:orange;">
-									<td nowrap class='center' style="width: 30px;" rowspan="2">总计</td>
-									<td nowrap class="center">总出院人数</td>
-									<td nowrap class="center">转科人数</td>
-									<td nowrap class="center">总使用抗菌药人数</td>
-									<td nowrap class="center">抗菌药物使用率</td>
-									<td nowrap class="center">DDD(全部)</td>
-									<td nowrap class="center">总住院天数(全部)</td>   
-									<td nowrap class="center">使用强度</td> 
-									
-								</tr>
-								<c:if test="${not empty patinfosum }">
-									<tr style="background-color:orange;" >
-										<td nowrap class="center">${patinfosum.pat_count } </td>
-										<td nowrap class="center">${patinfosum.scd }</td>
-										<td nowrap class="center">${patinfosum.anti_count }</td>
-										<c:set var="outanti_countsum" >
-											<fmt:formatNumber value="${patinfosum.anti_count }" type="number" maxFractionDigits="2" pattern="#00.00"/>
-										</c:set>
-										<c:set var="outpat_countsum" >
-											<fmt:formatNumber value="${patinfosum.pat_count }" type="number" maxFractionDigits="2" pattern="#00.00"/>
-										</c:set>
-										<td nowrap class="center">
-											${patinfosum.anti_count}/${patinfosum.pat_count}*100=
-											<fmt:formatNumber value="${outanti_countsum/outpat_countsum * 100}" type="number" maxFractionDigits="2" />%
-										</td>
-										<td nowrap class="center"> 
-											<fmt:formatNumber value="${patinfosum.ddd_values }" type="number" maxFractionDigits="2"/> 
-										</td>
-										<td nowrap class="center">
-											<fmt:formatNumber value="${patinfosum.admission_days }" type="number" maxFractionDigits="2"/>
-										</td>  
-										<td nowrap class="center">
-											<fmt:formatNumber value="${patinfosum.intensity }" type="number" maxFractionDigits="2"/>
-										</td> 
-									</tr>
-								</c:if>
-							</tfoot>
+							
 						</table>
 						</div>
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">

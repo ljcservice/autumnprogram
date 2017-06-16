@@ -214,12 +214,13 @@
 															data-content="<font size='0'>
 																<c:forEach items="${CheckRss.get(key1)}" var="rs">
 																	<b>${rsTypeDict.get(rs.RS_DRUG_TYPE).rs_type_name }:  
-																	<c:if test="${rs.drug_id1_name != order.order_Text }"> 
+																	<c:if test="${rs.drug_id1_name != order.order_Text && rs.order_no !=  rs.rec_main_no1}"> 
 																		${rs.drug_id1_name }</b>
 																	</c:if>
-																	<c:if test="${rs.drug_id2_name != order.order_Text }"> 
+																	<c:if test="${rs.drug_id2_name != order.order_Text and rs.order_no != rs.rec_main_no2}"> 
 																		${rs.drug_id2_name }</b>
 																	</c:if>
+																	
 																	 <br>
 																	${rs.ALERT_HINT }<br>
 																</c:forEach>	

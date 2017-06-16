@@ -140,17 +140,17 @@
 												<fmt:formatNumber value="${patVisit.limit_ddd_intensity }" type="number" maxFractionDigits="2"></fmt:formatNumber>
 											</td>  
 											<c:set var="outanti_count" >
-												<fmt:formatNumber value="${patVisit.limit_ddd_count}" type="number" maxFractionDigits="2" pattern="#00.00"></fmt:formatNumber>
+												<fmt:formatNumber value="${patVisit.limit_ddd_count}" type="number" maxFractionDigits="2" pattern="#0.00"></fmt:formatNumber>
 											</c:set>
 											<c:set var="outpat_count" >
-												<fmt:formatNumber value="${patVisit.pat_count }" type="number" maxFractionDigits="2" pattern="#00.00"></fmt:formatNumber>
+												<fmt:formatNumber value="${patVisit.pat_count }" type="number" maxFractionDigits="2" pattern="#0.00"></fmt:formatNumber>
 											</c:set>
 											<td nowrap class="center">
 												<fmt:formatNumber value="${outanti_count/outpat_count * 100}" type="number" maxFractionDigits="2" ></fmt:formatNumber>%
 											</td>
 												
 											<c:set var="outanti_countSpec" >
-												<fmt:formatNumber value="${patVisit.spec_ddd_count}" type="number" maxFractionDigits="2" pattern="#00.00"></fmt:formatNumber>
+												<fmt:formatNumber value="${patVisit.spec_ddd_count}" type="number" maxFractionDigits="2" pattern="#0.00"></fmt:formatNumber>
 											</c:set>
 											
 											<td nowrap class="center">

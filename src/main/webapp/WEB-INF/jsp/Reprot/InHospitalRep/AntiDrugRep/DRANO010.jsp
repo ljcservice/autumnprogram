@@ -146,7 +146,7 @@
 												${patVisit.limit_submit_count}
 											</td>
 											<td nowrap class="center">
-												<fmt:formatNumber value="${patVisit.linitranking * 100}" type="number" maxFractionDigits="2" pattern="#00.00"></fmt:formatNumber>%
+												<fmt:formatNumber value="${patVisit.linitranking * 100}" type="number" maxFractionDigits="2" pattern="#0.00"></fmt:formatNumber>%
 											</td>
 											<td nowrap class="center">
 												${patVisit.spec_anti_count}
@@ -155,7 +155,7 @@
 												${patVisit.spec_submit_count}
 											</td>
 											<td nowrap class="center" >
-												<fmt:formatNumber value="${patVisit.specranking * 100}" type="number" maxFractionDigits="2" pattern="#00.00"></fmt:formatNumber>%
+												<fmt:formatNumber value="${patVisit.specranking * 100}" type="number" maxFractionDigits="2" pattern="#0.00"></fmt:formatNumber>%
 											</td>
 											<td nowrap class="center"> 
 											</td>

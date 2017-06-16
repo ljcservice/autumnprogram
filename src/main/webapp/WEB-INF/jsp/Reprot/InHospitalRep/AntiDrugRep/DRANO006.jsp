@@ -142,14 +142,21 @@
 											</td>  
 											
 											<c:set var="outanti_count" >
-												<fmt:formatNumber value="${patVisit.anti_count }" type="number" maxFractionDigits="2" pattern="#00.00"></fmt:formatNumber>
+												<fmt:formatNumber value="${patVisit.anti_count }" type="number" maxFractionDigits="2" pattern="#0.00"></fmt:formatNumber>
 											</c:set>
 											<c:set var="outantitype_count" >
-												<fmt:formatNumber value="${patVisit.anti_type_count}" type="number" maxFractionDigits="2" pattern="#00.00"></fmt:formatNumber>
+												<fmt:formatNumber value="${patVisit.anti_type_count}" type="number" maxFractionDigits="2" pattern="#0.00"></fmt:formatNumber>
 											</c:set>
 											<td nowrap class="center">
-												[${patVisit.anti_type_count}/${patVisit.anti_count}]=
-												<fmt:formatNumber value="${outantitype_count/outanti_count}" type="number" maxFractionDigits="2" ></fmt:formatNumber>
+												<c:choose>
+													<c:when test="${outanti_count=='0'|| outanti_count=='0.00' }">
+														[${patVisit.anti_type_count}/0]=0
+													</c:when>
+													<c:otherwise>
+														[${patVisit.anti_type_count}/${patVisit.anti_count}]=
+														<fmt:formatNumber value="${outantitype_count/outanti_count}" type="number" maxFractionDigits="2" ></fmt:formatNumber>
+													</c:otherwise>
+												</c:choose>
 											</td>
 											<td nowrap class="center"> 
 											</td>
@@ -174,20 +181,34 @@
 										<td nowrap class="center">
 											${patinfosum.anti_count }
 										</td>  
-										
 										<c:set var="outpatantisum" >
 									
-											<fmt:formatNumber value="${patinfosum.anti_count }" type="number" maxFractionDigits="2" pattern="#00.00"/>
+											<fmt:formatNumber value="${patinfosum.anti_count }" type="number" maxFractionDigits="2" pattern="#0.00"/>
 										</c:set>
 										<c:set var="outpatcountsum" >
-											<fmt:formatNumber value="${patinfosum.pat_count }" type="number" maxFractionDigits="2" pattern="#00.00"/>
+											<fmt:formatNumber value="${patinfosum.pat_count }" type="number" maxFractionDigits="2" pattern="#0.00"/>
 										</c:set>
 										<td nowrap class="center">
-											<fmt:formatNumber value="${outpatantisum/outpatcountsum * 100}" type="number" maxFractionDigits="2" />%
+											<c:choose>
+												<c:when test="${outpatcountsum=='0'|| outpatcountsum=='0.00' }">
+													0
+												</c:when>
+												<c:otherwise>
+													<fmt:formatNumber value="${outpatantisum/outpatcountsum * 100}" type="number" maxFractionDigits="2" />%
+												</c:otherwise>
+											</c:choose>
 										</td> 
 										<td nowrap class="center">
-											[${antiCountnumber}/${outpatantisum}]=
-											<fmt:formatNumber value="${antiCountnumber/outpatantisum}" type="number" maxFractionDigits="2" />
+										
+											<c:choose>
+												<c:when test="${outpatantisum=='0'|| outpatantisum=='0.00' }">
+													[${antiCountnumber}/0]=0
+												</c:when>
+												<c:otherwise>
+													[${antiCountnumber}/${outpatantisum}]=
+													<fmt:formatNumber value="${antiCountnumber/outpatantisum}" type="number" maxFractionDigits="2" />
+												</c:otherwise>
+											</c:choose>
 										</td>
 										<td nowrap class="center"> 
 										</td>
@@ -308,7 +329,7 @@ function viewDetail(patId , visitId,ngnum){
 	
 }
 function listExport(){
-	window.open(path + "/InHospitalRep/DRANO007Export.do?"+$("#searchForm").serialize());
+	window.open(path + "/InHospitalRep/DRANO006Export.do?"+$("#searchForm").serialize());
 }
 function myprint(){
 	$("#main-container").hide();

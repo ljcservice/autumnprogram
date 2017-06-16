@@ -117,7 +117,6 @@
 									<th class="center" nowrap>抗菌比例</th>
 								</tr>
 							</thead>
-							<tbody>
 							<c:set var="antiCountCost" value="0.0000">
 							</c:set>
 							<c:set var="drugCountCost" value="0.0000">
@@ -127,6 +126,7 @@
 							<!-- 开始循环 -->	 
 							<c:choose>
 								<c:when test="${not empty patinfos}">
+									<tbody>
 									<c:forEach items="${patinfos}" var="patVisit" varStatus="vs" >
 												
 										<tr ondblclick="">
@@ -156,15 +156,8 @@
 											</td>
 										</tr>
 									</c:forEach>  
-								</c:when>
-								<c:otherwise>
-									<tr class="main_info">
-										<td colspan="8" class="center">没有相关数据</td>
-									</tr>
-								</c:otherwise>
-							</c:choose>
-							</tbody>
-							<tfoot>
+									</tbody>
+									<tfoot>
 									<tr style="background-color:orange;" >
 										<td nowrap class="center" colspan="3">合计 </td>
 										<td nowrap class="center"> 
@@ -185,7 +178,16 @@
 											<fmt:formatNumber value="${antiCountCost/drugCountCost * 100}" type="number" maxFractionDigits="4" />%
 										</td>
 									</tr>
-							</tfoot>
+									</tfoot>
+								</c:when>
+								<c:otherwise>
+									<tbody>
+									<tr class="main_info">
+										<td colspan="8" class="center">没有相关数据</td>
+									</tr>
+									</tbody>
+								</c:otherwise>
+							</c:choose>
 						</table>
 						</div>
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">

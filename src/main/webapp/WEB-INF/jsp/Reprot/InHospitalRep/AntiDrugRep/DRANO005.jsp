@@ -138,18 +138,32 @@
 											</td>
 											
 											<td nowrap class="center">
-												￥<fmt:formatNumber value="${patVisit.drug_costs_count / patVisit.anti_count }" type="number" maxFractionDigits="2"></fmt:formatNumber>
+												<c:choose>
+													<c:when test="${patVisit.anti_count==0}">
+														0
+													</c:when>
+													<c:otherwise>
+														￥<fmt:formatNumber value="${patVisit.drug_costs_count / patVisit.anti_count }" type="number" maxFractionDigits="2"></fmt:formatNumber>
+													</c:otherwise>
+												</c:choose>
 											</td>  
 											
 											<c:set var="outanti_count" >
-												<fmt:formatNumber value="${patVisit.anti_costs_count }" type="number" maxFractionDigits="2" pattern="#00.00"></fmt:formatNumber>
+												<fmt:formatNumber value="${patVisit.anti_costs_count }" type="number" maxFractionDigits="2" pattern="#0.00"></fmt:formatNumber>
 											</c:set>
 											<c:set var="outpat_count" >
-												<fmt:formatNumber value="${patVisit.drug_costs_count }" type="number" maxFractionDigits="2" pattern="#00.00"></fmt:formatNumber>
+												<fmt:formatNumber value="${patVisit.drug_costs_count }" type="number" maxFractionDigits="2" pattern="#0.00"></fmt:formatNumber>
 											</c:set>
 											<td nowrap class="center">
-												${outanti_count}/${outpat_count}*100=
-												<fmt:formatNumber value="${outanti_count/outpat_count * 100}" type="number" maxFractionDigits="2" ></fmt:formatNumber>%
+												<c:choose>
+													<c:when test="${outpat_count=='0'|| outpat_count=='0.00' }">
+														${outanti_count}/0*100= 0 %
+													</c:when>
+													<c:otherwise>
+														${outanti_count}/${outpat_count}*100=
+														<fmt:formatNumber value="${outanti_count/outpat_count * 100}" type="number" maxFractionDigits="2" ></fmt:formatNumber>%
+													</c:otherwise>
+												</c:choose>
 											</td>
 										</tr>
 									</c:forEach>  
@@ -168,10 +182,10 @@
 										<td nowrap class="center">${patinfosum.anticount}</td>
 <%-- 										<c:set var="outanti_countsum" > --%>
 										
-<%-- 											<fmt:formatNumber value="" type="number" maxFractionDigits="2" pattern="#00.00"/> --%>
+<%-- 											<fmt:formatNumber value="" type="number" maxFractionDigits="2" pattern="#0.00"/> --%>
 <%-- 										</c:set> --%>
 <%-- 										<c:set var="outpat_countsum" > --%>
-<%-- 											<fmt:formatNumber value="${patinfosum.pat_count }" type="number" maxFractionDigits="2" pattern="#00.00"/> --%>
+<%-- 											<fmt:formatNumber value="${patinfosum.pat_count }" type="number" maxFractionDigits="2" pattern="#0.00"/> --%>
 <%-- 										</c:set> --%>
 										<td nowrap class="center"> 
 											￥<fmt:formatNumber value="${antiCountCost }" type="number" maxFractionDigits="2"/> 

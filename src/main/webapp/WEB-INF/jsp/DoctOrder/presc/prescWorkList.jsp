@@ -134,27 +134,27 @@
 								<c:when test="${not empty prescList}">
 									<c:forEach items="${prescList}" var="presc" varStatus="vs">
 										<tr ondblclick="detailPresc('${presc.id}','${presc.NGROUPNUM}')">
-											<td class="center"><a href="javascript:detailPresc('${presc.id}','${presc.NGROUPNUM}');">${presc.PRESC_NO}</a></td>
-											<td class="center">${presc.ORDER_DATE}</td>
-											<td class="center">${presc.PATIENT_NAME}</td>
+											<td class="center" nowrap><a href="javascript:detailPresc('${presc.id}','${presc.NGROUPNUM}');">${presc.PRESC_NO}</a></td>
+											<td class="center" nowrap>${presc.ORDER_DATE}</td>
+											<td class="center" nowrap>${presc.PATIENT_NAME}</td>
 											<td class="center">${presc.PATIENT_SEX}</td>
-											<td class="center">${presc.ORG_NAME}</td>
-											<td class="center">${presc.DOCTOR_NAME}</td>
-											<td class="center">${presc.DIAGNOSIS_NAMES}</td>
-											<td class="center"><c:if test="${presc.ISORDERCHECK!=1}">未点评</c:if><c:if test="${presc.ISORDERCHECK==1}">已点评</c:if></td>
-											<td class="center">
+											<td class="center" nowrap>${presc.ORG_NAME}</td>
+											<td class="center" nowrap>${presc.DOCTOR_NAME}</td>
+											<td class="center" style="max-width: 150px;">${presc.DIAGNOSIS_NAMES}</td>
+											<td class="center" nowrap><c:if test="${presc.ISORDERCHECK!=1}">未点评</c:if><c:if test="${presc.ISORDERCHECK==1}">已点评</c:if></td>
+											<td class="center" nowrap>
 												<c:choose>
 													<c:when test="${presc.ISCHECKTRUE == 0 }">合理 </c:when>
 													<c:when test="${presc.ISCHECKTRUE == 1 }">不合理</c:when>
 													<c:otherwise>待定</c:otherwise>
 												</c:choose>
 											</td>
-											<td class="center">${presc.DRUG_COUNT}</td>
-											<td class="center"><c:if test="${presc.HASKJ==0}">否</c:if><c:if test="${presc.HASKJ==1}">是</c:if></td>
-											<td class="center">${presc.HASZS}</td>
-											<td class="center">${presc.BASEDRUG_COUNT}</td>
-											<td class="center"><fmt:formatNumber value="${presc.AMOUNT }" pattern="###,###,##0.00"></fmt:formatNumber></td>
-											<td class="center">
+											<td class="center" nowrap>${presc.DRUG_COUNT}</td>
+											<td class="center" nowrap><c:if test="${presc.HASKJ==0}">否</c:if><c:if test="${presc.HASKJ==1}">是</c:if></td>
+											<td class="center" nowrap>${presc.HASZS}</td>
+											<td class="center" nowrap>${presc.BASEDRUG_COUNT}</td>
+											<td class="center" nowrap><fmt:formatNumber value="${presc.AMOUNT }" pattern="###,###,##0.00"></fmt:formatNumber></td>
+											<td class="center" nowrap>
 												<div class="hidden-sm hidden-xs btn-group">
 													<c:forEach items="${presc.RS_DRUG_TYPES}" var="rs_type" varStatus="vs" >
 														<a class="btn btn-xs ${rstypeColorMap.get(rs_type)}"  title="${checktypeMap.get(rs_type).RS_TYPE_NAME}" >
@@ -170,24 +170,24 @@
 								</c:otherwise>
 							</c:choose>
 									<tr>
-										<td align="right">总 计：</td><td align="center">${report.ALL_COUNT}</td><td></td><td></td><td></td>
-										<td></td><td></td><td></td><td></td><td align="center">${report.DRUG_COUNT_SUM }</td>
-										<td align="center">${report.HASZS_SUM }</td><td align="center">${report.HASKJ_SUM }</td>
-										<td align="center">${report.BASEDRUG_COUNT_SUM }</td>
-										<td><fmt:formatNumber value="${report.AMOUNT_SUM}" pattern="###,###,##0.00"></fmt:formatNumber></td><td></td>
+										<td align="right" nowrap>总 计：</td><td align="center" nowrap>${report.ALL_COUNT}</td><td></td><td></td><td></td>
+										<td></td><td></td><td></td><td></td><td align="center" nowrap>${report.DRUG_COUNT_SUM }</td>
+										<td align="center" nowrap>${report.HASZS_SUM }</td><td align="center" nowrap>${report.HASKJ_SUM }</td>
+										<td align="center" nowrap>${report.BASEDRUG_COUNT_SUM }</td>
+										<td align="center" nowrap><fmt:formatNumber value="${report.AMOUNT_SUM}" pattern="###,###,##0.00"></fmt:formatNumber></td><td></td>
 									</tr>
 									<tr>
-										<td align="right">平 均：</td><td></td><td></td><td></td><td></td>
-										<td></td><td></td><td></td><td></td><td align="center">${report.DRUG_COUNT_AVG }</td>
+										<td align="right" nowrap>平 均：</td><td></td><td></td><td></td><td></td>
+										<td></td><td></td><td></td><td></td><td align="center" nowrap>${report.DRUG_COUNT_AVG }</td>
 										<td></td><td></td>
 										<td></td>
-										<td align="center">${report.AMOUNT_AVG }</td><td></td>
+										<td align="center" nowrap>${report.AMOUNT_AVG }</td><td></td>
 									</tr>
 									<tr>
 										<td align="center"> % </td><td></td><td></td><td></td><td></td>
 										<td></td><td></td><td></td><td></td><td></td>
-										<td align="center">${report.HASZS_PERSENTS }</td><td align="center">${report.HASKJ_PERSENTS}</td>
-										<td align="center">${report.BASEDRUG_COUNT_PERSENTS }</td>
+										<td align="center" nowrap>${report.HASZS_PERSENTS }</td><td align="center" nowrap>${report.HASKJ_PERSENTS}</td>
+										<td align="center" nowrap>${report.BASEDRUG_COUNT_PERSENTS }</td>
 										<td></td><td></td>
 									</tr>
 							</tbody>

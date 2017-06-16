@@ -112,7 +112,6 @@
 									<th class="center" nowrap>抗菌比例</th>
 								</tr>
 							</thead>
-							<tbody>
 							<c:set var="antiCountCost" value="0.0000">
 							</c:set>
 							<c:set var="drugCountCost" value="0.0000">
@@ -122,6 +121,7 @@
 							<!-- 开始循环 -->	 
 							<c:choose>
 								<c:when test="${not empty patinfos}">
+									<tbody>
 									<c:forEach items="${patinfos}" var="patVisit" varStatus="vs" >
 												
 										<tr ondblclick="">
@@ -150,36 +150,37 @@
 											</td>
 										</tr>
 									</c:forEach>  
+									</tbody>
+								<tfoot>
+										<tr style="background-color:orange;" >
+											<td nowrap class="center" colspan="2">合计 </td>
+											<td nowrap class="center"> 
+												￥<fmt:formatNumber value="${CountCost }" type="number" maxFractionDigits="2"/> 
+											</td>
+											<td nowrap class="center">
+												￥<fmt:formatNumber value="${drugCountCost }" type="number" maxFractionDigits="2"/>
+											</td>  
+											
+											<td nowrap class="center">
+												<fmt:formatNumber value="${100 * drugCountCost/CountCost }" type="number" maxFractionDigits="4" />%
+											</td> 
+											
+											<td nowrap class="center">
+												￥<fmt:formatNumber value="${antiCountCost}" type="number" maxFractionDigits="2"/>
+											</td> 
+											<td nowrap class="center">
+												<fmt:formatNumber value="${100 * antiCountCost/drugCountCost  }" type="number" maxFractionDigits="4" /> %
+											</td>
+										</tr>
+								</tfoot>
 								</c:when>
 								<c:otherwise>
+									<tbody>
 									<tr class="main_info">
 										<td colspan="8" class="center">没有相关数据</td>
-									</tr>
+									</tr></tbody>
 								</c:otherwise>
 							</c:choose>
-							</tbody>
-							<tfoot>
-									<tr style="background-color:orange;" >
-										<td nowrap class="center" colspan="2">合计 </td>
-										<td nowrap class="center"> 
-											￥<fmt:formatNumber value="${CountCost }" type="number" maxFractionDigits="2"/> 
-										</td>
-										<td nowrap class="center">
-											￥<fmt:formatNumber value="${drugCountCost }" type="number" maxFractionDigits="2"/>
-										</td>  
-										
-										<td nowrap class="center">
-											<fmt:formatNumber value="${100 * drugCountCost/CountCost }" type="number" maxFractionDigits="4" />%
-										</td> 
-										
-										<td nowrap class="center">
-											￥<fmt:formatNumber value="${antiCountCost}" type="number" maxFractionDigits="2"/>
-										</td> 
-										<td nowrap class="center">
-											<fmt:formatNumber value="${100 * antiCountCost/drugCountCost  }" type="number" maxFractionDigits="4" /> %
-										</td>
-									</tr>
-							</tfoot>
 						</table>
 						</div>
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">

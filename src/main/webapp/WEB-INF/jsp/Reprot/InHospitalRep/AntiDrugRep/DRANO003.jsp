@@ -124,7 +124,7 @@
 											<td nowrap class="center">${patVisit.patient_id }</td>
 											<td nowrap class="center">${patVisit.doctor}</td>
 											<td nowrap class="center">${patVisit.funcdays }</td>
-											<td nowrap class="center"> <fmt:formatNumber value="${patVisit.ddd_value }" type="number" ></fmt:formatNumber> </td>
+											<td nowrap class="center"> <fmt:formatNumber value="${patVisit.ddd_value }" type="number" maxFractionDigits="2"></fmt:formatNumber> </td>
 											<td nowrap class="center">
 												<fmt:formatNumber value="${patVisit.ddd_intensity}" type="number" maxFractionDigits="2"></fmt:formatNumber>
 											</td>
@@ -140,7 +140,7 @@
 												<fmt:formatNumber value="${patVisit.spec_ddd_value }" type="number" maxFractionDigits="2"></fmt:formatNumber>
 											</td>
 											<td nowrap class="center">
-												<fmt:formatNumber value="${patVisit.spec_ddd_intensity}" type="number" maxFractionDigits="2" ></fmt:formatNumber>%
+												<fmt:formatNumber value="${patVisit.spec_ddd_intensity}" type="number" maxFractionDigits="2" ></fmt:formatNumber>
 											</td>
 										</tr>
 									</c:forEach>  

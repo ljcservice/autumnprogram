@@ -104,15 +104,15 @@
 														<a class="fa fa-flag red bigger-130"
 															data-rel="popover" 
 															data-placement="right" 
-															title="<i class='ace-icon fa fa-check red'></i>   ${order.order_Text}" 
+															title="<i class='ace-icon fa fa-check red'></i>   ${order.DRUG_NAME}" 
 															data-content="<font size='0'>
 																<c:forEach items="${CheckRss.get(key1)}" var="rs">
 																	<b>${rsTypeDict.get(rs.RS_DRUG_TYPE).rs_type_name }:</b>
-																	<c:if test="${rs.drug_id1_name != order.order_Text }"> 
+																	<c:if test="${rs.drug_id1_name != order.DRUG_NAME and order.ORDER_NO!=rs.rec_main_no1}"> 
 																		${rs.drug_id1_name }
 																	</c:if>
-																	<c:if test="${rs.drug_id2_name != order.order_Text }"> 
-																		与 ${rs.drug_id2_name }
+																	<c:if test="${rs.drug_id2_name != order.DRUG_NAME  and order.ORDER_NO!=rs.rec_main_no2}"> 
+																		${rs.drug_id2_name }
 																	</c:if>
 																	
 																	 <br>
