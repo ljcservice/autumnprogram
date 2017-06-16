@@ -1,6 +1,7 @@
 package com.ts.controller.Report.InHospitalRep.AntiDrugRep;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ts.controller.base.BaseController;
 import com.ts.entity.Page;
 import com.ts.service.Report.InHospitalRep.AntiDrugRep.IIASPatInfoSCDService;
+import com.ts.util.MyDecimalFormat;
 import com.ts.util.ObjectExcelView;
 import com.ts.util.PageData;
 
@@ -75,6 +77,7 @@ public class IASPatInfoSCDController extends BaseController
 			titles.add("抗菌药物使用率");
 			titles.add("DDD");
 			titles.add("使用强度");
+			titles.add(" ");
 			dataMap.put("titles", titles);
             List<PageData> varList = new ArrayList<PageData>();
 			List<PageData> varOList =  patInfo.DRANO001(pd);
@@ -84,17 +87,17 @@ public class IASPatInfoSCDController extends BaseController
 				vpd.put("var2", varOList.get(i).get("dept_name"));
 				vpd.put("var3", varOList.get(i).get("pat_count"));	//4
 				vpd.put("var4", varOList.get(i).get("scd"));		//5
-				vpd.put("var5", varOList.get(i).get("anti_count"));
-				vpd.put("var6", varOList.get(i).get("pat_count").toString());
-				vpd.put("var7", varOList.get(i).get("anti_count").toString()+"/"+varOList.get(i).get("pat_count").toString()
+				vpd.put("var5", varOList.get(i).get("anti_count").toString()+"/"+varOList.get(i).get("pat_count").toString()
 						+"*100="
 						+((BigDecimal)varOList.get(i).get("anti_count")).divide((BigDecimal)varOList.get(i).get("pat_count"),2, BigDecimal.ROUND_HALF_UP)+"%"
 					);
-				vpd.put("var8", varOList.get(i).get("doctor_name"));
+				vpd.put("var6", varOList.get(i).get("ddd_values"));
+				vpd.put("var7", varOList.get(i).get("intensity") );
+				vpd.put("var8", " ");
 				 varList.add(vpd);
 			}
         	PageData  pdsumTitle = new PageData();
-        	pdsumTitle.put("var1", "总计");
+        	pdsumTitle.put("var1", " ");
         	pdsumTitle.put("var2", "总出院人数");
         	pdsumTitle.put("var3", "转科人数");
         	pdsumTitle.put("var4", "总使用抗菌药人数");
@@ -102,16 +105,19 @@ public class IASPatInfoSCDController extends BaseController
         	pdsumTitle.put("var6", "DDD(全部)");
         	pdsumTitle.put("var7", "总住院天数(全部)");
         	pdsumTitle.put("var8", "使用强度");
+        	varList.add(pdsumTitle);
         	PageData  pdsum = patInfo.DRANO001sum(pd);
-        	pdsum.put("var1", pdsum.get("pat_count"));
-        	pdsum.put("var2", pdsum.get("scd"));
-        	pdsum.put("var3", pdsum.get("anti_count"));
-        	pdsum.put("var4", pdsum.get("pat_count"));
-        	pdsum.put("var5",  ((BigDecimal)pdsum.get("anti_count")).divide((BigDecimal)pdsum.get("pat_count"),2, BigDecimal.ROUND_HALF_UP)+"%");
-        	pdsum.put("var6", pdsum.get("ddd_values"));
+        	pdsumTitle.put("var1", "总计");
+        	pdsum.put("var2", pdsum.get("pat_count"));
+        	pdsum.put("var3", pdsum.get("scd"));
+        	pdsum.put("var4", pdsum.get("anti_count"));
+        	pdsum.put("var5", 
+        			((BigDecimal)pdsum.get("anti_count")).longValue() + " / " +((BigDecimal)pdsum.get("pat_count")).longValue() +"* 100 =" +
+        			MyDecimalFormat.format(((BigDecimal)pdsum.get("anti_count")).divide((BigDecimal)pdsum.get("pat_count"),4, BigDecimal.ROUND_HALF_UP).doubleValue()*100)+"%");
+        	pdsum.put("var6", MyDecimalFormat.format(((BigDecimal)pdsum.get("ddd_values")).doubleValue()));
         	pdsum.put("var7", pdsum.get("admission_days"));
-        	pdsum.put("var8", pdsum.get("intensity"));
-        	
+        	pdsum.put("var8",  MyDecimalFormat.format( ((BigDecimal)pdsum.get("intensity")).doubleValue()) );
+        	varList.add(pdsum);
 			dataMap.put("varList", varList);
 			ObjectExcelView erv = new ObjectExcelView();
 			mv = new ModelAndView(erv,dataMap);
@@ -187,12 +193,12 @@ public class IASPatInfoSCDController extends BaseController
 					vpd.put("var3", varOList.get(i).get("pat_count"));		//5
 					vpd.put("var4", varOList.get(i).get("scd"));
 					vpd.put("var5", varOList.get(i).get("doctor"));
-					vpd.put("var6", varOList.get(i).get("ddd_intensity"));
-					vpd.put("var7", ((BigDecimal)varOList.get(i).get("antiuserat")).doubleValue() *100);
-					vpd.put("var8", varOList.get(i).get("limit_ddd_intensity"));
-					vpd.put("var9", ((BigDecimal)varOList.get(i).get("limit_ddd_count")).divide((BigDecimal)varOList.get(i).get("pat_count"),4, BigDecimal.ROUND_HALF_UP).doubleValue()*100 +"%");
-					vpd.put("var10", varOList.get(i).get("spec_ddd_intensity"));
-					vpd.put("var11", ((BigDecimal)varOList.get(i).get("spec_ddd_count")).divide((BigDecimal)varOList.get(i).get("pat_count"),4, BigDecimal.ROUND_HALF_UP).doubleValue()*100 +"%");
+					vpd.put("var6", MyDecimalFormat.format(((BigDecimal)varOList.get(i).get("ddd_intensity")).doubleValue()));
+					vpd.put("var7", MyDecimalFormat.format(((BigDecimal)varOList.get(i).get("antiuserat")).doubleValue() *100)+ " %");
+					vpd.put("var8",  MyDecimalFormat.format(((BigDecimal)varOList.get(i).get("limit_ddd_intensity")).doubleValue()));
+					vpd.put("var9", MyDecimalFormat.format(((BigDecimal)varOList.get(i).get("limit_ddd_count")).divide((BigDecimal)varOList.get(i).get("pat_count"),4, BigDecimal.ROUND_HALF_UP).doubleValue()*100) +"%");
+					vpd.put("var10", MyDecimalFormat.format(((BigDecimal)varOList.get(i).get("spec_ddd_intensity")).doubleValue()));
+					vpd.put("var11", MyDecimalFormat.format(((BigDecimal)varOList.get(i).get("spec_ddd_count")).divide((BigDecimal)varOList.get(i).get("pat_count"),4, BigDecimal.ROUND_HALF_UP).doubleValue()*100) +"%");
 					varList.add(vpd);
 				}
 			}
@@ -271,12 +277,12 @@ public class IASPatInfoSCDController extends BaseController
 					vpd.put("var3", varOList.get(i).get("patient_id"));		//5
 					vpd.put("var4", varOList.get(i).get("doctor"));
 					vpd.put("var5", varOList.get(i).get("funcdays"));
-					vpd.put("var6", varOList.get(i).get("ddd_value"));
-					vpd.put("var7", varOList.get(i).get("ddd_intensity"));
-					vpd.put("var8", varOList.get(i).get("limit_ddd_value"));
-					vpd.put("var9", varOList.get(i).get("limit_ddd_intensity"));
-					vpd.put("var10", varOList.get(i).get("spec_ddd_value"));
-					vpd.put("var11", varOList.get(i).get("spec_ddd_intensity"));
+					vpd.put("var6", MyDecimalFormat.format(((BigDecimal)varOList.get(i).get("ddd_value")).doubleValue()));
+					vpd.put("var7", MyDecimalFormat.format(((BigDecimal)varOList.get(i).get("ddd_intensity")).doubleValue()));
+					vpd.put("var8", MyDecimalFormat.format(((BigDecimal)varOList.get(i).get("limit_ddd_value")).doubleValue()));
+					vpd.put("var9", MyDecimalFormat.format(((BigDecimal)varOList.get(i).get("limit_ddd_intensity")).doubleValue()));
+					vpd.put("var10", MyDecimalFormat.format(((BigDecimal)varOList.get(i).get("spec_ddd_value")).doubleValue()));
+					vpd.put("var11", MyDecimalFormat.format(((BigDecimal)varOList.get(i).get("spec_ddd_intensity")).doubleValue()));
 					varList.add(vpd);
 				}
 			}
@@ -352,12 +358,19 @@ public class IASPatInfoSCDController extends BaseController
 				vpd.put("var1", i+1);	//2
 				vpd.put("var2", varOList.get(i).get("dept_name"));	//4
 				vpd.put("var3", varOList.get(i).get("anti_count"));		//5
-				vpd.put("var4", varOList.get(i).get("firm_id"));
-				vpd.put("var5", "￥ "+varOList.get(i).get("anti_costs_count").toString());
-				vpd.put("var6", "￥ "+varOList.get(i).get("drug_costs_count").toString());
-				vpd.put("var7", ((BigDecimal)varOList.get(i).get("drug_costs_count")).divide((BigDecimal)varOList.get(i).get("anti_count"),2, BigDecimal.ROUND_HALF_UP).doubleValue());
-				vpd.put("var8", varOList.get(i).get("outanti_count").toString() +"/" + varOList.get(i).get("outpat_count").toString() + "*100="
-					+	((BigDecimal)varOList.get(i).get("outanti_count")).divide((BigDecimal)varOList.get(i).get("outpat_count"),4, BigDecimal.ROUND_HALF_UP).doubleValue()*100);
+				vpd.put("var4", "￥ "+varOList.get(i).get("anti_costs_count").toString());
+				vpd.put("var5", "￥ "+varOList.get(i).get("drug_costs_count").toString());
+				if(((BigDecimal)varOList.get(i).get("anti_count")).doubleValue()==0){
+					vpd.put("var6"," 0");
+				}else{
+					vpd.put("var6", ((BigDecimal)varOList.get(i).get("drug_costs_count")).divide((BigDecimal)varOList.get(i).get("anti_count"),2, BigDecimal.ROUND_HALF_UP).doubleValue());
+				}
+				if(((BigDecimal)varOList.get(i).get("drug_costs_count")).doubleValue()==0){
+					vpd.put("var7", varOList.get(i).get("anti_costs_count").toString() +"/" + varOList.get(i).get("drug_costs_count").toString() + "*100=0%");
+				}else {
+					vpd.put("var7", varOList.get(i).get("anti_costs_count").toString() +"/" + varOList.get(i).get("drug_costs_count").toString() + "*100="
+							+	((BigDecimal)varOList.get(i).get("anti_costs_count")).divide((BigDecimal)varOList.get(i).get("drug_costs_count"),4, BigDecimal.ROUND_HALF_UP).doubleValue()*100);
+				}
 				varList.add(vpd);
 			}
         	PageData  pdsum = patInfo.DRANO005sum(pd);
@@ -369,7 +382,7 @@ public class IASPatInfoSCDController extends BaseController
         	pdsum.put("var6",  antiCountCost.divide((BigDecimal)pdsum.get("anticount"),2, BigDecimal.ROUND_HALF_UP));
         	pdsum.put("var7",antiCountCost +"/"+CountCost +"*100=" +
         			antiCountCost.divide(CountCost,4, BigDecimal.ROUND_HALF_UP).doubleValue()*100);
-        	
+        	varList.add(pdsum);
 			dataMap.put("varList", varList);
 			ObjectExcelView erv = new ObjectExcelView();
 			mv = new ModelAndView(erv,dataMap);
@@ -439,9 +452,9 @@ public class IASPatInfoSCDController extends BaseController
 				antiCountnumber = antiCountnumber.add((BigDecimal)varOList.get(i).get("anti_type_count"));
 				CountCost = CountCost.add((BigDecimal)varOList.get(i).get("drug_costs_count"));
 				PageData vpd = new PageData();
-				vpd.put("var1", i+1);	//2
-				vpd.put("var2", varOList.get(i).get("dept_name"));	//4
-				vpd.put("var3", varOList.get(i).get("pat_count"));		//5
+				vpd.put("var1", i+1);
+				vpd.put("var2", varOList.get(i).get("dept_name"));
+				vpd.put("var3", varOList.get(i).get("pat_count"));
 				vpd.put("var4", varOList.get(i).get("scd"));
 				vpd.put("var5",  varOList.get(i).get("anti_count") );
 				vpd.put("var6", "￥ "+((BigDecimal)varOList.get(i).get("antiuserat") ).doubleValue()*100);
@@ -459,6 +472,7 @@ public class IASPatInfoSCDController extends BaseController
         	pdsum.put("var7",antiCountnumber +"/"+pdsum.get("anti_count") +"=" +
         			antiCountnumber.divide((BigDecimal)pdsum.get("anti_count"),4, BigDecimal.ROUND_HALF_UP).doubleValue());
         	
+        	varList.add(pdsum);
 			dataMap.put("varList", varList);
 			ObjectExcelView erv = new ObjectExcelView();
 			mv = new ModelAndView(erv,dataMap);
@@ -542,19 +556,19 @@ public class IASPatInfoSCDController extends BaseController
 				vpd.put("var2", varOList.get(i).get("dept_name"));	//4
 				vpd.put("var3", varOList.get(i).get("med"));		//5
 				vpd.put("var4", "￥ "+varOList.get(i).get("drug"));
-				vpd.put("var5",  varOList.get(i).get("ranking").toString() +"%");
+				vpd.put("var5", MyDecimalFormat.format(((BigDecimal)varOList.get(i).get("ranking")).doubleValue()*100)  +"%");
 				vpd.put("var6", "￥ "+varOList.get(i).get("anti").toString() );
-				vpd.put("var7", varOList.get(i).get("antiranking").toString()  +"%");
+				vpd.put("var7", MyDecimalFormat.format(((BigDecimal)varOList.get(i).get("antiranking")).doubleValue()*100)  +"%");
 				varList.add(vpd);
 			}
 			PageData count = new PageData();
 			count.put("var1", "合计"); 
 			count.put("var2", " "); 
-			count.put("var3", "￥ "+CountCost.doubleValue()); 
-			count.put("var4", "￥ "+drugCountCost.doubleValue()); 
-			count.put("var5", drugCountCost.divide(CountCost,6, BigDecimal.ROUND_HALF_UP).doubleValue()*100 +"%"); 
+			count.put("var3", "￥ "+MyDecimalFormat.format(CountCost.doubleValue())); 
+			count.put("var4", "￥ "+MyDecimalFormat.format(drugCountCost.doubleValue())); 
+			count.put("var5", MyDecimalFormat.format(drugCountCost.divide(CountCost,6, 4).doubleValue()*100) +"%"); 
 			count.put("var6", "￥ "+antiCountCost.doubleValue()); 
-			count.put("var7", antiCountCost.divide(drugCountCost,6, BigDecimal.ROUND_HALF_UP).doubleValue()*100 +"%"); 
+			count.put("var7", MyDecimalFormat.format(antiCountCost.divide(drugCountCost,6, 4).doubleValue()*100) +"%"); 
 			varList.add(count);
 			dataMap.put("varList", varList);
 			ObjectExcelView erv = new ObjectExcelView();
@@ -639,21 +653,21 @@ public class IASPatInfoSCDController extends BaseController
 					vpd.put("var1", i+1);	//2
 					vpd.put("var2", varOList.get(i).get("dept_name"));	//4
 					vpd.put("var3", varOList.get(i).get("doctor"));		//5
-					vpd.put("var4",  "￥ "+varOList.get(i).get("med"));
-					vpd.put("var5","￥ "+varOList.get(i).get("drug").toString());
-					vpd.put("var6", ((BigDecimal) varOList.get(i).get("ranking")).doubleValue()*100 );
-					vpd.put("var7",  "￥ "+varOList.get(i).get("anti"));
-					vpd.put("var8", ((BigDecimal) varOList.get(i).get("antiranking")).doubleValue()*100 );
+					vpd.put("var4",  "￥ "+MyDecimalFormat.format(((BigDecimal)varOList.get(i).get("med")).doubleValue()));
+					vpd.put("var5","￥ "+MyDecimalFormat.format(((BigDecimal)varOList.get(i).get("drug")).doubleValue()));
+					vpd.put("var6", MyDecimalFormat.format(((BigDecimal) varOList.get(i).get("ranking")).doubleValue()*100) + " %" );
+					vpd.put("var7",  "￥ "+MyDecimalFormat.format(((BigDecimal)varOList.get(i).get("anti")).doubleValue()));
+					vpd.put("var8", MyDecimalFormat.format(((BigDecimal) varOList.get(i).get("antiranking")).doubleValue()*100) + " %" );
 					varList.add(vpd);
 				}
 				PageData count = new PageData();
 				count.put("var1", "合计"); 
-				count.put("var2", " "); 
-				count.put("var3", "￥ "+CountCost.doubleValue()); 
-				count.put("var4", "￥ "+drugCountCost.doubleValue()); 
-				count.put("var5", drugCountCost.divide(CountCost,6, BigDecimal.ROUND_HALF_UP).doubleValue()*100 +"%"); 
-				count.put("var6", "￥ "+antiCountCost.doubleValue()); 
-				count.put("var7", antiCountCost.divide(drugCountCost,6, BigDecimal.ROUND_HALF_UP).doubleValue()*100 +"%"); 
+				count.put("var2", " "); 	count.put("var3", " "); 
+				count.put("var4", "￥ "+MyDecimalFormat.format(CountCost.doubleValue())); 
+				count.put("var5", "￥ "+MyDecimalFormat.format(drugCountCost.doubleValue())); 
+				count.put("var6", MyDecimalFormat.format(drugCountCost.divide(CountCost,6, BigDecimal.ROUND_HALF_UP).doubleValue()*100) +"%"); 
+				count.put("var7", "￥ "+MyDecimalFormat.format(antiCountCost.doubleValue())); 
+				count.put("var8", MyDecimalFormat.format(antiCountCost.divide(drugCountCost,6, BigDecimal.ROUND_HALF_UP).doubleValue()*100) +"%"); 
 				varList.add(count);
 			dataMap.put("varList", varList);
 			ObjectExcelView erv = new ObjectExcelView();
@@ -768,7 +782,7 @@ public class IASPatInfoSCDController extends BaseController
         	pdsum.put("var9",  pdsum.get("spec_count"));
         	pdsum.put("var10",  pdsum.get("spec_submit_count"));
         	pdsum.put("var11",    ((BigDecimal)pdsum.get("specranking")).doubleValue()*100);
-        	
+        	varList.add(pdsum);
 			dataMap.put("varList", varList);
 			ObjectExcelView erv = new ObjectExcelView();
 			mv = new ModelAndView(erv,dataMap);
@@ -887,7 +901,7 @@ public class IASPatInfoSCDController extends BaseController
         	pdsum.put("var10",  pdsum.get("spec_count"));
         	pdsum.put("var11",  pdsum.get("spec_submit_count"));
         	pdsum.put("var12",    ((BigDecimal)pdsum.get("specranking")).doubleValue()*100);
-        	
+        	varList.add(pdsum);
 			dataMap.put("varList", varList);
 			ObjectExcelView erv = new ObjectExcelView();
 			mv = new ModelAndView(erv,dataMap);
@@ -1003,4 +1017,5 @@ public class IASPatInfoSCDController extends BaseController
         }
         return mv ;
     }
+    
 }

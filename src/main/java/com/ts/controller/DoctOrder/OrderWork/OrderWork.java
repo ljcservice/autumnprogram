@@ -84,7 +84,7 @@ public class OrderWork extends BaseController
 		
 		try
 		{
-			String keywords = pd.getString("keywords");				//关键词检索条件
+			String keywords = pd.getString("keywords");		//关键词检索条件
 			String beginDate = pd.getString("beginDate");	//开始时间
 			String endDate = pd.getString("endDate");		//结束时间
 			if(endDate != null && !"".equals(endDate))

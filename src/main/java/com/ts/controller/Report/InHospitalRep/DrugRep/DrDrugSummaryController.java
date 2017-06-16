@@ -1,5 +1,6 @@
 package com.ts.controller.Report.InHospitalRep.DrugRep;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import com.ts.controller.base.BaseController;
 import com.ts.entity.Page;
 import com.ts.service.Report.InHospitalRep.AntiDrugRep.IIASPatInfoSCDService;
 import com.ts.service.Report.InHospitalRep.DrugRep.IDrDrugSummaryService;
+import com.ts.util.MyDecimalFormat;
 import com.ts.util.ObjectExcelView;
 import com.ts.util.PageData;
 
@@ -323,7 +325,7 @@ public class DrDrugSummaryController extends BaseController
 					PageData vpd = new PageData();
 					vpd.put("var1", i+1);
 					vpd.put("var2", varOList.get(i).get("doctor_name"));
-					vpd.put("var3", "￥ "+varOList.get(i).get("costs").toString());
+					vpd.put("var3", "￥ "+MyDecimalFormat.format(((BigDecimal)varOList.get(i).get("costs")).doubleValue()) );
 					vpd.put("var4", varOList.get(i).get("dept_name"));
 					 varList.add(vpd);
 				}
@@ -402,7 +404,7 @@ public class DrDrugSummaryController extends BaseController
 					vpd.put("var3", varOList.get(i).get("drug_spec"));		//5
 					vpd.put("var4", varOList.get(i).get("dept_name"));
 					vpd.put("var5", varOList.get(i).get("doctor_name"));
-					vpd.put("var6", "￥ "+varOList.get(i).get("costs").toString());
+					vpd.put("var6", "￥ "+MyDecimalFormat.format(((BigDecimal)varOList.get(i).get("costs")).doubleValue()));
 					vpd.put("var7", varOList.get(i).get("amount").toString()+varOList.get(i).get("drug_units").toString());
 					 varList.add(vpd);
 				}
@@ -478,7 +480,7 @@ public class DrDrugSummaryController extends BaseController
 					vpd.put("var2", varOList.get(i).get("drug_name"));	//4
 					vpd.put("var3", varOList.get(i).get("drug_spec"));		//5
 					vpd.put("var4", varOList.get(i).get("firm_id"));
-					vpd.put("var5", "￥ "+varOList.get(i).get("costs").toString());
+					vpd.put("var5", "￥ "+MyDecimalFormat.format(((BigDecimal)varOList.get(i).get("costs")).doubleValue()) );
 					vpd.put("var6", varOList.get(i).get("amount").toString()+varOList.get(i).get("drug_units").toString());
 					vpd.put("var7", varOList.get(i).get("rpt_date"));
 					 varList.add(vpd);

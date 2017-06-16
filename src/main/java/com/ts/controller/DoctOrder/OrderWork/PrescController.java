@@ -1,5 +1,6 @@
 package com.ts.controller.DoctOrder.OrderWork;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -88,7 +89,7 @@ public class PrescController extends BaseController {
 					return mv;
 				}
 			}
-			List<PageData>	prescList = prescService.prescListPage(page);	//列出专家列表
+			List<PageData>	prescList = prescService.prescListPage(page); 
 			if("1".equals(pd.getString("randomflag"))){
 				getRequest().getSession().setAttribute("prescExportList", prescList);
 			}
@@ -104,12 +105,44 @@ public class PrescController extends BaseController {
 			mv.addObject("checktypeMap", commonService.getCheckTypeDict()); 
 			mv.addObject("prescList", prescList);
 			mv.addObject("pd", pd);
-			
-			//统计
-			PageData report = prescService.prescCountReport(pd); 
-			mv.addObject("report", report);
+			BigDecimal ALL_COUNT = new BigDecimal(prescList==null?0:prescList.size());
+			BigDecimal DRUG_COUNT_SUM = new BigDecimal(0);BigDecimal HASZS_SUM = new BigDecimal(0);
+			BigDecimal HASKJ_SUM = new BigDecimal(0);BigDecimal BASEDRUG_COUNT_SUM = new BigDecimal(0);
+			BigDecimal AMOUNT_AVG = new BigDecimal(0);BigDecimal DRUG_COUNT_AVG = new BigDecimal(0);
+			BigDecimal AMOUNT_SUM = new BigDecimal(0);BigDecimal HASZS_PERSENTS = new BigDecimal(0);
+			BigDecimal HASKJ_PERSENTS = new BigDecimal(0);BigDecimal BASEDRUG_COUNT_PERSENTS = new BigDecimal(0);
 			if("1".equals(pd.getString("randomflag"))){
+				//手动统计
+				for(PageData pp:prescList){
+					DRUG_COUNT_SUM = DRUG_COUNT_SUM.add((BigDecimal) pp.get("DRUG_COUNT") );
+					HASKJ_SUM = HASKJ_SUM.add( Tools.isEmpty(pp.getString("HASKJ"))?new BigDecimal(0):new BigDecimal(pp.getString("HASKJ")) );
+					HASZS_SUM = HASZS_SUM.add( Tools.isEmpty(pp.getString("HASZS"))?new BigDecimal(0):new BigDecimal(pp.getString("HASZS")) );
+					BASEDRUG_COUNT_SUM = BASEDRUG_COUNT_SUM.add( (BigDecimal) pp.get("BASEDRUG_COUNT")  );
+					AMOUNT_SUM = AMOUNT_SUM.add((BigDecimal) pp.get("AMOUNT"));
+				}
+				DRUG_COUNT_AVG = DRUG_COUNT_SUM.divide(ALL_COUNT,2,4);
+				AMOUNT_AVG = AMOUNT_SUM.divide(ALL_COUNT,2,4);
+				HASZS_PERSENTS=HASZS_SUM.divide(ALL_COUNT,4,4).multiply(new BigDecimal(100));
+				HASKJ_PERSENTS=HASKJ_SUM.divide(ALL_COUNT,4,4).multiply(new BigDecimal(100));
+				BASEDRUG_COUNT_PERSENTS=BASEDRUG_COUNT_SUM.divide(ALL_COUNT,4,4).multiply(new BigDecimal(100));
+				PageData report = new PageData();
+				report.put("ALL_COUNT", ALL_COUNT.longValue());
+				report.put("DRUG_COUNT_SUM",DRUG_COUNT_SUM.longValue());
+				report.put("HASZS_SUM",  HASZS_SUM.longValue());
+				report.put("HASKJ_SUM", HASKJ_SUM.longValue() );
+				report.put("BASEDRUG_COUNT_SUM", BASEDRUG_COUNT_SUM.longValue() );
+				report.put("AMOUNT_SUM",  AMOUNT_SUM.doubleValue());
+				report.put("DRUG_COUNT_AVG",  DRUG_COUNT_AVG.doubleValue());
+				report.put("AMOUNT_AVG",  AMOUNT_AVG.doubleValue());
+				report.put("HASZS_PERSENTS",  HASZS_PERSENTS.doubleValue()+" %");
+				report.put("HASKJ_PERSENTS",  HASKJ_PERSENTS.doubleValue()+" %");
+				report.put("BASEDRUG_COUNT_PERSENTS",  BASEDRUG_COUNT_PERSENTS.doubleValue()+" %");
 				getRequest().getSession().setAttribute("prescReportCount", report);
+				mv.addObject("report", report);
+			}else{
+				//统计
+				PageData report = prescService.prescCountReport(pd); 
+				mv.addObject("report", report);
 			}
 		} catch(Exception e){
 			logger.error(e.toString(), e);
