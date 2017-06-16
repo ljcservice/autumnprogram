@@ -122,7 +122,7 @@
 		       anti_count,
 		       ddd_values,
 		       admission_days,
-		       decode(admission_days, null, 0, (ddd_values / admission_days * 100)) intensity,
+		       decode(admission_days, 0, 0, (ddd_values / admission_days * 100)) intensity,
 		       dept_code,
 		       dept_name
 		  from (select nvl(count(patient_id),0) pat_count,
@@ -167,7 +167,7 @@
 		       anti_count,
 		       ddd_values,
 		       admission_days,
-		       decode(admission_days, null, 0, decode(admission_days,0,0,(ddd_values / admission_days * 100)))   intensity
+		       decode(admission_days, 0, 0, decode(admission_days,0,0,(ddd_values / admission_days * 100)))   intensity
 		  from (select count(b.patient_id) pat_count,
 		               nvl(sum(b.is_anti),0) anti_count,
 		                nvl(sum(b.is_scd),0) scd,
@@ -215,7 +215,7 @@
 		       anti_count,
 		       ddd_values,
 		       admission_days,
-		       decode(admission_days, null, 0, (ddd_values / admission_days * 100)) intensity,
+		       decode(admission_days, 0, 0, (ddd_values / admission_days * 100)) intensity,
 		       dept_code,
 		       dept_name
 		  from (select nvl(count(patient_id),0) pat_count,
@@ -262,7 +262,7 @@
 		       anti_count,
 		       ddd_values,
 		       admission_days,
-		       decode(admission_days, null, 0, (ddd_values / admission_days * 100)) intensity
+		       decode(admission_days, 0, 0, (ddd_values / admission_days * 100)) intensity
 		  from (select nvl(count(patient_id),0) pat_count,
 		               nvl(sum(is_anti),0) anti_count,
 		              nvl( sum(is_scd),0) scd,
@@ -310,7 +310,7 @@
 		       anti_count,
 		       ddd_values,
 		       admission_days,
-		       decode(admission_days, null, 0, (ddd_values / admission_days * 100)) intensity,
+		       decode(admission_days, 0, 0, (ddd_values / admission_days * 100)) intensity,
 		       dept_code,
 		       dept_name
 		  from (select nvl(count(patient_id),0) pat_count,
@@ -357,7 +357,7 @@
 		       anti_count,
 		       ddd_values,
 		       admission_days,
-		       decode(admission_days, null, 0, (ddd_values / admission_days * 100)) intensity
+		       decode(admission_days, 0, 0, (ddd_values / admission_days * 100)) intensity
 		  from (select nvl(count(patient_id),0) pat_count,
 		               nvl(sum(is_anti),0) anti_count,
 		               nvl(sum(is_scd),0) scd,
@@ -400,9 +400,9 @@
 
 	<select id="findDeptDoctDDDPage" parameterType="page" resultType="pd">
 		select is_anti,
-		       decode(admission_days, null, 0, (ddd_values / admission_days * 100)) ddd_intensity,
-		       decode(admission_days, null, 0, (spec_ddd_values / admission_days * 100)) spec_ddd_intensity,
-		       decode(admission_days,null,0,(limit_ddd_values / admission_days * 100)) limit_ddd_intensity,
+		       decode(admission_days, 0, 0, (ddd_values / admission_days * 100)) ddd_intensity,
+		       decode(admission_days, 0, 0, (spec_ddd_values / admission_days * 100)) spec_ddd_intensity,
+		       decode(admission_days,0,0,(limit_ddd_values / admission_days * 100)) limit_ddd_intensity,
 		       scd,
 		       dept_name,
 		       dept_code,
@@ -592,17 +592,17 @@
 	
 	<!-- 	抗菌药品种数及使用率-->
 	<select id="findDRANO006" parameterType="pd" resultType="pd">
-		select pat_count,
-		       scd,
-		       anti_count,
-		       (anti_count / pat_count) antiuserat,
-		       anti_type_count,
+		select nvl(pat_count,0),
+		       nvl(scd,0),
+		       nvl(anti_count,0),
+		       decode(pat_count,null,0,0,0,(anti_count / pat_count) ) antiuserat,
+		       nvl(anti_type_count,0),
 		       dept_name,
 		       dept_code
-		  from (select nvl(count(patient_id),0) pat_count,
-		               nvl(sum(is_scd),0) scd,
-		               nvl(sum(i.is_anti),0) anti_count,
-		               nvl(sum(i.species),0) anti_type_count,
+		  from (select  count(patient_id) pat_count,
+		                sum(is_scd),0) scd,
+		                sum(i.is_anti) anti_count,
+		                sum(i.species)  anti_type_count,
 		               funcdeptname dept_name,
 		               funcdeptcode dept_code
 		          from ias_pat_info_scd i
@@ -642,12 +642,12 @@
 	
 	<!-- 	抗菌药品种数及使用率 合计 -->
 	<select id="findDRANO006sum" parameterType="pd" resultType="pd">
-		select count(pat_count) pat_count,
-		     sum(decode(anti_count, 0, 0, 1)) anti_count,
-		     sum(decode(scd_count, 0, 0, 1)) scd_count
-		from (select nvl(count(*),0) pat_count,
-		             nvl(sum(i.is_scd),0) scd_count,
-		            nvl(sum(i.is_anti),0) anti_count
+		select nvl(count(pat_count),0) pat_count,
+		     sum(decode(anti_count,null,0, 0, 0, 1)) anti_count,
+		     sum(decode(scd_count,null,0, 0, 0, 1)) scd_count
+		from (select count(*) pat_count,
+		             sum(i.is_scd) scd_count,
+		            sum(i.is_anti) anti_count
 		        from ias_pat_info_scd i
 		       where i.rpt_date &gt;= to_date(#{beginDate} ,'yyyy-mm-dd') 
           			and i.rpt_date &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
@@ -694,9 +694,9 @@
 		       dept_name,
 		       dept_code
 		  from (select l.is_scd,
-		               nvl(sum(l.costs),0) costs,
-		               nvl(sum(l.drug_costs),0) drug_costs,
-		               nvl(sum(l.anti_costs),0) anti_costs,
+		               sum(l.costs) costs,
+		               sum(l.drug_costs) drug_costs,
+		               sum(l.anti_costs) anti_costs,
 		               l.patient_id,
 		               l.visit_id,
 		               l.outanticosts,
@@ -828,7 +828,7 @@
 		               nvl(sum(decode(submit_count, 0,0, decode(spec_ddd_value, 0, 0, 1))),0) spec_submit_count,
 		               funcdeptcode dept_code,
 		               funcdeptname dept_name
-		          from ias.ias_pat_info_scd i
+		          from ias_pat_info_scd i
 		         where is_orderflag = '1'
 		           	and i.rpt_date &gt;= to_date(#{beginDate} ,'yyyy-mm-dd') 
           			and i.rpt_date &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
@@ -885,7 +885,7 @@
 		               nvl(sum(decode(submit_count,0,0,decode(spec_ddd_value, 0, 0, 1))),0) spec_submit_count,
 		               nvl(sum(decode(submit_count,0,0,decode(limit_ddd_value, 0, 0, 1))),0) limit_submit_count,
 		               nvl(sum(i.is_anti),0) anti_count
-		          from ias.ias_pat_info_scd i
+		          from ias_pat_info_scd i
 		         where 
 		         	i.rpt_date &gt;= to_date(#{beginDate} ,'yyyy-mm-dd') 
           			and i.rpt_date &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
@@ -942,7 +942,7 @@
 		               funcdeptcode dept_code,
 		               funcdeptname dept_name,
 		               doctor
-		          from ias.ias_pat_info_scd i
+		          from ias_pat_info_scd i
 		         where is_orderflag = '1'
 		           	and i.rpt_date &gt;= to_date(#{pd.beginDate} ,'yyyy-mm-dd') 
           			and i.rpt_date &lt;= to_date(#{pd.endDate} ,'yyyy-mm-dd') 
@@ -985,12 +985,12 @@
 		       anti_count,
 		       ddd_values,
 		       admission_days,
-		       decode(adminjmsysum, null, 0, (adminjmsysum / pat_count * 100)) intensity,
-		       decode(adminantijmsysum, null,0,(adminantijmsysum / adminjmsysum * 100)) intensityanti,
+		       decode(adminjmsysum, 0, 0, (adminjmsysum / pat_count * 100)) intensity,
+		       decode(adminantijmsysum, 0,0,(adminantijmsysum / adminjmsysum * 100)) intensityanti,
 		       dept_code,
 		       dept_name,
-		       decode(adminjmsysum, null, 0, adminjmsysum) adminjmsysum,
-		       decode(adminantijmsysum, null, 0, adminantijmsysum) adminantijmsysum
+		       decode(adminjmsysum, 0, 0, adminjmsysum) adminjmsysum,
+		       decode(adminantijmsysum, 0, 0, adminantijmsysum) adminantijmsysum
 		  from (select nvl(count(patient_id),0) pat_count,
 		               nvl(sum(i.is_scd),0) scd,
 		               nvl(sum(i.funcdays),0) admission_days,
@@ -1036,8 +1036,8 @@
 	           anti_count,
 	           ddd_values,
 	           admission_days,
-	              decode(adminjmsysum, null, 0, (adminjmsysum / pat_count * 100)) intensity,
-	           decode(adminantijmsysum, null, 0, (adminantijmsysum / adminjmsysum * 100)) intensityanti,
+	           decode(adminjmsysum, 0, 0, (adminjmsysum / pat_count * 100)) intensity,
+	           decode(adminantijmsysum, 0, 0, (adminantijmsysum / adminjmsysum * 100)) intensityanti,
 	           adminjmsysum,
 	           adminantijmsysum
 	      from (select nvl(count(b.patient_id),0) pat_count,

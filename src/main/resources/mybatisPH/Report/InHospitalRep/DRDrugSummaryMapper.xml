@@ -164,7 +164,7 @@
 		                       t.doctor_name,
 		                       t.dept_name,
 		                       t.dept_code
-		                  from ias.dr_drug_summary t
+		                  from dr_drug_summary t
 		                 where  
 								t.rpt_date &gt;= to_date(#{pd.beginDate} ,'yyyy-mm-dd') 
 		          			   and t.rpt_date &lt;= to_date(#{pd.endDate} ,'yyyy-mm-dd') 
