@@ -47,10 +47,9 @@
 	
 	
 	<select id="ckOperationDrugPage" parameterType="page" resultType="pd">
-		select 
-			<include refid="Field"></include>
-		from 
-		    <include refid="tableName"></include>
+	    select a.* ,b.USERNAME operatoruser_name
+	    from  ck_operation_drug a
+		left join plat.sys_user b on a.operatoruser = b.user_id
 		order by O_Code,o_dept_code, is_use desc 
 	</select>
 	
@@ -58,13 +57,13 @@
 		select * from ck_operation_drug 
 		where 1=1
 		<if test="o_id!=null and o_id!=''">
-			o_id = #{o_id}
+			and o_id = #{o_id}
 		</if>
 		<if test="o_code!=null and o_code!=''">
-			o_code = #{o_code}
+			and o_code = #{o_code}
 		</if>
 		<if test="o_drug_code !=null and o_drug_code!=''">
-			o_drug_code = #{o_drug_code}
+			and o_drug_code = #{o_drug_code}
 		</if>
 	</select>
 	
@@ -74,7 +73,7 @@
 			, IS_USE, CREATEDATE, OPERATORDATE, OPERATORUSER)
 		values (#{O_ID,jdbcType=VARCHAR}, #{O_CODE,jdbcType=VARCHAR}, #{O_NAME,jdbcType=VARCHAR}, #{O_LEVEL,jdbcType=VARCHAR}, #{O_DRUG_CODE,jdbcType=VARCHAR}, #{O_DRUG_NAME,jdbcType=VARCHAR}
 			, #{O_DRUG_SPCE,jdbcType=VARCHAR}, #{O_DRUG_FORM,jdbcType=VARCHAR}, #{O_DEPT_CODE,jdbcType=VARCHAR}, #{O_DEPT_NAME,jdbcType=VARCHAR}, #{O_DOCTOR_CODE,jdbcType=VARCHAR}, #{O_DOCTOR_NAME,jdbcType=VARCHAR}
-			, #{IS_USE,jdbcType=VARCHAR}, #{CREATEDATE,jdbcType=VARCHAR}, #{OPERATORDATE,jdbcType=VARCHAR}, #{OPERATORUSER,jdbcType=VARCHAR});
+			, #{IS_USE,jdbcType=VARCHAR}, #{CREATEDATE,jdbcType=VARCHAR}, #{OPERATORDATE,jdbcType=VARCHAR}, #{OPERATORUSER,jdbcType=VARCHAR})
 	</update>
 	<update id="updateOpDrug"  parameterType="pd" >
 		update ck_operation_drug set O_CODE=#{O_CODE,jdbcType=VARCHAR},O_NAME=#{O_NAME,jdbcType=VARCHAR},O_LEVEL=#{O_LEVEL,jdbcType=VARCHAR}

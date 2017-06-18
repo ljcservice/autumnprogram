@@ -191,6 +191,7 @@ public class OperationDrug  extends BaseController{
 				//选择医生名称
 				list = opDrugService.queryStaffPage(page);
 			}
+			mv.addObject("resultList", list);
 			mv.setViewName("DoctOrder/opDrug/selectData");
 			mv.addObject("pd", pd);
 		} catch(Exception e){
