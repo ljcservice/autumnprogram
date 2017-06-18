@@ -137,9 +137,35 @@
 		if($("#user_id").val()==""){
 			hasU();
 		}else{
-			$("#userForm").submit();
 			$("#zhongxin").hide();
 			$("#zhongxin2").show();
+			//保存本体
+			function saveOnto(){
+				$("#zhongxin").hide();
+				$("#zhongxin2").show();
+				$.ajax({
+					type: "POST",
+					url: basePath+$("#userForm").attr("action"),
+			    	data: $("#userForm").serialize(),
+					dataType:'json',
+					async:false,
+					cache: false,
+					success: function(data){
+						if(data.result=="success"){
+							top.Dialog.close();
+						}else{
+							$("#zhongxin").show();
+							$("#zhongxin2").hide();
+							//查询失败
+							bootbox.dialog({
+								message: "<span class='bigger-110'>"+data.result+"</span>",
+								buttons: 			
+								{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+							});
+						}
+					}
+				});
+			}
 		}
 	}
 	$(function() {

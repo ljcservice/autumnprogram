@@ -25,8 +25,8 @@
 				<div class="page-content">
 					<div class="row">
 						<div class="col-xs-12">
-						<form action="expert/selectExpertList.do" method="post" id="searchForm">
-						<input type="hidden" name="onto_type" value="${pd.onto_type}" id="onto_type"/>
+						<form action="opDrug/selectData.do" method="post" id="searchForm">
+						<input type="hidden" name="ONTO_TYPE" value="${pd.ONTO_TYPE}" id="ONTO_TYPE"/>
 						<div id="zhongxin" style="padding-top: 13px;">
 							<table style="margin-top:5px;">
 								<tr>
@@ -63,15 +63,15 @@
 								
 							<!-- 开始循环 -->	
 							<c:choose>
-								<c:when test="${not empty expertList}">
-									<c:forEach items="${expertList}" var="diag" varStatus="vs">
+								<c:when test="${not empty resultList}">
+									<c:forEach items="${resultList}" var="onto" varStatus="vs">
 												
 										<tr onclick="clickTr(this);">
 											<td class='center' style="width: 30px;">
-												<label><input type="radio" class="ace" name='${diag.name}' value="${diag.id}" code="${diag.code}"/><span class="lbl"></span></label>
+												<label><input type="radio" class="ace" name="userIs" ontoName='${onto.name}' value="${onto.code}" code="${onto.code}" /><span class="lbl"></span></label>
 											</td>
-											<td class="center">${diag.code}</td>
-											<td class="center">${diag.name}</td>
+											<td class="center">${onto.code}</td>
+											<td class="center">${onto.name}</td>
 <%--											<td class="center"><fmt:formatDate value="${diag.UPDATE_TIME}" type="both" pattern="yyyy-MM-dd HH:mm:ss"/></td>--%>
 										</tr>
 									
@@ -137,23 +137,24 @@ function selectCont(){
 	}
 	var mydocument = parent.$("#_DialogFrame_0")[0].contentWindow.document;
 	//设置为专家点评
-	var onto_type = $("#onto_type").val();
+	var onto_type = $("#ONTO_TYPE").val();
 	if(onto_type==100){
-		mydocument.$("O_CODE").val(onto_type.attr("code"));
-		mydocument.$("O_NAME").val(onto_type.attr("name"));
+		mydocument.getElementById("O_CODE").value = osyn.attr("code");
+		mydocument.getElementById("O_NAME").value = osyn.attr("ontoName");
 	}
 	if(onto_type==101){
-		mydocument.$("O_DRUG_CODE").val(onto_type.attr("code"));
-		mydocument.$("O_DRUG_NAME").val(onto_type.attr("name"));
+		mydocument.getElementById("O_DRUG_CODE").vvalue = osyn.attr("code");
+		mydocument.getElementById("O_DRUG_NAME").value = osyn.attr("ontoName");
 	}
 	if(onto_type==102){
-		mydocument.$("O_DEPT_CODE").val(onto_type.attr("code"));
-		mydocument.$("O_DEPT_NAME").val(onto_type.attr("name"));
+		mydocument.getElementById("O_DEPT_CODE").value = osyn.attr("code");
+		mydocument.getElementById("O_DEPT_NAME").value = osyn.attr("ontoName");
 	}
 	if(onto_type==103){
-		mydocument.$("O_DOCTOR_CODE").val(onto_type.attr("code"));
-		mydocument.$("O_DOCTOR_NAME").val(onto_type.attr("name"));
+		mydocument.getElementById("O_DOCTOR_CODE").value = osyn.attr("code");
+		mydocument.getElementById("O_DOCTOR_NAME").value = osyn.attr("ontoName");
 	}
+	top.Dialog.close();
 }
 //检索
 function searchs(){

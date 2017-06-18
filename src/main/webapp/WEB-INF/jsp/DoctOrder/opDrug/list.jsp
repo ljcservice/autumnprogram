@@ -39,7 +39,7 @@
 						<div class="col-xs-12">
 						<!-- 检索  -->
 						<form name="searchForm" id="searchForm" action="opDrug/list.do">
-						<div class="col-xs-12" id="searchDiv">
+						<div class="col-xs-12" id="btnDiv">
 							<input type="hidden" name="category_id" id="category_id" value=""/>
 							<div class="check-search nav-search"  >
 								手术名称
@@ -97,14 +97,14 @@
 											<td class="center">${obj.O_DEPT_NAME}</td>
 											<td class="center">${obj.O_DOCTOR_NAME}</td>
 											<td class="center"><c:if test="${obj.IS_USE==0}">不可用</c:if><c:if test="${obj.IS_USE==1}">可用</c:if></td>
-											<td class="center">${obj.OPERATORUSER}</td>
-											<td class="center"><fmt:formatDate value="${obj.UPDATE_TIME}" type="both" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-											<td>
+											<td class="center">${obj.OPERATORUSER_NAME}</td>
+											<td class="center">${obj.OPERATORDATE}</td>
+											<td class="center" width="80px;">
 												<div class="btn-group" style="height: 30px;width: auto;overflow: visible;">
-														<a class="btn btn-xs btn-success" title="编辑" onclick="editOp('${obj.o_ID}');">
+														<a class="btn btn-xs btn-success" title="编辑" onclick="editOp('${obj.O_ID}');">
 															<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
 														</a>
-														<a class="btn btn-xs btn-danger" onclick="delOp('${obj.o_ID }','${obj.opNAME }');">
+														<a class="btn btn-xs btn-danger" onclick="delOp('${obj.O_ID }','${obj.opNAME }');">
 															<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
 														</a>
 												</div>
@@ -121,17 +121,15 @@
 							</tbody>
 						</table>
 						
-					<div class="page-header position-relative">
-					<table style="width:100%;">
-						<tr>
-							<td style="vertical-align:top;">
-									<a class="btn btn-mini btn-success" onclick="add();">新增</a>
-									<a title="批量删除" class="btn btn-mini btn-danger" onclick="makeAll('确定要删除选中的专家吗?');" ><i class='ace-icon fa fa-trash-o bigger-120'></i></a>
-							</td>
-							<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
-						</tr>
-					</table>
-					</div>
+						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 10px;padding-bottom: 10px;">
+							<table style="width:100%;">
+								<tr>
+									<td>
+										<div class="pagination" style="float: right;padding: 0px;margin: 0px;">${page.pageStr}</div>
+									</td>
+								</tr>
+							</table>
+						</div>
 					</form>
 	
 						</div>
@@ -166,10 +164,20 @@
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	</body>
-
+<script type="text/javascript" src="static/js/ontology/lockTable.js?v=20161"></script>
 <script type="text/javascript">
 $(top.hangge());
 
+$(function() {
+	//重置当前页面高度，自适应浏览器
+	initWidthHeight();
+});
+//重置当前页面高度，自适应浏览器
+function initWidthHeight(){
+	var mycars = new Array();
+	mycars[0]="btnDiv";mycars[1]="pageStrDiv";
+	FixTable("simple-table", 2 ,mycars);
+}
 //检索
 function searchs(){
 	top.jzts();
@@ -199,14 +207,7 @@ function add(){
 	 diag.Width = 600;
 	 diag.Height = 500;
 	 diag.CancelEvent = function(){ //关闭事件
-		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-			 if('${page.currentPage}' == '0'){
-				 top.jzts();
-				 setTimeout("self.location=self.location",100);
-			 }else{
-				 nextPage(${page.currentPage});
-			 }
-		}
+		nextPage(${page.currentPage});
 		diag.close();
 	 };
 	 diag.show();
@@ -218,13 +219,11 @@ function editOp(id){
 	 var diag = new top.Dialog();
 	 diag.Drag=true;
 	 diag.Title ="资料";
-	 diag.URL = '<%=path%>/opDrug/toEdit.do?ID='+id;
+	 diag.URL = '<%=path%>/opDrug/toEdit.do?o_id='+id;
 	 diag.Width = 600;
 	 diag.Height = 500;
 	 diag.CancelEvent = function(){ //关闭事件
-		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
 			nextPage(${page.currentPage});
-		}
 		diag.close();
 	 };
 	 diag.show();
