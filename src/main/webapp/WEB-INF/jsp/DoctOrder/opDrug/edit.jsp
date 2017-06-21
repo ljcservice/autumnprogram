@@ -110,6 +110,8 @@
 	<!-- basic scripts -->
 	<!-- 页面底部js¨ -->
 	<%@ include file="/WEB-INF/jsp/system/index/foot.jsp"%>
+		<!-- 删除时确认窗口 -->
+	<script src="static/ace/js/bootbox.js"></script>
 	<!-- ace scripts -->
 	<script src="static/ace/js/ace/ace.js"></script>
 	<!-- inline scripts related to this page -->
@@ -126,47 +128,50 @@
 	//保存
 	function save(){
 		var O_CODE = $("#O_CODE").val();
+		if(O_CODE==null||O_CODE==""){
+			$("#O_NAME").tips({ side:3,  msg:'选择手术名称',  bg:'#AE81FF',   time:2   });
+			reutrn;
+		}
 		var O_DRUG_CODE = $("#O_DRUG_CODE").val();
+		if(O_DRUG_CODE==null||O_DRUG_CODE==""){
+			$("#O_DRUG_NAME").tips({ side:3,  msg:'选择药品名称',  bg:'#AE81FF',   time:2   });
+			reutrn;
+		}
 		var O_DEPT_CODE = $("#O_DEPT_CODE").val();
+		if(O_DEPT_CODE==null||O_DEPT_CODE==""){
+			$("#O_DEPT_NAME").tips({ side:3,  msg:'科室名称',  bg:'#AE81FF',   time:2   });
+			reutrn;
+		}
 		var O_DOCTOR_CODE = $("#O_DOCTOR_CODE").val();
-	
-		if($("#user_id").val()==""){
-			$("#juese").tips({ side:3,  msg:'选择一个用户',  bg:'#AE81FF',   time:2   });
-			return false;
+		if(O_DOCTOR_CODE==null||O_DOCTOR_CODE==""){
+			$("#O_DOCTOR_NAME").tips({ side:3,  msg:'选择医生名称',  bg:'#AE81FF',   time:2   });
+			reutrn;
 		}
-		if($("#user_id").val()==""){
-			hasU();
-		}else{
-			$("#zhongxin").hide();
-			$("#zhongxin2").show();
-			//保存本体
-			function saveOnto(){
-				$("#zhongxin").hide();
-				$("#zhongxin2").show();
-				$.ajax({
-					type: "POST",
-					url: basePath+$("#userForm").attr("action"),
-			    	data: $("#userForm").serialize(),
-					dataType:'json',
-					async:false,
-					cache: false,
-					success: function(data){
-						if(data.result=="success"){
-							top.Dialog.close();
-						}else{
-							$("#zhongxin").show();
-							$("#zhongxin2").hide();
-							//查询失败
-							bootbox.dialog({
-								message: "<span class='bigger-110'>"+data.result+"</span>",
-								buttons: 			
-								{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
-							});
-						}
-					}
-				});
+
+		$("#zhongxin").hide();
+		$("#zhongxin2").show();
+		$.ajax({
+			type: "POST",
+			url: basePath+$("#userForm").attr("action"),
+	    	data: $("#userForm").serialize(),
+			async:false,
+			cache: false,
+			success: function(data){
+				if(data.result=="success"){
+					top.Dialog.close();
+				}else{
+					$("#zhongxin").show();
+					$("#zhongxin2").hide();
+					//查询失败
+					bootbox.dialog({
+						message: "<span class='bigger-110'>"+data.result+"</span>",
+						buttons: 			
+						{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+					});
+				}
 			}
-		}
+		});
+		
 	}
 	$(function() {
 		//下拉框

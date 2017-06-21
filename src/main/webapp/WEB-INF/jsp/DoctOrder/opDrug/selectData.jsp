@@ -42,12 +42,16 @@
 									<td style="vertical-align:top;padding-left:10px;"><a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
 									<td style="vertical-align:top;padding-left:15px;">
 										<a class="btn btn-mini btn-primary" onclick="selectCont();">确定</a>
+										<c:if test="${onto_type==102 or onto_type==103}">
+											<a class="btn btn-mini btn-info" onclick="selectCont(1);">选中全部</a>
+										</c:if>
 										<a class="btn btn-mini btn-danger" style="margin-left:10px;" onclick="top.Dialog.close();">取消</a>
 									</td>
 								</tr>
 							</table>
 						</div>
 						<div >
+						<c:if test="${pd.ONTO_TYPE!=101 }">
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
 							<thead>
 								<tr>
@@ -85,6 +89,48 @@
 							</c:choose>
 							</tbody>
 						</table>
+						</c:if>
+						<c:if test="${pd.ONTO_TYPE==101 }">
+						
+						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
+							<thead>
+								<tr>
+									<th class="center" style="width:35px;">
+										<label class="pos-rel"></label>
+									</th>
+									<th class="center" nowrap>编码</th>
+									<th class="center" nowrap>名称</th>
+									<th class="center" nowrap>规格</th>
+									<th class="center" nowrap>剂型</th>
+								</tr>
+							</thead>
+							<tbody id="standTbody">
+							<!-- 开始循环 -->	
+							<c:choose>
+								<c:when test="${not empty resultList}">
+									<c:forEach items="${resultList}" var="onto" varStatus="vs">
+												
+										<tr onclick="clickTr(this);">
+											<td class='center' style="width: 30px;">
+												<label><input type="radio" class="ace" name="userIs" ontoName='${onto.name}' value="${onto.code}" code="${onto.code}" DRUG_SPEC="${onto.DRUG_SPEC }" DRUG_FORM="${onto.DRUG_FORM }"/><span class="lbl"></span></label>
+											</td>
+											<td class="center">${onto.code}</td>
+											<td class="center">${onto.name}</td>
+											<td class="center">${onto.DRUG_SPEC}</td>
+											<td class="center">${onto.DRUG_FORM}</td>
+										</tr>
+									
+									</c:forEach>
+								</c:when>
+								<c:otherwise>
+									<tr class="main_info">
+										<td colspan="11" class="center">没有相关数据</td>
+									</tr>
+								</c:otherwise>
+							</c:choose>
+							</tbody>
+						</table>
+						</c:if>
 						</div>
 						<div class="page-header position-relative" id="osynPageParam">
 							<table style="width:100%;">
@@ -130,7 +176,7 @@ function clickTr(obj){
 	$("input[name='userIs']").prop("checked",false);
 	$(obj).find("input[name='userIs']").eq(0).prop("checked",true);
 }
-function selectCont(){
+function selectCont(type){
 	var osyn = $("input[name='userIs']:checked");
 	if(osyn.val()==undefined || osyn.val()==""){
 		return;
@@ -143,16 +189,28 @@ function selectCont(){
 		mydocument.getElementById("O_NAME").value = osyn.attr("ontoName");
 	}
 	if(onto_type==101){
-		mydocument.getElementById("O_DRUG_CODE").vvalue = osyn.attr("code");
+		mydocument.getElementById("O_DRUG_CODE").value = osyn.attr("code");
 		mydocument.getElementById("O_DRUG_NAME").value = osyn.attr("ontoName");
+		mydocument.getElementById("O_DRUG_SPCE").value = osyn.attr("DRUG_SPEC");
+		mydocument.getElementById("O_DRUG_FORM").value = osyn.attr("DRUG_FORM");
 	}
 	if(onto_type==102){
-		mydocument.getElementById("O_DEPT_CODE").value = osyn.attr("code");
-		mydocument.getElementById("O_DEPT_NAME").value = osyn.attr("ontoName");
+		if(type==1){
+			mydocument.getElementById("O_DEPT_CODE").value = osyn.attr("*");
+			mydocument.getElementById("O_DEPT_NAME").value = osyn.attr("*");
+		}else{
+			mydocument.getElementById("O_DEPT_CODE").value = osyn.attr("code");
+			mydocument.getElementById("O_DEPT_NAME").value = osyn.attr("ontoName");
+		}
 	}
 	if(onto_type==103){
-		mydocument.getElementById("O_DOCTOR_CODE").value = osyn.attr("code");
-		mydocument.getElementById("O_DOCTOR_NAME").value = osyn.attr("ontoName");
+		if(type==1){
+			mydocument.getElementById("O_DOCTOR_CODE").value = osyn.attr("*");
+			mydocument.getElementById("O_DOCTOR_NAME").value = osyn.attr("*");
+		}else{
+			mydocument.getElementById("O_DOCTOR_CODE").value = osyn.attr("code");
+			mydocument.getElementById("O_DOCTOR_NAME").value = osyn.attr("ontoName");
+		}
 	}
 	top.Dialog.close();
 }
