@@ -119,7 +119,7 @@ public class OperationDrug  extends BaseController{
 			}else{
 				errInfo = opDrugService.updateOpDrug(pd);
 			}
-			map.put("pd",errInfo);
+			map.put("result",errInfo);
 		} catch(Exception e){
 			map.put("result","操作失败");
 			logger.error(e.toString(), e);
