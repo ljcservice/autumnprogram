@@ -609,6 +609,7 @@ public class PrescController extends BaseController {
 		}
 		int i = orderWorkService.saveCheckResult(pd);
 		map.put("result", "ok");
+		map.put("ngroupnum", pd.getString("ngroupnum"));
 		return  AppUtil.returnObject(pd, map);
 	}
 	

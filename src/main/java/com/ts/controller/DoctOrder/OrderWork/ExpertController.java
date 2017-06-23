@@ -70,10 +70,10 @@ public class ExpertController extends BaseController{
 	@RequestMapping(value="/setExpertPatVisit")
 	@ResponseBody
 	public Object setExpertPatVisit(){
-		PageData pd = this.getPageData();
-		//设置住院病历为专家点评
 		try {
+			PageData pd = this.getPageData();
 			if("0".equals(pd.getString("business_type"))){
+				//设置住院病历为专家点评
 				orderWorkService.updateExpertPatVisit(pd);
 			}else if("1".equals(pd.getString("business_type"))){
 				//处方列表，供给选择

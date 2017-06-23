@@ -511,6 +511,7 @@ public class OrderWork extends BaseController
 		}
 		int i = orderWorkService.saveCheckResult(pd);
 		map.put("result", "ok");
+		map.put("ngroupnum", pd.getString("ngroupnum"));
 		return  AppUtil.returnObject(pd, map);
 	}
 	
@@ -646,7 +647,7 @@ public class OrderWork extends BaseController
 						return map;
 					}
 				}
-				if(Tools.isEmpty(patient.getString("ngroupnum"))) {
+				if(Tools.isEmpty(ngroupnum)) {
 					pd.put("ngroupnum", this.get32UUID());
 				}else{
 					pd.put("ngroupnum", patient.getString("ngroupnum"));
