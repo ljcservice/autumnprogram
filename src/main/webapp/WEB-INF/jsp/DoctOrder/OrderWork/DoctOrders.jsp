@@ -24,7 +24,7 @@
 				<div class="page-content">
 					<div class="row">
 						<div >
-						<form action="DoctOrder/DoctOrdersDetail.do?patient_id=${page.pd.patient_id}&visit_id=${page.pd.visit_id}" method="post">
+						<form id="myForm" action="DoctOrder/DoctOrdersDetail.do?patient_id=${page.pd.patient_id}&visit_id=${page.pd.visit_id}" method="post">
 							<input type="hidden" name="patient_id" value="${page.pd.patient_id}" id="patient_id"/>
 							<input type="hidden" name="visit_id" value="${page.pd.visit_id}" id="visit_id"/>
 							<input type="hidden" name="repeat_indicator" value="${page.pd.repeat_indicator}" id="repeat_indicator"/>
@@ -545,9 +545,10 @@
 					$("#dragCheck").hide(500); 
 					reSetCheck();
 					//刷新上个页面
-					parent.CheckRsFrame.location.href = parent.$("#CheckRsFrame").attr("src");
+					parent.CheckRsFrame.location.href = parent.$("#CheckRsFrame").attr("src")+data.ngroupnum;
 					//刷新本页面
-					nextPage(${page.currentPage});
+					$("#ngroupnum").val(data.ngroupnum);
+					$("#myForm").submit();
 					// 如果成功设置旗子
 					
 					//var trFirst = $("#tr" + order_no + order_sub_no);

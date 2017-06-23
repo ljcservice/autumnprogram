@@ -440,9 +440,10 @@
 					$("#dragCheck").hide(500);
 					reSetCheck();
 					//刷新上个页面
-					parent.CheckRsFrame.location.href = parent.$("#CheckRsFrame").attr("src");
+					parent.CheckRsFrame.location.href = parent.$("#CheckRsFrame").attr("src")+data.ngroupnum;
 					//刷新本页面
-					reloadPage();
+					$("#ngroupnum").val(data.ngroupnum);
+					$("#myForm").submit();
 					
 					// 如果成功设置旗子
 					//var trFirst = $("#tr" + order_no + order_sub_no);

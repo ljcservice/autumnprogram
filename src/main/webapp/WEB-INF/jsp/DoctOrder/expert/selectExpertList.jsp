@@ -146,7 +146,7 @@ function selectCont(){
 	}
 	var mydocument = parent.$("#_DialogFrame_0")[0].contentWindow.document;
 	//设置为专家点评
-	var url  = path + "/expert/setExpertPatVisit.do?expert_id="+osyn.eq(0).val()+"&"+$("#myForm").serialize();
+	var url  = path + "/expert/setExpertPatVisit.do?expert_id="+osyn.eq(0).val()+"&"+$("#searchForm").serialize();
 	$.ajax({ url: url, success: function(){
 		top.Dialog.close();
    	}});
