@@ -115,26 +115,26 @@ public class RoleService implements RoleManager{
 	 * @return
 	 * @throws Exception 
 	 */
-	@SuppressWarnings("unchecked")
 	public List<String> listSubRoleByUsId(String USER_ID) throws Exception {
-		PageData pd = new PageData();
-		pd.put("USER_ID", USER_ID);
-		pd.put("DATABASE_TYPE", BasicConst.DATABASE_TYPE);
-		if(BasicConst.DATABASE_TYPE==1){
-			//如果为mysql则多查询一部
-			//获取当前用户所有的角色关系（不包含权限关系）
-			List<Role> list = getUserRolesById(USER_ID);
-			List<String> role_ids = new ArrayList<>();
-			if(list!=null){
-				for(Role role:list){
-					role_ids.add(role.getROLE_ID());
-				}
-				if(role_ids.size()>0){
-					pd.put("ROLE_IDS", role_ids);
-				}
+		List<String> result = new ArrayList<String>();
+		List<Role> roles_list = this.getUserRolesById(USER_ID);
+		if(!CollectionUtils.isEmpty(roles_list)){
+			for(Role role:roles_list){
+				getAllRoleByUsId(role.getROLE_ID(),result);
 			}
 		}
-		return (List<String>) dao.findForList("RoleMapper.listSubRoleByUsId", pd);
+		return result;
+	}
+	private void getAllRoleByUsId(String ROLE_ID,List<String> result) throws Exception{
+		List<Role> subRoles = listSubRoleByParentId(ROLE_ID);
+		if(!CollectionUtils.isEmpty(subRoles)){
+			for(Role role:subRoles){
+				getAllRoleByUsId(role.getROLE_ID(),result);
+			}
+		}
+		if(!result.contains(ROLE_ID)){
+			result.add(ROLE_ID);
+		}
 	}
 
 	/**
@@ -166,11 +166,13 @@ public class RoleService implements RoleManager{
 	 */
 	public List<Role> listAllRole(String ROLE_ID) throws Exception {
 		List<Role> roleList = this.listSubRoleByParentId(ROLE_ID);
-		for(Role role : roleList){
-			role.setNoCheck(true);
-			role.setROLE_URL("role/list.do?ROLE_ID="+role.getROLE_ID());
-			role.setSubRole(this.listAllRole(role.getROLE_ID()));
-			role.setTarget("treeFrame");
+		if(!CollectionUtils.isEmpty(roleList)){
+			for(Role role : roleList){
+				role.setNoCheck(true);
+				role.setROLE_URL("role/list.do?ROLE_ID="+role.getROLE_ID());
+				role.setSubRole(this.listAllRole(role.getROLE_ID()));
+				role.setTarget("treeFrame");
+			}
 		}
 		return roleList;
 	}
@@ -182,11 +184,13 @@ public class RoleService implements RoleManager{
 	 */
 	public List<Role> listAllAccRole(String ROLE_ID) throws Exception {
 		List<Role> roleList = this.listSubRoleByParentId(ROLE_ID);
-		for(Role role : roleList){
-			role.setNoCheck(true);
-			role.setROLE_URL("api/roleList.do?ROLE_ID="+role.getROLE_ID());
-			role.setSubRole(this.listAllAccRole(role.getROLE_ID()));
-			role.setTarget("treeFrame");
+		if(!CollectionUtils.isEmpty(roleList)){
+			for(Role role : roleList){
+				role.setNoCheck(true);
+				role.setROLE_URL("api/roleList.do?ROLE_ID="+role.getROLE_ID());
+				role.setSubRole(this.listAllAccRole(role.getROLE_ID()));
+				role.setTarget("treeFrame");
+			}
 		}
 		return roleList;
 	}
@@ -310,16 +314,33 @@ public class RoleService implements RoleManager{
 	 * @throws Exception
 	 */
 	public void deleteRoleById(String ROLE_ID) throws Exception {
+		delAllRoleSubById(ROLE_ID);
+	}
+	/**
+	 * 删除菜单和菜单的所有下级菜单
+	 * modify by xsl 2017
+	 * @param MENU_ID
+	 * @throws Exception 
+	 */
+	private void delAllRoleSubById(String ROLE_ID) throws Exception{
+		//查询出当前菜单的所有下级菜单
+		List<Role> menu_list = this.listSubRoleByParentId(ROLE_ID);
+		if(!CollectionUtils.isEmpty(menu_list)){
+			for(Role role:menu_list){
+				delAllRoleSubById(role.getROLE_ID());
+			}
+		}
 		PageData pd = new PageData();
 		pd.put("ROLE_ID", ROLE_ID);
-		pd.put("DATABASE_TYPE", BasicConst.DATABASE_TYPE);
+		//删除用户-角色关系
 		dao.delete("RoleMapper.delUserRoleRelaByRoleId", pd);
+		// 删除角色-功能权限关系  
 		dao.delete("RoleMapper.delRoleMfByRoleId", pd);
+		//删除角色-接口数据权限关系
 		dao.delete("RoleMapper.delRelationByRoleId", pd);
+		//删除角色
 		dao.delete("RoleMapper.deleteRoleById", pd);
-		
 	}
-	
 	/**
 	 * 更新角色的功能权限 
 	 * @param ROLE_ID
@@ -327,7 +348,10 @@ public class RoleService implements RoleManager{
 	 * @throws Exception
 	 */
 	public void updateRoleMF(String ROLE_ID, List<PageData> pds) throws Exception {
-		dao.delete("RoleMapper.delRoleMfByRoleId", ROLE_ID);
+		PageData p = new PageData();
+		p.put("ROLE_ID", ROLE_ID);
+		p.put("DATABASE_TYPE", BasicConst.DATABASE_TYPE);
+		dao.delete("RoleMapper.delRoleMfByRoleId", p);
 		for(PageData pd:pds){
 			dao.save("RoleMapper.insertRoleRights", pd);
 		}
@@ -339,7 +363,10 @@ public class RoleService implements RoleManager{
 	 * @throws Exception
 	 */
 	public void deleteRoleAllRights(String ROLE_ID) throws Exception {
-		dao.delete("RoleMapper.delRoleMfByRoleId", ROLE_ID);
+		PageData p = new PageData();
+		p.put("ROLE_ID", ROLE_ID);
+		p.put("DATABASE_TYPE", BasicConst.DATABASE_TYPE);
+		dao.delete("RoleMapper.delRoleMfByRoleId", p);
 	}
 	
 	/**
