@@ -304,6 +304,12 @@
 				</if>
 			</otherwise>
 		</choose>
+		<if test="pd.IS_EXPERT!=null and pd.IS_EXPERT!='' and pd.IS_EXPERT==0"> <!-- 非专家点评 -->
+			and t.EXPERT_ID is null
+		</if>
+		<if test="pd.IS_EXPERT!=null and pd.IS_EXPERT!='' and pd.IS_EXPERT==1"> <!-- 是专家点评 -->
+			and t.EXPERT_ID is not null
+		</if>
 		<choose>
 			<when test="pd.randomflag!= null and pd.randomflag==1">
 				Order by DBMS_RANDOM.VALUE 
