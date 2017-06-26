@@ -75,6 +75,10 @@
 											</c:forEach>
 										</select>
 									</div>
+									<div id="btnDiv" class="check-search">
+										<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
+										<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
+									</div>
 								</form>
 							</div>
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
@@ -112,8 +116,6 @@
 								<table style="width:100%;">
 									<tr>
 										<td style="text-align: center;" colspan="10">
-											<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
-											<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
 											<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">关闭</a>
 										</td>
 									</tr>

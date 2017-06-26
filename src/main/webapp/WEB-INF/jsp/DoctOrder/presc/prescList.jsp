@@ -96,6 +96,18 @@
 										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
 										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.end_Date }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
 									</div>
+									<div class="check-search"  > 
+										专家点评：
+									 	<select class="chosen-select form-control" name="IS_EXPERT" id="IS_EXPERT" data-placeholder="是否专家点评" style="vertical-align:top;width: 80px;"  >
+											<option value="">全部</option>
+											<option <c:if test="${pd.IS_EXPERT == '0'}">selected</c:if> value="0" >否</option>
+											<option <c:if test="${pd.IS_EXPERT == '1'}">selected</c:if> value="1" >是</option>
+										</select> 
+									</div>
+									<div class="check-search"  > 
+										<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="prescListExport();">导出</a>
+										<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
+									</div>
 								</form>
 								</div>
 						<!-- 检索  -->
@@ -170,12 +182,6 @@
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">
 							<table style="width:100%;">
 								<tr>
-									<td>
-										<div id="btnDiv" style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
-											<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="prescListExport();">导出</a>
-											<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
-										</div>
-									</td>
 									<td>
 										<div class="pagination" style="float: right;padding: 0px;margin: 0px;">${page.pageStr}</div>
 									</td>

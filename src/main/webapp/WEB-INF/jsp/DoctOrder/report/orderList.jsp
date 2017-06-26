@@ -68,6 +68,10 @@
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
+									<div id="btnDiv" class="check-search">
+										<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
+										<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
+									</div>
 								</form>
 							</div>
 						<!-- 检索  -->
@@ -157,11 +161,6 @@
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 3px;padding-bottom: 3px;">
 							<table style="width:100%;">
 								<tr>
-									<td align="left">
-										<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
-										<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
-										<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">关闭</a></td>
-									</td>
 									<td>
 										<div class="pagination" style="float: right;padding: 0px;margin: 0px;">${page.pageStr}</div>
 									</td>

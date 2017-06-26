@@ -63,8 +63,8 @@
 									<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i></a>
 								</div>
 								<div id="btnDiv" class="check-search">
-										<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
-										<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
+									<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
+									<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
 								</div>
 							</form>
 							</div>

@@ -67,9 +67,9 @@
 										<label><input class="ace" value="2" name="type1" type="radio" <c:if test="${pd.type1 ==2 }">checked</c:if> >处方数(人次)&nbsp;<span class="lbl"></span></label>&nbsp;&nbsp;&nbsp;&nbsp;
 									</div>
 									<div id="btnDiv" class="check-search">
-											<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
-											<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
-										</div>
+										<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
+										<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
+									</div>
 								</div>
 							</form>
 						<!-- 检索  -->

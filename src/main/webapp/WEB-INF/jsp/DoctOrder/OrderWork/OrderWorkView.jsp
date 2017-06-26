@@ -95,6 +95,14 @@
 											<option <c:if test="${pd.ISCHECKTRUE == '2' }">selected</c:if> value="2" >待定</option>
 										</select>
 									</div>
+									<div class="check-search"  > 
+										专家点评：
+									 	<select class="chosen-select form-control" name="IS_EXPERT" id="IS_EXPERT" data-placeholder="是否专家点评" style="vertical-align:top;width: 80px;"  >
+											<option value="">全部</option>
+											<option <c:if test="${pd.IS_EXPERT == '0'}">selected</c:if> value="0" >否</option>
+											<option <c:if test="${pd.IS_EXPERT == '1'}">selected</c:if> value="1" >是</option>
+										</select> 
+									</div>
 									<div class="check-search"  >
 										<a title="随机抽取" class="btn btn-mini btn-info" onclick="randomQuery();">随机抽取</a>
 										<input type="number" placeholder="抽取数量" class="ace" name="RANDOM_NUM" value="${pd.RANDOM_NUM}" width="20px;" onchange="changeNum(this)">

@@ -94,6 +94,10 @@
 											<option <c:if test="${'4' == pd.sort_type}">selected</c:if> value="4" >金额 ↓</option>
 										</select>
 									</div>
+									<div id="btnDiv" class="check-search">
+										<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
+										<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
+									</div>
 								</div>
 							</form>
 						<!-- 检索  -->
@@ -137,12 +141,6 @@
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">
 							<table style="width:100%;">
 								<tr>
-									<td>
-										<div id="btnDiv" class="check-search">
-											<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
-											<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
-										</div>
-									</td>
 									<td>
 										<div class="pagination" style="float: right;padding: 0px;margin: 0px;">${page.pageStr}</div>
 									</td>
