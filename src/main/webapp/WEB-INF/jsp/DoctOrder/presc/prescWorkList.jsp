@@ -173,10 +173,6 @@
 											</td>
 										</tr>
 									</c:forEach>
-								</c:when>
-								<c:otherwise>
-								</c:otherwise>
-							</c:choose>
 									<tr>
 										<td align="right" nowrap>总 计：</td><td align="center" nowrap>${report.ALL_COUNT}</td><td></td><td></td><td></td>
 										<td></td><td></td><td></td><td></td><td align="center" nowrap>${report.DRUG_COUNT_SUM }</td>
@@ -198,6 +194,11 @@
 										<td align="center" nowrap>${report.BASEDRUG_COUNT_PERSENTS }</td>
 										<td></td><td></td>
 									</tr>
+								</c:when>
+								<c:otherwise>
+								</c:otherwise>
+							</c:choose>
+									
 							</tbody>
 						</table>
 						</div>
