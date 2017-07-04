@@ -624,7 +624,7 @@ public class SHCHDataFetcherNew extends ReportScheduler implements Runnable
                         "'" + crs.get("pham_SPEC")   + "', " + // 包装规格
                         "'" + (DrugUtils.isCenterDrugZS(crs.get("pham_CODE"),crs.get("pham_SPEC"))?"1":"0") + "', " + // 中药注射剂
                         "'" + (DrugUtils.isKJDrug(crs.get("pham_CODE"))?"1":"0")                            + "', " + // 抗菌药物
-                        "'" + (DrugUtils.isZSNormDrug(crs.get("pham_CODE"))?"1":"0")                        + "', " + // 标准注射
+                        "'" + (DrugUtils.isZSDrug(crs.get("pham_CODE"),"")?"1":"0")                        + "', " + // 标准注射
                         "'" + 2                         + "'  " +
                         ")";
                     impDrugCount++;
@@ -646,7 +646,7 @@ public class SHCHDataFetcherNew extends ReportScheduler implements Runnable
                     // 判断抗菌药
                     if (!HasKJ) HasKJ = DrugUtils.isKJDrug(crs.get("DRUG_CODE"));
                     // 判断注射剂
-                    if (!HasZS) HasZS = DrugUtils.isZSNormDrug(crs.get("DRUG_CODE"));
+                    if (!HasZS) HasZS = DrugUtils.isZSDrug(crs.get("DRUG_CODE"),null);
                     //中药注射剂
                     if(!CDZS)    CDZS = DrugUtils.isCenterDrugZS(crs.get("drug_code"),crs.get("DRUG_Spec"));
                     // 判断基本药品数
@@ -949,7 +949,7 @@ public class SHCHDataFetcherNew extends ReportScheduler implements Runnable
                             "'" + crs.get("PHAM_SPEC")   + "', " +  //包装规格 
                             "'" + (DrugUtils.isCenterDrugZS(crs.get("pham_CODE"),crs.get("pham_Spec"))?"1":"0") + "', " +  // 中药注射剂
                             "'" + (DrugUtils.isKJDrug(crs.get("pham_CODE"))?"1":"0")       + "', " +                       // 抗菌药物
-                            "'" + (DrugUtils.isZSNormDrug(crs.get("pham_CODE"))?"1":"0")   + "', " +                       // 标准注射
+                            "'" + (DrugUtils.isZSDrug(crs.get("pham_CODE"),null)?"1":"0")   + "', " +                       // 标准注射
                             "'" + crs.get("presc_no")       + "', " +
                             "'" + 1                         + "'  " +
                             ")";
@@ -967,7 +967,7 @@ public class SHCHDataFetcherNew extends ReportScheduler implements Runnable
                         // 判断抗菌药
                         if (!HasKJ) HasKJ = DrugUtils.isKJDrug(crs.get("pham_CODE"));
                         // 判断注射剂
-                        if (!HasZS) HasZS = DrugUtils.isZSNormDrug(crs.get("pham_CODE"));
+                        if (!HasZS) HasZS = DrugUtils.isZSDrug(crs.get("pham_CODE"),null);
                         //中药注射剂
                         if(!CDZS)    CDZS = DrugUtils.isCenterDrugZS(crs.get("pham_CODE"),crs.get("pham_Spec"));
                         // 判断基本药品数

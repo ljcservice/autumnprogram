@@ -1,29 +1,29 @@
-﻿<div id="sidebar" class="sidebar                  responsive">
+﻿<div id="sidebar" class="sidebar responsive">
 				<script type="text/javascript">
 					try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
 				</script>
 
 				<div class="sidebar-shortcuts" id="sidebar-shortcuts">
-					<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+					<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large" >
 						<form action="${path}/main/index" method="post" id="changeMenus">
 							<input type="hidden" value="yes" name="changeMenu">
 						</form>
 						<button class="btn btn-info" onclick="changeMenus();" title="切换菜单">
 							<i class="ace-icon fa fa-pencil"></i>
 						</button>
-						
-						<button class="btn btn-success" title="医药信息查询中心" onclick="window.open('${path}/show/index');">
-							<i class="ace-icon fa fa-signal"></i>
-						</button>
 
 						<!-- #section:basics/sidebar.layout.shortcuts -->
-						<button class="btn btn-warning" title="" id="adminzidian">
+						<button class="btn btn-warning" title="医药信息查询中心" onclick="window.open('${path}/show/index');">
 							<i class="ace-icon fa fa-book"></i>
 						</button>
+						
+<%-- 						<button class="btn btn-success" title="医药信息查询中心" onclick="window.open('${path}/show/index');"> --%>
+<!-- 							<i class="ace-icon fa fa-signal"></i> -->
+<!-- 						</button> -->
 
-						<button class="btn btn-danger">
-							<i class="ace-icon fa fa-cogs"></i>
-						</button>
+<!-- 						<button class="btn btn-danger"> -->
+<!-- 							<i class="ace-icon fa fa-cogs"></i> -->
+<!-- 						</button> -->
 
 						<!-- /section:basics/sidebar.layout.shortcuts -->
 					</div>
@@ -38,7 +38,7 @@
 						<span class="btn btn-danger"></span>
 					</div>
 				</div><!-- /.sidebar-shortcuts -->
-
+				<div style="overflow-y:auto;overflow-x:hidden;height: 500px;">
 				<ul class="nav nav-list">
 					<li class="">
 						<a href="main/index">
@@ -118,7 +118,7 @@
 				</c:forEach>
 
 				</ul><!-- /.nav-list -->
-
+				</div>
 				<!-- #section:basics/sidebar.layout.minimize -->
 				<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
 					<i class="ace-icon fa fa-angle-double-left" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>

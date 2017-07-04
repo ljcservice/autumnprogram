@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.ts.annotation.MyDao;
-import com.ts.service.pdss.pdss.Cache.InitPdssCache;
 
 /**
  * 重写Spring Listener 
@@ -31,28 +29,28 @@ public class CLListenerManager extends ContextLoaderListener
 //        setDataSourec();
     }
     
-    private void setDataSourec(){
-
-        WebApplicationContext wac = super.getCurrentWebApplicationContext();
-        
-        String[] name =wac.getBeanNamesForAnnotation(Service.class);
-        
-        for(String s : name){
-            System.out.println(s);
-            if(!"aiService".equals(s)) continue;
-            Object bean = wac.getBean(s);
-            Class clazz = bean.getClass();
-            
-            Field[] fs = clazz.getFields();
-            
-            for(Field f : fs){
-                f.getAnnotation(MyDao.class);
-                System.out.println(f.getName());
-            }
-            
-        }
-        
-    }
+//    private void setDataSourec(){
+//
+//        WebApplicationContext wac = super.getCurrentWebApplicationContext();
+//        
+//        String[] name =wac.getBeanNamesForAnnotation(Service.class);
+//        
+//        for(String s : name){
+//            System.out.println(s);
+//            if(!"aiService".equals(s)) continue;
+//            Object bean = wac.getBean(s);
+//            Class clazz = bean.getClass();
+//            
+//            Field[] fs = clazz.getFields();
+//            
+//            for(Field f : fs){
+//                f.getAnnotation(MyDao.class);
+//                System.out.println(f.getName());
+//            }
+//            
+//        }
+//        
+//    }
     
     private ScheduledExecutorService scheduled;
     /**

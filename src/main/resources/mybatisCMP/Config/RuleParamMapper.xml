@@ -1,41 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="ModelHandlerMapper">
+<mapper namespace="RuleParamMapper">
 	
 	<!--表名 -->
 	<sql id="tableName">
-		modelhandler 
+		ruleparameter 
 	</sql>
 	
 	<!-- 字段 -->
 	<sql id="Field">
-		 mh_id,        
-		 mh_groupcode, 
-		 mh_code,      
-		 mh_caption,   
-		 mh_action,    
-		 mh_classpath ,
-		 mh_progcode,  
-		 mh_progname , 
-		 mh_database,  
-		 mh_level,     
-		 mh_groupname
-
+	 	rulename,
+		rulevalue,
+		ruleid,
+		rulecode,
+		ruledesc,
+		redirect_tag
 	</sql>
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue">
-			#{mh_id},	
-			#{mh_groupcode},	
-			#{mh_code},	
-			#{mh_caption},	
-			#{mh_action},	
-			#{mh_classpath},	
-			#{mh_progcode},
-			#{mh_progname},
-			#{mh_database},
-			#{mh_level},
-			#{mh_groupname}
+		#{rulename},
+		#{rulevalue},
+		#{ruleid},
+		#{rulecode},
+		#{ruledesc},
+		#{redirect_tag}
 	</sql>
 	
 	<!-- 新增-->
@@ -56,7 +45,7 @@
 		where 
 			mh_id = #{mh_id}
 	</delete>
-		
+	
 	<!-- 修改 -->
 	<update id="edit" parameterType="pd">
 		update
@@ -67,11 +56,13 @@
 			where 
 				mh_id = #{mh_id}
 	</update>
-	<select id="findByAction" parameterType="pd" resultType="pd">
+	
+	<select id="findByRuleParam" parameterType="pd" resultType="pd">
 		select 
 			<include refid="Field"></include>
 		from 
 			<include refid="tableName"></include>
+		order by rulename
 	</select>
 	
 </mapper>

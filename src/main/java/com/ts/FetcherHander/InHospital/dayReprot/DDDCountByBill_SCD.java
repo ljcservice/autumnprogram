@@ -86,8 +86,13 @@ public class DDDCountByBill_SCD implements IReportBuilder
             double outlimitDDDS = 0; // 局部限制级抗生素使用频度
             double outordinaryDDDS = 0; // 局部普通级抗生素使用频度
             boolean adminJMSY = false; // 是否  静脉输液
+            double  adminJMSYCost = 0d; //
             boolean adminAntiJMSY = false;// 是否 抗菌药物静脉输液
-            
+            double adminAntiJMSYCost = 0d; //
+            boolean injection = false;    // 是否 注射药物
+            double  injectionCost = 0d;   // 注射药物  金额
+            boolean injectionAnti = false;  // 是否  抗菌 注射药物
+            double  injectionAntiCost = 0d; // 抗菌注射 金额 
 
             if (BillDetail != null && BillDetail.size() > 0)
             {
@@ -117,8 +122,16 @@ public class DDDCountByBill_SCD implements IReportBuilder
                         TCommonRecord rs = (TCommonRecord) cr.deepClone();
                         // 给药途径静脉输液
                         rs.set("adminJMSY", adminJMSY ? "1" : "0");
+                        rs.set("adminJMSYCost", adminJMSYCost + "");
                         // 抗菌药物  给药途径静脉输液
                         rs.set("adminAntiJMSY", adminAntiJMSY ? "1" : "0");
+                        rs.set("adminAntiJMSYCost", adminAntiJMSYCost + "");
+                        
+                        // 注射药物
+                        rs.set("injection", injection ? "1":"0");
+                        rs.set("injectionCost", injectionCost + "");
+                        rs.set("injectionAnti", injectionAnti ? "1" :"0");
+                        rs.set("injectionAntiCost", injectionAntiCost + "");
                         // 转科标示
                         rs.set("IS_SCD", is_scd ? "1" : "0");
                         // 病人过程唯一号
@@ -157,7 +170,14 @@ public class DDDCountByBill_SCD implements IReportBuilder
                         outdrug_costs = 0; // 局部应收药费--中药西药
                         outdrug_charges = 0; // 局部实收是非--中药西药
                         adminAntiJMSY = false; // 静脉输液抗菌药 
+                        adminAntiJMSYCost = 0 ;// 静脉输液抗菌药金额
                         adminJMSY = false ; // 静脉输液
+                        adminJMSYCost = 0; // 静脉输液金额 ;
+                        injection = false;  // 是否注射剂
+                        injectionCost = 0 ; // 注射剂金额
+                        injectionAnti = false; // 是否抗菌药物注射
+                        injectionAntiCost = 0 ; /// 抗菌药物注射金额
+                        
                     } // End 添加病人信息
                     costs += bill.getDouble("costs");
                     charges += bill.getDouble("charges");
@@ -169,7 +189,21 @@ public class DDDCountByBill_SCD implements IReportBuilder
                     }
                     else if (Config.getParamValue("Drug_In_Order").equals(bill.get("item_class"))) // 西药费用
                     {
-                        if(!adminJMSY && this.adminOrderMap.containsKey(bill.getObj("item_code"))) adminJMSY = true;
+                        
+                        // 注射剂药物
+                        if(DrugUtils.isZSDrug(bill.get("item_code"), bill.get("item_spec")))
+                        {
+                            injection = true;
+                            injectionCost += bill.getDouble("item_code");
+                        }
+                        // 静脉输液
+                        if(this.adminOrderMap.containsKey(bill.getObj("item_code"))) 
+                        {
+                            // 静脉输液金额
+                            adminJMSYCost += bill.getDouble("costs");
+                            adminJMSY = true;
+                        }
+                        
                         boolean isOutAnti = false;
                         if (DrugUtils.isExternalDrug(bill.get("item_code"),
                                 bill.get("item_spec")))
@@ -186,7 +220,19 @@ public class DDDCountByBill_SCD implements IReportBuilder
                         if (DrugUtils.isKJDrug(bill.get("item_code")))
                         {
                             
-                            if(!adminAntiJMSY && this.adminOrderMap.containsKey(bill.getObj("item_code"))) adminAntiJMSY = true;
+                            // 注射剂药物
+                            if(DrugUtils.isZSDrug(bill.get("item_code"), bill.get("item_spec")))
+                            {
+                                injectionAnti = true;
+                                injectionAntiCost += bill.getDouble("item_code");
+                            }
+                            // 静脉输液
+                            if(this.adminOrderMap.containsKey(bill.get("item_code"))) 
+                            {
+                                //静脉输液
+                                adminAntiJMSYCost += bill.getDouble("costs");
+                                adminAntiJMSY = true;
+                            }
                             // 外用抗菌药物
                             if (isOutAnti)
                             {
@@ -309,8 +355,17 @@ public class DDDCountByBill_SCD implements IReportBuilder
                         TCommonRecord rs = (TCommonRecord) cr.deepClone();
                         // 给药途径静脉输液
                         rs.set("adminJMSY", adminJMSY ? "1" : "0");
+                        rs.set("adminJMSYCost", adminJMSYCost + "");
                         // 抗菌药物  给药途径静脉输液
                         rs.set("adminAntiJMSY", adminAntiJMSY ? "1" : "0");
+                        rs.set("adminAntiJMSYCost", adminAntiJMSYCost + "");
+                        
+                        // 注射药物
+                        rs.set("injection", injection ? "1":"0");
+                        rs.set("injectionCost", injectionCost + "");
+                        rs.set("injectionAnti", injectionAnti ? "1" :"0");
+                        rs.set("injectionAntiCost", injectionAntiCost + "");
+                       
                         
                         // 转科标示
                         rs.set("IS_SCD", is_scd ? "1" : "0");
@@ -1292,7 +1347,7 @@ public class DDDCountByBill_SCD implements IReportBuilder
                     sql.append(
                             " limit_ddd_value, doctor, max_drug_aday, ordinaryDDDS, is_anti, identity, charge_type, costs, charges, drug_costs, drug_charges, anti_costs, anti_charges, "
                                     + "outdrug_costs,outdrug_charges,outAntiDDD,outAntiCosts,outAntiCharges,outspecDDDS,outlimitDDDS,outordinaryDDDS,is_out,"
-                                    + "FUNCDEPTCODE,FUNCDEPTNAME,FUNCDEPTBEGINDATE,FUNCDEPTENDDATE,FUNCDAYS,IS_SCD,PAT_FUNCT_NO,IS_ORDERFLAG,submit_count,first_diagnosis,ADMINJMSY,ADMINANTIJMSY");
+                                    + "FUNCDEPTCODE,FUNCDEPTNAME,FUNCDEPTBEGINDATE,FUNCDEPTENDDATE,FUNCDAYS,IS_SCD,PAT_FUNCT_NO,IS_ORDERFLAG,submit_count,first_diagnosis,ADMINJMSY,ADMINANTIJMSY,adminJMSYCost,adminAntiJMSYCost,injection,injectionCost,injectionAnti,injectionAntiCost");
                     sql.append(
                             ") values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
                     Timestamp dateTime = new Timestamp(DateUtils
@@ -1353,6 +1408,16 @@ public class DDDCountByBill_SCD implements IReportBuilder
 
                     sqlParams.add(cr.get("ADMINJMSY")); // 静脉输液
                     sqlParams.add(cr.get("ADMINANTIJMSY"));// 静脉输液 抗菌药物
+                    
+                    sqlParams.add(cr.get("adminJMSYCost"));
+                    // 抗菌药物  给药途径静脉输液
+                    sqlParams.add(cr.get("adminAntiJMSYCost"));
+                    
+                    // 注射药物
+                    sqlParams.add(cr.get("injection"));
+                    sqlParams.add(cr.get("injectionCost"));
+                    sqlParams.add(cr.get("injectionAnti"));
+                    sqlParams.add(cr.get("injectionAntiCost"));
                     
                     String tempKey = cr.get("patient_id") + "_"
                             + cr.get("visit_id") + "_"

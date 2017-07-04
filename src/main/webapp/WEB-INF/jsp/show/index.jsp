@@ -10,8 +10,9 @@
 <html lang="en">
 <head>
 <base href="<%=basePath%>">
-<meta charset="utf-8" />
+<meta charset="utf-8" /> 
 <title>主页</title>
+<link rel="shortcut icon" href="favicon.ico">  
 <link type="text/css" rel="stylesheet" href="static/css/show/show.css"/>
 <style>
 ul,li{

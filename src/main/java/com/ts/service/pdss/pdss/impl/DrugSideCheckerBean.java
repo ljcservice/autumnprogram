@@ -72,6 +72,7 @@ public class DrugSideCheckerBean extends Persistent4DB implements IDrugSideCheck
 	        	if(drugSDs == null) continue;
 	        	for(TDrugSideDict dsd : drugSDs)
 	        	{
+	        	    if("".equals(dsd.getDiagnosis_name())) continue;
 //	        		PageData  pd = pdssCache.queryDiagnosisDictById(dsd.getDIAGNOSIS_DICT_ID());
 	        		for(TPatOrderDiagnosis patOd : patOds)
 	        		{

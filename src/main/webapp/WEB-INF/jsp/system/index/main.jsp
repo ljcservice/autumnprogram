@@ -12,7 +12,7 @@
 <html lang="en">
 <head>
 <base href="<%=basePath%>">
-
+	<link rel="shortcut icon" href="favicon.ico">  
 	<!-- jsp文件头和头部 -->
 	<%@ include file="top.jsp"%>
 	<style type="text/css">

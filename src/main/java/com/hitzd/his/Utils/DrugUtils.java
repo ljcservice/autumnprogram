@@ -10,7 +10,7 @@ import com.hitzd.DBUtils.TCommonRecord;
 import com.hitzd.Factory.DBQueryFactory;
 
 /**
- * 药品基本信息
+ * 药品基本信息  drug_map 查询 
  * @author jingcong
  *
  */
@@ -44,7 +44,8 @@ public class DrugUtils
 		JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
 		try
 		{
-			String sql = "select * from Drug_Map where Drug_No_Local = '" + DrugCode + "' and Drug_Spec = '" + DrugSpec + "' and IS_INJECTION = '1'";
+			String sql = "select * from Drug_Map where Drug_No_Local = '" + DrugCode + "' and IS_INJECTION = '1' ";
+			if(DrugSpec !=  null  && !"".equals(DrugSpec)) sql += "and Drug_Spec = '" + DrugSpec + "'";
 			TCommonRecord cr = (TCommonRecord)query.queryForObject(sql, new CommonMapper());
 			sql = null;
 			return cr != null;
@@ -477,21 +478,21 @@ public class DrugUtils
 		
 	}
 	
-	/**
-	 *  是否标准注射剂药品 
-	 * @param drugCode
-	 * @return 已取消
-	 */
-	@Deprecated
-	public static boolean isZSNormDrug(String drugCode)
-	{
-	    TCommonRecord drug = DictCache.getNewInstance().getDrugDictInfo(drugCode);
-        if("针剂".equals(drug.get("drug_form")))
-        {
-            return true;    
-        }
-        return false;
-	}
+//	/**
+//	 *  是否标准注射剂药品 
+//	 * @param drugCode
+//	 * @return 已取消
+//	 */
+//	@Deprecated
+//	public static boolean isZSNormDrug(String drugCode)
+//	{
+//	    TCommonRecord drug = DictCache.getNewInstance().getDrugDictInfo(drugCode);
+//        if("针剂".equals(drug.get("drug_form")))
+//        {
+//            return true;    
+//        }
+//        return false;
+//	}
 	
 	/* 抗菌药物集合  */
 	private static List<TCommonRecord> KJDrug = new ArrayList<TCommonRecord>();
