@@ -82,26 +82,43 @@ public class DrugMatcher extends BaseController {
         		try {
         			//自动匹配
         			for(PageData drugmap:drugMaplist){
+        				String oldStr =  drugmap.getString("DRUG_NAME_LOCAL").trim();
 	        			PageData s = new PageData();
-	        			s.put("STAD_DRUG_NAME",drugmap.getString("DRUG_NAME_LOCAL"));
 	        			//完全匹配药品
+	        			s.put("STAD_DRUG_NAME",oldStr);
 	        			drugList = matcherService.drugList( s);
+	        			//模糊匹配
 	        			if(drugList==null || drugList.size()==0){
 	        				s = new PageData();
-	        				//汉字去掉（ ( 内容
-	        				String newName = controlName(s, drugmap.getString("DRUG_NAME_LOCAL"));
-	        				if(!drugmap.getString("DRUG_NAME_LOCAL").equals(newName)){
-	        					s.put("STAD_DRUG_NAME", newName);
-	        					//完全匹配药品
+	        				s.put("DRUG_NAME",oldStr);
+	        				drugList = matcherService.drugList( s);
+	        			}
+	        			String str =  drugmap.getString("DRUG_NAME_LOCAL").trim();
+	        			//替换无用字符
+	        			if(drugList==null || drugList.size()==0){
+	        	        	List<String> filterList =  matcherService.getFilterList();
+        	        		for(String st:filterList){
+        	        			st = st.replaceAll("\\(","\\\\\\(");
+        	        			st = st.replaceAll("\\)","\\\\\\)");
+        	        			str = str.replaceAll(st, "");
+        	        		}
+        	        		str = str.trim();
+	        			}
+	        			//汉字去掉（ ( 内容  完全匹配
+	        			if(drugList==null || drugList.size()==0){
+	        				if(!oldStr.equals(str)){
+	        					s = new PageData();
+	        					s.put("STAD_DRUG_NAME", str );
 	        					drugList = matcherService.drugList( s);
 	        				}
 	        			}
+	        			//汉字去掉（ ( 内容 模糊 查询
 	        			if(drugList==null || drugList.size()==0){
-	        				s = new PageData();
-	        				//汉字去掉（ ( 内容
-	        				s.put("DRUG_NAME", controlName(s, drugmap.getString("DRUG_NAME_LOCAL")));
-	        				//模糊 查询 相似药品
-	        				drugList = matcherService.drugList( s);
+	        				if(!oldStr.equals(str)){
+		        				s = new PageData();
+		        				s.put("DRUG_NAME", str );
+		        				drugList = matcherService.drugList( s);
+	        				}
 	        			}
 	        			
 	        			List<PageData> drugList2 = new ArrayList<PageData>();
@@ -750,14 +767,6 @@ public class DrugMatcher extends BaseController {
     }
     
     public static void main(String[] args) {
-    	StopWatch start = new StopWatch();
-    	start.start();
-    	try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-		}
-    	start.stop();
-	    start.getTime();
-    	System.out.println(2);
+    	System.out.println("asdasd".replaceAll("\\(","\\\\\\\\("));
 	}
 }

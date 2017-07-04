@@ -1,10 +1,12 @@
 package com.ts.service.matcher.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.ts.dao.DaoSupportPdss;
 import com.ts.entity.Page;
@@ -30,6 +32,16 @@ public class MatcherServiceImpl  implements MatcherService
 		return (PageData)dao.findForObject("MatcherMapper.countMatcherSum", new PageData());
 	}
 	
-	
+	/**
+	 * 查询出需要替换过滤的无用的字符串
+	 * @return
+	 */
+	public List<String> getFilterList() throws Exception{
+		List<String> list = (List<String>)dao.findForList("MatcherMapper.getFilterList", new PageData());
+		if(list==null){
+			return new  ArrayList<String>();
+		}
+		return list;
+	}
 	
 }
