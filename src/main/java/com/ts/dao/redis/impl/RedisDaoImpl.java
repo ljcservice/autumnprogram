@@ -134,6 +134,21 @@ public class RedisDaoImpl extends AbstractBaseRedisDao<String, PageData> impleme
 		return list;
 	}
 	
+	
+	/**
+	 *  使用的keys * 命令
+	 * @param pattern
+	 * @return
+	 */
+	public String[] getListByKey(String pattern)
+	{
+	    Jedis jedis = getJedis();
+	    Set<String> setKeys = jedis.keys("*" + pattern + "*");
+	    jedis.close();
+	    return (String[])setKeys.toArray(new String[0]);
+	}
+	
+	
 	/**新增(存储set)
 	 * @param key
 	 * @param set

@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +19,7 @@ import com.ts.controller.base.BaseController;
 import com.ts.entity.Page;
 import com.ts.entity.system.User;
 import com.ts.service.DoctOrder.OrderWork.OpDrugService;
+import com.ts.service.pdss.pdss.Cache.InitPdssCache;
 import com.ts.util.DateUtil;
 import com.ts.util.Jurisdiction;
 import com.ts.util.PageData;
@@ -27,9 +30,11 @@ import com.ts.util.app.AppUtil;
 @Controller
 @RequestMapping(value="/opDrug")
 public class OperationDrug  extends BaseController{
+    
 	@Autowired
 	private OpDrugService  opDrugService;
-	
+	@Resource(name="initPdssCache")
+	private InitPdssCache  initPdss;
 
 	/**
 	 * 专家点评列表
@@ -166,6 +171,24 @@ public class OperationDrug  extends BaseController{
 		map.put("result", "success");
 		return AppUtil.returnObject(pd, map);
 	}
+	
+	@RequestMapping(value="/loalRule")
+    @ResponseBody
+    public Object loadRule() throws Exception
+    {
+        Map<String,String> map = new HashMap<String,String>();
+        String rsInfo = "success";
+        PageData pd = this.getPageData();
+        try
+        {
+            initPdss.setOperationDrug();
+        }
+        catch(Exception e ){
+            logger.error(e.toString(), e);
+        }
+        map.put("result", rsInfo);
+        return map ;
+    }
 	
 	/**
 	 * 选择数据

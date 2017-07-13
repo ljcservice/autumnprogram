@@ -49,59 +49,29 @@ public class InitPdssCache {
 	private DaoSupportPdss dao;
 	@Resource(name="daoSupportPH")
 	private DaoSupportPH  daoPH;
-	
+
 	private int showCount = 5000;
 //	@PostConstruct()
 	public void bulidRedisCache(){
-	    
-	    
-		try
+	    try
 		{
-//		    Long l = System.currentTimeMillis();
-////		    for(int i =0 ; i < 100;i++){
-//		        
-//		        TDrug t = cacheTemplate.cache(PdssCache.drugCacheByLocal, "3101054IJ0", null);
-////		    }
-//		    System.out.println("redis" + (System.currentTimeMillis() - l));
-//		    l = System.currentTimeMillis();
-////		    for(int i =0 ; i < 100;i++){
-//		        DrugUtils.isKJDrug("3101054IJ0");
-////		    }
-//		    System.out.println("sysCache" + (System.currentTimeMillis() - l));
-//	        if(true) return ;
-			log.info("内容构建");
-			log.info("手术用药");
+	        log.info("内容构建");
 			setOperationDrug();
-//			log.info("重复给药");
-//			setDrugRepeat();
-//			log.info("药物禁忌症对应");
-//			setDrugDiagRel();
-//			log.info("药物禁忌症信息");
-//			setDrugDiagInfo();
-//			log.info("用药途径单个缓存");
-//			setAdministration();
-//			log.info("相互作用");
+			setDrugRepeat();
+			setDrugDiagRel();
+			setDrugDiagInfo();
+			setAdministration();
 ////	暂时不用 		setDrugInteractionInfo();
-//			setDrugInteractionMap();
-//			log.info("药品缓存 view_drug");
-//			setDrugById();
-//			log.info(" 查询单个诊断对应的疾病");
-//			setDiseageVsDiag();
-//			log.info("配伍禁忌");
-//			setDrugIvEffect();
-//			log.info("药物成分、药敏、药物分类与药物对照字典  目前放弃");
-//			setAid();
-//			log.info("药品剂量使用字典");
-//			setDdg();
-//			log.info("不良反应");
-//			setDrugSideDict();
-//			log.info("医嘱执行频率");
-//			setDrugPerfom();
-//			log.info("特殊人群");
-//			setDud();
-//			log.info("医保内容");
+			setDrugInteractionMap();
+			setDrugById();
+			setDiseageVsDiag();
+			setDrugIvEffect();
+			setAid();
+			setDdg();
+			setDrugSideDict();
+			setDrugPerfom();
+			setDud();
 //			setMemoList();
-//			log.info("医保用药 适应列表 ");
 //			setTMedicareCatalog();
 			log.info("内容构建完成");
 		}
@@ -118,6 +88,9 @@ public class InitPdssCache {
 	 */
 	public void setOperationDrug() throws Exception
 	{
+	    log.info("删除手术药品管理缓存");
+	    cacheTemplate.delKeys(PdssCache.OperationDrug);
+	    log.info("加载手术用药");
 	    Page page = new Page();
 	    int pageNum = 1;
 	    page.setShowCount(showCount);
@@ -125,9 +98,9 @@ public class InitPdssCache {
 	    String key = null;
 	    String keyName = null;
         List<TOperationDrugInfo> odinfo = new ArrayList<TOperationDrugInfo>();
-        while( pageNum == 1 || pageNum <= page.getTotalPage()){
+        while( pageNum == 1 || pageNum <= page.getTotalPage()){ 
             page.setCurrentPage(pageNum);
-            List<TOperationDrugInfo> ods = (List<TOperationDrugInfo>) daoPH.findForList("CKOperationDrug.ckOperationDrugPage", page);
+            List<TOperationDrugInfo> ods = (List<TOperationDrugInfo>) daoPH.findForList("CKOperationDrug.queryCKOperationDrugPage", page);
             for(TOperationDrugInfo od : ods){
                 if(key != null && !key.equals(od.getO_code()))
                 {
@@ -151,7 +124,7 @@ public class InitPdssCache {
 	 * @throws Exception
 	 */
 	public void setDrugRepeat() throws Exception{
-	    
+	    log.info("重复给药");
 	    Page page = new Page();
         int pageNum = 1;
         page.setShowCount(showCount);
@@ -183,6 +156,7 @@ public class InitPdssCache {
 	 * @throws Exception
 	 */
 	public void setDrugDiagRel() throws Exception {
+	    log.info("药物禁忌症对应");
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);
@@ -206,6 +180,7 @@ public class InitPdssCache {
 	 * @throws Exception
 	 */
 	public void setDrugDiagInfo() throws Exception{
+	    log.info("药物禁忌症信息");
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);
@@ -214,7 +189,7 @@ public class InitPdssCache {
 		List<TDrugDiagInfo> ddiRs = new ArrayList<TDrugDiagInfo>();
 		while( pageNum == 1 || pageNum <= page.getTotalPage()){
 			page.setCurrentPage(pageNum);
-			List<TDrugDiagInfo> ddis = (List<TDrugDiagInfo>) dao.findForList("DrugMapper.getDrugDiagInfos", page);
+			List<TDrugDiagInfo> ddis = (List<TDrugDiagInfo>) dao.findForList("DrugMapper.getDrugDiagInfosPage", page);
 			for(TDrugDiagInfo ddi : ddis){
 				if(key != null && !key.equals(ddi.getCONTRAIND_ID()) ){
 					cacheTemplate.setObject(PdssCache.ddisCache, key ,-1, ddiRs);
@@ -233,6 +208,7 @@ public class InitPdssCache {
 	 * 用药途径单个缓存查询
 	 */
 	public void setAdministration() throws Exception {
+	    log.info("用药途径单个缓存");
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);
@@ -296,7 +272,7 @@ public class InitPdssCache {
      * @throws Exception
      */
 	public void setDrugInteractionMap()	throws Exception {
-		
+	    log.info("相互作用");
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);
@@ -385,6 +361,7 @@ public class InitPdssCache {
 	 * @throws Exception
 	 */
 	public void setDrugById() throws Exception {
+	    log.info("药品缓存 view_drug");
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);
@@ -410,6 +387,7 @@ public class InitPdssCache {
 	 * @throws Exception
 	 */
 	public void setDiseageVsDiag() throws Exception {
+	    log.info(" 查询单个诊断对应的疾病");
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);
@@ -436,6 +414,7 @@ public class InitPdssCache {
 	 * @throws Exception
 	 */
 	public void setDrugIvEffect() throws Exception {
+	    log.info("配伍禁忌");
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);
@@ -482,6 +461,7 @@ public class InitPdssCache {
 	 * @throws Exception
 	 */
 	public void setDrugSideDict() throws Exception {
+	    log.info("不良反应");
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);
@@ -535,6 +515,7 @@ public class InitPdssCache {
 	 * @throws Exception
 	 */
 	public void setDud() throws Exception {
+	    log.info("特殊人群");
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);
@@ -561,6 +542,7 @@ public class InitPdssCache {
 	 * @throws Exception
 	 */
 	public void setAid() throws Exception {
+	    log.info("药物成分、药敏、药物分类与药物对照字典  目前放弃");
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);
@@ -586,6 +568,7 @@ public class InitPdssCache {
 	 * @throws Exception
 	 */
 	public void setDdg() throws Exception {
+	    log.info("药品剂量使用字典");
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);
@@ -620,6 +603,7 @@ public class InitPdssCache {
 	 * @throws Exception
 	 */
 	public void setDrugPerfom() throws Exception {
+	    log.info("医嘱执行频率");
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);
@@ -647,6 +631,7 @@ public class InitPdssCache {
 	 * @throws Exception
 	 */
 	public void setMemoList() throws Exception {
+	    log.info("医保内容");
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);
@@ -671,6 +656,7 @@ public class InitPdssCache {
 	 * @throws Exception
 	 */
 	public void setTMedicareCatalog() throws Exception {
+	    log.info("医保用药 适应列表 ");
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);

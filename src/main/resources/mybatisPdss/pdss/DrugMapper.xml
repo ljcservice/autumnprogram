@@ -99,7 +99,7 @@
 	</select>
 	
 	<!-- 	药物禁忌症对应CONTRAIND_ID -->
-	<select id="getDrugDiagInfosPage" parameterType="pd" resultType="TDrugDiagInfo">
+	<select id="getDrugDiagInfos" parameterType="pd" resultType="TDrugDiagInfo">
 		select DRUG_DIAG_INFO_ID,DIAGNOSIS_DICT_ID,DRUG_DIAG_REL_ID,SEQ_ID,INTER_INDI,DIAG_DESC,DRUG_REF_SOURCE,CONTRAIND_ID 
 		from DRUG_DIAG_INFO 
 		where disease_id in
@@ -115,7 +115,7 @@
 	</select>
 	
 	<!-- 	药物禁忌症对应CONTRAIND_ID -->
-	<select id="getDrugDiagInfos" parameterType="page" resultType="TDrugDiagInfo">
+	<select id="getDrugDiagInfosPage" parameterType="page" resultType="TDrugDiagInfo">
 		select DRUG_DIAG_INFO_ID,DIAGNOSIS_DICT_ID,DRUG_DIAG_REL_ID,SEQ_ID,INTER_INDI,DIAG_DESC,DRUG_REF_SOURCE,CONTRAIND_ID 
 		from DRUG_DIAG_INFO where contraind_id in (
 			select CONTRAIND_ID from DRUG_DIAG_REL where DRUG_CLASS_ID in (select drug_class_id from view_drug) )  order by contraind_id

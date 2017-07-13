@@ -1,5 +1,7 @@
 package com.ts.service.cache;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,7 +22,6 @@ import com.ts.util.Tools;
  *
  */
 @Component
-
 public class CacheTemplate {
     @Autowired
     private RedisDao redisDao;
@@ -113,6 +114,7 @@ public class CacheTemplate {
 	public String setObject(String key, int seconds, Object obj) {
 		return setObject(key,null, seconds, obj);
 	}
+	
 	/**
 	 * 从缓存获取数据，存放什么类型取出时强转什么类型
 	 * @param key
@@ -125,4 +127,34 @@ public class CacheTemplate {
 	public Object getObject(String key) {
 		return getObject(key,null) ;
 	}
+	
+	/**
+	 * 获得
+	 * @param val
+	 * @return
+	 */
+	public List<String> getKeys(String val)
+	{
+	    String[] ks = redisDao.getListByKey(val);
+	    return Arrays.asList(ks); 
+	}
+	
+	/**
+	 * 
+	 * @param val
+	 */
+	public void delKey(String key)
+	{
+	    redisDao.delete(key);
+	}
+	
+	/**
+	 * 
+	 * @param val
+	 */
+	public void delKeys(String val)
+	{
+	    redisDao.delete(getKeys(val));
+	}
+	
 }

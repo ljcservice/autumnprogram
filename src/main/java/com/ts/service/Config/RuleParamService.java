@@ -26,6 +26,13 @@ public interface RuleParamService
     public void updateRuleParam(PageData pd) throws Exception ;
     
     /**
+     * ruleCode 查询 
+     * @param pd
+     * @throws Exception
+     */
+    public PageData findRuleParmByRuleCode(PageData pd) throws Exception;
+    
+    /**
      * 添加 系统参数表
      * @param pd
      */

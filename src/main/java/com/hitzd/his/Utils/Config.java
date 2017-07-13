@@ -157,14 +157,14 @@ public class Config
         
          // 2014-09-02 liujc 修改，   
         if (!paramLoaded) initParam();
-        if (paramMap.containsKey(key.toUpperCase()))
-        {
+//        if (paramMap.containsKey(key.toUpperCase()))
+//        {
             paramMap.put(key.toUpperCase(), value); 
-        }
-        else
-        {
-            System.out.println("参数中没有该参数：" + key);
-        }
+//        }
+//        else
+//        {
+//            System.out.println("参数中没有该参数：" + key);
+//        }
     }
     
     /**

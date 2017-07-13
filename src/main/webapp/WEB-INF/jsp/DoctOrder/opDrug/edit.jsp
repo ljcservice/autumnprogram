@@ -66,7 +66,11 @@
 										<tr>
 											<td style="width:100px;text-align: right;padding-top: 13px;">手术切口等级:</td>
 											<td>
-												<input type="text" name="O_LEVEL" id="O_LEVEL" value="${pd.O_LEVEL }" style="width:99%;"/>
+												<select name="O_LEVEL" id="O_LEVEL" style="width:99%;">
+													<option value="1" <c:if test="${pd.O_LEVEL == '1' }">selected</c:if> >Ⅰ</option>
+													<option value="2" <c:if test="${pd.O_LEVEL == '2' }">selected</c:if> >Ⅱ</option>
+													<option value="3" <c:if test="${pd.O_LEVEL == '3' }">selected</c:if> >Ⅲ </option>
+												</select>
 											</td>
 										</tr>
 										<tr>

@@ -24,7 +24,7 @@ public class RuleParamServiceBean implements RuleParamService
     @Override
     public List<PageData> listRuleParam(Page page) throws Exception
     {
-        return (List<PageData>) dao.findForList("RuleParamMapper.findByRuleParam", page);
+        return (List<PageData>) dao.findForList("RuleParamMapper.findByRuleParamPage", page);
     }
 
     @Override
@@ -43,5 +43,11 @@ public class RuleParamServiceBean implements RuleParamService
     public void deleteRuleParam(PageData pd) throws Exception
     {
         dao.delete("RuleParamMapper.delete", pd);
+    }
+
+    @Override
+    public PageData findRuleParmByRuleCode(PageData pd) throws Exception
+    {
+        return (PageData) dao.findForObject("RuleParamMapper.findByRuleParamByRuleCode", pd);
     }
 }

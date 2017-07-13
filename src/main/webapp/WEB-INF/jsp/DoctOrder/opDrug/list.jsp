@@ -42,9 +42,8 @@
 						<div class="col-xs-12" id="btnDiv">
 							<input type="hidden" name="category_id" id="category_id" value=""/>
 							<div class="check-search nav-search"  >
-								手术名称
 								<span class="input-icon" style="">
-									<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="O_NAME" value="${pd.O_NAME }" placeholder="名称/编码等" maxlength="80"/>
+									<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="workcode"  value="${pd.workcode }" placeholder="手术名称/手术编码" maxlength="80"/>
 									<i class="ace-icon fa fa-search nav-search-icon"></i>
 								</span>
 							</div>
@@ -52,11 +51,11 @@
 								<a class="btn btn-light btn-xs" onclick="searchs(this);" title="检索" target="treeFrame" id="searchBtn"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
 								<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i></a>
 							</div>
-							<div class="check-search"   >
-								更新日期：
-								<input class="span10 date-picker" name="UPDATE_TIME_START" id="UPDATE_TIME_START"  value="${pd.UPDATE_TIME_START }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
-								<input class="span10 date-picker" name="UPDATE_TIME_END" id="UPDATE_TIME_END"  value="${pd.UPDATE_TIME_END }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
-							</div>
+<!-- 							<div class="check-search"   > -->
+<!-- 								更新日期： -->
+<%-- 								<input class="span10 date-picker" name="UPDATE_TIME_START" id="UPDATE_TIME_START"  value="${pd.UPDATE_TIME_START }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" /> --%>
+<%-- 								<input class="span10 date-picker" name="UPDATE_TIME_END" id="UPDATE_TIME_END"  value="${pd.UPDATE_TIME_END }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" /> --%>
+<!-- 							</div> -->
 						</div>
 						
 						<!-- 检索  -->
@@ -124,6 +123,16 @@
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 10px;padding-bottom: 10px;">
 							<table style="width:100%;">
 								<tr>
+									<td style="vertical-align:top;">
+<%-- 										<ts:rights code="user/toAdd"> --%>
+											<a class="btn btn-mini btn-success" onclick="add();">新增</a>
+<%-- 										</ts:rights> --%>
+
+<%-- 										<ts:rights code="user/toAdd"> --%>
+											<a class="btn btn-mini btn-yellow" onclick="javascript:loadRule();">重新加载规则</a>
+<%-- 										</ts:rights> --%>
+									</td>
+
 									<td>
 										<div class="pagination" style="float: right;padding: 0px;margin: 0px;">${page.pageStr}</div>
 									</td>
@@ -190,6 +199,20 @@ function delOp(id,msg){
 		if(result) {
 			top.jzts();
 			var url = "<%=basePath%>opDrug/delete.do?O_ID="+id+"&tm="+new Date().getTime();
+			$.get(url,function(data){
+				nextPage(${page.currentPage});
+			});
+		};
+	});
+}
+
+// 
+function loadRule()
+{
+	bootbox.confirm("重新加载规则，需要一些时间请耐心等待！", function(result) {
+		if(result) {
+			top.jzts();
+			var url = "<%=basePath%>opDrug/loalRule.do?tm="+new Date().getTime();
 			$.get(url,function(data){
 				nextPage(${page.currentPage});
 			});

@@ -24,7 +24,7 @@
 		#{ruleid},
 		#{rulecode},
 		#{ruledesc},
-		#{redirect_tag}
+		#{redirect_tag,jdbcType=VARCHAR}
 	</sql>
 	
 	<!-- 新增-->
@@ -43,7 +43,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			mh_id = #{mh_id}
+			rulecode = #{rulecode}
 	</delete>
 	
 	<!-- 修改 -->
@@ -51,17 +51,39 @@
 		update
 		<include refid="tableName"></include>
 			set 
-				mh_action = #{mh_action},	
-				mh_classpath = #{mh_classpath},
+				rulename = #{rulename},
+				rulevalue = #{rulevalue},
+				ruledesc =#{ruledesc}
 			where 
-				mh_id = #{mh_id}
+				rulecode = #{rulecode}
 	</update>
 	
-	<select id="findByRuleParam" parameterType="pd" resultType="pd">
+	<select id="findByRuleParamPage" parameterType="page" resultType="pd">
 		select 
 			<include refid="Field"></include>
 		from 
 			<include refid="tableName"></include>
+			
+		where 1=1 
+		
+		<if test="pd.workcode != null and pd.workcode != ''">
+			and 
+			(
+				rulename like CONCAT(CONCAT('%', #{pd.workcode}),'%')
+				or 
+				rulecode like CONCAT(CONCAT('%', #{pd.workcode}),'%')
+			)
+		</if>
+		order by rulename
+	</select>
+	
+	<select id="findByRuleParamByRuleCode" parameterType="pd" resultType="pd">
+		select 
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>
+		where 
+			rulecode = #{rulecode}
 		order by rulename
 	</select>
 	

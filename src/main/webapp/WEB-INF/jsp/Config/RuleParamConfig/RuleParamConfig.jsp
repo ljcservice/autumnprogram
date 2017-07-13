@@ -48,7 +48,7 @@
 								<form name="searchForm" id="searchForm" action="RuleParam/ruleParamViewUI.do" method="post" > 
 									<div class="check-search nav-search" > 
 										<span class="input-icon">
-											<input class="nav-search-input" style="width: 100px;" autocomplete="off" id="nav-search-input" type="text" name="drug_name" value="${pd.drug_name}" placeholder="药品名称" maxlength="80"/>
+											<input class="nav-search-input" style="width: 150px;" autocomplete="off" id="nav-search-input" type="text" name="workcode" value="${pd.workcode}" placeholder="参数名称/参数编码" maxlength="150"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
@@ -56,42 +56,11 @@
 										<a class="btn btn-light btn-xs" onclick="searchs();" title="检索"  id="searchBtn"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
 										<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i></a>
 									</div>
-									<div class="check-search"  >
-										起止日期：
-										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
-										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.endDate }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
-									</div>
-<!-- 									<div class="check-search"  >  -->
-<!-- 										作用范围： -->
-<!-- 									 	<select class="chosen-select form-control" name="IS_OPERATION" id="IS_OPERATION" data-placeholder="是否含手术" style="vertical-align:top;width: 80px;"> -->
-<!-- 									 		<option value="">全部</option> -->
-<%-- 											<option <c:if test="${pd.IS_OPERATION == '0' }">selected</c:if> value="0" >否</option> --%>
-<%-- 											<option <c:if test="${pd.IS_OPERATION == '1' }">selected</c:if> value="1" >是</option> --%>
-<!-- 										</select> -->
+									
+<!-- 									<div class="check-search"> -->
+<!-- 										<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a> -->
+<!-- 										<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a> -->
 <!-- 									</div> -->
-									
-									<div class="check-search"  > 
-										类型：
-									 	<select class="chosen-select form-control" name="drugType" id="drugType" data-placeholder="类型" style="vertical-align:top;width: 80px;">    
-									 		<option value="-1">全部</option>
-											<option <c:if test="${pd.drugType == '0' }">selected</c:if> value="0" >抗菌药</option>
-											<option <c:if test="${pd.drugType == '1' }">selected</c:if> value="1" >基本药物</option>
-											<option <c:if test="${pd.drugType == '2' }">selected</c:if> value="2" >非抗菌药</option>
-<%-- 											<option <c:if test="${pd.drugType == '3' }">selected</c:if> value="juvenile" >青年(大于10,小于18)</option> --%>
-										</select>
-									</div>  
-									
-									<div class="check-search">
-										排序：
-										<select class="chosen-select form-control" name="orderBy" id="orderBy" data-placeholder="抗菌药类型" style="vertical-align:top;width: 100px;">    
-											<option  value="sumcosts" >金额</option>
-											<option <c:if test="${pd.orderBy == 'sumamount' }">selected</c:if> value="sumamount" >用量</option>
-										</select>
-									</div>
-									<div class="check-search">
-										<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
-										<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
-									</div>
 								</form>
 							</div>
 							<div style="width: 100%;height: auto;">
@@ -99,14 +68,14 @@
 							<thead>
 								<tr>
 									<th class="center" nowrap style="width:45px;">序号</th>
-									<th class="center" nowrap>参数名称</th>
-									<th class="center" nowrap>参数编码</th>
-									<th class="center" nowrap>参数值</th>
-									<th class="center" nowrap>参数描述</th>
+									<th class="center" style="width: 50px;" >参数名称</th>
+									<th class="center" style="width: 50px;">参数编码</th>
+									<th class="center" style="width: 130px;">参数值</th>  
+									<th class="center" style="width: 80px;" >参数描述</th>
+									<th class="center" style="width: 80px;" >操作 </th>
 								</tr>
 							</thead>
 							<tbody>
-								
 							<!-- 开始循环 -->	 
 							<c:choose>
 								<c:when test="${not empty ruleParams}">
@@ -115,11 +84,23 @@
 											<td nowrap class='center' style="width: 30px;">${vs.index+1}</td>
 											<td nowrap class="center">${ruleParam.RULENAME} </td>
 											<td nowrap class="center">${ruleParam.RULECODE}</td>
-											<td nowrap class="center">${ruleParam.RULEVALUE}</td>
-											<td nowrap class="center">${ruleParam.RULEDESC}</td>
+											<td style="width: 130px;" class="center">${ruleParam.RULEVALUE}</td>
+											<td style="width: 80px;" class="center">${ruleParam.RULEDESC}</td>
+											<th class="center" style="width: 80px;" >
+<%-- 												<ts:rights code="user/toEdit"> --%>
+													<a class="btn btn-xs btn-success" title="编辑" onclick="editRule('${ruleParam.RULECODE}');">
+														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
+													</a>
+<%-- 												</ts:rights> --%>
+<%-- 												<ts:rights code="user/delete"> --%>
+													<a class="btn btn-xs btn-danger" onclick="delRule('${ruleParam.RULECODE}','${ruleParam.RULENAME}');">
+														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
+													</a>
+<%-- 												</ts:rights> --%>
+											</th>
 										</tr>
 									</c:forEach>  
-								</c:when>
+								</c:when>  
 								<c:otherwise>
 									<tr class="main_info">
 										<td colspan="11" class="center">没有相关数据</td>
@@ -132,6 +113,11 @@
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">
 							<table style="width:100%;">
 								<tr>
+									<td style="vertical-align:top;">
+<%-- 										<ts:rights code="user/toAdd"> --%>
+											<a class="btn btn-mini btn-success" onclick="add();">新增</a>
+<%-- 										</ts:rights> --%>
+									</td>
 									<td>
 										<div class="pagination" style="float: right;padding: 0px;margin: 0px;">${page.pageStr}</div>
 									</td>
@@ -212,6 +198,67 @@ function initWidthHeight(){
 	rr[1]="pageStrDiv";
 	FixTable("simple-table", 0, rr);
 }
+
+//删除
+function delRule(ruleCode,msg){
+	bootbox.confirm("确定要删除["+msg+"]吗?", function(result) {
+		if(result) {
+			top.jzts();
+			var url = "<%=basePath%>RuleParam/DelRuleParam.do?ruleCode="+ruleCode+"&tm="+new Date().getTime();
+			$.get(url,function(data){
+				nextPage(${page.currentPage});
+			});
+		};
+	});
+}
+
+//修改
+function editRule(_ruleCode){
+	 top.jzts();
+	 var diag = new top.Dialog();
+	 diag.Drag=true;
+	 diag.Title ="修改";
+	 diag.URL = '<%=path%>/RuleParam/updateRuleParamViewIU.do?RULECODE=' + _ruleCode;
+	 diag.Width = 469;
+	 diag.Height = 510;
+	 diag.CancelEvent = function(){ //关闭事件
+		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
+			 if('${page.currentPage}' == '0'){
+				 top.jzts();
+				 setTimeout("self.location=self.location",100);
+			 }else{
+				 nextPage(${page.currentPage});
+			 }
+		}
+		diag.close();
+	 };
+	 diag.show();
+}
+
+
+//新增
+function add(){
+	 top.jzts();
+	 var diag = new top.Dialog();
+	 diag.Drag=true;
+	 diag.Title ="新增";
+	 diag.URL = '<%=path%>/RuleParam/addRuleParamViewIU.do';
+	 diag.Width = 469;
+	 diag.Height = 510;
+	 diag.CancelEvent = function(){ //关闭事件
+		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
+			 if('${page.currentPage}' == '0'){
+				 top.jzts();
+				 setTimeout("self.location=self.location",100);
+			 }else{
+				 nextPage(${page.currentPage});
+			 }
+		}
+		diag.close();
+	 };
+	 diag.show();
+}
+
 
 function viewDetail(patId , visitId,ngnum){
 	top.jzts();

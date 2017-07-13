@@ -46,10 +46,28 @@
 	</sql>
 	
 	
+	<select id="queryCKOperationDrugPage" parameterType ="page" resultType="TOperationDrugInfo">
+		select 
+			<include refid="Field"></include>
+		from 
+		    <include refid="tableName"></include>
+		order by O_Code,o_dept_code, is_use desc 
+	</select>
+	
+	
 	<select id="ckOperationDrugPage" parameterType="page" resultType="pd">
 	    select a.* ,b.USERNAME operatoruser_name
 	    from  ck_operation_drug a
 		left join plat.sys_user b on a.operatoruser = b.user_id
+		where 1=1
+		<if test="pd.workcode != null and pd.workcode != ''">
+			and 
+			(
+				o_name like CONCAT(CONCAT('%', #{pd.workcode}),'%')
+				or 
+				o_code like CONCAT(CONCAT('%', #{pd.workcode}),'%')
+			)
+		</if>
 		order by O_Code,o_dept_code, is_use desc 
 	</select>
 	

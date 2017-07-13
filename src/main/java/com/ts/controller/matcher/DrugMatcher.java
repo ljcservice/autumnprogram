@@ -33,6 +33,7 @@ import com.ts.service.matcher.IDataMatcherService;
 import com.ts.service.matcher.MatcherService;
 import com.ts.util.MyDecimalFormat;
 import com.ts.util.PageData;
+import com.ts.util.PatternUtils;
 import com.ts.util.Tools;
 
 /**
@@ -100,6 +101,7 @@ public class DrugMatcher extends BaseController {
         	        		for(String st:filterList){
         	        			st = st.replaceAll("\\(","\\\\\\(");
         	        			st = st.replaceAll("\\)","\\\\\\)");
+//        	        			if(str.indexOf(st)!= -1)
         	        			str = str.replaceAll(st, "");
         	        		}
         	        		str = str.trim();
@@ -127,7 +129,7 @@ public class DrugMatcher extends BaseController {
 	        				continue;
 	        			}
 	        			// DRUG_SPEC UNITS DRUG_FORM
-	        			String DRUG_SPEC = drugmap.getString("DRUG_SPEC");
+	        			String DRUG_SPEC = PatternUtils.delChinaChar(drugmap.getString("DRUG_SPEC"));
 	        			String UNITS = drugmap.getString("UNITS");
 	        			String DRUG_FORM = drugmap.getString("DRUG_FORM");
 	        			PageData matcher = null;

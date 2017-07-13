@@ -52,6 +52,13 @@ public interface RedisDao {
 	 */
 	public List<String> getList(String key);
 	
+	/**
+     *  使用的keys * 命令
+     * @param pattern
+     * @return
+     */
+    public String[] getListByKey(String pattern);
+	
 	/**新增(存储set)
 	 * @param key
 	 * @param set

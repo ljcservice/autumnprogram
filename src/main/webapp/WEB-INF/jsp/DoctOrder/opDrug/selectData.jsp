@@ -42,7 +42,7 @@
 									<td style="vertical-align:top;padding-left:10px;"><a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
 									<td style="vertical-align:top;padding-left:15px;">
 										<a class="btn btn-mini btn-primary" onclick="selectCont();">确定</a>
-										<c:if test="${onto_type==102 or onto_type==103}">
+										<c:if test="${pd.onto_type==102 or pd.onto_type==103}">
 											<a class="btn btn-mini btn-info" onclick="selectCont(1);">选中全部</a>
 										</c:if>
 										<a class="btn btn-mini btn-danger" style="margin-left:10px;" onclick="top.Dialog.close();">取消</a>
@@ -110,7 +110,7 @@
 								<c:when test="${not empty resultList}">
 									<c:forEach items="${resultList}" var="onto" varStatus="vs">
 												
-										<tr onclick="clickTr(this);">
+										<tr onclick="clickTr(this);"  ondblclick="javascript:selectCont();">
 											<td class='center' style="width: 30px;">
 												<label><input type="radio" class="ace" name="userIs" ontoName='${onto.name}' value="${onto.code}" code="${onto.code}" DRUG_SPEC="${onto.DRUG_SPEC }" DRUG_FORM="${onto.DRUG_FORM }"/><span class="lbl"></span></label>
 											</td>
@@ -178,7 +178,8 @@ function clickTr(obj){
 }
 function selectCont(type){
 	var osyn = $("input[name='userIs']:checked");
-	if(osyn.val()==undefined || osyn.val()==""){
+	
+	if((osyn.val()==undefined || osyn.val()=="") && type != 1){
 		return;
 	}
 	var mydocument = parent.$("#_DialogFrame_0")[0].contentWindow.document;
@@ -192,12 +193,12 @@ function selectCont(type){
 		mydocument.getElementById("O_DRUG_CODE").value = osyn.attr("code");
 		mydocument.getElementById("O_DRUG_NAME").value = osyn.attr("ontoName");
 		mydocument.getElementById("O_DRUG_SPCE").value = osyn.attr("DRUG_SPEC");
-		mydocument.getElementById("O_DRUG_FORM").value = osyn.attr("DRUG_FORM");
+		mydocument.getElementById("O_DRUG_FORM").value = osyn.attr("DRUG_FORM"); 
 	}
 	if(onto_type==102){
 		if(type==1){
-			mydocument.getElementById("O_DEPT_CODE").value = osyn.attr("*");
-			mydocument.getElementById("O_DEPT_NAME").value = osyn.attr("*");
+			mydocument.getElementById("O_DEPT_CODE").value = "*";//osyn.attr("*"); 
+			mydocument.getElementById("O_DEPT_NAME").value = "*";//osyn.attr("*");
 		}else{
 			mydocument.getElementById("O_DEPT_CODE").value = osyn.attr("code");
 			mydocument.getElementById("O_DEPT_NAME").value = osyn.attr("ontoName");
@@ -205,8 +206,8 @@ function selectCont(type){
 	}
 	if(onto_type==103){
 		if(type==1){
-			mydocument.getElementById("O_DOCTOR_CODE").value = osyn.attr("*");
-			mydocument.getElementById("O_DOCTOR_NAME").value = osyn.attr("*");
+			mydocument.getElementById("O_DOCTOR_CODE").value = "*"; //osyn.attr("*");
+			mydocument.getElementById("O_DOCTOR_NAME").value = "*"; //osyn.attr("*");
 		}else{
 			mydocument.getElementById("O_DOCTOR_CODE").value = osyn.attr("code");
 			mydocument.getElementById("O_DOCTOR_NAME").value = osyn.attr("ontoName");
