@@ -247,15 +247,22 @@ public class RedisDaoImpl extends AbstractBaseRedisDao<String, PageData> impleme
 		String host = pros.getProperty("redis.host");		//地址
 		String port = pros.getProperty("redis.port");		//端口
 		String pass = pros.getProperty("redis.pass");		//密码
-		if(this.jedis != null ) return  this.jedis;
 		if("yes".equals(isopen)){
-			Jedis jedis = new Jedis(host,Integer.parseInt(port));
-			jedis.auth(pass);
-			this.jedis = jedis;
-			return this.jedis;
-		}else{
-			return null;
-		}
+            Jedis jedis = new Jedis(host,Integer.parseInt(port));
+            jedis.auth(pass);
+            return jedis;
+        }else{
+            return null;
+        }
+//		if(this.jedis != null ) return  this.jedis;
+//		if("yes".equals(isopen)){
+//			Jedis jedis = new Jedis(host,Integer.parseInt(port));
+//			jedis.auth(pass);
+//			this.jedis = jedis;
+//			return this.jedis;
+//		}else{
+//			return null;
+//		}
 	}
 	
 	/**读取redis.properties 配置文件

@@ -1,5 +1,6 @@
 package com.hitzd.his.Beans;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import org.springframework.beans.BeansException;
@@ -283,4 +284,58 @@ public class TPatientOrder implements java.io.Serializable
     {
         this.treatUseDrug = treatUseDrug;
     }
+
+    @Override
+    public String toString()
+    {
+        
+        String poDrug = "";
+        if(patOrderDrugs != null )
+        {
+            for( TPatOrderDrug podrug : patOrderDrugs)
+            {
+                poDrug += "[" + podrug.toString()+ "],";
+            }
+        }
+        String poSigns = "";
+        if(patSigns != null)
+        {
+            for(TPatSigns ps : patSigns)
+            {
+                poSigns += "[" + ps.toString() + "],";
+            }
+        }
+        
+        String  poDiagnosiss = "";
+        if(patOrderDiagnosiss != null)
+        {
+            for(TPatOrderDiagnosis diag : patOrderDiagnosiss)
+            {
+                poDiagnosiss += "[" + diag.toString() + "],";
+            }
+        }
+        if(patient == null ) patient = new TPatient();
+        if(patInfoExt == null) patInfoExt =new TPatOrderInfoExt();
+        
+        
+        
+        return "TPatientOrder [patientID=" + patientID + ", patType=" + patType
+                + ", patient=" + patient.toString() + ", patInfoExt=" + patInfoExt.toString()
+                + ", patVisitInfo=" + patVisitInfo.toString() + ", patOrderDrugs="
+                + poDrug + ", patSigns="
+                + poSigns + ", patOrderDiagnosiss="
+                + poDiagnosiss
+                + ", patOrderDrugSensitives="
+                + Arrays.toString(patOrderDrugSensitives) + ", doctorID="
+                + doctorID + ", doctorName=" + doctorName + ", doctorDeptID="
+                + doctorDeptID + ", doctorDeptName=" + doctorDeptName
+                + ", doctorTitleID=" + doctorTitleID + ", doctorTitleName="
+                + doctorTitleName + ", redQuestionChangeNum="
+                + redQuestionChangeNum + ", yellowQuestionChangeNum="
+                + yellowQuestionChangeNum + ", patOperation="
+                + Arrays.toString(patOperation) + ", preveUseDrug="
+                + Arrays.toString(preveUseDrug) + ", treatUseDrug="
+                + Arrays.toString(treatUseDrug) + ", drugMap=" + drugMap + "]";
+    }
+    
 }

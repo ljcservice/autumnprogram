@@ -611,6 +611,19 @@ public class PdssCache {
      * @return
      * @throws Exception 
      */
+    public  List<TDrugDosage> getDdg(final String dosageClass ) throws Exception
+    {
+        List<TDrugDosage> t = cacheTemplate.cache(ddgCache, dosageClass, null);
+        return t;
+    }
+    
+    /**
+     * 药品剂量使用字典
+     * @param allergenID    
+     * @param drugClassid
+     * @return
+     * @throws Exception 
+     */
     public  List<TDrugDosage> getDdg(final String dosageClass ,final String administation ) throws Exception
     {
     	List<TDrugDosage> t = cacheTemplate.cache(ddgCache, dosageClass + "_" + administation , null);

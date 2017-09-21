@@ -94,7 +94,7 @@
 		  </if>
 		  
 		  <if test="pd.drug_name!= null and pd.drug_name != ''">
-		  	 and t.drug_name like CONCAT(CONCAT('%', #{pd.pd.drug_name}),'%')
+		  	 and t.drug_name like CONCAT(CONCAT('%', #{pd.drug_name}),'%')
 		  </if>
 		 group by t.drug_code,
 		          t.drug_name,

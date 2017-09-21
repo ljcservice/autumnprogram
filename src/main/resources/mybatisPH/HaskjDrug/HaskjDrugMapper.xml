@@ -35,7 +35,7 @@
                org_name,
                count(*) c,
                (sum(haskj) - sum(decode(haskj, 0, 0, EXTEDRUG))) haskj
-          from patienthistory.presc t
+          from presc t
          where order_type = 1
            <if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
 					and t.ORDER_DATE &gt;= #{pd.beginDate} 
@@ -100,7 +100,7 @@
                        order_date,
                        sum(haskj) haskj,
                        sum(decode(haskj, 0, 0, EXTEDRUG)) EXTEDRUG
-                  from patienthistory.presc t
+                  from presc t
                  where order_type = 1
                   <if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
 					and t.ORDER_DATE &gt;= #{pd.beginDate} 
@@ -126,7 +126,7 @@
 			nvl(haskj,0) haskj,
 			nvl(100*haskj /c,0) rate
 		  from (select org_code, org_name, count(*) c, sum(haskj) haskj, doctor_name
-		          from patienthistory.presc t
+		          from presc t
 		         where t.order_type = 1
 		        <if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
 					and t.ORDER_DATE &gt;= #{pd.beginDate} 

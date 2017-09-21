@@ -89,4 +89,13 @@ public class TPatSigns implements Serializable
     {
         XXOK = xXOK;
     }
+
+    @Override
+    public String toString()
+    {
+        return "TPatSigns [TWDate=" + TWDate + ", TWValue=" + TWValue
+                + ", TWOK=" + TWOK + ", XXDate=" + XXDate + ", XXValue="
+                + XXValue + ", CValue=" + CValue + ", XXOK=" + XXOK + "]";
+    }
+    
 }

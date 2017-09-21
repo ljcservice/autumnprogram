@@ -43,5 +43,12 @@ public class TPatOrderDrugSensitive implements Serializable{
 //	public void setSensitiveSource(String sensitiveSource) {
 //		this.sensitiveSource = sensitiveSource;
 //	}
-   
+
+    @Override
+    public String toString()
+    {
+        return "TPatOrderDrugSensitive [patOrderDrugSensitiveID="
+                + patOrderDrugSensitiveID + ", drugAllergenID=" + drugAllergenID
+                + "]";
+    }
 }

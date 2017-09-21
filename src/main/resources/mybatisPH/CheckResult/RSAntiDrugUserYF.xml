@@ -71,7 +71,7 @@
 		#{kljlanjl,jdbcType=VARCHAR},
 		#{yf_use_drug_yj,jdbcType=VARCHAR},
 		#{tsyq,jdbcType=VARCHAR},
-		#{rec_date,jdbcType=VARCHAR},
+		#{rec_date,jdbcType=TIMESTAMP},
 		#{In_rs_type,jdbcType=NUMERIC},
 		#{order_no,jdbcType=NUMERIC},
 		#{order_sub_no,jdbcType=NUMERIC}

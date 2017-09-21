@@ -157,4 +157,12 @@ public class TPatient implements java.io.Serializable
         this.dateOfBirth = dateOfBirth;
     }
 
+    @Override
+    public String toString()
+    {
+        return "TPatient [name=" + name + ", sex=" + sex + ", dateOfBirth="
+                + dateOfBirth + ", birthPlace=" + birthPlace + ", nation="
+                + nation + "]";
+    }
+
 }

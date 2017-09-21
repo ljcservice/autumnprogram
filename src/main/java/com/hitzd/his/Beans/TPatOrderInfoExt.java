@@ -184,7 +184,14 @@ public class TPatOrderInfoExt implements Serializable {
 		this.weight = weight;
 	}
 
-
-	
+    @Override
+    public String toString()
+    {
+        return "TPatOrderInfoExt [isLact=" + isLact + ", isPregnant="
+                + isPregnant + ", insureanceType=" + insureanceType
+                + ", insuranceNo=" + insuranceNo + ", isLiverWhole="
+                + isLiverWhole + ", isKidneyWhole=" + isKidneyWhole
+                + ", height=" + height + ", weight=" + weight + "]";
+    }
   
 }

@@ -182,7 +182,7 @@
 				diagnosis_code,
 				diagnosis_name
 		from view_side 
-		where drug_class_id in (select drug_class_id  from view_drug)  and diagnosis_name is not null
+		where drug_class_id in (select drug_class_id  from view_drug)  and DIAGNOSIS_DESC is not null
 		order by DRUG_CLASS_ID, ADMINISTRATION_ID
 <!-- 		where  -->
 <!-- 	 			DRUG_CLASS_ID = #{DRUG_CLASS_ID}   -->

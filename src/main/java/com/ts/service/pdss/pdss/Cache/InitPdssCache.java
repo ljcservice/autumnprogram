@@ -31,6 +31,7 @@ import com.ts.entity.pdss.pdss.Beans.TDrugSideDict;
 import com.ts.entity.pdss.pdss.Beans.TDrugUseDetail;
 import com.ts.entity.pdss.pdss.Beans.ias.TOperationDrugInfo;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugInteractionRslt;
+import com.ts.interceptor.webservice.ApplicationProperties;
 import com.ts.service.cache.CacheProcessor;
 import com.ts.service.cache.CacheTemplate;
 import com.ts.util.PageData;
@@ -55,22 +56,60 @@ public class InitPdssCache {
 	public void bulidRedisCache(){
 	    try
 		{
+	        ApplicationProperties.init();
 	        log.info("内容构建");
-			setOperationDrug();
-			setDrugRepeat();
-			setDrugDiagRel();
-			setDrugDiagInfo();
-			setAdministration();
+	        if("true".equals(ApplicationProperties.getPropertyValue("setOperationDrug")))
+	        {
+	            setOperationDrug();
+	        }
+	        if("true".equals(ApplicationProperties.getPropertyValue("setDrugRepeat")))
+            {
+	            setDrugRepeat();
+            }
+	        if("true".equals(ApplicationProperties.getPropertyValue("setDrugDiagRel")))
+            {
+	            setDrugDiagRel();
+            }
+	        if("true".equals(ApplicationProperties.getPropertyValue("setDrugDiagInfo")))
+            {
+	            setDrugDiagInfo();
+            }
+	        if("true".equals(ApplicationProperties.getPropertyValue("setDrugInteractionMap")))
+            {
+	            setDrugInteractionMap();
+            }
+	        if("true".equals(ApplicationProperties.getPropertyValue("setDiseageVsDiag")))
+            {
+	            setDiseageVsDiag();
+            }
+	        if("true".equals(ApplicationProperties.getPropertyValue("setDrugIvEffect")))
+            {
+	            setDrugIvEffect();
+            }
+	        if("true".equals(ApplicationProperties.getPropertyValue("setAid")))
+            {
+	            setAid();
+            }
+	        if("true".equals(ApplicationProperties.getPropertyValue("setDdg")))
+            {
+	            setDdg();
+            }
+	        if("true".equals(ApplicationProperties.getPropertyValue("setDrugSideDict")))
+            {
+	            setDrugSideDict();
+            }
+	        if("true".equals(ApplicationProperties.getPropertyValue("setDud")))
+            {
+	            setDud();
+            }
+	        if("true".equals(ApplicationProperties.getPropertyValue("baseLocal")))
+            {
+	            //setAdministration();
+	            //setDrugById();
+	            setDrugPerfom();
+            }
+	        
 ////	暂时不用 		setDrugInteractionInfo();
-			setDrugInteractionMap();
-			setDrugById();
-			setDiseageVsDiag();
-			setDrugIvEffect();
-			setAid();
-			setDdg();
-			setDrugSideDict();
-			setDrugPerfom();
-			setDud();
 //			setMemoList();
 //			setTMedicareCatalog();
 			log.info("内容构建完成");
@@ -101,6 +140,7 @@ public class InitPdssCache {
         while( pageNum == 1 || pageNum <= page.getTotalPage()){ 
             page.setCurrentPage(pageNum);
             List<TOperationDrugInfo> ods = (List<TOperationDrugInfo>) daoPH.findForList("CKOperationDrug.queryCKOperationDrugPage", page);
+            if(ods == null) return ;
             for(TOperationDrugInfo od : ods){
                 if(key != null && !key.equals(od.getO_code()))
                 {
@@ -480,6 +520,8 @@ public class InitPdssCache {
 				}
 				key1 = did.getDRUG_CLASS_ID();
 				key2 = did.getADMINISTRATION_ID();
+				//不存在 不良反应对描述 则不存储 
+				if(did.getDIAGNOSIS_DESC() == null ||"".equals(did.getDIAGNOSIS_DESC() )) continue;
 				dsdRs.add(did);
 			}
 			pageNum = page.getCurrentPage() + 1;
@@ -576,6 +618,7 @@ public class InitPdssCache {
 		String key1 = null;
 		String key2 = null;
 		List<TDrugDosage> ddgRs = new ArrayList<>();
+		List<TDrugDosage> ddgDoseRs = new ArrayList<>();
 		while( pageNum == 1 || pageNum <= page.getTotalPage()){
 			page.setCurrentPage(pageNum);
 			List<TDrugDosage> list = (List<TDrugDosage>) dao.findForList("DrugMapper.getDdgInfoPage", page);
@@ -583,10 +626,15 @@ public class InitPdssCache {
 			for(TDrugDosage ddg : list){
 				if(key1 != null && key2 != null && (!key1.equals(ddg.getDOSE_CLASS_ID())|| !key2.equals(ddg.getADMINISTRATION_ID()))){
 					cacheTemplate.setObject(PdssCache.ddgCache,key1 + "_" + key2, -1,ddgRs);
-					ddgRs = new ArrayList<TDrugDosage>();
+					ddgRs.clear();
+				}
+				if(key1 != null && !key1.equals(ddg.getDOSE_CLASS_ID())){
+				    cacheTemplate.setObject(PdssCache.ddgCache,key1, -1,ddgDoseRs);
+				    ddgDoseRs.clear();
 				}
 				key1 = ddg.getDOSE_CLASS_ID();
 				key2 = ddg.getADMINISTRATION_ID();
+				ddgDoseRs.add(ddg);
 				ddgRs.add(ddg);
 			}
 			pageNum = page.getCurrentPage() + 1;

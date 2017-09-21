@@ -3,7 +3,6 @@ package com.ts.service.pdss.pdss.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -14,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.hitzd.his.Beans.TPatOrderDrug;
 import com.hitzd.his.Beans.TPatOrderInfoExt;
 import com.hitzd.his.Beans.TPatientOrder;
-import com.hitzd.his.Utils.DateUtils;
 import com.hitzd.persistent.Persistent4DB;
 import com.ts.entity.pdss.pdss.Beans.TAdministration;
 import com.ts.entity.pdss.pdss.Beans.TDrug;
@@ -23,7 +21,6 @@ import com.ts.entity.pdss.pdss.Beans.TDrugPerformFreqDict;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugDosageRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
 import com.ts.service.pdss.pdss.Cache.PdssCache;
-import com.ts.service.pdss.pdss.Utils.QueryUtils;
 import com.ts.service.pdss.pdss.manager.IDrugDosageChecker;
 
 /**

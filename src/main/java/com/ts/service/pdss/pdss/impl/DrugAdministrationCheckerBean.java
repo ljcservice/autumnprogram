@@ -1,6 +1,7 @@
 package com.ts.service.pdss.pdss.impl;
 
 
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -14,6 +15,7 @@ import com.hitzd.his.Beans.TPatientOrder;
 import com.hitzd.persistent.Persistent4DB;
 import com.ts.entity.pdss.pdss.Beans.TAdministration;
 import com.ts.entity.pdss.pdss.Beans.TDrug;
+import com.ts.entity.pdss.pdss.Beans.TDrugDosage;
 import com.ts.entity.pdss.pdss.Beans.TDrugUseDetail;
 import com.ts.entity.pdss.pdss.RSBeans.TAdministrationRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
@@ -54,36 +56,59 @@ public class DrugAdministrationCheckerBean extends Persistent4DB implements IDru
 	        	TPatOrderDrug pod     = pods[i];
 	        	TDrug drug            =  po.getDrugMap(pod.getDrugID());
 	        	if(drug == null ) continue;
-	        	TAdministration admin = pdssCache.queryAdministration(pod.getAdminName());
+	        	TAdministration admin = pdssCache.queryAdministration(pod.getAdministrationID());
 	        	if(admin == null) continue;
-	        	TDrugUseDetail dud    = pdssCache.getDud(drug.getDRUG_CLASS_ID());
+	        	
 	        	String inforLevelRs ="";
-	        	/* 需注意的用药途径 */
-	        	if(dud == null ) continue;
-                if (dud.getADVERT_RTID() != null)
-                {
-                    if (("," + dud.getADVERT_RTID() + ",").indexOf("," + admin.getADMINISTRATION_ID() + ",") != -1)
-                    {
-                        inforLevelRs = "G";
-                    }
+	        	if(drug.getDOSE_CLASS_ID() == null) continue;
 
-                }
-                /* 不宜的用药途径 */
-                if (dud.getINADVIS_RTID() != null)
-                {
-                    if (("," + dud.getINADVIS_RTID() + ",").indexOf("," + admin.getADMINISTRATION_ID() + ",") != -1)
-                    {
-                        inforLevelRs = "Y";
-                    }
-                }
-                /* 禁止的用药途径 */
-                if (dud.getFORBID_RUID() != null)
-                {
-                    if (("," + dud.getFORBID_RUID() + ",").indexOf("," + admin.getADMINISTRATION_ID() + ",") != -1)
-                    {
-                        inforLevelRs = "R";
-                    }
-                }                
+	        	List<TDrugDosage> ddgs = pdssCache.getDdg(drug.getDOSE_CLASS_ID());
+	        	if(ddgs == null) continue;
+	        	TDrugUseDetail dud = new TDrugUseDetail();
+	        	boolean flag = false;
+	        	String administrationTrue = "";
+	        	for(TDrugDosage ddg : ddgs)
+	        	{
+	        	    if(ddg.getADMINISTRATION_ID().equals(admin.getADMINISTRATION_ID()))
+	        	    {
+	        	        flag = true;
+	        	        break;
+	        	    }
+	        	    administrationTrue = ddg.getADMINISTRATION_ID();  
+	        	}
+	        	if(flag) continue;
+	        	inforLevelRs = "R";
+//	        	admin = pdssCache.queryAdministration(administrationTrue);
+	        	dud.setFORBID_RUID(admin.getADMINISTRATION_ID());
+	        	dud.setFORBID_CAUSE("禁止给药途径为" + admin.getADMINISTRATION_NAME_LOCAL() + "。");
+	        	
+//	        	TDrugUseDetail dud    = pdssCache.getDud(drug.getDRUG_CLASS_ID());
+//	        	/* 需注意的用药途径 */
+//	        	if(dud == null ) continue;
+//                if (dud.getADVERT_RTID() != null)
+//                {
+//                    if (("," + dud.getADVERT_RTID() + ",").indexOf("," + admin.getADMINISTRATION_ID() + ",") != -1)
+//                    {
+//                        inforLevelRs = "G";
+//                    }
+//
+//                }
+//                /* 不宜的用药途径 */
+//                if (dud.getINADVIS_RTID() != null)
+//                {
+//                    if (("," + dud.getINADVIS_RTID() + ",").indexOf("," + admin.getADMINISTRATION_ID() + ",") != -1)
+//                    {
+//                        inforLevelRs = "Y";
+//                    }
+//                }
+//                /* 禁止的用药途径 */
+//                if (dud.getFORBID_RUID() != null)
+//                {
+//                    if (("," + dud.getFORBID_RUID() + ",").indexOf("," + admin.getADMINISTRATION_ID() + ",") != -1)
+//                    {
+//                        inforLevelRs = "R";
+//                    }
+//                }                
 	            if(!"".equals(inforLevelRs))
 	            {
 	            	drug.setRecMainNo(pod.getRecMainNo());

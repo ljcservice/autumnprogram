@@ -47,6 +47,12 @@ public class TDrug extends TBaseBean
     private String DRUG_NO_LOCAL;
     /* 本地药品名称 */
     private String DRUG_NAME_LOCAL;
+//    /* 本地规格 */
+//    private String DRUG_SPEC_LOCAL;
+//    /* 本地单位 */
+//    private String UNITS_LOCAL;
+//    /* 本地 剂型 */
+//    private String DRUG_FORM_LOCAL;
     /* 操作人 */
     private String OPER_USER;
     /* 操作时间*/
@@ -122,8 +128,12 @@ public class TDrug extends TBaseBean
 //			this.isAnti          = drugInput.isAnti;
 			this.SENSIT_CODE     = drugInput.SENSIT_CODE;
 			this.UseType         = drugInput.UseType;
+//			this.DRUG_SPEC_LOCAL = drugInput.DRUG_SPEC_LOCAL;
+//			this.UNITS_LOCAL     = drugInput.UNITS_LOCAL;
+//			this.DRUG_FORM_LOCAL = drugInput.DRUG_FORM_LOCAL;
 			this.direct_no       = drugInput.direct_no;
-			this.is_anti         = drugInput.is_anti;
+			this.is_anti         = drugInput.is_anti;    
+			
 		}
 	}
 	
@@ -376,6 +386,36 @@ public class TDrug extends TBaseBean
         OPER_TYPE = oPER_TYPE;
     }
 
+//    public String getDRUG_SPEC_LOCAL()
+//    {
+//        return DRUG_SPEC_LOCAL;
+//    }
+//
+//    public void setDRUG_SPEC_LOCAL(String dRUG_SPEC_LOCAL)
+//    {
+//        DRUG_SPEC_LOCAL = dRUG_SPEC_LOCAL;
+//    }
+//
+//    public String getUNITS_LOCAL()
+//    {
+//        return UNITS_LOCAL;
+//    }
+//
+//    public void setUNITS_LOCAL(String uNITS_LOCAL)
+//    {
+//        UNITS_LOCAL = uNITS_LOCAL;
+//    }
+//
+//    public String getDRUG_FORM_LOCAL()
+//    {
+//        return DRUG_FORM_LOCAL;
+//    }
+//
+//    public void setDRUG_FORM_LOCAL(String dRUG_FORM_LOCAL)
+//    {
+//        DRUG_FORM_LOCAL = dRUG_FORM_LOCAL;
+//    }
+    
 	@Override
 	public int hashCode() 
 	{

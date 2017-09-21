@@ -1,6 +1,7 @@
 package com.ts.service.pdss.pdss.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -208,55 +209,58 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
             //String[] sql = new String[po.getPatOrderDrugs().length];
             
             List<String> sqlList = new ArrayList<String>();
-            for(int i = 0 ; i<po.getPatOrderDrugs().length ; i++)
+            if(po.getPatOrderDrugs() != null)
             {
-                TPatOrderDrug pod = po.getPatOrderDrugs()[i];
-                TDrug drug = new TDrug();
-                drug.setDRUG_NO_LOCAL(pod.getDrugID());
-                drug.setRecMainNo(pod.getRecMainNo());
-                drug.setRecSubNo(pod.getRecSubNo());
-                TCheckResult cres = dsr.getCheckResult(drug);
-                if (cres != null)
+                for(int i = 0 ; i<po.getPatOrderDrugs().length ; i++)
                 {
-                    String checkResult = cres.getAlertLevel();
-                    param = new PageData();
-                	param.put("DOCTOR_DEPT", pod.getDoctorDept());
-                	param.put("IS_GROUP", "0");
-                	param.put("ADMINISTRATION_ID", pod.getAdministrationID());
-                	param.put("PERFORM_FREQ_DICT_ID", pod.getPerformFreqDictID());
-                	param.put("DRUG_ID", pod.getDrugID());
-                	param.put("REC_MAIN_NO", pod.getRecMainNo());
-                	param.put("REC_SUB_NO", pod.getRecSubNo());
-                	param.put("PERFORM_FREQ_DICT_NAME", pod.getPerformFreqDictText());
-                	param.put("DOSAGE", pod.getDosage());
-                	param.put("DOSE_UNITS", pod.getDoseUnits());
-                	param.put("DOCTOR", pod.getDoctorName());
-                	param.put("NGROUPNUM", this.ngroupnum);
-                	param.put("checkDate", CheckTime);
-                	param.put("USETYPE", "");
-                	param.put("USECAUSE", "");
-                	param.put("DRUG_NAME", pod.getDrugName());
-                	param.put("check_Result", checkResult);
-             		String start = pod.getStartDateTime();
-            		String stop  = pod.getStartDateTime();
-                    if(start != null && !"".equals(start))
+                    TPatOrderDrug pod = po.getPatOrderDrugs()[i];
+                    TDrug drug = new TDrug();
+                    drug.setDRUG_NO_LOCAL(pod.getDrugID());
+                    drug.setRecMainNo(pod.getRecMainNo());
+                    drug.setRecSubNo(pod.getRecSubNo());
+                    TCheckResult cres = dsr.getCheckResult(drug);
+                    if (cres != null)
                     {
-                    	if(start.length()>19)
-                    	{
-                    		start = start.substring(0, 19);
-                    	}
-                    	param.put("START_DATE_TIME",start);
-                    	if(stop.length()>19)
-                    	{
-                    		stop = stop.substring(0, 19);
-                    	}
-//                    	param.put("STOP_DATE_TIME",DateUtil.fomatDate2(stop));
-                    	param.put("STOP_DATE_TIME",stop);
+                        String checkResult = cres.getAlertLevel();
+                        param = new PageData();
+                    	param.put("DOCTOR_DEPT", pod.getDoctorDept());
+                    	param.put("IS_GROUP", "0");
+                    	param.put("ADMINISTRATION_ID", pod.getAdministrationID());
+                    	param.put("PERFORM_FREQ_DICT_ID", pod.getPerformFreqDictID());
+                    	param.put("DRUG_ID", pod.getDrugID());
+                    	param.put("REC_MAIN_NO", pod.getRecMainNo());
+                    	param.put("REC_SUB_NO", pod.getRecSubNo());
+                    	param.put("PERFORM_FREQ_DICT_NAME", pod.getPerformFreqDictText());
+                    	param.put("DOSAGE", pod.getDosage());
+                    	param.put("DOSE_UNITS", pod.getDoseUnits());
+                    	param.put("DOCTOR", pod.getDoctorName());
+                    	param.put("NGROUPNUM", this.ngroupnum);
+                    	param.put("checkDate", CheckTime);
+                    	param.put("USETYPE", "");
+                    	param.put("USECAUSE", "");
+                    	param.put("DRUG_NAME", pod.getDrugName());
+                    	param.put("check_Result", checkResult);
+                 		String start = pod.getStartDateTime();
+                		String stop  = pod.getStartDateTime();
+                        if(start != null && !"".equals(start))
+                        {
+                        	if(start.length()>19)
+                        	{
+                        		start = start.substring(0, 19);
+                        	}
+                        	param.put("START_DATE_TIME",start);
+                        	if(stop.length()>19)
+                        	{
+                        		stop = stop.substring(0, 19);
+                        	}
+    //                    	param.put("STOP_DATE_TIME",DateUtil.fomatDate2(stop));
+                        	param.put("STOP_DATE_TIME",stop);
+                        }
+                        /* 病人用药记录 */
+                        dao.save("InfoMapper.insertCheckPatOrderDrug", param);
+                        
+                        //sqlList.add(patient.toString());
                     }
-                    /* 病人用药记录 */
-                    dao.save("InfoMapper.insertCheckPatOrderDrug", param);
-                    
-                    //sqlList.add(patient.toString());
                 }
             }
             /* 病人用药记录  CHECK_PAT_ORDER_DRUG */
@@ -265,39 +269,44 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
 //              String[] sqls = sqlList.toArray(new String[0]);
 //            }
 //            String[] sql = new String[po.getPatOrderDiagnosiss().length];
-            for(int i = 0 ; i < po.getPatOrderDiagnosiss().length ; i++)
+            if(po.getPatOrderDiagnosiss() != null)
             {
-                TPatOrderDiagnosis pod = po.getPatOrderDiagnosiss()[i];
-                param = new PageData();
-            	param.put("DIAGNOSIS_DICT_ID", pod.getDiagnosisDictID());
-            	param.put("NGROUPNUM", this.ngroupnum);
-            	param.put("DIAGNOSIS_NAME", pod.getDiagnosisName());
-            	param.put("checkDate", CheckTime);
-                /*  审查医嘱诊断表 */
-                dao.save("InfoMapper.insertCheckPatOrderDiagnosis", param);
+                for(int i = 0 ; i < po.getPatOrderDiagnosiss().length ; i++)
+                {
+                    TPatOrderDiagnosis pod = po.getPatOrderDiagnosiss()[i];
+                    param = new PageData();
+                	param.put("DIAGNOSIS_DICT_ID", pod.getDiagnosisDictID());
+                	param.put("NGROUPNUM", this.ngroupnum);
+                	param.put("DIAGNOSIS_NAME", pod.getDiagnosisName());
+                	param.put("checkDate", CheckTime);
+                    /*  审查医嘱诊断表 */
+                    dao.save("InfoMapper.insertCheckPatOrderDiagnosis", param);
+                }
             }
-            
             /* 审查医嘱诊断表 CHECK_PAT_ORDER_DIAGNOSIS  */
 //            if(sql.length > 0)
 //              query.batchUpdate(sql);
 //            sql = new String[po.getPatOrderDrugSensitives().length];
-            for(int i = 0 ; i< po.getPatOrderDrugSensitives().length; i++)
+            if(po.getPatOrderDrugSensitives() !=  null)
             {
-                TPatOrderDrugSensitive pods = po.getPatOrderDrugSensitives()[i];
-                /* 审查医嘱过敏表 */
-                param = new PageData();
-            	param.put("DRUG_ALLERGEN_ID", pods.getPatOrderDrugSensitiveID());
-            	param.put("NGROUPNUM", this.ngroupnum);
-            	param.put("checkDate", CheckTime);
-                /*  审查医嘱诊断表 */
-                dao.save("InfoMapper.insertCheckPatOrderDrugSensitive", param);
-//                sql[i] = patient.toString();
+                for(int i = 0 ; i< po.getPatOrderDrugSensitives().length; i++)
+                {
+                    TPatOrderDrugSensitive pods = po.getPatOrderDrugSensitives()[i];
+                    /* 审查医嘱过敏表 */
+                    param = new PageData();
+                	param.put("DRUG_ALLERGEN_ID", pods.getPatOrderDrugSensitiveID());
+                	param.put("NGROUPNUM", this.ngroupnum);
+                	param.put("checkDate", CheckTime);
+                    /*  审查医嘱诊断表 */
+                    dao.save("InfoMapper.insertCheckPatOrderDrugSensitive", param);
+    //                sql[i] = patient.toString();
+                }
             }
             /* 审查医嘱过敏表 CHECK_PAT_ORDER_DRUG_SENSITIVE*/
 //            if(sql.length > 0)
 //              query.batchUpdate(sql);
             /* 体征信息保存  */
-            if(po.getPatSigns().length > 0)
+            if(po.getPatSigns() != null && po.getPatSigns().length > 0)
             {
                 sqlList.clear();
                 for(int i = 0 ; i < po.getPatSigns().length ; i++)
@@ -1258,7 +1267,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
             	param.put("kndzbj", p.getKNDZBJ());
             	param.put("kljlanjl", p.getKLJLANJL() );
             	param.put("yf_use_drug_yj",p.getYF_USE_DRUG_YJ());
-            	param.put("REC_DATE", DateUtils.getStringFromDate(DateUtils.getDateFromString(p.getREC_DATE()), "yyyy-MM-dd")  );
+            	param.put("REC_DATE", DateUtils.getDateTime());
             	param.put("tsyq", p.getTSYQ()  );
             	param.put("order_no", p.getOrder_no());
                 param.put("order_sub_no", p.getOrder_sub_no());

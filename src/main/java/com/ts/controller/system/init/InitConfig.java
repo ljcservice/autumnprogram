@@ -19,6 +19,7 @@ import com.ts.controller.base.BaseController;
 import com.ts.dao.DAO;
 import com.ts.entity.Page;
 import com.ts.service.pdss.pdss.Cache.InitPdssCache;
+import com.ts.util.Logger;
 import com.ts.util.PageData;
 
 
@@ -26,7 +27,8 @@ import com.ts.util.PageData;
 @RequestMapping(value="/InitConfig")
 public class InitConfig extends BaseController {
 
-	
+	Logger logger = Logger.getLogger("InitConfig");
+    
 	@Resource(name="initPdssCache")
 	private InitPdssCache ipc ; 
 	@Resource(name="daoSupportPdss")

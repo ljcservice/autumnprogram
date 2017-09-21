@@ -363,4 +363,30 @@ public class TPatOrderDrug implements Serializable
         this.firmID = firmID;
     }
 
+    @Override
+    public String toString()
+    {
+        return "TPatOrderDrug [drugID=" + drugID + ", drugStandID="
+                + drugStandID + ", DrugName=" + DrugName + ", DoctorName="
+                + DoctorName + ", recMainNo=" + recMainNo + ", recSubNo="
+                + recSubNo + ", dosage=" + dosage + ", doseUnits=" + doseUnits
+                + ", administrationID=" + administrationID
+                + ", administrationStandID=" + administrationStandID
+                + ", performFreqDictID=" + performFreqDictID
+                + ", performFreqDictStandID=" + performFreqDictStandID
+                + ", performFreqDictText=" + performFreqDictText
+                + ", startDateTime=" + startDateTime + ", stopDateTime="
+                + stopDateTime + ", doctorDept=" + doctorDept + ", doctor="
+                + doctor + ", isGroup=" + isGroup + ", firmID=" + firmID
+                + ", isNew=" + isNew + ", dvaliddate=" + dvaliddate
+                + ", adminName=" + adminName + ", useType=" + useType
+                + ", useCause=" + useCause + ", PRESC_NO=" + PRESC_NO
+                + ", ITEM_NO=" + ITEM_NO + ", AMOUNT=" + AMOUNT + ", COSTS="
+                + COSTS + ", UNITS=" + UNITS + ", DRUG_SPEC=" + DRUG_SPEC
+                + ", SERIAL_NO=" + SERIAL_NO + ", ITEM_CLASS=" + ITEM_CLASS
+                + "]";
+    }
+    
+    
+
 }

@@ -62,6 +62,7 @@ public class DrugSideCheckerBean extends Persistent4DB implements IDrugSideCheck
 	        TPatOrderDrug[] pods = po.getPatOrderDrugs();
 	        
 	        TPatOrderDiagnosis[] patOds = po.getPatOrderDiagnosiss();
+	        if(patOds == null) return result;
 //	        Map<String, TDrug> mapDrugs = pdssCache.queryDrugMap(pods);
             for(TPatOrderDrug pod : pods)
 	        {
@@ -72,14 +73,17 @@ public class DrugSideCheckerBean extends Persistent4DB implements IDrugSideCheck
 	        	if(drugSDs == null) continue;
 	        	for(TDrugSideDict dsd : drugSDs)
 	        	{
-	        	    if("".equals(dsd.getDiagnosis_name())) continue;
 //	        		PageData  pd = pdssCache.queryDiagnosisDictById(dsd.getDIAGNOSIS_DICT_ID());
 	        		for(TPatOrderDiagnosis patOd : patOds)
 	        		{
-	        			if(patOd.getDiagnosisName().indexOf(dsd.getDiagnosis_name()) != -1 
-	        			        || dsd.getDiagnosis_name().indexOf(patOd.getDiagnosisName())!= -1){
+	        		    if(("".equals(dsd.getDIAGNOSIS_DESC()) || dsd.getDIAGNOSIS_DESC() == null ) || 
+	        		            (patOd.getDiagnosisName() == null || "".equals(patOd.getDiagnosisName()))) continue;
+	        		    
+	        			if(patOd.getDiagnosisName().indexOf(dsd.getDIAGNOSIS_DESC()) != -1 
+	        			        || dsd.getDIAGNOSIS_DESC().indexOf(patOd.getDiagnosisName())!= -1){
 	        				TDrugHarmfulRslt harmfulRslt = new TDrugHarmfulRslt();
 	        	            /* 对每一个返回的药品标注上 医嘱序号 */
+	        				dsd.setDiagnosis_name(patOd.getDiagnosisName());
 	        	            drug.setRecMainNo(pod.getRecMainNo());
 	        	            drug.setRecSubNo(pod.getRecSubNo());
 	        	            harmfulRslt.addDrugSide(dsd,drug);

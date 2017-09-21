@@ -566,9 +566,11 @@ public class HisAuditor implements IHisAuditor
 	 */
 	public TCheckResultCollection DrugSecurityCheckAllPO(TPatientOrder po)
 	{
+	    
 		TCommonRecord tcr = new TCommonRecord();                                                  //审查时间监控
 		tcr.set("CHECK_START_TIME",DateUtils.getDateTime());      								  //审查开始时间
 		log.debug("--------------------------------------------------------------------");
+		log.debug("输入参数" + po.toString());
 		log.debug("用户地址:" + this.getRemoteAddrIp());
 //		tcr.set("IP", XFireServletController.getRequest().getRemoteAddr());                       //用户地址
 		tcr.set("IP", this.getRemoteAddrIp());                       //用户地址

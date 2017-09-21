@@ -40,7 +40,7 @@ public class TPatOrderVisitInfo implements Serializable
     private String consultingDoctor;
     public String getVisitID()
     {
-        return visitID;
+        return visitID == null ?"":visitID ;
     }
 
     public void setVisitID(String visitID)
@@ -162,4 +162,15 @@ public class TPatOrderVisitInfo implements Serializable
 		this.consultingDoctor = consultingDoctor;
 	}
 
+    @Override
+    public String toString()
+    {
+        return "TPatOrderVisitInfo [visitID=" + visitID + ", patientID="
+                + patientID + ", inDept=" + inDept + ", inMode=" + inMode
+                + ", inDate=" + inDate + ", outDept=" + outDept
+                + ", patAdmCondition=" + patAdmCondition + ", mainDoctor="
+                + mainDoctor + ", otherDoctor=" + otherDoctor
+                + ", consultingDoctor=" + consultingDoctor + "]";
+    }
+	
 }

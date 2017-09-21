@@ -64,7 +64,7 @@
 			nvl(haskj,0) haskj, 
 			nvl(100*haskj / c,0) rate
 		  from (select org_code, org_name, count(*) c, nvl(sum(adminantijmsy),0) haskj, doctor_name
-		          from patienthistory.presc t
+		          from presc t
 		         where t.order_type = 1
 		        <if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
 					and t.ORDER_DATE &gt;= #{beginDate} 

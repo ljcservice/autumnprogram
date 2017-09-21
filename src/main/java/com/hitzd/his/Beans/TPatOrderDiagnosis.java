@@ -64,6 +64,13 @@ public class TPatOrderDiagnosis
 	public void setDiagnosisName(String diagnosisName) {
 		this.diagnosisName = diagnosisName;
 	}
+
+    @Override
+    public String toString()
+    {
+        return "TPatOrderDiagnosis [diagnosisDictID=" + diagnosisDictID
+                + ", diagnosisName=" + diagnosisName + "]";
+    }
    
     
 }

@@ -63,7 +63,7 @@
 		#{dosage,jdbcType=VARCHAR},
 		#{dosage_units,jdbcType=VARCHAR},
 		#{administration,jdbcType=VARCHAR},
-		#{rec_date,jdbcType=VARCHAR},
+		#{rec_date,jdbcType=TIMESTAMP},
 		#{twdate,jdbcType=VARCHAR},
 		#{twvalue,jdbcType=VARCHAR},
 		#{twok,jdbcType=VARCHAR},

@@ -34,12 +34,18 @@
 										<div class="nav-search">
 										名称：
 										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords }" placeholder="专家名称 " />
+											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords }" placeholder="名称/编码 " />
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 										</div>
 									</td>
-									<td style="vertical-align:top;padding-left:10px;"><a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
+									<td style="vertical-align:top;padding-left:10px;">
+										<a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i>
+										</a>
+<!-- 										<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i> -->
+<!-- 										</a> -->
+									</td>
+									
 									<td style="vertical-align:top;padding-left:15px;">
 										<a class="btn btn-mini btn-primary" onclick="selectCont();">确定</a>
 										<c:if test="${pd.onto_type==102 or pd.onto_type==103}">
@@ -168,6 +174,7 @@
 	<script src="static/ace/js/chosen.jquery.js"></script>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
+	<script type="text/javascript" src="static/js/common/common.js"></script>   
 	</body>
 
 <script type="text/javascript">

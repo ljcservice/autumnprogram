@@ -75,8 +75,13 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
 	        	for(TDrugDiagInfo ddi : ddis){
 	        		for(TPatOrderDiagnosis patOd  : patOds)
 	        		{
+	        		    if((ddi.getDIAG_DESC() == null || "".equals(ddi.getDIAG_DESC())) || 
+	        		            (patOd.getDiagnosisName().trim() == null || "".equals(patOd.getDiagnosisName().trim()))){
+	        		        continue;
+	        		    }
+	        		            
 	        			if(patOd.getDiagnosisName().indexOf(ddi.getDIAG_DESC()) != -1
-	        			        )//|| ddi.getDIAG_DESC().indexOf(patOd.getDiagnosisName()) != -1
+	        			        || ddi.getDIAG_DESC().indexOf(patOd.getDiagnosisName()) != -1 )//
 	        			{
 	    	        		TDrugDiagRslt diarslt = new TDrugDiagRslt();
 	    	        		drug.setRecMainNo(pod.getRecMainNo());

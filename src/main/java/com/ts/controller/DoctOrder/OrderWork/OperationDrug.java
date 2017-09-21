@@ -201,6 +201,7 @@ public class OperationDrug  extends BaseController{
 			PageData pd = this.getPageData();
 			List<PageData> list = null;
 			String ONTO_TYPE = pd.getString("ONTO_TYPE");
+			page.setPd(pd);
 			if("100".equals(ONTO_TYPE)){
 				//选择手术
 				list = opDrugService.queryOperationPage(page);
