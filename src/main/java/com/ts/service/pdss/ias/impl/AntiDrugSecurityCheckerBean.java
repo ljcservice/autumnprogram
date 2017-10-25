@@ -21,7 +21,6 @@ import com.ts.service.pdss.ias.manager.IAntiDrugOverRateCheck;
 import com.ts.service.pdss.ias.manager.IAntiDrugOverTimeCheck;
 import com.ts.service.pdss.ias.manager.IAntiDrugSecurityChecker;
 import com.ts.service.pdss.ias.manager.IAntiDrugSpecCheck;
-import com.ts.util.HisSubCheckTime;
 
 /**
  * 总体查询
@@ -154,7 +153,7 @@ public class AntiDrugSecurityCheckerBean implements IAntiDrugSecurityChecker
 		TAntiDrugSecurityCheckResult antidrugExce   = this.antidrugExcess.Checker(input);
 		if(antidrugExce != null) result.addAntiDrugSecurity(antidrugExce);
 		System.out.println("超授权使用抗菌药物监测与提示:" + (System.currentTimeMillis() - xx));
-		HisSubCheckTime.setSubCheckTime("[超授权使用抗菌药物监测与提示:" + (System.currentTimeMillis() - xx) + "]");
+//		HisSubCheckTime.setSubCheckTime("[超授权使用抗菌药物监测与提示:" + (System.currentTimeMillis() - xx) + "]");
 		
 //		xx = System.currentTimeMillis();
 //		TAntiDrugSecurityCheckResult antidrugMoment = this.antiDrugMoment.Checker(input);
@@ -178,7 +177,7 @@ public class AntiDrugSecurityCheckerBean implements IAntiDrugSecurityChecker
         TAntiDrugSecurityCheckResult antidrugspec   = this.AntiDrugSppec.Checker(input);
         if(antidrugspec != null)  result.addAntiDrugSecurity(antidrugspec);
         System.out.println("特殊用抗菌药监测与提示:" + (System.currentTimeMillis() - xx));
-        HisSubCheckTime.setSubCheckTime("[特殊用抗菌药监测与提示:" + (System.currentTimeMillis() - xx) + "]");
+//        HisSubCheckTime.setSubCheckTime("[特殊用抗菌药监测与提示:" + (System.currentTimeMillis() - xx) + "]");
         
         return result;
 	}

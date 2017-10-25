@@ -34,7 +34,7 @@
 	<!-- 	审查病人扩展信息表 -->
 	<insert id="insertCheckPtaOrderInfoExt" parameterType="pd"	>
 		insert into rs_check_pat_order_info_ext(is_lact,is_pregnant,insureance_type,insurance_no,is_liverwhole,is_kidneywhole,height,weight,ngroupnum,checkdate,patient_id,visit_id)
-		values(#{is_lact},#{is_pregnant},#{insureance_type},#{insurance_no},#{is_liverwhole},#{is_kidneywhole},#{height},#{weight},#{ngroupnum},#{checkdate},#{patient_id},#{visit_id});
+		values(#{is_lact,jdbcType=VARCHAR},#{is_pregnant,jdbcType=VARCHAR},#{insureance_type,jdbcType=VARCHAR},#{insurance_no,jdbcType=VARCHAR},#{is_liverwhole,jdbcType=VARCHAR},#{is_kidneywhole,jdbcType=VARCHAR},#{height,jdbcType=VARCHAR},#{weight,jdbcType=VARCHAR},#{ngroupnum,jdbcType=VARCHAR},#{checkdate,jdbcType=VARCHAR},#{patient_id,jdbcType=VARCHAR},#{visit_id,jdbcType=VARCHAR});
 	</insert>
 	<!-- 	保存医生信息 -->
 	<insert id="insertCheckDoctorInfo"  parameterType="pd"	>

@@ -85,6 +85,7 @@ public class InitPdssCache {
 	        if("true".equals(ApplicationProperties.getPropertyValue("setDrugIvEffect")))
             {
 	            setDrugIvEffect();
+	            setDrugIvEffectSupp();
             }
 	        if("true".equals(ApplicationProperties.getPropertyValue("setAid")))
             {
@@ -491,6 +492,44 @@ public class InitPdssCache {
 //		}
 	}
 	
+	
+	/**
+     * 配伍信息,使用缓存
+     * 
+     * @param Code1
+     * @param Code2
+     * @return
+     * @throws Exception
+     */
+    public void setDrugIvEffectSupp() throws Exception {
+        
+        log.info("配伍禁忌");
+        Page page = new Page();
+        int pageNum = 1;
+        page.setShowCount(showCount);
+        page.setTotalPage(pageNum);
+        String key1 = null;
+        String key2 = null;
+        List<TDrugIvEffect> dieRs = new ArrayList<>();
+        while( pageNum == 1 || pageNum <= page.getTotalPage()){
+            page.setCurrentPage(pageNum);   
+            List<TDrugIvEffect> list = (List<TDrugIvEffect>) dao.findForList("DrugMapper.queryDrugIvEffecSupptPage",page);
+            if (list == null || list.size() == 0)return;
+            //去掉重复配伍禁忌信息 
+            for(TDrugIvEffect die  : list)
+            {
+                key1 = die.getIV_CLASS_CODE1();
+                key2 = die.getIV_CLASS_CODE2();
+                dieRs.add(die);
+                cacheTemplate.setObject(PdssCache.drugIvEffect, key1 + "_" + key2, -1,dieRs);
+                dieRs = new ArrayList<TDrugIvEffect>();
+            }
+            pageNum = page.getCurrentPage() + 1;
+            log.info("配伍信息,使用缓存-- 第" + pageNum +"页");
+        }
+        //cacheTemplate.setObject(PdssCache.drugIvEffect, key1 + "_" + key2, -1,dieRs);
+        
+    }
 	
 	/**
 	 * 不良反应 所有信息 使用缓存

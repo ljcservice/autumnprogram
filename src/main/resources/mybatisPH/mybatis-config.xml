@@ -18,6 +18,7 @@
 <!-- 		<typeAlias type="com.ts.entity.system.Department" alias="Department"/> -->
 		<!-- 手术药品管理 -->
 		<typeAlias type="com.ts.entity.pdss.pdss.Beans.ias.TOperationDrugInfo" alias="TOperationDrugInfo"/>
+		<typeAlias type="com.ts.entity.pdss.DrugUseAuth.TCkDrugUserAuth" alias="TCkDrugUserAuth"/>
 		<typeAlias type="com.ts.util.PageData" alias="pd"/>
 		<!-- 分页 -->
 		<typeAlias type="com.ts.entity.Page" alias="Page"/> 

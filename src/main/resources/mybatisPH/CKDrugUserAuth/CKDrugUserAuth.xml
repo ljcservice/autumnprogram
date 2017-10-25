@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CKOperationDrug">
+	
+	<!--表名  药物授权表 ->
+	<sql id="tableName">
+		CK_DRUG_USER_AUTH
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		id,
+		drug_code,
+		drug_name,
+		dept_name,
+		doctor_name,
+		drug_spec,
+		drug_form,
+		control_type,
+		t_value,
+		total_value,
+		update_persion,
+		update_date,
+		diag_name,
+		diag_code,
+		h_type
+
+	</sql>
+	<sql id="FieldValue">
+		#{id},
+		#{drug_code},
+		#{drug_name},
+		#{dept_name},
+		#{doctor_name},
+		#{drug_spec},
+		#{drug_form},
+		#{control_type},
+		#{t_value},
+		#{total_value},
+		#{update_persion},
+		#{update_date},
+		#{diag_name},
+		#{diag_code},
+		#{h_type}
+	</sql>
+	
+	
+	<select id="queryTCkDrugUserAuthPage" parameterType ="page" resultType="TCkDrugUserAuth">
+		select 
+			<include refid="Field"></include>
+		from 
+		    <include refid="tableName"></include>
+<!-- 		order by O_Code,o_dept_code, is_use desc  -->
+	</select>
+	
+	
+	<select id="ckOperationDrugPage" parameterType="page" resultType="pd">
+	    select a.* ,b.USERNAME operatoruser_name
+	    from  ck_operation_drug a
+		left join plat.sys_user b on a.operatoruser = b.user_id
+		where 1=1
+		<if test="pd.workcode != null and pd.workcode != ''">
+			and 
+			(
+				o_name like CONCAT(CONCAT('%', #{pd.workcode}),'%')
+				or 
+				o_code like CONCAT(CONCAT('%', #{pd.workcode}),'%')
+			)
+		</if>
+		order by O_Code,o_dept_code, is_use desc 
+	</select>
+	
+	<select id="selectOpdrugInfo" parameterType="pd" resultType="pd">
+		select * from ck_operation_drug 
+		where 1=1
+		<if test="o_id!=null and o_id!=''">
+			and o_id = #{o_id}
+		</if>
+		<if test="o_code!=null and o_code!=''">
+			and o_code = #{o_code}
+		</if>
+		<if test="o_drug_code !=null and o_drug_code!=''">
+			and o_drug_code = #{o_drug_code}
+		</if>
+	</select>
+	
+	<update id="saveOpDrug"  parameterType="pd" >
+		insert into ck_operation_drug (O_ID, O_CODE, O_NAME, O_LEVEL, O_DRUG_CODE, O_DRUG_NAME
+			, O_DRUG_SPCE, O_DRUG_FORM, O_DEPT_CODE, O_DEPT_NAME, O_DOCTOR_CODE, O_DOCTOR_NAME
+			, IS_USE, CREATEDATE, OPERATORDATE, OPERATORUSER)
+		values (#{O_ID,jdbcType=VARCHAR}, #{O_CODE,jdbcType=VARCHAR}, #{O_NAME,jdbcType=VARCHAR}, #{O_LEVEL,jdbcType=VARCHAR}, #{O_DRUG_CODE,jdbcType=VARCHAR}, #{O_DRUG_NAME,jdbcType=VARCHAR}
+			, #{O_DRUG_SPCE,jdbcType=VARCHAR}, #{O_DRUG_FORM,jdbcType=VARCHAR}, #{O_DEPT_CODE,jdbcType=VARCHAR}, #{O_DEPT_NAME,jdbcType=VARCHAR}, #{O_DOCTOR_CODE,jdbcType=VARCHAR}, #{O_DOCTOR_NAME,jdbcType=VARCHAR}
+			, #{IS_USE,jdbcType=VARCHAR}, #{CREATEDATE,jdbcType=VARCHAR}, #{OPERATORDATE,jdbcType=VARCHAR}, #{OPERATORUSER,jdbcType=VARCHAR})
+	</update>
+	<update id="updateOpDrug"  parameterType="pd" >
+		update ck_operation_drug set O_CODE=#{O_CODE,jdbcType=VARCHAR},O_NAME=#{O_NAME,jdbcType=VARCHAR},O_LEVEL=#{O_LEVEL,jdbcType=VARCHAR}
+			,O_DRUG_CODE=#{O_DRUG_CODE,jdbcType=VARCHAR},O_DRUG_NAME=#{O_DRUG_NAME,jdbcType=VARCHAR},O_DRUG_SPCE=#{O_DRUG_SPCE,jdbcType=VARCHAR}
+			,O_DRUG_FORM=#{O_DRUG_FORM,jdbcType=VARCHAR},O_DEPT_CODE=#{O_DEPT_CODE,jdbcType=VARCHAR},O_DEPT_NAME=#{O_DEPT_NAME,jdbcType=VARCHAR}
+			,O_DOCTOR_CODE=#{O_DOCTOR_CODE,jdbcType=VARCHAR},O_DOCTOR_NAME=#{O_DOCTOR_NAME,jdbcType=VARCHAR},IS_USE=#{IS_USE,jdbcType=VARCHAR}
+			,OPERATORDATE=#{OPERATORDATE,jdbcType=VARCHAR},OPERATORUSER=#{OPERATORUSER,jdbcType=VARCHAR}
+		where O_ID = #{O_ID}
+	</update>
+	
+	<delete id="deleteOpDrug" parameterType="pd">
+		delete from ck_operation_drug where o_id=#{o_id}
+	</delete>
+	
+	<select id="queryOperationPage" parameterType="page" resultType="pd">
+		select OPERATION_CODE code,OPERATION_NAME name
+		from operation_dict
+		where 1=1 
+		<if test="pd.keywords != null and pd.keywords != ''">
+			and 
+			(
+				OPERATION_NAME like CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				or 
+				OPERATION_CODE like CONCAT(CONCAT('%', #{pd.keywords}),'%')
+			)
+		</if>
+	</select>
+	<select id="queryDrugMapPage" parameterType="page" resultType="pd">
+		select DRUG_NO_LOCAL code,DRUG_NAME_LOCAL name,DRUG_SPEC,UNITS,DRUG_FORM
+		from pdss.drug_map
+		where 1=1 
+		<if test="pd.keywords != null and pd.keywords != ''">
+			and 
+			(
+				DRUG_NAME_LOCAL like CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				or 
+				DRUG_NO_LOCAL like CONCAT(CONCAT('%', #{pd.keywords}),'%')
+			)
+		</if>
+	</select>
+	<select id="queryDeptPage" parameterType="page" resultType="pd">
+		select DEPT_CODE code,DEPT_NAME name
+		from dept_dict
+		where 1=1 
+		<if test="pd.keywords != null and pd.keywords != ''">
+			and 
+			(
+				DEPT_NAME like CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				or 
+				DEPT_CODE like CONCAT(CONCAT('%', #{pd.keywords}),'%')
+			)
+		</if>
+	</select>
+	<select id="queryStaffPage" parameterType="page" resultType="pd">
+		select EMP_NO code,NAME name
+		from staff_dict
+		where 1=1 
+		<if test="pd.keywords != null and pd.keywords != ''">
+			and 
+			(
+				NAME like CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				or 
+				EMP_NO like CONCAT(CONCAT('%', #{pd.keywords}),'%')
+			)
+		</if>
+	</select>
+</mapper>

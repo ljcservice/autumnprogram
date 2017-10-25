@@ -145,6 +145,15 @@
 		order by iv_class_code1 , iv_class_code2
 	</select>
 	
+	<select id="queryDrugIvEffecSupptPage" parameterType="pd" resultType="TDrugIvEffect">
+		select ID as EFFECT_ID, IV_CLASS_CODE1, IV_CLASS_CODE2, RESULT_ID, REFER_INFO
+		from DRUG_IV_EFFECT_supp
+		where 
+		  iv_class_code1 in (select iv_class_code from view_drug) and iv_class_code2 in (select iv_class_code from view_drug)
+		order by iv_class_code1 , iv_class_code2
+	</select>
+	
+	
 	<select id="queryDrugRepeatPage" parameterType="page" resultType="TDrugRepeat">
 		select 
 			drug_name_1,

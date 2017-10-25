@@ -3,10 +3,7 @@
   <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>
-			classpath:spring/ApplicationContext-main.xml,
-			classpath:spring/ApplicationContext-dataSource.xml,
-			classpath:spring/ApplicationContext-shiro.xml,
-			classpath:spring/ApplicationContext-redis.xml
+			classpath:spring/ApplicationContext-*.xml
 		</param-value>
   </context-param>
   <context-param>

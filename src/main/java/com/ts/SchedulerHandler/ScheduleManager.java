@@ -21,6 +21,9 @@ public class ScheduleManager
 {
 
     private static final Logger log = Logger.getLogger(ScheduleManager.class);
+    /**
+     * 加载spring容器后，自己动执行该方法。
+     */
     @PostConstruct
     public void ScheduleInit(){
         

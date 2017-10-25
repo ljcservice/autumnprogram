@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DrugCleanManagerMapper">
+	<select id="findDrugEffect"  parameterType="page" resultType="pd">
+		select 
+			drug_name1,
+			drug_name2,
+			refer_info,
+			result_id,  
+			re_sourec,
+			id,
+			IV_CLASS_CODE1,
+			IV_CLASS_CODE2
+		from 
+			drug_iv_effect_supp
+			
+		where 
+		    iv_class_code1 is null 
+		order by to_number(id) 
+	</select>
+	
+	<update id="updateIvClass" parameterType="pd">
+		update 
+			drug_iv_effect_supp
+			set IV_CLASS_CODE1 = #{IV_CLASS_CODE1 ,jdbcType=NUMERIC} , IV_CLASS_CODE2 = #{IV_CLASS_CODE2 ,jdbcType=NUMERIC} 
+				, DRUG_NAME1 = #{DRUG_NAME1} , DRUG_NAME2 = #{DRUG_NAME2} 
+		where 
+			id = #{id}
+	</update>
+	
+	<insert id="addIvClass" parameterType="pd">
+		insert into  drug_iv_effect_supp(drug_name1,
+			drug_name2,
+			refer_info,
+			result_id,
+			re_sourec,
+			id,
+			IV_CLASS_CODE1,
+			IV_CLASS_CODE2)
+			values 
+			(
+				#{drug_name1 ,jdbcType=VARCHAR} ,
+				#{drug_name2 ,jdbcType=VARCHAR},
+				#{refer_info},
+				#{result_id,jdbcType=VARCHAR},
+				#{re_sourec},
+				#{id},
+				#{IV_CLASS_CODE1,jdbcType=NUMERIC},
+				#{IV_CLASS_CODE2,jdbcType=NUMERIC}
+			)
+	
+	</insert>
+
+	<select id="findDrug" parameterType="pd" resultType="pd">
+		select distinct t.iv_class_code from drug t where t.drug_name like #{drug_name}  and t.iv_class_code  is not null
+	</select>
+
+</mapper>

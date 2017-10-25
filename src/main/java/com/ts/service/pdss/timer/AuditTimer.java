@@ -562,7 +562,7 @@ public class AuditTimer implements Runnable
                 /* 处理业务类 */
                 IHisAuditor hisAuditor = (IHisAuditor) SpringBeanUtil.getBean("hisAuditor");
                 /* 根据医嘱 做事后审查 */
-                hisAuditor.DrugSecutityCheckAllPO(po);
+//                hisAuditor.DrugSecutityCheckAllPO(po);
             }
             
         }
