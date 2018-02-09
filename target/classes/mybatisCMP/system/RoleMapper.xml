@@ -84,71 +84,26 @@
 	
 	<!-- 删除角色  -->
 	<delete id="deleteRoleById" parameterType="pd">
-		delete from 
-		<include refid="tableName"></include> 
-	 	where 
-		<choose>
-			<!-- mysql 时调用自定义函数 -->
-		 	<when test="DATABASE_TYPE == 1">
-		 		FIND_IN_SET(ROLE_ID, getChild(#{ROLE_ID},1));
-		 	</when>
-		 	<otherwise>
-				ROLE_ID in ( 
-					select ROLE_ID  from SYS_ROLE START WITH ROLE_ID =#{ROLE_ID} CONNECT BY PRIOR ROLE_ID=PARENT_ID
-			 	)
-			</otherwise>
-		</choose>
+		delete from SYS_ROLE
+	 	where ROLE_ID = #{ROLE_ID}
 	</delete>
 	
-	<!-- 删除角色权限  -->
+	<!-- 删除角色权限关系  -->
 	<delete id="delRoleMfByRoleId" parameterType="pd">
 		delete from ROLE_MF_RELA 
-	 	where 
-		<choose>
-			<!-- mysql 时调用自定义函数 -->
-		 	<when test="DATABASE_TYPE == 1">
-		 		FIND_IN_SET(ROLE_ID, getChild(#{ROLE_ID},1));
-		 	</when>
-		 	<otherwise>
-				ROLE_ID in ( 
-					select ROLE_ID  from SYS_ROLE START WITH ROLE_ID =#{ROLE_ID} CONNECT BY PRIOR ROLE_ID=PARENT_ID
-			 	)
-			</otherwise>
-		</choose>
+	 	where ROLE_ID = #{ROLE_ID}
 	</delete>
 	
 	<!-- 删除角色接口数据权限关系  -->
 	<delete id="delRelationByRoleId" parameterType="pd">
 		delete from SYS_ROLE_TABLE_RELATION 
-	 	where 
-		<choose>
-			<!-- mysql 时调用自定义函数 -->
-		 	<when test="DATABASE_TYPE == 1">
-		 		FIND_IN_SET(ROLE_ID, getChild(#{ROLE_ID},1);
-		 	</when>
-		 	<otherwise>
-				ROLE_ID in ( 
-					select ROLE_ID  from SYS_ROLE START WITH ROLE_ID =#{ROLE_ID} CONNECT BY PRIOR ROLE_ID=PARENT_ID
-			 	)
-			</otherwise>
-		</choose>
+	 	where ROLE_ID=#{ROLE_ID}
 	</delete>
 	
 		<!-- 删除用户角色关系  -->
 	<delete id="delUserRoleRelaByRoleId" parameterType="pd">
 		delete from USER_ROLE_RELA 
-	 	where 
-		<choose>
-			<!-- mysql 时调用自定义函数 -->
-		 	<when test="DATABASE_TYPE == 1">
-		 		FIND_IN_SET(ROLE_ID, getChild(#{ROLE_ID},1));
-		 	</when>
-		 	<otherwise>
-				ROLE_ID in ( 
-					select ROLE_ID  from SYS_ROLE START WITH ROLE_ID =#{ROLE_ID} CONNECT BY PRIOR ROLE_ID=PARENT_ID
-			 	)
-			</otherwise>
-		</choose>
+	 	where  ROLE_ID=#{ROLE_ID}
 	</delete>
 	
 	
@@ -180,36 +135,6 @@
 			a.ROLE_ID = b.ROLE_ID and b.USER_ID = #{USER_ID}
 	</select>
 
-	<!-- 通过用户角色关系，查找用户所有角色ID及角色下属角色ID集合 -->
-	<select id="listSubRoleByUsId" parameterType="pd" resultType="String" >
-		<choose>
-			<!-- mysql 时调用自定义函数 -->
-		 	<when test="DATABASE_TYPE == 1">
-				<if test="ROLE_IDS == null ">
-			 		select * from SYS_ROLE where 1=2
-			 	</if>
-			 	<if test="ROLE_IDS != null ">
- 				<foreach item="item" index="index" collection="ROLE_IDS" open="" separator=" union " close="">
-			 		 select 
-						distinct(ROLE_ID) 
-					from 
-						SYS_ROLE 
-					where FIND_IN_SET(ROLE_ID, getChild(#{item},1)) 
-				</foreach>
-				</if>
-		 	</when>
-		 	<otherwise>
-				select 
-					distinct(ROLE_ID)  
-				from 
-					SYS_ROLE 
-				where 1=1 
-					START WITH ROLE_ID in (select ROLE_ID from USER_ROLE_RELA where USER_ID = #{USER_ID} ) 
-					CONNECT BY PRIOR ROLE_ID = PARENT_ID 
-			</otherwise>
-		</choose>
-	</select>
-	
 	<select id="checkRoleUsed" parameterType="String" resultType="Integer" >
 		select 
 			count(ROLE_ID)  

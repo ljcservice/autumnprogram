@@ -26,6 +26,7 @@ import com.hitzd.DBUtils.TCommonRecord;
 import com.hitzd.Factory.DBQueryFactory;
 import com.hitzd.WebPage.PageView;
 import com.hitzd.WebPage.Impl.BasePageBean;
+import com.hitzd.his.Utils.DrugUtils;
 import com.hitzd.his.Web.Utils.CommonUtils;
 import com.ts.controller.base.BaseController;
 import com.ts.entity.Page;
@@ -245,7 +246,9 @@ public class DrugMatcher extends BaseController {
 	    map.put("msg","当前条件下药品总数："+totalCount+"，匹配成功数："+matcherSuccess+"，匹配成功率："+persent+"%，耗时："
 	    		+start.getTime()/(1000*60)+"分"+start.getTime()/1000+"秒"
 	    		);
-		return  map ; 
+	    // 配对后重载 药品信息
+	    DrugUtils.loadDrugMap();
+		return map ; 
     }
     
     private void update(PageData matcher) {
@@ -665,6 +668,9 @@ public class DrugMatcher extends BaseController {
                 "' where drug_map_id = '" + CommonUtils.getRequestParameter(request, "drug_map_id", "") + "'";
         JDBCQueryImpl query      = DBQueryFactory.getQuery("PDSS");
         int x = query.update(sql);
+        // 更新缓存中的药品 
+        DrugUtils.loadDrugMapBySingle(CommonUtils.getRequestParameter(request, "drug_map_id", ""));
+        
         return new HashMap<String,Object>();
     }
 

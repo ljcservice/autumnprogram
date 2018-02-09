@@ -200,7 +200,7 @@ public class MR_DeptUseDrugCountTwo extends Persistent4DB implements IReportBuil
     
 	private String getNoOutDrug()
 	{
-    	String result = DrugUtils.getExternalDrugNos();
+    	String result = "";//DrugUtils.getExternalDrugNos();
     	return !"".equals(result)?result:"''";
 	}
 	

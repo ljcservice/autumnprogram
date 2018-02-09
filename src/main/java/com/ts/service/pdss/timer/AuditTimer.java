@@ -40,8 +40,9 @@ import com.ts.service.pdss.IHisAuditor;
  * @author Administrator
  *
  */
-@Service
-@Transactional
+//@Service
+//@Transactional
+@Deprecated
 public class AuditTimer implements Runnable
 {
     private static final Log logger = LogFactory.getLog(JdbcTemplateHander.class);

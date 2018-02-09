@@ -16,8 +16,11 @@
 	         from  (
 	         		select NGROUPNUM,RS_DRUG_TYPE  
 	         		from RS_DRUG_CHECKRSLT 
+	         		where 
+<!-- 	         		查询处方点评结果 -->
+	         		in_rs_type = 2 
 	         		<if test="pd.RS_DRUG_TYPE != null and pd.RS_DRUG_TYPE != ''"> <!-- 问题类型 -->
-			    		where RS_DRUG_TYPE = #{pd.RS_DRUG_TYPE}
+			    		and RS_DRUG_TYPE = #{pd.RS_DRUG_TYPE}
 			    	</if>
 	         		group by NGROUPNUM,RS_DRUG_TYPE 
            	) group by NGROUPNUM
@@ -68,28 +71,28 @@
 		<if test="pd.HASKJ != null and pd.HASKJ != ''"> <!-- 是否抗菌 -->
 			and a.HASKJ = #{pd.HASKJ}
 		</if>
-		<if test="pd.HASZS != null and pd.HASZS != ''"> <!-- 是否抗菌 -->
+		<if test="pd.HASZS != null and pd.HASZS != ''"> <!-- 是否抗菌注射 -->
 			and a.HASZS = #{pd.HASZS}
 		</if>
-		<if test="pd.ELJSY != null and pd.ELJSY != ''"> <!-- 是否抗菌 -->
+		<if test="pd.ELJSY != null and pd.ELJSY != ''"> <!-- 是否二类精神-->
 			and a.ELJSY = #{pd.ELJSY}
 		</if>
-		<if test="pd.DDRUG != null and pd.DDRUG != ''"> <!-- 是否抗菌 -->
+		<if test="pd.DDRUG != null and pd.DDRUG != ''"> <!-- 是否毒药 -->
 			and a.DDRUG = #{pd.DDRUG}
 		</if>
-		<if test="pd.FSDRUG != null and pd.FSDRUG != ''"> <!-- 是否抗菌 -->
+		<if test="pd.FSDRUG != null and pd.FSDRUG != ''"> <!-- 是否放射 -->
 			and a.FSDRUG = #{pd.FSDRUG}
 		</if>
-		<if test="pd.YLJSY != null and pd.YLJSY != ''"> <!-- 是否抗菌 -->
+		<if test="pd.YLJSY != null and pd.YLJSY != ''"> <!-- 是否一类精神-->
 			and a.YLJSY = #{pd.YLJSY}
 		</if>
-		<if test="pd.GZDRUG != null and pd.GZDRUG != ''"> <!-- 是否抗菌 -->
+		<if test="pd.GZDRUG != null and pd.GZDRUG != ''"> <!-- 是否贵重 -->
 			and a.GZDRUG = #{pd.GZDRUG}
 		</if>
-		<if test="pd.MDRUG != null and pd.MDRUG != ''"> <!-- 是否抗菌 -->
+		<if test="pd.MDRUG != null and pd.MDRUG != ''"> <!-- 是否麻药 -->
 			and a.MDRUG = #{pd.MDRUG}
 		</if>
-		<if test="pd.DMDRUG != null and pd.DMDRUG != ''"> <!-- 是否抗菌 -->
+		<if test="pd.DMDRUG != null and pd.DMDRUG != ''"> <!-- 是否毒麻 -->
 			and a.DMDRUG = #{pd.DMDRUG}
 		</if>
 		<if test="pd.IS_EXPERT!=null and pd.IS_EXPERT!='' and pd.IS_EXPERT==0"> <!-- 非专家点评 -->

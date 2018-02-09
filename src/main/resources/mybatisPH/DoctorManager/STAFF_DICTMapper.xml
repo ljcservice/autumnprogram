@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="STAFF_DICTMapper">
+
+	<!--表名   手术表-->
+	<sql id="tableName">
+		STAFF_DICT
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		EMP_NO,
+        DEPT_CODE,
+        NAME,
+        INPUT_CODE,
+        JOB,
+        TITLE,
+        USER_NAME,
+        SURGERY,
+        CANCEL,
+        POWER
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{EMP_NO,jdbcType=VARCHAR},
+		#{DEPT_CODE,jdbcType=VARCHAR},
+		#{NAME,jdbcType=VARCHAR},
+		#{INPUT_CODE,jdbcType=VARCHAR},
+		#{JOB,jdbcType=VARCHAR},
+		#{TITLE,jdbcType=VARCHAR},
+		#{USER_NAME,jdbcType=VARCHAR},
+		#{SURGERY,jdbcType=VARCHAR},
+		#{CANCEL,jdbcType=VARCHAR},
+		#{POWER,jdbcType=VARCHAR}
+	</sql>
+	
+	<!-- 查询医生  -->
+	<select id="queryDoctorDictPage" parameterType="page" resultType="pd">
+		select 
+			<include refid="Field"></include>
+		from  
+			<include refid="tableName"></include>
+		where 1=1 
+		<if test="pd.keywordsByDoctor != null and pd.keywordsByDoctor != ''">
+			and 
+			(
+				NAME like CONCAT(CONCAT('%', #{pd.keywordsByDoctor}),'%')
+				or 
+				EMP_NO like CONCAT(CONCAT('%', #{pd.keywordsByDoctor}),'%')
+			)
+		</if>
+		
+		<if test="pd.JOB != null and pd.JOB != ''">
+			and JOB = #{pd.JOB}
+		</if>
+		
+		<if test="pd.TITLE != null and pd.TITLE != ''">
+			and TITLE = #{pd.TITLE}
+		</if>
+		
+		<if test="pd.deptdicts != null and pd.deptdicts.length !='' " >
+			and dept_code in 
+			<foreach item="item" index="index" collection="pd.deptdicts" open="(" separator="," close=")">  
+ 			 	${item}  
+ 			</foreach> 
+			
+<!-- 			<foreach item="deptitem" collection="pd.deptdicts" index="index"  open="(" separator="," close=")"> -->
+<!--                 #{deptitem}    -->
+<!-- 	        </foreach>     -->
+		</if>
+		<if test="pd.orderBy != null and pd.orderBy == 'doctorName'">
+			order by  name 
+		</if>
+		<if test="pd.orderBy != null and pd.orderBy == 'deptCode'" >
+			order by  dept_code 
+		</if>
+		
+	</select>
+	
+	<!-- 查询医生  -->
+	<select id="queryDoctorDict" parameterType="pd" resultType="pd">
+		select 
+			<include refid="Field"></include>
+		from  
+			<include refid="tableName"></include>
+		where 1=1 
+		<if test="keywordsByDoctor != null and keywordsByDoctor != ''">
+			and 
+			(
+				NAME like CONCAT(CONCAT('%', #{keywordsByDoctor}),'%')
+				or 
+				EMP_NO like CONCAT(CONCAT('%', #{keywordsByDoctor}),'%')
+			)
+		</if>
+		
+		<if test="JOB != null and JOB != ''">
+			and JOB = #{JOB}
+		</if>
+		
+		<if test="TITLE != null and TITLE != ''">
+			and TITLE = #{TITLE}
+		</if>
+		
+		<if test="deptdicts != null and deptdicts.length !=''" >
+			and dept_code in 
+			<foreach item="item" index="index" collection="deptdicts" open="(" separator="," close=")">  
+				 ${item}  
+			</foreach> 
+		</if>
+		
+		<if test="orderBy != null and orderBy == 'doctorName'">
+			order by  name 
+		</if>
+		<if test="orderBy != null and pd.orderBy == 'deptCode'" >
+			order by  dept_code 
+		</if>
+		
+	</select>
+	
+	
+	<!--查询医生信息  -->
+	<select id="findDoctorByCode" parameterType="String" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where
+		  EMP_NO = #{DoctorCode} 
+	</select>
+	
+	<insert id="insertDoctorDict" parameterType="pd">
+		insert into   <include refid="tableName"></include> 
+		(
+			 <include refid="Field"></include> 
+		)
+		values
+			(
+			<include refid="FieldValue"></include>
+			)
+	</insert>
+	
+	<update id="updateDoctorDict" parameterType="pd">
+		update 
+			<include refid="tableName" ></include>
+		set
+			DEPT_CODE=#{DEPT_CODE,jdbcType=VARCHAR},
+			NAME=#{NAME,jdbcType=VARCHAR},
+			INPUT_CODE=#{INPUT_CODE,jdbcType=VARCHAR},
+			JOB=#{JOB,jdbcType=VARCHAR},
+			TITLE=#{TITLE,jdbcType=VARCHAR},
+			USER_NAME=#{USER_NAME,jdbcType=VARCHAR},
+			SURGERY=#{SURGERY,jdbcType=VARCHAR},
+			CANCEL=#{CANCEL,jdbcType=VARCHAR},
+			POWER=#{POWER,jdbcType=VARCHAR} 
+		where
+		  EMP_NO=#{EMP_NO}
+	</update>
+
+	<delete id="delDoctorDict" parameterType="String">
+		delete <include refid="tableName" ></include>  where EMP_NO=#{DoctorCode}
+	</delete>
+
+</mapper>

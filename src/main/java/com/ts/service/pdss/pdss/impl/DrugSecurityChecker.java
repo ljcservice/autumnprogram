@@ -27,6 +27,7 @@ import com.ts.service.pdss.pdss.manager.IDrugIvEffectChecker;
 import com.ts.service.pdss.pdss.manager.IDrugSecurityChecker;
 import com.ts.service.pdss.pdss.manager.IDrugSideChecker;
 import com.ts.service.pdss.pdss.manager.IDrugSpecPeopleChecker;
+import com.ts.service.pdss.pdss.manager.IDrugUserAuthChecker;
 import com.ts.service.pdss.pdss.manager.IMedicareChecker;
 import com.ts.service.pdss.pdss.manager.IPatientSaveCheckResult;
 import com.ts.util.Logger;
@@ -258,6 +259,13 @@ public class DrugSecurityChecker implements IDrugSecurityChecker
         return adsc.Check(po);
     }
 	
+	@Resource(name="drugUserAuthCheckerBean")
+	private IDrugUserAuthChecker duAuth ;
+	@Override
+	public TDrugSecurityRslt DrugUserAuthChecker(TPatientOrder po)
+	{
+	    return duAuth.Check(po);
+	}
     /**
      * 参数字符串及字符串数组
      * @param doctorInfo    -- doctorDeptID,doctorDeptName,doctorID,doctorName,doctorTitleID,doctorTitleName
@@ -334,8 +342,14 @@ public class DrugSecurityChecker implements IDrugSecurityChecker
         xx = System.currentTimeMillis();
         this.adsc.Check(po).CopyAdcrCheckRsltTo(dsr);
         sb.append(" 抗拒药物:" + (System.currentTimeMillis() - xx));
+        // patType =  1 为门诊事实审核 
+        if("1".equals(po.getPatType())){
+            xx = System.currentTimeMillis();
+            this.duAuth.Check(po).CopyDuAuthCheckRsltTo(dsr);
+            sb.append(" 药物控制审核:" + (System.currentTimeMillis() - xx));
+        }
         sb.append(" 总时长：" + (System.currentTimeMillis() - l));
-        logger.debug(sb.toString());
+        logger.info(sb.toString());
         return dsr;
     }
     

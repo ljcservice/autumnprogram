@@ -36,3 +36,30 @@ function searchs(){
 	top.jzts();
 	$("#searchForm").submit();
 }
+//单页遮罩层
+var bgObj = null;
+
+function closeBG()  
+{
+	if(bgObj != null)
+	{
+		document.body.removeChild(bgObj);
+	}
+	bgObj = null;
+}
+function showBG()
+{  
+	document.body.style.margin = "0";
+	bgObj   = document.createElement("div");
+	bgObj.setAttribute('id', 'bgDiv');
+	bgObj.style.position   = "absolute";
+	bgObj.style.top        = "0";
+	bgObj.style.background = "#777";
+	bgObj.style.filter     = "progid:DXImageTransform.Microsoft.Alpha(opacity=50)";
+	bgObj.style.opacity    = "0.4";
+	bgObj.style.left       = "0";
+	bgObj.style.width      = "100%";
+	bgObj.style.height     = "100%";
+	bgObj.style.zIndex     = "1000";
+	document.body.appendChild(bgObj);
+}

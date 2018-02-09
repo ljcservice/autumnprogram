@@ -398,6 +398,7 @@ public class DataFetcherNew extends ReportScheduler  {
 			}
 			/* 保存操作日志 */
 			logger.info("提取操作结束...");
+			/*构建报表 - reportbuild 表  */
 			BuildReport(prevDate, "PEAAS", vctLog);
 			if (Config.getParamValue("PrescCheckFlag").equals("true")) {
 				logger.info("处方进行审核开始....");

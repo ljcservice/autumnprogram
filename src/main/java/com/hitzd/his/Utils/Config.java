@@ -15,6 +15,7 @@ import com.hitzd.his.RowMapperBeans.Middle.DBUrlConfigMapper;
 import com.hitzd.his.RowMapperBeans.Middle.FieldConfigMapper;
 import com.hitzd.his.RowMapperBeans.Middle.QueryConfigMapper;
 import com.hitzd.his.RowMapperBeans.Middle.TableConfigMapper;
+import com.ts.util.Logger;
 import com.hitzd.DBUtils.CommonMapper;
 
 /**
@@ -24,6 +25,7 @@ import com.hitzd.DBUtils.CommonMapper;
  */
 public class Config 
 {
+    private static Logger  logger = Logger.getLogger("Config");
     /* 规则 */
     private static HashMap<String, String>            paramMap = null;
     /* 对照表配置 */
@@ -33,28 +35,131 @@ public class Config
     public static boolean tableConfigLoaded = false;
     
     /**
+     * 加载单个参数缓存
+     * @param id 主键
+     */
+    public static void initParamBySingle(String id)
+    {
+        JDBCQueryImpl peaasQuery = DBQueryFactory.getQuery("");
+        CommonMapper  cmr        = new CommonMapper();
+        try
+        {
+            logger.debug("Config参数初始化开始！");
+            // 初始化参数信息
+            paramMap = new HashMap<String, String>(); 
+            @SuppressWarnings("unchecked")
+            List<TCommonRecord> list = peaasQuery.query("select rulecode,rulevalue from ruleparameter where ruleid = ? ", new Object[]{id},cmr);
+            for (TCommonRecord cr: list)
+                paramMap.put(cr.get("rulecode").toUpperCase(), cr.get("rulevalue"));
+            paramLoaded = true;
+            logger.debug("Config参数初始化结束！");
+        }
+        catch(Exception e )
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            peaasQuery = null;
+            cmr = null;
+        }
+    }
+    
+    /**
      * 参数初始化
      */
     public static void initParam()
     {
+        JDBCQueryImpl peaasQuery = DBQueryFactory.getQuery("");
+        CommonMapper  cmr        = new CommonMapper();
     	try
     	{
-    		System.out.println("Config参数初始化开始！");
-        	JDBCQueryImpl peaasQuery = DBQueryFactory.getQuery("");
+    	    logger.debug("Config参数初始化开始！");
         	// 初始化参数信息
         	paramMap = new HashMap<String, String>(); 
             @SuppressWarnings("unchecked")
-    		List<TCommonRecord> list = peaasQuery.query("select rulecode,rulevalue from ruleparameter", new CommonMapper());
+    		List<TCommonRecord> list = peaasQuery.query("select rulecode,rulevalue from ruleparameter", cmr);
             for (TCommonRecord cr: list)
             	paramMap.put(cr.get("rulecode").toUpperCase(), cr.get("rulevalue"));
             peaasQuery = null;
             paramLoaded = true;
-        	System.out.println("Config参数初始化结束！");
+            logger.debug("Config参数初始化结束！");
     	}
     	catch(Exception e )
     	{
     		e.printStackTrace();
     	}
+    	finally
+    	{
+    	    peaasQuery = null;
+    	    cmr = null;
+    	}
+    }
+    
+    
+    /**
+     *  加载单个中间层缓存
+     * @param table_id
+     */
+    public static void initTableConfigBySingle(String table_id)
+    {
+        try
+        {
+            logger.debug("Config表和字段配置初始化开始！");
+            JDBCQueryImpl peaasQuery = DBQueryFactory.getQuery("");
+            // 初始化对照表配置信息
+            tableMap = new HashMap<String, TTableConfig>();
+            @SuppressWarnings("unchecked")
+            List<TTableConfig> tableList = peaasQuery.query("select * from table_config",new Object[]{table_id} ,new TableConfigMapper());
+            if (tableList != null && tableList.size() > 0)
+            {
+                for (TTableConfig table : tableList)
+                {
+                    @SuppressWarnings("unchecked")
+                    List<TFieldConfig> fieldList = peaasQuery.query("select * from field_config where table_id='" + table.getTableId() + "'", new FieldConfigMapper());
+                    if (fieldList != null && fieldList.size() > 0)
+                    {
+                        TFieldConfig[] fields = new TFieldConfig[fieldList.size()];
+                        Map<String, TFieldConfig> fieldMap = new HashMap<String, TFieldConfig>();
+                        for (int i = 0; i < fieldList.size(); i++)
+                        {
+                            fields[i] = fieldList.get(i);
+                            fieldMap.put(fieldList.get(i).getOriginalField(), fieldList.get(i));
+                        }
+                        table.setFields(fields);
+                        table.setFieldMap(fieldMap);
+                    }
+                    @SuppressWarnings("unchecked")
+                    List<TQueryConfig> queryList = peaasQuery.query("select * from query_config where table_id='" + table.getTableId() + "'", new QueryConfigMapper());
+                    if (queryList != null && queryList.size() > 0)
+                    {
+                        TQueryConfig[] queries = new TQueryConfig[queryList.size()];
+                        Map<String, TQueryConfig> queryMap = new HashMap<String, TQueryConfig>();
+                        for (int i = 0; i < queryList.size(); i++)
+                        {
+                            queries[i] = queryList.get(i);
+                            queryMap.put(queryList.get(i).getQueryId(), queryList.get(i));
+                        }
+                        table.setQueries(queries);
+                        table.setQueryMap(queryMap);
+                    }
+                    tableMap.put(table.getTableId(), table);
+                }
+            }
+            dbUrlMap = new HashMap<String, TDBUrlConfig>();
+            List<TDBUrlConfig>  list = peaasQuery.query("select * from db_url_config ", new DBUrlConfigMapper());
+            for(TDBUrlConfig t : list)
+            {
+                dbUrlMap.put(t.getDb_url(), t);
+            }
+            peaasQuery = null;
+            tableConfigLoaded = true;
+            logger.debug("Config表和字段配置初始化结束！");
+        }
+        catch(Exception e )
+        {
+            e.printStackTrace();
+        }
     }
     
     /**
@@ -65,7 +170,7 @@ public class Config
     {
     	try
     	{
-    		System.out.println("Config表和字段配置初始化开始！");
+    	    logger.debug("Config表和字段配置初始化开始！");
         	JDBCQueryImpl peaasQuery = DBQueryFactory.getQuery("");
             // 初始化对照表配置信息
             tableMap = new HashMap<String, TTableConfig>();
@@ -114,7 +219,7 @@ public class Config
             }
             peaasQuery = null;
             tableConfigLoaded = true;
-        	System.out.println("Config表和字段配置初始化结束！");
+            logger.debug("Config表和字段配置初始化结束！");
     	}
     	catch(Exception e )
     	{

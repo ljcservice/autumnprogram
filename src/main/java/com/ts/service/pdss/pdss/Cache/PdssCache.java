@@ -34,6 +34,7 @@ import com.ts.entity.pdss.pdss.Beans.TDrugPerformFreqDict;
 import com.ts.entity.pdss.pdss.Beans.TDrugRepeat;
 import com.ts.entity.pdss.pdss.Beans.TDrugSideDict;
 import com.ts.entity.pdss.pdss.Beans.TDrugUseDetail;
+import com.ts.entity.pdss.pdss.Beans.DrugUseAuth.TCkDrugUserAuth;
 import com.ts.entity.pdss.pdss.Beans.ias.TOperationDrugInfo;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugInteractionRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TMedicareRslt;
@@ -62,6 +63,8 @@ public class PdssCache {
     public static String diagnosisDict    = "diagnosisDict";    // 诊断字典
     public static String drugSideDict     = "drugSideDict";     // 不良反应
     public static String OperationDrug    = "operationdrug";    // 手术使用药品
+    public static String DrugUserAuth     = "drugUserAuth";     // 药物控制授权 
+    
 	@Autowired
 	private CacheTemplate cacheTemplate;
 	
@@ -95,6 +98,37 @@ public class PdssCache {
 //        return list;	
 //    	
 //    }
+
+	/**
+	 * 获得药物授权控制 实体 
+	 * @param drugCode
+	 * @param drugName
+	 * @param deptName
+	 * @param doctorName
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String, TCkDrugUserAuth> queryDrugUserAuthByMap(String drugCode , String drugName , String deptName , String doctorName) throws Exception
+	{
+	    String key = drugCode + "_" + drugName + "_" + deptName + "_" + doctorName;
+	    return cacheTemplate.cache(DrugUserAuth, key , null);
+	}
+	
+	
+	/**
+	 * 更新药物授权控制缓存 
+	 * @param entity  要缓存 实体 
+	 * @param drugCode
+	 * @param drugName
+	 * @param deptName
+	 * @param doctorName
+	 */
+	public void setDrugUserAuthByMap(Map<String,TCkDrugUserAuth> entity ,String drugCode , String drugName , String deptName , String doctorName )
+	{
+	    String key = drugCode + "_" + drugName + "_" + deptName + "_" + doctorName;
+	    cacheTemplate.setObject(DrugUserAuth, key, -1, entity);
+	}
+	
 	
 	
 	/**

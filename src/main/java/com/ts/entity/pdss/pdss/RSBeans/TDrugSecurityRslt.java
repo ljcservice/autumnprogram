@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlElement;
 
 import com.ts.entity.pdss.pdss.Beans.TDrug;
 import com.ts.entity.pdss.pdss.Beans.TDrugCheckInfoCollet;
+import com.ts.entity.pdss.pdss.RSBeans.DrugUserAuth.TDrugUserAuthResult;
 import com.ts.entity.pdss.pdss.RSBeans.ias.TAntiDrugCheckResult;
 
 /**
@@ -219,6 +220,24 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
             dsr.chkRslt.put(drugs[i], cr1);
         }
     }
+    
+    /**
+     * 药物授权控制结果 复制 
+     * @param dsr
+     */
+    public void CopyDuAuthCheckRsltTo(TDrugSecurityRslt dsr)
+    {
+        TDrug[] drugs = getDrugs();
+        for (int i = 0; i < drugs.length; i++)
+        {
+            TCheckResult cr = chkRslt.get(drugs[i]);
+            TCheckResult cr1 = dsr.chkRslt.get(drugs[i]);
+            if (cr1 == null)
+                cr1 = new TCheckResult();
+            cr.CopyDuAuthRsltTo(cr1); 
+            dsr.chkRslt.put(drugs[i], cr1);
+        }
+    }
 
     /**
      * 注册注册相互作用检查结果
@@ -406,6 +425,23 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
             chkRslt.put(drug, cr);
         }
         cr.addTAntiDrugCheckResult(adcr);
+    }
+    
+    
+    /**
+     * 注册 药物授权控制 信息 
+     * @param drug
+     * @param dspr
+     */
+    public void regDrugUserAuthCheckResult(TDrug drug,TDrugUserAuthResult duAuth)
+    {
+        TCheckResult cr = chkRslt.get(drug);
+        if (cr == null)
+        {
+            cr = new TCheckResult();
+            chkRslt.put(drug, cr);
+        }
+        cr.addDrugUserAuthResult(duAuth);
     }
 
     /**

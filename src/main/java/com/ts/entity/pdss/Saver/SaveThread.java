@@ -62,6 +62,8 @@ public class SaveThread implements Runnable
 				        patientSaveBean.saveDrugSideCheckInfo(crc.getDsr());
 				        /* 抗菌药物审查*/
 				        patientSaveBean.saveAntiDrugCheckInfo(crc.getDsr());
+				        /* 药物授权控制审查 */
+				        patientSaveBean.saveDrugUserAuthCheckInfo(po, crc.getDsr());
 				        /* 保存审查总体结构 */
 				        patientSaveBean.saveDrugSecurityCheckInfo(po, crc.getDsr());
 				        /* 抗菌药物 审查  结果保存 */
@@ -84,7 +86,7 @@ public class SaveThread implements Runnable
 			}
 			else
 			{
-			    logger.debug("扫描没有猎物等待5秒后继续 扫描 ");
+			    logger.debug("线程ID:" + Thread.currentThread().getId() + ",扫描没有猎物等待5秒后继续 扫描 ");
 				//System.out.println("扫描没有猎物等待5秒后继续 扫描 ");
 				try
 				{

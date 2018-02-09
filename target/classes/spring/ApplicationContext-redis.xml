@@ -14,9 +14,11 @@
 						http://www.springframework.org/schema/tx 
 						http://www.springframework.org/schema/tx/spring-tx.xsd
 	">
+	<bean id="defaultRedisSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
 
 	<bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">  
         <property name="connectionFactory"   ref="connectionFactory" />  
+        <property name="defaultSerializer" ref="defaultRedisSerializer"/>  
     </bean>   
     
     <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" 

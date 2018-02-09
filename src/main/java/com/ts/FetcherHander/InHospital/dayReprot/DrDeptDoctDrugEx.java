@@ -25,6 +25,7 @@ import com.hitzd.his.casehistory.helper.CaseHistoryUtils;
 import com.hitzd.his.casehistory.helper.ICaseHistoryHelper;
 import com.hitzd.his.task.Task;
 import com.ts.util.LoggerFileSaveUtil;
+import com.ts.util.UuidUtil;
 
 /**
  * 适用于307医院,304医院，北京军区总院，上海长征医院
@@ -356,14 +357,14 @@ public class DrDeptDoctDrugEx implements IReportBuilder
     {
         logger.info("删除旧数据");
         String where = "where rpt_date = to_date('" + Adate + "','yyyy-mm-dd')";
-        query.update("delete dr_Drug  " + where);
-        query.update("delete dr_Drug_anti  " + where);
+//        query.update("delete dr_Drug  " + where);
+//        query.update("delete dr_Drug_anti  " + where);
         query.update("delete dr_drug_summary  " + where);
-        query.update("delete dr_Dept_doctor_Drug  " + where);
-        query.update("delete dr_Dept_doctor_Drug_anti  " + where);
-        query.update("delete dr_Dept_Drug_anti  " + where);
-        query.update("delete dr_Dept_Drug  " + where);
-        query.update("delete DR_ALL_COSTS  " + where);
+//        query.update("delete dr_Dept_doctor_Drug  " + where);
+//        query.update("delete dr_Dept_doctor_Drug_anti  " + where);
+//        query.update("delete dr_Dept_Drug_anti  " + where);
+//        query.update("delete dr_Dept_Drug  " + where);
+//        query.update("delete DR_ALL_COSTS  " + where);
         where = null;
     }
 
@@ -380,6 +381,7 @@ public class DrDeptDoctDrugEx implements IReportBuilder
 
     private void saveResultSet(String ADate)
     {
+        // 保存过程 修改。
         TCommonRecord tc = new TCommonRecord();
         tc.set("ADate", ADate);
         TransactionTemp tt = new TransactionTemp("IAS");
@@ -387,14 +389,16 @@ public class DrDeptDoctDrugEx implements IReportBuilder
             public void ExceuteSqlRecord()
             {
                 JDBCQueryImpl Jquery = DBQueryFactory.getQuery("IAS");
+                DrDeptDoctDrugEx.this.deleteDR(Jquery,getTranParm().get("ADate"));
                 int i = 1;
                 for (TCommonRecord cr : DrDeptDoctDrugEx.this.resultSet)
                 {
                     logger.info("第-----" + i + "-----共-----"
                             + DrDeptDoctDrugEx.this.resultSet.size() + "药品统计");
                     List<Object> sqlParams = new ArrayList<Object>();
-                    String sql = " insert into dr_drug_summary_out(drug_code, FIRM_ID, DRUG_FORM, drug_name, patient_id, visit_id, costs, drug_units, amount, rpt_date, doctor_code, doctor_name, dept_code,  dept_name, drug_spec,  charges, identity, charge_type, is_basedrug ,is_anti,DDD_VALUE) "
-                            + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    String sql = " insert into dr_drug_summary(drug_code, FIRM_ID, DRUG_FORM, drug_name, patient_id, visit_id, costs, drug_units, amount, rpt_date, doctor_code, doctor_name, dept_code,  dept_name, drug_spec,  charges, identity, charge_type, is_basedrug ,is_anti,DDD_VALUE,"
+                            + " is_exhilarant,is_injection,is_oral,anti_level,is_impregnant,IS_NOCHINESEDRUG,is_external,is_chinesedrug,is_tumor,is_poison,is_psychotic,is_habitforming,is_radiation,is_precious,is_danger,is_assist,is_albumin,id ) "
+                            + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
                     sqlParams.add(cr.get("item_code"));
                     sqlParams.add(cr.get("FIRM_ID"));
                     sqlParams.add(cr.get("drug_FORM"));
@@ -428,28 +432,53 @@ public class DrDeptDoctDrugEx implements IReportBuilder
                     }
                     // 计算出ddd值 
                     sqlParams.add(dddValue);
+                    
+                    sqlParams.add(getflag(DrugUtils.isExhilarantDrug(cr.get("item_code"))));       // is_exhilarant '兴奋剂标识，0是非兴奋剂，1是兴奋剂';
+                    sqlParams.add(getflag(DrugUtils.isZSDrug(cr.get("item_code"))));               // is_injection '注射剂标识，0是非注射剂，1是注射剂';
+                    sqlParams.add(getflag(DrugUtils.IsOralDrug(cr.get("item_code"))));             // is_oral '口服制剂标识，0是非口服，1是口服';
+                    sqlParams.add(DrugUtils.getDrugAntiByLevel(cr.get("item_code")));              // anti_level'抗菌药级别，1是非限制用药，2是限制用药，3是特殊用药';
+                    sqlParams.add(getflag(DrugUtils.isImpregnant(cr.get("item_code"))) );          // is_impregnant '溶剂标识，0是非溶剂，1是溶剂';
+                    sqlParams.add(getflag(!DrugUtils.isChineseDrug(cr.get("item_code"))) );        // IS_NOCHINESEDRUG '药理分类， 0 饮片 1 非饮片 ';
+                    sqlParams.add(getflag(DrugUtils.isExternalDrug(cr.get("item_code"))) );        // is_external '外用标识，0是非外用，1是外用';
+                    sqlParams.add(getflag(DrugUtils.isChineseDrug(cr.get("item_code"))) );         // is_chinesedrug '中药标识，0是非中药，1是中药';
+                    sqlParams.add(getflag(DrugUtils.isAntiAllergyDrug(cr.get("item_code"))) );     // is_allergy '抗过敏标识，0是非抗过敏药物，1是抗过敏药物';
+                    sqlParams.add(getflag(DrugUtils.isPatentDrug(cr.get("item_code"))) );          // is_patentdrug  '中成药标识，0是非中成药，1是中成药';
+                    sqlParams.add(getflag(DrugUtils.isTumor(cr.get("item_code"))) );               // is_tumor  '抗肿瘤标识，0是非抗肿瘤药，1是抗肿瘤药';
+                    sqlParams.add(getflag(DrugUtils.isDDrug(cr.get("item_code"))) );               // is_poison '毒药标识，0是非毒药，1是毒药';
+                    sqlParams.add(getflag(DrugUtils.isJSDrug(cr.get("item_code"))) );              // is_psychotic'精神药标识，0是非精神药，1是精神药,';
+                    sqlParams.add(getflag(DrugUtils.isMDrug(cr.get("item_code"))) );               // is_habitforming '麻药标识，0是非麻药，1是麻药';
+                    sqlParams.add(getflag(DrugUtils.isFSDrug(cr.get("item_code"))) );              // is_radiation '放射标识，0是非放射药，1是放射药';
+                    sqlParams.add(getflag(DrugUtils.isGZDrug(cr.get("item_code"))) );              // is_precious '贵重药标识，0是非贵重药，1是贵重药';
+                    sqlParams.add(getflag(DrugUtils.isDanger(cr.get("item_code"))) );              // is_danger '危险级别： 0-不是 1-是危险药品;
+                    sqlParams.add(getflag(DrugUtils.IsAssist(cr.get("item_code"))) );              // is_assist '辅助用药 0 否 1 是';
+                    sqlParams.add(getflag(DrugUtils.isAlbumin(cr.get("item_code"))) );             // is_albumin '白蛋白 0 否 1 是';
+                    sqlParams.add(UuidUtil.get32UUID() );//  表主键id
                     Jquery.update(sql, sqlParams.toArray());
                     i++;
                 }
-                DrDeptDoctDrugEx.this.deleteDR(Jquery,
-                        getTranParm().get("ADate"));
+                
+                // 注释不必要处理 
+//                DrDeptDoctDrugEx.this.saveDeptDrug(Jquery);
+//
+//                DrDeptDoctDrugEx.this.saveDeptDoctDrug(Jquery);
+//
+//                DrDeptDoctDrugEx.this.saveDrug(Jquery);
+//
+//                DrDeptDoctDrugEx.this.saveAllCosts(Jquery);
 
-                DrDeptDoctDrugEx.this.saveDeptDrug(Jquery);
+//                DrDeptDoctDrugEx.this.saveDr_Drug_Summary(Jquery);
 
-                DrDeptDoctDrugEx.this.saveDeptDoctDrug(Jquery);
-
-                DrDeptDoctDrugEx.this.saveDrug(Jquery);
-
-                DrDeptDoctDrugEx.this.saveAllCosts(Jquery);
-
-                DrDeptDoctDrugEx.this.saveDr_Drug_Summary(Jquery);
-
-                DrDeptDoctDrugEx.this.deleteDR_DRUG_SUMMARY_OUT(Jquery);
+//                DrDeptDoctDrugEx.this.deleteDR_DRUG_SUMMARY_OUT(Jquery);
                 Jquery = null;
             }
         });
     }
 
+    private String getflag(boolean rs)
+    {
+        return  rs ? "1":"0";
+    }
+    
     public void buildOver(String ADate, Task AOwner)
     {
         logger.info("开始保存日报");

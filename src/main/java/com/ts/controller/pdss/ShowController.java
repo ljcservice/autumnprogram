@@ -24,7 +24,11 @@ import com.ts.entity.system.User;
 import com.ts.service.pdss.ShowService;
 import com.ts.util.PageData;
 import com.ts.util.Tools;
-
+/**
+ * 知识库 查询 
+ * @author autumn
+ *
+ */
 @Controller
 @RequestMapping(value="/show")
 public class ShowController extends BaseController{

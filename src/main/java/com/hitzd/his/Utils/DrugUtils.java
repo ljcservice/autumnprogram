@@ -1,8 +1,11 @@
 package com.hitzd.his.Utils;
 
 import java.util.ArrayList;
-
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
 
 import com.hitzd.DBUtils.CommonMapper;
 import com.hitzd.DBUtils.JDBCQueryImpl;
@@ -26,7 +29,6 @@ public class DrugUtils
      *   4 表示给定药品码是精神药    
      *   5 表示给定药品码是抗菌药      
      *   0 表示不能给出药品分类
-     *   
      *  PZ  品种，药品码前多少位可以标识一种药
      *  ZS  注射剂，用药途径分类码为多少时是注射剂
      *  ZY  中成药药品码以什么开头为中药
@@ -37,18 +39,22 @@ public class DrugUtils
 	
 	/**
 	 * 是否是注射剂
-	 * 
+	 * @param DrugCode
+	 * @param DrugSpec
+	 * @return
 	 */
     public static boolean isZSDrug(String DrugCode, String DrugSpec)
 	{
-		JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
+//		JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
 		try
 		{
-			String sql = "select * from Drug_Map where Drug_No_Local = '" + DrugCode + "' and IS_INJECTION = '1' ";
-			if(DrugSpec !=  null  && !"".equals(DrugSpec)) sql += "and Drug_Spec = '" + DrugSpec + "'";
-			TCommonRecord cr = (TCommonRecord)query.queryForObject(sql, new CommonMapper());
-			sql = null;
-			return cr != null;
+//			String sql = "select * from Drug_Map where Drug_No_Local = '" + DrugCode + "' and IS_INJECTION = '1' ";
+//			if(DrugSpec !=  null  && !"".equals(DrugSpec)) sql += "and Drug_Spec = '" + DrugSpec + "'";
+//			TCommonRecord cr = (TCommonRecord)query.queryForObject(sql, new CommonMapper());
+			String key = DrugCode ; 
+			if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
+			TCommonRecord cr  = drugMapCollenct.get(key);
+			return "1".equals(cr.get("IS_INJECTION"));
 		}
 		catch (Exception ex)
 		{
@@ -56,11 +62,54 @@ public class DrugUtils
 		}
 		finally
 		{
-			query = null;
+//			query = null;
 		}
 		return false;
 	}
 	
+    /**
+     * 是否是注射剂
+     * @param DrugCode
+     * @return
+     */
+    public static boolean isZSDrug(String DrugCode)
+    {
+        return isZSDrug(DrugCode, null);
+    }
+    
+    /**
+     * '溶剂标识，0是非溶剂，1是溶剂';
+     * @param DrugCode
+     * @param DrugSpec
+     * @return
+     */
+    public static boolean isImpregnant(String DrugCode , String DrugSpec)
+    {
+        try
+        {
+            String key = DrugCode ; 
+            if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
+            TCommonRecord cr  = drugMapCollenct.get(key);
+            return "1".equals(cr.get("is_impregnant"));
+        }
+        catch(Exception e )
+        {
+            e.printStackTrace();
+        }
+        return false ;
+    }
+    
+    /**
+     * '溶剂标识，0是非溶剂，1是溶剂';
+     * @param DrugCode
+     * @return
+     */
+    public static boolean isImpregnant(String DrugCode)
+    {
+        return  isImpregnant(DrugCode, null);
+    }
+    
+    
     /**
      * 是否是外用药
      * @param DrugCode
@@ -69,13 +118,16 @@ public class DrugUtils
      */
     public static boolean isExternalDrug(String DrugCode, String DrugSpec)
     {
-    	JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
+//    	JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
 		try
 		{
-			String sql = "select * from Drug_Map where Drug_No_Local = '" + DrugCode + "' and Drug_Spec = '" + DrugSpec + "' and IS_EXTERNAL = '1'";
-			TCommonRecord cr = (TCommonRecord)query.queryForObject(sql, new CommonMapper());
-			sql = null;
-			return cr != null;
+//			String sql = "select * from Drug_Map where Drug_No_Local = '" + DrugCode + "' and IS_EXTERNAL = '1' " ;
+//			if(DrugSpec != null && !"".equals(DrugSpec)) sql += " and Drug_Spec = '" + DrugSpec + "' ";
+//			TCommonRecord cr = (TCommonRecord)query.queryForObject(sql, new CommonMapper());
+			String key = DrugCode ; 
+            if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
+            TCommonRecord cr  = drugMapCollenct.get(key);
+            return "1".equals(cr.get("IS_EXTERNAL"));
 		}
 		catch (Exception ex)
 		{
@@ -83,78 +135,49 @@ public class DrugUtils
 		}
 		finally
 		{
-			query = null;
+//			query = null;
 		}
 		return false;
     }
     
     /**
-     * 获得外用药编号列表
+     * 是否是外用药
+     * @param DrugCode
      * @return
      */
-    public static String getExternalDrugNos()
+    public static boolean isExternalDrug(String DrugCode)
     {
-    	JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
-    	try
-    	{
-    		String sql = "select drug_no_local from drug_map where IS_EXTERNAL = '1'";
-    		@SuppressWarnings("unchecked")
-			List<TCommonRecord> list = query.query(sql, new CommonMapper());
-            StringBuffer sbfr = new StringBuffer();
-    		for (TCommonRecord cr : list)
-    		{
-    			sbfr.append("'").append(cr.get("drug_no_local")).append("',");
-    		}
-            if(sbfr.length() > 0)
-            {
-                sbfr.deleteCharAt(sbfr.length() - 1 );
-            }
-            return sbfr.toString();
-    	}
-    	catch (Exception ex)
-    	{
-    		ex.printStackTrace();
-    	}
-    	finally
-    	{
-    		query = null;
-    	}
-    	return "";
+        return isExternalDrug( DrugCode,null);
     }
     
-    
     /**
-     * 获得抗过敏药物编号列表
+     * 是否是抗过敏药物
      * @return
      */
-    public static String getAntiAllergyDrugNos()
+    public static boolean isAntiAllergyDrug(String DrugCode , String DrugSpec)
     {
-    	JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
-    	try
-    	{
-    		String sql = "select drug_no_local from drug_map where IS_Allergy = '1'";
-    		@SuppressWarnings("unchecked")
-			List<TCommonRecord> list = query.query(sql, new CommonMapper());
-            StringBuffer sbfr = new StringBuffer();
-    		for (TCommonRecord cr : list)
-    		{
-    			sbfr.append("'").append(cr.get("drug_no_local")).append("',");
-    		}
-            if(sbfr.length() > 0)
-            {
-                sbfr.deleteCharAt(sbfr.length() - 1 );
-            }
-            return sbfr.toString();
-    	}
-    	catch (Exception ex)
-    	{
-    		ex.printStackTrace();
-    	}
-    	finally
-    	{
-    		query = null;
-    	}
-    	return "";
+        try
+        {
+            String key = DrugCode ; 
+            if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
+            TCommonRecord cr  = drugMapCollenct.get(key);
+            return "1".equals(cr.get("IS_Allergy"));
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+    
+    /**
+     * 是否是抗过敏药物
+     * @param DrugCode
+     * @return
+     */
+    public static boolean isAntiAllergyDrug(String DrugCode)
+    {
+        return isAntiAllergyDrug(DrugCode, null);
     }
         
     /**
@@ -186,161 +209,283 @@ public class DrugUtils
 		}
 		return "";
     }
+    /**
+     * 中药饮片
+     * @param DrugCode
+     * @param DrugSpec
+     * @return
+     */
+    public static boolean isChineseDrug(String DrugCode, String DrugSpec)
+    {
+        try
+        {
+            String key = DrugCode ; 
+            if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
+            TCommonRecord cr  = drugMapCollenct.get(key);
+            return "1".equals(cr.get("IS_CHINESEDRUG"));
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return false;
+    }
     
     /**
-     * 毒药
+     * 中药饮片
+     * @param DrugCode
+     * @return
      */
-    @Deprecated
-    public static String getDYList()
+    public static boolean isChineseDrug(String DrugCode)
     {
-		JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
-		try
-		{
-			String sql = "select * from Drug_Map where IS_POISON = '1' ";
-			@SuppressWarnings("unchecked")
-			List<TCommonRecord> list = query.query(sql, new CommonMapper());
-			sql = null;
-            StringBuffer sbfr = new StringBuffer();
-    		for (TCommonRecord cr : list)
-    		{
-    			sbfr.append("'").append(cr.get("drug_no_local")).append("',");
-    		}
-            if(sbfr.length() > 0)
-            {
-                sbfr.deleteCharAt(sbfr.length() - 1 );
-            }
-            return sbfr.toString();
-		}
-		catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}
-		finally
-		{
-			query = null;
-		}
-		return "";
+        return isChineseDrug(DrugCode,null);
     }
     
     /**
      * 是否是中药注射剂
-     * @param drugCode
+     * @param DrugCode
+     * @param DrugSpec
      * @return
      */
     public static boolean isCenterDrugZS(String DrugCode, String DrugSpec)
     {
-		JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
-		try
-		{
-			String sql = "select * from Drug_Map where Drug_No_Local = '" + DrugCode + "' and Drug_Spec = '" + DrugSpec + "' and IS_INJECTION = '1' and IS_CHINESEDRUG = '1'";
-			TCommonRecord cr = (TCommonRecord)query.queryForObject(sql, new CommonMapper());
-			sql = null;
-			return cr != null;
-		}
-		catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}
-		finally
-		{
-			query = null;
-		}
-		return false;
+        try
+        {
+            String key = DrugCode ; 
+            if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
+            TCommonRecord cr  = drugMapCollenct.get(key);
+            return ("1".equals(cr.get("IS_INJECTION")) && "1".equals(cr.get("IS_PATENTDRUG")));
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return false;
     }
 	
     /**
-     * 是否是中药
+     * 是否是中药注射剂
      * @param DrugCode
      * @return
      */
-	public static boolean isZYDrug(String DrugCode)
+    public static boolean isCenterDrugZS(String DrugCode)
+    {
+        return  isCenterDrugZS(DrugCode, null);
+    }
+    
+    /**
+     * 是否是中成药
+     * @param DrugCode
+     * @return
+     */
+	public static boolean isPatentDrug(String DrugCode,String DrugSpec)
 	{
-		JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
-		try
-		{
-			String sql = "select * from Drug_Map where Drug_No_Local = '" + DrugCode + "' and IS_PATENTDRUG = '1'";
-			TCommonRecord cr = (TCommonRecord)query.queryForObject(sql, new CommonMapper());
-			sql = null;
-			return cr != null;
-		}
-		catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}
-		finally
-		{
-			query = null;
-		}
-		return false;
+	    try
+        {
+            String key = DrugCode ; 
+            if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
+            TCommonRecord cr  = drugMapCollenct.get(key);
+            return ("1".equals(cr.get("IS_PATENTDRUG")));
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return false;
 	}
 	
-	/**
-	 * 是否是麻醉药
-	 * @param DrugCode
-	 * @return
-	 */
-	@Deprecated
-	public static boolean isMZDrug(String DrugCode)
-	{
-		JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
-		try
-		{
-			String sql = "select * from Drug_Map where Drug_No_Local = '" + DrugCode + "' and IS_HABITFORMING = '1' ";
-			TCommonRecord cr = (TCommonRecord)query.queryForObject(sql, new CommonMapper());
-			sql = null;
-			return cr != null;
-		}
-		catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}
-		finally
-		{
-			query = null;
-		}
-		return false;
-	}
+	 /**
+     * 是否是中成药
+     * @param DrugCode
+     * @return
+     */
+    public static boolean isPatentDrug(String DrugCode)
+    {
+        return isPatentDrug(DrugCode, null);
+    }
+    
+    /**
+     * 抗肿瘤标识，0是非抗肿瘤药，1是抗肿瘤药';
+     * @param DrugCode
+     * @param DrugSpec
+     * @return
+     */
+    public static boolean isTumor(String DrugCode , String DrugSpec)
+    {
+        try
+        {
+            String key = DrugCode ; 
+            if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
+            TCommonRecord cr  = drugMapCollenct.get(key);
+            return ("1".equals(cr.get("is_Tumor")));
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return false;
+    }
 	
+    /**
+     * 抗肿瘤标识，0是非抗肿瘤药，1是抗肿瘤药';
+     * @param DrugCode
+     * @return
+     */
+    public static boolean isTumor(String DrugCode)
+    {
+        return isTumor(DrugCode, null);
+    }
+	
+    /**
+     * 危险药物
+     * @param DrugCode
+     * @param DrugSpec
+     * @return
+     */
+    public static boolean isDanger(String DrugCode , String DrugSpec)
+    {
+        try
+        {
+            String key = DrugCode ; 
+            if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
+            TCommonRecord cr  = drugMapCollenct.get(key);
+            return ("1".equals(cr.get("is_danger")));
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+    
+    /**
+     * 危险药物
+     * @param DrugCode
+     * @return
+     */
+    public static boolean isDanger(String DrugCode )
+    {
+        return isDanger(DrugCode, null);
+    }
+    
+    
+    /**
+     * 辅助用药 0 否 1 是
+     * @param DrugCode
+     * @param DrugSpec
+     * @return
+     */
+    public static boolean IsAssist(String DrugCode , String DrugSpec)
+    {
+        try
+        {
+            String key = DrugCode ; 
+            if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
+            TCommonRecord cr  = drugMapCollenct.get(key);
+            return ("1".equals(cr.get("IS_ASSIST")));
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+    
+    /**
+     * 辅助用药 0 否 1 是
+     * @param DrugCode
+     * @return
+     */
+    public static boolean IsAssist(String DrugCode )
+    {
+        return IsAssist(DrugCode, null);
+    }
+    
+    /**
+     * 辅助用药 0 否 1 是
+     * @param DrugCode
+     * @param DrugSpec
+     * @return
+     */
+    public static boolean isAlbumin(String DrugCode , String DrugSpec)
+    {
+        try
+        {
+            String key = DrugCode ; 
+            if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
+            TCommonRecord cr  = drugMapCollenct.get(key);
+            return ("1".equals(cr.get("IS_ALBUMIN")));
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+    
+    /**
+     * 白蛋白 0 否 1 是
+     * @param DrugCode
+     * @return
+     */
+    public static boolean isAlbumin(String DrugCode )
+    {
+        return isAlbumin(DrugCode, null);
+    }
+    
+    
 	/**
 	 * 是否是精神用药
 	 * @param DrugCode
 	 * @return 返回精一、精二
 	 */
-	@Deprecated
-	public static String isJSDrug(String DrugCode, String DrugSpec)
+	public static boolean isJSDrug(String DrugCode, String DrugSpec)
 	{
-		JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
-		try
-		{
-			String sql = "select * from Drug_Map where Drug_No_Local = '" + DrugCode + "' and Drug_Spec = '" + DrugSpec + "' and TOXI_PROPERTY like '%精%'";
-			TCommonRecord cr = (TCommonRecord)query.queryForObject(sql, new CommonMapper());
-			sql = null;
-			if (cr == null)
-				return "";
-			else
-				return cr.get("TOXI_PROPERTY");
-		}
-		catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}
-		finally
-		{
-			query = null;
-		}
-		return "";
-		/*
-		String value = Config.getParamValue("JS");
-        if (value == null) return false;
-        String[] v = value.split(";");
-        for (String x : v)
+	    try
         {
-            if (DrugCode.toUpperCase().startsWith(x.toUpperCase()))
-                return true;
+            String key = DrugCode ; 
+            if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
+            TCommonRecord cr  = drugMapCollenct.get(key);
+            return ("1".equals(cr.get("IS_PSYCHOTIC")) || "2".equals(cr.get("IS_PSYCHOTIC")));
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
         }
         return false;
-        */
+	    
+//		JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
+//		try
+//		{
+//			String sql = "select * from Drug_Map where Drug_No_Local = '" + DrugCode + "' and Drug_Spec = '" + DrugSpec + "' and TOXI_PROPERTY like '%精%'";
+//			TCommonRecord cr = (TCommonRecord)query.queryForObject(sql, new CommonMapper());
+//			sql = null;
+//			if (cr == null)
+//				return "";
+//			else
+//				return cr.get("TOXI_PROPERTY");
+//		}
+//		catch (Exception ex)
+//		{
+//			ex.printStackTrace();
+//		}
+//		finally
+//		{
+//			query = null;
+//		}
+//		return "";
 	}
+	
+	
+	/**
+     * 是否是精神用药
+     * @param DrugCode
+     * @return 返回精一、精二
+     */
+    public static boolean isJSDrug(String DrugCode)
+    {
+        return isJSDrug(DrugCode, null);
+    }
 	
 	/**
 	 * 是否是医保用药
@@ -348,7 +493,8 @@ public class DrugUtils
 	 * @param DrugSpec
 	 * @return 0是非医保，1是甲类医保，2是乙类医保
 	 */
-	public static String isMedcareDrug(String DrugCode, String DrugSpec)
+    @Deprecated
+	public static String isMedcareDrug1(String DrugCode, String DrugSpec)
 	{
 		JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
 		try
@@ -372,55 +518,37 @@ public class DrugUtils
 		return "";
 	}
 
-    /* 国家基本药物*/
-    private static List<TCommonRecord> Base = new ArrayList<TCommonRecord>();
-    @SuppressWarnings ("unchecked")
-    public static List<TCommonRecord> getAllBaseDrug()
-	{
-	    if(Base.size() > 0 ) return Base;
-	    JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
-	    CommonMapper  cmr   = new CommonMapper();
-	    try
-	    {
-	    	String sql = "select * from Drug_Map where  is_basedrug='1'";
-	        Base = query.query(sql, cmr);
-	    }
-	    catch(Exception e)
-	    {
-	        e.printStackTrace();
-	    }
-	    finally
-	    {
-	        query = null;
-	        cmr   = null;
-	    }
-	    return Base;
-	}
 	/**
 	 * 是否是国家基本药品目录中的药品
 	 * @param DrugCode
 	 * @param DrugSpec
 	 * @return
 	 */
-	public static boolean isCountryBase(String DrugCode, String DrugSpec)
+    public static boolean isCountryBase(String DrugCode, String DrugSpec)
 	{
-		if(Base.size() <= 0 ) getAllBaseDrug();
-		try
-		{
-			for(TCommonRecord t : Base)
-			{
-			    if((DrugCode + DrugSpec).equals(t.get("drug_no_local") + t.get("drug_spec")))
-			    {
-			        return true;
-			    }
-			}
-		}
-		catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}
-		return false;
-		
+	    try
+        {
+            String key = DrugCode ; 
+            if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
+            TCommonRecord cr  = drugMapCollenct.get(key);
+            return ("1".equals(cr.get("is_basedrug")));
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return false;
+	}
+	
+    /**
+     * 是否是国家基本药品目录中的药品
+     * @param DrugCode
+     * @param DrugSpec
+     * @return
+     */
+	public static boolean isCountryBase(String DrugCode)
+	{
+	    return isCountryBase(DrugCode, null);
 	}
 	
 	/**
@@ -477,90 +605,47 @@ public class DrugUtils
 		return false;
 		
 	}
-	
-//	/**
-//	 *  是否标准注射剂药品 
-//	 * @param drugCode
-//	 * @return 已取消
-//	 */
-//	@Deprecated
-//	public static boolean isZSNormDrug(String drugCode)
-//	{
-//	    TCommonRecord drug = DictCache.getNewInstance().getDrugDictInfo(drugCode);
-//        if("针剂".equals(drug.get("drug_form")))
-//        {
-//            return true;    
-//        }
-//        return false;
-//	}
-	
-	/* 抗菌药物集合  */
-	private static List<TCommonRecord> KJDrug = new ArrayList<TCommonRecord>();
-	@SuppressWarnings ("unchecked")
-    public static List<TCommonRecord> getAllKJDrug()
-	{
-	    if(KJDrug.size() > 0 ) return KJDrug;
-	    JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
-	    CommonMapper  cmr   = new CommonMapper();
-	    try
-	    {
-	        String sql = "select * from Drug_Map where is_anti = '1'";
-	        KJDrug = query.query(sql, cmr);
-	    }
-	    catch(Exception e)
-	    {
-	        e.printStackTrace();
-	    }
-	    finally
-	    {
-	        query = null;
-	        cmr   = null;
-	    }
-	    return KJDrug;
-	}
-	
+
 	/**
-	 * 返回抗菌药列表 
-	 * @return
-	 */
-	public static String getKJDrugList()
-	{
-	    if(KJDrug.size() <= 0 ) getAllKJDrug();
-	    StringBuffer sb = new StringBuffer();
-	    for(TCommonRecord t : KJDrug)
-	    {
-	        sb.append("'").append(t.get("drug_no_local")).append("',");
-	    }
-	    if(sb.length() > 1) sb.deleteCharAt(sb.length() - 1 );
-	    return sb.toString();
-	}
+     * 是否是口服制剂
+     * @param DrugCode
+     * @return
+     */
+    public static boolean IsOralDrug(String DrugCode)
+    {
+        return IsOralDrug(DrugCode,null);
+    }
 	
+
 	/**
 	 * 是否是抗菌药
 	 * @param DrugCode
 	 * @return
 	 */
+	public static boolean isKJDrug(String DrugCode,String DrugSpec)
+	{
+	    try
+        {
+            String key = DrugCode ; 
+            if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
+            TCommonRecord cr  = drugMapCollenct.get(key);
+            return ("1".equals(cr.get("is_anti")));
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return false;
+	}
+	
+	/**
+     * 是否是抗菌药
+     * @param DrugCode
+     * @return
+     */
 	public static boolean isKJDrug(String DrugCode)
 	{
-	    if(KJDrug.size() <= 0 ) 
-	    {
-	        getAllKJDrug();
-	    }
-		try
-		{
-			for(TCommonRecord t : KJDrug)
-			{
-			    if(DrugCode.equals(t.get("drug_no_local")))
-			    {
-			        return true;
-			    }
-			}
-		}
-		catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}
-		return false;
+	    return isKJDrug(DrugCode,null);
 	}
 	
 	/**
@@ -621,12 +706,12 @@ public class DrugUtils
 	}
 	
 	/**
-	 * 返回药品登记
+	 * 返回抗菌药品 分级 药品登记
 	 * @param DrugCode
 	 * @param DrugSpec
 	 * @return 1是非限制用药，2是限制用药，3是特殊用药
 	 */
-	public static String getDrugLevel(String DrugCode, String DrugSpec)
+	public static String getDrugAntiByLevel(String DrugCode, String DrugSpec)
 	{
 		JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
 		try
@@ -649,6 +734,17 @@ public class DrugUtils
 		}
 		return "";
 	}
+	
+	/**
+     * 返回抗菌药品 分级 药品登记
+     * @param DrugCode
+     * @return 1是非限制用药，2是限制用药，3是特殊用药
+     */
+    public static String getDrugAntiByLevel(String DrugCode)
+    {
+        return getDrugAntiByLevel(DrugCode,null);
+    }
+	
 	
 	/**
 	 * 是否是限制用药
@@ -698,9 +794,9 @@ public class DrugUtils
     public static String getDrugType(String DrugCode, String DrugSpec, String administration)
     {
     	if (isZSDrug(DrugCode, DrugSpec)) return "1";
-    	else if (isZYDrug(DrugCode)) return "2";
-    	else if (isMZDrug(DrugCode)) return "3";
-    	else if (isJSDrug(DrugCode, DrugSpec).length() > 0) return "4";
+    	else if (isPatentDrug(DrugCode)) return "2";
+    	else if (isMDrug(DrugCode)) return "3";
+    	else if (isJSDrug(DrugCode, DrugSpec)) return "4";
     	else if (isKJDrug(DrugCode)) return "5";
     	else return "0";
     }
@@ -756,74 +852,10 @@ public class DrugUtils
     /**
      * 重置药品库 drug_map
      */
+    @PostConstruct
     public static void ReSetToxiProperty()
     {
-        DM.clear();
-        DY.clear();
-        MY.clear();
-        YJ.clear();
-        EJ.clear();
-        FS.clear();
-        GZ.clear();
-        KJDrug.clear();
-        Base.clear();
-    }
-
-    /* 毒麻药*/
-    private static List<TCommonRecord> DM = new ArrayList<TCommonRecord>();
-    /**
-     * 返回所有毒麻药  
-     * @return
-     */
-    @SuppressWarnings ("unchecked")
-    public static List<TCommonRecord> getAllDM()   
-    {
-        if(DM.size() > 0 )
-            return DM;
-        JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
-        CommonMapper cmr    = new CommonMapper();
-        try
-        {
-            String sql = "select * from drug_map where Is_Poison = '1' and IS_HABITFORMING = '1' ";
-            DM = query.query(sql, cmr);
-            return DM;
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        finally 
-        {
-            query = null;
-            cmr   = null;
-        }
-        return DM ;
-    }
-    
-    /**
-     * 
-     * 返回麻药 列表药物 'code','code','code' 带有cache中 
-     * @return
-     */
-    public static String getDMList()
-    {
-        if(DM.size() <= 0 ) getAllDM();
-        StringBuffer sql = new StringBuffer();
-        try
-        {
-            if(DM.size() < 0 ) return "";
-            for(TCommonRecord t : DM)
-            {
-                sql.append("'").append(t.get("DRUG_NO_LOCAL")).append("',");
-            }
-            if(sql.length() > 0 )
-                sql.deleteCharAt(sql.length() - 1 );
-        }
-        catch(Exception e )
-        {
-            e.printStackTrace();
-        }
-        return sql.toString();
+        loadDrugMap();
     }
     
     /**
@@ -831,73 +863,52 @@ public class DrugUtils
      * @param Code
      * @return
      */
-    public static boolean isDMDrug(String drugCode )
+    public static boolean isDMDrug(String DrugCode ,String DrugSpec )
     {
-        if(DM.size() <= 0 ) getAllDM();
-        for(TCommonRecord t : DM)
+        try
         {
-            if(drugCode.equals(t.getObj("DRUG_NO_LOCAL")))
-                return true;
+            String key = DrugCode ; 
+            if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
+            TCommonRecord cr  = drugMapCollenct.get(key);
+            return ("1".equals(cr.get("IS_POISON")) && "1".equals("IS_HABITFORMING"));
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
         }
         return false;
     }
     
-    /* 毒药 */
-    private static List<TCommonRecord> DY = new ArrayList<TCommonRecord>();
     /**
-     * 返回麻药 从 drug_map 表出数据
+     * 返回是否为毒麻药 
+     * @param Code
      * @return
      */
-    @SuppressWarnings ("unchecked")
-    public static List<TCommonRecord> getAllDY()
+    public static boolean isDMDrug(String DrugCode )
     {
-        
-        if(DY.size() > 0 )
-            return DY;
-        JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
-        CommonMapper cmr = new CommonMapper();
-        try
-        {
-            String sql = "select * from drug_map where IS_POISON = '1' " ;
-            DY = query.query(sql, cmr);
-            return DY ;
-        }
-        catch(Exception e )
-        {
-            e.printStackTrace();
-        }
-        finally
-        {
-            query  = null;
-            cmr    = null;
-        }
-        return DY;
+        return  isDMDrug(DrugCode,null);
     }
     
+    
     /**
-     * 
-     * 返回麻药 列表药物 'code','code','code' 带有cache中 
+     * 返回是否为毒药 
+     * @param Code
      * @return
      */
-    public static String getDYList1()
+    public static boolean isDDrug(String DrugCode, String DrugSpec)
     {
-        if(DY.size() <= 0 ) getAllDY();
-        StringBuffer sql = new StringBuffer();
         try
         {
-            if(DY.size() < 0 ) return "";
-            for(TCommonRecord t : DY)
-            {
-                sql.append("'").append(t.get("DRUG_NO_LOCAL")).append("',");
-            }
-            if(sql.length() > 0 )
-                sql.deleteCharAt(sql.length() - 1 );
+            String key = DrugCode ; 
+            if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
+            TCommonRecord cr  = drugMapCollenct.get(key);
+            return "1".equals(cr.get("IS_POISON"));
         }
-        catch(Exception e )
+        catch (Exception ex)
         {
-            e.printStackTrace();
+            ex.printStackTrace();
         }
-        return sql.toString();
+        return false;
     }
     
     /**
@@ -905,218 +916,68 @@ public class DrugUtils
      * @param Code
      * @return
      */
-    public static boolean isDDrug(String drugCode)
+    public static boolean isDDrug(String DrugCode)
     {
-        if(DY.size() <= 0 ) getAllDY();
-        for(TCommonRecord t : DY)
-        {
-            if(drugCode.equals(t.getObj("DRUG_NO_LOCAL")))
-                return true;
-        }
-        return false;
-    }
-    
-    /* 麻药 */
-    private static List<TCommonRecord> MY = new ArrayList<TCommonRecord>();
-    
-    /**
-     * 返回麻药 从 drug_map 表出数据
-     * @return
-     */
-    @SuppressWarnings ("unchecked")
-    public static List<TCommonRecord> getAllMY()
-    {
-        if(MY.size() > 0 )
-            return MY;
-        JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
-        CommonMapper cmr    = new CommonMapper();
-        try
-        {
-            String sql = "select * from drug_map where IS_HABITFORMING = '1' ";
-            MY = query.query(sql, cmr);
-            return MY;
-        }
-        catch(Exception e )
-        {
-            e.printStackTrace();
-        }
-        finally
-        {
-            query = null;
-            cmr   = null;
-        }
-        return MY;
-    }
-    
-    /**
-     * 返回麻药 列表药物 'code','code','code'
-     * @return
-     */
-    public static String getMYList()
-    {
-        if(MY.size() <= 0 ) getAllMY();
-        StringBuffer sql = new StringBuffer();
-        try
-        {
-            if(MY.size() < 0 ) return "";
-            for(TCommonRecord t : MY)
-            {
-                sql.append("'").append(t.get("DRUG_NO_LOCAL")).append("',");
-            }
-            if(sql.length() > 0 )
-                sql.deleteCharAt(sql.length() - 1 );
-        }
-        catch(Exception e )
-        {
-            e.printStackTrace();
-        }
-        return sql.toString();
+        return isDDrug(DrugCode, null);
     }
     
     /**
      * 返回是否为麻药 
-     * @param Code
+     * @param DrugCode 药品代码
+     * @param DrugSpec 规格
      * @return
      */
-    public static boolean isMDrug(String drugCode)
+    public static boolean isMDrug(String DrugCode,String DrugSpec)
     {
-        if(MY.size() <= 0 ) getAllMY();
-        for(TCommonRecord t : MY)
+        try
         {
-            if(drugCode.equals(t.getObj("DRUG_NO_LOCAL")))
-                return true;
+            String key = DrugCode ; 
+            if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
+            TCommonRecord cr  = drugMapCollenct.get(key);
+            return "1".equals(cr.get("IS_HABITFORMING"));
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
         }
         return false;
     }
     
-    /* 一类精 */
-    private static List<TCommonRecord> YJ = new ArrayList<TCommonRecord>();
-    
     /**
-     * 返回一类精神药物 从 drug_map 表出数据
+     * 返回是否为麻药 
+     * @param DrugCode
      * @return
      */
-    @SuppressWarnings ("unchecked")
-    public static List<TCommonRecord> getAllYJ()
+    public static boolean isMDrug(String DrugCode)
     {
-        if(YJ.size() > 0 )
-            return YJ;
-        JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
-        CommonMapper  cmr   = new CommonMapper();
-        try
-        {
-            String sql = "select * from drug_map where IS_PSYCHOTIC = '1' ";
-            YJ = query.query(sql, cmr);
-            return YJ;
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        finally
-        {
-            query = null;
-            cmr   = null;
-        }
-        return YJ;
+        return isMDrug(DrugCode, null);
     }
     
-    /**
-     * 返回一类精神列表药物 'code','code','code'
-     * @return
-     */
-    public static String getYJList()
-    {
-        if(YJ.size() <= 0 ) getAllYJ();
-        StringBuffer sql = new StringBuffer();
-        try
-        {
-            if(YJ.size() < 0 ) return "";
-            for(TCommonRecord t : YJ)
-            {
-                sql.append("'").append(t.get("DRUG_NO_LOCAL")).append("',");
-            }
-            if(sql.length() > 0 )
-                sql.deleteCharAt(sql.length() - 1 );
-        }
-        catch(Exception e )
-        {
-            e.printStackTrace();
-        }
-        return sql.toString();
-    }
     
     /**
      * 返回是否为一类精神药物 
      * @param Code
      * @return
      */
-    public static boolean isYJDrug(String drugCode)
+    public static boolean isYJDrug(String DrugCode , String DrugSpec)
     {
-        if(YJ.size() <= 0 ) getAllYJ();
-        for(TCommonRecord t : YJ)
+        try
         {
-            if(drugCode.equals(t.getObj("DRUG_NO_LOCAL")))
-                return true;
+            String key = DrugCode ; 
+            if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
+            TCommonRecord cr  = drugMapCollenct.get(key);
+            return "1".equals(cr.get("IS_PSYCHOTIC"));
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
         }
         return false;
     }
     
-    /* 二类精 */
-    private static List<TCommonRecord> EJ = new ArrayList<TCommonRecord>();
-    
-    /**
-     * 返回 二类精神药物 
-     * @return
-     */
-    @SuppressWarnings ("unchecked")
-    public static List<TCommonRecord> getAllEJ()
+    public static boolean isYJDrug(String DrugCode)
     {
-        if(EJ.size() > 0 )
-            return EJ;
-        JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
-        CommonMapper  cmr   = new CommonMapper();
-        try
-        {
-            String sql = "select * from drug_map where IS_PSYCHOTIC = '2' ";
-            EJ = query.query(sql, cmr);
-            return EJ;
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace(); 
-        }
-        finally
-        {
-            query = null;
-            cmr   = null;
-        }
-        return EJ;
-    }
-    
-    /**
-     * 返回二类精神列表药物 'code','code','code'
-     * @return
-     */
-    public static String getEJList()
-    {
-        if(EJ.size() <= 0 ) getAllEJ();
-        StringBuffer sql = new StringBuffer();
-        try
-        {
-            if(EJ.size() < 0 ) return "";
-            for(TCommonRecord t : EJ)
-            {
-                sql.append("'").append(t.get("DRUG_NO_LOCAL")).append("',");
-            }
-            if(sql.length() > 0 )
-                sql.deleteCharAt(sql.length() - 1 );
-        }
-        catch(Exception e )
-        {
-            e.printStackTrace();
-        }
-        return sql.toString();
+        return isYJDrug(DrugCode,null);
     }
     
     /**
@@ -1124,75 +985,30 @@ public class DrugUtils
      * @param Code
      * @return
      */
-    public static boolean isEJDrug(String drugCode)
+    public static boolean isEJDrug(String DrugCode,String DrugSpec)
     {
-        if(EJ.size() <= 0 ) getAllEJ();
-        for(TCommonRecord t : EJ)
+        try
         {
-            if(drugCode.equals(t.getObj("DRUG_NO_LOCAL")))
-                return true;
+            String key = DrugCode ; 
+            if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
+            TCommonRecord cr  = drugMapCollenct.get(key);
+            return "2".equals(cr.get("IS_PSYCHOTIC"));
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
         }
         return false;
     }
     
-    /* 放射 */
-    private static List<TCommonRecord> FS = new ArrayList<TCommonRecord>();
-    
     /**
-     * 返回 放射药品 drug_map 数据
+     * 返回是否为二类精神药物 
+     * @param DrugCode
      * @return
      */
-    @SuppressWarnings ("unchecked")
-    /**
-     *  返回所有放射药物 drug_map 数据
-     */
-    public static List<TCommonRecord> getAllFS()
+    public static boolean isEJDrug(String DrugCode)
     {
-        if(FS.size() > 0 )
-            return FS;
-        JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
-        CommonMapper  cmr   = new CommonMapper();
-        try
-        {
-            String sql = "select * from drug_map where IS_RADIATION = '1' ";
-            FS = query.query(sql, cmr);
-            return FS;
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        finally
-        {
-            query = null;
-            cmr   = null;
-        }
-        return FS;
-    }
-    
-    /**
-     * 返回放射列表药物 'code','code','code'
-     * @return
-     */
-    public static String getFSList()
-    {
-        if(FS.size() <= 0 ) getAllFS();
-        StringBuffer sql = new StringBuffer();
-        try
-        {
-            if(FS.size() < 0 ) return "";
-            for(TCommonRecord t : FS)
-            {
-                sql.append("'").append(t.get("DRUG_NO_LOCAL")).append("',");
-            }
-            if(sql.length() > 0 )
-                sql.deleteCharAt(sql.length() - 1 );
-        }
-        catch(Exception e )
-        {
-            e.printStackTrace();
-        }
-        return sql.toString();
+        return isEJDrug(DrugCode,null);
     }
     
     /**
@@ -1200,71 +1016,30 @@ public class DrugUtils
      * @param Code
      * @return
      */
-    public static boolean isFSDrug(String drugCode)
+    public static boolean isFSDrug(String DrugCode,String DrugSpec)
     {
-        if(FS.size() <= 0 ) getAllFS();
-        for(TCommonRecord t : FS)
+        try
         {
-            if(drugCode.equals(t.getObj("DRUG_NO_LOCAL")))
-                return true;
+            String key = DrugCode ; 
+            if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
+            TCommonRecord cr  = drugMapCollenct.get(key);
+            return "1".equals(cr.get("IS_RADIATION"));
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
         }
         return false;
     }
     
-    /* 贵重  */
-    private static List<TCommonRecord> GZ = new ArrayList<TCommonRecord>();
     /**
-     * 返回 贵重药品 drug_map 数据
+     * 返回是否为放射药物 
+     * @param DrugCode
      * @return
      */
-    @SuppressWarnings ("unchecked")
-    public static List<TCommonRecord> getAllGZ()
+    public static boolean isFSDrug(String DrugCode)
     {
-        if(GZ.size() > 0 )
-            return GZ;
-        JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
-        CommonMapper  cmr   = new CommonMapper();
-        try
-        {
-            String sql = "select * from drug_map where IS_PRECIOUS = '1' ";
-            GZ = query.query(sql, cmr);
-            return GZ;
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        finally
-        {
-            query = null;
-            cmr   = null;
-        }
-        return GZ;
-    }
-
-    /**
-     * 返回贵重药物列表   'code','code','code'
-     * @return
-     */
-    public static String getGZList()
-    {
-        if(GZ.size() <= 0 ) getAllGZ();
-        StringBuffer sql = new StringBuffer();
-        try
-        {
-            if(GZ.size() < 0 ) return "";
-            for(TCommonRecord t : GZ)
-            {
-                sql.append("'").append(t.get("DRUG_NO_LOCAL")).append("',");
-            }
-            if(sql.length() > 0 )
-                sql.deleteCharAt(sql.length() - 1 );
-        }
-        catch(Exception e )
-        {
-            e.printStackTrace();
-        }
-        return sql.toString();
+        return isFSDrug(DrugCode, null);
     }
     
     /**
@@ -1272,140 +1047,44 @@ public class DrugUtils
      * @param Code
      * @return
      */
-    public static boolean isGZDrug(String drugCode)
+    public static boolean isGZDrug(String DrugCode,String DrugSpec)
     {
-        if(GZ.size() <= 0 ) getAllGZ();
-        for(TCommonRecord t : GZ)
+        try
         {
-            if(drugCode.equals(t.getObj("DRUG_NO_LOCAL")))
-                return true;
+            String key = DrugCode ; 
+            if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
+            TCommonRecord cr  = drugMapCollenct.get(key);
+            return "1".equals(cr.get("IS_PRECIOUS"));
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
         }
         return false;
     }
     
-    /* 限制  */
-    private static List<TCommonRecord> XZ = new ArrayList<TCommonRecord>();
-    
     /**
-     * 返回 限制药品 drug_map 数据
+     * 返回是否为贵重药物 
+     * @param DrugCode
      * @return
      */
-    @SuppressWarnings ("unchecked")
-    public static List<TCommonRecord> getAllXZ()
+    public static boolean isGZDrug(String DrugCode)
     {
-        if(XZ.size() > 0 )
-            return XZ;
-        JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
-        CommonMapper  cmr   = new CommonMapper();
-        try
-        {
-            String sql = "select * from drug_map where is_anti='1' and  anti_level='2'";
-            XZ = query.query(sql, cmr);
-            return XZ;
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        finally
-        {
-            query = null;
-            cmr   = null;
-        }
-        return XZ;
-    }
-
-    /**
-     * 返回限制药物列表   'code','code','code'
-     * @return
-     */
-    public static String getXZList()
-    {
-        if(XZ.size() <= 0 ) getAllXZ();
-        StringBuffer sql = new StringBuffer();
-        try
-        {
-            if(XZ.size() < 0 ) return "";
-            for(TCommonRecord t : XZ)
-            {
-                sql.append("'").append(t.get("DRUG_NO_LOCAL")).append("',");
-            }
-            if(sql.length() > 0 )
-                sql.deleteCharAt(sql.length() - 1 );
-        }
-        catch(Exception e )
-        {
-            e.printStackTrace();
-        }
-        return sql.toString();
+        return isGZDrug(DrugCode, null);
     }
     
-    
-    /* 特殊 */
-    private static List<TCommonRecord> TS = new ArrayList<TCommonRecord>();
     /**
-     * 返回 特殊药品 drug_map 数据
-     * @return
-     */
-    @SuppressWarnings ("unchecked")
-    public static List<TCommonRecord> getAllTS()
-    {
-        if(TS.size() > 0 )
-            return TS;
-        JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
-        CommonMapper  cmr   = new CommonMapper();
-        try
-        {
-            String sql = "select * from drug_map where  is_anti='1' and  anti_level='3'";
-            TS = query.query(sql, cmr);
-            return TS;
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        finally
-        {
-            query = null;
-            cmr   = null;
-        }
-        return TS;
-    }
-
-    /**
-     * 返回特殊药物列表   'code','code','code'
-     * @return
-     */
-    public static String getTSList()
-    {
-        if(TS.size() <= 0 ) getAllTS();
-        StringBuffer sql = new StringBuffer();
-        try
-        {
-            if(TS.size() < 0 ) return "";
-            for(TCommonRecord t : TS)
-            {
-                sql.append("'").append(t.get("DRUG_NO_LOCAL")).append("',");
-            }
-            if(sql.length() > 0 )
-                sql.deleteCharAt(sql.length() - 1 );
-        }
-        catch(Exception e )
-        {
-            e.printStackTrace();
-        }
-        return sql.toString();
-    }
-
-    /**
+     * 
      * 去除审核中重复的信息 
      * 每次是使用后需要 调用一下 clearDistinctDrugIngerInfo() 方法来清空 过滤的数据
      * @param drug1 可以唯一确定药品1
      * @param drug2 可以唯一确定药品2
      * @return 
-     * 
+     * @deprecated
      */
+    @Deprecated
     private static List<String> Distinctdrug = new ArrayList<String>();
+    @Deprecated
     public static boolean isDistinctDrugIngerInfo(String drug1 , String drug2)
     {
         try
@@ -1426,8 +1105,80 @@ public class DrugUtils
      * 清除去重记录
      * 
      */
+    @Deprecated
     public static void clearDistinctDrugIngerInfo()
     {
         Distinctdrug.clear();
+    }
+    
+    /* 将药品基本信息   全部缓存起来   key= 药品代码 ，  key = 药品代码 _ 药品规格*/
+    private static Map<String, TCommonRecord>  drugMapCollenct = new HashMap<String , TCommonRecord>();
+    
+    /**
+     * 加载所有药品基本信息 drug_map表
+     */
+    @SuppressWarnings ("unchecked")
+    public static void loadDrugMap()
+    {
+        drugMapCollenct.clear();
+        JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
+        CommonMapper  cmr   = new CommonMapper();
+        try
+        {
+            String sql = "select * from drug_map ";
+            List<TCommonRecord>  dms  = query.query(sql, cmr);
+            for(TCommonRecord entity : dms)
+            {
+                if(!drugMapCollenct.containsKey(entity.get("drug_no_local"))) 
+                    drugMapCollenct.put(entity.get("drug_no_local"), entity);
+                if(!drugMapCollenct.containsKey(entity.get("drug_no_local") + "_" + entity.get("drug_spec"))) 
+                    drugMapCollenct.put(entity.get("drug_no_local") + "_" + entity.get("drug_spec"), entity);
+            }
+//            if(drugMapCollenct.size() != dms.size())
+//            {
+//                for(TCommonRecord entity : dms)
+//                {
+//                    if(drugMapCollenct.containsKey(entity.get("drug_no_local") + entity.get("drug_spec"))) continue;
+//                }
+//            }
+            
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            query = null;
+            cmr   = null;
+        }
+    }
+    
+    /**
+     * 更新缓冲药品信息
+     * @param drugMapId
+     */
+    public static void loadDrugMapBySingle(String drugMapId)
+    {
+        JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
+        CommonMapper cmr = new CommonMapper();
+        try
+        {
+            String sql = "select * from  drug_map where drug_map_id = ?";
+            TCommonRecord  tcom = (TCommonRecord)query.queryForObject(sql, new Object[]{drugMapId},cmr); 
+            if(tcom != null ) 
+            {
+                drugMapCollenct.put(tcom.get("drug_no_local"), tcom);
+                drugMapCollenct.put(tcom.get("drug_no_local") + "_" + tcom.get("drug_spec"), tcom);
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally {
+            query = null;
+            cmr   = null;
+        }
     }
 }

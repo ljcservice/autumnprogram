@@ -115,7 +115,7 @@
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
-										<td colspan="*"  class="center">没有相关数据</td>
+										<td colspan="5"  class="center">没有相关数据</td>
 									</tr>
 								</c:otherwise>
 							</c:choose>

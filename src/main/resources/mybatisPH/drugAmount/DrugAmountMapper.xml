@@ -14,13 +14,10 @@
 	        sum(amount) amounts,
 	        sum(cost) costs
 	    from dr_drugdaycost t 
-	    where 1=1 
-	 	 <if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 结束-->
-			and dr_date &gt;= to_date(#{pd.beginDate} ,'yyyy-mm-dd') 
-		</if>
-	    <if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
+	    where 
+			 dr_date &gt;= to_date(#{pd.beginDate} ,'yyyy-mm-dd') 
 			and dr_date &lt;= to_date(#{pd.endDate} ,'yyyy-mm-dd') 
-		</if>
+		
 		<if test="pd.drug_name != null and pd.drug_name != ''"> <!-- 药品-->
 			and drug_name = #{pd.drug_name} 
 		</if>
@@ -30,8 +27,8 @@
 		<if test="pd.DISPENSARY_NAME != null and pd.DISPENSARY_NAME != ''"> <!-- 发药药房 -->
 			and DISPENSARY_NAME = #{pd.DISPENSARY_NAME}
 		</if>
-		<if test="pd.TOXI_PROPERTY != null and pd.TOXI_PROPERTY != ''"> <!-- 类型-->
-			and TOXI_PROPERTY  = #{pd.TOXI_PROPERTY} 
+		<if test="pd.PROPERTY != null and pd.PROPERTY != ''"> <!-- 类型-->
+			and ${pd.PROPERTY} = '1'
 		</if>
 	  	group by 
 	  		drug_code,drug_name, package_spec,firm_id,is_anti,units
@@ -82,8 +79,8 @@
 		<if test="pd.DISPENSARY_NAME != null and pd.DISPENSARY_NAME != ''"> <!-- 发药药房 -->
 			and DISPENSARY_NAME = #{pd.DISPENSARY_NAME}
 		</if>
-		<if test="pd.TOXI_PROPERTY != null and pd.TOXI_PROPERTY != ''"> <!-- 类型-->
-			and TOXI_PROPERTY  = #{pd.TOXI_PROPERTY} 
+		<if test="pd.PROPERTY != null and pd.PROPERTY != ''"> <!-- 类型-->
+			and ${pd.PROPERTY} = '1'
 		</if>
  	 	group by dept_code,dept_name,units,drug_code,drug_name
  	 		,package_spec,firm_id,is_anti,toxi_property
@@ -139,8 +136,8 @@
 			<if test="pd.DISPENSARY_NAME != null and pd.DISPENSARY_NAME != ''"> <!-- 发药药房 -->
 				and DISPENSARY_NAME = #{pd.DISPENSARY_NAME}
 			</if>
-			<if test="pd.TOXI_PROPERTY != null and pd.TOXI_PROPERTY != ''"> <!-- 类型-->
-				and TOXI_PROPERTY  = #{pd.TOXI_PROPERTY} 
+			<if test="pd.PROPERTY != null and pd.PROPERTY != ''"> <!-- 类型-->
+				and ${pd.PROPERTY} = '1'
 			</if>
 		group by doctor_code,doctor_name,
 				drug_code,drug_name,
@@ -213,8 +210,8 @@
 			<if test="pd.DISPENSARY_NAME != null and pd.DISPENSARY_NAME != ''"> <!-- 发药药房 -->
 				and DISPENSARY_NAME = #{pd.DISPENSARY_NAME}
 			</if>
-			<if test="pd.TOXI_PROPERTY != null and pd.TOXI_PROPERTY != ''"> <!-- 类型-->
-				and TOXI_PROPERTY  = #{pd.TOXI_PROPERTY} 
+			<if test="pd.PROPERTY != null and pd.PROPERTY != ''"> <!-- 类型-->
+				and ${pd.PROPERTY} = '1'
 			</if>
 		group by patient_id,
            identity,
@@ -281,8 +278,8 @@
 			<if test="pd.DISPENSARY_NAME != null and pd.DISPENSARY_NAME != ''"> <!-- 发药药房 -->
 				and DISPENSARY_NAME = #{pd.DISPENSARY_NAME}
 			</if>
-			<if test="pd.TOXI_PROPERTY != null and pd.TOXI_PROPERTY != ''"> <!-- 类型-->
-				and TOXI_PROPERTY  = #{pd.TOXI_PROPERTY} 
+			<if test="pd.PROPERTY != null and pd.PROPERTY != ''"> <!-- 类型-->
+				and ${pd.PROPERTY} = '1'
 			</if>
 	 	 group by dr_date,
            drug_code,
@@ -317,7 +314,7 @@
 	<select id="depAmountPersents" parameterType="pd" resultType="pd">
 		SELECT s.ordered_by_dept dept_name,
 		       nvl(SUM(s.costs),0) med,
-		       nvl(SUM(DECODE(m.is_anti, '1', s.costs, 0)),0) anti,
+		       nvl(SUM(DECODE(s.is_anti, '1', s.costs, 0)),0) anti,
 		       nvl(SUM(DECODE(s.item_class, 'A', s.costs, 'B', s.costs, 0)),0) drug,
 		       nvl(COUNT(DISTINCT s.visit_no + s.visit_date),0) pat_sum
 		  FROM OUTP_ORDERS_COSTS s,
@@ -350,10 +347,10 @@
   			order by SUM(DECODE(s.item_class, 'A', s.costs, 'B', s.costs, 0)) desc
   		</if>
   		<if test="sort_type != null and sort_type == 5"> 
-  			order by SUM(DECODE(m.is_anti, '1', s.costs, 0))
+  			order by SUM(DECODE(s.is_anti, '1', s.costs, 0))
   		</if>
   		<if test="sort_type != null and sort_type == 6"> 
-  			order by SUM(DECODE(m.is_anti, '1', s.costs, 0)) desc
+  			order by SUM(DECODE(s.is_anti, '1', s.costs, 0)) desc
   		</if>
 	</select>
 </mapper>

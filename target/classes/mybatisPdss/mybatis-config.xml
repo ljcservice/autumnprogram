@@ -10,9 +10,11 @@
     </settings>
 
 	<typeAliases>
+	
 		<typeAlias type="com.ts.util.PageData" alias="pd"/>
 		<!-- 分页 -->
 		<typeAlias type="com.ts.entity.Page" alias="Page"/>
+		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TDrugRepeat" alias="TDrugRepeat"/>
 		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TDrug" alias="TDrug"/>
 		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TAdministration" alias="TAdministration"/>
 		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TDrugDiagRel" alias="TDrugDiagRel"/>
@@ -24,8 +26,10 @@
 		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TDrugDosage" alias="TDrugDosage"/>
 		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TDrugSideDict" alias="TDrugSideDict"/>
 		<typeAlias type="com.ts.entity.pdss.mas.Beans.TMedicareCatalog" alias="TMedicareCatalog"/>
+		<typeAlias type="com.ts.entity.pdss.pdss.Beans.TDrugPerformFreqDict" alias="TDrugPerformFreqDict"/>
 		<typeAlias type="com.ts.entity.pdss.mas.Beans.TMemo" alias="TMemo"/>
 		
+<!-- 		<typeAlias type="com.ts.entity.pdss.DirectionImage" alias="DirectionImage"/> -->
 		
 	</typeAliases>
 	

@@ -53,6 +53,7 @@
 										抽取时间：
 										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
 										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.endDate }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
+										<font color="red">*</font>
 										抽取范围：
 									 	<select  name="fatchType" id="fatchType" data-placeholder="抽取范围" style="vertical-align:top;width: 80px;">
 									 		<option value="-1">全部</option>
@@ -230,6 +231,14 @@ function initWidthHeight(){
 }
 // 执行ETL
 function execute(){
+	if($("#beginDate").val()==""){
+		$("#beginDate").tips({ side:3, msg:'请选择开始日期', bg:'#AE81FF',  time:1   });
+		return;
+	}
+	if($("#endDate").val()==""){
+		$("#endDate").tips({ side:3, msg:'请选择结束日期', bg:'#AE81FF',  time:1   });
+		return;
+	}
 	top.jzts();
 	$("#searchForm").submit();
 	

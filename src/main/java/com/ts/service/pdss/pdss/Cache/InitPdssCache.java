@@ -1,7 +1,9 @@
 package com.ts.service.pdss.pdss.Cache;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -29,6 +31,7 @@ import com.ts.entity.pdss.pdss.Beans.TDrugPerformFreqDict;
 import com.ts.entity.pdss.pdss.Beans.TDrugRepeat;
 import com.ts.entity.pdss.pdss.Beans.TDrugSideDict;
 import com.ts.entity.pdss.pdss.Beans.TDrugUseDetail;
+import com.ts.entity.pdss.pdss.Beans.DrugUseAuth.TCkDrugUserAuth;
 import com.ts.entity.pdss.pdss.Beans.ias.TOperationDrugInfo;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugInteractionRslt;
 import com.ts.interceptor.webservice.ApplicationProperties;
@@ -105,11 +108,10 @@ public class InitPdssCache {
             }
 	        if("true".equals(ApplicationProperties.getPropertyValue("baseLocal")))
             {
-	            //setAdministration();
-	            //setDrugById();
+	            setAdministration();
+	            setDrugById();
 	            setDrugPerfom();
             }
-	        
 ////	暂时不用 		setDrugInteractionInfo();
 //			setMemoList();
 //			setTMedicareCatalog();
@@ -120,7 +122,39 @@ public class InitPdssCache {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 本地内容 
+	 * @throws Exception
+	 */
+	public void loadLoaclCache() throws Exception
+	{
+	    cacheTemplate.loalCache();
+	}
 
+	/**
+	 * 药物授权控制
+	 * @throws Exception
+	 */
+	public void setDrugUserAuth() throws Exception
+	{
+	    log.info("删除药物授权控制管理");
+	    cacheTemplate.delKeys(PdssCache.DrugUserAuth);
+	    log.info("加载药物授权控制管理");
+	    List<PageData> pds = (List<PageData>)daoPH.findForList("CKDrugUserAuth.findDUAByCheck");
+	    for(PageData pd : pds)
+	    {
+	        List<TCkDrugUserAuth> duas = (List<TCkDrugUserAuth>) daoPH.findForList("CKDrugUserAuth.findDUAByCheckDetail",pd);
+	        Map<String, TCkDrugUserAuth>  mapDua = new HashMap<String, TCkDrugUserAuth>();
+	        for(TCkDrugUserAuth entity : duas)
+	        {
+	            mapDua.put(entity.getCONTROL_TYPE(), entity);
+	        }
+	        String keyAppend = pd.getString("drug_code") + "_" +  pd.getString("drug_name") + "_" + pd.getString("dept_name") + "_" + pd.getString("doctor_name");
+	        cacheTemplate.setObject(PdssCache.DrugUserAuth, keyAppend , -1, mapDua);
+	    }
+	    log.info("加载药物授权管理控制  结束 ");
+	}
 	
 	/**
 	 * 手术药品管理
@@ -165,6 +199,7 @@ public class InitPdssCache {
 	 * @throws Exception
 	 */
 	public void setDrugRepeat() throws Exception{
+	    cacheTemplate.delKeys(PdssCache.drugRepeatCache);
 	    log.info("重复给药");
 	    Page page = new Page();
         int pageNum = 1;
@@ -198,6 +233,7 @@ public class InitPdssCache {
 	 */
 	public void setDrugDiagRel() throws Exception {
 	    log.info("药物禁忌症对应");
+	    cacheTemplate.delKeys(PdssCache.ddrCache);
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);
@@ -222,6 +258,7 @@ public class InitPdssCache {
 	 */
 	public void setDrugDiagInfo() throws Exception{
 	    log.info("药物禁忌症信息");
+	    cacheTemplate.delKeys(PdssCache.ddisCache);
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);
@@ -250,6 +287,7 @@ public class InitPdssCache {
 	 */
 	public void setAdministration() throws Exception {
 	    log.info("用药途径单个缓存");
+	    cacheTemplate.delKeys(PdssCache.drugadmini);
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);
@@ -314,6 +352,7 @@ public class InitPdssCache {
      */
 	public void setDrugInteractionMap()	throws Exception {
 	    log.info("相互作用");
+	    cacheTemplate.delKeys(PdssCache.drugInteraction);
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);
@@ -403,6 +442,7 @@ public class InitPdssCache {
 	 */
 	public void setDrugById() throws Exception {
 	    log.info("药品缓存 view_drug");
+	    cacheTemplate.delKeys(PdssCache.drugCacheByLocal);
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);
@@ -429,6 +469,7 @@ public class InitPdssCache {
 	 */
 	public void setDiseageVsDiag() throws Exception {
 	    log.info(" 查询单个诊断对应的疾病");
+	    cacheTemplate.delKeys(PdssCache.DiseageVsDiag);
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);
@@ -456,6 +497,7 @@ public class InitPdssCache {
 	 */
 	public void setDrugIvEffect() throws Exception {
 	    log.info("配伍禁忌");
+	    cacheTemplate.delKeys(PdssCache.drugIvEffect);
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);
@@ -541,6 +583,7 @@ public class InitPdssCache {
 	 */
 	public void setDrugSideDict() throws Exception {
 	    log.info("不良反应");
+	    cacheTemplate.delKeys(PdssCache.drugSideDict);
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);
@@ -597,6 +640,7 @@ public class InitPdssCache {
 	 */
 	public void setDud() throws Exception {
 	    log.info("特殊人群");
+	    cacheTemplate.delKeys(PdssCache.dudCache);
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);
@@ -624,6 +668,7 @@ public class InitPdssCache {
 	 */
 	public void setAid() throws Exception {
 	    log.info("药物成分、药敏、药物分类与药物对照字典  目前放弃");
+	    cacheTemplate.delKeys(PdssCache.aidCache);
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);
@@ -650,6 +695,7 @@ public class InitPdssCache {
 	 */
 	public void setDdg() throws Exception {
 	    log.info("药品剂量使用字典");
+	    cacheTemplate.delKeys(PdssCache.ddgCache);
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);
@@ -691,6 +737,7 @@ public class InitPdssCache {
 	 */
 	public void setDrugPerfom() throws Exception {
 	    log.info("医嘱执行频率");
+	    cacheTemplate.delKeys(PdssCache.drugPerform);
 		Page page = new Page();
 		int pageNum = 1;
 		page.setShowCount(showCount);

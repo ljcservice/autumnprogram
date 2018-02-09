@@ -295,7 +295,7 @@ public class DDDCountByBill_SCD implements IReportBuilder
                                 outAntiDDD += dddValue;
                             }
                             // 普通级抗菌药
-                            if ("1".equals(DrugUtils.getDrugLevel(
+                            if ("1".equals(DrugUtils.getDrugAntiByLevel(
                                     bill.get("item_code"),
                                     bill.get("item_spec"))))
                             {

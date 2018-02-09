@@ -75,6 +75,7 @@ public class DaoSupportPdss implements DAO {
 	 * @throws Exception
 	 */
 	public void batchUpdate(String str, List objs )throws Exception{
+	    if(objs== null || objs.size() == 0 ) return ;
 		SqlSessionFactory sqlSessionFactory = sqlSessionTemplate.getSqlSessionFactory();
 		//批量执行器
 		SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH,false);

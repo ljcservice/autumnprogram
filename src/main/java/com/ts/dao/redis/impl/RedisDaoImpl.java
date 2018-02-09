@@ -2,6 +2,8 @@ package com.ts.dao.redis.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -143,9 +145,21 @@ public class RedisDaoImpl extends AbstractBaseRedisDao<String, PageData> impleme
 	public String[] getListByKey(String pattern)
 	{
 	    Jedis jedis = getJedis();
-	    Set<String> setKeys = jedis.keys("*" + pattern + "*");
+	    Set<byte[]> setKeys = jedis.keys(("*" + pattern + "*").getBytes());
 	    jedis.close();
-	    return (String[])setKeys.toArray(new String[0]);
+	    List<String> list = new ArrayList<String>();
+	    for(byte[] b : setKeys)
+	    {
+	        try
+            {
+                list.add(new String(b,"GBK"));
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+            }
+	    }
+	    return (String[])list.toArray(new String[0]);
 	}
 	
 	
@@ -195,13 +209,30 @@ public class RedisDaoImpl extends AbstractBaseRedisDao<String, PageData> impleme
         return result;  
 	}
 
-	/**删除多个
-	 * (non-Javadoc)
-	 * @see com.ts.dao.redis.RedisDao#delete(java.util.List)
+	
+	
+	/**
+	 * 删除多个
 	 */
 	@Override
-	public void delete(List<String> keys) {
-		redisTemplate.delete(keys); 
+	public boolean deletes(final String key)
+	{
+	    boolean result = redisTemplate.execute(new RedisCallback<Boolean>() {  
+            public Boolean doInRedis(RedisConnection connection)  
+                    throws DataAccessException {  
+                RedisSerializer<String> serializer = getRedisSerializer();  
+                byte[] jkey  = serializer.serialize("*" + key + "*"); 
+                Set<byte[]> setkeys = connection.keys(jkey);
+                for(byte[] b : setkeys)
+                {
+                    if(connection.exists(b)){
+                        connection.del(b);
+                    }
+                }
+                return true;
+            }  
+        });
+	    return result;
 	}
 
 	/**修改
@@ -317,14 +348,15 @@ public class RedisDaoImpl extends AbstractBaseRedisDao<String, PageData> impleme
 	 * @param seconds 单位为秒
 	 * @param obj	存储的值
 	 * @return
+	 * @throws UnsupportedEncodingException 
 	 */
-	public String setObject(String key, int seconds, Object obj) {
+	public String setObject(String key, int seconds, Object obj) throws UnsupportedEncodingException {
 		if ((key == null) || (obj == null))
 			return null;
 		byte[] byteObj = ObjectBytesExchange.toByteArray(obj);
 		if (null == byteObj)
 			return null;
-		return setBytes(key.getBytes(), seconds, byteObj);
+		return setBytes(key.getBytes("GBK"), seconds, byteObj);
 	}
 	
 	private  Jedis jedis = null;

@@ -108,11 +108,28 @@
 									</div>
 									<div class="check-search"  >
 										类型：
-									 	<select class="chosen-select form-control" name="TOXI_PROPERTY" id="TOXI_PROPERTY" data-placeholder="类型" style="vertical-align:top;width: 110px;" >
+									 	<select class="chosen-select form-control" name="PROPERTY" id="PROPERTY" data-placeholder="类型" style="vertical-align:top;width: 110px;" >
 											<option value="" >全部</option>
-											<option <c:if test="${'普通药品' == pd.TOXI_PROPERTY}">selected</c:if> value="普通药品" >普通药品</option>
-											<option <c:if test="${'精神一类' == pd.TOXI_PROPERTY}">selected</c:if> value="精神一类" >精神一类</option>
-											<option <c:if test="${'精神二类' == pd.TOXI_PROPERTY}">selected</c:if> value="精神二类" >精神二类</option>
+											<option <c:if test="${'IS_BASE' == pd.PROPERTY}">selected</c:if> value="IS_BASE" >基本药物</option>
+											<option <c:if test="${'IS_EXHILARANT' == pd.PROPERTY}">selected</c:if> value="IS_EXHILARANT" >兴奋剂</option>
+											<option <c:if test="${'IS_INJECTION' == pd.PROPERTY}">selected</c:if> value="IS_INJECTION" >注射剂</option>
+											<option <c:if test="${'IS_ORAL' == pd.PROPERTY}">selected</c:if> value="IS_ORAL" >口服</option>
+											<option <c:if test="${'IS_ANTI' == pd.PROPERTY}">selected</c:if> value="IS_ANTI" >抗菌药物</option>
+											<option <c:if test="${'IS_IMPREGNANT' == pd.PROPERTY}">selected</c:if> value="IS_IMPREGNANT" >溶剂</option>
+											<option <c:if test="${'IS_NOCHINESEDRUG' == pd.PROPERTY}">selected</c:if> value="IS_NOCHINESEDRUG" >非饮片</option>
+											<option <c:if test="${'IS_EXTERNAL' == pd.PROPERTY}">selected</c:if> value="IS_EXTERNAL" >外用</option>
+											<option <c:if test="${'IS_CHINESEDRUG' == pd.PROPERTY}">selected</c:if> value="IS_CHINESEDRUG" >中药</option>
+											<option <c:if test="${'IS_ALLERGY' == pd.PROPERTY}">selected</c:if> value="IS_ALLERGY" >抗过敏药物</option>
+											<option <c:if test="${'IS_PATENTDRUG' == pd.PROPERTY}">selected</c:if> value="IS_PATENTDRUG" >中成药</option>
+											<option <c:if test="${'IS_TUMOR' == pd.PROPERTY}">selected</c:if> value="IS_TUMOR" >抗肿瘤药</option>
+											<option <c:if test="${'IS_POISON' == pd.PROPERTY}">selected</c:if> value="IS_POISON" >毒药</option>
+											<option <c:if test="${'IS_PSYCHOTIC' == pd.PROPERTY}">selected</c:if> value="IS_PSYCHOTIC" >精神药</option>
+											<option <c:if test="${'IS_HABITFORMING' == pd.PROPERTY}">selected</c:if> value="IS_HABITFORMING" >麻醉药</option>
+											<option <c:if test="${'IS_RADIATION' == pd.PROPERTY}">selected</c:if> value="IS_RADIATION" >放射药</option>
+											<option <c:if test="${'IS_PRECIOUS' == pd.PROPERTY}">selected</c:if> value="IS_PRECIOUS" >贵重药</option>  
+											<option <c:if test="${'IS_ASSIST' == pd.PROPERTY}">selected</c:if> value="IS_ASSIST" >辅助用药</option>
+											<option <c:if test="${'IS_PRECIOUS' == pd.PROPERTY}">selected</c:if> value="IS_PRECIOUS" >贵重药</option>
+											<option <c:if test="${'IS_ALBUMIN' == pd.PROPERTY}">selected</c:if> value="IS_ALBUMIN" >白蛋白</option>
 										</select>
 									</div>
 									<div class="check-search"  >

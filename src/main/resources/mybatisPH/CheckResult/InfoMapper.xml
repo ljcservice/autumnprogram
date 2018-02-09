@@ -52,11 +52,11 @@
 				(DOCTOR_DEPT,IS_GROUP,ADMINISTRATION_ID,PERFORM_FREQ_DICT_ID
 				,DRUG_ID,REC_MAIN_NO,REC_SUB_NO,PERFORM_FREQ_DICT_NAME
 				,DOSAGE,DOSE_UNITS,START_DATE_TIME,STOP_DATE_TIME,DOCTOR
-				,NGROUPNUM,checkDate,USETYPE,USECAUSE,DRUG_NAME,check_Result)
+				,NGROUPNUM,checkDate,USETYPE,USECAUSE,DRUG_NAME,check_Result,id)
      	values (#{DOCTOR_DEPT,jdbcType=VARCHAR},#{IS_GROUP,jdbcType=VARCHAR},#{ADMINISTRATION_ID,jdbcType=VARCHAR},#{PERFORM_FREQ_DICT_ID,jdbcType=VARCHAR}
 				,#{DRUG_ID,jdbcType=VARCHAR},#{REC_MAIN_NO,jdbcType=VARCHAR},#{REC_SUB_NO,jdbcType=VARCHAR},#{PERFORM_FREQ_DICT_NAME,jdbcType=VARCHAR}
 				,#{DOSAGE,jdbcType=VARCHAR},#{DOSE_UNITS,jdbcType=VARCHAR},#{START_DATE_TIME,jdbcType=VARCHAR},#{STOP_DATE_TIME,jdbcType=VARCHAR},#{DOCTOR,jdbcType=VARCHAR}
-				,#{NGROUPNUM,jdbcType=VARCHAR},#{checkDate,jdbcType=VARCHAR},#{USETYPE,jdbcType=VARCHAR},#{USECAUSE,jdbcType=VARCHAR},#{DRUG_NAME,jdbcType=VARCHAR},#{check_Result,jdbcType=VARCHAR})
+				,#{NGROUPNUM,jdbcType=VARCHAR},#{checkDate,jdbcType=VARCHAR},#{USETYPE,jdbcType=VARCHAR},#{USECAUSE,jdbcType=VARCHAR},#{DRUG_NAME,jdbcType=VARCHAR},#{check_Result,jdbcType=VARCHAR},#{id,jdbcType=VARCHAR})
 	</insert>
 	<!-- 	 审查医嘱诊断表 -->
 	<insert id="insertCheckPatOrderDiagnosis"  parameterType="pd">

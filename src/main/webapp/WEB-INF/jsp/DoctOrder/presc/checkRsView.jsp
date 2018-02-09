@@ -100,9 +100,15 @@
 														</label>
 													</td>
 													<td style="width: 100px;" class='center' > ${rsTypeDict.get(rs.RS_DRUG_TYPE).rs_type_name }</td>
-													<td >${rs.drug_id1_name }&nbsp;（处方号：${rs.PRESC_NO1}，科室：${rs.ORG_NAME1}，医生：${rs.DOCTOR_NAME1}）
+													<td >${rs.drug_id1_name }&nbsp;
+														<c:if test="${not empty rs.PRESC_NO1 }">
+															（处方号：${rs.PRESC_NO1}，科室：${rs.ORG_NAME1}，医生：${rs.DOCTOR_NAME1}）
+														</c:if>
 														<c:if test="${rsTypeDict.get(rs.RS_DRUG_TYPE).RS_COUNT == 2}"> 
-														<font color="red">与</font> ${rs.drug_id2_name }&nbsp;（处方号：${rs.PRESC_NO2}，科室：${rs.ORG_NAME2}，医生：${rs.DOCTOR_NAME2}）
+														<font color="red">与</font> ${rs.drug_id2_name }&nbsp;
+														<c:if test="${not empty rs.PRESC_NO2 }">
+															（处方号：${rs.PRESC_NO2}，科室：${rs.ORG_NAME2}，医生：${rs.DOCTOR_NAME2}）
+														</c:if>
 														 </c:if>
 													</td>
 													<td style="width: 100px;text-align: right;" nowrap>提交日期：</td>

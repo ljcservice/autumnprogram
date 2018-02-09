@@ -2,7 +2,9 @@ package com.ts.service.pdss.pdss.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -30,6 +32,7 @@ import com.ts.entity.pdss.pdss.Beans.TDrug;
 import com.ts.entity.pdss.pdss.Beans.TDrugInteractionInfo;
 import com.ts.entity.pdss.pdss.Beans.TDrugIvEffect;
 import com.ts.entity.pdss.pdss.Beans.TDrugUseDetail;
+import com.ts.entity.pdss.pdss.Beans.DrugUseAuth.TCkDrugUserAuth;
 import com.ts.entity.pdss.pdss.RSBeans.TAdministrationRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TCheckResult;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugAllergenRslt;
@@ -41,8 +44,11 @@ import com.ts.entity.pdss.pdss.RSBeans.TDrugInteractionRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugIvEffectRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSpecPeopleRslt;
+import com.ts.entity.pdss.pdss.RSBeans.DrugUserAuth.TDrugUserAuthResult;
+import com.ts.entity.pdss.pdss.RSBeans.DrugUserAuth.TDrugUserAuthRslt;
 import com.ts.entity.pdss.pdss.RSBeans.ias.TAntiDrugCheckResult;
 import com.ts.entity.pdss.pdss.RSBeans.ias.TAntiDrugRslt;
+import com.ts.service.pdss.pdss.Cache.PdssCache;
 import com.ts.service.pdss.pdss.manager.IPatientSaveCheckResult;
 import com.ts.util.DateUtil;
 import com.ts.util.Logger;
@@ -58,6 +64,9 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
 {
 	@Resource(name = "daoSupportPH")
 	private DAO dao;
+	@Resource(name = "pdssCache")
+    private PdssCache pdssCache;
+	
 	
     /* 每次批次号 */
     private String ngroupnum = "";
@@ -119,7 +128,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
             	param.put("SEX", po.getPatient().getSex());
             	param.put("DATE_OF_BIRTH", DateUtils.getStringFromDate(DateUtils.getDateFromString(po.getPatient().getDateOfBirth()), "yyyy-MM-dd"));
             	param.put("BIRTH_PLACE", DateUtils.getStringFromDate(DateUtils.getDateFromString(po.getPatient().getBirthPlace()), "yyyy-MM-dd"));
-            	param.put("NATION", po.getPatient().getNation());
+            	param.put("NATION", po.getPatient().getNation()); 
             	param.put("PATIENT_ID", patient_id);
             	param.put("NGROUPNUM", this.ngroupnum);
             	param.put("checkDate", CheckTime);
@@ -240,6 +249,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                     	param.put("USECAUSE", "");
                     	param.put("DRUG_NAME", pod.getDrugName());
                     	param.put("check_Result", checkResult);
+                    	param.put("ID", UuidUtil.get32UUID());
                  		String start = pod.getStartDateTime();
                 		String stop  = pod.getStartDateTime();
                         if(start != null && !"".equals(start))
@@ -980,7 +990,244 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
         }
         catch(Exception e )
         {
+            e.printStackTrace();
+            log.warn("[" + this.ngroupnum + "]------抗菌药物审核 -----" + e.getMessage() + e.toString());
+        }
+    }
+    
+    private PageData setDrugBillinfo(TPatOrderDrug pod ,TPatientOrder po)
+    {
+        PageData pd  = new PageData();
+        pd.put("dept_name", po.getDoctorDeptName());
+        pd.put("doctor_Name",po.getDoctorName());
+        pd.put("drug_code", pod.getDrugID());
+        pd.put("drug_name", pod.getDrugName());
+        pd.put("DRUGCOUNT", Integer.parseInt(pod.getStartDateTime()));
+        pd.put("DRUG_SPEC", pod.getDoctorDept());
+        pd.put("BILL_DATE", new Date());
+        pd.put("PAT_NAME", po.getPatient().getName());
+        pd.put("PAT_ID", po.getPatVisitInfo().getPatientID());
+        pd.put("VISIT_ID", po.getPatVisitInfo().getVisitID());
+        pd.put("DIAG_CODE", "");
+        pd.put("DIAG_NAME", po.toStringByDiagnosiss());
+        pd.put("SOURCE", this.in_rs_type);
+        pd.put("id", UuidUtil.get32UUID());
+        return pd;
+    }
+    
+    private PageData setDUAuthCheckRs(String id , String info,String type )
+    {
+        PageData pd = new PageData();
+        pd.put("id", UuidUtil.get32UUID());
+        pd.put("checkInfo", info);
+        pd.put("bill_id", id);
+        pd.put("control_type", type);
+        return pd;
+    }
+    
+    /**
+     * 获得个数
+     * @param pod
+     * @return
+     */
+    private int drugCount(TPatOrderDrug pod)
+    {
+        int drugCount = 0;
+        try
+        {
+            drugCount = Integer.parseInt(pod.getStartDateTime());
+        }
+        catch(Exception e )
+        {
+            log.warn(e.getMessage());
+        }
+        return drugCount;
+    }
+    
+    /**
+     * 药物授权控制管理 
+     * @param po
+     * @param dsr
+     */
+    @Override
+    public void saveDrugUserAuthCheckInfo(TPatientOrder po,TDrugSecurityRslt dsr)
+    {
+        try
+        {
+            String deptName =  po.getDoctorDeptName();
+            String doctorName = po.getDoctorName();
+            TPatOrderDrug[]  pods =  po.getPatOrderDrugs();
+            // 1.记录bill， 2 更新缓存的  3。更新数据
+            List<PageData> objs    = new ArrayList<PageData>();
+            List<PageData> checkRs = new ArrayList<PageData>();
+            //保存待保存信息
+            Map<String ,Map<String ,TCkDrugUserAuth>> mapMain = new HashMap<String ,Map<String ,TCkDrugUserAuth>>();
+            Map<String , Integer>  mapdrugCount = new HashMap<String , Integer>();
+            boolean rsBool = true;
+            for(int i = 0 ;i < pods.length;i++)
+            {
+                TPatOrderDrug pod = pods[i];
+                Map<String, TCkDrugUserAuth> mapDua = new HashMap<String , TCkDrugUserAuth>();
+                boolean rsDrugBool = true;
+                String drugCode = pod.getDrugID();
+                String drugName = pod.getDrugName();
+                int drugCount = drugCount(pod);
+                if(!mapdrugCount.containsKey(drugCode +  drugName))
+                {
+                    mapdrugCount.put(drugCode +  drugName, 0);
+                }
+                mapdrugCount.put(drugCode + drugName , drugCount  + mapdrugCount.get(drugCode + drugName));
+                Map<String, TCkDrugUserAuth> duaMap = pdssCache.queryDrugUserAuthByMap(drugCode, drugName, deptName, doctorName);
+                if(duaMap ==  null)  continue;
+                PageData  pd = setDrugBillinfo(pod,po);
+                String id =  pd.getString("id");
+                // 允许(不看量) 
+                if(duaMap.containsKey("6")) 
+                {
+                    mapDua.put("6", duaMap.get("6"));
+                }
+                if(duaMap.containsKey("5"))
+                {
+                    rsDrugBool = false;
+                    // 禁用(不看量) 
+                    TCkDrugUserAuth  controltype5 =  duaMap.get("5");
+                    mapDua.put("5",controltype5);
+                    checkRs.add(setDUAuthCheckRs(id, doctorName + "医生您好,很抱歉您所要开具的【" + drugName + "】为医院禁开目录中药物，所以不能开具该药品!","5"));
+                }
+                //如果医生开具的用量小于等 0 则不进行一下判断
+                if(drugCount <= 0) continue;
+                //年量
+                if(duaMap.containsKey("3")){
+                    TCkDrugUserAuth  controltype3 =  duaMap.get("3");
+                    int tValue =  controltype3.getT_VALUE();
+                    int totalValue =  controltype3.getTOTAL_VALUE();
+                    if(tValue < (totalValue + drugCount))
+                    {
+                        rsDrugBool = false;
+                        checkRs.add(setDUAuthCheckRs(id, doctorName + "医生您好，很抱歉您所要开具的【" + drugName + "】数量已经超出医院规定【全年的总量】:" 
+                                + ((totalValue + drugCount) - tValue) + "个,全年总量为:" + tValue + ",已经开具为:" + totalValue,"3"));
+                    }
+                    else if(tValue < (totalValue + mapdrugCount.get(drugCode + drugName) ))
+                    {
+                        rsDrugBool = false;
+                        checkRs.add(setDUAuthCheckRs(id,doctorName + "医生您好，请将【" + drugName + "】开具在一起！" , ""));
+                    }
+                    else
+                    {
+                        controltype3.setTOTAL_VALUE(totalValue + drugCount);
+                        mapDua.put("3", controltype3);
+                    }
+                }
+                //季度量
+                if(duaMap.containsKey("4")){
+                    
+                    TCkDrugUserAuth  controltype4 =  duaMap.get("4");
+                    int tValue =  controltype4.getT_VALUE();
+                    int totalValue =  controltype4.getTOTAL_VALUE();
+                    if(tValue < (totalValue + drugCount))
+                    {
+                        rsDrugBool = false;
+                        checkRs.add(setDUAuthCheckRs(id, doctorName + "医生您好，很抱歉您所要开具的【" + drugName + "】数量已经超出医院规定【季度的总量】:" 
+                                + ((totalValue + drugCount) - tValue) + "个,季度总量为:" + tValue + ",已经开具为:" + totalValue,"4"));
+                    }
+                    else if(tValue < (totalValue + mapdrugCount.get(drugCode + drugName) ))
+                    {
+                        rsDrugBool = false;
+                        checkRs.add(setDUAuthCheckRs(id,doctorName + "医生您好，请将【" + drugName + "】开具在一起！",""));
+                    }
+                    else
+                    {
+                        controltype4.setTOTAL_VALUE(totalValue + drugCount);
+                        mapDua.put("4", controltype4);
+                    }
+                }
+                //月量
+                if(duaMap.containsKey("2")){
+                    TCkDrugUserAuth  controltype2 =  duaMap.get("2");
+                    int tValue =  controltype2.getT_VALUE();
+                    int totalValue =  controltype2.getTOTAL_VALUE();
+                    if(tValue < (totalValue + drugCount))
+                    {
+                        rsDrugBool = false;
+                        
+                        checkRs.add(setDUAuthCheckRs(id, doctorName + "医生您好，很抱歉您所要开具的【" + drugName + "】数量已经超出医院规定【本月的总量】:" 
+                                + ((totalValue + drugCount) - tValue) + "个,本月总量为:" + tValue + ",已经开具为:" + totalValue,"2"));
+                    }
+                    else if(tValue < (totalValue + mapdrugCount.get(drugCode + drugName) ))
+                    {
+                        rsDrugBool = false;
+                        checkRs.add(setDUAuthCheckRs(id,doctorName + "医生您好，请将【" + drugName + "】开具在一起！",""));
+                    }
+                    else
+                    {
+                        controltype2.setTOTAL_VALUE(totalValue + drugCount);
+                        mapDua.put("2", controltype2);
+                    }
+                }
+                //日量
+                if(duaMap.containsKey("1")){
+                    TCkDrugUserAuth  controltype1 =  duaMap.get("1");
+                    int tValue =  controltype1.getT_VALUE();
+                    int totalValue =  controltype1.getTOTAL_VALUE();
+                    if(tValue < (totalValue + drugCount))
+                    {
+                        rsDrugBool = false;
+                        checkRs.add(setDUAuthCheckRs(id,doctorName + "医生您好，很抱歉您所要开具的【" + drugName + "】数量已经超出医院规定【单日的总量】为:" 
+                                + ((totalValue + drugCount) - tValue) + ",单日总量为:" + tValue + ",已经开具为:" + totalValue ,"1"));
+                    }
+                    else if(tValue < (totalValue + mapdrugCount.get(drugCode + drugName) ))
+                    {
+                        rsDrugBool = false;
+                        checkRs.add(setDUAuthCheckRs(id,doctorName + "医生您好，请将【" + drugName + "】开具在一起！",""));
+                    }
+                    else
+                    {
+                        controltype1.setTOTAL_VALUE(totalValue +  drugCount); 
+                        mapDua.put("1", controltype1);
+                    }
+                }
+                pd.put("ispass", (rsDrugBool?"1":"0"));
+                objs.add(pd);
+                if(rsDrugBool)
+                {
+                    String key =  drugCode + "-" + drugName + "-" + deptName + "-" + doctorName + "-" + i; 
+                    mapMain.put(key, mapDua);
+                }else
+                {
+                    rsBool = false;
+                }
+            }
+            // 只有全部通过的情况 才进行更新 
+            if(rsBool)
+            {
+                for(String key :  mapMain.keySet())
+                {
+                    String[] keys = key.split("-");
+                    pdssCache.setDrugUserAuthByMap(mapMain.get(key), keys[0], keys[1], keys[2], keys[3]);
+                    // 更新数据库
+                    for(String rsKey : mapMain.get(key).keySet())
+                    {
+                        TCkDrugUserAuth entity =   mapMain.get(key).get(rsKey);
+                        dao.update("CKDrugUserAuth.updateDUAuthByTotal", entity);
+                    }
+                }
+            }
             
+            for(PageData  pd :objs)
+            {
+                // 保存管控药品 开药信息 
+                dao.save("CKDrugUserAuth.insertDUAuthByBill", pd); 
+            }
+            for(PageData pd : checkRs)
+            {
+                // 审核结果信息  和开药信息  有关联关系
+                dao.save("CKDrugUserAuth.insertDUAuthbyCheckRs", pd);
+            }
+        }
+        catch(Exception e )
+        {
+            e.printStackTrace();
+            log.warn("[" + this.ngroupnum + "]----药物授权控制审查结果保存 ----" + e.getMessage() + e.toString());
         }
     }
     
@@ -1006,7 +1253,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
             int didRedCount     = 0, didYellowCount = 0;            //重复成份审查结果                  
             int diaRedCount     = 0, diaYellowCount = 0;            //相互作用审查结果                  
             int dieRedCount     = 0, dieYellowCount = 0;            //配伍审查结果                        
-            int dhfRedCount   = 0, dhfYellowCount = 0;            //不良反应审查结果                  
+            int dhfRedCount     = 0, dhfYellowCount = 0;            //不良反应审查结果                  
             int NOLDRED         = 0, NOLDYELLOW = 0;                //老人红色,老人黄色 
             int NKIDRED         = 0, NKIDYELLOW = 0;                //小孩红色,小孩黄色
             int NPREGNANTRED    = 0, NPREGNANTYELLOW = 0;           //孕妇红色,孕妇黄色
@@ -1162,6 +1409,7 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
         }
     }
     
+    @Deprecated
     @Override
     public void saveAntiDrugSecutity(TPatientOrder po,TAntiDrugSecurityResult[] adsr)
     {

@@ -50,6 +50,16 @@
 								<form name="searchForm" id="searchForm" action="InHospitalRep/DRANO014.do" method="post" > 
 									<input type="hidden" value="${pd.ss }" id="ss" name="ss">
 									<input type="hidden" value="${pd.dept_code}" id ="dept_code" name="dept_code">
+									<div class="check-search"  >
+										起止日期：
+										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
+										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.endDate }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
+										<font style="color: red;">*</font>
+									</div>
+									<div class="check-search"  >
+										<a class="btn btn-light btn-xs" onclick="searchs();" title="检索"  id="searchBtn"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
+										<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i></a>
+									</div>
 									<div class="check-search nav-search" >
 										<span class="input-icon">
 											<input class="nav-search-input" autocomplete="off" id="DEPT_NAME" style="width: 100px;" type="text" name="DEPT_NAME" value="${pd.DEPT_NAME}" placeholder="科室名称" maxlength="32" />
@@ -59,15 +69,6 @@
 											<input class="nav-search-input" autocomplete="off" style="width: 100px;" id="nav-search-input" type="text" name="DOCTOR_NAME" value="${pd.DOCTOR_NAME}" placeholder="医生名称" maxlength="32"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
-									</div>
-									<div class="check-search"  >
-										<a class="btn btn-light btn-xs" onclick="searchs();" title="检索"  id="searchBtn"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
-										<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i></a>
-									</div>
-									<div class="check-search"  >
-										起止日期：
-										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
-										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.endDate }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
 									</div>
 									<div class="check-search nav-search"  >
 										使用类型：

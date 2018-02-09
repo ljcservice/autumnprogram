@@ -18,6 +18,7 @@ import com.hitzd.persistent.Persistent4DB;
 
 /**
  *  门诊药品使用 费用情况 日报 
+ *  最差方案。
  * @author Administrator
  *
  */

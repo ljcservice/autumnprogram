@@ -99,10 +99,17 @@ public interface IPatientSaveCheckResult
     public void saveDrugSideCheckInfo(TDrugSecurityRslt dsr);
     
     /**
-     * 抗拒药物审查
+     * 抗菌药物审查
      * @param dsr
      */
     public void saveAntiDrugCheckInfo(TDrugSecurityRslt dsr);
+    
+    /**
+     * 药物授权控制管理 
+     * @param po
+     * @param dsr
+     */
+    public void saveDrugUserAuthCheckInfo(TPatientOrder po , TDrugSecurityRslt dsr);
     
     /**
      * 保存审查的总体结构 

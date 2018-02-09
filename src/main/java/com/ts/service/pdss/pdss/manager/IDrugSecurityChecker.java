@@ -164,6 +164,13 @@ public interface IDrugSecurityChecker
      * @return
      */
     public TDrugSecurityRslt AntiDrugChecker(TPatientOrder po);
+    
+    /**
+     * 药物授权控制审核
+     * @param po
+     * @return
+     */
+    public TDrugSecurityRslt DrugUserAuthChecker(TPatientOrder po);
     /**
      * 返回单个药品信息 
      * @param drugCode

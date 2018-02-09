@@ -46,20 +46,21 @@
 						<div class="col-xs-12" >
 							<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
 								<form name="searchForm" id="searchForm" action="InHospitalRep/DRNO001.do" method="post" > 
-									<div class="check-search nav-search" > 
-										<span class="input-icon">
-											<input class="nav-search-input" style="width: 100px;" autocomplete="off" id="nav-search-input" type="text" name="drug_name" value="${pd.drug_name}" placeholder="药品名称" maxlength="80"/>
-											<i class="ace-icon fa fa-search nav-search-icon"></i>
-										</span>
+									<div class="check-search"  >
+										起止日期：
+										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
+										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.endDate }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
+										<font style="color: red;">*</font>
 									</div>
 									<div class="check-search"  >
 										<a class="btn btn-light btn-xs" onclick="searchs();" title="检索"  id="searchBtn"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
 										<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i></a>
 									</div>
-									<div class="check-search"  >
-										起止日期：
-										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
-										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.endDate }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
+									<div class="check-search nav-search" > 
+										<span class="input-icon">
+											<input class="nav-search-input" style="width: 100px;" autocomplete="off" id="nav-search-input" type="text" name="drug_name" value="${pd.drug_name}" placeholder="药品名称" maxlength="80"/>
+											<i class="ace-icon fa fa-search nav-search-icon"></i>
+										</span>
 									</div>
 <!-- 									<div class="check-search"  >  -->
 <!-- 										作用范围： -->
@@ -141,6 +142,12 @@
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">
 							<table style="width:100%;">
 								<tr>
+<!-- 									<td> -->
+<!-- 										<div class="check-search"> -->
+<!-- 										<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a> -->
+<!-- 										<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a> -->
+<!-- 									</div> -->
+<!-- 									</td> -->
 									<td>
 										<div class="pagination" style="float: right;padding: 0px;margin: 0px;">${page.pageStr}</div>
 									</td>

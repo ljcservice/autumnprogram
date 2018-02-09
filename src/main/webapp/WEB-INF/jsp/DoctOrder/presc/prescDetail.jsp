@@ -68,7 +68,10 @@
 																 <td width="10%" class="info">性别:</th>
 																 <th width="15%" >${pat.PATIENT_SEX}</th>
 																 <td width="10%" class="info">出生日期:</th>
-																 <th width="15%"  >${pat.PATIENT_BIRTH }</th>
+																 <fmt:parseDate value="${pat.PATIENT_BIRTH }" var="date" pattern="yyyy-MM-dd HH:mm:SS"/>  
+  
+																	 
+																 <th width="15%"  ><fmt:formatDate value="${date}" pattern="yyyy-MM-dd" /> </th> 
 															</tr>
 															<tr>
 																 <td width="10%" class="info">年龄:</th>
@@ -80,7 +83,7 @@
 															</tr>
 															<tr>
 																 <td width="10%" class="info">处方编号:</th>
-																 <th width="15%" > ${ pat.dayCount} </th>
+																 <th width="15%" > ${ pat.presc_no} </th>
 																 <td width="10%" class="info">科室:</th>
 																 <th width="15%" > ${ pat.ORG_NAME} </th>
 																 <td width="10%" class="info">医生姓名:</th>

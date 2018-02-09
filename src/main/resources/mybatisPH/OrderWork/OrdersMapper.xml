@@ -183,6 +183,7 @@
 		<if test="order_class != null and order_class != '' ">
 			and b.local_order_class_code = #{order_class}
 		</if>
+		order by a.ORDER_NO,a.order_sub_no 
 	</select>
 	<!-- 术后日期查询医嘱 -->
 	<select id="ordersPageByOpDate" parameterType="page" resultType="pd">

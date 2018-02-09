@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 
+import com.ts.entity.pdss.pdss.RSBeans.DrugUserAuth.TDrugUserAuthResult;
 import com.ts.entity.pdss.pdss.RSBeans.ias.TAntiDrugCheckResult;
 
 public class TCheckResult 
@@ -346,6 +347,33 @@ public class TCheckResult
         return adcrList.toArray(new TAntiDrugCheckResult[0]);
     }
 
+    private List<TDrugUserAuthResult> duAuthList = new ArrayList<TDrugUserAuthResult>();
+    public void addDrugUserAuthResult(TDrugUserAuthResult dua)
+    {
+        this.duAuthList.add(dua);
+        if("R".equals(dua.alertLevel))
+            this.duAuthRedCount++;
+        else if("Y".equals(dua.alertLevel))
+            this.duAuthYellowCount++;
+    }
+    private int duAuthRedCount = 0;
+    private int duAuthYellowCount = 0;
+    public void CopyDuAuthRsltTo(TCheckResult cr)
+    {
+        cr.duAuthList = this.duAuthList;
+        cr.duAuthRedCount = this.duAuthRedCount;
+        cr.duAuthYellowCount = this.duAuthYellowCount ;
+    }
+    
+    /**
+     * 药物授权控制 审核结果对象 
+     * @return
+     */
+    @XmlElement(name="getDuAuthRslt")
+    public TDrugUserAuthResult[] getDuAuthRslt()
+    {
+        return duAuthList.toArray(new TDrugUserAuthResult[0]);
+    }
     
 	//医保审查
 	private List<TMedicareRslt> mcareList = new ArrayList<TMedicareRslt>();
@@ -368,7 +396,18 @@ public class TCheckResult
 	    return (TMedicareRslt[])mcareList.toArray(new TMedicareRslt[0]);
 	}
 	
-	@XmlElement(name="getAdcrRedCount")
+	@XmlElement(name="getDuAuthRedCount")
+	public int getDuAuthRedCount()
+    {
+        return duAuthRedCount;
+    }
+	@XmlElement(name="getDuAuthYellowCount")
+    public int getDuAuthYellowCount()
+    {
+        return duAuthYellowCount;
+    }
+
+    @XmlElement(name="getAdcrRedCount")
 	public int getAdcrRedCount()
     {
         return adcrRedCount;
@@ -379,7 +418,6 @@ public class TCheckResult
     {
         return adcrYellowCount;
     }
-    
 	
 	@XmlElement(name="getAdmRedCount")
 	public int getAdmRedCount() {

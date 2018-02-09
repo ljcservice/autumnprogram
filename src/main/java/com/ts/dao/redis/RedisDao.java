@@ -1,5 +1,6 @@
 package com.ts.dao.redis;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -75,11 +76,10 @@ public interface RedisDao {
 	 * @param key
 	 */
 	public boolean delete(String key); 
-	
 	/**删除多个 
-	 * @param keys
-	 */
-	public void delete(List<String> keys);
+     * @param key
+     */
+    public boolean deletes(String key); 
 	
 	/**修改
 	 * @param pd
@@ -100,7 +100,7 @@ public interface RedisDao {
 	 * @param obj	存储的值
 	 * @return
 	 */
-	public String setObject(String key, int seconds, Object obj) ;
+	public String setObject(String key, int seconds, Object obj) throws UnsupportedEncodingException;
 	
 	/**
 	 * 从缓存获取数据，存放什么类型取出时强转什么类型

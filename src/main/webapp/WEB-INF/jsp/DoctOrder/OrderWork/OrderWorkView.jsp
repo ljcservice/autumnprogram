@@ -49,26 +49,25 @@
 						<div class="col-xs-12" >
 							<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 2px;padding-bottom: 2px;width: 100%;">
 								<form name="searchForm" id="searchForm" action="DoctOrder/OrderWork.do" method="post" > 
-									<div class="check-search nav-search" >
-											科室：
-										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="OUT_DEPT_NAME" value="${pd.OUT_DEPT_NAME}" placeholder="科室" maxlength="80"/>
-											<i class="ace-icon fa fa-search nav-search-icon"></i>
-										</span>
-											诊断：
-										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="DIAGNOSIS_DESC" type="text" name="DIAGNOSIS_DESC" value="${pd.DIAGNOSIS_DESC}" placeholder="诊断" maxlength="80"/>
-											<i class="ace-icon fa fa-search nav-search-icon"></i>
-										</span>
+									<div class="check-search"  >
+										出院日期：
+										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
+										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.end_Date }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
+										<font color="red">*</font>
 									</div>
 									<div class="check-search"  >
 										<a class="btn btn-light btn-xs" onclick="searchs();" title="检索"  id="searchBtn"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
 										<a class="btn btn-light btn-xs" onclick="reset('searchForm');" title="重置"  id="resetBtn"><i id="nav-search-icon" class="ace-icon fa fa-undo bigger-110"></i></a>
 									</div>
-									<div class="check-search"  >
-										出院日期：
-										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
-										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.end_Date }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
+									<div class="check-search nav-search" >
+										<span class="input-icon">
+											<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="OUT_DEPT_NAME" value="${pd.OUT_DEPT_NAME}" placeholder="科室" maxlength="80"/>
+											<i class="ace-icon fa fa-search nav-search-icon"></i>
+										</span>
+										<span class="input-icon">
+											<input class="nav-search-input" autocomplete="off" id="DIAGNOSIS_DESC" type="text" name="DIAGNOSIS_DESC" value="${pd.DIAGNOSIS_DESC}" placeholder="诊断" maxlength="80"/>
+											<i class="ace-icon fa fa-search nav-search-icon"></i>
+										</span>
 									</div>
 									<div class="check-search"  > 
 										是否含手术：

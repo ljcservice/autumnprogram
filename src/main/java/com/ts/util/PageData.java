@@ -28,6 +28,7 @@ public class PageData extends HashMap implements Map{
 		String name = "";  
 		String value = "";  
 		while (entries.hasNext()) {
+		    value = "";  
 			entry = (Map.Entry) entries.next(); 
 			name = (String) entry.getKey(); 
 			Object valueObj = entry.getValue(); 
@@ -36,7 +37,7 @@ public class PageData extends HashMap implements Map{
 			}else if(valueObj instanceof String[]){ 
 				String[] values = (String[])valueObj;
 				for(int i=0;i<values.length;i++){ 
-					 value = values[i] + ",";
+					 value += values[i] + ",";
 				}
 				value = value.substring(0, value.length()-1); 
 			}else{

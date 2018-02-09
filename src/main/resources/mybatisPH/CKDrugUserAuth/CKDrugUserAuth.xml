@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="CKOperationDrug">
+<mapper namespace="CKDrugUserAuth">
 	
-	<!--表名  药物授权表 ->
+	<!--  表名  药物授权表 -->
 	<sql id="tableName">
 		CK_DRUG_USER_AUTH
-	</sql>
+ 	</sql>
 	
 	<!-- 字段 -->
 	<sql id="Field">
@@ -13,6 +13,7 @@
 		drug_code,
 		drug_name,
 		dept_name,
+		dept_code,
 		doctor_name,
 		drug_spec,
 		drug_form,
@@ -27,97 +28,189 @@
 
 	</sql>
 	<sql id="FieldValue">
-		#{id},
-		#{drug_code},
-		#{drug_name},
-		#{dept_name},
-		#{doctor_name},
-		#{drug_spec},
-		#{drug_form},
-		#{control_type},
-		#{t_value},
-		#{total_value},
-		#{update_persion},
-		#{update_date},
-		#{diag_name},
-		#{diag_code},
-		#{h_type}
+		#{id,jdbcType=VARCHAR},
+		#{drug_code,jdbcType=VARCHAR},
+		#{drug_name,jdbcType=VARCHAR},
+		#{dept_name,jdbcType=VARCHAR},
+		#{dept_code,jdbcType=VARCHAR},
+		#{doctor_name,jdbcType=VARCHAR},
+		#{drug_spec,jdbcType=VARCHAR},
+		#{drug_form,jdbcType=VARCHAR},
+		#{control_type,jdbcType=VARCHAR},
+		#{t_value,jdbcType=NUMERIC},
+		#{total_value,jdbcType=NUMERIC},
+		#{update_persion,jdbcType=VARCHAR},
+		#{update_date,jdbcType=VARCHAR},
+		#{diag_name,jdbcType=VARCHAR},
+		#{diag_code,jdbcType=VARCHAR},
+		#{h_type,jdbcType=VARCHAR}
 	</sql>
-	
 	
 	<select id="queryTCkDrugUserAuthPage" parameterType ="page" resultType="TCkDrugUserAuth">
 		select 
 			<include refid="Field"></include>
 		from 
 		    <include refid="tableName"></include>
-<!-- 		order by O_Code,o_dept_code, is_use desc  -->
-	</select>
-	
-	
-	<select id="ckOperationDrugPage" parameterType="page" resultType="pd">
-	    select a.* ,b.USERNAME operatoruser_name
-	    from  ck_operation_drug a
-		left join plat.sys_user b on a.operatoruser = b.user_id
-		where 1=1
+		where 1=1 
+		
 		<if test="pd.workcode != null and pd.workcode != ''">
 			and 
 			(
-				o_name like CONCAT(CONCAT('%', #{pd.workcode}),'%')
+				drug_name like CONCAT(CONCAT('%', #{pd.workcode}),'%')
 				or 
-				o_code like CONCAT(CONCAT('%', #{pd.workcode}),'%')
+				drug_spec like CONCAT(CONCAT('%', #{pd.workcode}),'%')
 			)
 		</if>
-		order by O_Code,o_dept_code, is_use desc 
+		
+		<if test="pd.CONTROL_TYPE != null and pd.CONTROL_TYPE != ''">
+			and CONTROL_TYPE = #{pd.CONTROL_TYPE}
+		</if>
+		
+		<if test="pd.deptdicts != null and pd.deptdicts.length !='' " >
+			and dept_code in 
+			<foreach item="item" index="index" collection="pd.deptdicts" open="(" separator="," close=")">  
+ 			 	${item}  
+ 			</foreach> 
+		</if>
+		
+		<if test="pd.orderby != null and pd.orderby =='DEPT_NAME' " >
+			order by  DEPT_NAME
+		</if>
+		<if test="pd.orderby != null and pd.orderby =='DOCTOR_NAME' " >
+			order by DOCTOR_NAME
+		</if>
+		<if test="pd.orderby != null and pd.orderby =='DRUG_NAME' " >
+			order by  DRUG_NAME 
+		</if>
 	</select>
 	
-	<select id="selectOpdrugInfo" parameterType="pd" resultType="pd">
-		select * from ck_operation_drug 
-		where 1=1
-		<if test="o_id!=null and o_id!=''">
-			and o_id = #{o_id}
-		</if>
-		<if test="o_code!=null and o_code!=''">
-			and o_code = #{o_code}
-		</if>
-		<if test="o_drug_code !=null and o_drug_code!=''">
-			and o_drug_code = #{o_drug_code}
-		</if>
+	
+<!-- 	<select id="TCkDrugUserAuthPage" parameterType="page" resultType="pd"> -->
+<!-- 	    select a.* ,b.USERNAME operatoruser_name -->
+<!-- 	    from  ck_operation_drug a -->
+<!-- 		left join plat.sys_user b on a.operatoruser = b.user_id -->
+<!-- 		where 1=1 -->
+<!-- 		<if test="pd.workcode != null and pd.workcode != ''"> -->
+<!-- 			and  -->
+<!-- 			( -->
+<!-- 				o_name like CONCAT(CONCAT('%', #{pd.workcode}),'%') -->
+<!-- 				or  -->
+<!-- 				o_code like CONCAT(CONCAT('%', #{pd.workcode}),'%') -->
+<!-- 			) -->
+<!-- 		</if> -->
+<!-- 		order by O_Code,o_dept_code, is_use desc  -->
+<!-- 	</select> -->
+	
+	<select id="findDrugUserAuthByid" parameterType="String" resultType="TCkDrugUserAuth">
+		select * from CK_DRUG_USER_AUTH 
+			where  id=#{id}
 	</select>
 	
-	<update id="saveOpDrug"  parameterType="pd" >
-		insert into ck_operation_drug (O_ID, O_CODE, O_NAME, O_LEVEL, O_DRUG_CODE, O_DRUG_NAME
-			, O_DRUG_SPCE, O_DRUG_FORM, O_DEPT_CODE, O_DEPT_NAME, O_DOCTOR_CODE, O_DOCTOR_NAME
-			, IS_USE, CREATEDATE, OPERATORDATE, OPERATORUSER)
-		values (#{O_ID,jdbcType=VARCHAR}, #{O_CODE,jdbcType=VARCHAR}, #{O_NAME,jdbcType=VARCHAR}, #{O_LEVEL,jdbcType=VARCHAR}, #{O_DRUG_CODE,jdbcType=VARCHAR}, #{O_DRUG_NAME,jdbcType=VARCHAR}
-			, #{O_DRUG_SPCE,jdbcType=VARCHAR}, #{O_DRUG_FORM,jdbcType=VARCHAR}, #{O_DEPT_CODE,jdbcType=VARCHAR}, #{O_DEPT_NAME,jdbcType=VARCHAR}, #{O_DOCTOR_CODE,jdbcType=VARCHAR}, #{O_DOCTOR_NAME,jdbcType=VARCHAR}
-			, #{IS_USE,jdbcType=VARCHAR}, #{CREATEDATE,jdbcType=VARCHAR}, #{OPERATORDATE,jdbcType=VARCHAR}, #{OPERATORUSER,jdbcType=VARCHAR})
-	</update>
-	<update id="updateOpDrug"  parameterType="pd" >
-		update ck_operation_drug set O_CODE=#{O_CODE,jdbcType=VARCHAR},O_NAME=#{O_NAME,jdbcType=VARCHAR},O_LEVEL=#{O_LEVEL,jdbcType=VARCHAR}
-			,O_DRUG_CODE=#{O_DRUG_CODE,jdbcType=VARCHAR},O_DRUG_NAME=#{O_DRUG_NAME,jdbcType=VARCHAR},O_DRUG_SPCE=#{O_DRUG_SPCE,jdbcType=VARCHAR}
-			,O_DRUG_FORM=#{O_DRUG_FORM,jdbcType=VARCHAR},O_DEPT_CODE=#{O_DEPT_CODE,jdbcType=VARCHAR},O_DEPT_NAME=#{O_DEPT_NAME,jdbcType=VARCHAR}
-			,O_DOCTOR_CODE=#{O_DOCTOR_CODE,jdbcType=VARCHAR},O_DOCTOR_NAME=#{O_DOCTOR_NAME,jdbcType=VARCHAR},IS_USE=#{IS_USE,jdbcType=VARCHAR}
-			,OPERATORDATE=#{OPERATORDATE,jdbcType=VARCHAR},OPERATORUSER=#{OPERATORUSER,jdbcType=VARCHAR}
-		where O_ID = #{O_ID}
+	
+	<select id="findDrugUserAuthByIsHavInfo" parameterType="pd" resultType="pd">
+		select * from CK_DRUG_USER_AUTH 
+			where 
+			dept_name = #{dept_name}
+			and
+			drug_code = #{drug_code}
+			and 
+			drug_name = #{drug_name}
+			and 
+			drug_form = #{drug_form}
+			and 
+			drug_spec = #{drug_spec}
+			and 
+			doctor_name = #{doctor_name}
+			and 
+			control_type = #{control_type}
+			<if test="ID != null and ID !='' " >
+				and id != #{ID}
+			</if>
+	</select>
+	
+	<!-- 	审核分组查询 -->
+	<select id="findDUAByCheck" resultType="pd">
+		
+			select t.drug_code,
+		       t.drug_name,
+		       t.dept_name,
+		       t.doctor_name,
+		       count(*)
+		  from ck_drug_user_auth t
+			 group by t.drug_code,
+			          t.drug_name,
+			          t.dept_name,
+			          t.doctor_name
+	</select>
+	
+	
+	<!-- 	审核查询 -->
+	<select id="findDUAByCheckDetail" parameterType="pd" resultType="TCkDrugUserAuth">
+		select * from CK_DRUG_USER_AUTH 
+			where 
+			dept_name = #{dept_name}
+			and
+			drug_code = #{drug_code}
+			and 
+			drug_name = #{drug_name}
+			and 
+			doctor_name = #{doctor_name}
+	</select>
+	
+	
+<!-- 	<select id="selectOpdrugInfo" parameterType="pd" resultType="pd"> -->
+<!-- 		select * from CK_DRUG_USER_AUTH  -->
+<!-- 		where 1=1 -->
+<!-- 		<if test="o_id!=null and o_id!=''"> -->
+<!-- 			and o_id = #{o_id} -->
+<!-- 		</if> -->
+<!-- 		<if test="o_code!=null and o_code!=''"> -->
+<!-- 			and o_code = #{o_code} -->
+<!-- 		</if> -->
+<!-- 		<if test="o_drug_code !=null and o_drug_code!=''"> -->
+<!-- 			and o_drug_code = #{o_drug_code} -->
+<!-- 		</if> -->
+<!-- 	</select> -->
+	
+	<update id="saveDrugUserAuth"  parameterType="pd" >
+		insert into CK_DRUG_USER_AUTH (
+			<include refid="Field"></include>
+			)
+		values (
+			<include refid="FieldValue"></include>)
 	</update>
 	
-	<delete id="deleteOpDrug" parameterType="pd">
-		delete from ck_operation_drug where o_id=#{o_id}
+	<update id="updateDrugUserAuth"  parameterType="pd">
+		update CK_DRUG_USER_AUTH set 
+				drug_code=#{drug_code,jdbcType=VARCHAR},
+				drug_name=#{drug_name,jdbcType=VARCHAR},
+				dept_name=#{dept_name,jdbcType=VARCHAR},
+				doctor_name=#{doctor_name,jdbcType=VARCHAR},
+				drug_spec=#{drug_spec,jdbcType=VARCHAR},
+				drug_form=#{drug_form,jdbcType=VARCHAR},
+				control_type=#{control_type,jdbcType=VARCHAR},
+				t_value=#{t_value,jdbcType=NUMERIC},
+				total_value=#{total_value,jdbcType=NUMERIC},
+				update_persion=#{update_persion,jdbcType=VARCHAR},
+				update_date=#{update_date,jdbcType=VARCHAR},
+				diag_name=#{diag_name,jdbcType=VARCHAR},
+				diag_code=#{diag_code,jdbcType=VARCHAR},
+				h_type=#{h_type,jdbcType=VARCHAR} 
+		where id=#{id}
+	</update>
+	
+	<update id="updateDUAuthByTotal" parameterType="TCkDrugUserAuth" >
+		update CK_DRUG_USER_AUTH set total_value = #{TOTAL_VALUE} where id = #{ID}
+	</update>
+	
+	<update id="updateDUAuthByTotalOfType" parameterType="Integer" >
+		update CK_DRUG_USER_AUTH set total_value = 0 where control_type = #{type}
+	</update>
+	
+	<delete id="deleteDrugUserAuth" parameterType="String">
+		delete from CK_DRUG_USER_AUTH where id=#{id}
 	</delete>
 	
-	<select id="queryOperationPage" parameterType="page" resultType="pd">
-		select OPERATION_CODE code,OPERATION_NAME name
-		from operation_dict
-		where 1=1 
-		<if test="pd.keywords != null and pd.keywords != ''">
-			and 
-			(
-				OPERATION_NAME like CONCAT(CONCAT('%', #{pd.keywords}),'%')
-				or 
-				OPERATION_CODE like CONCAT(CONCAT('%', #{pd.keywords}),'%')
-			)
-		</if>
-	</select>
 	<select id="queryDrugMapPage" parameterType="page" resultType="pd">
 		select DRUG_NO_LOCAL code,DRUG_NAME_LOCAL name,DRUG_SPEC,UNITS,DRUG_FORM
 		from pdss.drug_map
@@ -131,6 +224,7 @@
 			)
 		</if>
 	</select>
+	
 	<select id="queryDeptPage" parameterType="page" resultType="pd">
 		select DEPT_CODE code,DEPT_NAME name
 		from dept_dict
@@ -144,6 +238,7 @@
 			)
 		</if>
 	</select>
+	
 	<select id="queryStaffPage" parameterType="page" resultType="pd">
 		select EMP_NO code,NAME name
 		from staff_dict
@@ -154,7 +249,28 @@
 				NAME like CONCAT(CONCAT('%', #{pd.keywords}),'%')
 				or 
 				EMP_NO like CONCAT(CONCAT('%', #{pd.keywords}),'%')
-			)
+			)  
 		</if>
 	</select>
+	
+	<insert id="insertDUAuthByBill" parameterType="pd">
+		insert into CK_DRUG_BILLDETAIL
+		(
+		 	id,drug_code,drug_name,dept_name,doctor_name,drugcount,drug_spec,bill_date,pat_name,pat_id,visit_id,diag_code,diag_name,h_type,source,ispass
+		)
+		values(
+		#{id,jdbcType=VARCHAR},#{drug_code,jdbcType=VARCHAR},#{drug_name,jdbcType=VARCHAR},#{dept_name,jdbcType=VARCHAR},#{doctor_name,jdbcType=VARCHAR}
+		,#{drugcount,jdbcType=NUMERIC},#{drug_spec,jdbcType=VARCHAR},#{bill_date,jdbcType=TIMESTAMP},#{pat_name,jdbcType=VARCHAR},#{pat_id,jdbcType=VARCHAR},#{visit_id,jdbcType=VARCHAR},#{diag_code,jdbcType=VARCHAR},#{diag_name,jdbcType=VARCHAR},#{h_type,jdbcType=VARCHAR},#{source,jdbcType=VARCHAR},#{ispass,jdbcType=VARCHAR}		
+		)
+	</insert> 
+	<insert id="insertDUAuthbyCheckRs">
+		insert into ck_DrugUAuth_rslt 
+		(
+			id , checkinfo , bill_id   ,control_type
+		)
+		values
+		(
+			#{id,jdbcType=VARCHAR} , #{checkinfo,jdbcType=VARCHAR} , #{bill_id,jdbcType=VARCHAR} , #{control_type,jdbcType=VARCHAR}
+		)
+	</insert>
 </mapper>

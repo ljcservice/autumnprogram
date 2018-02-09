@@ -138,7 +138,7 @@
 		</td>
 	</tr>
 	<tr height="22">
-		<td  style="text-align: right;">中药:</td>
+		<td  style="text-align: right;">中药(饮片):</td>
 		<td style="text-align: left;">
 			<input type="radio" class="noline" name="is_chinesedrug" value="1" <c:if test="${'1'==cr.get('is_chinesedrug')}" > checked='checked' </c:if>>是
 			<input type="radio" class="noline" name="is_chinesedrug" value="0" <c:if test="${'0'==cr.get('is_chinesedrug')}" > checked='checked' </c:if>>否

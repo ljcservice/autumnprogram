@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DEPT_DICTMapper">
+
+	<!--表名   手术表-->
+	<sql id="tableName">
+		dept_dict
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		DEPT_CODE,
+		DEPT_NAME,
+		DEPT_ALIAS,
+		CLINIC_ATTR,
+		OUTP_OR_INP,
+		INTERNAL_OR_SERGERY,
+		INPUT_CODE
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{DEPT_CODE,jdbcType=VARCHAR},
+		#{DEPT_NAME,jdbcType=VARCHAR},
+		#{DEPT_ALIAS,jdbcType=VARCHAR},
+		#{CLINIC_ATTR,jdbcType=NUMERIC },
+		#{OUTP_OR_INP,jdbcType=NUMERIC },
+		#{INTERNAL_OR_SERGERY,jdbcType=NUMERIC },
+		#{INPUT_CODE,jdbcType=VARCHAR}
+	</sql>
+	
+	<!-- 查询科室  -->
+	<select id="queryDeptDictPage" parameterType="page" resultType="pd">
+		select 
+			<include refid="Field"></include>
+		from  
+			<include refid="tableName"></include>
+		where 1=1 
+		<if test="pd.keywords != null and pd.keywords != ''">
+			and 
+			(
+				dept_code like CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				or 
+				dept_name like CONCAT(CONCAT('%', #{pd.keywords}),'%')
+			)
+		</if>
+		
+		<if test="pd.CLINIC_ATTR != null and pd.CLINIC_ATTR != ''">
+			and CLINIC_ATTR = #{pd.CLINIC_ATTR}
+		</if>
+		
+		<if test="pd.OUTP_OR_INP != null and pd.OUTP_OR_INP != ''">
+			and OUTP_OR_INP = #{pd.OUTP_OR_INP}
+		</if>
+		
+		<if test="pd.INTERNAL_OR_SERGERY != null and pd.INTERNAL_OR_SERGERY != ''">
+			and INTERNAL_OR_SERGERY = #{pd.INTERNAL_OR_SERGERY}
+		</if>
+	</select>
+	
+	
+	<!-- 查询科室  -->
+	<select id="queryDeptDict" parameterType="pd" resultType="pd">
+		select 
+			<include refid="Field"></include>
+		from  
+			<include refid="tableName"></include>
+		where 1=1 
+		<if test="keywords != null and keywords != ''">
+			and 
+			(
+				dept_code like CONCAT(CONCAT('%', #{keywords}),'%')
+				or 
+				dept_name like CONCAT(CONCAT('%', #{keywords}),'%')
+			)
+		</if>
+		
+		<if test="CLINIC_ATTR != null and CLINIC_ATTR != ''">
+			and CLINIC_ATTR = #{CLINIC_ATTR}
+		</if>
+		
+		<if test="OUTP_OR_INP != null and OUTP_OR_INP != ''">
+			and OUTP_OR_INP = #{OUTP_OR_INP}
+		</if>
+		
+		<if test="INTERNAL_OR_SERGERY != null and INTERNAL_OR_SERGERY != ''">
+			and INTERNAL_OR_SERGERY = #{INTERNAL_OR_SERGERY}
+		</if>
+	</select>
+	
+	
+	<!--查询病人信息  -->
+	<select id="findDeptByCode" parameterType="String" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where
+		  dept_code = #{deptCode} 
+	</select>
+	
+	<insert id="insertDeptDict" parameterType="pd">
+		insert into   <include refid="tableName"></include> 
+		(
+			 <include refid="Field"></include> 
+		)
+		values
+			(
+			<include refid="FieldValue"></include>
+			)
+	</insert>
+	
+	<update id="updateDeptDict" parameterType="pd">
+		update 
+			<include refid="tableName" ></include>
+		set
+			DEPT_NAME=#{DEPT_NAME,jdbcType=VARCHAR},
+			DEPT_ALIAS=#{DEPT_ALIAS,jdbcType=VARCHAR},
+			CLINIC_ATTR=#{CLINIC_ATTR,jdbcType=NUMERIC},
+			OUTP_OR_INP=#{OUTP_OR_INP,jdbcType=NUMERIC},
+			INTERNAL_OR_SERGERY=#{INTERNAL_OR_SERGERY,jdbcType=NUMERIC},
+			INPUT_CODE=#{INPUT_CODE,jdbcType=VARCHAR}
+		where
+		  DEPT_CODE=#{DEPT_CODE}
+	</update>
+
+	<delete id="delDeptDict" parameterType="String">
+		delete dept_dict  where DEPT_CODE=#{deptCode}
+	</delete>
+
+</mapper>

@@ -223,73 +223,41 @@
 	
 	<!--查询病人信息  -->
 	<select id="patvisitlistPage" parameterType="page" resultType="pd">
-		select  
-			p.NAME,
-			P.SEX,
-			P.DATE_OF_BIRTH,
-			p.PHONE_NUMBER_HOME,
-			t.PAT_AGE,
-			t.patient_id,
-			t.visit_id,
-			t.dept_admission_to,
-			t.admission_date_time,
-			t.dept_discharge_from,
-			t.discharge_date_time,
-			t.occupation,
-			t.marital_status,
-			t.identity,
-			t.armed_services,
-			t.duty,
-			t.unit_in_contract,
-			t.charge_type,
-			t.working_status,
-			t.insurance_type,
-			t.insurance_no,
-			t.service_agency,
-			t.mailing_address,
-			t.patient_class,
-			t.admission_cause,
-			t.pat_adm_condition,
-			t.consulting_doctor,
-			t.admitted_by,
-			t.serious_cond_days,
-			t.discharge_disposition,
-			t.total_costs,
-			t.total_payments,
-			t.catalog_date,
-			t.cataloger,
-			t.catalog_writer,
-			t.health_level,
-			t.mr_infect_report,
-			t.infect_indicator,
-			t.identity_class,
-			t.chief_doctor,
-			t.advanced_studies_doctor,
-			t.practice_doctor_of_graduate,
-			t.practice_doctor,
-			t.in_dept_name,
-			t.in_clinic_attr,
-			t.in_outp_or_inp,
-			t.in_internal_or_sergery,
-			t.out_dept_name,
-			t.out_clinic_attr,
-			t.out_outp_or_inp,
-			t.out_internal_or_sergery,
-			t.settle_indi,
-			t.link_date,
-			t.NGROUPNUM,
-			t.ISORDERCHECK,
-			t.expert_id,
-			t.ISCHECKTRUE
+		select  p.NAME,P.SEX,P.DATE_OF_BIRTH,p.PHONE_NUMBER_HOME,t.PAT_AGE,
+			t.patient_id,t.visit_id,t.dept_admission_to,t.admission_date_time,
+			t.dept_discharge_from,t.discharge_date_time,t.occupation,t.marital_status,
+			t.identity,t.armed_services,t.duty,t.unit_in_contract,t.charge_type,
+			t.working_status,t.insurance_type,t.insurance_no,t.service_agency,
+			t.mailing_address,t.patient_class,t.admission_cause,t.pat_adm_condition,
+			t.consulting_doctor,t.admitted_by,t.serious_cond_days,t.discharge_disposition,
+			t.total_costs,t.total_payments,t.catalog_date,t.cataloger,t.catalog_writer,
+			t.health_level,t.mr_infect_report,t.infect_indicator,t.identity_class,t.chief_doctor,
+			t.advanced_studies_doctor,t.practice_doctor_of_graduate,t.practice_doctor,
+			t.in_dept_name,t.in_clinic_attr,t.in_outp_or_inp,t.in_internal_or_sergery,
+			t.out_dept_name,t.out_clinic_attr,t.out_outp_or_inp,t.out_internal_or_sergery,
+			t.settle_indi,t.link_date,t.NGROUPNUM,t.ISORDERCHECK,t.expert_id,t.ISCHECKTRUE,
+			t.ATTENDING_DOCTOR
       		,m.RS_DRUG_TYPES
       		,n.DIAGNOSIS_DESC,nvl(N.DIAGNOSIS_COUNT,0) DIAGNOSIS_COUNT
 	    from pat_visit t
 	    left join pat_master_index p on t.patient_id = p.patient_id 
-	    left join ( select NGROUPNUM,listagg( RS_DRUG_TYPE ,'@;@') within GROUP (order by NGROUPNUM) RS_DRUG_TYPES 
-	         from  (
-	         		select NGROUPNUM,RS_DRUG_TYPE  from RS_DRUG_CHECKRSLT group by NGROUPNUM,RS_DRUG_TYPE 
-           			) group by NGROUPNUM
-	    ) m on t.NGROUPNUM=m.NGROUPNUM
+	    <if test="pd.RS_DRUG_TYPE != null and pd.RS_DRUG_TYPE != ''"> <!-- 问题类型 -->
+		    inner 
+		</if>
+	    <if test="pd.RS_DRUG_TYPE ==null or pd.RS_DRUG_TYPE == ''"> <!-- 问题类型 -->
+		    left 
+		</if>
+		 join ( select NGROUPNUM,listagg( RS_DRUG_TYPE ,'@;@') within GROUP (order by NGROUPNUM) RS_DRUG_TYPES 
+	          from  (
+	         		select NGROUPNUM,RS_DRUG_TYPE  
+	         		from RS_DRUG_CHECKRSLT 
+			        <if test="pd.RS_DRUG_TYPE != null and pd.RS_DRUG_TYPE != ''"> <!-- 问题类型 -->
+			    		where RS_DRUG_TYPE = #{pd.RS_DRUG_TYPE}
+			    	</if>
+	         		group by NGROUPNUM,RS_DRUG_TYPE 
+           		)  
+	         group by NGROUPNUM
+	    ) m on (t.NGROUPNUM=m.NGROUPNUM  )
 	    <if test="pd.DIAGNOSIS_DESC != null and pd.DIAGNOSIS_DESC != ''"> <!-- 诊断-->
 		    inner  
 		</if>
@@ -305,28 +273,51 @@
 	    	group by PATIENT_ID,VISIT_ID
 	    )n on (t.patient_id = n.patient_id and t.VISIT_ID=n.VISIT_ID )
 		where 1=1 
-		<if test="pd.keywords != null and pd.keywords != ''"><!-- 关键词检索 -->
-			and
-				(
-					 t.IN_DEPT_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-					 or 
-					 t.OUT_DEPT_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
-				)
+		<if test="pd.OUT_DEPT_NAME != null and pd.OUT_DEPT_NAME != ''"><!-- 关键词检索 -->
+			and t.OUT_DEPT_NAME LIKE CONCAT(CONCAT('%', #{pd.OUT_DEPT_NAME}),'%') 
 		</if>
-
+		<if test="pd.ATTENDING_DOCTOR != null and pd.ATTENDING_DOCTOR != ''"> <!-- 医生名-->
+			and t.ATTENDING_DOCTOR  LIKE CONCAT(CONCAT('%', #{pd.ATTENDING_DOCTOR}),'%') 
+		</if>
 		<if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
 			and t.discharge_date_time &gt;= to_date(#{pd.beginDate},'yyyy-mm-dd') 
 		</if>
 		<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
 			and t.discharge_date_time &lt; to_date(#{pd.endDate} ,'yyyy-mm-dd') 
 		</if>
-		<if test="pd.ISCHECKTRUE != null and pd.ISCHECKTRUE != ''"> <!-- 是否合理-->
-			and t.ISCHECKTRUE = #{pd.ISCHECKTRUE} 
+		<if test="pd.IS_OPERATION != null and pd.IS_OPERATION != ''"> <!-- 是否含有手术-->
+			and t.IS_OPERATION = #{pd.IS_OPERATION} 
 		</if>
-		<if test="pd.ISORDERCHECK != null and pd.ISORDERCHECK != ''"> <!--点评记录-->
-			and t.ISORDERCHECK = #{pd.ISORDERCHECK}
+		<if test="pd.ISORDERCHECK!=null and pd.ISORDERCHECK!='' and pd.ISORDERCHECK==1"> <!--点评记录-->
+			and t.ISORDERCHECK = 1
 		</if>
-		Order by t.discharge_date_time 
+		<if test="pd.ISORDERCHECK!=null and pd.ISORDERCHECK!='' and pd.ISORDERCHECK==0"> <!--点评记录-->
+			and (t.ISORDERCHECK= 0 or t.ISORDERCHECK is null ) 
+		</if>
+		<choose>
+			<when test="pd.ISCHECKTRUE!=null and pd.ISCHECKTRUE!='' and pd.ISCHECKTRUE==2">
+				and ( t.ISCHECKTRUE =2	or t.ISCHECKTRUE  is null )
+			</when>
+			<otherwise>
+				<if test="pd.ISCHECKTRUE!=null and pd.ISCHECKTRUE!='' and pd.ISCHECKTRUE  != ''"> <!--点评记录-->
+					and t.ISCHECKTRUE  = #{pd.ISCHECKTRUE }
+				</if>
+			</otherwise>
+		</choose>
+		<if test="pd.IS_EXPERT!=null and pd.IS_EXPERT!='' and pd.IS_EXPERT==0"> <!-- 非专家点评 -->
+			and t.EXPERT_ID is null
+		</if>
+		<if test="pd.IS_EXPERT!=null and pd.IS_EXPERT!='' and pd.IS_EXPERT==1"> <!-- 是专家点评 -->
+			and t.EXPERT_ID is not null
+		</if>
+		<choose>
+			<when test="pd.randomflag!= null and pd.randomflag==1">
+				Order by DBMS_RANDOM.VALUE 
+			</when>
+			<otherwise>
+				Order by t.discharge_date_time  desc
+			</otherwise>
+		</choose>
 	</select>
 	
 	<select id="patVisitById" parameterType="pd" resultType="pd">
@@ -422,4 +413,51 @@
 		update pat_visit t set expert_id=#{expert_id} 
  		where  t.patient_id =#{patient_id} and t.visit_id = #{visit_id}
 	</update>
+	
+	<!-- 	查询出院病人 -->
+	<select id="queryPatVisitByDate" parameterType="pd" resultType="pd" >
+		select * from pat_visit t 
+		left join  pat_master_index  m on m.patient_id  = t.patient_id  
+		where 
+			t.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
+			and t.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+	</select>
+		 
+	<!-- 	查询诊断 -->
+	<select id="queryDiagnosisByPatVisist" parameterType="pd" resultType="pd">
+		select * from diagnosis t 
+			where 
+			patient_id =#{patient_id} and visit_id = #{visit_id}
+	</select>
+	
+	<!-- 	清空审核数据 -->
+	<select id="deleteDrugCheckRslt" parameterType="pd" >
+		delete rs_drug_checkrslt  
+		where ngroupnum in (
+			select t.ngroupnum from pat_visit t 
+		where 
+			t.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
+			and t.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+			and ngroupnum is not null
+		)
+	</select>
+	
+	<!-- 	查询审核结果去除药品重复结果 -->
+	<select id="queryGroupDrugCheckRs" parameterType="pd" resultType="pd">
+		select 
+			drug_id1,drug_id1_name,rec_main_no1,rec_sub_no1,drug_id2,drug_id2_name,rec_main_no2,rec_sub_no2,ngroupnum,
+			rs_drug_type,in_rs_type,alert_level,alert_hint,alert_cause,checkpeople,relation_id1,relation_id2
+		  from rs_drug_checkrslt t
+		 where ngroupnum in (
+	 			select t.ngroupnum from pat_visit t 
+				where 
+					t.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
+					and t.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+					and ngroupnum is not null
+		 )
+		 group by 
+			drug_id1,drug_id1_name,rec_main_no1,rec_sub_no1,drug_id2,drug_id2_name,rec_main_no2,rec_sub_no2,ngroupnum,
+			rs_drug_type,in_rs_type,alert_level,alert_hint,alert_cause,checkpeople,relation_id1,relation_id2
+	</select>
+		
 </mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Config_DictMapper">
+
+	<!--表名   手术表-->
+	<sql id="tableName">
+		config_dict
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+	 	id,
+		type,
+		code,
+		name,
+		remark,
+		apply_sign,
+		input_code
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+	 	#{id},
+		#{type},
+		#{code},
+		#{name},
+		#{remark},
+		#{apply_sign},
+		#{input_code}
+	</sql>
+	
+	<!--查询字典表信息  -->
+	<select id="findConfigDictByType" parameterType="String" resultType="pd">
+		select * from config_dict where type = #{type}
+	</select>
+	
+</mapper>

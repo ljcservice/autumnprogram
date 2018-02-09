@@ -231,7 +231,7 @@ public class DDDCountByBill_SCDJMS implements IReportBuilder
 							    outAntiDDD += dddValue;
 							}
 							//普通级抗菌药
-							if("1".equals(DrugUtils.getDrugLevel(bill.get("item_code"), bill.get("item_spec"))))
+							if("1".equals(DrugUtils.getDrugAntiByLevel(bill.get("item_code"), bill.get("item_spec"))))
 							{
 								ordinaryDDDS += dddValue;
 								antiDrugInfo.get(mapKey).set("OUTORDINARYDDDS", dddValue + antiDrugInfo.get(mapKey).getDouble("OUTORDINARYDDDS") + "");

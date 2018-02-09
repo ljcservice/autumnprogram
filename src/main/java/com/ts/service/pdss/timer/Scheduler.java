@@ -14,6 +14,7 @@ import com.ts.SchedulerHandler.ModelHandler;
  * @author Administrator
  *
  */  
+@Deprecated
 public class Scheduler 
 {
     private static ScheduledExecutorService sess = null;

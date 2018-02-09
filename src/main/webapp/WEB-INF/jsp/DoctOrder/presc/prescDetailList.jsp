@@ -24,7 +24,7 @@
 				<div class="page-content">
 					<div class="row">
 						<div >
-						<form action="presc/prescDetailList.do?id=${page.pd.id}" method="post" id="myForm" name="myForm">
+						<form action="presc/prescDetailList.do" method="post" id="myForm" name="myForm">
 							<input type="hidden" name="id" value="${page.pd.id}" id="id"/>
 							<input type="hidden" name="ngroupnum" value="${page.pd.ngroupnum }" id="ngroupnum"/>
 							<!-- 快捷审核名字  -->
@@ -249,7 +249,7 @@
 						
 						</div>
 						
-								<div  id="dragCheck" style="width: 400px;position: absolute;top: 100px;left:260px;display:none;" class="drag"   >
+								<div  id="dragCheck" style="width: 400px;position: absolute;top: 100px;left:260px;display:none;z-index: 1001" class="drag"   >
 										<!-- #section:custom/widget-box -->
 										<div class="widget-box" >
 											<div class="widget-header" >
@@ -440,7 +440,8 @@
 					$("#dragCheck").hide(500);
 					reSetCheck();
 					//刷新上个页面
-					parent.CheckRsFrame.location.href = parent.$("#CheckRsFrame").attr("src")+data.ngroupnum;
+					var rsUrl = "presc/checkRsView.do?id=" + id + "&NGROUPNUM=" + data.ngroupnum;
+					parent.CheckRsFrame.location.href = rsUrl ; //parent.$("#CheckRsFrame").attr("src")+data.ngroupnum;
 					//刷新本页面
 					$("#ngroupnum").val(data.ngroupnum);
 					$("#myForm").submit();
@@ -485,9 +486,11 @@
 				$(".tr" + order_no+"_" + order_sub_no).css("background-Color",tmpColor);
 				$(".tr" + tmpOrder_no+"_" + tmpOrder_sub_no).css("background-Color",tmpColor);
 				reSetCheck();
+				closeBG();
 			}
 		  }
 		);
+		
 	}
 	
 	// 审核预设置
@@ -613,7 +616,7 @@
 			tmpColor        = myColor;
 			setCheckJsonInfo();
 			drug1.html(_trObj.getAttributeNode("order_name").value);
-			alert("一个药品可以做添加点评项目");
+			//alert("一个药品可以做添加点评项目");
 			$(".widget-title").text(checkName);
 			showDragCheck();
 		}else if (setCount == 2 ) {
@@ -632,11 +635,10 @@
 				order_no     = $(_trObj).attr("order_no");
 				order_sub_no = $(_trObj).attr("order_sub_no");
 				//setCheckJsonInfo();
-				
 				drug1.html(tmpOrder_name);
 				var  text = "<b>与</b> " + _trObj.getAttributeNode("order_name").value;
 				drug2.html(text);
-				alert("两个药品可以做添加点评项目");
+				//alert("两个药品可以做添加点评项目");
 				$(".widget-title").text(checkName);
 				showDragCheck();
 			}else{
@@ -651,6 +653,8 @@ function reloadPage(){
 	window.document.forms[0].submit();
 }
 function showDragCheck(){
+	
+	showBG();
 	$("#dragCheck").css("top",($(window).height())/5 + 'px');
 	$("#dragCheck").css("left",($(window).width()-$("#dragCheck").outerWidth())/2 + 'px');
 	$("#dragCheck").show(500);
@@ -665,6 +669,33 @@ function showDetail(obj){
 		ss.hide().attr("show","0");
 		$(obj).text("打开详情");
 	}
+}
+
+//单页遮罩层
+var bgObj = null;
+function closeBG()
+{
+	if(bgObj != null)
+	{
+		document.body.removeChild(bgObj);
+	}
+	bgObj = null;
+}
+function showBG()
+{
+	document.body.style.margin = "0";
+	bgObj   = document.createElement("div");
+	bgObj.setAttribute('id', 'bgDiv');
+	bgObj.style.position   = "absolute";
+	bgObj.style.top        = "0";
+	bgObj.style.background = "#777";
+	bgObj.style.filter     = "progid:DXImageTransform.Microsoft.Alpha(opacity=50)";
+	bgObj.style.opacity    = "0.4";
+	bgObj.style.left       = "0";
+	bgObj.style.width      = "100%";
+	bgObj.style.height     = "100%";
+	bgObj.style.zIndex     = "1000";
+	document.body.appendChild(bgObj);
 }
 </script>
 </body>

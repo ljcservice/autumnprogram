@@ -18,6 +18,7 @@ import com.hitzd.his.casehistory.helper.CaseHistoryFunction;
 import com.hitzd.his.casehistory.helper.CaseHistoryHelperUtils;
 import com.hitzd.his.casehistory.helper.ICaseHistoryHelper;
 import com.ts.util.Logger;
+import com.ts.util.UuidUtil;
 
 public class MH4OUTP_BILL_ITEMS
 {
@@ -54,8 +55,8 @@ public class MH4OUTP_BILL_ITEMS
                         sql = "INSERT INTO OUTP_ORDERS_COSTS " +
                                 "(PATIENT_ID, VISIT_DATE, VISIT_NO, SERIAL_NO, ORDER_CLASS, ORDER_NO, ORDER_SUB_NO,ITEM_CLASS, ITEM_NO, ITEM_NAME, ITEM_CODE, ITEM_SPEC, UNITS, REPETITION, " +
                                 "AMOUNT, ORDERED_BY_DEPT, ORDERED_BY_DOCTOR, PERFORMED_BY, CLASS_ON_RCPT, COSTS, CHARGES, RCPT_NO, BILL_DESC_NO, BILL_ITEM_NO, "
-                                + "ORDERED_BY_DEPT_CODE,PERFORMED_BY_CODE,is_anti,CHARGE_INDICATOR,ddd_value)" +
-                                " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                                + "ORDERED_BY_DEPT_CODE,PERFORMED_BY_CODE,is_anti,CHARGE_INDICATOR,ddd_value,OOC_ID)" +
+                                " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         				sqlParams.add(t.get("PATIENT_ID"));
         				Timestamp dateTime = new Timestamp(DateUtils.getDateFromString(t.getDateString("VISIT_DATE")).getTime());
     					sqlParams.add(dateTime);
@@ -95,13 +96,14 @@ public class MH4OUTP_BILL_ITEMS
                                         t.get("item_spec"), t.get("units"),
                                         t.get("Firm_ID"), t.get("amount"),
                                         t.get("COSTS"));
-                                logger.info("存在抗菌药" + t.get("item_code") + "●●●"
+                                logger.info("门诊 存在抗菌药" + t.get("item_code") + "●●●"
                                         + t.get("item_spec") + "●●●" + dddValue);
                             }
                         }
                         sqlParams.add(is_anti);
                         sqlParams.add("1");
                         sqlParams.add(dddValue);    
+                        sqlParams.add(UuidUtil.get32UUID());
                         query.update(sql,sqlParams.toArray());
                     }
                     catch (Exception e) 

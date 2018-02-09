@@ -24,7 +24,7 @@
 				<div class="page-content">
 					<div class="row">
 						<div >
-						<form id="myForm" action="DoctOrder/DoctOrdersDetail.do?patient_id=${page.pd.patient_id}&visit_id=${page.pd.visit_id}" method="post">
+						<form id="myForm" action="DoctOrder/DoctOrdersDetail.do" method="post">
 							<input type="hidden" name="patient_id" value="${page.pd.patient_id}" id="patient_id"/>
 							<input type="hidden" name="visit_id" value="${page.pd.visit_id}" id="visit_id"/>
 							<input type="hidden" name="repeat_indicator" value="${page.pd.repeat_indicator}" id="repeat_indicator"/>
@@ -361,7 +361,7 @@
 						</table>
 						</div>
 						
-								<div  id="dragCheck" style="width: 400px;position: absolute;top: 100px;left:260px;display:none;z-index: 950;" class="drag"   >
+								<div  id="dragCheck" style="width: 400px;position: absolute;top: 100px;left:260px;display:none;z-index: 1001;" class="drag"   >
 										<!-- #section:custom/widget-box -->
 										<div class="widget-box" >
 											<div class="widget-header" >
@@ -478,9 +478,11 @@
 	}
 	window.onload = function(){
 		var cji = $("#checkJsonInfo").val();
+		//alert(cji);
 		if(cji == '' || cji == 'undefind') return ;
-		var jsonObj = JSON.parse(cji);
-		var id = "#tr" + jsonObj.order_no + "" + jsonObj.order_sub_no ;
+		var jsonObj = JSON.parse(cji)
+		var id = ".tr" + jsonObj.order_no + "" + jsonObj.order_sub_no ;
+		//alert($(id).text());
 		$(id).css("background-Color","red");
 		setCount = jsonObj.setCount;
 		checkFlag = jsonObj.checkFlag ;
@@ -545,10 +547,13 @@
 					$("#dragCheck").hide(500); 
 					reSetCheck();
 					//刷新上个页面
-					parent.CheckRsFrame.location.href = parent.$("#CheckRsFrame").attr("src")+data.ngroupnum;
+					var rsUrl = "DoctOrder/CheckRsViewUI.do?patient_id=" + patId + "&visit_id=" + visitId + "&ngroupnum=" + ngroupnum;
+					parent.CheckRsFrame.location.href = rsUrl ;//parent.$("#CheckRsFrame").attr("src")+data.ngroupnum;
 					//刷新本页面
 					$("#ngroupnum").val(data.ngroupnum);
-					$("#myForm").submit();
+					
+					nextPage(${page.currentPage});
+					//$("#myForm").submit();
 					// 如果成功设置旗子
 					
 					//var trFirst = $("#tr" + order_no + order_sub_no);
@@ -591,6 +596,7 @@
 				if(trFirst) trFirst.css("background-Color",oldColor);
 				$(".tr" + tmpOrder_no + tmpOrder_sub_no).css("background-Color",tmpColor);
 				reSetCheck();
+				closeBG();
 			}
 		  }
 		);
@@ -621,6 +627,7 @@
 		var myform = window.document.forms[0];
 		myform.order_class.value = "";
 		myform.order_class_name.value = "";
+		myform.submit();
 	}
 	function reSetShowType(){
 		$("#reSetShowTypeId").text("未选择");
@@ -694,16 +701,17 @@
 			if(order_no == ""){
 				
 				drug1.text($(_trObj).attr("order_name"));
-				alert("一个药品可以做添加点评项目");
+				//alert("一个药品可以做添加点评项目");
 				
 			}else{
 				drug1.text(order_name);
 				var  text = "<b>与</b> " + $(_trObj).attr("order_name");
 				drug2.html(text);
-				alert("两个药品可以做添加点评项目");
+				//alert("两个药品可以做添加点评项目");
 			}
 			$(".widget-title").text(checkName);
 			showDragCheck();
+			showBG();
 		}else if (setCount == 2 )
 		{
 			oldColor     = myColor;

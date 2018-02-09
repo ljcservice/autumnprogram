@@ -15,6 +15,7 @@ public class DoctorConst {
 		rstypeMap.put("administrator","途");
 		rstypeMap.put("specpeople","特");
 		rstypeMap.put("manager","管");
+		rstypeMap.put("manager4Two", "管");
 	}
 	public static Map<String,String> rstypeColorMap = new HashMap<String,String>(); 
 	static{
@@ -27,5 +28,6 @@ public class DoctorConst {
 		rstypeColorMap.put("administrator","btn-info");
 		rstypeColorMap.put("specpeople","btn-purple");
 		rstypeColorMap.put("manager","btn-success");
+		rstypeColorMap.put("manager4Two","btn-success"); 
 	}
 }

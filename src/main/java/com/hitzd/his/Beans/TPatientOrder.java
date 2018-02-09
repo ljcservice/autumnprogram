@@ -285,6 +285,16 @@ public class TPatientOrder implements java.io.Serializable
         this.treatUseDrug = treatUseDrug;
     }
 
+    public String toStringByDiagnosiss(){
+        StringBuffer sb = new StringBuffer();
+        for(TPatOrderDiagnosis patOderDiag : this.patOrderDiagnosiss)
+        {
+            sb.append(patOderDiag.getDiagnosisName()).append(",");
+        }
+        if(sb.length() > 0) sb.deleteCharAt(sb.length() -1 );
+        return sb.toString();
+    }
+    
     @Override
     public String toString()
     {

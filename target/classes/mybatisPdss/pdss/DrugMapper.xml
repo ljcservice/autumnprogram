@@ -99,7 +99,7 @@
 	</select>
 	
 	<!-- 	药物禁忌症对应CONTRAIND_ID -->
-	<select id="getDrugDiagInfosPage" parameterType="pd" resultType="TDrugDiagInfo">
+	<select id="getDrugDiagInfos" parameterType="pd" resultType="TDrugDiagInfo">
 		select DRUG_DIAG_INFO_ID,DIAGNOSIS_DICT_ID,DRUG_DIAG_REL_ID,SEQ_ID,INTER_INDI,DIAG_DESC,DRUG_REF_SOURCE,CONTRAIND_ID 
 		from DRUG_DIAG_INFO 
 		where disease_id in
@@ -115,7 +115,7 @@
 	</select>
 	
 	<!-- 	药物禁忌症对应CONTRAIND_ID -->
-	<select id="getDrugDiagInfos" parameterType="page" resultType="TDrugDiagInfo">
+	<select id="getDrugDiagInfosPage" parameterType="page" resultType="TDrugDiagInfo">
 		select DRUG_DIAG_INFO_ID,DIAGNOSIS_DICT_ID,DRUG_DIAG_REL_ID,SEQ_ID,INTER_INDI,DIAG_DESC,DRUG_REF_SOURCE,CONTRAIND_ID 
 		from DRUG_DIAG_INFO where contraind_id in (
 			select CONTRAIND_ID from DRUG_DIAG_REL where DRUG_CLASS_ID in (select drug_class_id from view_drug) )  order by contraind_id
@@ -145,15 +145,53 @@
 		order by iv_class_code1 , iv_class_code2
 	</select>
 	
+	<select id="queryDrugIvEffecSupptPage" parameterType="pd" resultType="TDrugIvEffect">
+		select ID as EFFECT_ID, IV_CLASS_CODE1, IV_CLASS_CODE2, RESULT_ID, REFER_INFO
+		from DRUG_IV_EFFECT_supp
+		where 
+		  iv_class_code1 in (select iv_class_code from view_drug) and iv_class_code2 in (select iv_class_code from view_drug)
+		order by iv_class_code1 , iv_class_code2
+	</select>
+	
+	
+	<select id="queryDrugRepeatPage" parameterType="page" resultType="TDrugRepeat">
+		select 
+			drug_name_1,
+			drug_name_2,
+			refer_info,
+			effect,
+			effect_indi,
+			source,
+			source_tag,
+			drug_class_1,
+			drug_class_2,
+			id
+		from 
+			DRUG_REPEAT
+		where 
+		  drug_class_1 in (select drug_class_id from view_drug) and drug_class_2 in (select drug_class_id from view_drug)
+		order by drug_class_1 , drug_class_2
+	</select>
+	
 <!-- 	<select id="queryDrugIvEffectGroupPage" parameterType="page" resultType="pd"> -->
 <!-- 		select iv_class_code1 ,iv_class_code2,count(*) count from DRUG_IV_EFFECT group by iv_class_code1 ,iv_class_code2 -->
 <!-- 	</select> -->
 	
 	<!-- 不良反应 所有信息 -->
 	<select id="getTDrugSideDictPage" parameterType="pd" resultType="TDrugSideDict">
-		select SIDE_ID,DIAGNOSIS_DICT_ID,SEQ_NO,DIAGNOSIS_DESC,SIDE_GROUP_ID,SEVERITY,DRUG_CLASS_ID,ADMINISTRATION_ID ,diagnosis_code,diagnosis_name
+		select 
+				SIDE_ID,
+				DIAGNOSIS_DICT_ID,
+				SEQ_NO,
+				DIAGNOSIS_DESC,
+				SIDE_GROUP_ID,
+				SEVERITY,
+				DRUG_CLASS_ID,
+				ADMINISTRATION_ID,
+				diagnosis_code,
+				diagnosis_name
 		from view_side 
-		where drug_class_id in (select drug_class_id  from view_drug)
+		where drug_class_id in (select drug_class_id  from view_drug)  and DIAGNOSIS_DESC is not null
 		order by DRUG_CLASS_ID, ADMINISTRATION_ID
 <!-- 		where  -->
 <!-- 	 			DRUG_CLASS_ID = #{DRUG_CLASS_ID}   -->
@@ -221,7 +259,7 @@
    		from view_perform 
    		where perform_freq_dict_no_local = #{performID} 
 	</select>
-	<select id="queryDrugPerfomPage" parameterType="page"	resultType="TDrugDosage">
+	<select id="queryDrugPerfomPage" parameterType="page"	resultType="TDrugPerformFreqDict">
 		select PERFORM_FREQ_DICT_NAME,FREQ_COUNTER,FREQ_INTERVAL,FREQ_INTERVAL_UNITS,PERFORM_FREQ_DICT_NO_LOCAL,PERFORM_FREQ_DICT_NAME_LOCAL,PERFORM_FREQ_DICT_ID,OPER_USER,OPER_TIME
    		from view_perform 
 	</select>
