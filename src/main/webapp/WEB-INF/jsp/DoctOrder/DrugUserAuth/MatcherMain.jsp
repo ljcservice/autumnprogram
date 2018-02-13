@@ -31,7 +31,6 @@
 </style>
 </head>
 <body class="no-skin">
-
 	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
 		<!-- /section:basics/sidebar -->
@@ -42,7 +41,7 @@
 						<div class="col-xs-12">
 						<!-- 检索  -->
 								<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 4px;padding-bottom: 5px;width: 100%;">
-								<form action="DrugMatcher/query.do" method="post" name="searchForm" id="searchForm">
+								<form action="drugUserAuth/queryByDrug.do" method="post" name="searchForm" id="searchForm">
 									<div class="check-search nav-search"  >
 										药品代码：
 										<span class="input-icon">
@@ -138,47 +137,21 @@
 							                <option value="3" <c:if test="${'3'==q_is_danger}"> selected='selected'</c:if>>C级</option>
 							            </select>
 									</div>
-									<div class="check-search"  >
-										配对状态:
-									 	<select class="chosen-select form-control" name="matched" id="matched" data-placeholder=" " style="vertical-align:top;width: 80px;">
-									 		<option value="">全部</option>
-							               <option value="is not null" <c:if test="${'is not null'==matched}">selected='selected'</c:if> >已配对</option>
-							               <option value="is null" <c:if test="${'is null'==matched}">selected='selected'</c:if>>未配对</option>
-							           </select>
-									</div>
-									
-									<div class="check-search"  id="autoMatcherBtn" >
-										<ts:rights code="DrugMatcher/autoMatcher" >
-											<c:choose>
-											<c:when test="${autoMatcher!=null and autoMatcher!='' }">
-												自动匹配中......
-											</c:when>
-											<c:otherwise>
-												<a class="btn btn-mini btn-primary" onclick="autoMatcher();">自动匹配</a>
-											</c:otherwise>
-											</c:choose>
-										</ts:rights>
-									</div>
+									<a class="btn btn-mini btn-primary" onclick="selectByDrug;">选择</a>
 								</form>
 								</div>
 						<!-- 检索  -->
 						<div>
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
 							<thead>
-								<tr>
-						             <th class="center" colspan="2">本院药品信息</th>
-						             <th class="center" colspan="6">配码信息</th>
-						             <th class="center" rowspan="2" id="last_th" style="border-right: 1px;background-color: #f1f1f1;">操作</th>
-						         </tr>
 						         <tr>
+						         	 <th class="center"></th>
 						             <th class="center">药品码</th>
-						             <th class="center">药品名称</th>
 						             <th class="center">药品名称</th>
 						             <th class="center">规格</th>
 						             <th class="center">单位</th>
 						             <th class="center">剂型</th>
-						             <th class="center">最小单位剂量</th>
-						             <th class="center" style="background-color: #f1f1f1;border-right: 1px;">剂量单位</th>
+						             <th class="center" rowspan="2" id="last_th" style="border-right: 1px;background-color: #f1f1f1;">操作</th>
 						         </tr>
 							</thead>
 							<tbody>
@@ -186,26 +159,26 @@
 							<c:choose>
 								<c:when test="${not empty resultList}">
 									<c:forEach items="${resultList}" var="obj" varStatus="vs">
-										<tr  >
+										<tr >
+											 <td class="center"> 
+											    <label>
+														<input name="form-field-checkbox" class="ace ace-checkbox-2" type="checkbox" />
+														<span class="lbl"></span>
+												</label> 
+											 </td>
 											 <td class="center">${obj.get("Drug_No_Local")}
 								              </td>
 								              <td class="center">${obj.get("Drug_Name_Local")}
 								              </td>
-								              <td class="center">${obj.get("drug_name")}
-								              </td class="center">
-								              <td class="center">${obj.get("drug_spec_pdss")}
+								              <td class="center">${obj.get("drug_spec")}
+								              </td >
+								              <td class="center">${obj.get("units")}
 								              </td>
-								              <td class="center">${obj.get("units_pdss")}
+								              <td class="center">${obj.get("drug_form")}
 								              </td>
-								              <td class="center">${obj.get("drug_form_pdss")}
-								              </td>
-								              <td class="center">${obj.get("dose_per_unit_pdss")}
-								              </td>
-								              <td class="center">${obj.get("dose_units_pdss")}
-								              </td>
-								              <td  class="center">
-								                  <a href="javascript:DeleteIt('${obj.get("drug_map_id")}')">删除</a>
-								                  <a href="javascript:MatchIt('${obj.get("drug_map_id")}')">配对</a>
+								             
+								              <td  class="center"> 
+								             	 <a class="btn btn-mini btn-success" onclick="javascript:selectByDrug('${obj.get("drug_no_local")}','${obj.get("Drug_Name_Local")}','${obj.get("drug_spec")}','${obj.get("units")}','${obj.get("drug_form")}')">选择</a>  
 								              </td>
 										</tr>
 									
@@ -223,9 +196,6 @@
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">
 							<table style="width:100%;">
 								<tr>
-									<td>
-										<b>药品总数：<font color="#428bca">${matcherCount.drug_all}</font> &nbsp;&nbsp;  已匹配总数： <font color="#428bca">${matcherCount.success}</font></b>
-									</td>
 									<td>
 										<div class="pagination" style="float: right;padding: 0px;margin: 0px;">${page.pageStr}</div>
 									</td>
@@ -267,14 +237,21 @@
 	<script type="text/javascript" src="static/js/common/common.js"></script>
 	</body>
 <script type="text/javascript" src="static/js/common/lockTable.js?v=201612"></script>
-<script type="text/javascript">
+<script type="text/javascript">  
 $(top.hangge());
-
 //检索
 function searchs(){
-	top.jzts();
+	//top.jzts();
 	$("#searchForm").submit();
 }
+
+
+function selectByDrug(drug_no_local,Drug_Name_Local,drug_spec,units,drug_form)
+{
+	parent.frames["_DialogFrame_0"].contentWindow.setDrugInfo(drug_no_local,Drug_Name_Local,drug_spec,units,drug_form);
+	//alert(parent.document.getElementById("_DialogFrame_0").contentWindow.document.getElementId("DRUG_NAME").value);  
+	parent.Dialog.close();
+} 
 
 function resetForm(){
 	document.getElementById("searchForm").reset();
@@ -315,49 +292,32 @@ function initWidthHeight(){
 	rr[1]="pageStrDiv";
 	FixTable("simple-table", 1, rr);
 }
-//删除
-function DeleteIt(id){
-	bootbox.confirm("确定要删除吗?", function(result) {
-		if(result) {
-			top.jzts();
-			var url = "DrugMatcher/deleteIt.do?dmi="+id+"&tm="+new Date().getTime();
-			$.get(url,function(data){
-				nextPage(${page.currentPage});
-			});
-		};
-	});
-}
+//单页遮罩层
+var bgObj = null;
 
-//配对
-function MatchIt(drug_map_id) {
-    var url = path + "/DrugMatcher/matcherIt.do?drug_map_id=" + drug_map_id ;
-  	 top.jzts();
-  	 var diag = new top.Dialog();
-  	 diag.Drag=true;
-  	 diag.Title ="资料";
-  	 diag.URL = url;
-	 diag.Width = $(top.window).width();
-	 diag.Height = $(top.window).height();
-  	 diag.CancelEvent = function(){ //关闭事件
-  		nextPage(${page.currentPage});
-  		diag.close();
-  	 };
-  	 diag.show();
+function closeBG()  
+{
+	if(bgObj != null)
+	{
+		document.body.removeChild(bgObj);
+	}
+	bgObj = null;
 }
-function autoMatcher(){
-	$("#autoMatcherBtn").html("自动匹配中......");
-	$.ajax({
-		type: "POST",
-		url: '${path}/DrugMatcher/autoMatcher.do',
-		data:$("#searchForm").serialize(),
-		dataType:'json',
-		async:true,
-		cache: false,
-		success: function(data){
-			alert(data.msg);
-			nextPage(${page.currentPage});
-		}
-    });
+function showBG()
+{  
+	document.body.style.margin = "0";
+	bgObj   = document.createElement("div");
+	bgObj.setAttribute('id', 'bgDiv');
+	bgObj.style.position   = "absolute";
+	bgObj.style.top        = "0";
+	bgObj.style.background = "#777";
+	bgObj.style.filter     = "progid:DXImageTransform.Microsoft.Alpha(opacity=50)";
+	bgObj.style.opacity    = "0.4";
+	bgObj.style.left       = "0";
+	bgObj.style.width      = "100%";
+	bgObj.style.height     = "100%";
+	bgObj.style.zIndex     = "1000";
+	document.body.appendChild(bgObj);
 }
 </script>
 </html>

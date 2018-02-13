@@ -121,7 +121,7 @@ public class TPatOrderInfoExt implements Serializable {
 	}
 
 	public String getInsureanceType() {
-		return insureanceType;
+		return insureanceType == null ? "":insureanceType;
 	}
 
 	public void setInsureanceType(String insureanceType) {
@@ -129,7 +129,7 @@ public class TPatOrderInfoExt implements Serializable {
 	}
 
 	public String getInsuranceNo() {
-		return insuranceNo;
+		return insuranceNo == null ? "" : insuranceNo ;
 	}
 
 	public void setInsuranceNo(String insuranceNo) {

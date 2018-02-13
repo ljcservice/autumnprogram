@@ -303,8 +303,14 @@ function viewDetail(patId , visitId,ngnum){
 	diag.Width = window.screen.width;
 	diag.Height = window.screen.height;  
 	diag.CancelEvent = function(){ //关闭事件
-		
-		nextPage(${page.currentPage});
+		diag.close();
+		try
+		{
+			nextPage(${page.currentPage});
+		}catch(e)
+		{
+			
+		}
 		/**
 		if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
 			 if('${page.currentPage}' == '0'){
@@ -314,7 +320,6 @@ function viewDetail(patId , visitId,ngnum){
 				 nextPage(${page.currentPage});
 			 }
 		}*/
-		diag.close();
 	 };
 	 diag.show();
 	

@@ -1,6 +1,7 @@
 package com.ts.service.DoctOrder.OrderWork.Impl;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,7 +62,7 @@ public class PrescServiceImpl implements PrescService{
 		return map;
 	}
 	public Map otherPrescListSpecial(PageData pd)throws Exception{
-		Map<String,String> map = new HashMap<String,String>();
+		Map<String,String> map = new LinkedHashMap<String,String>();
 		List<PageData>	list =	(List<PageData>) daoph.findForList("PrescMapper.otherPrescListSpecial",pd);
 		if(list!=null){
 			for(PageData p:list){

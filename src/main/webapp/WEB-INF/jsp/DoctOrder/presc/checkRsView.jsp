@@ -317,9 +317,9 @@ function toAddCheckRs(ngroupnum){
 		var ngroupnum = diag.innerFrame.contentWindow.document.getElementById('ngroupnum').value;
 		$("#ngroupnum").val(ngroupnum);
 		diag.close();
+		refreshDoctFrame();
 		//遮罩层控制，第三层弹窗使用
 		top.$("#_DialogBGDiv").css("z-index",900).css("display","block");
-		parent.DoctFrame.location.href = parent.$("#DoctFrame").attr("src")+ngroupnum;
 		$("#checkForm").submit();
 	};
 	diag.show();
@@ -335,6 +335,7 @@ function editCheckRs(rs_id){
 	diag.Height =650;
 	diag.CancelEvent = function(){ //关闭事件
 		diag.close();
+		refreshDoctFrame();
 		//遮罩层控制，第三层弹窗使用
 		top.$("#_DialogBGDiv").css("z-index",900).css("display","block");
 		$("#checkForm").submit();
@@ -419,9 +420,14 @@ function refreshAll(){
 	refreshDoctFrame();
 	$("#checkForm").submit();
 }
+
 function refreshDoctFrame(){
+	var myngroupnum =  $("#ngroupnum").val(); 
+	var orderUrl = "presc/prescDetailList.do?id=${page.pd.id}&ngroupnum=" + myngroupnum;
 	//刷新下方iframe列表
-	parent.DoctFrame.location.href = parent.$("#DoctFrame").attr("src");
+	//parent.$("#DoctFrame").attr("src",orderUrl);// = orderUrl ;  
+	parent.frames["DoctFrame"].refreshPage(myngroupnum);
+	//parent.DoctFrame.location.href = orderUrl;//parent.$("#DoctFrame").attr("src");
 }
 </script>
 </html>

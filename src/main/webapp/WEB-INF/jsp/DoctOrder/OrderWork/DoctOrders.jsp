@@ -547,7 +547,7 @@
 					$("#dragCheck").hide(500); 
 					reSetCheck();
 					//刷新上个页面
-					var rsUrl = "DoctOrder/CheckRsViewUI.do?patient_id=" + patId + "&visit_id=" + visitId + "&ngroupnum=" + ngroupnum;
+					var rsUrl = "DoctOrder/CheckRsViewUI.do?patient_id=" + patId + "&visit_id=" + visitId + "&ngroupnum=" + data.ngroupnum; 
 					parent.CheckRsFrame.location.href = rsUrl ;//parent.$("#CheckRsFrame").attr("src")+data.ngroupnum;
 					//刷新本页面
 					$("#ngroupnum").val(data.ngroupnum);
@@ -575,6 +575,12 @@
 		
 	}
 	
+	function refreshPage(_num)
+	{
+		$("#ngroupnum").val(_num);
+		nextPage(${page.currentPage});
+	}
+
 	// 快捷审核页面  关闭
 	function dragClose(){
 		bootbox.confirm({

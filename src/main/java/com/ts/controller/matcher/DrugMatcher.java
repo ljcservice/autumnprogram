@@ -28,6 +28,7 @@ import com.hitzd.WebPage.PageView;
 import com.hitzd.WebPage.Impl.BasePageBean;
 import com.hitzd.his.Utils.DrugUtils;
 import com.hitzd.his.Web.Utils.CommonUtils;
+import com.ts.annotation.Rights;
 import com.ts.controller.base.BaseController;
 import com.ts.entity.Page;
 import com.ts.service.matcher.IDataMatcherService;
@@ -52,6 +53,7 @@ public class DrugMatcher extends BaseController {
     private MatcherService matcherService;
     private int drug_map_id = 0;
 
+    @Rights(code="DrugMatcher/autoMatcher")
     @RequestMapping(value="/autoMatcher")
     @ResponseBody
     public Object autoMatcher(Page page){ 

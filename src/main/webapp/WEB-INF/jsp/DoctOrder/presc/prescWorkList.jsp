@@ -314,7 +314,12 @@ function detailPresc(id,NGROUPNUM){
 	diag.Height =  window.screen.height;  
 	diag.CancelEvent = function(){ //关闭事件
 		diag.close();
-		nextPage(${page.currentPage});
+		try
+		{
+			nextPage(${page.currentPage});
+		}
+		catch(e)
+		{}
 	 };
 	 diag.show();
 }

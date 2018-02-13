@@ -671,6 +671,12 @@ function showDetail(obj){
 	}
 }
 
+function refreshPage(_num)
+{
+	$("#ngroupnum").val(_num);
+	$("#myForm").submit();
+}
+
 //单页遮罩层
 var bgObj = null;
 function closeBG()

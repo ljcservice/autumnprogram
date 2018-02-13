@@ -303,7 +303,8 @@ function toAddCheckRs(ngroupnum){
 		diag.close();
 		//遮罩层控制，第三层弹窗使用
 		top.$("#_DialogBGDiv").css("z-index",900).css("display","block");
-		parent.DoctFrame.location.href = parent.$("#DoctFrame").attr("src")+ngroupnum;
+		refreshDoctFrame();
+		//parent.DoctFrame.location.href = parent.$("#DoctFrame").attr("src")+ngroupnum;
 		$("#checkForm").submit();
 	};
 	diag.show();
@@ -320,10 +321,12 @@ function editCheckRs(rs_id){
 	diag.CancelEvent = function(){ //关闭事件
 		diag.close();
 		//遮罩层控制，第三层弹窗使用
+		refreshDoctFrame();
 		top.$("#_DialogBGDiv").css("z-index",900).css("display","block");
 		$("#checkForm").submit();
 	};
 	diag.show();
+	
 	
 }
 function saveIsCheckTrue(){
@@ -403,9 +406,17 @@ function refreshAll(){
 	refreshDoctFrame();
 	$("#checkForm").submit();
 }
+
+//function refreshDoctFramByNum()
+
 function refreshDoctFrame(){
+	var myngroupnum =  $("#ngroupnum").val(); 
+	var orderUrl = "DoctOrder/DoctOrdersDetail.do?patient_id=${page.pd.patient_id}&visit_id=${page.pd.visit_id}&ngroupnum=" + myngroupnum;
 	//刷新下方iframe列表
-	parent.DoctFrame.location.href = parent.$("#DoctFrame").attr("src");
+	//alert(orderUrl);
+	//parent.$("#DoctFrame").attr("src",orderUrl);// = orderUrl ;  
+	parent.frames["DoctFrame"].refreshPage(myngroupnum);
+	//parent.DoctFrame.location.href = orderUrl;//parent.$("#DoctFrame").attr("src");
 }
 </script>
 </html>

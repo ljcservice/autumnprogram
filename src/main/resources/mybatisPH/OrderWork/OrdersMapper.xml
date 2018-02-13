@@ -172,7 +172,7 @@
 
 	<!-- 日图查看 -->
 	<select id="ordersByPicture" parameterType="pd" resultType="pd">
-		select a.order_Text,a.order_class,b.local_order_class_code local_order_class,to_char(a.start_date_time,'yyyy-MM-dd hh24:mi:ss') startdate ,to_char(a.stop_date_time+1,'yyyy-MM-dd hh24:mi:ss') enddate 
+		select a.order_Text,a.order_class ,a.order_no , a.order_sub_no ,b.order_class_name ,b.local_order_class_code local_order_class,to_char(a.start_date_time,'yyyy-MM-dd') startdate ,to_char(a.stop_date_time,'yyyy-MM-dd') enddate 
 		from  orders a,dict_order_class b
 		where a.order_class = b.order_class_code 
 			and a.patient_id  = #{patient_id} 
@@ -231,6 +231,7 @@
 			and a.visit_id = #{visit_id}
 			<!-- 医嘱类型为药疗 -->
 			and b.local_order_class_code = 'A'
+		 order by a.order_no , a.order_sub_no 
 	</select>
 	
 	<!-- 查询医嘱单开始日期 -->

@@ -352,7 +352,8 @@ public class OrderWork extends BaseController
 		Integer show_type = page.getPd().getInt("show_type");
 		//常规查看 获取医嘱信息
 		List<PageData> pdOrders =null;
-		if(show_type==null || show_type==0){
+		Map<String, String> orderClassDict = commonService.getOrderClassDict();
+        if(show_type==null || show_type==0){
 			pdOrders = this.orderWorkService.orderList(page);
 		}else if( show_type==1){
 			//按日分解查看
@@ -376,17 +377,28 @@ public class OrderWork extends BaseController
 			classmap.put(3, "label-purple");
 			classmap.put(4, "label-yellow");
 			classmap.put(5, "label-pink");
-			classmap.put(6, "label-grey");
+			classmap.put(6, "label-inverse");
+			classmap.put(7, "label-grey");
+			classmap.put(8, "label-primary");
+			classmap.put(9, "label-warning");
+			classmap.put(10, "label-light");
 			List<PageData> treeList = orderWorkService.OrdersPicture(pd);
-			int  i = 0;
+			int  i = -1;
+			String temp = "";
 			for(PageData pp:treeList){
-				pp.put("title",pp.getString("order_Text")+"["+commonService.getOrderClassDict().get( pp.getString("order_class"))+"]");
+			    String orderNo = pp.getInt("order_no").toString();
+			    String orderSubNo = pp.get("order_sub_no").toString();
+			    if(!temp.equals(orderNo))
+			    {
+			        if(i>=11){
+			            i=0;
+			        }else{
+			            i++;
+			        }
+			    }
+			    temp = orderNo;
+				pp.put("title","[" + pp.getString("order_class_name") + "("+ orderNo + "," + orderSubNo + ")] " + pp.getString("order_Text"));
 				pp.put("CLASSNAME", classmap.get(i));
-				if(i>=6){
-					i=0;
-				}else{
-					i++;
-				}
 			}
 			JSONArray arr = JSONArray.fromObject(treeList);
 			String json = arr.toString();
@@ -427,7 +439,7 @@ public class OrderWork extends BaseController
 			if(!map.containsKey(key2)) map.put(key2, new ArrayList<PageData>()); 
 			map.get(key2).add(d);
 		}
-		mv.addObject("orderClassMap",commonService.getOrderClassDict());
+		mv.addObject("orderClassMap",orderClassDict);
 		mv.addObject("CheckRss",map);
 		mv.addObject("DoctOrders", pdOrders);
 		mv.addObject("rsTypeDict",commonService.getCheckTypeDict());
