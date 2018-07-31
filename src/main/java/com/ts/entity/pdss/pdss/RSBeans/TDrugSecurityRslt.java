@@ -549,6 +549,46 @@ public class TDrugSecurityRslt extends TBaseResult implements Serializable
     	}
 		return "红灯：" + RedCount + "; 黄灯：" + YellowCount;
 	}
+	
+	/**
+	 * 返回当前审查结果 所含的最高级的警告 
+	 * @return
+	 */
+	public String getResultLevel()
+	{
+	    TDrug[] drugs = getDrugs();
+        for (int i = 0; i < drugs.length; i++)
+        {
+            TCheckResult cr = chkRslt.get(drugs[i]);
+            if (null != cr && cr.getAlertLevel().equalsIgnoreCase("R"))
+                return  "R";
+//            else
+//            if (null != cr && cr.getAlertLevel().equalsIgnoreCase("Y"))
+//                YellowCount ++;
+        }
+	    return "Y" ;
+	}
+	
+	/**
+	 * 返回抗菌药物出现问题的最高级别
+	 * @return
+	 */
+	public String getResultLevelByAnti()
+	{
+	    TDrug[] drugs = getDrugs();
+        for (int i = 0; i < drugs.length; i++)
+        {
+            TDrug drug = drugs[i];
+            if(!drug.isAnti())continue;
+            TCheckResult cr = chkRslt.get(drugs[i]);
+            if (null != cr && cr.getAlertLevel().equalsIgnoreCase("R"))
+                return  "R";
+//            else
+//            if (null != cr && cr.getAlertLevel().equalsIgnoreCase("Y"))
+//                YellowCount ++;
+        }
+	    return "Y";
+	}
 
 	/**
 	 * 设置数据指点数据结果 

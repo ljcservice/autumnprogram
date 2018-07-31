@@ -8,6 +8,8 @@ import com.ts.util.PageData;
 
 public interface PrescService {
 
+    public List<PageData> checkRsDetail(PageData pd) throws Exception;
+    
 	/**
 	 * 分页查询处方信息
 	 * @param page

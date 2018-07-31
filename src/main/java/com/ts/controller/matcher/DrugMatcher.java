@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,12 +32,19 @@ import com.hitzd.his.Web.Utils.CommonUtils;
 import com.ts.annotation.Rights;
 import com.ts.controller.base.BaseController;
 import com.ts.entity.Page;
+import com.ts.interceptor.webservice.ApplicationProperties;
 import com.ts.service.matcher.IDataMatcherService;
 import com.ts.service.matcher.MatcherService;
+import com.ts.service.pdss.pdss.Cache.InitPdssCache;
 import com.ts.util.MyDecimalFormat;
 import com.ts.util.PageData;
 import com.ts.util.PatternUtils;
 import com.ts.util.Tools;
+import com.ts.util.HTTP.HTTPURLConnection;
+import com.ts.util.HTTP.HttpClientUtil;
+import com.ts.util.HTTP.HttpRequest;
+
+import net.sf.json.JSONObject;
 
 /**
  * 药品配码
@@ -52,6 +60,9 @@ public class DrugMatcher extends BaseController {
     @Resource
     private MatcherService matcherService;
     private int drug_map_id = 0;
+    
+    @Resource(name="initPdssCache")
+    private InitPdssCache initpdssCache;
 
     @Rights(code="DrugMatcher/autoMatcher")
     @RequestMapping(value="/autoMatcher")
@@ -98,16 +109,33 @@ public class DrugMatcher extends BaseController {
 	        				drugList = matcherService.drugList( s);
 	        			}
 	        			String str =  drugmap.getString("DRUG_NAME_LOCAL").trim();
-	        			//替换无用字符
-	        			if(drugList==null || drugList.size()==0){
-	        	        	List<String> filterList =  matcherService.getFilterList();
-        	        		for(String st:filterList){
-        	        			st = st.replaceAll("\\(","\\\\\\(");
-        	        			st = st.replaceAll("\\)","\\\\\\)");
-//        	        			if(str.indexOf(st)!= -1)
-        	        			str = str.replaceAll(st, "");
-        	        		}
-        	        		str = str.trim();
+	        			if(drugList==null || drugList.size()==0)
+	        			{
+    	        			if("true".equals(ApplicationProperties.getPropertyValue("NLPFlag")))
+    	        			{
+    	        			  //NLP 之前 处理一些字符，
+                                List<String> filterList =  matcherService.getFilterList();
+                                for(String st:filterList){
+                                    st = st.replaceAll("\\(","\\\\\\(");
+                                    st = st.replaceAll("\\)","\\\\\\)");
+//                                if(str.indexOf(st)!= -1)
+                                    str = str.replaceAll(st, "");
+                                }
+                                str = str.trim();
+    	        			    str = NLPDrugRslt(str);
+    	        			}
+    	        			else
+    	        			{
+    	        			  //替换无用字符
+	                            List<String> filterList =  matcherService.getFilterList();
+	                            for(String st:filterList){
+	                                st = st.replaceAll("\\(","\\\\\\(");
+	                                st = st.replaceAll("\\)","\\\\\\)");
+//	                              if(str.indexOf(st)!= -1)
+	                                str = str.replaceAll(st, "");
+	                            }
+	                            str = str.trim();
+    	        			}
 	        			}
 	        			//汉字去掉（ ( 内容  完全匹配
 	        			if(drugList==null || drugList.size()==0){
@@ -250,7 +278,58 @@ public class DrugMatcher extends BaseController {
 	    		);
 	    // 配对后重载 药品信息
 	    DrugUtils.loadDrugMap();
+	    
 		return map ; 
+    }
+    
+    
+    private String NLPDrugRslt(String param)
+    {
+        String drugName = param ;
+        try
+        {
+            String url = ApplicationProperties.getPropertyValue("NLPUrl");
+//            String url = "http://10.10.41.25:10011";
+//            String rs = HttpRequest.sendPost(url, "s=" + param);
+//            HttpClientUtil http = new HttpClientUtil();
+//            String rs = http.doPost(url, "s=" + param, "utf-8");
+            String rs =  HTTPURLConnection.readContentFromPost(url, param);
+            System.out.println(rs);
+            JSONObject j = JSONObject.fromObject(rs);
+            System.out.println(j);
+            Iterator iterator = j.keys();
+            while (iterator.hasNext())
+            {
+                String key = (String) iterator.next();// 术语类型 疾病
+                if (key.equals("entity"))
+                {
+                    // "entity" :
+                    // "急性支气管炎【疾病】<br/>咳嗽【症状】<br/>气道高反应【症状】<br/>【转换】性障碍【症状】",
+                    String entity = j.getString(key);
+                    String[] nlpstrs = entity.split("<br/>");
+                    for (int k = 0; k < nlpstrs.length; k++)
+                    {
+
+                        if (!(nlpstrs[k] == "" || "".equals(nlpstrs[k])))
+                        {
+                            String type  = nlpstrs[k].substring(nlpstrs[k].lastIndexOf("【"),nlpstrs[k].length() -1 );
+                            if(type.indexOf("药品") != -1||type.indexOf("保健食品") != -1)
+                            {
+                                drugName = nlpstrs[k].substring(0,nlpstrs[k].lastIndexOf("【")); 
+                                break;
+                            }
+                        }
+                    }
+
+                }
+            }
+        
+        }
+        catch(Exception e )
+        {
+            e.printStackTrace();
+        }
+        return drugName;
     }
     
     private void update(PageData matcher) {
@@ -319,6 +398,9 @@ public class DrugMatcher extends BaseController {
                 "' where drug_map_id = '" + CommonUtils.getRequestParameter(matcher, "drug_map_id", "") + "'";
         JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
         int x = query.update(sql);
+        
+        // 更新药品整体缓存中
+        DrugUtils.loadDrugMapBySingle(CommonUtils.getRequestParameter(matcher, "drug_map_id", ""));
 	}
 
 	//统计数组中不为空的个数
@@ -488,6 +570,17 @@ public class DrugMatcher extends BaseController {
         			+ "FROM drug_map where drug_map_id=" + drug_map_id;
         	TCommonRecord resultRec = (TCommonRecord) query.queryForObject(querySql, new CommonMapper());
         	newDrug.put(resultRec.get("drug_code").replace(" ", "") + resultRec.get("drug_spec").replace(" ", "") + resultRec.get("drug_name").replace(" ", ""),resultRec);
+        }
+        // 删除缓存中药品
+        DrugUtils.DelDrugMapBySingle(drug_map_id);
+        try
+        {
+            initpdssCache.delDrugById(drug_map_id);
+        }
+        catch (Exception e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
         String sql = "delete from pdss.drug_map where drug_map_id=" + drug_map_id;
         query.execute(sql);

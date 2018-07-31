@@ -72,7 +72,7 @@ public class MedicareChecker extends Persistent4DB implements IMedicareChecker
             return result;
         } catch(Exception e) {
             e.printStackTrace();
-            log.warn(e.getMessage());
+            log.warn(this.getClass().toString() + ":" + e.getMessage());
             return new TDrugSecurityRslt();
         }
     }

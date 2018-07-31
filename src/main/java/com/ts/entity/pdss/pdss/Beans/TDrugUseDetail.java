@@ -45,8 +45,16 @@ public class TDrugUseDetail extends TBaseBean
     private String OLD_INFO_REF;
     /* 肝功能禁用标志 */
     private String HEPATICAL_INDI;
+    /* 肝功能用药说明*/
+    private String HEPATICAL_INFO;
+    /* 肝功能用药说明参考*/
+    private String HEPATICAL_REF;
     /* 肾功能禁用标志 */
     private String RENAL_INDI;
+    /* 肾功能用药说明*/
+    private String RENAL_INFO;
+    /* 肾功能用药参考 */
+    private String RENAL_REF;
     /* 禁止的用药途径 */
     private String FORBID_RUID;
     /* 用药途径禁止的原因 */
@@ -62,6 +70,38 @@ public class TDrugUseDetail extends TBaseBean
     /* 最后更新时间 */
     private String LAST_DATE_TIME;
     
+    public String getHEPATICAL_INFO()
+    {
+        return HEPATICAL_INFO;
+    }
+    public void setHEPATICAL_INFO(String hEPATICAL_INFO)
+    {
+        HEPATICAL_INFO = hEPATICAL_INFO;
+    }
+    public String getHEPATICAL_REF()
+    {
+        return HEPATICAL_REF;
+    }
+    public void setHEPATICAL_REF(String hEPATICAL_REF)
+    {
+        HEPATICAL_REF = hEPATICAL_REF;
+    }
+    public String getRENAL_INFO()
+    {
+        return RENAL_INFO;
+    }
+    public void setRENAL_INFO(String rENAL_INFO)
+    {
+        RENAL_INFO = rENAL_INFO;
+    }
+    public String getRENAL_REF()
+    {
+        return RENAL_REF;
+    }
+    public void setRENAL_REF(String rENAL_REF)
+    {
+        RENAL_REF = rENAL_REF;
+    }
     public String getDRUG_USE_DETAIL_ID()
     {
         return DRUG_USE_DETAIL_ID == null ?"":DRUG_USE_DETAIL_ID;

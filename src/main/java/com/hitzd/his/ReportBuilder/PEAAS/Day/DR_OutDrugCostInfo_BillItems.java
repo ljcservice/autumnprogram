@@ -27,6 +27,7 @@ import com.hitzd.persistent.Persistent4DB;
  * @author jingcong
  *
  */
+@Deprecated
 public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IReportBuilder
 {
     @Override

@@ -44,26 +44,27 @@ import com.ts.util.PageData;
 
 @Service
 public class PdssCache {
-	public static String drugCacheByLocal = "drugCacheByLocal";	//单个药品信息kEY，以本地药品码为主键的药品Bean 
-	public static String drugInteraction  = "drugInteraction";	//互动信息结果缓存
-	public static String diiCache         = "diiCache";			//药品成分冲突Key
-	public static String DiseageVsDiag    = "DiseageVsDiag";	//诊断对应的疾病key
-	public static String drugadmini       = "drugadmini";		//用药途径key
+	public static String drugCacheByLocal = "drugCacheByLocal";	// 单个药品信息kEY，以本地药品码为主键的药品Bean 
+	public static String drugInteraction  = "drugInteraction";	// 互动信息结果缓存
+	public static String diiCache         = "diiCache";			// 药品成分冲突Key
+	public static String DiseageVsDiag    = "DiseageVsDiag";	// 诊断对应的疾病key
+	public static String drugadmini       = "drugadmini";		// 用药途径key
 	public static String ddrCache         = "ddrCache";			// 药物禁忌症对应key
 	public static String drugRepeatCache  = "drugRepeatCache";  // 重复给药key
 	public static String ddisCache        = "ddisCache"; 		// 药物禁忌信息
 	public static String drugIvEffect     = "drugIvEffect";		// 配伍信息
 	public static String dudCache         = "dudCache";			// 特殊人群
-	public static String aidCache         = "aidCache"; 		/* 药物成分、药敏、药物分类与药物对照字典 */
-    public static String ddgCache         = "ddgCache"; 		//药品剂量使用字典
-    public static String drugPerform      = "drugPerform";		/* 医嘱执行频率字典 */
+	public static String aidCache         = "aidCache"; 		// 药物成分、药敏、药物分类与药物对照字典 
+    public static String ddgCache         = "ddgCache"; 		// 药品剂量使用字典
+    public static String drugPerform      = "drugPerform";		// 医嘱执行频率字典 
     public static String commonCache      = "commonCache";		// 公用缓存
-    public static String drugMedicareRslt = "drugMedicareRslt";	// 公用缓存
-    public static String drugMedicare     = "drugMedicare";		// 公用缓存
+    public static String drugMedicareRslt = "drugMedicareRslt";	// 医保结果缓存
+    public static String drugMedicare     = "drugMedicare";		// 医保总记录缓存
     public static String diagnosisDict    = "diagnosisDict";    // 诊断字典
     public static String drugSideDict     = "drugSideDict";     // 不良反应
     public static String OperationDrug    = "operationdrug";    // 手术使用药品
     public static String DrugUserAuth     = "drugUserAuth";     // 药物控制授权 
+    
     
 	@Autowired
 	private CacheTemplate cacheTemplate;

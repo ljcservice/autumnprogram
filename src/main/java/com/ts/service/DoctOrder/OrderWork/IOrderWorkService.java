@@ -23,6 +23,14 @@ public interface IOrderWorkService {
 	public List<PageData>  patientList(Page page ) throws Exception; 
 	
 	/**
+	 * 解决抽取后刷新的问题
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData  patvisitlistbyRefreshId(PageData pd ) throws Exception;
+	
+	/**
 	 * 查询患者详细信息
 	 * @param pid
 	 * @param vid
@@ -79,6 +87,15 @@ public interface IOrderWorkService {
 	 * @return
 	 */
 	public List<PageData> orderList(Page page) throws Exception ;
+	
+	/**
+	 * 导出审核结果
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> checkRsDetail(PageData pd) throws Exception;
+	
 	/**
 	 * 查询患者医嘱信息,按照日期查看
 	 * @param pid

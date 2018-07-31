@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -37,8 +38,12 @@ public class ExpertController extends BaseController{
 	private UserManager userService;
 	@Autowired
 	private PrescService prescService;
-	@Autowired
+	//正常医嘱点评
+	@Autowired @Qualifier("orderWorkServiceBean")
 	private IOrderWorkService orderWorkService;
+	//抗菌药专项医嘱点评
+    @Autowired @Qualifier("orderAntiWorkServiceBean")
+    private IOrderWorkService orderAntiWorkService;
 	
 	/**
 	 * 专家点评列表
@@ -75,7 +80,10 @@ public class ExpertController extends BaseController{
 			if("0".equals(pd.getString("business_type"))){
 				//设置住院病历为专家点评
 				orderWorkService.updateExpertPatVisit(pd);
-			}else if("1".equals(pd.getString("business_type"))){
+			}else if("0.1".equals(pd.getString("business_type"))) {
+              //设置住院病历抗菌药专项点评为专家点评
+                orderAntiWorkService.updateExpertPatVisit(pd);
+            }else if("1".equals(pd.getString("business_type"))){
 				//处方列表，供给选择
 				prescService.updateExpertPresc(pd);
 			}

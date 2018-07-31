@@ -50,6 +50,7 @@ public class HaskjDrugReport extends BaseController{
 			page.setPd(pd);
 			//门急诊药品费用统计
 			List<PageData>	reportList = null;
+			List<PageData> reportHZ = null;
 			String type1 = pd.getString("type1");
 			if(Tools.isEmpty(type1)){
 				type1="1";
@@ -64,6 +65,7 @@ public class HaskjDrugReport extends BaseController{
 				if("1".equals(type2)){
 					//处方数，含外用
 					reportList = haskjDrugService.haskjDrug11(page);
+					reportHZ = haskjDrugService.haskjDrug11ByHJ(page);
 				}else if("2".equals(type2)){
 					//处方数，不含外用
 					reportList = haskjDrugService.haskjDrug12(page);
@@ -72,11 +74,13 @@ public class HaskjDrugReport extends BaseController{
 				if("1".equals(type2)){
 					//处方数(人次) ，含外用
 					reportList = haskjDrugService.haskjDrug13(page);
+					reportHZ = haskjDrugService.haskjDrug13ByHJ(page);
 				}else if("2".equals(type2)){
 					//处方数(人次) ，不含外用
 					reportList = haskjDrugService.haskjDrug14(page);
 				}
 			}
+			mv.addObject("reportHJ", reportHZ.get(0));
 			mv.addObject("reportList", reportList);
 		} catch(Exception e){
 			logger.error(e.toString(), e);
@@ -99,6 +103,7 @@ public class HaskjDrugReport extends BaseController{
 			page.setPd(pd);
 			//门急诊药品费用统计
 			List<PageData>	reportList = null;
+			List<PageData> reportHJ = null;
 			String type1 = pd.getString("type1");
 			if(Tools.isEmpty(type1)){
 				type1="1";
@@ -113,6 +118,7 @@ public class HaskjDrugReport extends BaseController{
 				if("1".equals(type2)){
 					//处方数，含外用
 					reportList = haskjDrugService.haskjDrug11(page);
+					reportHJ = haskjDrugService.haskjDrug11ByHJ(page);
 				}else if("2".equals(type2)){
 					//处方数，不含外用
 					reportList = haskjDrugService.haskjDrug12(page);
@@ -121,6 +127,7 @@ public class HaskjDrugReport extends BaseController{
 				if("1".equals(type2)){
 					//处方数(人次) ，含外用
 					reportList = haskjDrugService.haskjDrug13(page);
+					reportHJ = haskjDrugService.haskjDrug13ByHJ(page);
 				}else if("2".equals(type2)){
 					//处方数(人次) ，不含外用
 					reportList = haskjDrugService.haskjDrug14(page);
@@ -148,6 +155,14 @@ public class HaskjDrugReport extends BaseController{
 				vpd.put("var5", MyDecimalFormat.format(((BigDecimal)reportList.get(i).get("rate")).doubleValue() )  +"%");		//5
 				varList.add(vpd);
 			}
+			PageData vpd = new PageData();
+            vpd.put("var1", "合计");   //2
+            vpd.put("var2", "");    //4
+            vpd.put("var3",  MyDecimalFormat.format(((BigDecimal)reportHJ.get(0).get("c")).doubleValue() ));      //5
+            vpd.put("var4", MyDecimalFormat.format(((BigDecimal)reportHJ.get(0).get("haskj")).doubleValue() )  );     //5
+            vpd.put("var5", MyDecimalFormat.format(((BigDecimal)reportHJ.get(0).get("rate")).doubleValue() )  +"%");      //5
+            varList.add(vpd);
+			
 			dataMap.put("varList", varList);
 			ObjectExcelView erv = new ObjectExcelView();
 			mv = new ModelAndView(erv,dataMap);
@@ -180,15 +195,19 @@ public class HaskjDrugReport extends BaseController{
 				pd.put("type", type);
 			}
 			List<PageData>	reportList = null;
+			List<PageData> reportHJ = null;
 			//门急诊药品费用统计
 			if("1".equals(type)){
 				//处方数 
 				reportList = haskjDrugService.haskjDrug21(page);
+				reportHJ  = haskjDrugService.haskjDrug11ByHJ(page);
 			}else if("2".equals(type)){
 				//处方数(人次)  
 				reportList = haskjDrugService.haskjDrug22(page);
+				reportHJ = haskjDrugService.haskjDrug13ByHJ(page);
 			}
 			mv.addObject("reportList", reportList);
+			mv.addObject("reportHJ",reportHJ.get(0));
 		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
@@ -213,13 +232,17 @@ public class HaskjDrugReport extends BaseController{
 				pd.put("type", type);
 			}
 			List<PageData>	reportList = null;
+			List<PageData>  reportHJ = null;
 			//门急诊药品费用统计
 			if("1".equals(type)){
 				//处方数 
 				reportList = haskjDrugService.haskjDrug21(page);
+				reportHJ = haskjDrugService.haskjDrug11ByHJ(page);
+				
 			}else if("2".equals(type)){
 				//处方数(人次)  
 				reportList = haskjDrugService.haskjDrug22(page);
+				reportHJ = haskjDrugService.haskjDrug13ByHJ(page);
 			}
 //			mv.addObject("reportList", reportList);
 //			mv.setViewName("DoctOrder/haskjDrug/haskjDrug2");
@@ -245,6 +268,14 @@ public class HaskjDrugReport extends BaseController{
 				vpd.put("var6", MyDecimalFormat.format(((BigDecimal)reportList.get(i).get("rate")).doubleValue() )  +"%");		//5
 				varList.add(vpd);
 			}
+			PageData vpd = new PageData();
+            vpd.put("var1", "合计");   //2
+            vpd.put("var2", ""); //4
+            vpd.put("var3", "");  //4
+            vpd.put("var4",  MyDecimalFormat.format(((BigDecimal)reportHJ.get(0).get("c")).doubleValue() ));      //5
+            vpd.put("var5", MyDecimalFormat.format(((BigDecimal)reportHJ.get(0).get("haskj")).doubleValue() )  );     //5
+            vpd.put("var6", MyDecimalFormat.format(((BigDecimal)reportHJ.get(0).get("rate")).doubleValue() )  +"%");      //5
+            varList.add(vpd);
 			dataMap.put("varList", varList);
 			ObjectExcelView erv = new ObjectExcelView();
 			mv = new ModelAndView(erv,dataMap);

@@ -71,7 +71,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
     private void DrugDayCost(final String ADate)
     {
         
-        TransactionTemp tt = new TransactionTemp("PEAAS"); 
+        TransactionTemp tt = new TransactionTemp("ph"); 
         tt.execute(new TransaCallback(null) 
         {
             @SuppressWarnings ("unchecked")
@@ -80,8 +80,9 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
             {
                 DictCache dc = DictCache.getNewInstance();
                 CommonMapper cmr = new CommonMapper();
-                JDBCQueryImpl his = DBQueryFactory.getQuery("HIS");
-                JDBCQueryImpl query = DBQueryFactory.getQuery("PEAAS");
+//                JDBCQueryImpl his = DBQueryFactory.getQuery("HIS");
+                JDBCQueryImpl query = DBQueryFactory.getQuery("ph");
+                /*
                 ICaseHistoryHelper ichr = CaseHistoryFactory.getCaseHistoryHelper();
                 String strFields = " t.VISIT_DATE,t.VISIT_NO,t.RCPT_NO,t.ITEM_NO,t.ITEM_CLASS,t.CLASS_ON_RCPT,t.ITEM_CODE,t.ITEM_NAME,t.ITEM_SPEC,t.AMOUNT,t.UNITS,t.PERFORMED_BY,t.COSTS,t.CHARGES"
                         + ",b.patient_id,b.ordered_by_dept,b.ordered_by_doctor";
@@ -109,7 +110,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                 String gensql = "[" + ichr.genSQL(strFields, strTables, lsWheres, lsGroups, null) + "] m";
                 strFields = "m.item_name,m.item_code,m.item_spec,m.units,m.ordered_by_dept,m.performed_by,sum(m.COSTS) costs,sum(m.amount) amount" ;
                 TCommonRecord group = CaseHistoryHelperUtils.genGroupCR("m.item_name");
-                lsGroups.add(group);
+                lsGroups.add(group); 
                 group = CaseHistoryHelperUtils.genGroupCR(" m.item_code ");
                 lsGroups.add(group);
                 group = CaseHistoryHelperUtils.genGroupCR("m.item_spec");
@@ -121,7 +122,33 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                 group = CaseHistoryHelperUtils.genGroupCR("m.performed_by");
                 lsGroups.add(group);
                 gensql = ichr.genSQL(strFields, gensql, null, lsGroups, null);
-                List<TCommonRecord> listDDC = his.query(gensql, cmr);
+                List<TCommonRecord> listDDC = his.query(gensql, cmr);*/
+                StringBuffer strBuff  = new StringBuffer();
+                strBuff.append("select m.item_name,m.item_code,m.item_spec,m.units,m.ordered_by_dept_code as ordered_by_dept ,m.performed_by_code as performed_by,sum(m.COSTS) costs,sum(m.amount) amount from ");
+                strBuff.append("(");
+                strBuff.append("select t.VISIT_DATE,");
+                strBuff.append("       t.VISIT_NO,");
+                strBuff.append("       t.RCPT_NO,");
+                strBuff.append("       t.ITEM_NO,");
+                strBuff.append("       t.ITEM_CLASS,");
+                strBuff.append("       t.CLASS_ON_RCPT,");
+                strBuff.append("       t.ITEM_CODE,");
+                strBuff.append("       t.ITEM_NAME,");
+                strBuff.append("       t.ITEM_SPEC,");
+                strBuff.append("       t.AMOUNT,");
+                strBuff.append("       t.UNITS,");
+                strBuff.append("       t.PERFORMED_BY_code,");
+                strBuff.append("       t.COSTS,");
+                strBuff.append("       t.CHARGES,");
+                strBuff.append("       t.patient_id,");
+                strBuff.append("       t.ordered_by_dept_code,");
+                strBuff.append("       t.ordered_by_doctor");
+                strBuff.append("  from outp_orders_costs t");
+                strBuff.append("  where t.visit_date >= to_date('" + ADate + "','yyyy-mm-dd') and t.visit_date < to_date('" + DateUtils.getDateAdded(1,ADate) + "','yyyy-mm-dd')");
+                strBuff.append("  and t.item_class in ('" + Config.getParamValue("Drug_In_Order") + "','" + Config.getParamValue("Drug_In_Order_Chinese") + "')");
+                strBuff.append(") m ");
+                strBuff.append("group by m.item_name, m.item_code ,m.item_spec,m.units,m.ordered_by_dept_code,m.performed_by_code");
+                List<TCommonRecord> listDDC = query.query(strBuff.toString(), cmr);
                 query.update("delete dr_drugDayCost where dr_date = to_date('" + ADate + "','yyyy-mm-dd')");
                 System.out.println(" dr_drugDayCost-总条数:" + listDDC.size());
                 int i = 0;
@@ -134,7 +161,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                     dddValue = AntiDDDSum(t, dddValue);
                     TCommonRecord tCom = dc.getDrugDictInfo(t.get("item_code"));
                     String sql = "insert into dr_drugDayCost(dr_date,drug_code, drug_name, cost, package_spec, amount, firm_id, dept_code, dept_name, dispensary, toxi_property, is_anti, dispensary_name, units,ddd_value"
-                            + ",is_exhilarant,is_injection,is_oral,anti_level,is_impregnant,IS_NOCHINESEDRUG,is_external,is_chinesedrug,is_tumor,is_poison,is_psychotic,is_habitforming,is_radiation,is_precious,is_danger,is_assist,is_albumin,id ) values ( "
+                            + ",is_base,is_exhilarant,is_injection,is_oral,anti_level,is_impregnant,IS_NOCHINESEDRUG,is_external,is_chinesedrug,IS_ALLERGY, is_patentdrug,is_tumor,is_poison,is_psychotic,is_habitforming,is_radiation,is_precious,is_danger,is_assist,is_albumin,id ) values ( "
                         + "to_date('"  + ADate + "','yyyy-mm-dd')"
                         + ",'" + t.get("item_code",true) + "'"
                         + ",'" + t.get("item_name",true) + "'"
@@ -150,6 +177,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                         + ",'" + dc.getDeptName(t.get("performed_by")) + "'"
                         + ",'" + t.get("units",true) + "'"
                         + ",'" + dddValue + "'"
+                        + ",'" + getflag(DrugUtils.isCountryBase(t.get("item_code")))  + "'" // is_base '基药剂标识，0是非基药，1是基药';
                         + ",'" + getflag(DrugUtils.isExhilarantDrug(t.get("item_code")))  + "'" // is_exhilarant '兴奋剂标识，0是非兴奋剂，1是兴奋剂';
                         + ",'" + getflag(DrugUtils.isZSDrug(t.get("item_code"))) + "'"// is_injection '注射剂标识，0是非注射剂，1是注射剂';
                         + ",'" + getflag(DrugUtils.IsOralDrug(t.get("item_code"))) + "'"// is_oral '口服制剂标识，0是非口服，1是口服';
@@ -196,7 +224,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
      */
     private void DrugDoctorDeptCost(final String ADate)
     {
-        TransactionTemp tt = new TransactionTemp("PEAAS");
+        TransactionTemp tt = new TransactionTemp("ph");
         tt.execute(new TransaCallback(null) 
         {
             @SuppressWarnings ("unchecked")
@@ -205,8 +233,9 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
             {
                 DictCache           dc = DictCache.getNewInstance();
                 CommonMapper       cmr = new CommonMapper();
-                JDBCQueryImpl    his = DBQueryFactory.getQuery("HIS");
-                JDBCQueryImpl query = DBQueryFactory.getQuery("PEAAS");
+//                JDBCQueryImpl    his = DBQueryFactory.getQuery("HIS");
+                JDBCQueryImpl query = DBQueryFactory.getQuery("ph");
+                /*
                 ICaseHistoryHelper ichr = CaseHistoryFactory.getCaseHistoryHelper();
                 String strFields = "t.VISIT_DATE,t.VISIT_NO,t.RCPT_NO,t.ITEM_NO,t.ITEM_CLASS,t.CLASS_ON_RCPT,t.ITEM_CODE,t.ITEM_NAME,t.ITEM_SPEC,t.AMOUNT,t.UNITS,t.PERFORMED_BY,t.COSTS,t.CHARGES"
                         + ",b.patient_id,b.ordered_by_dept,b.ordered_by_doctor";
@@ -248,7 +277,46 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                 group = CaseHistoryHelperUtils.genGroupCR("m.ordered_by_doctor");
                 lsGroups.add(group);
                 gensql = ichr.genSQL(strFields, gensql, null, lsGroups, null);
-                List<TCommonRecord> listDDDC = his.query(gensql, cmr);
+                List<TCommonRecord> listDDDC = his.query(gensql, cmr);*/
+                StringBuffer strBuff  = new StringBuffer();
+                strBuff.append("select m.item_name,");
+                strBuff.append("       m.item_code,");
+                strBuff.append("       m.item_spec,");
+                strBuff.append("       m.units,");
+                strBuff.append("       m.ordered_by_dept_code ordered_by_dept ,");
+                strBuff.append("       m.performed_by_code performed_by ,");
+                strBuff.append("       sum(m.COSTS) costs,");
+                strBuff.append("       sum(m.amount) amount,");
+                strBuff.append("       m.ordered_by_doctor");
+                strBuff.append("  from (select t.VISIT_DATE,");
+                strBuff.append("               t.VISIT_NO,");
+                strBuff.append("               t.RCPT_NO,");
+                strBuff.append("               t.ITEM_NO,");
+                strBuff.append("               t.ITEM_CLASS,");
+                strBuff.append("               t.CLASS_ON_RCPT,");
+                strBuff.append("               t.ITEM_CODE,");
+                strBuff.append("               t.ITEM_NAME,");
+                strBuff.append("               t.ITEM_SPEC,");
+                strBuff.append("               t.AMOUNT,");
+                strBuff.append("               t.UNITS,");
+                strBuff.append("               t.PERFORMED_BY_code,");
+                strBuff.append("               t.COSTS,");
+                strBuff.append("               t.CHARGES,");
+                strBuff.append("               t.patient_id,");
+                strBuff.append("               t.ordered_by_dept_code,");
+                strBuff.append("               t.ordered_by_doctor");
+                strBuff.append("          from outp_orders_costs t");
+                strBuff.append("  where t.visit_date >= to_date('" + ADate + "','yyyy-mm-dd') and t.visit_date < to_date('" + DateUtils.getDateAdded(1,ADate) + "','yyyy-mm-dd')");
+                strBuff.append("  and t.item_class in ('" + Config.getParamValue("Drug_In_Order") + "','" + Config.getParamValue("Drug_In_Order_Chinese") + "')");
+                strBuff.append(") m ");
+                strBuff.append(" group by m.item_name,");
+                strBuff.append("          m.item_code,");
+                strBuff.append("          m.item_spec,");
+                strBuff.append("          m.units,");
+                strBuff.append("          m.ordered_by_dept_code,");
+                strBuff.append("          m.performed_by_code,");
+                strBuff.append("          m.ordered_by_doctor");
+                List<TCommonRecord> listDDDC = query.query(strBuff.toString(), cmr);
                 query.update("delete DR_DRUGDOCTORDEPTCOST where dr_date = to_date('" + ADate + "','yyyy-mm-dd')");
                 System.out.println(" DR_DRUGDOCTORDEPTCOST-总条数:" + listDDDC.size());
                 int i = 0;
@@ -277,7 +345,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                             + ",dispensary_name"
                             + ",units"
                             + ",ddd_value"
-                            + ",is_exhilarant,is_injection,is_oral,anti_level,is_impregnant,IS_NOCHINESEDRUG,is_external,is_chinesedrug,is_tumor,is_poison,is_psychotic,is_habitforming,is_radiation,is_precious,is_danger,is_assist,is_albumin ,id) " + 
+                            + ",is_base,is_exhilarant,is_injection,is_oral,anti_level,is_impregnant,IS_NOCHINESEDRUG,is_external,is_chinesedrug,IS_ALLERGY, is_patentdrug,is_tumor,is_poison,is_psychotic,is_habitforming,is_radiation,is_precious,is_danger,is_assist,is_albumin ,id) " + 
                             " values(" +
                             "to_date('" + ADate  + "','yyyy-mm-dd')" +
                             ",'" + t.get("item_code",true)        + "'" +
@@ -295,8 +363,9 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                             ",'" + t.get("performed_by",true)       + "'" +
                             ",'" + dc.getDeptName(t.get("performed_by"))  + "'" +
                             ",'" + t.get("units",true)            + "'" +
-                            ",'" + dddValue + "'" +
-                            ",'" + getflag(DrugUtils.isExhilarantDrug(t.get("item_code")))  + "'" // is_exhilarant '兴奋剂标识，0是非兴奋剂，1是兴奋剂';
+                            ",'" + dddValue + "'" 
+                            + ",'" + getflag(DrugUtils.isCountryBase(t.get("item_code")))  + "'" // is_base '基药剂标识，0是非基药，1是基药';
+                            + ",'" + getflag(DrugUtils.isExhilarantDrug(t.get("item_code")))  + "'" // is_exhilarant '兴奋剂标识，0是非兴奋剂，1是兴奋剂';
                             + ",'" + getflag(DrugUtils.isZSDrug(t.get("item_code"))) + "'"// is_injection '注射剂标识，0是非注射剂，1是注射剂';
                             + ",'" + getflag(DrugUtils.IsOralDrug(t.get("item_code"))) + "'"// is_oral '口服制剂标识，0是非口服，1是口服';
                             + ",'" + DrugUtils.getDrugAntiByLevel(t.get("item_code")) + "'" // anti_level'抗菌药级别，1是非限制用药，2是限制用药，3是特殊用药';
@@ -337,7 +406,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
      */
     private void DrugPatDDCost(final String ADate)
     {
-        TransactionTemp tt = new TransactionTemp("PEAAS");
+        TransactionTemp tt = new TransactionTemp("ph");
         tt.execute(new TransaCallback(null)
         {
             @SuppressWarnings ("unchecked")
@@ -346,12 +415,13 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
             {
                 DictCache           dc = DictCache.getNewInstance();
                 CommonMapper       cmr = new CommonMapper();
-                JDBCQueryImpl    his = DBQueryFactory.getQuery("HIS");
-                JDBCQueryImpl query = DBQueryFactory.getQuery("PEAAS");
+//                JDBCQueryImpl    his = DBQueryFactory.getQuery("HIS");
+                JDBCQueryImpl query = DBQueryFactory.getQuery("ph");
+                /*
                 ICaseHistoryHelper ichr = CaseHistoryFactory.getCaseHistoryHelper();
                 String strFields = "t.VISIT_DATE,t.VISIT_NO,t.RCPT_NO,t.ITEM_NO,t.ITEM_CLASS,t.CLASS_ON_RCPT,t.ITEM_CODE,t.ITEM_NAME,t.ITEM_SPEC,t.AMOUNT,t.UNITS,t.PERFORMED_BY,t.COSTS,t.CHARGES"
                         + ",b.patient_id,b.ordered_by_dept,b.ordered_by_doctor"
-                        + ",r.identity,r.name,r.charge_type,r.sex,r.date_of_birth";
+                        + ",r.name,r.charge_type,r.sex,r.date_of_birth";
                 String strTables = " outpbill.outp_bill_items t,outpbill.outp_order_desc b,medrec.pat_master_index r";
                 List<TCommonRecord> lsWheres = new ArrayList<TCommonRecord>();
                 List<TCommonRecord> lsGroups = new ArrayList<TCommonRecord>();
@@ -377,7 +447,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                 lsWheres.add(where);
                 String gensql = "[" + ichr.genSQL(strFields, strTables, lsWheres, lsGroups, null) + "] m";
                 strFields = "m.item_name,m.item_code,m.item_spec,m.units,m.ordered_by_dept,m.performed_by,sum(m.COSTS) costs,sum(m.amount) amount"
-                        + ",m.ordered_by_doctor,m.patient_id,m.name,m.identity,m.charge_type,m.sex,m.date_of_birth" ;
+                        + ",m.ordered_by_doctor,m.patient_id,m.name,m.charge_type,m.sex,m.date_of_birth" ;
                 TCommonRecord group = CaseHistoryHelperUtils.genGroupCR("m.item_name");
                 lsGroups.add(group);
                 group = CaseHistoryHelperUtils.genGroupCR(" m.item_code ");
@@ -396,8 +466,8 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                 lsGroups.add(group);
                 group = CaseHistoryHelperUtils.genGroupCR("m.name");
                 lsGroups.add(group);
-                group = CaseHistoryHelperUtils.genGroupCR("m.identity");
-                lsGroups.add(group);
+//                group = CaseHistoryHelperUtils.genGroupCR("m.identity");
+//                lsGroups.add(group);
                 group = CaseHistoryHelperUtils.genGroupCR("m.charge_type");
                 lsGroups.add(group);
                 group = CaseHistoryHelperUtils.genGroupCR("m.sex");
@@ -405,7 +475,59 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                 group = CaseHistoryHelperUtils.genGroupCR("m.date_of_birth");
                 lsGroups.add(group);
                 gensql = ichr.genSQL(strFields, gensql, null, lsGroups, null);
-                List<TCommonRecord> listDDDC = his.query(gensql, cmr);
+                List<TCommonRecord> listDDDC = his.query(gensql, cmr);*/
+                StringBuffer strBuff = new StringBuffer();
+                strBuff.append("select m.item_name,");
+                strBuff.append("       m.item_code,");
+                strBuff.append("       m.item_spec,");
+                strBuff.append("       m.units,");
+                strBuff.append("       m.ordered_by_dept_code ordered_by_dept,");
+                strBuff.append("       m.performed_by_code performed_by,");
+                strBuff.append("       sum(m.COSTS) costs,");
+                strBuff.append("       sum(m.amount) amount,");
+                strBuff.append("       m.ordered_by_doctor,");
+                strBuff.append("       m.patient_id,");
+                strBuff.append("       r.name,");
+                strBuff.append("       r.charge_type,");
+                strBuff.append("       r.sex,");
+                strBuff.append("       r.date_of_birth");
+                strBuff.append("  from (select t.VISIT_DATE,");
+                strBuff.append("               t.VISIT_NO,");
+                strBuff.append("               t.RCPT_NO,");
+                strBuff.append("               t.ITEM_NO,");
+                strBuff.append("               t.ITEM_CLASS,");
+                strBuff.append("               t.CLASS_ON_RCPT,");
+                strBuff.append("               t.ITEM_CODE,");
+                strBuff.append("               t.ITEM_NAME,");
+                strBuff.append("               t.ITEM_SPEC,");
+                strBuff.append("               t.AMOUNT,");
+                strBuff.append("               t.UNITS,");
+                strBuff.append("               t.PERFORMED_BY_code,");
+                strBuff.append("               t.COSTS,");
+                strBuff.append("               t.CHARGES,");
+                strBuff.append("               t.patient_id,");
+                strBuff.append("               t.ordered_by_dept_code,");
+                strBuff.append("               t.ordered_by_doctor");
+                strBuff.append("          from patienthistory.outp_orders_costs t");
+                strBuff.append("         where t.visit_date >= to_date('" + ADate + "', 'yyyy-mm-dd')");
+                strBuff.append("           and t.visit_date < to_date('" +  DateUtils.getDateAdded(1,ADate)  + "', 'yyyy-mm-dd')");
+                strBuff.append("           and t.item_class in ('" + Config.getParamValue("Drug_In_Order") + "','" + Config.getParamValue("Drug_In_Order_Chinese") + "')");
+                strBuff.append("       ) m,");
+                strBuff.append("       patienthistory.pat_master_index r");
+                strBuff.append(" where m.patient_id = r.patient_id");
+                strBuff.append(" group by m.item_name,");
+                strBuff.append("          m.item_code,");
+                strBuff.append("          m.item_spec,");
+                strBuff.append("          m.units,");
+                strBuff.append("          m.ordered_by_dept_code,");
+                strBuff.append("          m.performed_by_code,");
+                strBuff.append("          m.ordered_by_doctor,");
+                strBuff.append("          m.patient_id,");
+                strBuff.append("          r.name,");
+                strBuff.append("          r.charge_type,");
+                strBuff.append("          r.sex,");
+                strBuff.append("          r.date_of_birth");
+                List<TCommonRecord> listDDDC = query.query(strBuff.toString(), cmr);
                 query.update("delete DR_DRUGPATDDCOST where  dr_date = to_date('" + ADate + "','yyyy-mm-dd')");
                 logger.debug(" DR_DRUGPATDDCOST-总条数:" + listDDDC.size());
                 int i = 0;
@@ -440,7 +562,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                             + ",dispensary"     
                             + ",dispensary_name"
                             + ",ddd_value"
-                            + ",is_exhilarant,is_injection,is_oral,anti_level,is_impregnant,IS_NOCHINESEDRUG,is_external,is_chinesedrug,is_tumor,is_poison,is_psychotic,is_habitforming,is_radiation,is_precious,is_danger,is_assist,is_albumin,id ) values(" 
+                            + ",is_base,is_exhilarant,is_injection,is_oral,anti_level,is_impregnant,IS_NOCHINESEDRUG,is_external,is_chinesedrug,IS_ALLERGY, is_patentdrug,is_tumor,is_poison,is_psychotic,is_habitforming,is_radiation,is_precious,is_danger,is_assist,is_albumin,id ) values(" 
                             + "to_date('"  + ADate     + "','yyyy-mm-dd')"
                             + ",'" + t.get("item_code",true)      + "'"
                             + ",'" + t.get("item_name",true)      + "'"
@@ -464,6 +586,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                             + ",'" + t.get("performed_by",true)     + "'"
                             + ",'" + dc.getDeptName( t.get("performed_by")) + "'"
                             + ",'" + dddValue + "'"
+                            + ",'" + getflag(DrugUtils.isCountryBase(t.get("item_code")))  + "'" // is_base '基药剂标识，0是非基药，1是基药';
                             +",'" + getflag(DrugUtils.isExhilarantDrug(t.get("item_code")))  + "'" // is_exhilarant '兴奋剂标识，0是非兴奋剂，1是兴奋剂';
                             + ",'" + getflag(DrugUtils.isZSDrug(t.get("item_code"))) + "'"// is_injection '注射剂标识，0是非注射剂，1是注射剂';
                             + ",'" + getflag(DrugUtils.IsOralDrug(t.get("item_code"))) + "'"// is_oral '口服制剂标识，0是非口服，1是口服';
@@ -489,7 +612,7 @@ public class DR_OutDrugCostInfo_BillItems extends Persistent4DB implements IRepo
                             + ",'" + UuidUtil.get32UUID()  + "'"//  表主键id
                             + ")";
                     query.update(sql);
-                    logger.debug("=====添加数量为" + listDDDC.size() + "/" + (++i) + "====");
+                    logger.info("=====添加数量为" + listDDDC.size() + "/" + (++i) + "====");
                 }
                 cmr       = null;
                 query     = null;

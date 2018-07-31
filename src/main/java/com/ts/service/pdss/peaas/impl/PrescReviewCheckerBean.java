@@ -426,7 +426,7 @@ public class PrescReviewCheckerBean extends Persistent4DB implements IPrescRevie
         String errorMessage = "";
         String doctorName = p.get("doctor_name");
         DictCache dictCache = DictCache.getNewInstance();
-        TCommonRecord doctor = dictCache.getDoctorInfo(DBQueryFactory.getQuery("HIS"), doctorName);
+        TCommonRecord doctor = dictCache.getDoctorInfo( doctorName);
         String title = doctor.get("title");
         List<String> masterDoctors = new ArrayList<String>();
         masterDoctors.add("主任医师");

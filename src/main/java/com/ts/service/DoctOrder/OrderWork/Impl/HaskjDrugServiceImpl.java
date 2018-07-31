@@ -20,6 +20,11 @@ public class HaskjDrugServiceImpl implements HaskjDrugService {
 	public List<PageData> haskjDrug11(Page page) throws Exception {
 		return (List<PageData>) daoph.findForList("HaskjDrugMapper.haskjDrug11", page);
 	}
+	
+	@Override
+    public List<PageData> haskjDrug11ByHJ(Page page) throws Exception {
+        return (List<PageData>) daoph.findForList("HaskjDrugMapper.haskjDrug11ByHJ", page);
+    }
 	@Override
 	public List<PageData> haskjDrug12(Page page) throws Exception {
 		return (List<PageData>) daoph.findForList("HaskjDrugMapper.haskjDrug12", page);
@@ -28,6 +33,12 @@ public class HaskjDrugServiceImpl implements HaskjDrugService {
 	public List<PageData> haskjDrug13(Page page) throws Exception {
 		return (List<PageData>) daoph.findForList("HaskjDrugMapper.haskjDrug13", page);
 	}
+	
+	@Override
+    public List<PageData> haskjDrug13ByHJ(Page page) throws Exception {
+        return (List<PageData>) daoph.findForList("HaskjDrugMapper.haskjDrug13ByHJ", page);
+    }
+	
 	@Override
 	public List<PageData> haskjDrug14(Page page) throws Exception {
 		return (List<PageData>) daoph.findForList("HaskjDrugMapper.haskjDrug14", page);

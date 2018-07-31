@@ -16,6 +16,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -40,7 +41,7 @@ public class ReportController extends BaseController{
 	private CommonService commonService;
 	@Autowired
 	private PrescService prescService;
-	@Autowired
+	@Autowired @Qualifier("orderWorkServiceBean")
 	private IOrderWorkService orderWorkService;
 	
 	/**
@@ -180,7 +181,7 @@ public class ReportController extends BaseController{
 			}
 			mv.addObject("pd", pd);
 			page.setPd(pd);
-			page.setShowCount(9999);
+//			page.setShowCount(9999);
 			List<PageData> entity =  this.orderWorkService.patientList(page);
 			for(PageData pp:entity){
 				String RS_DRUG_TYPES = pp.getString("RS_DRUG_TYPES");
@@ -825,7 +826,7 @@ public class ReportController extends BaseController{
 		return  mv; 
 	}
 	/**
-	 * 处方 出院科室报表
+	 * 处方 科室报表
 	 * @return
 	 */
 	@RequestMapping(value="/prescListByDep")
@@ -999,9 +1000,9 @@ public class ReportController extends BaseController{
 				p1.put("MAXUSEDAY_AVG", 0);
 				p1.put("BASEDRUG_COUNT_AVG", 0);
 			}else {
-				p1.put("AMOUNT_AVG", MyDecimalFormat.format(AMOUNT_SUM.divide(COUNT,4,4).doubleValue()*100));
+				p1.put("AMOUNT_AVG", MyDecimalFormat.format(AMOUNT_SUM.divide(COUNT,4,4).doubleValue()));
 				p1.put("MAXUSEDAY_AVG", MyDecimalFormat.format(MAXUSEDAY_SUM.divide(COUNT,4,4).doubleValue()*100));
-				p1.put("BASEDRUG_COUNT_AVG", MyDecimalFormat.format(BASEDRUG_COUNT_SUM.divide(COUNT,4,4).doubleValue()*100));
+				p1.put("BASEDRUG_COUNT_AVG", MyDecimalFormat.format(DRUG_COUNT_SUM.divide(COUNT,4,4).doubleValue()));
 			}
 			
 			PageData p3 =  this.prescService.prescStatistics3(pd);
@@ -1009,7 +1010,7 @@ public class ReportController extends BaseController{
 			if(PATIENT_ID_COUNT==null||PATIENT_ID_COUNT.doubleValue()==0){
 				p3.put("PATIENT_ID_AVG",0);
 			}else {
-				p3.put("PATIENT_ID_AVG", MyDecimalFormat.format(BASEDRUG_COUNT_SUM.divide(PATIENT_ID_COUNT,4,4).doubleValue()*100));
+			    p3.put("PATIENT_ID_AVG", MyDecimalFormat.format(AMOUNT_SUM.divide(PATIENT_ID_COUNT,4,4).doubleValue()));
 			}
 			
 			mv.addObject("p1", p1);
@@ -1088,23 +1089,23 @@ public class ReportController extends BaseController{
 			//平均每张处方金额：
 			//计算百分比  
 			if(COUNT==null||COUNT.doubleValue()==0){
-				p1.put("AMOUNT_AVG",0);
-				p1.put("MAXUSEDAY_AVG", 0);
-				p1.put("BASEDRUG_COUNT_AVG", 0);
-			}else {
-				p1.put("AMOUNT_AVG", MyDecimalFormat.format(AMOUNT_SUM.divide(COUNT,4,4).doubleValue()*100));
-				p1.put("MAXUSEDAY_AVG", MyDecimalFormat.format(MAXUSEDAY_SUM.divide(COUNT,4,4).doubleValue()*100));
-				p1.put("BASEDRUG_COUNT_AVG", MyDecimalFormat.format(BASEDRUG_COUNT_SUM.divide(COUNT,4,4).doubleValue()*100));
-			}
-			
-			PageData p3 =  this.prescService.prescStatistics3(pd);
-			BigDecimal PATIENT_ID_COUNT = (BigDecimal) p3.get("PATIENT_ID_COUNT");
-			if(PATIENT_ID_COUNT==null||PATIENT_ID_COUNT.doubleValue()==0){
-				p3.put("PATIENT_ID_AVG",0);
-			}else {
-				p3.put("PATIENT_ID_AVG", MyDecimalFormat.format(BASEDRUG_COUNT_SUM.divide(PATIENT_ID_COUNT,4,4).doubleValue()*100));
-			}
-			
+                p1.put("AMOUNT_AVG",0);
+                p1.put("MAXUSEDAY_AVG", 0);
+                p1.put("BASEDRUG_COUNT_AVG", 0);
+            }else {
+                p1.put("AMOUNT_AVG", MyDecimalFormat.format(AMOUNT_SUM.divide(COUNT,4,4).doubleValue()));
+                p1.put("MAXUSEDAY_AVG", MyDecimalFormat.format(MAXUSEDAY_SUM.divide(COUNT,4,4).doubleValue()*100));
+                p1.put("BASEDRUG_COUNT_AVG", MyDecimalFormat.format(DRUG_COUNT_SUM.divide(COUNT,4,4).doubleValue()));
+            }
+            
+            PageData p3 =  this.prescService.prescStatistics3(pd);
+            BigDecimal PATIENT_ID_COUNT = (BigDecimal) p3.get("PATIENT_ID_COUNT");
+            if(PATIENT_ID_COUNT==null||PATIENT_ID_COUNT.doubleValue()==0){
+                p3.put("PATIENT_ID_AVG",0);
+            }else {
+                p3.put("PATIENT_ID_AVG", MyDecimalFormat.format(AMOUNT_SUM.divide(PATIENT_ID_COUNT,4,4).doubleValue()));
+            }
+            
 			//构建EXCEL
 			HSSFWorkbook workbook = new HSSFWorkbook();
 			Sheet sheet = workbook.createSheet();
@@ -1216,7 +1217,7 @@ public class ReportController extends BaseController{
 			
 			response.setContentType("application/vnd.ms-excel;charset=UTF-8");
 			response.setHeader("Content-disposition", "attachment; " + "filename="
-					+ "prescExport" + ".xlsx" );
+					+ "prescExport" + ".xls" );
 			OutputStream response_out = response.getOutputStream();
 			workbook.write(response_out);
 			response_out.flush();

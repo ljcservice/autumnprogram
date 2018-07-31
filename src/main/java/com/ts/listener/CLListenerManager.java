@@ -1,6 +1,6 @@
 package com.ts.listener;
 
-import java.lang.reflect.Field;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -23,7 +23,7 @@ public class CLListenerManager extends ContextLoaderListener
 //    private ConfigurableApplicationContext app ;
     
     public void contextInitialized(ServletContextEvent event)  
-    {   
+    {    
         super.contextInitialized(event);
         setScheduled2GC();
 //        setDataSourec();
@@ -62,7 +62,7 @@ public class CLListenerManager extends ContextLoaderListener
             @Override
             public void run()
             {
-                System.gc();
+                System.gc(); 
             }
         }, 0, 3, TimeUnit.MINUTES);
     }

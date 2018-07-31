@@ -87,12 +87,12 @@ public class DrugSpecPeopleCheckerBean extends Persistent4DB implements IDrugSpe
 	                continue;
 	            TDrugSpecPeopleRslt specPeopRslt = new TDrugSpecPeopleRslt();
 	            /*  肾功不全*/
-	            if(poiext.TheIsKidneyWhole()&& dud.getRENAL_INDI() != null && "1".equals(dud.getRENAL_INDI()))
+	            if(poiext.TheIsKidneyWhole()&& dud.getRENAL_INDI() != null && !"".equals(dud.getRENAL_INDI()))
 	            {
 	                specPeopRslt.addRenal(dud);
 	            }
 	            /* 肝功不全*/
-	            if(poiext.TheIsLiverWhole() && dud.getHEPATICAL_INDI() != null && "1".equals(dud.getHEPATICAL_INDI()))
+	            if(poiext.TheIsLiverWhole() && dud.getHEPATICAL_INDI() != null && !"".equals(dud.getHEPATICAL_INDI()))
 	            {
 	                specPeopRslt.addHepatical(dud);
 	            }
@@ -105,7 +105,7 @@ public class DrugSpecPeopleCheckerBean extends Persistent4DB implements IDrugSpe
 	                    specPeopRslt.addPregnant(dud);
 	                }
 	                /* 哺乳期*/
-	                if(poiext.TheIsLact() && dud.getLACT_INDI() != null && !"".equals(dud.getPREGNANT_INDI()))
+	                if(poiext.TheIsLact() && dud.getLACT_INDI() != null && !"".equals(dud.getLACT_INDI()))
 	                {
 	                    specPeopRslt.addLact(dud);
 	                }
@@ -143,7 +143,7 @@ public class DrugSpecPeopleCheckerBean extends Persistent4DB implements IDrugSpe
     	catch(Exception e)
     	{
     		e.printStackTrace();
-    		log.warn(e.getMessage());
+    		log.warn(this.getClass().toString() + ":" + e.getMessage());
     		return new TDrugSecurityRslt();
     	}
     }

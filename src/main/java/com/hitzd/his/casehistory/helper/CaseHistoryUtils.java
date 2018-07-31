@@ -23,7 +23,7 @@ public  class CaseHistoryUtils
      */
     public static TCommonRecord  getTableConfig(String tableid)
     {
-        JDBCQueryImpl query = DBQueryFactory.getQuery("PEAAS");
+        JDBCQueryImpl query = DBQueryFactory.getQuery("");
         TCommonRecord  tcom = null;
         try
         {

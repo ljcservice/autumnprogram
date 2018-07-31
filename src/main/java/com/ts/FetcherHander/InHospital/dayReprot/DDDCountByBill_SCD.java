@@ -197,7 +197,7 @@ public class DDDCountByBill_SCD implements IReportBuilder
                             injectionCost += bill.getDouble("item_code");
                         }
                         // 静脉输液
-                        if(this.adminOrderMap.containsKey(bill.getObj("item_code"))) 
+                        if(this.adminOrderMap.containsKey(bill.get("item_code"))) 
                         {
                             // 静脉输液金额
                             adminJMSYCost += bill.getDouble("costs");
@@ -769,7 +769,7 @@ public class DDDCountByBill_SCD implements IReportBuilder
         if ("SQLServer"
                 .equals(Config.getTableCofig("MedRec.pat_visit").getDbName()))
         {
-            strFields = "t.ATTENDING_DOCTOR doctor,t.'identity',t.charge_type,t.patient_id,t.visit_id,t.DEPT_DISCHARGE_FROM dept_code,t.discharge_date_time,m.date_of_birth,t.discharge_date_time,t.admission_date_time,dg.diagnosis_desc";
+            strFields = "t.ATTENDING_DOCTOR doctor,t.charge_type,t.patient_id,t.visit_id,t.DEPT_DISCHARGE_FROM dept_code,t.discharge_date_time,m.date_of_birth,t.discharge_date_time,t.admission_date_time,dg.diagnosis_desc";
         }
         else
         {
@@ -1349,7 +1349,7 @@ public class DDDCountByBill_SCD implements IReportBuilder
                                     + "outdrug_costs,outdrug_charges,outAntiDDD,outAntiCosts,outAntiCharges,outspecDDDS,outlimitDDDS,outordinaryDDDS,is_out,"
                                     + "FUNCDEPTCODE,FUNCDEPTNAME,FUNCDEPTBEGINDATE,FUNCDEPTENDDATE,FUNCDAYS,IS_SCD,PAT_FUNCT_NO,IS_ORDERFLAG,submit_count,first_diagnosis,ADMINJMSY,ADMINANTIJMSY,adminJMSYCost,adminAntiJMSYCost,injection,injectionCost,injectionAnti,injectionAntiCost");
                     sql.append(
-                            ") values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                            ") values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
                     Timestamp dateTime = new Timestamp(DateUtils
                             .getDateFromString(getTranParm().get("ADate"))
                             .getTime());

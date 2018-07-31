@@ -1,5 +1,6 @@
 package com.ts.service.pdss.pdss.impl;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -52,6 +53,7 @@ import com.ts.service.pdss.pdss.Cache.PdssCache;
 import com.ts.service.pdss.pdss.manager.IPatientSaveCheckResult;
 import com.ts.util.DateUtil;
 import com.ts.util.Logger;
+import com.ts.util.NumberUtil;
 import com.ts.util.PageData;
 import com.ts.util.UuidUtil;
 
@@ -584,17 +586,17 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
                     if(!dsp[j].getHepaticalLevel().equals("0"))
                     {
 //                    	param.put("ID", dsp[j].getDrughepatical().getDRUG_USE_DETAIL_ID());
-                        param.put("ALERT_HINT", "");
+                        param.put("ALERT_HINT", dsp[j].getDrughepatical().getHEPATICAL_INFO());
                         param.put("ALERT_LEVEL",  dsp[j].getHepaticalLevel());
-//                        param.put("CHECK_ITEM", 5);
+                        param.put("CHECK_ITEM", 5);
                     }
                     /* 肾功不全  */
                     if(!dsp[j].getRenalLevel().equals("0"))
                     {
 //                    	param.put("ID", dsp[j].getDrugrenal().getDRUG_USE_DETAIL_ID());
-                        param.put("ALERT_HINT", "");
+                        param.put("ALERT_HINT", dsp[j].getDrugrenal().getRENAL_INFO());
                         param.put("ALERT_LEVEL",  dsp[j].getRenalLevel());
-//                        param.put("CHECK_ITEM", 6);
+                        param.put("CHECK_ITEM", 6);
                     }
                 	param.put("RS_ID", UuidUtil.get32UUID());
                 	param.put("REC_MAIN_NO1", dsp[j].getRecMainNo());
@@ -1035,11 +1037,13 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
         int drugCount = 0;
         try
         {
-            drugCount = Integer.parseInt(pod.getStartDateTime());
+         
+            drugCount = (int) Double.parseDouble(pod.getStartDateTime());
         }
         catch(Exception e )
         {
-            log.warn(e.getMessage());
+            e.printStackTrace();
+            log.warn(this.getClass().toString() + ":" + e.getMessage());
         }
         return drugCount;
     }
@@ -1054,6 +1058,8 @@ public class PatientSaveCheckResult extends Persistent4DB implements IPatientSav
     {
         try
         {
+            // 不保存项目
+            if (po == null || "4".equals(po.getPatType()) ||"3".equals(po.getPatType())) return ; 
             String deptName =  po.getDoctorDeptName();
             String doctorName = po.getDoctorName();
             TPatOrderDrug[]  pods =  po.getPatOrderDrugs();

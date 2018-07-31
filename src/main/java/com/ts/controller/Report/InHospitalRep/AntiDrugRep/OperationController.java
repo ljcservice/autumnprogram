@@ -137,8 +137,8 @@ public class OperationController extends BaseController
         try {
         	Map<String,Object> dataMap = new HashMap<String,Object>();
             page.setPd(pd);
+            page.setShowCount(1000);
             mv.addObject("pd", pd);
-            
             List<String> titles = new ArrayList<String>();
 			titles.add("患者姓名");
 			titles.add("手术式");
@@ -155,32 +155,42 @@ public class OperationController extends BaseController
 			dataMap.put("titles", titles);
             
             List<PageData> varList = new ArrayList<PageData>();
-			List<PageData> varOList =  oper.DRANO007(page);
-			for(int i=0;i<varOList.size();i++){
-				PageData vpd = new PageData();
-				vpd.put("var1", varOList.get(i).get("name"));	//2
-				vpd.put("var2", varOList.get(i).get("OPERATION_DESC"));	//4
-				vpd.put("var3", varOList.get(i).get("OPERATOR"));		//5
-				vpd.put("var4", varOList.get(i).get("dept_name"));
-				vpd.put("var5", varOList.get(i).get("OPERATING_DATE"));
-				vpd.put("var6", varOList.get(i).get("WOUND_GRADE"));
-				vpd.put("var7", varOList.get(i).get("WOUND_GRADE_UPDATE"));
-				vpd.put("var8", "1".equals(varOList.get(i).getString("HAS_ANTI"))?"是":"");
-				String LH = varOList.get(i).getString("LH");
-				if("1".equals(LH)){
-					vpd.put("var9", "一联");
-				}if("2".equals(LH)){
-					vpd.put("var9", "二联");
-				}if("3".equals(LH)){
-					vpd.put("var9", "三联");
-				}if("4".equals(LH)){
-					vpd.put("var9", "多联");
-				}
-				vpd.put("var10", "1".equals(varOList.get(i).getString("PZ"))?"是":"");
-				vpd.put("var11", "1".equals(varOList.get(i).getString("IS_TREATMENT"))?"是":"");
-				vpd.put("var12", "1".equals(varOList.get(i).getString("IS_TIMING"))?"是":"");
-				varList.add(vpd);
-			}
+			int TotalPage = 1;
+            //分批查询,最大查询2万条
+            for(int pag = 1;pag<=TotalPage&&pag<=20;pag++){
+                List<PageData> varOList =  oper.DRANO007(page);
+                TotalPage = page.getTotalPage();
+                if(varList==null){
+                    varList = new ArrayList<PageData>(TotalPage*page.getShowCount());
+                }
+                if(varOList!=null){
+        			for(int i=0;i<varOList.size();i++){
+        				PageData vpd = new PageData();
+        				vpd.put("var1", varOList.get(i).get("name"));	//2
+        				vpd.put("var2", varOList.get(i).get("OPERATION_DESC"));	//4
+        				vpd.put("var3", varOList.get(i).get("OPERATOR"));		//5
+        				vpd.put("var4", varOList.get(i).get("dept_name"));
+        				vpd.put("var5", varOList.get(i).get("OPERATING_DATE"));
+        				vpd.put("var6", varOList.get(i).get("WOUND_GRADE"));
+        				vpd.put("var7", varOList.get(i).get("WOUND_GRADE_UPDATE"));
+        				vpd.put("var8", "1".equals(varOList.get(i).getString("HAS_ANTI"))?"是":"");
+        				String LH = varOList.get(i).getString("LH");
+        				if("1".equals(LH)){
+        					vpd.put("var9", "一联");
+        				}if("2".equals(LH)){
+        					vpd.put("var9", "二联");
+        				}if("3".equals(LH)){
+        					vpd.put("var9", "三联");
+        				}if("4".equals(LH)){
+        					vpd.put("var9", "多联");
+        				}
+        				vpd.put("var10", "1".equals(varOList.get(i).getString("PZ"))?"是":"");
+        				vpd.put("var11", "1".equals(varOList.get(i).getString("IS_TREATMENT"))?"是":"");
+        				vpd.put("var12", "1".equals(varOList.get(i).getString("IS_TIMING"))?"是":"");
+        				varList.add(vpd);
+        			}
+                }
+            }
 			dataMap.put("varList", varList);
 			ObjectExcelView erv = new ObjectExcelView();
 			mv = new ModelAndView(erv,dataMap);

@@ -97,7 +97,7 @@ public class DrugAllergenCheckerBean  implements IDrugAllergenChecker
     	catch(Exception e)
     	{
     		e.printStackTrace();
-    		log.warn(e.getMessage());
+    		log.warn(this.getClass().toString() + ":" + e.getMessage());
     		return new TDrugSecurityRslt();
     	}
     }

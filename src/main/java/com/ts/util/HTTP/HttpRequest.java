@@ -1,4 +1,4 @@
-package com.ts.util;
+package com.ts.util.HTTP;
 
 import java.io.BufferedReader;
 import java.io.IOException;

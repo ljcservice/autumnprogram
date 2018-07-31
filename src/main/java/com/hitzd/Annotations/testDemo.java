@@ -15,6 +15,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,13 +36,50 @@ import org.apache.http.util.EntityUtils;
 import com.hitzd.DBUtils.LobCreatingPSCallBeck;
 import com.hitzd.DBUtils.TCommonRecord;
 import com.hitzd.his.Utils.DateUtils;
-import com.ts.util.HttpRequest;
+import com.ts.util.HTTP.HttpRequest;
 
 import net.sf.json.JSONObject;
 
 public class testDemo
 {
+    class ThreeThread implements Callable<Integer>
+    {
+        int i = 0 ;
+        @Override
+        public Integer call() throws Exception
+        {
+            for(;i<20 ;i++)
+            {
+                
+            }
+            // TODO Auto-generated method stub
+            return i;
+        }
+        
+    }
     
+    private void pubc() throws InterruptedException, ExecutionException
+    {
+        ThreeThread  tt = new ThreeThread();
+        FutureTask<Integer> ft = new FutureTask<>(tt);
+        Thread tt2 = new Thread(ft, "");
+        tt2.start();
+        
+        int rs = ft.get();
+
+    }
+    
+    private java.util.concurrent.locks.Lock lock = new java.util.concurrent.locks.ReentrantLock(); 
+    private static ThreadLocal<Integer> count = new ThreadLocal<Integer>();
+    private void test()
+    {
+        lock.lock();
+        lock.unlock();
+        
+        
+        
+        
+    }
 //    public HttpResult doPost(String url, Map<String, String> params) throws IOException {
 //        // 创建http POST请求
 //        HttpPost httpPost = new HttpPost(url);
@@ -79,6 +119,7 @@ public class testDemo
      * @return
      */
     public static JSONObject httpPost(String url,JSONObject jsonParam){
+        
         return httpPost(url, jsonParam, false);
     }
     /**
@@ -183,33 +224,48 @@ public class testDemo
      */
     public static void main(String[] args)
     {
+//        Date  dd = DateUtils.getDateFromString("2018-06-23");
+//        Calendar cal = Calendar.getInstance();
+//        cal.setTime(dd);
+//        System.out.println(DateUtils.getDate(cal));
+//         if(true ) return ;
+//        String s1 = "2型糖尿病伴外伤";
+//        String s2 = "外伤";
+//        System.out.println(s1.length());
+//        System.out.println(s1.indexOf(s2));
         
-        
+//        String sts = null ;
+//        String b = String.valueOf(sts);
+//        System.out.println(sts == null);
+//        System.out.println("null".equals(b));
+//        
+//        if(true) return ;
         List<String> nnlp = new ArrayList<String>();
         List<String> ss = new ArrayList<String>();
+        
         try
         {
-            Calendar cal = Calendar.getInstance();
-            // 每月中的天
-            int day = cal.get(Calendar.DAY_OF_MONTH);
-            System.out.println(day);
-            // 月份。
-            int month = cal.get(Calendar.MONTH);
-            System.out.println(month);
-            // 年 天
-            int dayOfyear = cal.get(Calendar.DAY_OF_YEAR);
-            System.out.println(dayOfyear);
+//            Calendar cal = Calendar.getInstance();
+//            // 每月中的天
+//            int day = cal.get(Calendar.DAY_OF_MONTH);
+//            System.out.println(day);
+//            // 月份。
+//            int month = cal.get(Calendar.MONTH);
+//            System.out.println(month);
+//            // 年 天
+//            int dayOfyear = cal.get(Calendar.DAY_OF_YEAR);
+//            System.out.println(dayOfyear);
+//            
             
             
-            
-            if(true) return ;
+//            if(true) return ;
             
             String url = "http://10.10.41.25:10011";
-            String value = "0.25g*50石药集团中诺";
-            //value = "#注射用哌拉西林钠他唑巴坦钠(农 医乙)限重度感染"  ;
-            value ="#脂肪乳氨基酸(17)葡萄糖注射液/医乙限重症患者肠功能";
-            JSONObject jsonpara = new JSONObject();
-            jsonpara.put("s", value);
+            String value = "孕12周+..终止妊娠";
+//            value = "复方氨基酸（6AA）"  ; 
+            //value ="#脂肪乳氨基酸(17)葡萄糖注射液/医乙限重症患者肠功能";
+//            JSONObject jsonpara = new JSONObject();
+//            jsonpara.put("s", value);
 //            System.out.println(httpPost(url, jsonpara).toString());
             String rs = HttpRequest.sendPost(url, "s=" + value);
             System.out.println(rs);

@@ -24,7 +24,7 @@ import com.hitzd.his.casehistory.CaseHistory;
 public class CaseHistoryCommon extends CaseHistoryHelperBase
 {
 	/**
-	 * 获取指定病案号和住院号的病人的病历，暂时返回空值
+	 * 获取指定病案号和住院号的病人的病历，暂时返回空值 
 	 * @param PatientID
 	 * @param VisitID
 	 * @param srcQuery
@@ -80,7 +80,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 		    	List<TCommonRecord> OperMaster = null;
 				try 
 				{
-					OperMaster = fetchOperationMaster2CR(PatientID, VisitID, srcQuery);
+//					OperMaster = fetchOperationMaster2CR(PatientID, VisitID, srcQuery);
 				} 
 				catch (Exception e) 
 				{
@@ -104,7 +104,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 				List<TCommonRecord> OperationName = null;
 				try 
 				{
-					OperationName = fetchOperationName2CR(PatientID, VisitID, srcQuery);
+//					OperationName = fetchOperationName2CR(PatientID, VisitID, srcQuery);
 				} 
 				catch (Exception e) 
 				{
@@ -116,7 +116,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 				List<TCommonRecord> DrugDispenseRec = null;
 				try 
 				{
-					DrugDispenseRec = fetchDrugDispenseRec2CR(PatientID, VisitID, srcQuery);
+//					DrugDispenseRec = fetchDrugDispenseRec2CR(PatientID, VisitID, srcQuery);
 				} 
 				catch (Exception e8) 
 				{
@@ -166,7 +166,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 		    	List<TCommonRecord> LabTestMaster = null;
 				try 
 				{
-					LabTestMaster = fetchLabTestMaster2CR(PatientID, VisitID, srcQuery);
+//					LabTestMaster = fetchLabTestMaster2CR(PatientID, VisitID, srcQuery);
 				} 
 				catch (Exception e4) 
 				{
@@ -178,7 +178,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 		    	List<TCommonRecord> VitalSignsRec = null;
 				try 
 				{
-					VitalSignsRec = fetchVitalSignsRec2CR(PatientID, VisitID, srcQuery);
+//					VitalSignsRec = fetchVitalSignsRec2CR(PatientID, VisitID, srcQuery);
 				} 
 				catch (Exception e3) 
 				{
@@ -190,7 +190,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 		    	List<TCommonRecord> ExamMaster = null;
 				try 
 				{
-					ExamMaster = fetchExamMaster2CR(PatientID, VisitID, srcQuery);
+//					ExamMaster = fetchExamMaster2CR(PatientID, VisitID, srcQuery);
 				} 
 				catch (Exception e2) 
 				{
@@ -202,7 +202,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 		    	List<TCommonRecord> GermTest = null;
 				try 
 				{
-					GermTest = fetchGermTest2CR(PatientID, VisitID, srcQuery);
+//					GermTest = fetchGermTest2CR(PatientID, VisitID, srcQuery);
 				} 
 				catch (Exception e1) 
 				{
@@ -214,7 +214,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 		    	List<TCommonRecord> GermTestResult = null;
 				try 
 				{
-					GermTestResult = fetchGermTestResult2CR(PatientID, VisitID, srcQuery);
+//					GermTestResult = fetchGermTestResult2CR(PatientID, VisitID, srcQuery);
 				} 
 				catch (Exception e)
 				{
@@ -1410,7 +1410,7 @@ public class CaseHistoryCommon extends CaseHistoryHelperBase
 	@Override
 	public List<TCommonRecord> fetchDrugDict2CR(String strFields,  List<TCommonRecord> lsWheres, List<TCommonRecord> lsGroups, List<TCommonRecord> lsOrders, JDBCQueryImpl srcQuery) throws Exception
 	{
-		String tableName = this.getTableName("pdss.drug_dict", lsWheres);
+		String tableName = this.getTableName("comm.drug_dict", lsWheres);
 		String dbUrl = getDbUrl(tableName).trim();
 		if (dbUrl != null && !"".equals(dbUrl))
 			srcQuery = DBQueryFactory.getQuery(dbUrl);

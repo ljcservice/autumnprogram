@@ -119,8 +119,9 @@ public class iasDataFetcherEx extends ReportScheduler implements  IScheduler
 	            PatVisit2PatientInfo(patV, PatientInfo);
 	        	
 	        	Log(40, "正在保存" + patV.get("PATIENT_ID") + "的就诊信息...");
-	            // 保存病人就诊记录               
-	            SavePatVisit(hisQuery, patQuery, patV, crPatMasterIndex, PatientInfo);
+	            // 保存病人就诊记录 增加抗菌药专项点评         
+	            SavePatVisit(hisQuery, patQuery, patV, crPatMasterIndex, PatientInfo,"PAT_VISIT");
+	            SavePatVisit(hisQuery, patQuery, patV, crPatMasterIndex, PatientInfo,"PAT_VISIT_ANTI");
 //	        	Log(40, "正在保存" + patV.get("PATIENT_ID") + "的手术记录...");
 //	            // 保存手术记录，必须在摆药记录之前
 //	            SaveOperation(hisQuery, patQuery, patV.get("PATIENT_ID"), patV.get("VISIT_ID"), crPatMasterIndex, PatientInfo);
@@ -129,10 +130,10 @@ public class iasDataFetcherEx extends ReportScheduler implements  IScheduler
 	            
 	        	Log(40, "正在保存" + patV.get("PATIENT_ID") + "的摆药记录...");
 	            // 保存摆药记录，必须在医嘱之前
-	            SaveDrugDispenseRec(hisQuery, patQuery, patV.get("PATIENT_ID"), patV.get("VISIT_ID"), crPatMasterIndex, PatientInfo);
+	            //SaveDrugDispenseRec(hisQuery, patQuery, patV.get("PATIENT_ID"), patV.get("VISIT_ID"), crPatMasterIndex, PatientInfo);
 	        	Log(40, "正在保存" + patV.get("PATIENT_ID") + "的在院记录...");
 	            // 保存在院病人记录
-	            SavePatsInHospital(hisQuery, patQuery, patV.get("PATIENT_ID"), patV.get("VISIT_ID"), crPatMasterIndex, PatientInfo);
+	            //SavePatsInHospital(hisQuery, patQuery, patV.get("PATIENT_ID"), patV.get("VISIT_ID"), crPatMasterIndex, PatientInfo);
 	        	Log(40, "正在保存" + patV.get("PATIENT_ID") + "的医嘱信息...");
 	            // 保存医嘱
 	            SaveOrders(hisQuery, patQuery, patV.get("PATIENT_ID"), patV.get("VISIT_ID"), crPatMasterIndex, PatientInfo);
@@ -144,23 +145,23 @@ public class iasDataFetcherEx extends ReportScheduler implements  IScheduler
 	            SaveInpBillDetail(hisQuery, patQuery, patV.get("PATIENT_ID"), patV.get("VISIT_ID"), crPatMasterIndex, PatientInfo);
 	        	Log(40, "正在保存" + patV.get("PATIENT_ID") + "的检验信息...");
 	            // 保存检验主记录
-	            SaveLabTestInfo(hisQuery, patQuery, patV.get("PATIENT_ID"), patV.get("VISIT_ID"), crPatMasterIndex, PatientInfo);
+	            //SaveLabTestInfo(hisQuery, patQuery, patV.get("PATIENT_ID"), patV.get("VISIT_ID"), crPatMasterIndex, PatientInfo);
 	        	Log(40, "正在保存" + patV.get("PATIENT_ID") + "的体症信息...");
 	            // 保存病人体症记录
-	            SaveVitalSignsRec(hisQuery, patQuery, patV.get("PATIENT_ID"), patV.get("VISIT_ID"), crPatMasterIndex, PatientInfo);
+	            //SaveVitalSignsRec(hisQuery, patQuery, patV.get("PATIENT_ID"), patV.get("VISIT_ID"), crPatMasterIndex, PatientInfo);
 	        	Log(40, "正在保存" + patV.get("PATIENT_ID") + "的检查信息...");
 	            // 保存检查记录
-	            SaveExamInfo(hisQuery, patQuery, patV.get("PATIENT_ID"), patV.get("VISIT_ID"), crPatMasterIndex, PatientInfo);
+	            //SaveExamInfo(hisQuery, patQuery, patV.get("PATIENT_ID"), patV.get("VISIT_ID"), crPatMasterIndex, PatientInfo);
 	        	Log(40, "正在保存" + patV.get("PATIENT_ID") + "的微生物检验信息...");
 	            // 保存微生物检验信息
-	            SaveGermTestInfo(hisQuery, patQuery, patV.get("PATIENT_ID"), patV.get("VISIT_ID"), crPatMasterIndex, PatientInfo);
+	            //SaveGermTestInfo(hisQuery, patQuery, patV.get("PATIENT_ID"), patV.get("VISIT_ID"), crPatMasterIndex, PatientInfo);
 	            // 保存处方信息
 	            //SaveDrugPresc(hisQuery, patQuery, patV.get("Patient_ID"), patV.get("Visit_ID"), crPatMasterIndex, PatientInfo);
 	            
 	            Log(40, "正在保存" + patV.get("PATIENT_ID") + "的抗菌药使用信息...");
-	            drugDispenseOrders2PatientInfo(hisQuery, patV, PatientInfo);
+	            //drugDispenseOrders2PatientInfo(hisQuery, patV, PatientInfo);
 
-	            insetPatientInfo(PatientInfo);
+	            //insetPatientInfo(PatientInfo);
 	            PatientInfo = null;
 	            
 	            onBuild(prevDate, crPatMasterIndex);
@@ -357,7 +358,7 @@ public class iasDataFetcherEx extends ReportScheduler implements  IScheduler
      * @param patQuery
      * @param patV
      */
-    public void SavePatVisit(JDBCQueryImpl hisQuery, JDBCQueryImpl patQuery, TCommonRecord patV, TCommonRecord crPatMasterIndex, TCommonRecord PatientInfo)
+    public void SavePatVisit(JDBCQueryImpl hisQuery, JDBCQueryImpl patQuery, TCommonRecord patV, TCommonRecord crPatMasterIndex, TCommonRecord PatientInfo,String table)
     {
         TCommonRecord crVisit = (TCommonRecord)crPatMasterIndex.getObj(ICaseHistoryHelper.Key_PatVisit);
         List<TCommonRecord> Operation = (List<TCommonRecord>)crVisit.getObj(ICaseHistoryHelper.Key_Operation);
@@ -377,7 +378,7 @@ public class iasDataFetcherEx extends ReportScheduler implements  IScheduler
     	PatientInfo.set("OUT_CLINIC_ATTR", cr.get("CLINIC_ATTR"));
     	PatientInfo.set("OUT_OUTP_OR_INP", cr.get("OUTP_OR_INP"));
     	List<Object> sqlParams = new ArrayList<Object>();
-    	String dstSQL = "Insert into Pat_Visit(PATIENT_ID, VISIT_ID, DEPT_ADMISSION_TO, IN_DEPT_NAME, IN_CLINIC_ATTR, IN_OUTP_OR_INP, IN_INTERNAL_OR_SERGERY, " +
+    	String dstSQL = "Insert into " + table + "(PATIENT_ID, VISIT_ID, DEPT_ADMISSION_TO, IN_DEPT_NAME, IN_CLINIC_ATTR, IN_OUTP_OR_INP, IN_INTERNAL_OR_SERGERY, " +
     			"ADMISSION_DATE_TIME, DEPT_DISCHARGE_FROM, OUT_DEPT_NAME, OUT_CLINIC_ATTR, OUT_OUTP_OR_INP, OUT_INTERNAL_OR_SERGERY, " +
     			"DISCHARGE_DATE_TIME, OCCUPATION, MARITAL_STATUS, IDENTITY, ARMED_SERVICES, DUTY, UNIT_IN_CONTRACT, CHARGE_TYPE, " +
     			"WORKING_STATUS, INSURANCE_TYPE, INSURANCE_NO, SERVICE_AGENCY, MAILING_ADDRESS, ZIP_CODE, NEXT_OF_KIN, RELATIONSHIP, " +
@@ -2313,23 +2314,23 @@ public class iasDataFetcherEx extends ReportScheduler implements  IScheduler
 	}
 	
 	private void CheckPat(String prevDate){
-	    InHospitalCheck ihc = new  InHospitalCheckBean(); //(InHospitalCheck)SpringBeanUtil.getBean("");
+	    InHospitalCheck ihc = (InHospitalCheck)SpringBeanUtil.getBean("inHospitalCheckBean");
 	    List<Object> values = new ArrayList<Object>();
 	    values.add(prevDate);
-        Object rs = ihc.InHospitalCheck(values);
+        Object rs = ihc.InHospitalCheck(values.toArray(new Object[0]));
 	}
 	
 	private void clearData(JDBCQueryImpl patQuery, String prevDate) {
 		String[] tableNames = new String[]{"Pat_Master_Index","Pat_Visit","Operation_Name","Drug_Dispense_Rec","Pats_In_Hospital",
 				"Orders","Diagnosis","Inp_Bill_Detail","Lab_Test_Master","Lab_Test_Items","Lab_Result","Vital_Signs_Rec","Exam_Master",
-				"Exam_Items","Exam_Report","germ_test","DRUG_SENSIT_RESULT","GERM_TEST_RESULT"};
+				"Exam_Items","Exam_Report","GERM_TEST","DRUG_SENSIT_RESULT","GERM_TEST_RESULT"};
 		List<String> sqlList = new ArrayList<String>();
 		for (String str : tableNames) {
 			sqlList.add("delete from " + str + " where LINK_DATE = to_date('" + prevDate + "','yyyy-MM-dd')");
 		}
 		patQuery.batchUpdate(sqlList.toArray(new String[]{}));
-		query.batchUpdate(new String[]{"delete from IAS_PATIENT_USE_ANTIBO where LINK_DATE = to_date('" + prevDate + "','yyyy-MM-dd')",
-				"delete from IAS_PATIENT_INFO where LINK_DATE = to_date('" + prevDate + "','yyyy-MM-dd')"});
+		//query.batchUpdate(new String[]{"delete from IAS_PATIENT_USE_ANTIBO where LINK_DATE = to_date('" + prevDate + "','yyyy-MM-dd')",
+		//		"delete from IAS_PATIENT_INFO where LINK_DATE = to_date('" + prevDate + "','yyyy-MM-dd')"});
 	}
 
 	@Override

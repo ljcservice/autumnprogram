@@ -176,10 +176,10 @@ public class PagePlugin implements Interceptor {
 		if(page!=null && Tools.notEmpty(dialect)){
 			StringBuffer pageSql = new StringBuffer();
 			if("oracle".equals(dialect)){
-				pageSql.append("select * from (select tmp_tb.*,ROWNUM row_id from (");
+				pageSql.append("select * from (select tmp_tb.*,ROWNUM row_id from ( select * from (");
 				pageSql.append(sql);
 				//pageSql.append(") as tmp_tb where ROWNUM<=");
-				pageSql.append(") tmp_tb where ROWNUM<=");
+				pageSql.append(") tmp ) tmp_tb where ROWNUM<=");
 				pageSql.append(page.getCurrentResult()+page.getShowCount());
 				pageSql.append(") where row_id>");
 				pageSql.append(page.getCurrentResult());

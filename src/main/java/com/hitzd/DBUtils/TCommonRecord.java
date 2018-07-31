@@ -50,7 +50,7 @@ public class TCommonRecord implements Serializable
 	public String get(String key  )
 	{
 	    String ret = attributes.get(key.toUpperCase());
-		return ret == null ? "" : ret; //.replaceAll("'", "''");
+		return ret == null ? "" : ret.trim(); //.replaceAll("'", "''");
 	}
 	
 	/**

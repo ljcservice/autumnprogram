@@ -80,8 +80,9 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
 	        		        continue;
 	        		    }
 	        		            
-	        			if(patOd.getDiagnosisName().indexOf(ddi.getDIAG_DESC()) != -1
-	        			        || ddi.getDIAG_DESC().indexOf(patOd.getDiagnosisName()) != -1 )//
+//	        			if(patOd.getDiagnosisName().indexOf(ddi.getDIAG_DESC()) != -1
+//	        			        || ddi.getDIAG_DESC().indexOf(patOd.getDiagnosisName()) != -1 )//
+	        		    if(patOd.getDiagnosisName().trim().equals(ddi.getDIAG_DESC().trim()))
 	        			{
 	    	        		TDrugDiagRslt diarslt = new TDrugDiagRslt();
 	    	        		drug.setRecMainNo(pod.getRecMainNo());
@@ -239,7 +240,7 @@ public class DrugDiagCheckerBean extends Persistent4DB implements IDrugDiagCheck
     	catch(Exception e)
     	{
     		e.printStackTrace();
-    		log.warn(e.getMessage());
+    		log.warn(this.getClass().toString() + ":" + e.getMessage());
     		return new TDrugSecurityRslt();
     	}
     }

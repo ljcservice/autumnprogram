@@ -1,6 +1,7 @@
 package com.ts.service.DoctOrder.OrderWork.Impl;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,12 +26,22 @@ public class OrderWorkServiceBean implements IOrderWorkService {
 	{
 		return (List<PageData>) daoph.findForList("PatVisitMapper.patvisitlistPage", page); 
 	}
+	
+	@Override
+    public PageData patvisitlistbyRefreshId(PageData pd) throws Exception
+    {
+        return (PageData) daoph.findForObject("PatVisitMapper.patvisitlistbyRefreshId", pd);
+    }
 
 	@Override
 	public PageData findByPatient(Page page) throws Exception {
 		
 		return (PageData) daoph.findForObject("PatVisitMapper.patVisitById", page);
 	}
+	
+    public List<PageData> checkRsDetail(PageData pd) throws Exception {
+        return (List<PageData>) daoph.findForList("PatVisitMapper.selectCheckOrdersExcelByNgroupnum", pd);
+    }
 	
 	@Override
 	public int updatePatVisitNgroupnum(PageData pd) throws Exception {
@@ -127,9 +138,9 @@ public class OrderWorkServiceBean implements IOrderWorkService {
 	
 	//查询药疗类型的 医嘱信息
 	public Map ordersListSpecial(PageData pd) throws Exception{
-		Map<String,String> map = new HashMap<String,String>();
+		Map<String,String> map = new LinkedHashMap<String,String>();
 		List<PageData>	list =	(List<PageData>) daoph.findForList("OrdersMapper.ordersListSpecial",pd);
-		if(list!=null){
+		if(list!=null){  
 			for(PageData p:list){
 				map.put(p.getString("key"), p.getString("value"));
 			}
@@ -151,9 +162,9 @@ public class OrderWorkServiceBean implements IOrderWorkService {
 		//如果为合理，删除点评
 		if("0".equals(pd.getString("ISCHECKTRUE"))){
 			delCheckRsByNgroupnum(pd);
-			//无人工点评记录
-			pd.put("ISORDERCHECK", 0);
+			pd.put("ISORDERCHECK", 1);
 		}
+		//无人工点评记录
 		//pd.put("NGROUPNUM", "");问题组号
 		//更新病人住院记录pat_visit的状态为0合理1不合理2待定
 		//pd.put("ISCHECKTRUE", pd.getString("ISCHECKTRUE"));
@@ -198,5 +209,4 @@ public class OrderWorkServiceBean implements IOrderWorkService {
 	public List<PageData> orderListByDep(PageData pd)throws Exception {
 		return (List<PageData>) daoph.findForList("rsDrugCheckRsltMapper.orderListByDep", pd);
 	}
-
 }

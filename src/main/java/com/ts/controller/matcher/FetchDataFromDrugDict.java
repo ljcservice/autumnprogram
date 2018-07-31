@@ -24,6 +24,7 @@ import com.hitzd.Factory.DBQueryFactory;
 import com.hitzd.WebPage.PageView;
 import com.hitzd.WebPage.QueryResult;
 import com.hitzd.his.Utils.DateUtils;
+import com.hitzd.his.Utils.DrugUtils;
 import com.hitzd.his.Web.Utils.CommonUtils;
 import com.hitzd.his.Web.base.PubServlet;
 import com.hitzd.his.casehistory.helper.CaseHistoryFactory;
@@ -198,6 +199,7 @@ public class FetchDataFromDrugDict  extends BaseController   {
 			}
 			newDrug.clear(); //清空缓存
 		} catch (Exception e) {
+		    e.printStackTrace();
 			errInfo = "操作失败！";
 		}
         map.put("result",errInfo);
@@ -225,6 +227,7 @@ public class FetchDataFromDrugDict  extends BaseController   {
             }
         } catch (Exception e) {
 			errInfo = "操作失败！";
+			e.printStackTrace();
 		}
         map.put("result",errInfo);
 		return  map ;  
@@ -366,6 +369,8 @@ public class FetchDataFromDrugDict  extends BaseController   {
     		   params.get("drug_form"),params.get("dose_per_unit"),params.get("dose_units"),params.get("drug_indicator"),
     		   params.get("toxi_property"),params.get("input_code"),dateTime,dateTime};
         query.update(sql, sqlParams);
+        // 添加的药品到缓存中。
+        DrugUtils.loadDrugMapBySingle(maxId);
     }
     /**
      * 获取最大ID

@@ -89,7 +89,7 @@ public class IASPatInfoSCDController extends BaseController
 				vpd.put("var4", varOList.get(i).get("scd"));		//5
 				vpd.put("var5", varOList.get(i).get("anti_count").toString()+"/"+varOList.get(i).get("pat_count").toString()
 						+"*100="
-						+((BigDecimal)varOList.get(i).get("anti_count")).divide((BigDecimal)varOList.get(i).get("pat_count"),2, BigDecimal.ROUND_HALF_UP)+"%"
+						+(((BigDecimal)varOList.get(i).get("anti_count")).divide((BigDecimal)varOList.get(i).get("pat_count"),4, BigDecimal.ROUND_HALF_UP)).doubleValue() * 100 +"%"
 					);
 				vpd.put("var6", varOList.get(i).get("ddd_values"));
 				vpd.put("var7", varOList.get(i).get("intensity") );
@@ -750,8 +750,8 @@ public class IASPatInfoSCDController extends BaseController
             BigDecimal antiCountnumber = new BigDecimal(0);
             BigDecimal CountCost = new BigDecimal(0);
 			for(int i=0;i<varOList.size();i++){
-				antiCountnumber = antiCountnumber.add((BigDecimal)varOList.get(i).get("anti_type_count"));
-				CountCost = CountCost.add((BigDecimal)varOList.get(i).get("drug_costs_count"));
+//				antiCountnumber = antiCountnumber.add(BigDecimal.valueOf(varOList.get(i).getDouble("anti_type_count")));
+//				CountCost = CountCost.add((BigDecimal)varOList.get(i).get("drug_costs_count"));
 				PageData vpd = new PageData();
 				vpd.put("var1", i+1);	//2
 				vpd.put("var2", varOList.get(i).get("dept_name"));	//4
@@ -870,8 +870,8 @@ public class IASPatInfoSCDController extends BaseController
 				page.setCurrentPage(pag);
 	            List<PageData> varOList =  patInfo.DRANO011(page);
 				for(int i=0;i<varOList.size();i++){
-					antiCountCost = antiCountCost.add((BigDecimal)varOList.get(i).get("anti_costs_count"));
-					CountCost = CountCost.add((BigDecimal)varOList.get(i).get("drug_costs_count"));
+//					antiCountCost = antiCountCost.add((BigDecimal)varOList.get(i).get("anti_costs_count"));
+//					CountCost = CountCost.add((BigDecimal)varOList.get(i).get("drug_costs_count"));
 					PageData vpd = new PageData();
 					vpd.put("var1", i+1); 
 					vpd.put("var2", varOList.get(i).get("doctor"));	
@@ -969,8 +969,8 @@ public class IASPatInfoSCDController extends BaseController
             BigDecimal antiCountCost = new BigDecimal(0);
             BigDecimal CountCost = new BigDecimal(0);
 			for(int i=0;i<varOList.size();i++){
-				antiCountCost = antiCountCost.add((BigDecimal)varOList.get(i).get("anti_costs_count"));
-				CountCost = CountCost.add((BigDecimal)varOList.get(i).get("drug_costs_count"));
+				//antiCountCost = antiCountCost.add((BigDecimal)varOList.get(i).get("anti_costs_count"));
+				//CountCost = CountCost.add((BigDecimal)varOList.get(i).get("drug_costs_count"));
 				PageData vpd = new PageData();
 				vpd.put("var1", i+1);	//2
 				vpd.put("var2", varOList.get(i).get("dept_name"));	//4

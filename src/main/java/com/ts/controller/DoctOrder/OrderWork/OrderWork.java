@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 import net.sf.json.JSONArray;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -45,7 +46,7 @@ public class OrderWork extends BaseController
 {
 	@Resource(name="commonServicePdss")
 	private CommonService commonService;
-	@Autowired
+	@Autowired @Qualifier("orderWorkServiceBean")
 	private IOrderWorkService orderWorkService;
 	@Autowired
 	private UserManager userService;
@@ -98,6 +99,12 @@ public class OrderWork extends BaseController
 			}
 			mv.addObject("pd", pd);
 			page.setPd(pd);
+			
+			String DRUG_TYPE = pd.getString("DRUG_TYPE");    //药品种类
+            if(!Tools.isEmpty(DRUG_TYPE)){
+                pd.put(DRUG_TYPE, 1);
+            }
+            
 			String RANDOM_NUM = pd.getString("RANDOM_NUM");
 			if(Tools.isEmpty(RANDOM_NUM)){
 				pd.put("RANDOM_NUM", 50);
@@ -110,23 +117,62 @@ public class OrderWork extends BaseController
 					return mv;
 				}
 			}
-			List<PageData> entity =  this.orderWorkService.patientList(page);
+			List<PageData> entity =  null;
+			//解决抽取样例数据刷新的问题
+			if("1".equals(pd.getString("randomrefresh")))
+			{
+			    String refreshpatid = pd.getString("refreshpatientid");
+			    String refreshvisitid = pd.getString("refreshvisitId");
+                PageData param = new PageData();
+                param.put("patient_id", refreshpatid);
+                param.put("visit_id", refreshvisitid);
+                
+                PageData refreshRs = orderWorkService.patvisitlistbyRefreshId(param);
+                
+                String RS_DRUG_TYPES = refreshRs.getString("RS_DRUG_TYPES");
+                if(!Tools.isEmpty(RS_DRUG_TYPES)){
+                    String[] RS_DRUG_TYPE = RS_DRUG_TYPES.split("@;@");
+                    refreshRs.put("RS_DRUG_TYPES", RS_DRUG_TYPE);
+                }
+                String DIAGNOSIS_DESC = refreshRs.getString("DIAGNOSIS_DESC");
+                if(!Tools.isEmpty(DIAGNOSIS_DESC)){
+                    String[] DIAGNOSIS_DESCS = DIAGNOSIS_DESC.split("@;@");
+                    refreshRs.put("DIAGNOSIS_DESC", DIAGNOSIS_DESCS);
+                }
+                entity = (List<PageData>) getRequest().getSession().getAttribute("ExportList");
+                int removeplace = 0;
+                for(int  i = 0 ; i < entity.size() ; i ++)
+                {
+                    PageData p = entity.get(i);
+                    if(p.getString("patient_id").equals(refreshpatid) &&p.getString("visit_id").equals(refreshvisitid))
+                    {
+                        removeplace = i ;
+                        break;
+                    }
+                }
+                entity.remove(removeplace);
+                entity.add(removeplace, refreshRs);
+			}
+			else
+			{
+			    entity =  this.orderWorkService.patientList(page);
+			    for(PageData pp:entity){
+	                String RS_DRUG_TYPES = pp.getString("RS_DRUG_TYPES");
+	                if(!Tools.isEmpty(RS_DRUG_TYPES)){
+	                    String[] RS_DRUG_TYPE = RS_DRUG_TYPES.split("@;@");
+	                    pp.put("RS_DRUG_TYPES", RS_DRUG_TYPE);
+	                }
+	                String DIAGNOSIS_DESC = pp.getString("DIAGNOSIS_DESC");
+	                if(!Tools.isEmpty(DIAGNOSIS_DESC)){
+	                    String[] DIAGNOSIS_DESCS = DIAGNOSIS_DESC.split("@;@");
+	                    pp.put("DIAGNOSIS_DESC", DIAGNOSIS_DESCS);
+	                }
+	            }
+			}
 			if("1".equals(pd.getString("randomflag"))){
 				getRequest().getSession().setAttribute("ExportList", entity);
 			}
 			page = null;
-			for(PageData pp:entity){
-				String RS_DRUG_TYPES = pp.getString("RS_DRUG_TYPES");
-				if(!Tools.isEmpty(RS_DRUG_TYPES)){
-					String[] RS_DRUG_TYPE = RS_DRUG_TYPES.split("@;@");
-					pp.put("RS_DRUG_TYPES", RS_DRUG_TYPE);
-				}
-				String DIAGNOSIS_DESC = pp.getString("DIAGNOSIS_DESC");
-				if(!Tools.isEmpty(DIAGNOSIS_DESC)){
-					String[] DIAGNOSIS_DESCS = DIAGNOSIS_DESC.split("@;@");
-					pp.put("DIAGNOSIS_DESC", DIAGNOSIS_DESCS);
-				}
-			}
 			mv.addObject("rstypeMap", DoctorConst.rstypeMap); 
 			mv.addObject("rstypeColorMap", DoctorConst.rstypeColorMap); 
 			mv.addObject("checktypeMap", commonService.getCheckTypeDict()); 
@@ -139,8 +185,38 @@ public class OrderWork extends BaseController
 		return  mv; 
 	}
 	
+	private String  checkRsDetail(String ngroupnum) throws Exception 
+    {
+	    if(ngroupnum== null || "".equals(ngroupnum))return "" ;
+        PageData pd  = new PageData();
+        pd.put("ngroupnum", ngroupnum);
+        Map<String,PageData> rsDict = commonService.getCheckTypeDict();
+        List<PageData> rsChecks = orderWorkService.checkRsDetail(pd);
+        StringBuffer sbRs = new StringBuffer();
+        String rsType = "";
+        String drugGroup = ""  ;
+        for (PageData entity : rsChecks)
+        {
+            if(!rsType.equals(entity.getString("rs_drug_type")))
+            {
+                sbRs.append(rsDict.get(entity.getString("rs_drug_type")).getString("rs_type_name")).append("\r\n");
+            }
+            String strEmp = entity.getString("drug_id1") + entity.getString("drug_id2");
+            if(!strEmp.equals(drugGroup))
+            {
+                sbRs.append(entity.getString("drugdetail1"));
+                if(rsDict.get(entity.getString("rs_drug_type")).getInt("rs_count") == 2 ) sbRs.append(" 与  ");
+                sbRs.append(entity.getString("drugdetail2"));
+                sbRs.append("\r\n");
+            }
+            drugGroup = strEmp;
+            sbRs.append("  ").append(entity.getString("alert_hint")).append("\r\n");
+            rsType = entity.getString("rs_drug_type");
+        }
+        return sbRs.toString()  ;
+    }
 	
-	/**
+	/**  
 	 * 导出到excel
 	 * @return
 	 */
@@ -171,7 +247,7 @@ public class OrderWork extends BaseController
 			List<String> titles = new ArrayList<String>();
 			titles.add("患者ID");//1
 			titles.add("患者名称");//2
-			titles.add("诊断结果数");	//3
+			titles.add("诊断结果");	//3
 			titles.add("主治医师");	//4
 			titles.add("入院科室");	//5
 			titles.add("入院时间");	//5
@@ -180,6 +256,7 @@ public class OrderWork extends BaseController
 			titles.add("点评");	//5
 			titles.add("合理");	//5
 			titles.add("结果");	//5
+			titles.add("问题详细");
 			dataMap.put("titles", titles);
 			int TotalPage = 1;
 			List<PageData> varList = null;
@@ -195,14 +272,14 @@ public class OrderWork extends BaseController
 				if(varOList!=null){
 					for(int i=0;i<varOList.size();i++){
 						PageData vpd = new PageData();
-						vpd.put("var1", varOList.get(i).get("PATIENT_ID").toString()+"（"+varOList.get(i).get("VISIT_ID").toString()+"）");		//1
+						vpd.put("var1", varOList.get(i).getString("PATIENT_ID")+"（"+varOList.get(i).getString("VISIT_ID")+"）");		//1
 						vpd.put("var2", varOList.get(i).getString("NAME"));	//2
-						vpd.put("var3", varOList.get(i).get("DIAGNOSIS_COUNT").toString());	//3
+						vpd.put("var3", varOList.get(i).getString("DIAGNOSIS_DESC"));	//3
 						vpd.put("var4", varOList.get(i).getString("ATTENDING_DOCTOR"));	//4
 						vpd.put("var5", varOList.get(i).getString("in_dept_name"));		//5
-						vpd.put("var6", varOList.get(i).get("admission_date_time"));	//6
+						vpd.put("var6", varOList.get(i).getString("admission_date_time"));	//6
 						vpd.put("var7", varOList.get(i).getString("out_dept_name"));		//7
-						vpd.put("var8", varOList.get(i).get("discharge_date_time"));	//8
+						vpd.put("var8", varOList.get(i).getString("discharge_date_time"));	//8
 						vpd.put("var9", varOList.get(i).get("ISORDERCHECK")==null?"未点评":("0".equals(varOList.get(i).get("ISORDERCHECK").toString())?"未点评":"已点评"));	//10
 						vpd.put("var10", varOList.get(i).get("ISCHECKTRUE")==null?"待定":("0".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"合理":("1".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"不合理":"待定")));	//11
 						String RS_DRUG_TYPES = varOList.get(i).getString("RS_DRUG_TYPES");
@@ -215,6 +292,7 @@ public class OrderWork extends BaseController
 							}
 						}
 						vpd.put("var11", sb.length()>0?sb.substring(0, sb.length()-1):"");	//12
+						vpd.put("var12", this.checkRsDetail(varOList.get(i).getString("ngroupnum")));
 						varList.add(vpd);
 					}
 				}
@@ -232,7 +310,7 @@ public class OrderWork extends BaseController
 		List<String> titles = new ArrayList<String>();
 		titles.add("患者ID");//1
 		titles.add("患者名称");//2
-		titles.add("诊断结果数");	//3
+		titles.add("诊断结果");	//3
 		titles.add("主治医师");	//4
 		titles.add("入院科室");	//5
 		titles.add("入院时间");	//5
@@ -241,36 +319,54 @@ public class OrderWork extends BaseController
 		titles.add("点评");	//5
 		titles.add("合理");	//5
 		titles.add("结果");	//5
+		titles.add("问题详细");
 		dataMap.put("titles", titles);
-		//分批查询,最大查询2万条
-		List<PageData> varOList =  (List<PageData>) getRequest().getSession().getAttribute("ExportList" );
-		List<PageData> varList = new ArrayList<PageData>();
-		if(varOList!=null){
-			for(int i=0;i<varOList.size();i++){
-				PageData vpd = new PageData();
-				vpd.put("var1", varOList.get(i).get("PATIENT_ID").toString()+"（"+varOList.get(i).get("VISIT_ID").toString()+"）");		//1
-				vpd.put("var2", varOList.get(i).getString("NAME"));	//2
-				vpd.put("var3", varOList.get(i).get("DIAGNOSIS_COUNT").toString());	//3
-				vpd.put("var4", varOList.get(i).getString("ATTENDING_DOCTOR"));	//4
-				vpd.put("var5", varOList.get(i).getString("in_dept_name"));		//5
-				vpd.put("var6", varOList.get(i).get("admission_date_time"));	//6
-				vpd.put("var7", varOList.get(i).getString("out_dept_name"));		//7
-				vpd.put("var8", varOList.get(i).get("discharge_date_time"));	//8
-				vpd.put("var9", varOList.get(i).get("ISORDERCHECK")==null?"未点评":("0".equals(varOList.get(i).get("ISORDERCHECK").toString())?"未点评":"已点评"));	//10
-				vpd.put("var10", varOList.get(i).get("ISCHECKTRUE")==null?"待定":("0".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"合理":("1".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"不合理":"待定")));	//11
-				String[] RS_DRUG_TYPE = (String[]) varOList.get(i).get("RS_DRUG_TYPES");
-				if(RS_DRUG_TYPE!=null){
-					StringBuffer sb = new StringBuffer();
-					for(String ss:RS_DRUG_TYPE){
-						String w = DoctorConst.rstypeMap.get(ss );
-						sb.append(w+";");
-					}
-					vpd.put("var11", sb.length()>0?sb.substring(0, sb.length()-1):"");	//12
-				}
-				varList.add(vpd);
-			}
+		try
+		{  
+		  //分批查询,最大查询2万条
+	        List<PageData> varOList =  (List<PageData>) getRequest().getSession().getAttribute("ExportList" );
+	        List<PageData> varList = new ArrayList<PageData>();
+	        if(varOList!=null){
+	            for(int i=0;i<varOList.size();i++){
+	                PageData vpd = new PageData();
+	                vpd.put("var1", varOList.get(i).getString("PATIENT_ID")+"（"+varOList.get(i).getString("VISIT_ID")+"）");       //1
+	                vpd.put("var2", varOList.get(i).getString("NAME")); //2
+	                
+	                String[] DIAGNOSIS_DESC = (String[]) varOList.get(i).get("DIAGNOSIS_DESC");
+                    if(DIAGNOSIS_DESC!=null){
+                        StringBuffer sb = new StringBuffer();
+                        for(String ss:DIAGNOSIS_DESC){
+                            sb.append(ss+";");
+                        }
+                        vpd.put("var3", sb.length()>0?sb.substring(0, sb.length()-1):"");  //12
+                    }
+	                vpd.put("var4", varOList.get(i).getString("ATTENDING_DOCTOR")); //4
+	                vpd.put("var5", varOList.get(i).getString("in_dept_name"));     //5
+	                vpd.put("var6", varOList.get(i).getString("admission_date_time"));    //6
+	                vpd.put("var7", varOList.get(i).getString("out_dept_name"));        //7
+	                vpd.put("var8", varOList.get(i).getString("discharge_date_time"));    //8
+	                vpd.put("var9", varOList.get(i).get("ISORDERCHECK")==null?"未点评":("0".equals(varOList.get(i).get("ISORDERCHECK").toString())?"未点评":"已点评"));  //10
+	                vpd.put("var10", varOList.get(i).get("ISCHECKTRUE")==null?"待定":("0".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"合理":("1".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"不合理":"待定")));    //11
+	                String[] RS_DRUG_TYPE = (String[]) varOList.get(i).get("RS_DRUG_TYPES");
+	                if(RS_DRUG_TYPE!=null){
+	                    StringBuffer sb = new StringBuffer();
+	                    for(String ss:RS_DRUG_TYPE){
+	                        String w = DoctorConst.rstypeMap.get(ss );
+	                        sb.append(w+";");
+	                    }
+	                    vpd.put("var11", sb.length()>0?sb.substring(0, sb.length()-1):"");  //12
+	                }
+	                vpd.put("var12", this.checkRsDetail(varOList.get(i).getString("ngroupnum")));
+	                varList.add(vpd);
+	            }
+	        }
+	        dataMap.put("varList", varList);
 		}
-		dataMap.put("varList", varList);
+		catch(Exception e )
+		{
+		    e.printStackTrace();
+		}
+		
 		ObjectExcelView erv = new ObjectExcelView();
 		mv = new ModelAndView(erv,dataMap);
 		return mv;
@@ -347,6 +443,11 @@ public class OrderWork extends BaseController
 	public ModelAndView DoctOrdersDetail(Page page) throws Exception{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = this.getPageData();
+		//药品种类
+		String DRUG_TYPE = pd.getString("DRUG_TYPE");    
+        if(!Tools.isEmpty(DRUG_TYPE)){
+            pd.put(DRUG_TYPE, 1);
+        }
 		page.setPd(pd);
 		page.setCurrentjztsFlag(1);
 		Integer show_type = page.getPd().getInt("show_type");
@@ -485,10 +586,10 @@ public class OrderWork extends BaseController
 			PageData patient = orderWorkService.findByPatient(p);
 			if(Tools.isEmpty(patient.getString("ngroupnum"))) {
 				pd.put("ngroupnum", this.get32UUID());
-				this.orderWorkService.updatePatVisitNgroupnum(pd);
 			}else{
 				pd.put("ngroupnum", patient.getString("ngroupnum"));
 			}
+			this.orderWorkService.updatePatVisitNgroupnum(pd);
 		}
 		pd.put("in_rs_type", 4);
 		pd.put("rs_id", this.get32UUID());

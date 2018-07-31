@@ -11,6 +11,7 @@ import com.hitzd.DBUtils.CommonMapper;
 import com.hitzd.DBUtils.JDBCQueryImpl;
 import com.hitzd.DBUtils.TCommonRecord;
 import com.hitzd.Factory.DBQueryFactory;
+import com.ts.util.Logger;
 
 /**
  * 药品基本信息  drug_map 查询 
@@ -19,6 +20,8 @@ import com.hitzd.Factory.DBQueryFactory;
  */
 public class DrugUtils 
 {
+    
+    private static  Logger log = Logger.getLogger("DrugUtils"); 
     /**
      * 根据规则确定药品类型
      * @param DrugCode
@@ -54,7 +57,7 @@ public class DrugUtils
 			String key = DrugCode ; 
 			if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
 			TCommonRecord cr  = drugMapCollenct.get(key);
-			return "1".equals(cr.get("IS_INJECTION"));
+			return cr != null && "1".equals(cr.get("IS_INJECTION"));
 		}
 		catch (Exception ex)
 		{
@@ -90,7 +93,7 @@ public class DrugUtils
             String key = DrugCode ; 
             if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
             TCommonRecord cr  = drugMapCollenct.get(key);
-            return "1".equals(cr.get("is_impregnant"));
+            return cr != null && "1".equals(cr.get("is_impregnant"));
         }
         catch(Exception e )
         {
@@ -127,7 +130,7 @@ public class DrugUtils
 			String key = DrugCode ; 
             if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
             TCommonRecord cr  = drugMapCollenct.get(key);
-            return "1".equals(cr.get("IS_EXTERNAL"));
+            return cr != null && "1".equals(cr.get("IS_EXTERNAL"));
 		}
 		catch (Exception ex)
 		{
@@ -161,7 +164,7 @@ public class DrugUtils
             String key = DrugCode ; 
             if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
             TCommonRecord cr  = drugMapCollenct.get(key);
-            return "1".equals(cr.get("IS_Allergy"));
+            return cr != null && "1".equals(cr.get("IS_Allergy"));
         }
         catch (Exception ex)
         {
@@ -222,7 +225,7 @@ public class DrugUtils
             String key = DrugCode ; 
             if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
             TCommonRecord cr  = drugMapCollenct.get(key);
-            return "1".equals(cr.get("IS_CHINESEDRUG"));
+            return cr != null && "1".equals(cr.get("IS_CHINESEDRUG"));
         }
         catch (Exception ex)
         {
@@ -254,7 +257,7 @@ public class DrugUtils
             String key = DrugCode ; 
             if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
             TCommonRecord cr  = drugMapCollenct.get(key);
-            return ("1".equals(cr.get("IS_INJECTION")) && "1".equals(cr.get("IS_PATENTDRUG")));
+            return cr != null && ("1".equals(cr.get("IS_INJECTION")) && "1".equals(cr.get("IS_PATENTDRUG")));
         }
         catch (Exception ex)
         {
@@ -285,7 +288,7 @@ public class DrugUtils
             String key = DrugCode ; 
             if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
             TCommonRecord cr  = drugMapCollenct.get(key);
-            return ("1".equals(cr.get("IS_PATENTDRUG")));
+            return cr != null && ("1".equals(cr.get("IS_PATENTDRUG")));
         }
         catch (Exception ex)
         {
@@ -317,7 +320,7 @@ public class DrugUtils
             String key = DrugCode ; 
             if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
             TCommonRecord cr  = drugMapCollenct.get(key);
-            return ("1".equals(cr.get("is_Tumor")));
+            return cr != null && (cr != null && "1".equals(cr.get("is_Tumor")));
         }
         catch (Exception ex)
         {
@@ -349,7 +352,7 @@ public class DrugUtils
             String key = DrugCode ; 
             if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
             TCommonRecord cr  = drugMapCollenct.get(key);
-            return ("1".equals(cr.get("is_danger")));
+            return cr != null && ("1".equals(cr.get("is_danger")));
         }
         catch (Exception ex)
         {
@@ -382,7 +385,7 @@ public class DrugUtils
             String key = DrugCode ; 
             if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
             TCommonRecord cr  = drugMapCollenct.get(key);
-            return ("1".equals(cr.get("IS_ASSIST")));
+            return cr != null && ("1".equals(cr.get("IS_ASSIST")));
         }
         catch (Exception ex)
         {
@@ -414,7 +417,7 @@ public class DrugUtils
             String key = DrugCode ; 
             if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
             TCommonRecord cr  = drugMapCollenct.get(key);
-            return ("1".equals(cr.get("IS_ALBUMIN")));
+            return cr != null && ("1".equals(cr.get("IS_ALBUMIN")));
         }
         catch (Exception ex)
         {
@@ -446,7 +449,7 @@ public class DrugUtils
             String key = DrugCode ; 
             if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
             TCommonRecord cr  = drugMapCollenct.get(key);
-            return ("1".equals(cr.get("IS_PSYCHOTIC")) || "2".equals(cr.get("IS_PSYCHOTIC")));
+            return cr != null && ("1".equals(cr.get("IS_PSYCHOTIC")) || "2".equals(cr.get("IS_PSYCHOTIC")));
         }
         catch (Exception ex)
         {
@@ -531,7 +534,7 @@ public class DrugUtils
             String key = DrugCode ; 
             if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
             TCommonRecord cr  = drugMapCollenct.get(key);
-            return ("1".equals(cr.get("is_basedrug")));
+            return cr != null && ("1".equals(cr.get("is_basedrug")));
         }
         catch (Exception ex)
         {
@@ -629,7 +632,7 @@ public class DrugUtils
             String key = DrugCode ; 
             if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
             TCommonRecord cr  = drugMapCollenct.get(key);
-            return ("1".equals(cr.get("is_anti")));
+            return cr != null && ("1".equals(cr.get("is_anti")));
         }
         catch (Exception ex)
         {
@@ -870,7 +873,7 @@ public class DrugUtils
             String key = DrugCode ; 
             if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
             TCommonRecord cr  = drugMapCollenct.get(key);
-            return ("1".equals(cr.get("IS_POISON")) && "1".equals("IS_HABITFORMING"));
+            return cr != null && ("1".equals(cr.get("IS_POISON")) && "1".equals("IS_HABITFORMING"));
         }
         catch (Exception ex)
         {
@@ -902,7 +905,7 @@ public class DrugUtils
             String key = DrugCode ; 
             if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
             TCommonRecord cr  = drugMapCollenct.get(key);
-            return "1".equals(cr.get("IS_POISON"));
+            return cr != null && "1".equals(cr.get("IS_POISON"));
         }
         catch (Exception ex)
         {
@@ -934,7 +937,7 @@ public class DrugUtils
             String key = DrugCode ; 
             if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
             TCommonRecord cr  = drugMapCollenct.get(key);
-            return "1".equals(cr.get("IS_HABITFORMING"));
+            return cr != null && "1".equals(cr.get("IS_HABITFORMING"));
         }
         catch (Exception ex)
         {
@@ -966,7 +969,7 @@ public class DrugUtils
             String key = DrugCode ; 
             if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
             TCommonRecord cr  = drugMapCollenct.get(key);
-            return "1".equals(cr.get("IS_PSYCHOTIC"));
+            return cr != null && "1".equals(cr.get("IS_PSYCHOTIC"));
         }
         catch (Exception ex)
         {
@@ -992,7 +995,7 @@ public class DrugUtils
             String key = DrugCode ; 
             if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
             TCommonRecord cr  = drugMapCollenct.get(key);
-            return "2".equals(cr.get("IS_PSYCHOTIC"));
+            return cr != null && "2".equals(cr.get("IS_PSYCHOTIC"));
         }
         catch (Exception ex)
         {
@@ -1023,7 +1026,7 @@ public class DrugUtils
             String key = DrugCode ; 
             if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
             TCommonRecord cr  = drugMapCollenct.get(key);
-            return "1".equals(cr.get("IS_RADIATION"));
+            return cr != null && "1".equals(cr.get("IS_RADIATION"));
         }
         catch (Exception ex)
         {
@@ -1054,7 +1057,7 @@ public class DrugUtils
             String key = DrugCode ; 
             if(DrugSpec != null && !"".equals(DrugSpec)) key+= "_" + DrugSpec;
             TCommonRecord cr  = drugMapCollenct.get(key);
-            return "1".equals(cr.get("IS_PRECIOUS"));
+            return cr != null && "1".equals(cr.get("IS_PRECIOUS"));
         }
         catch (Exception ex)
         {
@@ -1160,6 +1163,7 @@ public class DrugUtils
      */
     public static void loadDrugMapBySingle(String drugMapId)
     {
+        log.debug("更新缓冲药品信息:" + drugMapId);
         JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
         CommonMapper cmr = new CommonMapper();
         try
@@ -1171,6 +1175,38 @@ public class DrugUtils
                 drugMapCollenct.put(tcom.get("drug_no_local"), tcom);
                 drugMapCollenct.put(tcom.get("drug_no_local") + "_" + tcom.get("drug_spec"), tcom);
             }
+            log.debug("更新缓冲药品信息:" + drugMapId + "药品信息" + tcom.get("drug_no_local") + "," + tcom.get("drug_name_local"));
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally {
+            query = null;
+            cmr   = null;
+        }
+    }
+    
+    /**
+     * 删除缓存中的药品
+     * @param drugMapId
+     */
+    public static void DelDrugMapBySingle(String drugMapId)
+    {
+        
+        log.debug("删除缓存中的药品:" + drugMapId);
+        JDBCQueryImpl query = DBQueryFactory.getQuery("PDSS");
+        CommonMapper cmr = new CommonMapper();
+        try
+        {
+            String sql = "select * from  drug_map where drug_map_id = ?";
+            TCommonRecord  tcom = (TCommonRecord)query.queryForObject(sql, new Object[]{drugMapId},cmr); 
+            if(tcom != null ) 
+            {
+                drugMapCollenct.remove(tcom.get("drug_no_local"));
+                drugMapCollenct.remove(tcom.get("drug_no_local") + "_" + tcom.get("drug_spec"));
+            }
+            log.debug("删除缓存中的药品:" + drugMapId + "药品信息" + tcom.get("drug_no_local") + "," + tcom.get("drug_no_name"));
         }
         catch(Exception e)
         {

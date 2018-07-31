@@ -36,6 +36,7 @@ import com.hitzd.his.casehistory.helper.ICaseHistoryHelper;
 import com.hitzd.springBeanManager.SpringBeanUtil;
 import com.ts.service.pdss.IReviewResultServ;
 import com.ts.service.pdss.ReviewResultBean;
+import com.ts.service.pdss.peaas.Utils.DrugUseDate;
 import com.ts.service.pdss.peaas.manager.IPrescReviewChecker;
 import com.ts.util.LoggerFileSaveUtil;
 
@@ -672,26 +673,26 @@ public class DataFetcherNew extends ReportScheduler  {
 				logger.info("处方日期:" + crm.get("PRESC_DATE") + ","+ crm.get("PRESC_NO") + "下共有药品信息" + crsS.size()+ "个");
 				for (TCommonRecord crs : crsS) {
 					/* 临时处理 */
-					tmpDataDisposal(crs);
+//					tmpDataDisposal(crs);
 					/* 药品代码 */
 					String drug = crs.get("DRUG_CODE");
 					String DrugToxiProperty = DrugUtils.getDrugToxiProperty(drug, crs.get("Drug_Spec"));
 					// 国家基药
 					if (DrugUtils.isCountryBase(drug, crs.get("Drug_Spec")))baseDrugCount++;
 					// 判断二类精神药物
-					if (!ELJSY)ELJSY = DrugToxiProperty.indexOf("精二") >= 0;
-					// 判断毒性药品
-					if (!DDrug)DDrug = DrugToxiProperty.indexOf("毒药") >= 0;
-					// 判断麻醉药品
-					if (!MDrug)MDrug = DrugToxiProperty.indexOf("麻药") >= 0;
-					// 判断放射药品
-					if (!FSDrug)FSDrug = DrugToxiProperty.indexOf("放射") >= 0;
-					// 判断一类精神药品
-					if (!YLJSY)YLJSY = DrugToxiProperty.indexOf("精一") >= 0;
-					// 判断贵重药品
-					if (!GZDrug)GZDrug = DrugToxiProperty.indexOf("贵重") >= 0;
-					// 判断毒麻药品
-					if (!DMDrug)DMDrug = DrugToxiProperty.indexOf("毒麻") >= 0;
+                    if (!ELJSY)ELJSY = DrugUtils.isEJDrug(drug);//DrugToxiProperty.indexOf("精二") >= 0;
+                    // 判断毒性药品
+                    if (!DDrug)DDrug = DrugUtils.isDDrug(drug);//DrugToxiProperty.indexOf("毒药") >= 0;
+                    // 判断麻醉药品
+                    if (!MDrug)MDrug = DrugUtils.isMDrug(drug);//DrugToxiProperty.indexOf("麻药") >= 0;
+                    // 判断放射药品
+                    if (!FSDrug)FSDrug = DrugUtils.isFSDrug(drug);//DrugToxiProperty.indexOf("放射") >= 0;
+                    // 判断一类精神药品
+                    if (!YLJSY)YLJSY = DrugUtils.isYJDrug(drug);//DrugToxiProperty.indexOf("精一") >= 0;
+                    // 判断贵重药品
+                    if (!GZDrug)GZDrug = DrugUtils.isGZDrug(drug);//DrugToxiProperty.indexOf("贵重") >= 0;
+                    // 判断毒麻药品
+                    if (!DMDrug)DMDrug = DrugUtils.isDMDrug(drug);//DrugToxiProperty.indexOf("毒麻") >= 0;
 					// 判断是否为 外用抗菌药
 					if (!ExteDrug)ExteDrug = DrugUtils.isExternalDrug(drug,crs.get("DRUG_Spec"));
 					/* 药品类型 */
@@ -1030,29 +1031,34 @@ public class DataFetcherNew extends ReportScheduler  {
 				for (TCommonRecord crs : crsS) 
 				{
 					/* 临时处理（用于北京军总数据整理） */
-					tmpDataDisposal(crs);
+//					tmpDataDisposal(crs);
 					/* 药品代码 */
 					String drug = crs.get("DRUG_CODE");
 					String DrugToxiProperty = DrugUtils.getDrugToxiProperty(drug, crs.get("Drug_Spec"));
 					if (DrugUtils.isCountryBase(drug, crs.get("Drug_Spec")))baseDrugCount++;
 					// 判断二类精神药物
-					if (!ELJSY)ELJSY = DrugToxiProperty.indexOf("精二") >= 0;
+					if (!ELJSY)ELJSY = DrugUtils.isEJDrug(drug);//DrugToxiProperty.indexOf("精二") >= 0;
 					// 判断毒性药品
-					if (!DDrug)DDrug = DrugToxiProperty.indexOf("毒药") >= 0;
+					if (!DDrug)DDrug = DrugUtils.isDDrug(drug);//DrugToxiProperty.indexOf("毒药") >= 0;
 					// 判断麻醉药品
-					if (!MDrug)MDrug = DrugToxiProperty.indexOf("麻药") >= 0;
+					if (!MDrug)MDrug = DrugUtils.isMDrug(drug);//DrugToxiProperty.indexOf("麻药") >= 0;
 					// 判断放射药品
-					if (!FSDrug)FSDrug = DrugToxiProperty.indexOf("放射") >= 0;
+					if (!FSDrug)FSDrug = DrugUtils.isFSDrug(drug);//DrugToxiProperty.indexOf("放射") >= 0;
 					// 判断一类精神药品
-					if (!YLJSY)YLJSY = DrugToxiProperty.indexOf("精一") >= 0;
+					if (!YLJSY)YLJSY = DrugUtils.isYJDrug(drug);//DrugToxiProperty.indexOf("精一") >= 0;
 					// 判断贵重药品
-					if (!GZDrug)GZDrug = DrugToxiProperty.indexOf("贵重") >= 0;
+					if (!GZDrug)GZDrug = DrugUtils.isGZDrug(drug);//DrugToxiProperty.indexOf("贵重") >= 0;
 					// 判断毒麻药品
-					if (!DMDrug)DMDrug = DrugToxiProperty.indexOf("毒麻") >= 0;
+					if (!DMDrug)DMDrug = DrugUtils.isDMDrug(drug);//DrugToxiProperty.indexOf("毒麻") >= 0;
 					// 判断是否为外用药物
 					if (!ExteDrug)ExteDrug = DrugUtils.isExternalDrug(drug,crs.get("DRUG_Spec"));
 					/* 基本类型 - 可能不精确 */
 					String drugType = DrugUtils.getDrugType(crs.get("DRUG_CODE"), crs.get("DRUG_Spec"),crs.get("ADMINISTRATION"));
+					
+					//TODO  添加计算天数  可以基础数据 丰富出 药品最小单元。
+//					DrugUseDate dud = new DrugUseDate();
+//					int days = dud.getPrescUseDate(crs);
+					
 					List<String> sqlParams = new ArrayList<String>();
 					sql = "insert into PRESC_DETAIL(PRESC_ID, DRUG_CODE, DRUG_NAME, DRUG_TYPE,PRESCDATE,ITEM_CLASS,DRUG_SPEC,"
 							+ "FIRM_ID,UNITS,AMOUNT,DOSAGE,DOSAGE_UNITS,ADMINISTRATION,FREQUENCY,ORDER_NO,ORDER_SUB_NO,DISPENSARY,FREQ_DETAIL,"

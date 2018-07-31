@@ -4,12 +4,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.hitzd.DBUtils.CommonMapper;
@@ -22,7 +25,9 @@ import com.ts.FetcherHander.InHospital.Check.InHospitalCheck;
 import com.ts.FetcherHander.OutPatient.Check.IOutPatientCheck;
 import com.ts.SchedulerHandler.ModelHandler;
 import com.ts.controller.base.BaseController;
+import com.ts.util.Logger;
 import com.ts.util.PageData;
+import com.ts.util.app.AppUtil;
 
 /**
  * 
@@ -33,6 +38,8 @@ import com.ts.util.PageData;
 @RequestMapping(value="/FCConfig")
 public class FatchCheckContr extends BaseController
 {
+    Logger  log = Logger.getLogger("FatchCheckContr");
+    
     @Resource(name="outPatientCheckBean")
     private IOutPatientCheck OutPatientCheckBean;
     
@@ -77,9 +84,30 @@ public class FatchCheckContr extends BaseController
         }
         //mv.setViewName("");
         mv.addObject("pd", pd);
+        mv.addObject("result", "okay");
+        mv.setViewName("Config/FCConfig/FatchCheckConfig");
         return mv;
     }
 
+
+    @SuppressWarnings ("unchecked")
+    @RequestMapping(value="/queryReport")
+    @ResponseBody
+    public Object queryReport() throws Exception
+    {
+        PageData pd = this.getPageData();
+        Map<String, Object> map = new HashMap<String , Object>();
+        
+        String sql = "select reportid , REPORTNAME  from REPORTBUILD  where action = 1 ";
+        JDBCQueryImpl query = DBQueryFactory.getQuery("");
+        List<TCommonRecord>  reports = query.query(sql,  new CommonMapper());
+        map.put("result", "ok");
+        map.put("reports", reports);
+        
+        return  AppUtil.returnObject(pd, map);
+
+    }
+    
     private void execFunction(String fatchType,String execType, String reportCode, String strDate)
     {
         switch (execType)
@@ -114,7 +142,7 @@ public class FatchCheckContr extends BaseController
     
     private void reportBuild(String strDate,String type){
         
-        JDBCQueryImpl peaasQuery = DBQueryFactory.getQuery("ph");
+        JDBCQueryImpl peaasQuery = DBQueryFactory.getQuery("");
         String sql = "";
         //修正构建报表无法使用"全部"构建功能  2014-07-18 liujc 
         if("-1".equals(type)) 
@@ -123,25 +151,26 @@ public class FatchCheckContr extends BaseController
         }
         else
         {
-            sql = "select classpath , REPORTNAME from REPORTBUILD  where reportcode='" + type + "' and action = 1 ";
+            sql = "select classpath , REPORTNAME from REPORTBUILD  where reportid ='" + type + "' and action = 1 ";
         }
+        log.debug(sql);
         List<TCommonRecord> peaasList = peaasQuery.query(sql.toString(), new CommonMapper());
         String Error = null;
         if(peaasList != null && peaasList.size()!=0)
         {
             for(TCommonRecord tcr : peaasList)
             {
-                System.out.println("构建报表为：" + tcr.get("REPORTNAME"));
+                log.info("构建报表为：" + tcr.get("REPORTNAME"));
                 Class clazz = null;
                 try 
                 {
                     clazz = Class.forName(tcr.get("classpath"));
                     IReportBuilder rb = (IReportBuilder) clazz.newInstance();
-                    System.out.println("开始构造" + strDate + "的日报表");
+                    log.info("开始构造" + strDate + "的日报表");
                     Error = rb.BuildReport(strDate, null);
                     if (Error.length() > 0)
                     {  
-                        System.out.println((new Date()) + " " + Error);
+                        log.info((new Date()) + " " + Error);
                     }
                 }
                 catch (Exception e) 

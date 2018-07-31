@@ -78,7 +78,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 				List<TCommonRecord> OperationName = null;
 				try 
 				{
-					OperationName = fetchOperationName2CR(PatientID, VisitID, srcQuery);
+					OperationName = null ;//fetchOperationName2CR(PatientID, VisitID, srcQuery);
 				} 
 				catch (Exception e) 
 				{
@@ -90,7 +90,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 				List<TCommonRecord> DrugDispenseRec = null;
 				try 
 				{
-					DrugDispenseRec = fetchDrugDispenseRec2CR(PatientID, VisitID, srcQuery);
+					//DrugDispenseRec = fetchDrugDispenseRec2CR(PatientID, VisitID, srcQuery);
 				} 
 				catch (Exception e8) 
 				{
@@ -140,7 +140,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 		    	List<TCommonRecord> LabTestMaster = null;
 				try 
 				{
-					LabTestMaster = fetchLabTestMaster2CR(PatientID, VisitID, srcQuery);
+//					LabTestMaster = fetchLabTestMaster2CR(PatientID, VisitID, srcQuery);
 				} 
 				catch (Exception e4) 
 				{
@@ -152,7 +152,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 		    	List<TCommonRecord> VitalSignsRec = null;
 				try 
 				{
-					VitalSignsRec = fetchVitalSignsRec2CR(PatientID, VisitID, srcQuery);
+//					VitalSignsRec = fetchVitalSignsRec2CR(PatientID, VisitID, srcQuery);
 				} 
 				catch (Exception e3) 
 				{
@@ -164,7 +164,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 		    	List<TCommonRecord> ExamMaster = null;
 				try 
 				{
-					ExamMaster = fetchExamMaster2CR(PatientID, VisitID, srcQuery);
+//					ExamMaster = fetchExamMaster2CR(PatientID, VisitID, srcQuery);
 				} 
 				catch (Exception e2) 
 				{
@@ -176,7 +176,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 		    	List<TCommonRecord> GermTest = null;
 				try 
 				{
-					GermTest = fetchGermTest2CR(PatientID, VisitID, srcQuery);
+//					GermTest = fetchGermTest2CR(PatientID, VisitID, srcQuery);
 				} 
 				catch (Exception e1) 
 				{
@@ -188,7 +188,7 @@ public class CaseHistoryJWYH extends CaseHistoryCommon
 		    	List<TCommonRecord> GermTestResult = null;
 				try 
 				{
-					GermTestResult = fetchGermTestResult2CR(PatientID, VisitID, srcQuery);
+//					GermTestResult = fetchGermTestResult2CR(PatientID, VisitID, srcQuery);
 				} 
 				catch (Exception e)
 				{

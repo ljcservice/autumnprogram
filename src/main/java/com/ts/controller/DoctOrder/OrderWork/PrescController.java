@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -44,7 +45,7 @@ public class PrescController extends BaseController {
 	private PrescService prescService;
 	@Autowired
 	private UserManager userService;
-	@Autowired
+	@Autowired @Qualifier("orderWorkServiceBean")
 	private IOrderWorkService orderWorkService;
 	
 	/**
@@ -89,17 +90,52 @@ public class PrescController extends BaseController {
 					return mv;
 				}
 			}
-			List<PageData>	prescList = prescService.prescListPage(page); 
+			
+			List<PageData>	prescList = null; 
+			// 此处解决随机抽取 刷新问题
+			if("1".equals(pd.getString("randomrefresh")))
+			{
+			    String id = pd.getString("refreshId");
+			    PageData param = new PageData();
+			    param.put("id", id);
+			    PageData refreshRs = prescService.findPrescById(param);
+			    String RS_DRUG_TYPES = refreshRs.getString("RS_DRUG_TYPES");
+                if(!Tools.isEmpty(RS_DRUG_TYPES)){
+                    String[] RS_DRUG_TYPE = RS_DRUG_TYPES.split("@;@");
+                    refreshRs.put("RS_DRUG_TYPES", RS_DRUG_TYPE);
+                }
+			    prescList = (List<PageData>)getRequest().getSession().getAttribute("prescExportList");
+			    int removeplace = 0;
+			    for(int  i = 0 ; i < prescList.size() ; i ++)
+			    {
+			        PageData p = prescList.get(i);
+			        if(p.getString("id").equals(id))
+			        {
+			            removeplace = i ;
+			            break;
+			        }
+			    }
+			    prescList.remove(removeplace);
+			    prescList.add(removeplace, refreshRs);
+			    
+			}
+			// 检索 和 随机抽取 
+			else
+			{
+			    prescList = prescService.prescListPage(page);
+			    for(PageData pp:prescList){
+	                String RS_DRUG_TYPES = pp.getString("RS_DRUG_TYPES");
+	                if(!Tools.isEmpty(RS_DRUG_TYPES)){
+	                    String[] RS_DRUG_TYPE = RS_DRUG_TYPES.split("@;@");
+	                    pp.put("RS_DRUG_TYPES", RS_DRUG_TYPE);
+	                }
+	            }
+			}
+			
 			if("1".equals(pd.getString("randomflag"))){
 				getRequest().getSession().setAttribute("prescExportList", prescList);
 			}
-			for(PageData pp:prescList){
-				String RS_DRUG_TYPES = pp.getString("RS_DRUG_TYPES");
-				if(!Tools.isEmpty(RS_DRUG_TYPES)){
-					String[] RS_DRUG_TYPE = RS_DRUG_TYPES.split("@;@");
-					pp.put("RS_DRUG_TYPES", RS_DRUG_TYPE);
-				}
-			}
+			
 			mv.addObject("rstypeMap", DoctorConst.rstypeMap); 
 			mv.addObject("rstypeColorMap", DoctorConst.rstypeColorMap); 
 			mv.addObject("checktypeMap", commonService.getCheckTypeDict()); 
@@ -120,11 +156,14 @@ public class PrescController extends BaseController {
 					BASEDRUG_COUNT_SUM = BASEDRUG_COUNT_SUM.add( (BigDecimal) pp.get("BASEDRUG_COUNT")  );
 					AMOUNT_SUM = AMOUNT_SUM.add((BigDecimal) pp.get("AMOUNT"));
 				}
-				DRUG_COUNT_AVG = DRUG_COUNT_SUM.divide(ALL_COUNT,2,4);
-				AMOUNT_AVG = AMOUNT_SUM.divide(ALL_COUNT,2,4);
-				HASZS_PERSENTS=HASZS_SUM.divide(ALL_COUNT,4,4).multiply(new BigDecimal(100));
-				HASKJ_PERSENTS=HASKJ_SUM.divide(ALL_COUNT,4,4).multiply(new BigDecimal(100));
-				BASEDRUG_COUNT_PERSENTS=BASEDRUG_COUNT_SUM.divide(ALL_COUNT,4,4).multiply(new BigDecimal(100));
+				if(ALL_COUNT.intValue() != 0)
+				{
+    				DRUG_COUNT_AVG = DRUG_COUNT_SUM.divide(ALL_COUNT,2,4);
+    				AMOUNT_AVG = AMOUNT_SUM.divide(ALL_COUNT,2,4);
+    				HASZS_PERSENTS=HASZS_SUM.divide(ALL_COUNT,4,4).multiply(new BigDecimal(100));
+    				HASKJ_PERSENTS=HASKJ_SUM.divide(ALL_COUNT,4,4).multiply(new BigDecimal(100));
+    				BASEDRUG_COUNT_PERSENTS=BASEDRUG_COUNT_SUM.divide(ALL_COUNT,4,4).multiply(new BigDecimal(100));
+				}
 				PageData report = new PageData();
 				report.put("ALL_COUNT", ALL_COUNT.longValue());
 				report.put("DRUG_COUNT_SUM",DRUG_COUNT_SUM.longValue());
@@ -148,6 +187,36 @@ public class PrescController extends BaseController {
 			logger.error(e.toString(), e);
 		}
 		return mv;
+	}
+	
+	private String  checkRsDetail(String ngroupnum) throws Exception 
+	{
+	    if(ngroupnum == null  ||  "".equals(ngroupnum)) return  "";
+	    PageData pd  = new PageData();
+	    pd.put("ngroupnum", ngroupnum);
+	    Map<String,PageData> rsDict = commonService.getCheckTypeDict();
+	    List<PageData> rsChecks = prescService.checkRsDetail(pd);
+	    StringBuffer sbRs = new StringBuffer();
+	    String rsType = "";
+	    String drugGroup = ""  ;
+	    for (PageData entity : rsChecks)
+	    {
+	        if(!rsType.equals(entity.getString("rs_drug_type")))
+	        {
+	            sbRs.append(rsDict.get(entity.getString("rs_drug_type")).getString("rs_type_name")).append("\r\n");
+	        }
+	        String strEmp = entity.getString("drug_id1") + entity.getString("drug_id2");
+	        if(!strEmp.equals(drugGroup))
+	        {
+	            sbRs.append(entity.getString("drugdetail1"));
+	            if(rsDict.get(entity.getString("rs_drug_type")).getInt("rs_count") == 2 ) sbRs.append(" 与  ");
+	            sbRs.append(entity.getString("drugdetail2"));
+	        }
+	        drugGroup = strEmp;
+	        sbRs.append("  ").append(entity.getString("alert_hint")).append("\r\n");
+	        rsType = entity.getString("rs_drug_type");
+	    }
+	    return sbRs.toString()  ;
 	}
 	
 	/**
@@ -186,6 +255,7 @@ public class PrescController extends BaseController {
 			titles.add("处方日期");//2
 			titles.add("患者");	//3
 			titles.add("性别 	");	//4
+			titles.add("年龄   "); //5
 			titles.add("科室");	//5
 			titles.add("医生");	//5
 			titles.add("诊断");	//5
@@ -197,6 +267,7 @@ public class PrescController extends BaseController {
 			titles.add("基药数");	//5
 			titles.add("金额");	//5
 			titles.add("存在问题");	//5
+			titles.add("问题明细");  //5
 			dataMap.put("titles", titles);
 			int TotalPage = 1;
 			List<PageData> varList = null;
@@ -216,16 +287,18 @@ public class PrescController extends BaseController {
 						vpd.put("var2", varOList.get(i).getString("ORDER_DATE"));	//2
 						vpd.put("var3", varOList.get(i).getString("PATIENT_NAME"));	//3
 						vpd.put("var4", varOList.get(i).getString("PATIENT_SEX"));	//4
-						vpd.put("var5", varOList.get(i).getString("ORG_NAME"));		//5
-						vpd.put("var6", varOList.get(i).getString("DOCTOR_NAME"));	//6
-						vpd.put("var7", varOList.get(i).getString("DIAGNOSIS_NAMES"));	//8
-						vpd.put("var8", varOList.get(i).get("ISORDERCHECK")==null?"未点评":("0".equals(varOList.get(i).get("ISORDERCHECK").toString())?"未点评":"已点评"));	//10
-						vpd.put("var9", varOList.get(i).get("ISCHECKTRUE")==null?"待定":("0".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"合理":("1".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"不合理":"待定")));	//11
-						vpd.put("var10", varOList.get(i).get("DRUG_COUNT").toString());	//6
-						vpd.put("var11", "0".equals(varOList.get(i).getString("HASKJ"))?"否":"是");		//7
-						vpd.put("var12", varOList.get(i).getString("HASZS"));		//5
-						vpd.put("var13", varOList.get(i).get("BASEDRUG_COUNT").toString());	
-						vpd.put("var14", "￥ "+varOList.get(i).getDouble("AMOUNT"));			//9
+						String patAge =  varOList.get(i).getString("PATIENT_AGE");
+                        vpd.put("var5",  (patAge.indexOf(".") != -1)?patAge.substring(patAge.indexOf(".") + 1,patAge.length()) + "日" :patAge + "岁");        //5
+						vpd.put("var6", varOList.get(i).getString("ORG_NAME"));		//5
+						vpd.put("var7", varOList.get(i).getString("DOCTOR_NAME"));	//6
+						vpd.put("var8", varOList.get(i).getString("DIAGNOSIS_NAMES"));	//8
+						vpd.put("var9", varOList.get(i).get("ISORDERCHECK")==null?"未点评":("0".equals(varOList.get(i).get("ISORDERCHECK").toString())?"未点评":"已点评"));	//10
+						vpd.put("var10", varOList.get(i).get("ISCHECKTRUE")==null?"待定":("0".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"合理":("1".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"不合理":"待定")));	//11
+						vpd.put("var11", varOList.get(i).get("DRUG_COUNT").toString());	//6
+						vpd.put("var12", "0".equals(varOList.get(i).getString("HASKJ"))?"否":"是");		//7
+						vpd.put("var13", varOList.get(i).getString("HASZS"));		//5
+						vpd.put("var14", varOList.get(i).get("BASEDRUG_COUNT").toString());	
+						vpd.put("var15", "￥ "+varOList.get(i).getDouble("AMOUNT"));			//9
 						
 						String RS_DRUG_TYPES = varOList.get(i).getString("RS_DRUG_TYPES");
 						StringBuffer sb = new StringBuffer();
@@ -236,7 +309,8 @@ public class PrescController extends BaseController {
 								sb.append(w).append(";");
 							}
 						}
-						vpd.put("var15", sb.length()>0?sb.substring(0, sb.length()-1):"");	//12
+						vpd.put("var16", sb.length()>0?sb.substring(0, sb.length()-1):"");	//12
+						vpd.put("var17", this.checkRsDetail(varOList.get(i).getString("ngroupnum")));
 						varList.add(vpd);
 					}
 				}
@@ -248,20 +322,20 @@ public class PrescController extends BaseController {
 				PageData p1 = new PageData();
 				p1.put("var1", "总 计：");	 
 				p1.put("var2", report.get("ALL_COUNT").toString()); 
-				p1.put("var10", report.get("DRUG_COUNT_SUM").toString()); 
-				p1.put("var11", report.get("HASZS_SUM").toString()); 
+				p1.put("var11", report.get("DRUG_COUNT_SUM").toString()); 
 				p1.put("var12", report.get("HASKJ_SUM").toString()); 
-				p1.put("var13", report.get("BASEDRUG_COUNT_SUM").toString()); 
-				p1.put("var14", report.get("AMOUNT_SUM").toString()); 
+				p1.put("var13", report.get("HASZS_SUM").toString()); 
+				p1.put("var14", report.get("BASEDRUG_COUNT_SUM").toString()); 
+				p1.put("var15", report.get("AMOUNT_SUM").toString()); 
 				PageData p2 = new PageData();
 				p2.put("var1", "平 均：");	
-				p2.put("var10", report.get("DRUG_COUNT_AVG").toString()); 
-				p2.put("var14", report.get("AMOUNT_AVG").toString()); 
+				p2.put("var11", report.get("DRUG_COUNT_AVG").toString()); 
+				p2.put("var15", report.get("AMOUNT_AVG").toString()); 
 				PageData p3 = new PageData();
 				p3.put("var1", "% ");	
-				p3.put("var11", report.get("HASZS_PERSENTS").toString()); 
 				p3.put("var12", report.get("HASKJ_PERSENTS").toString()); 
-				p3.put("var13", report.get("BASEDRUG_COUNT_PERSENTS").toString()); 
+				p3.put("var13", report.get("HASZS_PERSENTS").toString()); 
+				p3.put("var14", report.get("BASEDRUG_COUNT_PERSENTS").toString()); 
 				varList.add(p1);
 				varList.add(p2);
 				varList.add(p3);
@@ -282,6 +356,7 @@ public class PrescController extends BaseController {
 			titles.add("处方日期");//2
 			titles.add("患者");	//3
 			titles.add("性别 	");	//4
+			titles.add("年龄   "); //5
 			titles.add("科室");	//5
 			titles.add("医生");	//5
 			titles.add("诊断");	//5
@@ -293,6 +368,7 @@ public class PrescController extends BaseController {
 			titles.add("基药数");	//5
 			titles.add("金额");	//5
 			titles.add("存在问题");	//5
+			titles.add("问题明细");  //5
 			dataMap.put("titles", titles);
 			int TotalPage = 1;
 			List<PageData> varList  = new ArrayList<PageData>();
@@ -300,31 +376,51 @@ public class PrescController extends BaseController {
 				List<PageData> varOList =   (List<PageData>) getRequest().getSession().getAttribute("prescExportList" );
 				if(varOList!=null){
 					for(int i=0;i<varOList.size();i++){
+					    String id = varOList.get(i).getString("id");
+					    //PageData  pdInput = new PageData();
+					    //pdInput.put("id", id);
+					    PageData pd = varOList.get(i);//prescService.findPrescById(pdInput);
 						PageData vpd = new PageData();
-						vpd.put("var1", varOList.get(i).getString("PRESC_NO"));		//1
-						vpd.put("var2", varOList.get(i).getString("ORDER_DATE"));	//2
-						vpd.put("var3", varOList.get(i).getString("PATIENT_NAME"));	//3
-						vpd.put("var4", varOList.get(i).getString("PATIENT_SEX"));	//4
-						vpd.put("var5", varOList.get(i).getString("ORG_NAME"));		//5
-						vpd.put("var6", varOList.get(i).getString("DOCTOR_NAME"));	//6
-						vpd.put("var7", varOList.get(i).getString("DIAGNOSIS_NAMES"));	//8
-						vpd.put("var8", varOList.get(i).get("ISORDERCHECK")==null?"未点评":("0".equals(varOList.get(i).get("ISORDERCHECK").toString())?"未点评":"已点评"));	//10
-						vpd.put("var9", varOList.get(i).get("ISCHECKTRUE")==null?"待定":("0".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"合理":("1".equals(varOList.get(i).get("ISCHECKTRUE").toString())?"不合理":"待定")));	//11
-						vpd.put("var10", varOList.get(i).get("DRUG_COUNT").toString());	//6
-						vpd.put("var11", "0".equals(varOList.get(i).getString("HASKJ"))?"否":"是");		//7
-						vpd.put("var12", varOList.get(i).getString("HASZS"));		//5
-						vpd.put("var13", varOList.get(i).get("BASEDRUG_COUNT").toString());	
-						vpd.put("var14", "￥ "+varOList.get(i).getDouble("AMOUNT"));			//9
+						vpd.put("var1", pd.getString("PRESC_NO"));		//1
+						vpd.put("var2", pd.getString("ORDER_DATE"));	//2
+						vpd.put("var3", pd.getString("PATIENT_NAME"));	//3
+						vpd.put("var4", pd.getString("PATIENT_SEX"));	//4
+						String patAge =  pd.getString("PATIENT_AGE");
+						vpd.put("var5",  (patAge.indexOf(".") != -1)?patAge.substring(patAge.indexOf(".") + 1,patAge.length()) + "日" :patAge + "岁");        //5
+						vpd.put("var6", pd.getString("ORG_NAME"));		//5
+						vpd.put("var7", pd.getString("DOCTOR_NAME"));	//6
+						vpd.put("var8", pd.getString("DIAGNOSIS_NAMES"));	//8
+						vpd.put("var9", pd.get("ISORDERCHECK")==null?"未点评":("0".equals(pd.get("ISORDERCHECK").toString())?"未点评":"已点评"));	//10
+						vpd.put("var10", pd.get("ISCHECKTRUE")==null?"待定":("0".equals(pd.get("ISCHECKTRUE").toString())?"合理":("1".equals(pd.get("ISCHECKTRUE").toString())?"不合理":"待定")));	//11
+						vpd.put("var11", pd.get("DRUG_COUNT").toString());	//6
+						vpd.put("var12", "0".equals(pd.getString("HASKJ"))?"否":"是");		//7
+						vpd.put("var13", pd.getString("HASZS"));		//5
+						vpd.put("var14", pd.get("BASEDRUG_COUNT").toString());	
+						vpd.put("var15", "￥ "+pd.getDouble("AMOUNT"));			//9
 						
-						String[] RS_DRUG_TYPES = (String[]) varOList.get(i).get("RS_DRUG_TYPES");
+						
+//						String RS_DRUG_TYPES = pd.getString("RS_DRUG_TYPES");
+//                        StringBuffer sb = new StringBuffer();
+//                        if(!Tools.isEmpty(RS_DRUG_TYPES)){
+//                            String[] RS_DRUG_TYPE = RS_DRUG_TYPES.split("@;@");
+//                            for(String ss:RS_DRUG_TYPE){
+//                                String w = DoctorConst.rstypeMap.get(ss );
+//                                sb.append(w).append(";");
+//                            }
+//                            vpd.put("var15", sb.length()>0?sb.substring(0, sb.length()-1):"");  //12
+//                        }
+                        
+						String[] RS_DRUG_TYPES = (String[]) pd.get("RS_DRUG_TYPES");
 						StringBuffer sb = new StringBuffer();
 						if(RS_DRUG_TYPES!=null){
 							for(String ss:RS_DRUG_TYPES){
-								String w = DoctorConst.rstypeMap.get(ss );
+								String w = DoctorConst.rstypeMap.get(ss);
 								sb.append(w).append(";");
 							}
-							vpd.put("var15", sb.length()>0?sb.substring(0, sb.length()-1):"");	//12
+							vpd.put("var16", sb.length()>0?sb.substring(0, sb.length()-1):"");	//12
 						}
+                        
+						vpd.put("var17", this.checkRsDetail(pd.getString("ngroupnum")));
 						varList.add(vpd);
 					}
 			}
@@ -334,20 +430,20 @@ public class PrescController extends BaseController {
 				PageData p1 = new PageData();
 				p1.put("var1", "总 计：");	 
 				p1.put("var2", report.get("ALL_COUNT").toString()); 
-				p1.put("var10", report.get("DRUG_COUNT_SUM").toString()); 
-				p1.put("var11", report.get("HASZS_SUM").toString()); 
+				p1.put("var11", report.get("DRUG_COUNT_SUM").toString()); 
 				p1.put("var12", report.get("HASKJ_SUM").toString()); 
-				p1.put("var13", report.get("BASEDRUG_COUNT_SUM").toString()); 
-				p1.put("var14", report.get("AMOUNT_SUM").toString()); 
+				p1.put("var13", report.get("HASZS_SUM").toString()); 
+				p1.put("var14", report.get("BASEDRUG_COUNT_SUM").toString()); 
+				p1.put("var15", report.get("AMOUNT_SUM").toString()); 
 				PageData p2 = new PageData();
 				p2.put("var1", "平 均：");	
-				p2.put("var10", report.get("DRUG_COUNT_AVG").toString()); 
-				p2.put("var14", report.get("AMOUNT_AVG").toString()); 
+				p2.put("var11", report.get("DRUG_COUNT_AVG").toString()); 
+				p2.put("var15", report.get("AMOUNT_AVG").toString()); 
 				PageData p3 = new PageData();
 				p3.put("var1", "% ");	
-				p3.put("var11", report.get("HASZS_PERSENTS").toString()); 
 				p3.put("var12", report.get("HASKJ_PERSENTS").toString()); 
-				p3.put("var13", report.get("BASEDRUG_COUNT_PERSENTS").toString()); 
+				p3.put("var13", report.get("HASZS_PERSENTS").toString()); 
+				p3.put("var14", report.get("BASEDRUG_COUNT_PERSENTS").toString()); 
 				varList.add(p1);
 				varList.add(p2);
 				varList.add(p3);
@@ -424,6 +520,9 @@ public class PrescController extends BaseController {
 		page.setPd(pd);
 		//查询处方中的病人信息
 		PageData presc = prescService.findPrescById(pd);
+		String patAge =  presc.getString("PATIENT_AGE");
+		//重新结算年龄
+		presc.put("patAge", (patAge.indexOf(".") != -1)?patAge.substring(patAge.indexOf(".") + 1,patAge.length()) + "日" :patAge + "岁");
 		String expert_id = presc.getString("expert_id");
 		mv.addObject("pat", presc);
 		if(!Tools.isEmpty(expert_id) ){

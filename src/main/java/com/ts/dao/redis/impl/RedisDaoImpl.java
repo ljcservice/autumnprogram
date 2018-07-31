@@ -144,22 +144,30 @@ public class RedisDaoImpl extends AbstractBaseRedisDao<String, PageData> impleme
 	 */
 	public String[] getListByKey(String pattern)
 	{
-	    Jedis jedis = getJedis();
-	    Set<byte[]> setKeys = jedis.keys(("*" + pattern + "*").getBytes());
-	    jedis.close();
-	    List<String> list = new ArrayList<String>();
-	    for(byte[] b : setKeys)
+	    try
 	    {
-	        try
-            {
-                list.add(new String(b,"GBK"));
-            }
-            catch (UnsupportedEncodingException e)
-            {
-                e.printStackTrace();
-            }
+	        Jedis jedis = getJedis();
+	        Set<byte[]> setKeys = jedis.keys(("*" + pattern + "*").getBytes());
+	        jedis.close();
+	        List<String> list = new ArrayList<String>();
+	        for(byte[] b : setKeys)
+	        {
+	            try
+	            {
+	                list.add(new String(b,"GBK"));
+	            }
+	            catch (UnsupportedEncodingException e)
+	            {
+	                e.printStackTrace();
+	            }
+	        }
+	        return (String[])list.toArray(new String[0]);    
 	    }
-	    return (String[])list.toArray(new String[0]);
+	    catch(Exception e )
+	    {
+	        return new String[0];
+	    }
+	    
 	}
 	
 	
@@ -278,22 +286,22 @@ public class RedisDaoImpl extends AbstractBaseRedisDao<String, PageData> impleme
 		String host = pros.getProperty("redis.host");		//地址
 		String port = pros.getProperty("redis.port");		//端口
 		String pass = pros.getProperty("redis.pass");		//密码
-		if("yes".equals(isopen)){
-            Jedis jedis = new Jedis(host,Integer.parseInt(port));
-            jedis.auth(pass);
-            return jedis;
-        }else{
-            return null;
-        }
-//		if(this.jedis != null ) return  this.jedis;
 //		if("yes".equals(isopen)){
-//			Jedis jedis = new Jedis(host,Integer.parseInt(port));
-//			jedis.auth(pass);
-//			this.jedis = jedis;
-//			return this.jedis;
-//		}else{
-//			return null;
-//		}
+//            Jedis jedis = new Jedis(host,Integer.parseInt(port));
+//            jedis.auth(pass);
+//            return jedis;
+//        }else{
+//            return null;
+//        }
+		if(this.jedis != null ) return  this.jedis;
+		if("yes".equals(isopen)){
+			Jedis jedis = new Jedis(host,Integer.parseInt(port));
+			jedis.auth(pass);
+			this.jedis = jedis;
+			return this.jedis;
+		}else{
+			return null;
+		}
 	}
 	
 	/**读取redis.properties 配置文件
@@ -359,7 +367,7 @@ public class RedisDaoImpl extends AbstractBaseRedisDao<String, PageData> impleme
 		return setBytes(key.getBytes("GBK"), seconds, byteObj);
 	}
 	
-	private  Jedis jedis = null;
+	private  static Jedis jedis = null;
 	private String setBytes(byte[] key, int seconds, byte[] bytes) {
 		String ret = null;
 		if ((key == null) || (bytes == null))

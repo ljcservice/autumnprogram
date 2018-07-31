@@ -8,6 +8,7 @@ import org.springframework.beans.BeansException;
 import com.hitzd.springBeanManager.SpringBeanUtil;
 import com.ts.entity.pdss.pdss.Beans.TDrug;
 import com.ts.service.pdss.pdss.Cache.PdssCache;
+import com.ts.util.Logger;
 
 /**
  * 医嘱对象
@@ -18,6 +19,8 @@ import com.ts.service.pdss.pdss.Cache.PdssCache;
 public class TPatientOrder implements java.io.Serializable
 {
 
+    private static Logger log = Logger.getLogger("TPatientOrder");
+    
     private static final long        serialVersionUID        = 1L;
     /* 病人ID */
     private String                   patientID               = null;
@@ -162,6 +165,7 @@ public class TPatientOrder implements java.io.Serializable
         {
             e.printStackTrace();
         }
+        log.debug("待审核药品数："+ patOrderDrugs.length + ",映射上的药品：" + drugMap.size());
     }
 
     public TPatOrderDiagnosis[] getPatOrderDiagnosiss()

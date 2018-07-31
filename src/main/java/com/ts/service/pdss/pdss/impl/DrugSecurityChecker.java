@@ -296,6 +296,8 @@ public class DrugSecurityChecker implements IDrugSecurityChecker
     public TDrugSecurityRslt DrugSecurityCheck(TPatientOrder po)
     {
         TDrugSecurityRslt dsr = new TDrugSecurityRslt();
+        try
+        {
         StringBuffer sb = new StringBuffer();
         long l = System.currentTimeMillis();
         /* 相互作用检查 */
@@ -320,9 +322,9 @@ public class DrugSecurityChecker implements IDrugSecurityChecker
         this.drugIngredientCheckerBean.check(po).CopyDrugIngreDientCheckRsltTo(dsr);
         sb.append(" 重复成份:" + (System.currentTimeMillis() - xx));
         /* 用药途径审查 */
-        xx = System.currentTimeMillis();
-        this.drugAdministrationCheckerBean.Check(po).CopyAdministrationCheckRsltTo(dsr);
-        sb.append(" 用药途径:" + (System.currentTimeMillis() - xx));
+//        xx = System.currentTimeMillis();
+//        this.drugAdministrationCheckerBean.Check(po).CopyAdministrationCheckRsltTo(dsr);
+//        sb.append(" 用药途径:" + (System.currentTimeMillis() - xx));
         /* 过敏药物审查 */
         xx = System.currentTimeMillis();
         this.drugAllergenCheckerBean.Check(po).CopyDrugAllergenCheckRsltTo(dsr);
@@ -350,6 +352,13 @@ public class DrugSecurityChecker implements IDrugSecurityChecker
         }
         sb.append(" 总时长：" + (System.currentTimeMillis() - l));
         logger.info(sb.toString());
+        }
+        catch(Exception e )
+        {
+            e.printStackTrace();
+            logger.error(this.getClass().toString() + ":" + e.getMessage());
+        }
+        OutResultInfo(dsr);
         return dsr;
     }
     

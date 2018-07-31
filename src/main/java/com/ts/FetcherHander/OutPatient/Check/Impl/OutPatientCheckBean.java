@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hitzd.DBUtils.TCommonRecord;
 import com.hitzd.his.Beans.TPatOrderDiagnosis;
 import com.hitzd.his.Beans.TPatOrderDrug;
 import com.hitzd.his.Beans.TPatOrderInfoExt;
@@ -16,6 +17,7 @@ import com.hitzd.his.Beans.TPatOrderVisitInfo;
 import com.hitzd.his.Beans.TPatient;
 import com.hitzd.his.Beans.TPatientOrder;
 import com.hitzd.his.Utils.DateUtils;
+import com.hitzd.his.Utils.DictCache;
 import com.ts.FetcherHander.InHospital.Check.Impl.InHospitalCheckBean;
 import com.ts.FetcherHander.OutPatient.Check.IOutPatientCheck;
 import com.ts.dao.DAO;
@@ -23,8 +25,11 @@ import com.ts.entity.pdss.Saver.QueueBean;
 import com.ts.entity.pdss.Saver.SaveBeanRS;
 import com.ts.entity.pdss.pdss.RSBeans.TCheckResultCollection;
 import com.ts.entity.pdss.pdss.RSBeans.TDrugSecurityRslt;
+import com.ts.interceptor.webservice.ApplicationProperties;
 import com.ts.service.pdss.pdss.manager.IDrugSecurityChecker;
 import com.ts.util.PageData;
+
+import net.sf.json.JSONObject;
 
 
 /**
@@ -57,7 +62,9 @@ public class OutPatientCheckBean implements IOutPatientCheck
         try
         {
             dao.delete("PrescMapper.deleteDrugCheckRslt", pdInp);
+            dao.delete("PrescMapper.reSetCheckRslt", pdInp);
             List<PageData> pds = (List<PageData>)dao.findForList("PrescMapper.findByDate", pdInp);
+            String checkLvl ="";
             for(PageData pd : pds)
             {
                 TPatientOrder po = new TPatientOrder();
@@ -71,6 +78,7 @@ public class OutPatientCheckBean implements IOutPatientCheck
                 SaveBeanRS saveRs = new SaveBeanRS();
                 TCheckResultCollection checkRC = new TCheckResultCollection();
                 if(dsr.getCheckResults().length == 0) continue;
+                checkLvl = dsr.getResultLevel();
                 checkRC.setDsr(dsr);
                 saveRs.setCheckRC(checkRC);
                 saveRs.setPo(po);
@@ -81,7 +89,8 @@ public class OutPatientCheckBean implements IOutPatientCheck
                 PageData entity = new PageData();
                 entity.put("NGROUPNUM", groupNum);
                 entity.put("ID", id);
-                entity.put("ISCHECKTRUE", "1");
+                //只有觉得出现问题单 R 级别  视为不合理， 否则有些是 慎用 也所谓不合理 显然是 不合适的。
+                entity.put("ISCHECKTRUE", "R".equals(checkLvl)?"1":"2");
                 pdOut.add(entity);
             }
             // 批量保存数据
@@ -103,13 +112,31 @@ public class OutPatientCheckBean implements IOutPatientCheck
         po.setDoctorDeptName(pd.getString("ORG_CODE"));
         po.setDoctorDeptID(pd.getString("ORG_NAME"));
         po.setDoctorName(pd.getString("DOCTOR_NAME"));
-        //
-        po.setDoctorTitleName(pd.getString(""));
+        // 设置 医生职称。
+        DictCache dictCache =  DictCache.getNewInstance();
+        TCommonRecord doctor = dictCache.getDoctorInfo(pd.getString("DOCTOR_NAME"));
+        String title = doctor.get("title");
+        String json = ApplicationProperties.getPropertyValue("doctorTile");
+        JSONObject  jsonObject = JSONObject.fromObject(json);
+
+        if(jsonObject.getString("1").indexOf(title.trim()) != -1)
+        {
+            po.setDoctorTitleID("1");
+            po.setDoctorTitleName(title);
+        }else if(jsonObject.getString("2").indexOf(title.trim()) != -1)
+        {
+            po.setDoctorTitleID("2");
+            po.setDoctorTitleName(title);
+        }else
+        {
+            po.setDoctorTitleID("3");
+            po.setDoctorTitleName(title);
+        }
         po.setPatientID(pd.getString("PATIENT_ID"));
         TPatient patient = new TPatient();
         patient.setName(pd.getString("PATIENT_NAME"));
         patient.setSex(pd.getString("PATIENT_SEX"));
-        patient.setDateOfBirth(pd.get("PATIENT_BIRTH").toString());
+        patient.setDateOfBirth(pd.getString("PATIENT_BIRTH").toString());
         po.setPatient(patient );
         TPatOrderInfoExt patInfoExt = new TPatOrderInfoExt();
         // 是否哺乳期

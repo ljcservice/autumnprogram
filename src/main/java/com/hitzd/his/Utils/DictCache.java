@@ -52,8 +52,8 @@ public final class DictCache
     /* 剂型字典*/
     private static HashMap<String, TCommonRecord>   formMap = null;
     private JDBCQueryImpl hisQuery   = null;
-    private JDBCQueryImpl iasQuery   = null;
-    private JDBCQueryImpl peaasQuery = null;
+//    private JDBCQueryImpl iasQuery   = null;
+//    private JDBCQueryImpl peaasQuery = null;
     
     private static DictCache singClass = null;
     private DictCache()
@@ -80,11 +80,11 @@ public final class DictCache
         /* 部门 */
         this.setDept(hisQuery);
         /* 大部门 */
-        this.setMergeDept(hisQuery);
+//        this.setMergeDept(hisQuery);
         /* 医生基本信息，构建时来源为用户维护表，使用过程中如没有，则自动缓存，但不添加数据库中，许用户自己维护*/
         this.setDoctorCode();
-        /* 标本 */
-        this.setSpeci(hisQuery);
+//        /* 标本 */
+//        this.setSpeci(hisQuery);
         /* 微生物字典表 */
         //this.setGermCode(hisQuery);
         /* 细菌药敏字典  */
@@ -100,14 +100,14 @@ public final class DictCache
         /* 频率字典 */
         this.setPerformMap(hisQuery);
         /* 费别字典 */
-        this.setChargeMap(hisQuery);
+//        this.setChargeMap(hisQuery);
         /* 身份字典 */
-        this.setIdentityMap(hisQuery);
+//        this.setIdentityMap(hisQuery);
         /* 剂型字典 */
         this.setFormMap(hisQuery);
         hisQuery   = null;
-        iasQuery   = null;
-        peaasQuery = null;
+//        iasQuery   = null;
+//        peaasQuery = null;
         System.out.println("---------------------工厂创建结束 ");
     }
 
@@ -525,6 +525,7 @@ public final class DictCache
             for(TCommonRecord ds : list)
             {
                 doctorMap.put(ds.get("NAME").toUpperCase(), ds);
+                doctorMap.put(ds.get("EMP_NO"), ds);
             }
         }
         catch(Exception e )
@@ -536,7 +537,6 @@ public final class DictCache
             query = null;
             list  = null;
         }
-        
         /*
         ICaseHistoryHelper ichh = CaseHistoryFactory.getCaseHistoryHelper();
         String strFields = "*";
@@ -612,7 +612,7 @@ public final class DictCache
         try
         {
             String sql = "SELECT * FROM peaas.dept_dict WHERE DEPT_CODE=PARENT_DEPT_CODE order by order_no";
-            JDBCQueryImpl query4PEAAS = DBQueryFactory.getQuery("PEAAS");
+            JDBCQueryImpl query4PEAAS = DBQueryFactory.getQuery("ph");
             List<TCommonRecord> depts = query4PEAAS.query(sql,
                     new CommonMapper());
             for (TCommonRecord d : depts)
@@ -775,12 +775,13 @@ public final class DictCache
      * @param DoctorName
      * @return
      */
-    public TCommonRecord getDoctorInfo(JDBCQueryImpl hisQuery , String DoctorName)
+    public TCommonRecord getDoctorInfo(String DoctorName)
     {
     	if(doctorMap.containsKey(DoctorName))
     	{
     		return doctorMap.get(DoctorName);
     	}
+    	
         ICaseHistoryHelper ichh = CaseHistoryFactory.getCaseHistoryHelper();
         String strFields = "*";
         List<TCommonRecord> lsWheres = new ArrayList<TCommonRecord>();

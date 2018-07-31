@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.ts.service.DoctOrder.OrderWork.CommonService;
@@ -14,7 +15,7 @@ import com.ts.util.PageData;
 @Service(value="commonServicePdss")
 public class CommonServiceImpl implements CommonService{
 	
-	@Autowired
+    @Autowired @Qualifier("orderWorkServiceBean")
 	private IOrderWorkService orderWorkService;
 	
 	/**

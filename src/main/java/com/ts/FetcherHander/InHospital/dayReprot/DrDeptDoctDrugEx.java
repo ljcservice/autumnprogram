@@ -384,11 +384,11 @@ public class DrDeptDoctDrugEx implements IReportBuilder
         // 保存过程 修改。
         TCommonRecord tc = new TCommonRecord();
         tc.set("ADate", ADate);
-        TransactionTemp tt = new TransactionTemp("IAS");
+        TransactionTemp tt = new TransactionTemp("ph");
         tt.execute(new TransaCallback(tc) {
             public void ExceuteSqlRecord()
             {
-                JDBCQueryImpl Jquery = DBQueryFactory.getQuery("IAS");
+                JDBCQueryImpl Jquery = DBQueryFactory.getQuery("ph");
                 DrDeptDoctDrugEx.this.deleteDR(Jquery,getTranParm().get("ADate"));
                 int i = 1;
                 for (TCommonRecord cr : DrDeptDoctDrugEx.this.resultSet)
@@ -397,8 +397,9 @@ public class DrDeptDoctDrugEx implements IReportBuilder
                             + DrDeptDoctDrugEx.this.resultSet.size() + "药品统计");
                     List<Object> sqlParams = new ArrayList<Object>();
                     String sql = " insert into dr_drug_summary(drug_code, FIRM_ID, DRUG_FORM, drug_name, patient_id, visit_id, costs, drug_units, amount, rpt_date, doctor_code, doctor_name, dept_code,  dept_name, drug_spec,  charges, identity, charge_type, is_basedrug ,is_anti,DDD_VALUE,"
-                            + " is_exhilarant,is_injection,is_oral,anti_level,is_impregnant,IS_NOCHINESEDRUG,is_external,is_chinesedrug,is_tumor,is_poison,is_psychotic,is_habitforming,is_radiation,is_precious,is_danger,is_assist,is_albumin,id ) "
-                            + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                            + " is_exhilarant,is_injection,is_oral,anti_level,is_impregnant,IS_NOCHINESEDRUG,is_external,is_chinesedrug,is_allergy,is_patentdrug,is_tumor,is_poison,is_psychotic,is_habitforming,is_radiation,is_precious,is_danger,is_assist,is_albumin,id ) "
+                            + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    // to_date('" + getTranParm().get("ADate") + "','yyyy-mm-dd') 
                     sqlParams.add(cr.get("item_code"));
                     sqlParams.add(cr.get("FIRM_ID"));
                     sqlParams.add(cr.get("drug_FORM"));
@@ -408,8 +409,10 @@ public class DrDeptDoctDrugEx implements IReportBuilder
                     sqlParams.add(cr.getDouble("costs"));
                     sqlParams.add(cr.get("units"));
                     sqlParams.add(cr.getDouble("amount"));
+                    
                     Timestamp dateTime = new Timestamp(DateUtils.getDateFromString(getTranParm().get("ADate")).getTime());
                     sqlParams.add(dateTime);
+                    
                     sqlParams.add(cr.get("doctor_code"));
                     sqlParams.add(cr.get("doctor_name"));
                     sqlParams.add(cr.get("dept_code"));

@@ -61,6 +61,10 @@ public class InitPdssCache {
 		{
 	        ApplicationProperties.init();
 	        log.info("内容构建");
+	        if("".equals(ApplicationProperties.getPropertyValue("setDrugUserAuth")))
+	        {
+	            setDrugUserAuth();
+	        }
 	        if("true".equals(ApplicationProperties.getPropertyValue("setOperationDrug")))
 	        {
 	            setOperationDrug();
@@ -124,7 +128,7 @@ public class InitPdssCache {
 	}
 	
 	/**
-	 * 本地内容 
+	 * 将redis里面 key 生成为快照 。
 	 * @throws Exception
 	 */
 	public void loadLoaclCache() throws Exception
@@ -175,7 +179,7 @@ public class InitPdssCache {
         while( pageNum == 1 || pageNum <= page.getTotalPage()){ 
             page.setCurrentPage(pageNum);
             List<TOperationDrugInfo> ods = (List<TOperationDrugInfo>) daoPH.findForList("CKOperationDrug.queryCKOperationDrugPage", page);
-            if(ods == null) return ;
+            if(ods == null || ods.size() == 0) return ;
             for(TOperationDrugInfo od : ods){
                 if(key != null && !key.equals(od.getO_code()))
                 {
@@ -458,6 +462,41 @@ public class InitPdssCache {
 			pageNum = page.getCurrentPage()+1;
 			log.info("查询单个药品信息，使用缓存-- 第" + pageNum +"页");
 		}
+	}
+	
+	/**
+	 * 添加新配对的药品 
+	 * @param drugid
+	 * @throws Exception
+	 */
+	public void setDrugById(String drugid ) throws Exception
+	{
+	    if(drugid == null || "".equals(drugid)) return ;
+	    log.info("添加新新配的药品 :" + drugid);
+	    PageData pd = new PageData();
+	    pd.put("drug_id", drugid);
+	    TDrug  tdrug =  (TDrug)dao.findForObject("DrugMapper.queryDrugById", pd);
+	    if(tdrug == null ) return ;
+	    cacheTemplate.setObject(PdssCache.drugCacheByLocal,tdrug.getDRUG_NO_LOCAL(), -1, tdrug);
+	    log.info("添加新新配的药品 完毕 :" + drugid);
+	    
+	}
+	
+	/**
+	 * 删除药品
+	 * @param drugid
+	 * @throws Exception
+	 */
+	public void delDrugById(String drugid) throws Exception
+	{
+	    if(drugid == null || "".equals(drugid)) return ;
+        log.info("删除药品 :" + drugid);
+        PageData pd = new PageData();
+        pd.put("drug_id", drugid);
+        TDrug  tdrug =  (TDrug)dao.findForObject("DrugMapper.queryDrugById", pd);
+        if(tdrug == null ) return ;
+        Boolean  b = cacheTemplate.delKey(PdssCache.drugCacheByLocal,tdrug.getDRUG_NO_LOCAL());
+        log.info("删除药品  完毕 :" + drugid + ":" + b.toString() );
 	}
 
 	/**

@@ -221,15 +221,30 @@ public class CacheTemplate {
 	    return Arrays.asList(ks); 
 	}
 	
+	
+	/**
+	 * 删除
+	 * @param key
+	 * @param keyAppend
+	 */
+	public boolean delKey(String key ,String keyAppend)
+	{
+	    String keyName = "KEY:# " + key + (keyAppend == null ? "" : ("," + keyAppend)) + " #";
+	    // 删除redis 元素
+	    return delKey(keyName);
+	}
+	
 	/**
 	 * 删除单个key 
 	 * @param val
 	 */
-	public void delKey(String key)
+	public boolean delKey(String key)
 	{
-	    redisDao.delete(key);
+	    boolean bool = false;
+	    bool = redisDao.delete(key);
 	    //删除本地快照 
 	    delLocalCacheByKey(key);
+	    return  bool;
 	}
 	
 	/**

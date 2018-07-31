@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.ts.dao.DAO;
@@ -20,7 +21,7 @@ import com.ts.util.PageData;
 public class PrescServiceImpl implements PrescService{
 	@Resource(name="daoSupportPH")
 	private DAO daoph;
-	@Autowired
+	@Autowired @Qualifier("orderWorkServiceBean")
 	private IOrderWorkService orderWorkService;
 
 	@Override
@@ -87,7 +88,8 @@ public class PrescServiceImpl implements PrescService{
 		if("0".equals(pd.getString("ISCHECKTRUE"))){
 			orderWorkService.delCheckRsByNgroupnum(pd);
 			//无人工点评记录
-			pd.put("ISORDERCHECK", 0);
+//			pd.put("ISORDERCHECK", 0);
+			pd.put("ISORDERCHECK", "1");
 		}
 		//pd.put("NGROUPNUM", "");问题组号
 		//更新病人住院记录pat_visit的状态为0合理1不合理2待定
@@ -184,5 +186,9 @@ public class PrescServiceImpl implements PrescService{
 	public PageData exceedCommonOrderAll(PageData pd)throws Exception{
 		return (PageData) daoph.findForObject("rsDrugCheckRsltMapper.exceedCommonOrderAll", pd);
 	}
+
+    public List<PageData> checkRsDetail(PageData pd) throws Exception {
+        return (List<PageData>) daoph.findForList("PrescMapper.selectCheckPrescExcelByNgroupnum", pd);
+    }
 
 }

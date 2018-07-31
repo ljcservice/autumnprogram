@@ -2,6 +2,8 @@ package com.ts.FetcherHander.InHospital.dayReprot;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,7 @@ import com.hitzd.DBUtils.TCommonRecord;
 import com.hitzd.Factory.DBQueryFactory;
 import com.hitzd.Transaction.TransaCallback;
 import com.hitzd.Transaction.TransactionTemp;
+import com.hitzd.Utils.CalcuateAgeUtil;
 import com.hitzd.his.ReportBuilder.Interfaces.IReportBuilder;
 import com.hitzd.his.Utils.Config;
 import com.hitzd.his.Utils.DateUtils;
@@ -95,13 +98,77 @@ public class DrOperation implements IReportBuilder
         DictCache deptCache = DictCache.getNewInstance();
         for (TCommonRecord data : operationArray)
         {
+            // 避免转科做的手术无法准确统计到指定科室上面
+            getTransfer(data.get("OPERATING_DATE"), data.get("patient_id"), data.get("visit_id"), data);
+            String deptCode = !"".equals(data.get("DEPT_STAYED"))?data.get("DEPT_STAYED"):data.get("dept_admission_to");
+//            String doctor   = "";
             data.set("id", getUUID());// 提前加入ID方便后续使用
-            data.set("dept_code", data.get("dept_admission_to"));
-            data.set("dept_name",
-                    deptCache.getDeptName(data.get("dept_admission_to")));
+            data.set("dept_code", deptCode);
+            data.set("dept_name", deptCache.getDeptName(deptCode));
         }
     }
 
+    /**
+     * 转科信息
+     * @param opertionDate 手术时间 
+     * @param p_id
+     * @param v_id
+     * @param cr
+     * @return
+     */
+    public void getTransfer(String opertionDate, String p_id, String v_id,
+            TCommonRecord cr)
+    {
+        boolean ret = false;
+        ICaseHistoryHelper chhr = CaseHistoryFactory.getCaseHistoryHelper();
+        try
+        {
+            Date  dd = DateUtils.getDateFromString(opertionDate);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(dd);
+            
+            String strFields = "*";
+            List<TCommonRecord> lsWheres = new ArrayList<TCommonRecord>();
+            TCommonRecord where = CaseHistoryHelperUtils
+                    .genWhereCR("PATIENT_ID", p_id, "Char", "", "", "");
+            lsWheres.add(where);
+            where = CaseHistoryHelperUtils.genWhereCR("VISIT_ID", v_id, "Char",
+                    "", "", "");
+            lsWheres.add(where);
+            // 出科时间
+            where = CaseHistoryHelperUtils.genWhereCR("DISCHARGE_DATE_TIME",  
+                    CaseHistoryFunction.genRToDate("MEDREC.TRANSFER", "DISCHARGE_DATE_TIME", "'" + DateUtils.getDate(cal) + "'", "yyyy-mm-dd"),
+                    "", ">=", "", "");
+            lsWheres.add(where);
+            // 入科时间 
+            where = CaseHistoryHelperUtils.genWhereCR("ADMISSION_DATE_TIME",  
+                    CaseHistoryFunction.genRToDate("MEDREC.TRANSFER", "ADMISSION_DATE_TIME", "'" + DateUtils.getDate(cal) + "'", "yyyy-mm-dd"),
+                    "", "<=", "", "");
+            lsWheres.add(where);
+            List<TCommonRecord> list = chhr.fetchTransfer2CR(strFields,
+                    lsWheres, null, null, null);
+            // 如果没找记录直接返回
+            if (list == null || list.size() == 0)
+                return ;
+            TCommonRecord tComm = list.get(0);
+            cr.set("DEPT_STAYED",
+                    tComm.getDateTimeString("DEPT_STAYED"));
+            cr.set("DOCTOR_IN_CHARGE",
+                    tComm.getDateTimeString("DOCTOR_IN_CHARGE"));
+        }
+        catch (Exception e)
+        {
+            logger.error("DrOperation.class,mothed=getTransfer()" + e.getMessage());
+            e.printStackTrace();
+        }
+        finally
+        {
+            chhr = null;
+        }
+        return ;
+    }
+    
+    
     /**
      * 处理手术信息 包括抓取手术主表中的信息,计算手术中是否存在抗菌药
      * 
@@ -197,7 +264,8 @@ public class DrOperation implements IReportBuilder
             }
             o.set("has_anti", has_anti + "");
             has_anti = 0;
-            fetchOpertaionMaster(o, chhr, his);
+            // 临时关掉 liujc 2018-05-20
+            //fetchOpertaionMaster(o, chhr, his);
         }
     }
 
@@ -268,11 +336,11 @@ public class DrOperation implements IReportBuilder
     {
         TCommonRecord tc = new TCommonRecord();
         tc.set("ADate", ADate);
-        TransactionTemp tt = new TransactionTemp("PatientHistory");
+        TransactionTemp tt = new TransactionTemp("ph");
         tt.execute(new TransaCallback(tc) {
             public void ExceuteSqlRecord()
             {
-                JDBCQueryImpl ph = DBQueryFactory.getQuery("PatientHistory");
+                JDBCQueryImpl ph = DBQueryFactory.getQuery("ph");
                 for (int j = 0; j < operationArray.size(); j++)
                 {
                     logger.info("保存第-----------------" + (j + 1)
@@ -327,12 +395,12 @@ public class DrOperation implements IReportBuilder
     {
         TCommonRecord tc = new TCommonRecord();
         tc.set("ADate", ADate);
-        TransactionTemp tt = new TransactionTemp("PatientHistory");
+        TransactionTemp tt = new TransactionTemp("ph");
         tt.execute(new TransaCallback(tc) {
             @Override
             public void ExceuteSqlRecord()
             {
-                JDBCQueryImpl ph = DBQueryFactory.getQuery("PatientHistory");
+                JDBCQueryImpl ph = DBQueryFactory.getQuery("ph");
                 for (int j = 0; j < operationMasterList.size(); j++)
                 {
                     logger.info("第--------" + (j + 1) + "--------共--------"
@@ -461,18 +529,18 @@ public class DrOperation implements IReportBuilder
     @Override
     public void buildOver(String ADate, Task owner)
     {
-        JDBCQueryImpl ph = DBQueryFactory.getQuery("PatientHistory");
+        JDBCQueryImpl ph = DBQueryFactory.getQuery("ph");
         deleteOldOperation(ph, ADate);
 
         logger.info("开始保存手术数据....");
         this.saveResultSet(ADate);
         logger.info("手术数据保存结束....");
-
-        deleteOldOperationMaster(ph, ADate);
-        deleteRepeatOperationMasterInfo();// 去除operation_master记录中重复的项
-        logger.info("开始保存Operation_Master数据....");
-        this.saveOperationMaster(ADate);
-        logger.info("Operation_Master数据保存结束....");
+// 暂时关掉 liujc 20180520 
+//        deleteOldOperationMaster(ph, ADate);
+//        deleteRepeatOperationMasterInfo();// 去除operation_master记录中重复的项
+//        logger.info("开始保存Operation_Master数据....");
+//        this.saveOperationMaster(ADate);
+//        logger.info("Operation_Master数据保存结束....");
     }
 
     @Override

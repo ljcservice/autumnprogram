@@ -169,7 +169,7 @@ public class DrugUserAuthCheckerBean implements IDrugUserAuthChecker
         catch(Exception e )
         {
             e.printStackTrace();
-            log.warn(e.getMessage());
+            log.warn(this.getClass().toString()+":" + e.getMessage());
             return new TDrugSecurityRslt();
         }
     }
@@ -188,7 +188,7 @@ public class DrugUserAuthCheckerBean implements IDrugUserAuthChecker
         }
         catch(Exception e )
         {
-            log.warn(e.getMessage());
+            log.warn(this.getClass().toString() + ":" +e.getMessage());
         }
         return drugCount;
     }
