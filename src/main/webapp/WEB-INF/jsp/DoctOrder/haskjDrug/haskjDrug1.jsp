@@ -66,10 +66,10 @@
 										<label><input class="ace"  value="1" name="type1" type="radio" <c:if test="${pd.type1 == null or pd.type1==1 }">checked</c:if> >处方数&nbsp;<span class="lbl"></span></label>&nbsp;
 										<label><input class="ace" value="2" name="type1" type="radio" <c:if test="${pd.type1 ==2 }">checked</c:if> >处方数(人次)&nbsp;<span class="lbl"></span></label>&nbsp;&nbsp;&nbsp;&nbsp;
 									</div>
-									<div class="check-search">
-										<label><input class="ace"  value="1" name="type2" type="radio" <c:if test="${pd.type2 == null or pd.type2==1 }">checked</c:if> >含外用&nbsp;<span class="lbl"></span></label>&nbsp;
-										<label><input class="ace" value="2" name="type2" type="radio" <c:if test="${pd.type2==2 }">checked</c:if> >不含外用&nbsp;<span class="lbl"></span></label>
-									</div>
+<!-- 									<div class="check-search"> -->
+<%-- 										<label><input class="ace"  value="1" name="type2" type="radio" <c:if test="${pd.type2 == null or pd.type2==1 }">checked</c:if> >含外用&nbsp;<span class="lbl"></span></label>&nbsp; --%>
+<%-- 										<label><input class="ace" value="2" name="type2" type="radio" <c:if test="${pd.type2==2 }">checked</c:if> >不含外用&nbsp;<span class="lbl"></span></label> --%>
+<!-- 									</div> -->
 									<div id="btnDiv" class="check-search">
 										<a title="最大支持导出6万条" class="btn btn-mini btn-success" onclick="listExport();">导出</a>
 										<a title="" class="btn btn-mini btn-success" onclick="myprint();">打印</a>
@@ -110,6 +110,16 @@
 								</c:otherwise>
 							</c:choose>
 							</tbody>
+							<c:if test="${not empty reportHJ}">
+							<tfoot>
+								<tr>
+									<td class="center" colspan="2">合计</td>
+											<td class="center">${reportHJ.c}</td>
+											<td class="center"> ${reportHJ.haskj}</td>
+											<td class="center"><fmt:formatNumber value="${reportHJ.rate}" pattern="#0.00"></fmt:formatNumber> %</td>
+								</tr>
+							</tfoot>
+							</c:if>
 						</table>
 						</div>
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">

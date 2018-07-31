@@ -66,6 +66,10 @@
 											<input class="nav-search-input" autocomplete="off" id="DRUG_NAME" type="text" name="DRUG_NAME" value="${pd.DRUG_NAME}" placeholder="药品名称" maxlength="80" style="width: 100px;" />
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
+										<span class="input-icon">
+											<input class="nav-search-input" autocomplete="off" id="DOCTOR_NAME" type="text" name="DOCTOR_NAME" value="${pd.DOCTOR_NAME}" placeholder="医生名称" maxlength="80" style="width: 100px;" />
+											<i class="ace-icon fa fa-search nav-search-icon"></i>
+										</span>
 									</div>
 									<div class="check-search"   >
 										是否点评：

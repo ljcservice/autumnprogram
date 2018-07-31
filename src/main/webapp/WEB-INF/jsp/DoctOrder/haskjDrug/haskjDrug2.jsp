@@ -105,9 +105,17 @@
 									<tr class="main_info">
 										<td colspan="12" class="center">没有相关数据</td>
 									</tr>
-								</c:otherwise>
+								</c:otherwise>  
 							</c:choose>
 							</tbody>
+							<c:if test="${not empty reportHJ}">
+								<tr >
+									<td class="center" colspan="3">合计</td>
+									<td class="center">${reportHJ.c}</td>
+									<td class="center"> ${reportHJ.haskj}</td>
+									<td class="center"><fmt:formatNumber value="${reportHJ.rate}" pattern="#0.00"></fmt:formatNumber> %</td>
+								</tr>
+							</c:if>
 						</table>
 						</div>
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 5px;padding-bottom: 5px;">

@@ -24,7 +24,7 @@
 				<div class="page-content">
 					<div class="row">
 						<div >
-						<form id="myForm" action="DoctOrder/DoctOrdersDetail.do" method="post">
+						<form id="myForm" action="DoctOrderAnti/DoctOrdersDetail.do" method="post">
 							<input type="hidden" name="patient_id" value="${page.pd.patient_id}" id="patient_id"/>
 							<input type="hidden" name="visit_id" value="${page.pd.visit_id}" id="visit_id"/>
 							<input type="hidden" name="repeat_indicator" value="${page.pd.repeat_indicator}" id="repeat_indicator"/>
@@ -590,7 +590,7 @@
 		var visitId   = $("#visit_id").val();
 		$.ajax({
 			type: "POST",
-			url: basePath + 'DoctOrder/SaveShortcut.do', 
+			url: basePath + 'DoctOrderAnti/SaveShortcut.do', 
 	    	data: {checkType:checkType,order_no:order_no,order_sub_no:order_sub_no
 	    		,order_name:order_name,order_code:order_code,tmpOrder_Name:tmpOrder_Name,tmpOrder_code:tmpOrder_code,tmpOrder_sub_no:tmpOrder_sub_no
 	    		,tmpOrder_no:tmpOrder_no,count:count,checkText:checkText,ngroupnum:ngroupnum,patient_id:patId,visit_id:visitId,business_type:0},
@@ -603,7 +603,7 @@
 					$("#dragCheck").hide(500); 
 					reSetCheck();
 					//刷新上个页面
-					var rsUrl = "DoctOrder/CheckRsViewUI.do?patient_id=" + patId + "&visit_id=" + visitId + "&ngroupnum=" + data.ngroupnum; 
+					var rsUrl = "DoctOrderAnti/CheckRsViewUI.do?patient_id=" + patId + "&visit_id=" + visitId + "&ngroupnum=" + data.ngroupnum; 
 					parent.CheckRsFrame.location.href = rsUrl ;//parent.$("#CheckRsFrame").attr("src")+data.ngroupnum;
 					//刷新本页面
 					$("#ngroupnum").val(data.ngroupnum);
@@ -830,7 +830,7 @@
 		myform.submit();
 	}
 	function show_picture(_type,name){
-		var url = path + "/DoctOrder/DoctOrdersDetail.do?show_type="+_type+"&patient_id="+$("#patient_id").val()+"&visit_id="+$("#visit_id").val();
+		var url = path + "/DoctOrderAnti/DoctOrdersDetail.do?show_type="+_type+"&patient_id="+$("#patient_id").val()+"&visit_id="+$("#visit_id").val();
 		url+="&order_class="+$(order_class).val()+"&repeat_indicator"+$("#repeat_indicator").val()+"&drug_type="+$("#drug_type").val();
 		//top.jzts();
 		var diag = new top.Dialog();

@@ -55,4 +55,44 @@
 		select distinct t.iv_class_code from drug t where t.drug_name like #{drug_name}  and t.iv_class_code  is not null
 	</select>
 
+	<select id="findDrugByAllPage" parameterType="Integer" resultType="pd" >
+		select * from drug where dose_class_id is not null
+	</select>
+	
+	<update id="updateDrugByDoseClassId" parameterType="pd">
+		update drug set dose_class_id = #{dose_class_id,jdbcType=NUMERIC} where drug_id = #{drug_id,jdbcType=NUMERIC}
+ 	</update>
+	
+	
+	<select id="finddrug_dosageByDoseClassId" parameterType="Integer" resultType="pd">
+		select * from drug_dosage t where dose_class_id = #{dose_class_id}
+	</select>	
+	
+	<select id="finddrug_dosageBydrugName" parameterType="String" resultType="pd">
+		select d.dose_class_id ,count(d.drug_dosage_id)  from drug_dosage d where  d.drug_name = #{drug_name}
+			group by d.dose_class_id order by count(d.drug_dosage_id) desc 
+	</select>
+	
+	<select id="findDrugByDrugClassId" parameterType="String" resultType="pd">  
+		select drug_class_id from drug t where t.drug_name like #{drug_name} group by drug_class_id order by count(*) desc 
+	</select>
+	
+	<select id="findspecial"  resultType="pd">
+		select * from hospital_special_population where drug_class_id is not null
+	</select>
+	<update id="updatespecialByDrugClassId" parameterType="pd" >
+		update hospital_special_population  set  drug_class_id = #{drug_class_id} where drug_code = #{drug_code}
+	</update>
+	<update id="updateDrugUseDetail" parameterType="pd">
+		update drug_use_detail set 
+			hepatical_indi = #{hepatic_indi,jdbcType=VARCHAR},
+			hepatical_info = #{hepatic_info,jdbcType=VARCHAR},
+			hepatical_ref  = #{hepatic_ref,jdbcType=VARCHAR},
+			renal_indi = #{renal_indi,jdbcType=VARCHAR},
+			renal_info = #{renal_info,jdbcType=VARCHAR},   
+			renal_ref  = #{renal_ref,jdbcType=VARCHAR}
+			where  drug_class_id = #{drug_class_id}
+		
+	</update>
+	
 </mapper>

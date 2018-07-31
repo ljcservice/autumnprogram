@@ -83,6 +83,7 @@
 			a.ngroupnum = #{pd.ngroupnum} 
 		order by CHECKDATE
 	</select>
+
 	<delete id="delCheckRsByNgroupnum" parameterType="pd" >
 		delete from RS_DRUG_CHECKRSLT
 		where 
@@ -345,7 +346,7 @@
 			and a.ORDER_DATE &gt;= #{beginDate} 
 		</if>
 		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
-			and a.ORDER_DATE &lt; #{endDate}
+			and a.ORDER_DATE &lt;= #{endDate}
 		</if>
 		<if test="ORG_NAME!= null and ORG_NAME != ''">
 			and a.ORG_NAME = #{ORG_NAME} 
@@ -374,7 +375,7 @@
 			and a.ORDER_DATE &gt;= #{beginDate} 
 		</if>
 		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
-			and a.ORDER_DATE &lt; #{endDate}
+			and a.ORDER_DATE &lt;= #{endDate}
 		</if>
 		<if test="ORG_NAME!= null and ORG_NAME != ''">
 			and a.ORG_NAME = #{ORG_NAME} 
@@ -401,7 +402,7 @@
 			and a.ORDER_DATE &gt;= #{beginDate} 
 		</if>
 		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
-			and a.ORDER_DATE &lt; #{endDate}
+			and a.ORDER_DATE &lt;= #{endDate}
 		</if>
 		<if test="ORG_NAME!= null and ORG_NAME != ''">
 			and a.ORG_NAME = #{ORG_NAME} 
@@ -419,7 +420,7 @@
 			and a.ORDER_DATE &gt;= #{beginDate} 
 		</if>
 		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
-			and a.ORDER_DATE &lt; #{endDate}
+			and a.ORDER_DATE &lt;= #{endDate}
 		</if>
 		<if test="ORG_NAME!= null and ORG_NAME != ''">
 			and a.ORG_NAME = #{ORG_NAME} 
@@ -438,7 +439,7 @@
 			and a.ORDER_DATE &gt;= #{beginDate} 
 		</if>
 		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
-			and a.ORDER_DATE &lt; #{endDate}
+			and a.ORDER_DATE &lt;= #{endDate}
 		</if>
 		<if test="ORG_NAME!= null and ORG_NAME != ''">
 			and a.ORG_NAME = #{ORG_NAME} 
@@ -467,7 +468,7 @@
 			and a.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
 		</if>
 		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
-			and a.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+			and a.discharge_date_time &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
 		</if>
 		<if test="OUT_DEPT_NAME != null and OUT_DEPT_NAME != ''"><!-- 关键词检索 -->
 			and a.OUT_DEPT_NAME = #{OUT_DEPT_NAME} 
@@ -496,7 +497,7 @@
 			and a.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
 		</if>
 		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
-			and a.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+			and a.discharge_date_time &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
 		</if>
 		<if test="OUT_DEPT_NAME != null and OUT_DEPT_NAME != ''"><!-- 关键词检索 -->
 			and a.OUT_DEPT_NAME = #{OUT_DEPT_NAME} 
@@ -523,7 +524,7 @@
 			and a.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
 		</if>
 		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
-			and a.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+			and a.discharge_date_time &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
 		</if>
 		<if test="OUT_DEPT_NAME != null and OUT_DEPT_NAME != ''"><!-- 关键词检索 -->
 			and a.OUT_DEPT_NAME = #{OUT_DEPT_NAME} 
@@ -542,7 +543,7 @@
 			and a.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
 		</if>
 		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
-			and a.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+			and a.discharge_date_time &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
 		</if>
 		<if test="OUT_DEPT_NAME != null and OUT_DEPT_NAME != ''"><!-- 关键词检索 -->
 			and OUT_DEPT_NAME = #{OUT_DEPT_NAME} 
@@ -561,7 +562,7 @@
 			and discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
 		</if>
 		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
-			and discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
+			and discharge_date_time &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
 		</if>
 		<if test="OUT_DEPT_NAME != null and OUT_DEPT_NAME != ''"><!-- 关键词检索 -->
 			and OUT_DEPT_NAME = #{OUT_DEPT_NAME} 

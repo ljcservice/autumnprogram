@@ -16,7 +16,7 @@
 					and t.ORDER_DATE &gt;= #{pd.beginDate} 
 				</if>
 				<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
-					and t.ORDER_DATE &lt; #{pd.endDate}
+					and t.ORDER_DATE &lt;= #{pd.endDate}
 				</if>
 				<if test="pd.org_name != null and pd.org_name != ''"> <!-- 科室-->
 					and t.org_name = #{pd.org_name}
@@ -24,6 +24,28 @@
         	group by org_code, org_name)
  		order by rate desc
 	</select>
+<!-- 	合计  处方数 含外用 -->
+	<select id="haskjDrug11ByHJ" parameterType="page" resultType="pd" >
+		select 
+	       nvl(c,0) c,
+	       nvl(haskj,0) haskj,
+	       nvl(100*haskj / c,0) rate
+		from (select count(*) c, sum(haskj) haskj
+	          from presc t
+	         where order_type = 1
+	         	<if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
+					and t.ORDER_DATE &gt;= #{pd.beginDate} 
+				</if>
+				<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
+					and t.ORDER_DATE &lt;= #{pd.endDate}
+				</if>
+				<if test="pd.org_name != null and pd.org_name != ''"> <!-- 科室-->
+					and t.org_name = #{pd.org_name}
+				</if>
+        		)
+ 		order by rate desc
+	</select>
+	
 <!-- 	处方数，不含外用 -->
 	<select id="haskjDrug12" parameterType="page" resultType="pd" >
 		select org_name dept_name,
@@ -41,7 +63,7 @@
 					and t.ORDER_DATE &gt;= #{pd.beginDate} 
 				</if>
 				<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
-					and t.ORDER_DATE &lt; #{pd.endDate}
+					and t.ORDER_DATE &lt;= #{pd.endDate}
 				</if>
 				<if test="pd.org_name != null and pd.org_name != ''"> <!-- 科室-->
 					and t.org_name = #{pd.org_name}
@@ -72,7 +94,7 @@
 					and t.ORDER_DATE &gt;= #{pd.beginDate} 
 				</if>
 				<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
-					and t.ORDER_DATE &lt; #{pd.endDate}
+					and t.ORDER_DATE &lt;= #{pd.endDate}
 				</if>
 				<if test="pd.org_name != null and pd.org_name != ''"> <!-- 科室-->
 					and t.org_name = #{pd.org_name}
@@ -83,6 +105,37 @@
          	)
 		 order by rate desc
 	</select>
+	<!-- 合计	处方数(人次) ，含外用 -->
+		<select id="haskjDrug13ByHJ" parameterType="page" resultType="pd" >
+		select 
+			nvl(c,0) c,
+			nvl(haskj,0) haskj,
+			nvl(100*haskj / c,0)  rate
+  		from (select 
+               count(*) c,
+               sum(decode(haskj, 0, 0, 1)) haskj
+          		from (select 
+                       patient_id,
+                       order_date,
+                       sum(haskj) haskj,
+                       sum(decode(haskj, 0, 0, EXTEDRUG)) EXTEDRUG
+                  from presc t
+                 where order_type = 1
+                   <if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
+					and t.ORDER_DATE &gt;= #{pd.beginDate} 
+				</if>
+				<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
+					and t.ORDER_DATE &lt;= #{pd.endDate}
+				</if>
+				<if test="pd.org_name != null and pd.org_name != ''"> <!-- 科室-->
+					and t.org_name = #{pd.org_name}
+				</if>
+                 group by patient_id, order_date
+             	)
+         	)
+		 order by rate desc
+	</select>
+	
 <!-- 处方数(人次) ，不含外用 -->
 	<select id="haskjDrug14" parameterType="page" resultType="pd" >
 		select org_code dept_code,
@@ -106,7 +159,7 @@
 					and t.ORDER_DATE &gt;= #{pd.beginDate} 
 				</if>
 				<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
-					and t.ORDER_DATE &lt; #{pd.endDate}
+					and t.ORDER_DATE &lt;= #{pd.endDate}
 				</if>
 				<if test="pd.org_name != null and pd.org_name != ''"> <!-- 科室-->
 					and t.org_name = #{pd.org_name}
@@ -119,7 +172,7 @@
 
 
 	
-	
+<!-- 	门急诊医生抗菌药使用率 处方数 -->
 	<select id="haskjDrug21" parameterType="page" resultType="pd" >
 		select org_name, org_code, doctor_name, 
 			nvl(c,0) c, 
@@ -132,7 +185,7 @@
 					and t.ORDER_DATE &gt;= #{pd.beginDate} 
 				</if>
 				<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
-					and t.ORDER_DATE &lt; #{pd.endDate}
+					and t.ORDER_DATE &lt;= #{pd.endDate}
 				</if>
 				<if test="pd.org_name != null and pd.org_name != ''"> <!-- 科室-->
 					and t.org_name = #{pd.org_name}
@@ -142,7 +195,29 @@
 	
 	</select>
 	
-		
+	<!-- 	门急诊医生抗菌药使用率  合计  处方数 -->
+	<select id="haskjDrug21ByHJ" parameterType="page" resultType="pd" >
+		select 
+			nvl(c,0) c, 
+			nvl(haskj,0) haskj,
+			nvl(100*haskj /c,0) rate
+		  from (select count(*) c, sum(haskj) haskj
+		          from presc t
+		         where t.order_type = 1
+		        <if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
+					and t.ORDER_DATE &gt;= #{pd.beginDate} 
+				</if>
+				<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
+					and t.ORDER_DATE &lt;= #{pd.endDate}
+				</if>
+				<if test="pd.org_name != null and pd.org_name != ''"> <!-- 科室-->
+					and t.org_name = #{pd.org_name}
+				</if>
+		         )
+		 order by rate desc
+	
+	</select>
+	<!-- 	门急诊医生抗菌药使用率  人次 -->
 	<select id="haskjDrug22" parameterType="page" resultType="pd" >
 		select doctor_name,
 	       nvl(sum(haskj),0) haskj,
@@ -161,10 +236,31 @@
 					and t.ORDER_DATE &gt;= #{pd.beginDate} 
 				</if>
 				<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
-					and t.ORDER_DATE &lt; #{pd.endDate}
+					and t.ORDER_DATE &lt;= #{pd.endDate}
 				</if>
-	         group by org_code, patient_id, doctor_name, org_name)
+	         group by org_code, patient_id, doctor_name, org_name, order_date)
 		 group by org_code, doctor_name, org_name
+		 order by rate desc
+	</select>
+	
+	<!-- 	门急诊医生抗菌药使用率  合计  人次-->
+	<select id="haskjDrug22ByHJ" parameterType="page" resultType="pd" >
+		select 
+	       nvl(sum(haskj),0) haskj,
+	       nvl(100 * sum(haskj) / count(patient_id),0) rate,
+	       count(distinct patient_id) c
+  		from (select 
+               patient_id,
+               decode(sum(haskj), 0, 0, 1) haskj
+	         from presc t
+	         where order_type = 1
+	            <if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
+					and t.ORDER_DATE &gt;= #{pd.beginDate} 
+				</if>
+				<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
+					and t.ORDER_DATE &lt;= #{pd.endDate}
+				</if>
+	         group by  patient_id)
 		 order by rate desc
 	</select>
 </mapper>

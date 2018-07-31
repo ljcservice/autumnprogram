@@ -102,6 +102,42 @@
 		#{ddd_value}
 	</sql>
 	
+	<sql id="drugtypesql">
+		<if test="pd.DRUG_TYPE != null and pd.DRUG_TYPE != ''"> <!-- 药品名-->
+	 	and exists (select i.drug_no_local
+	          from pdss.drug_map i
+		         where i.drug_no_local = a.order_code
+				<if test="pd.HASKJ != null and pd.HASKJ != ''"> <!-- 是否抗菌 -->
+					and i.IS_ANTI = 1
+				</if>  
+				<if test="pd.HASZS != null and pd.HASZS != ''"> <!-- 是否注射 -->
+					and i.IS_INJECTION = 1 
+				</if>
+				<if test="pd.ELJSY != null and pd.ELJSY != ''"> <!-- 是否二类精神-->
+					and i.IS_PSYCHOTIC = 2
+				</if>
+				<if test="pd.DDRUG != null and pd.DDRUG != ''"> <!-- 是否毒药 -->
+					and i.IS_POISON = 1
+				</if>
+				<if test="pd.FSDRUG != null and pd.FSDRUG != ''"> <!-- 是否放射 -->
+					and i.is_radiation = 1
+				</if>
+				<if test="pd.YLJSY != null and pd.YLJSY != ''"> <!-- 是否一类精神-->
+					and i.IS_PSYCHOTIC = 1
+				</if>
+				<if test="pd.GZDRUG != null and pd.GZDRUG != ''"> <!-- 是否贵重 -->
+					and i.is_precious = 1
+				</if>
+				<if test="pd.MDRUG != null and pd.MDRUG != ''"> <!-- 是否麻药 -->
+					and i.is_habitforming = 1
+				</if>
+				<if test="pd.DMDRUG != null and pd.DMDRUG != ''"> <!-- 是否毒麻 -->
+					and  i.is_habitforming = 1  and i.IS_POISON = 1 
+				</if>				        
+	         )
+	         
+		</if>
+	</sql>
 	
 	<!--查询病人信息  (常规查看 )-->
 	<select id="ordersByIdlistPage" parameterType="page" resultType="pd">
@@ -117,8 +153,11 @@
 			,b.local_order_class_code local_order_class
 		from  orders a,dict_order_class b   
 		where a.order_class = b.order_class_code
-			and patient_id  = #{pd.patient_id} 
+			and patient_id  = #{pd.patient_id}   
 			and visit_id = #{pd.visit_id}
+			
+		<include refid="drugtypesql" ></include>
+		
 		<if test="pd.REPEAT_INDICATOR != null and pd.REPEAT_INDICATOR != ''"> <!-- 医嘱标示 1 长期 0 临时-->  
 			and REPEAT_INDICATOR = #{pd.REPEAT_INDICATOR} 
 		</if>
@@ -167,6 +206,9 @@
 		<if test="pd.order_class != null and pd.order_class != '' ">
 			and c.local_order_class_code = #{pd.order_class}
 		</if>
+				
+		<include refid="drugtypesql" ></include>
+		
 		Order by b.datestr,a.ORDER_NO,a.order_sub_no 
 	</select>
 
@@ -183,6 +225,41 @@
 		<if test="order_class != null and order_class != '' ">
 			and b.local_order_class_code = #{order_class}
 		</if>
+		
+		<if test="DRUG_TYPE != null and DRUG_TYPE != ''"> <!-- 药品名-->
+	 	and exists (select i.drug_no_local
+	          from pdss.drug_map i
+		         where i.drug_no_local = a.order_code
+				<if test="HASKJ != null and HASKJ != ''"> <!-- 是否抗菌 -->
+					and i.IS_ANTI = 1
+				</if>  
+				<if test="HASZS != null and HASZS != ''"> <!-- 是否注射 -->
+					and i.IS_INJECTION = 1 
+				</if>
+				<if test="ELJSY != null and ELJSY != ''"> <!-- 是否二类精神-->
+					and i.IS_PSYCHOTIC = 2
+				</if>
+				<if test="DDRUG != null and DDRUG != ''"> <!-- 是否毒药 -->
+					and i.IS_POISON = 1
+				</if>
+				<if test="FSDRUG != null and FSDRUG != ''"> <!-- 是否放射 -->
+					and i.is_radiation = 1
+				</if>
+				<if test="YLJSY != null and YLJSY != ''"> <!-- 是否一类精神-->
+					and i.IS_PSYCHOTIC = 1  
+				</if>
+				<if test="GZDRUG != null and GZDRUG != ''"> <!-- 是否贵重 -->
+					and i.is_precious = 1
+				</if>
+				<if test="MDRUG != null and MDRUG != ''"> <!-- 是否麻药 -->
+					and i.is_habitforming = 1
+				</if>
+				<if test="DMDRUG != null and DMDRUG != ''"> <!-- 是否毒麻 -->
+					and  i.is_habitforming = 1  and i.IS_POISON = 1 
+				</if>				        
+	         )
+		</if>
+				
 		order by a.ORDER_NO,a.order_sub_no 
 	</select>
 	<!-- 术后日期查询医嘱 -->
@@ -218,6 +295,9 @@
 			<if test="pd.order_class != null and pd.order_class != '' ">
 				and c.local_order_class_code = #{pd.order_class}
 			</if>
+			
+			<include refid="drugtypesql" ></include>
+			
 			Order by a.startDate,b.ORDER_NO,b.order_sub_no 
 	</select>
 	

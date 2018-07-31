@@ -13,12 +13,11 @@
 	<!-- 查询单个药品 -->
 	<select id="queryDrugById" parameterType="pd" resultType="TDrug">
 		select * from view_DRUG 
-		<if test="id != null and id != ''">
-		where drug_no_local =#{id}
-		</if>
+			where drug_id =#{drug_id}
 	</select>
 	<select id="queryDrugPage" parameterType="page" resultType="TDrug">
 		select * from view_DRUG 
+		
 	</select>
 	<!-- 查询单2个成分是否药理冲突 --> 
 	<select id="getDrugInteraction" parameterType="pd" resultType="TDrugInteractionInfo">
@@ -213,7 +212,7 @@
     	</if>
 	</select>
 	<select id="getDudInfoPage" parameterType="page"	resultType="TDrugUseDetail">
-		select drug_use_detail_id, drug_class_id, last_date_time, pregnant_indi, pregnant_info, pregnant_info_ref, lact_indi, lact_info, lact_info_ref, kid_indi, kid_low, kid_high, kid_info, kid_info_ref, old_indi, old_info, old_info_ref, hepatical_indi, renal_indi, forbid_ruid, forbid_cause, inadvis_rtid, inadvis_cause, advert_rtid, advert_cause 
+		select drug_use_detail_id, drug_class_id, last_date_time, pregnant_indi, pregnant_info, pregnant_info_ref, lact_indi, lact_info, lact_info_ref, kid_indi, kid_low, kid_high, kid_info, kid_info_ref, old_indi, old_info, old_info_ref, hepatical_indi,hepatical_info,hepatical_ref, renal_indi,renal_info,renal_ref, forbid_ruid, forbid_cause, inadvis_rtid, inadvis_cause, advert_rtid, advert_cause 
     	from DRUG_USE_DETAIL
     	where drug_class_id in (select drug_class_id  from pdss.view_drug) 
 	</select>

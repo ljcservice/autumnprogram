@@ -48,7 +48,7 @@
 					<div class="row">
 						<div class="col-xs-12" >
 							<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 2px;padding-bottom: 2px;width: 100%;">
-								<form name="searchForm" id="searchForm" action="DoctOrder/OrderWork.do" method="post" > 
+								<form name="searchForm" id="searchForm" action="DoctOrderAnti/OrderWork.do" method="post" > 
 									<input name="randomflag" id="randomflag" type="hidden" value="">
 									<input name="randomrefresh" id="randomrefresh" type="hidden" value="">
 									<input name="refreshpatientid" id="refreshpatientid" type="hidden" value="">
@@ -327,7 +327,7 @@ function viewDetail(patId , visitId,ngnum){
 	var diag = new top.Dialog();
 	diag.Drag=true;
 	diag.Title ="医嘱点评";
-	diag.URL = "<%=path%>/DoctOrder/OrderWorkDetailUI.do?patient_id=" + patId + "&visit_Id=" + visitId + "&ngroupnum=" + ngnum;    
+	diag.URL = "<%=path%>/DoctOrderAnti/OrderWorkDetailUI.do?patient_id=" + patId + "&visit_Id=" + visitId + "&ngroupnum=" + ngnum;    
 	diag.Width = window.screen.width;
 	diag.Height = window.screen.height;  
 	diag.CancelEvent = function(){ //关闭事件
@@ -357,7 +357,7 @@ function viewDetail(patId , visitId,ngnum){
 	
 }
 function listExport(){
-	window.open(path + "/DoctOrder/orderListExport.do?"+$("#searchForm").serialize()+"&randomFlag="+'${pd.randomFlag}');
+	window.open(path + "/DoctOrderAnti/orderListExport.do?"+$("#searchForm").serialize()+"&randomFlag="+'${pd.randomFlag}');
 }
 function myprint(){
 	$("#main-container").hide();
@@ -371,7 +371,7 @@ function myprint(){
 }
 function randomQuery(){
 	$("#randomflag").val("1");
-	window.location.href=path + "/DoctOrder/OrderWork.do?"+$("#searchForm").serialize();
+	window.location.href=path + "/DoctOrderAnti/OrderWork.do?"+$("#searchForm").serialize();
 }
 function changeNum(obj){
 	var mynum = $(obj).val();

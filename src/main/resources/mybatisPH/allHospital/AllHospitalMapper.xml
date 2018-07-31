@@ -17,12 +17,12 @@
 	               sum(l.anti_costs) anti_costs
 	         from ias_pat_info_scd l
 	         where 1 = 1
-	            and is_orderflag = '1'
+<!-- 	            and is_orderflag = '1' -->
 	            <if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
 					and l.rpt_date &gt;=  to_date(#{pd.beginDate}, 'yyyy-mm-dd')
 				</if>
 				<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
-					and l.rpt_date &lt; to_date(#{pd.endDate}, 'yyyy-mm-dd')
+					and l.rpt_date &lt;= to_date(#{pd.endDate}, 'yyyy-mm-dd')
 				</if>
 				<if test="pd.dept_name != null and pd.dept_name != ''"> <!--  科室 -->
 					and  l.funcdeptname like  CONCAT(CONCAT('%', #{pd.dept_name}),'%') 
@@ -61,7 +61,7 @@
 	       t.ordered_by_dept_code dept_code
 	   from outp_orders_costs t,
 	       (select drug_no_local  from pdss.drug_map  where 1 = 1 group by drug_no_local) d
-	   		where t.item_code = d.Drug_No_Local
+	   		where t.item_code = d.Drug_No_Local(+)
 	   		<if test="pd.dept_name != null and pd.dept_name != ''"> <!--  科室 -->
 				and  t.ordered_by_dept like  CONCAT(CONCAT('%', #{pd.dept_name}),'%') 
 			</if>
@@ -69,7 +69,7 @@
 				and trunc(t.visit_date) &gt;=  to_date(#{pd.beginDate}, 'yyyy-mm-dd')
 			</if>
 			<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
-				and trunc(t.visit_date) &lt; to_date(#{pd.endDate}, 'yyyy-mm-dd')
+				and trunc(t.visit_date) &lt;= to_date(#{pd.endDate}, 'yyyy-mm-dd')
 			</if>
 	   group by t.ordered_by_dept, t.ordered_by_dept_code
 		    <if test="pd.sort_type == null or pd.sort_type == ''">  
@@ -112,7 +112,7 @@
 			             m.cost         cost,
 			             m.amount       amount
 			        from Dr_Drugdaycost m, pdss.Drug_Map d
-			       where m.Drug_Code = d.Drug_No_Local
+			       where m.Drug_Code = d.Drug_No_Local(+)
 			           <if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
 							and m.dr_date &gt;=  to_date(#{pd.beginDate}, 'yyyy-mm-dd')
 						</if>
@@ -140,7 +140,7 @@
 			             to_char(h.costs) cost,
 			             to_char(h.amount) amount
 			        from dr_drug_summary h, pdss.Drug_Map d
-			       where h.Drug_Code = d.Drug_No_Local
+			       where h.Drug_Code = d.Drug_No_Local(+)
 			         	<if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
 							and h.rpt_date  &gt;=  to_date(#{pd.beginDate}, 'yyyy-mm-dd')
 						</if>

@@ -61,14 +61,14 @@
 											<option <c:if test="${pd.fatchType == '1' }">selected</c:if> value="1" >住院</option>
 										</select>
 										执行类型
-										<select  name="execType" id="execType" data-placeholder="执行类型" style="vertical-align:top;width: 90px;">
+										<select  name="execType" id="execType" onchange="javascript:reportInfo(this.value)" data-placeholder="执行类型" style="vertical-align:top;width: 90px;" >
 											<option <c:if test="${pd.execType == '0' }">selected</c:if> value="0" >执行抽取</option>
 											<option <c:if test="${pd.execType == '1' }">selected</c:if> value="1" >执行审核</option>
 											<option <c:if test="${pd.execType == '2' }">selected</c:if> value="2" >执行报表</option>
 										</select>
-										<select name="reportCode" id="reportCode" data-placeholder="报表名称"  >
+										<select name="reportCode" id="reportCode" data-placeholder="报表名称" style="display:none" >
 											<option value="-1">全部报表</option>
-											<option <c:if test="${pd.reportCode == '0' }">selected</c:if> value="0" >报表名称</option>
+											
 										</select>
 										
 									</div>
@@ -83,68 +83,7 @@
 							</div>
 							
 							<div style="width: 100%;height: auto;">
-							<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
-							<thead>
-								<tr>
-									<th class="center" nowrap style="width:35px;">序号</th>
-									<th class="center" nowrap>患者ID</th>
-									<th class="center" nowrap>患者名称</th>
-									<th class="center" nowrap>诊断结果数</th>
-									<th class="center" nowrap>主治医师</th>
-									<th class="center" nowrap>入院科室</th>
-									<th class="center" nowrap><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>入院时间</th>
-									<th class="center" nowrap>出院科室</th>
-									<th class="center" nowrap><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>出院时间</th>
-									<th class="center" nowrap>点评</th>
-								</tr>
-							</thead>
-							<tbody>
-								
-							<!-- 开始循环 -->	
-							<c:choose>
-								<c:when test="${not empty patVisits}">
-									<c:forEach items="${patVisits}" var="patVisit" varStatus="vs" >
-												
-										<tr ondblclick="viewDetail('${patVisit.PATIENT_ID}','${patVisit.VISIT_ID}','${patVisit.ngroupnum}');">
-											<td nowrap class='center' style="width: 30px;">${vs.index+1}</td>
-											<td nowrap class="center"> <a onclick="javascript:viewDetail('${patVisit.PATIENT_ID}','${patVisit.VISIT_ID}','${patVisit.ngroupnum}')" style="cursor:pointer;">${patVisit.PATIENT_ID}(${patVisit.VISIT_ID})</a> </td>
-											<td nowrap class="center">${patVisit.NAME }</td>
-											<td nowrap class="center">${patVisit.DIAGNOSIS_COUNT } &nbsp;
-												<c:if test="${patVisit.DIAGNOSIS_COUNT!=0}">
-														<a class="fa fa-flag"
-																data-rel="popover" 
-																data-placement="right" 
-																title="<i class='ace-icon fa fa-check red'></i> ${patVisit.NAME }" 
-																data-content="<font size='0'>
-																	<c:forEach items="${patVisit.DIAGNOSIS_DESC}" var="rs">
-																		<b>${rs}</b><br>
-																	</c:forEach>	
-																</font>"
-															></a>
-												</c:if>
-											</td>
-											<td nowrap class="center">${patVisit.ATTENDING_DOCTOR }</td>
-											<td nowrap class="center">${patVisit.in_dept_name }</td>
-											<td nowrap class="center"><fmt:formatDate value="${patVisit.admission_date_time }" pattern="yyyy-MM-dd"/> </td>
-											<td nowrap class="center"> ${patVisit.out_dept_name }</td>
-											<td nowrap class="center"><fmt:formatDate value="${patVisit.discharge_date_time}" pattern="yyyy-MM-dd"/> </td> 
-											<td nowrap class="center">
-												<c:choose>
-													<c:when test="${patVisit.ISORDERCHECK == 0 }">未点评</c:when>
-													<c:otherwise> 已点评 </c:otherwise>
-												</c:choose>
-											</td>
-										</tr>
-									</c:forEach>
-								</c:when>
-								<c:otherwise>
-									<tr class="main_info">
-										<td colspan="11" class="center">没有相关数据</td>
-									</tr>
-								</c:otherwise>
-							</c:choose>
-							</tbody>
-						</table>
+								ETL结果 ： ${result }
 						</div>
 						<div class= "pageStrDiv" id="pageStrDiv" style="padding-top: 10px;padding-bottom: 10px;">
 							<table style="width:100%;">
@@ -229,6 +168,49 @@ function initWidthHeight(){
 		FixTable("simple-table", 0, $(window).width(), myheight-20);
 	//}
 }
+
+function reportInfo(_value)
+{
+	$("#reportCode").css("display","none");
+	if(_value == 2)
+	{
+		$("#reportCode").empty();
+		$.ajax({
+			type: "POST",
+			url: basePath + 'FCConfig/queryReport.do', 
+	    	data: {t:""},
+			dataType:'json',
+			async:false,
+			cache: false,
+			success: function(data){
+				$("#reportCode").append("<option   value='-1'>全部报表 </option>");
+				if(data.result=="ok"){
+					$.each(data.reports, function(i, str){
+						$("#reportCode").append("<option "  + "  value='" + str.attributes['REPORTID'] + "'>"+ str.attributes['REPORTNAME'] + "</option>");  
+					});
+					
+					//$("#myForm").submit();
+					// 如果成功设置旗子
+					
+					//var trFirst = $("#tr" + order_no + order_sub_no);
+					//var trSecond = $("#tr" + tmpOrder_no + tmpOrder_sub_no);
+					//if(trFirst){ 
+					//	trFirst.css("background-Color",oldColor);
+						//alert(trFirst);///.eq(1).html("<div class='fa fa-flag red bigger-130'></div>");
+					//}
+					//trSecond.css("background-Color",tmpColor);
+					//trsecond.children.eq(1).html("<div class='fa fa-flag red bigger-130'></div>");
+					
+				}
+			},
+    		error:function (XMLHttpRequest, textStatus, errorThrown) {
+    		 	alert('网络异常，请稍后重试');
+    		}
+		});
+		$("#reportCode").css("display","");	
+	}
+}
+
 // 执行ETL
 function execute(){
 	if($("#beginDate").val()==""){

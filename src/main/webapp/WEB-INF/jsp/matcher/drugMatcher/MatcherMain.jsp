@@ -46,7 +46,7 @@
 									<div class="check-search nav-search"  >
 										药品代码：
 										<span class="input-icon">
-											<input class="nav-search-input" autocomplete="off" id="drugCode" type="text" name="ORG_NAME" value="${pd.drugCode}" placeholder="药品代码" maxlength="80"/>
+											<input class="nav-search-input" autocomplete="off" id="drugCode" type="text" name="drugCode" value="${pd.drugCode}" placeholder="药品代码" maxlength="80"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 										药品名称：

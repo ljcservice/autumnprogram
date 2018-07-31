@@ -109,7 +109,7 @@
 					  	   and t.WOUND_GRADE_UPDATE = #{WOUND_GRADE}
 					    </if>
 				    </if>
-		         group by t.patient_id, visit_id, dept_name, dept_code) v
+		         group by t.patient_id, visit_id, dept_name, dept_code,operating_date) v
 		 group by dept_name, dept_code
 		 order by ratAnti desc
     </select>
@@ -181,6 +181,7 @@
 				t.pz,
 				t.wound_grade_update,
 				t.id,
+				t.context,
 				m.name
 			from 
 				<include refid="tableName"></include> t 
@@ -215,7 +216,8 @@
 			IS_TREATMENT = #{IS_TREATMENT},
 			LH = #{LH},
 			PZ = #{PZ},
-			WOUND_GRADE_UPDATE = #{WOUND_GRADE_UPDATE,jdbcType=VARCHAR}
+			WOUND_GRADE_UPDATE = #{WOUND_GRADE_UPDATE,jdbcType=VARCHAR},
+			context = #{context,jdbcType=VARCHAR}
 		where  
 			id = #{id}
 	</update>

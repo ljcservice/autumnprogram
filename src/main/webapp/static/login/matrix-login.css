@@ -42,16 +42,16 @@ hr{ border-top-color:#dadada;}
 body {   padding: 0;    margin-top:0px;margin: 0px;} 
 /*body {background-image:url("1.jpg");   padding: 0;    margin-top:10%;} */
 
-#logo, #loginbox {    width: 32%;    margin-left: auto;  margin-right: auto;   position: relative;}
+#logo, #loginbox {    width: 41%;    margin-left: auto;  margin-right: auto;   position: relative;}
 #logo img {  margin: 0 auto;    display: block;}
 #loginbox { overflow: hidden !important; z-index: 100;  text-align: center;  position: relative; margin-top:10%;}
 
-/* #loginbox form{ width:100%; background:#2E363F; position:relative; top:0; left:0; } */
-#loginbox form{ width:100%; background-color: rgba(0, 0, 0, 0.5);  position:relative; top:0; left:0; }
+/* #loginbox form{ width:100%; background:#2E363F; position:relative; top:0; left:0; }  background-color: rgba(0, 0, 0, 0.5);  */
+#loginbox form{ width:100%; background:linear-gradient(-45deg,rgba(29, 56, 135, 0.5),rgba(91,182,190, 0.5)) ; border-radius:15px; position:relative; top:0; left:0; }
 
-#loginbox .form-actions { padding: 14px 20px 15px;}
-#loginbox .form-actions .pull-left { margin-top:0px;}
-#loginbox form#loginform { z-index: 200; display:block;}
+#loginbox .form-actions { padding: 14px 20px 15px;} 
+#loginbox .form-actions .pull-left { margin-top:0px;} 
+#loginbox form#loginform { z-index: 200; display:block;} 
 #loginbox form#recoverform { z-index: 100;     display:none;}
 #loginbox form#recoverform .form-actions {    margin-top: 10px;}
 #loginbox .main_input_box { margin:0 auto; text-align:center; font-size:13px;}
@@ -59,7 +59,7 @@ body {   padding: 0;    margin-top:0px;margin: 0px;}
 #loginbox .main_input_box input{ height:30px; border:0px; display:inline-block; width:75%; line-height:28px;  margin-bottom:3px;}
 #loginbox .controls{ padding:0 20px;}
 #loginbox .control-group{ padding:20px 0; margin-bottom:0px;}
-.form-vertical, .form-actions {  margin-bottom: 0; background:none; border-top:1px solid #3f4954; }
+.form-vertical, .form-actions {  margin-bottom: 0; background:none; border-top:0px solid #3f4954; }
 
 /* #loginbox .normal_text{ padding:15px 10px; text-align:center; font-size:14px; line-height:20px; background:#2E363F; color:#fff; } */
 

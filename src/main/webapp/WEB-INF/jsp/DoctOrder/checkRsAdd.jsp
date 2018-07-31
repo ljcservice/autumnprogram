@@ -183,7 +183,7 @@ function save(){
 //改变类型
 function changeType(obj){
 	var val = $(obj).val();
-	if(val=="ingredien" || val=="interaction" || val=="iv_effect"){
+	if(val=="ingredien" || val=="interaction" || val=="iv_effect"||val=="manager4Two"){
 		$("#divorderMap2").show();
 		$("#orderDrug2").removeAttr("disabled");
 		$("#orderDrug2").chosen('destroy');

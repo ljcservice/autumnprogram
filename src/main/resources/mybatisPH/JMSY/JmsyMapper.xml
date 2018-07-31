@@ -16,7 +16,7 @@
 					and t.ORDER_DATE &gt;= #{beginDate} 
 				</if>
 				<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
-					and t.ORDER_DATE &lt; #{endDate}
+					and t.ORDER_DATE &lt;= #{endDate}
 				</if>
 				<if test="org_name != null and org_name != ''"> <!-- 科室-->
 					and t.org_name = #{org_name}
@@ -46,7 +46,7 @@
 					and t.ORDER_DATE &gt;= #{beginDate} 
 				</if>
 				<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
-					and t.ORDER_DATE &lt; #{endDate}
+					and t.ORDER_DATE &lt;= #{endDate}
 				</if>
 				<if test="org_name != null and org_name != ''"> <!-- 科室-->
 					and t.org_name = #{org_name}
@@ -70,7 +70,7 @@
 					and t.ORDER_DATE &gt;= #{beginDate} 
 				</if>
 				<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
-					and t.ORDER_DATE &lt; #{endDate}
+					and t.ORDER_DATE &lt;= #{endDate}
 				</if>
 				<if test="org_name != null and org_name != ''"> <!-- 科室-->
 					and t.org_name = #{org_name}
@@ -98,7 +98,7 @@
 					and t.ORDER_DATE &gt;= #{beginDate} 
 				</if>
 				<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
-					and t.ORDER_DATE &lt; #{endDate}
+					and t.ORDER_DATE &lt;= #{endDate}
 				</if>
 	         group by org_code, patient_id, doctor_name, org_name)
 		 group by org_code, doctor_name, org_name

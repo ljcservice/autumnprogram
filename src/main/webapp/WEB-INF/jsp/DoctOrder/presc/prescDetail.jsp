@@ -75,7 +75,10 @@
 															</tr>
 															<tr>
 																 <td width="10%" class="info">年龄:</th>
-																 <th width="15%" > ${pat.PATIENT_AGE } </th>
+																 <th width="15%" >
+																  ${pat.patAge } 
+																  
+																  </th>
 																 <td width="10%" class="info">患者类别:</th>
 																 <th width="15%" colspan="3">${pat.IDENTITY }</th>
 																 <td width="10%" class="info">处方日期:</th>

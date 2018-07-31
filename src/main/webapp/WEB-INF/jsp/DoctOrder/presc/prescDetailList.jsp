@@ -82,7 +82,7 @@
 									<th class="center" nowrap>单次计量</th>
 									<th class="center" nowrap>用法</th>
 									<th class="center" nowrap>频次</th>
-									<th class="center" nowrap>用药天数</th>
+<!-- 									<th class="center" nowrap>用药天数</th> -->
 									<th class="center" nowrap>单价</th>
 									<th class="center" nowrap>数量</th>
 									<th class="center" nowrap>单位</th>
@@ -129,11 +129,11 @@
 											<td class="center "><fmt:formatNumber value="${order.dosage }" pattern="###,###,##0.00"></fmt:formatNumber>${order.DOSAGE_UNITS}</td>
 											<td class="center ">${order.ADMINISTRATION }</td>
 											<td class="center " >${order.FREQUENCY}</td>
-											<td class="center " >${order.DRUG_USE_DAYS }</td>
-											<td class="center " >${order.COSTS } </td>
+<%-- 											<td class="center " >${order.DRUG_USE_DAYS }</td> --%>
+											<td class="center " ><fmt:formatNumber value="${order.COSTS / order.AMOUNT}" pattern="###,###,##0.00"></fmt:formatNumber>  </td>
 											<td class="center " >${order.AMOUNT } </td>
 											<td class="center " >${order.PACKAGE_SPEC}</td>
-											<td class="center " ><fmt:formatNumber value="${order.COSTS * order.AMOUNT}" pattern="###,###,##0.00"></fmt:formatNumber>  </td>
+											<td class="center " ><fmt:formatNumber value="${order.COSTS}" pattern="###,###,##0.00"></fmt:formatNumber>  </td>
 										</tr>
 									
 									</c:forEach>
@@ -178,7 +178,7 @@
 											<td class="center" nowrap>单次计量</td>
 											<td class="center" nowrap>用法</td>
 											<td class="center" nowrap>频次</td>
-											<td class="center" nowrap>用药天数</td>
+<!-- 											<td class="center" nowrap>用药天数</td> -->
 											<td class="center" nowrap>单价</td>
 											<td class="center" nowrap>数量</td>
 											<td class="center" nowrap>单位</td>
@@ -212,24 +212,26 @@
 																			${rs.ALERT_HINT }<br>
 																		</c:forEach>	
 																	</font>"
-																></a>
+																></a>  
 														</c:if>
 													</td>
-													
+													   
 													<td class='center' >
 														${order.DRUG_NAME } ${order.DRUG_SPEC }
 													</td>
 													<td class="center "><fmt:formatNumber value="${order.dosage }" pattern="###,###,##0.00"></fmt:formatNumber> ${order.DOSAGE_UNITS}</td>
 													<td class="center ">${order.ADMINISTRATION }</td>
 													<td class="center " >${order.FREQUENCY}</td>
-													<td class="center " >${order.DRUG_USE_DAYS }</td>
-													<td class="center " >${order.COSTS } </td>
+<%-- 													<td class="center " >${order.DRUG_USE_DAYS }</td> --%>
+													<td class="center " >
+														<fmt:formatNumber value="${order.COSTS / order.AMOUNT}" pattern="###,###,##0.00"></fmt:formatNumber>
+													</td>
 													<td class="center " >${order.AMOUNT } </td>
 													<td class="center " >${order.PACKAGE_SPEC}</td>
-													<td class="center " ><fmt:formatNumber value="${order.COSTS * order.AMOUNT}" pattern="###,###,##0.00"></fmt:formatNumber>  </td>
+													<td class="center " ><fmt:formatNumber value="${order.COSTS}" pattern="###,###,##0.00"></fmt:formatNumber>  </td>
 												</tr>
 											
-											</c:forEach>
+											</c:forEach> 
 									</tbody>
 								</table>
 								</div>

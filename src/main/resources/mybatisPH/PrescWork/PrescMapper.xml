@@ -26,6 +26,9 @@
            	) group by NGROUPNUM
 	    ) m on a.NGROUPNUM=m.NGROUPNUM
 		where 1=1 
+		<if test="pd.id!= null and pd.id != ''">
+			and  a.id = #{pd.id}
+		</if>
 		<!-- 		关键词检索 -->
 		<if test="pd.keywords!= null and pd.keywords != ''">
 			and
@@ -50,18 +53,18 @@
 				</if>
 			</otherwise>
 		</choose>
-		<if test="pd.ISORDERCHECK!= null and pd.ISORDERCHECK!='' and pd.ISORDERCHECK == '1'"> <!--点评记录-->
+		<if test="pd.ISORDERCHECK!= null and pd.ISORDERCHECK!='' and pd.ISORDERCHECK == 1"> <!--点评记录-->
 			and a.ISORDERCHECK = 1
 		</if>
-		<if test="pd.ISORDERCHECK!= null and pd.ISORDERCHECK!='' and pd.ISORDERCHECK == '0'"> <!--点评记录-->
+		<if test="pd.ISORDERCHECK!= null and pd.ISORDERCHECK!='' and pd.ISORDERCHECK == 0"> <!--点评记录-->
 			and (a.ISORDERCHECK = 0 or a.ISORDERCHECK is null ) 
 		</if>
-		<if test="pd.beginDate != null and pd.beginDate != ''"> <!-- 更新时间 开始-->  
+<!-- 		<if test="pd.beginDate != null and pd.beginDate != ''"> 更新时间 开始   -->
 			and a.ORDER_DATE &gt;= #{pd.beginDate} 
-		</if>
-		<if test="pd.endDate != null and pd.endDate != ''"> <!-- 更新时间 结束-->
+<!-- 		</if> -->
+<!-- 		<if test="pd.endDate != null and pd.endDate != ''"> 更新时间 结束 -->
 			and a.ORDER_DATE &lt; #{pd.endDate}
-		</if>
+<!-- 		</if> -->
 		<if test="pd.DRUG_NAME != null and pd.DRUG_NAME != ''"> <!-- 药品名-->
 			 and exists( select PRESC_ID from presc_detail q 
 			 	where a.id = q.PRESC_ID 
@@ -71,7 +74,7 @@
 		<if test="pd.HASKJ != null and pd.HASKJ != ''"> <!-- 是否抗菌 -->
 			and a.HASKJ = #{pd.HASKJ}
 		</if>
-		<if test="pd.HASZS != null and pd.HASZS != ''"> <!-- 是否抗菌注射 -->
+		<if test="pd.HASZS != null and pd.HASZS != ''"> <!-- 是否注射 -->
 			and a.HASZS = #{pd.HASZS}
 		</if>
 		<if test="pd.ELJSY != null and pd.ELJSY != ''"> <!-- 是否二类精神-->
@@ -112,7 +115,20 @@
 	</select>
 	<!-- 单个处方主要信息 -->
 	<select id="findPrescById" parameterType="pd" resultType="pd" >
-		select * from presc where id = #{id}
+		select a.*,m.RS_DRUG_TYPES from presc a
+		 left join ( select NGROUPNUM,listagg( RS_DRUG_TYPE ,'@;@') within GROUP (order by NGROUPNUM) RS_DRUG_TYPES 
+	         from  (
+	         		select NGROUPNUM,RS_DRUG_TYPE  
+	         		from RS_DRUG_CHECKRSLT 
+	         		where 
+<!-- 	         		查询处方点评结果 -->
+	         		in_rs_type = 2 
+	         		group by NGROUPNUM,RS_DRUG_TYPE 
+           	) group by NGROUPNUM
+	    ) m on a.NGROUPNUM=m.NGROUPNUM
+		
+		where id = #{id}
+		
 	</select>
 	<!-- 	处方详情 -->
 	<select id="prescDetailList" parameterType="pd" resultType="pd" >
@@ -131,7 +147,7 @@
 		from presc_detail a, presc b 
 		where a.presc_id = b.id 
 		and b.id != #{ID}
-		and b.PATIENT_ID = #{PATIENT_ID}
+		and b.PATIENT_ID = #{PATIENT_ID}   
 		and b.ORDER_DATE = #{ORDER_DATE}
 	</select>
 	
@@ -139,9 +155,9 @@
 	<update id="updatePrescNgroupnum" parameterType="pd" >
 		update presc set NGROUPNUM = #{Ngroupnum} ,ISCHECKTRUE = #{ISCHECKTRUE}
 			<if test="ISORDERCHECK !=null and ISORDERCHECK!='' ">
-				,ISORDERCHECK = #{ISORDERCHECK}
+				,ISORDERCHECK = 1
 			</if>
-		where id=#{id}
+		where id=#{id} 
 	</update>
 	<!-- 	查询处方，为新增点评使用 -->
 	<select id="prescListSpecial" parameterType="pd" resultType="pd">
@@ -182,6 +198,10 @@
 				select ngroupnum from  presc  where order_date = #{order_date} and ngroupnum is not null
 			)
 	</delete>
+	
+	<update id="reSetCheckRslt" parameterType="pd">
+		update presc set ngroupnum = '',ISCHECKTRUE=0, ISORDERCHECK=0 where order_date = #{order_date}
+	</update>
 	
 	
 	<!-- 医嘱工作表统计 -->
@@ -254,5 +274,58 @@
 		</if>
 		
 	</select>
+	
+	
+	<select id="selectCheckPrescExcelByNgroupnum" parameterType="pd" resultType="pd" >
+			select a.rs_id,
+			       a.drug_id1,
+			       (select p.drug_name || '[' || p.drug_spec || '][' || p.dosage ||
+			               p.dosage_units || ',' || p.frequency || ',' ||
+			               p.administration || '][' || p.amount || p.units || ']'
+			          from patienthistory.presc_detail p
+			         where p.presc_id = b.id
+			           and p.drug_code = a.drug_id1
+			           and p.order_no = a.rec_main_no1
+			           and p.order_sub_no = a.rec_sub_no1) drugdetail1,
+			       a.drug_id1_name,
+			       a.rec_main_no1,
+			       a.rec_sub_no1,
+			       a.drug_id2,
+			       a.drug_id2_name,
+			       (select p.drug_name || '[' || p.drug_spec || '][' || p.dosage ||
+			               p.dosage_units || ',' || p.frequency || ',' ||
+			               p.administration || '][' || p.amount || p.units || ']'
+			          from patienthistory.presc_detail p
+			         where p.presc_id = c.id
+			           and p.drug_code = a.drug_id2
+			           and p.order_no = a.rec_main_no2
+			           and p.order_sub_no = a.rec_sub_no2) drugdetail2,
+			       a.rec_main_no2,
+			       a.rec_sub_no2,
+			       a.ngroupnum,
+			       a.rs_drug_type,
+			       a.in_rs_type,
+			       a.alert_level,
+			       a.alert_hint,
+			       a.alert_cause,
+			       a.checkdate,
+			       a.CHECKPEOPLE,
+			       a.RELATION_ID1,
+			       a.RELATION_ID2,
+			       b.DOCTOR_NAME DOCTOR_NAME1,
+			       b.ORG_NAME ORG_NAME1,
+			       b.PRESC_NO PRESC_NO1,
+			       c.DOCTOR_NAME DOCTOR_NAME2,
+			       c.ORG_NAME ORG_NAME2,
+			       c.PRESC_NO PRESC_NO2
+			  from RS_DRUG_CHECKRSLT a
+			  left join PRESC b
+			    on b.id = a.RELATION_ID1
+			  left join PRESC c
+			    on c.id = a.RELATION_ID2
+			 where a.ngroupnum = #{ngroupnum} 
+			order by a.rs_drug_type  ,a.drug_id1 ,a.drug_id2
+	</select>
+	
 
 </mapper>

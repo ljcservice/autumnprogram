@@ -150,7 +150,7 @@
 							<tbody>
 								<tr  >
 									<td nowrap align="right" width="40%">平均每张处方用药品种数：</td>
-									<td nowrap class="center">${p1.BASEDRUG_COUNT_SUM }</td>
+									<td nowrap class="center">${p1.DRUG_COUNT_SUM }</td>
 									<td nowrap class="center">${p1.COUNT }</td>
 									<td nowrap class="center">${p1.BASEDRUG_COUNT_AVG } </td>
 								</tr>
@@ -160,12 +160,12 @@
 									<td nowrap class="center">${p1.COUNT }</td>
 									<td nowrap class="center">￥ ${p1.AMOUNT_AVG }</td>
 								</tr>
-								<tr  >
-									<td nowrap align="right" width="40%">平均处方用药天数：</td>
-									<td nowrap class="center">${p1.MAXUSEDAY_SUM }</td>
-									<td nowrap class="center">${p1.COUNT }</td>
-									<td nowrap class="center">${p1.MAXUSEDAY_AVG }</td>
-								</tr>
+<!-- 								<tr  > -->
+<!-- 									<td nowrap align="right" width="40%">平均处方用药天数：</td> -->
+<%-- 									<td nowrap class="center">${p1.MAXUSEDAY_SUM }</td> --%>
+<%-- 									<td nowrap class="center">${p1.COUNT }</td> --%>
+<%-- 									<td nowrap class="center">${p1.MAXUSEDAY_AVG }</td> --%>
+<!-- 								</tr> -->
 							</tbody>
 							</table>
 	

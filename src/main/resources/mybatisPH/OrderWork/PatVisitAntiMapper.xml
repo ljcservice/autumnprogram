@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="PatVisitMapper">
+<mapper namespace="PatVisitAntiMapper">
 
 	<!--表名 -->
 	<sql id="tableName">
-		pat_visit
+		pat_visit_anti
 	</sql>
 	
 	<!-- 字段 -->
@@ -239,7 +239,7 @@
 			t.ATTENDING_DOCTOR
       		,m.RS_DRUG_TYPES
       		,n.DIAGNOSIS_DESC,nvl(N.DIAGNOSIS_COUNT,0) DIAGNOSIS_COUNT
-	    from pat_visit t
+	    from pat_visit_anti t
 	    left join pat_master_index p on t.patient_id = p.patient_id 
 	    <if test="pd.RS_DRUG_TYPE != null and pd.RS_DRUG_TYPE != ''"> <!-- 问题类型 -->
 		    inner 
@@ -386,7 +386,7 @@
 			t.ATTENDING_DOCTOR
       		,m.RS_DRUG_TYPES
       		,n.DIAGNOSIS_DESC,nvl(N.DIAGNOSIS_COUNT,0) DIAGNOSIS_COUNT
-	    from pat_visit t
+	    from pat_visit_anti t
 	    left join pat_master_index p on t.patient_id = p.patient_id 
 		    left 
 		 join ( select NGROUPNUM,listagg( RS_DRUG_TYPE ,'@;@') within GROUP (order by NGROUPNUM) RS_DRUG_TYPES 
@@ -471,7 +471,7 @@
 			t.expert_id
 			,n.DIAGNOSIS_DESC,nvl(N.DIAGNOSIS_COUNT,0)
 		from 
-			pat_visit t 
+			pat_visit_anti t 
 		left join pat_master_index p on t.patient_id = p.patient_id
 	    left join ( 
 	    	select PATIENT_ID,VISIT_ID,count(DIAGNOSIS_DESC) DIAGNOSIS_COUNT,listagg(DIAGNOSIS_DESC,';') within GROUP (order by PATIENT_ID,VISIT_ID) DIAGNOSIS_DESC 
@@ -495,17 +495,17 @@
 	
 	</update>
 	<select id="queryPatVisit" parameterType="pd" resultType="pd">
-		select * from  pat_visit t
+		select * from  pat_visit_anti t
 		 where  t.patient_id =#{patient_id} and t.visit_id = #{visit_id}
 	</select>
 	<update id="updateExpertPatVisit">
-		update pat_visit t set expert_id=#{expert_id} 
+		update pat_visit_anti t set expert_id=#{expert_id} 
  		where  t.patient_id =#{patient_id} and t.visit_id = #{visit_id}
 	</update>
 	
 	<!-- 	查询出院病人 -->
 	<select id="queryPatVisitByDate" parameterType="pd" resultType="pd" >
-		select * from pat_visit t 
+		select * from pat_visit_anti t 
 		left join  pat_master_index  m on m.patient_id  = t.patient_id  
 		where 
 			t.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
@@ -523,7 +523,7 @@
 	<select id="deleteDrugCheckRslt" parameterType="pd" >
 		delete rs_drug_checkrslt  
 		where ngroupnum in (
-			select t.ngroupnum from pat_visit t 
+			select t.ngroupnum from pat_visit_anti t 
 		where 
 			t.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
 			and t.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
@@ -532,7 +532,7 @@
 	</select>
 	<!-- 	清空审核结果状态 -->
 	<select id="reSetCheckRslt" parameterType="pd" >
-		update pat_visit  set 
+		update pat_visit_anti  set 
 			 ngroupnum = '',ISCHECKTRUE=0, ISORDERCHECK=0 
 		where 
 			discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
@@ -547,7 +547,7 @@
 			rs_drug_type,in_rs_type,alert_level,alert_hint,alert_cause,checkpeople,relation_id1,relation_id2
 		  from rs_drug_checkrslt t
 		 where ngroupnum in (
-	 			select t.ngroupnum from pat_visit t 
+	 			select t.ngroupnum from pat_visit_anti t 
 				where 
 					t.discharge_date_time &gt;= to_date(#{beginDate},'yyyy-mm-dd') 
 					and t.discharge_date_time &lt; to_date(#{endDate} ,'yyyy-mm-dd') 
@@ -593,7 +593,7 @@
 		       a.checkdate,
 		       a.CHECKPEOPLE
 		  from RS_DRUG_CHECKRSLT a
-		  left join pat_visit b
+		  left join pat_visit_anti b
 		    on b.ngroupnum = a.ngroupnum
 		 where a.ngroupnum = #{ngroupnum} 
 		 order by a.rs_drug_type, a.drug_id1, a.drug_id2

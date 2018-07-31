@@ -350,27 +350,27 @@ function saveIsCheckTrue(){
 	var ISCHECKTRUE = $("input[name='ISCHECKTRUE']:checked").val();
 	if(ISCHECKTRUE==0){
 		msg= "选择合理将清空所有点评结果，请确认？";
-		//合理
+		/*/合理
 		if(checkstats==0){
 			$("#isCheck").tips({ side:3, msg:'已经为合理，无需再次保存', bg:'#AE81FF',  time:3   });
 			return;
 		}else{
 			
-		}
+		}*/
 	}else if(ISCHECKTRUE==1){
 		msg= "确定设置为不合理吗，请确认？";
-		//不合理
+		/*/不合理
 		if(checkstats==1){
 			$("#isCheck").tips({ side:3, msg:'已经为不合理，无需再次保存', bg:'#AE81FF',  time:3   });
 			return;
-		}
+		}*/
 	}else if(ISCHECKTRUE==2){
 		msg= "确定设置为待定吗，请确认？";
-		//不合理
+		/*/不合理
 		if(checkstats==2){
 			$("#isCheck").tips({ side:3, msg:'已经为待定，无需再次保存', bg:'#AE81FF',  time:3   });
 			return;
-		}
+		}*/
 	}else{
 		alert("请刷新页面重试！");
 	}

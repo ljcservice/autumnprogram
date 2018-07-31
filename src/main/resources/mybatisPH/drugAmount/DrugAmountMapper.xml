@@ -134,7 +134,7 @@
 				and DOCTOR_NAME  = #{pd.DOCTOR_NAME} 
 			</if>
 			<if test="pd.DISPENSARY_NAME != null and pd.DISPENSARY_NAME != ''"> <!-- 发药药房 -->
-				and DISPENSARY_NAME = #{pd.DISPENSARY_NAME}
+				and DISPENSARY_NAME = #{pd.DISPENSARY_NAME}  
 			</if>
 			<if test="pd.PROPERTY != null and pd.PROPERTY != ''"> <!-- 类型-->
 				and ${pd.PROPERTY} = '1'
@@ -316,9 +316,9 @@
 		       nvl(SUM(s.costs),0) med,
 		       nvl(SUM(DECODE(s.is_anti, '1', s.costs, 0)),0) anti,
 		       nvl(SUM(DECODE(s.item_class, 'A', s.costs, 'B', s.costs, 0)),0) drug,
-		       nvl(COUNT(DISTINCT s.visit_no + s.visit_date),0) pat_sum
+		       nvl(COUNT(DISTINCT s.visit_no || s.visit_date),0) pat_sum
 		  FROM OUTP_ORDERS_COSTS s,
-		       (select distinct drug_no_local, is_anti from pdss.drug_map) m
+		       (select distinct drug_no_local from pdss.drug_map) m
 		 WHERE s.item_code = m.drug_no_local(+)
 		   <if test="beginDate != null and beginDate != ''"> <!-- 更新时间 结束-->
 				and visit_date &gt;= to_date(#{beginDate} ,'yyyy-mm-dd') 

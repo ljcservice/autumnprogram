@@ -45,11 +45,11 @@
 						<div class="col-xs-12"  >
 							<div id="searchDiv" style="height:5px; ;display: none;">	
 								<form action="report/prescList.do" method="post" name="searchForm" id="searchForm">
-									<input type="hidden" name="RS_DRUG_TYPE" value="${pd.RS_DRUG_TYPE}">
+<%-- 									<input type="hidden" name="RS_DRUG_TYPE" value="${pd.RS_DRUG_TYPE}"> --%>
 									<div class="check-search"   >
 										起止日期：
 										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
-										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.endDate }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
+										<input class="span10 date-picker" name="endDate" id="endDate"  value="${pd.end_Date }" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="结束日期" />
 									</div>
 									<div class="check-search nav-search" >
 										科室：

@@ -31,7 +31,7 @@
 				<div class="page-content">
 					<div class="row">
 						<div >
-							<form name="checkForm" id="checkForm" action="DoctOrder/CheckRsViewUI.do" method="post">
+							<form name="checkForm" id="checkForm" action="DoctOrderAnti/CheckRsViewUI.do" method="post">
 							<input type="hidden" value="${page.pd.patient_id}" name="patient_id" id="patient_id"/>
 							<input type="hidden" value="${page.pd.visit_id}"   name="visit_id"   id="visit_id"/>
 							<input type="hidden" value="${page.pd.ngroupnum}"  name="ngroupnum"  id="ngroupnum"/>
@@ -216,7 +216,7 @@ $(function() {
 function delCheckRs(id){
 	bootbox.confirm("确定删除该点评结果吗?", function(result) {
 		if(result) {
-			var url = path+"/DoctOrder/delCheckRs.do?RS_ID="+id;
+			var url = path+"/DoctOrderAnti/delCheckRs.do?RS_ID="+id;
 			$.get(url,function(data){
 				if(data.result=="success"){
 					refreshDoctFrame();
@@ -257,7 +257,7 @@ function delCheckRsBatch(){
 		
 		return;
 	}
-	var url = path+"/DoctOrder/delCheckRsAll.do";
+	var url = path+"/DoctOrderAnti/delCheckRsAll.do";
 	var msg = "确定删除全部选中的数据吗?";
 	bootbox.confirm(msg,function(result) {
 		if(result) {
@@ -289,7 +289,7 @@ function delCheckRsBatch(){
 	});
 }
 function toAddCheckRs(ngroupnum){
-	var url = path + "/DoctOrder/toAddCheckRs.do?business_type=0&ngroupnum="+ngroupnum+"&patient_id="+$("#patient_id").val()+"&visit_id="+$("#visit_id").val();
+	var url = path + "/DoctOrderAnti/toAddCheckRs.do?business_type=0&ngroupnum="+ngroupnum+"&patient_id="+$("#patient_id").val()+"&visit_id="+$("#visit_id").val();
 	//top.jzts();
 	var diag = new top.Dialog();
 	diag.Drag=true;
@@ -310,7 +310,7 @@ function toAddCheckRs(ngroupnum){
 	diag.show();
 }
 function editCheckRs(rs_id){
-	var url = path + "/DoctOrder/toEditCheckRs.do?business_type=0&rs_id="+rs_id;
+	var url = path + "/DoctOrderAnti/toEditCheckRs.do?business_type=0&rs_id="+rs_id;
 	//top.jzts();
 	var diag = new top.Dialog();
 	diag.Drag=true;
@@ -362,7 +362,7 @@ function saveIsCheckTrue(){
 	
 	bootbox.confirm(msg, function(result) {
 		if(result) {
-			var url = path+"/DoctOrder/setCheckRsStatus.do?"+$("#checkForm").serialize();
+			var url = path+"/DoctOrderAnti/setCheckRsStatus.do?"+$("#checkForm").serialize();
 			$.get(url,function(data){
 				if(data.result=="success"){
 					if(ISCHECKTRUE==0){
@@ -384,7 +384,7 @@ function saveIsCheckTrue(){
 function expertOrders(){
 	//top.jzts();
 	//医嘱专家列表
-	var url = path + "/expert/selectExpertList.do?business_type=0&IS_ORDERS=1"+"&patient_id="+$("#patient_id").val()+"&visit_id="+$("#visit_id").val();
+	var url = path + "/expert/selectExpertList.do?business_type=0.1&IS_ORDERS=1"+"&patient_id="+$("#patient_id").val()+"&visit_id="+$("#visit_id").val();
 	var diag = new top.Dialog();
 	diag.Drag=true;
 	diag.Title ="编辑点评";
@@ -411,7 +411,7 @@ function refreshAll(){
 
 function refreshDoctFrame(){
 	var myngroupnum =  $("#ngroupnum").val(); 
-	var orderUrl = "DoctOrder/DoctOrdersDetail.do?patient_id=${page.pd.patient_id}&visit_id=${page.pd.visit_id}&ngroupnum=" + myngroupnum;
+	var orderUrl = "DoctOrderAnti/DoctOrdersDetail.do?patient_id=${page.pd.patient_id}&visit_id=${page.pd.visit_id}&ngroupnum=" + myngroupnum;
 	//刷新下方iframe列表
 	//alert(orderUrl);
 	//parent.$("#DoctFrame").attr("src",orderUrl);// = orderUrl ;  

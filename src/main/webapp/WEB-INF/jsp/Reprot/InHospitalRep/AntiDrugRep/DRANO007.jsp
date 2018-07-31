@@ -117,6 +117,7 @@
 									<th class="center" nowrap>品种 </th>
 									<th class="center" nowrap>疗程</th>
 									<th class="center" nowrap>时机</th>
+									<th class="center" nowrap>建议</th>
 									<th class="center" nowrap>操作</th>
 								</tr>
 							</thead>
@@ -132,8 +133,10 @@
 								<c:when test="${not empty opers}">
 									<c:forEach items="${opers}" var="oper" varStatus="vs" >
 										
-										<tr ondblclick="">
-											<td nowrap class="center">${oper.name } </td>
+										<tr ondblclick="viewDetail('${oper.patient_ID}','${oper.visit_ID}','')">
+											<td nowrap class="center">
+												<a onclick="viewDetail('${oper.patient_ID}','${oper.visit_ID}','')">${oper.name}<br>${oper.patient_ID}(${oper.visit_ID})</a>	 
+											</td>
 											<td nowrap class="center">${oper.OPERATION_DESC }</td>
 											<td nowrap class="center">${oper.OPERATOR }</td>
 											<td nowrap class="center">${oper.dept_name }</td>
@@ -181,6 +184,9 @@
 													<option value="0"></option>  
 													<option <c:if test="${oper.IS_TIMING == '1' }">selected</c:if> value="1" >是</option>
 												</select>
+											</td>
+											<td nowrap class="center" style="padding: 0 0 0 0;"> 
+												<textarea name="context_${oper.patient_id}_${oper.visit_id}" id="context_${oper.patient_id}_${oper.visit_id}" rows="2" cols="14">${oper.context }</textarea>
 											</td>
 											<td nowrap class="center">
 												<button class="btn btn-success" onclick="funSave('${oper.patient_id}','${oper.visit_id}','${oper.id}','${oper.name}')">保存</button>
@@ -299,6 +305,7 @@ function funSave(pat,vist,idx,patName){
 	var IS_TREATMENT = $("#simple-table #IS_TREATMENT_" + pat + "_" + vist).val();
 	var LH = $("#simple-table #LH_" + pat + "_" + vist).val();
 	var PZ = $("#simple-table #PZ_" + pat + "_" + vist).val();
+	var context = $("#simple-table #context_" + pat + "_" + vist).val(); 
 	var WOUND_GRADE_UPDATE = $("#simple-table #WOUND_GRADE_UPDATE_" + pat + "_" + vist).val();
 	var id = idx;
 	var titlename = "患者:" + patName;
@@ -307,7 +314,7 @@ function funSave(pat,vist,idx,patName){
 	$.ajax({
 		type: "POST",
 		url: basePath + 'InHospitalRep/DRANO07_Ajax01.do', 
-    	data: {HAS_ANTI:HAS_ANTI,IS_TIMING:IS_TIMING,IS_TREATMENT:IS_TREATMENT,LH:LH,PZ:PZ,WOUND_GRADE_UPDATE:WOUND_GRADE_UPDATE,id:id},
+    	data: {HAS_ANTI:HAS_ANTI,IS_TIMING:IS_TIMING,IS_TREATMENT:IS_TREATMENT,LH:LH,PZ:PZ,WOUND_GRADE_UPDATE:WOUND_GRADE_UPDATE,id:id,context:context},
 		dataType:'json',
 		async:false,
 		cache: false,
@@ -332,12 +339,12 @@ function funSave(pat,vist,idx,patName){
 	
 }
 
-function viewDetail(patId , visitId,ngnum){
+function viewDetail(patId,visitId,ngnum){
 	top.jzts();
 	var diag = new top.Dialog();
-	diag.Drag=true;
-	diag.Title ="医嘱点评";
-	diag.URL = "<%=path%>/InHospitalRep/DRAN007DetailView.do?patient_id=" + patId + "&visit_Id=" + visitId + "&ngroupnum=" + ngnum;    
+	diag.Drag=true;  
+	diag.Title ="医嘱信息";
+	diag.URL = "<%=path%>/DoctOrder/DoctOrdersDetail.do?patient_id=" + patId + "&visit_Id=" + visitId + "&ngroupnum=" + ngnum;    
 	diag.Width = window.screen.width;
 	diag.Height = window.screen.height;  
 	diag.CancelEvent = function(){ //关闭事件

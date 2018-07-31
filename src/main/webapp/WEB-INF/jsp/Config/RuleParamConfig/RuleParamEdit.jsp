@@ -47,7 +47,7 @@
 										</tr>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">参数值:</td>
-											<td><input type="text" name="RULEVALUE" id="RULEVALUE" value="${pd.RULEVALUE }"  maxlength="32" placeholder="输入参数值" title="参数值" style="width:98%;"/></td>
+											<td><input type="text" name="RULEVALUE" id="RULEVALUE" value="${pd.RULEVALUE }"  placeholder="输入参数值" title="参数值" style="width:98%;"/></td>
 										</tr>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">参数描述:</td>

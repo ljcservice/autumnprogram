@@ -133,7 +133,9 @@
 		               funcdeptcode dept_code,
 		               funcdeptname dept_name
 		          from Ias_Pat_Info_scd i
-		         where i.is_orderflag = '1'
+		         where 
+		         1=1
+<!-- 		         i.is_orderflag = '1' -->
 		           and i.rpt_date &gt;= to_date(#{beginDate} ,'yyyy-mm-dd')  
 		           and i.rpt_date &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
 		           <if test="persionType!= null and persionType != ''">
@@ -226,7 +228,9 @@
 		               funcdeptcode dept_code,
 		               funcdeptname dept_name
 		          from Ias_Pat_Info_scd i
-		         where i.is_orderflag = 1
+		         where 
+		         1=1  
+<!-- 		         i.is_orderflag = 1 -->
 		           		and i.rpt_date &gt;= to_date(#{beginDate} ,'yyyy-mm-dd') 
 		          		and i.rpt_date &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
 				           <if test="persionType!= null and persionType != ''">
@@ -321,7 +325,9 @@
 		               funcdeptcode dept_code,
 		               funcdeptname dept_name
 		          from Ias_Pat_Info_scd i
-		         where i.is_orderflag = 1
+		         where 
+		         1=1 
+<!-- 		         i.is_orderflag = 1 -->
 		           			and i.rpt_date &gt;= to_date(#{beginDate} ,'yyyy-mm-dd') 
 		          			and i.rpt_date &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
 			           <if test="persionType!= null and persionType != ''">
@@ -430,7 +436,9 @@
 		               nvl(count(t.patient_id),0) pat_count,
 		               nvl(sum(t.funcdays),0) admission_days
 		          from ias_pat_info_scd t
-		         where t.is_orderflag = 1
+		         where 
+		         1=1
+<!-- 		         t.is_orderflag = 1 -->
 		           		and t.rpt_date &gt;= to_date(#{pd.beginDate} ,'yyyy-mm-dd') 
 		          		and t.rpt_date &lt;= to_date(#{pd.endDate} ,'yyyy-mm-dd') 
 			           <if test="pd.persionType!= null and pd.persionType != ''">
@@ -472,7 +480,9 @@
 		       decode(i.funcdays, 0, 0, (i.spec_ddd_value / (i.funcdays) * 100)) spec_ddd_intensity,
 		       decode(i.funcdays, 0, 0, (i.limit_ddd_value / (i.funcdays) * 100)) limit_ddd_intensity
 		  from ias_pat_info_scd i
-		 where is_orderflag = 1
+		 where 
+		 1=1
+<!-- 		 is_orderflag = 1 -->
 		   		and i.rpt_date &gt;= to_date(#{pd.beginDate} ,'yyyy-mm-dd') 
           		and i.rpt_date &lt;= to_date(#{pd.endDate} ,'yyyy-mm-dd') 
 		           <if test="pd.persionType!= null and pd.persionType != ''">
@@ -516,7 +526,9 @@
 		               funcdeptname dept_name,
 		               funcdeptcode dept_code
 		          from ias_pat_info_scd i
-		         where i.is_orderflag = '1'
+		         where 
+		         1=1
+<!-- 		         i.is_orderflag = '1' -->
 					and i.rpt_date &gt;= to_date(#{beginDate} ,'yyyy-mm-dd') 
           			and i.rpt_date &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
 		           <if test="persionType!= null and persionType != ''">
@@ -606,7 +618,9 @@
 		               funcdeptname dept_name,
 		               funcdeptcode dept_code
 		          from ias_pat_info_scd i
-		         where is_orderflag = '1'
+		         where 
+		         1=1
+<!-- 		         is_orderflag = '1' -->
 		           	and i.rpt_date &gt;= to_date(#{beginDate} ,'yyyy-mm-dd') 
           			and i.rpt_date &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
 		           <if test="persionType!= null and persionType != ''">
@@ -703,7 +717,9 @@
 		               l.funcdeptcode dept_code,
 		               l.funcdeptname dept_name
 		          from ias_pat_info_scd l
-		         where l.is_orderflag = '1'
+		         where
+		         1=1
+<!-- 		          l.is_orderflag = '1' -->
 		           	and l.rpt_date &gt;= to_date(#{beginDate} ,'yyyy-mm-dd') 
           			and l.rpt_date &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
 		           <if test="persionType!= null and persionType != ''">
@@ -766,7 +782,9 @@
 		               l.funcdeptcode dept_code,
 		               l.funcdeptname dept_name
 		          from ias_pat_info_scd l
-		         where l.is_orderflag = '1'
+		         where 
+		         1=1
+<!-- 		         l.is_orderflag = '1' -->
 		           	and l.rpt_date &gt;= to_date(#{beginDate} ,'yyyy-mm-dd') 
           			and l.rpt_date &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
 		           <if test="persionType!= null and persionType != ''">
@@ -829,7 +847,9 @@
 		               funcdeptcode dept_code,
 		               funcdeptname dept_name
 		          from ias_pat_info_scd i
-		         where is_orderflag = '1'
+		         where 
+		         1=1
+<!-- 		         is_orderflag = '1' -->
 		           	and i.rpt_date &gt;= to_date(#{beginDate} ,'yyyy-mm-dd') 
           			and i.rpt_date &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
 		           <if test="persionType!= null and persionType != ''">
@@ -870,21 +890,25 @@
 			       sum(decode(spec_count, 0, 0, 1)) spec_count,
 			       sum(submit_count) submit_count,
 			       sum(decode(spec_submit_count, 0, 0, 1)) spec_submit_count,
-			        sum(decode(spec_submit_count, 0, 0, 1))/sum(decode(spec_count, 0, 0, 1)) specranking,
+			       decode(sum(decode(spec_count, 0, 0, 1)) ,0,0,
+			       sum(decode(spec_submit_count, 0, 0, 1)) /
+			       sum(decode(spec_count, 0, 0, 1))) specranking,
 			       sum(decode(limit_submit_count, 0, 0, 1)) limit_submit_count,
-			       sum(decode(limit_submit_count, 0, 0, 1))/sum(decode(limit_count, 0, 0, 1)) limitranking,
+			       sum(decode(limit_submit_count, 0, 0, 1)) /
+			       decode(sum(decode(limit_count, 0, 0, 1)),0,1,sum(decode(limit_count, 0, 0, 1))) limitranking,
 			       sum(decode(anti_count, 0, 0, 1)) anti_count,
-			       sum(submit_count)/sum(decode(anti_count, 0, 0, 1)) antiranking ,
+			       sum(submit_count) / sum(decode(anti_count, 0, 0, 1)) antiranking,
 			       sum(days) outdays,
 			       sum(decode(scd_count, 0, 0, 1)) changedept_count
 		  from (select nvl(count(*),0) pat_count,
-		               i.days,
-		               nvl(sum(i.is_scd) scd_count,sum(decode(i.submit_count, 0, 0, 1)),0) submit_count,
-		               nvl(sum(decode(i.limit_ddd_value, 0, 0, 1)),0) limit_count,
-		               nvl(sum(decode(i.spec_ddd_value, 0, 0, 1)),0) spec_count,
-		               nvl(sum(decode(submit_count,0,0,decode(spec_ddd_value, 0, 0, 1))),0) spec_submit_count,
-		               nvl(sum(decode(submit_count,0,0,decode(limit_ddd_value, 0, 0, 1))),0) limit_submit_count,
-		               nvl(sum(i.is_anti),0) anti_count
+                       i.days,
+		               nvl(sum(i.is_scd),0) scd_count,
+		               sum(decode(i.submit_count, 0, 0, 1)) submit_count,
+		               nvl(sum(decode(i.limit_ddd_value, 0, 0, 1)), 0) limit_count,
+		               nvl(sum(decode(i.spec_ddd_value, 0, 0, 1)), 0) spec_count,
+		               nvl(sum(decode(submit_count, 0,0,decode(spec_ddd_value, 0, 0, 1))),0) spec_submit_count,
+		               nvl(sum(decode(submit_count, 0,0,decode(limit_ddd_value, 0, 0, 1))),0) limit_submit_count,
+		               nvl(sum(i.is_anti), 0) anti_count
 		          from ias_pat_info_scd i
 		         where 
 		         	i.rpt_date &gt;= to_date(#{beginDate} ,'yyyy-mm-dd') 
@@ -943,7 +967,9 @@
 		               funcdeptname dept_name,
 		               doctor
 		          from ias_pat_info_scd i
-		         where is_orderflag = '1'
+		         where 
+		         1=1 
+<!-- 		         is_orderflag = '1' -->
 		           	and i.rpt_date &gt;= to_date(#{pd.beginDate} ,'yyyy-mm-dd') 
           			and i.rpt_date &lt;= to_date(#{pd.endDate} ,'yyyy-mm-dd') 
 		           <if test="pd.persionType!= null and pd.persionType != ''">
@@ -1001,7 +1027,9 @@
 		               funcdeptcode dept_code,
 		               funcdeptname dept_name
 		          from Ias_Pat_Info_scd i
-		         where i.is_orderflag = '1'
+		         where 
+		         1=1
+<!-- 		         i.is_orderflag = '1' -->
 		           and i.rpt_date &gt;= to_date(#{beginDate} ,'yyyy-mm-dd')  
 		           and i.rpt_date &lt;= to_date(#{endDate} ,'yyyy-mm-dd') 
 		           <if test="persionType!= null and persionType != ''">

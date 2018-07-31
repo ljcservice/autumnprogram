@@ -43,6 +43,9 @@
 						<!-- 检索  -->
 								<div id="searchDiv"  style="vertical-align:bottom;float: left;padding-top: 2px;padding-bottom: 2px;width: 100%;">
 								<form action="presc/prescWorkListPage.do" method="post" name="searchForm" id="searchForm">
+									<input name="randomflag" id="randomflag" type="hidden" value="">
+									<input name="randomrefresh" id="randomrefresh" type="hidden" value="">
+									<input name="refreshId" id="refreshId" type="hidden" value="">
 									<div class="check-search"  >
 										处方日期：
 										<input class="span10 date-picker" name="beginDate" id="beginDate"  value="${pd.beginDate}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:85px;" placeholder="开始日期" />
@@ -64,6 +67,10 @@
 										</span>
 										<span class="input-icon">
 											<input class="nav-search-input" autocomplete="off" id="DRUG_NAME" type="text" name="DRUG_NAME" value="${pd.DRUG_NAME}" placeholder="药品名称" maxlength="80" style="width: 100px;" />
+											<i class="ace-icon fa fa-search nav-search-icon"></i>
+										</span>
+										<span class="input-icon">
+											<input class="nav-search-input" autocomplete="off" id="DOCTOR_NAME" type="text" name="DOCTOR_NAME" value="${pd.DOCTOR_NAME}" placeholder="医生名称" maxlength="80" style="width: 100px;" />
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
@@ -90,13 +97,13 @@
 									 		<option value="">全部</option>
 											<option <c:if test="${pd.DRUG_TYPE == 'HASKJ' }">selected</c:if> value="HASKJ" >抗菌药</option>
 											<option <c:if test="${pd.DRUG_TYPE == 'HASZS' }">selected</c:if> value="HASZS" >注射药</option>
-											<option <c:if test="${pd.DRUG_TYPE == 'ELJSY' }">selected</c:if> value="ELJSY" >二类抗拒药</option>
-											<option <c:if test="${pd.DRUG_TYPE == 'DDRUG' }">selected</c:if> value="DDRUG" >毒性药</option>
-											<option <c:if test="${pd.DRUG_TYPE == 'FSDRUG' }">selected</c:if> value="FSDRUG" >放射性药</option>
 											<option <c:if test="${pd.DRUG_TYPE == 'YLJSY' }">selected</c:if> value="YLJSY" >一类精神药</option>
-											<option <c:if test="${pd.DRUG_TYPE == 'GZDRUG' }">selected</c:if> value="GZDRUG" >贵重药</option>
+											<option <c:if test="${pd.DRUG_TYPE == 'ELJSY' }">selected</c:if> value="ELJSY" >二类精神药</option>
+											<option <c:if test="${pd.DRUG_TYPE == 'DDRUG' }">selected</c:if> value="DDRUG" >毒性药</option>
 											<option <c:if test="${pd.DRUG_TYPE == 'MDRUG' }">selected</c:if> value="MDRUG" >麻药</option>
 											<option <c:if test="${pd.DRUG_TYPE == 'DMDRUG' }">selected</c:if> value="DMDRUG" >毒麻药</option>
+											<option <c:if test="${pd.DRUG_TYPE == 'FSDRUG' }">selected</c:if> value="FSDRUG" >放射性药</option>
+											<option <c:if test="${pd.DRUG_TYPE == 'GZDRUG' }">selected</c:if> value="GZDRUG" >贵重药</option>
 										</select>
 									</div>
 									<div class="check-search"  > 
@@ -179,7 +186,8 @@
 									<tr>
 										<td align="right" nowrap>总 计：</td><td align="center" nowrap>${report.ALL_COUNT}</td><td></td><td></td><td></td>
 										<td></td><td></td><td></td><td></td><td align="center" nowrap>${report.DRUG_COUNT_SUM }</td>
-										<td align="center" nowrap>${report.HASZS_SUM }</td><td align="center" nowrap>${report.HASKJ_SUM }</td>
+										<td align="center" nowrap>${report.HASKJ_SUM }</td>
+										<td align="center" nowrap>${report.HASZS_SUM }</td>
 										<td align="center" nowrap>${report.BASEDRUG_COUNT_SUM }</td>
 										<td align="center" nowrap><fmt:formatNumber value="${report.AMOUNT_SUM}" pattern="###,###,##0.00"></fmt:formatNumber></td><td></td>
 									</tr>
@@ -193,7 +201,8 @@
 									<tr>
 										<td align="center"> % </td><td></td><td></td><td></td><td></td>
 										<td></td><td></td><td></td><td></td><td></td>
-										<td align="center" nowrap>${report.HASZS_PERSENTS }</td><td align="center" nowrap>${report.HASKJ_PERSENTS}</td>
+										<td align="center" nowrap>${report.HASKJ_PERSENTS }</td>
+										<td align="center" nowrap>${report.HASZS_PERSENTS}</td>
 										<td align="center" nowrap>${report.BASEDRUG_COUNT_PERSENTS }</td>
 										<td></td><td></td>
 									</tr>
@@ -319,12 +328,18 @@ function detailPresc(id,NGROUPNUM){
 			nextPage(${page.currentPage});
 		}
 		catch(e)
-		{}
+		{
+			$("#randomflag").val("1");
+			$("#randomrefresh").val("1");
+			$("#refreshId").val(id);
+			//随机抽取进行刷新 
+			searchs();
+		}
 	 };
 	 diag.show();
 }
 function prescListExport(){
-	window.open(path + "/presc/prescListExport.do?work=1&"+$("#searchDiv").serialize()+"&randomFlag="+'${pd.randomFlag}');
+	window.open(path + "/presc/prescListExport.do?work=1&"+$("#searchForm").serialize()+"&randomFlag="+'${pd.randomFlag}');
 }
 function myprint(){
 	$("#main-container").hide();
@@ -337,7 +352,8 @@ function myprint(){
 	$("#main-container").show();
 }
 function randomQuery(){
-	window.location.href=path + "/presc/prescWorkListPage.do?randomFlag=1&"+$("#searchForm").serialize();
+	$("#randomflag").val("1");
+	window.location.href=path + "/presc/prescWorkListPage.do?"+$("#searchForm").serialize();
 }
 function changeNum(obj){
 	var mynum = $(obj).val();
@@ -345,8 +361,8 @@ function changeNum(obj){
 		if(mynum.indexOf("\.")!=-1){
 			$(obj).val(50);
 		}
-		if(mynum>200){
-			$(obj).val(200);
+		if(mynum>1000){
+			$(obj).val(1000);
 		}
 	}else{
 		$(obj).val(50);
