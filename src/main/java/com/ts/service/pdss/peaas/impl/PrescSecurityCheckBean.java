@@ -28,6 +28,7 @@ import com.ts.service.pdss.peaas.manager.IPrescSecurityChecker;
  *
  */
 @Service
+@Deprecated
 public class PrescSecurityCheckBean implements IPrescSecurityChecker
 {
 

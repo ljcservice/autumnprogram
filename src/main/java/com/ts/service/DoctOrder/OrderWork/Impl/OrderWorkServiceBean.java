@@ -209,4 +209,9 @@ public class OrderWorkServiceBean implements IOrderWorkService {
 	public List<PageData> orderListByDep(PageData pd)throws Exception {
 		return (List<PageData>) daoph.findForList("rsDrugCheckRsltMapper.orderListByDep", pd);
 	}
+
+	@Override
+	public List<PageData> queryDiagnosisByPatVisist(PageData pd) throws Exception {
+		return (List<PageData>)daoph.findForList("PatVisitMapper.queryDiagnosisByPatVisist", pd);
+	}
 }

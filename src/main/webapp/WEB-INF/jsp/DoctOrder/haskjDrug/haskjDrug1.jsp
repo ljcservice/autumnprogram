@@ -114,9 +114,23 @@
 							<tfoot>
 								<tr>
 									<td class="center" colspan="2">合计</td>
-											<td class="center">${reportHJ.c}</td>
-											<td class="center"> ${reportHJ.haskj}</td>
-											<td class="center"><fmt:formatNumber value="${reportHJ.rate}" pattern="#0.00"></fmt:formatNumber> %</td>
+									<td class="center">${reportHJ.c}</td>
+									<td class="center"> ${reportHJ.haskj}</td>
+									<td class="center"><fmt:formatNumber value="${reportHJ.rate}" pattern="#0.00"></fmt:formatNumber> %</td>
+								</tr>
+								<tr>
+									<td class="center" colspan="2">急诊合计</td>
+									<td class="center">${prescCount}</td>
+									<td class="center"> ${prescAntiCount}</td>
+									<td class="center"><fmt:formatNumber value="${prescAntiCount/prescCount * 100}" pattern="#0.00"></fmt:formatNumber> %</td>
+								</tr>
+								<tr>
+									<td class="center" colspan="2">门诊合计</td>
+									<td class="center">${reportHJ.c - prescCount}</td>
+									<td class="center"> ${reportHJ.haskj - prescAntiCount}</td>
+									<td class="center"> 
+										<fmt:formatNumber value="${antiCount1/count1 * 100}" pattern="#0.00"></fmt:formatNumber> %
+									</td>
 								</tr>
 							</tfoot>
 							</c:if>

@@ -54,17 +54,21 @@ public class DrugAdministrationCheckerBean extends Persistent4DB implements IDru
 	        for (int i = 0; i < counter; i++)
 	        {
 	        	TPatOrderDrug pod     = pods[i];
+	        	System.out.print("药品名称 " + pod.getDrugName());
 	        	TDrug drug            =  po.getDrugMap(pod.getDrugID());
 	        	if(drug == null ) continue;
+	        	System.out.print(";本地药品：" + drug.getDRUG_NAME_LOCAL());
 	        	TAdministration admin = pdssCache.queryAdministration(pod.getAdministrationID());
 	        	if(admin == null) continue;
-	        	
+	        	System.out.print(";本地途径：" + admin.getADMINISTRATION_NAME_LOCAL());
 	        	String inforLevelRs ="";
 	        	if(drug.getDOSE_CLASS_ID() == null) continue;
-
+	        	System.out.println(";getDOSE_CLASS_ID：" + drug.getDOSE_CLASS_ID());
 	        	List<TDrugDosage> ddgs = pdssCache.getDdg(drug.getDOSE_CLASS_ID());
+	        	System.out.print(ddgs);
 	        	if(ddgs == null) continue;
 	        	TDrugUseDetail dud = new TDrugUseDetail();
+	        	System.out.print("" + dud);
 	        	boolean flag = false;
 	        	String administrationTrue = "";
 	        	for(TDrugDosage ddg : ddgs)

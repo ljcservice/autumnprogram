@@ -34,7 +34,8 @@
 		lh,
 		pz,
 		wound_grade_update,
-		id
+		id,
+		context
 	</sql>
 	
 	<sql id="FieldValue">
@@ -63,7 +64,9 @@
 		#{lh},
 		#{pz},
 		#{wound_grade_update},
-		#{id}
+		#{id},
+		#{context}
+		
 	</sql>
 	
 	<insert id="saveOperation" parameterType="pd"	>
@@ -152,6 +155,16 @@
 		 group by dept_name, dept_code
 		 order by ratAnti desc
     </select>
+
+	<select id="findOperationRepById" parameterType="pd" resultType="pd" >
+		select 
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where 
+		id = #{id,jdbcType=VARCHAR}  
+	
+	</select>
 
 	<select id="findDRANO007Page" parameterType="page" resultType="pd">
 			select

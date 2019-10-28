@@ -16,6 +16,14 @@ import com.ts.util.PageData;
 public interface IOrderWorkService {
 
 	/**
+	 * 查询诊断信息 
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> queryDiagnosisByPatVisist(PageData pd ) throws Exception ;
+	
+	/**
 	 * 查询患者信息
 	 * @param pd
 	 * @return

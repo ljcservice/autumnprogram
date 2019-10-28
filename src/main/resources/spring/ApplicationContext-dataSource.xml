@@ -51,7 +51,7 @@
          <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis}" />
          <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
          <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis}" />  
-         <property name="validationQuery" value="${validationQuery}" />  
+<!--          <property name="validationQuery" value="${validationQuery}" />   -->
          <property name="testWhileIdle" value="${testWhileIdle}" />  
          <property name="testOnBorrow" value="${testOnBorrow}" />  
          <property name="testOnReturn" value="${testOnReturn}" />  
@@ -114,7 +114,7 @@
          <property name="minIdle" value="${minIdle_ph}" />  
          <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis_ph}" />
          <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis_ph}" />  
-         <property name="validationQuery" value="${validationQuery_ph}" />  
+<!--          <property name="validationQuery" value="${validationQuery_ph}" />   -->
          <property name="testWhileIdle" value="${testWhileIdle_ph}" />  
          <property name="testOnBorrow" value="${testOnBorrow_ph}" />  
          <property name="testOnReturn" value="${testOnReturn_ph}" />  
@@ -167,7 +167,7 @@
          <property name="minIdle" value="${minIdle_Pdss}" />  
          <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis_Pdss}" />
          <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis_Pdss}" />  
-         <property name="validationQuery" value="${validationQuery_Pdss}" />  
+<!--          <property name="validationQuery" value="${validationQuery_Pdss}" />   -->
          <property name="testWhileIdle" value="${testWhileIdle_Pdss}" />  
          <property name="testOnBorrow" value="${testOnBorrow_Pdss}" />  
          <property name="testOnReturn" value="${testOnReturn_Pdss}" />  
@@ -218,7 +218,7 @@
          <property name="minIdle" value="${minIdle_HIS}" />  
          <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis_HIS}" />
          <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis_HIS}" />  
-         <property name="validationQuery" value="${validationQuery_HIS}" />  
+<!--          <property name="validationQuery" value="${validationQuery_HIS}" />   -->
          <property name="testWhileIdle" value="${testWhileIdle_HIS}" />  
          <property name="testOnBorrow" value="${testOnBorrow_HIS}" />  
          <property name="testOnReturn" value="${testOnReturn_HIS}" />  

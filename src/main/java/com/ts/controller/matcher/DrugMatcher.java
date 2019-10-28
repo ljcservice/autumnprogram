@@ -109,33 +109,42 @@ public class DrugMatcher extends BaseController {
 	        				drugList = matcherService.drugList( s);
 	        			}
 	        			String str =  drugmap.getString("DRUG_NAME_LOCAL").trim();
-	        			if(drugList==null || drugList.size()==0)
+	        			try
 	        			{
-    	        			if("true".equals(ApplicationProperties.getPropertyValue("NLPFlag")))
-    	        			{
-    	        			  //NLP 之前 处理一些字符，
-                                List<String> filterList =  matcherService.getFilterList();
-                                for(String st:filterList){
-                                    st = st.replaceAll("\\(","\\\\\\(");
-                                    st = st.replaceAll("\\)","\\\\\\)");
-//                                if(str.indexOf(st)!= -1)
-                                    str = str.replaceAll(st, "");
-                                }
-                                str = str.trim();
-    	        			    str = NLPDrugRslt(str);
-    	        			}
-    	        			else
-    	        			{
-    	        			  //替换无用字符
-	                            List<String> filterList =  matcherService.getFilterList();
-	                            for(String st:filterList){
-	                                st = st.replaceAll("\\(","\\\\\\(");
-	                                st = st.replaceAll("\\)","\\\\\\)");
-//	                              if(str.indexOf(st)!= -1)
-	                                str = str.replaceAll(st, "");
-	                            }
-	                            str = str.trim();
-    	        			}
+	        				if(drugList==null || drugList.size()==0)
+		        			{
+	    	        			if("true".equals(ApplicationProperties.getPropertyValue("NLPFlag")))
+	    	        			{
+	    	        			  //NLP 之前 处理一些字符，
+	                                List<String> filterList =  matcherService.getFilterList();
+	                                for(String st:filterList){
+	                                	if("".equals(st)) continue;
+	                                    st = st.replaceAll("\\(","\\\\\\(");
+	                                    st = st.replaceAll("\\)","\\\\\\)");
+//	                                if(str.indexOf(st)!= -1)
+	                                    str = str.replaceAll(st, "");
+	                                }
+	                                str = str.trim();
+	    	        			    str = NLPDrugRslt(str);
+	    	        			}
+	    	        			else
+	    	        			{
+	    	        			  //替换无用字符
+		                            List<String> filterList =  matcherService.getFilterList();
+		                            for(String st:filterList){
+		                            	if("".equals(st)) continue;
+		                                st = st.replaceAll("\\(","\\\\\\(");
+		                                st = st.replaceAll("\\)","\\\\\\)");
+//		                              if(str.indexOf(st)!= -1)
+		                                str = str.replaceAll(st, "");
+		                            }
+		                            str = str.trim();
+	    	        			}
+		        			}
+	        			}
+	        			catch(Exception e )
+	        			{
+	        				e.printStackTrace();
 	        			}
 	        			//汉字去掉（ ( 内容  完全匹配
 	        			if(drugList==null || drugList.size()==0){
@@ -264,6 +273,7 @@ public class DrugMatcher extends BaseController {
         	}
 	    } catch (Exception e) {
 			errInfo = "操作失败！";
+			e.printStackTrace();
 		}
         session.removeAttribute("autoMatcher");
 	    map.put("result",errInfo);

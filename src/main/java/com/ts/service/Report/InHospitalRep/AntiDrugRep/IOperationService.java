@@ -30,6 +30,14 @@ public interface IOperationService
     public List<PageData> DRANO007(Page page) throws Exception;
     
     /**
+     * 手术信息 ID 获取
+     * @param pd
+     * @return
+     * @throws Exception
+     */
+    public PageData DRANO007OperationById(PageData pd)throws Exception;
+    
+    /**
      * 手术信息维护更新
      * @param pd
      * @throws Exception

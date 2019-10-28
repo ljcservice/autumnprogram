@@ -765,6 +765,7 @@ public class InitPdssCache {
 			log.info("药品剂量使用字典-- 第" + pageNum +"页");
 		}
 		cacheTemplate.setObject(PdssCache.ddgCache,key1 + "_" + key2, -1,ddgRs);
+		cacheTemplate.setObject(PdssCache.ddgCache,key1, -1,ddgDoseRs);
 	}
 
 	/**

@@ -174,12 +174,12 @@ public class PagePlugin implements Interceptor {
 	 */
 	private String generatePageSql(String sql,Page page){
 		if(page!=null && Tools.notEmpty(dialect)){
-			StringBuffer pageSql = new StringBuffer();
+			StringBuffer pageSql = new StringBuffer();   
 			if("oracle".equals(dialect)){
-				pageSql.append("select * from (select tmp_tb.*,ROWNUM row_id from ( select * from (");
+				pageSql.append("select * from (select tmp_tb.*,ROWNUM row_id from ( select tmp.* , rownum row_end_id from (");
 				pageSql.append(sql);
 				//pageSql.append(") as tmp_tb where ROWNUM<=");
-				pageSql.append(") tmp ) tmp_tb where ROWNUM<=");
+				pageSql.append(") tmp ) tmp_tb where row_end_id <=");
 				pageSql.append(page.getCurrentResult()+page.getShowCount());
 				pageSql.append(") where row_id>");
 				pageSql.append(page.getCurrentResult());

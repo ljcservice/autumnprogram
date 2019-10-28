@@ -133,9 +133,9 @@
 								<c:when test="${not empty opers}">
 									<c:forEach items="${opers}" var="oper" varStatus="vs" >
 										
-										<tr ondblclick="viewDetail('${oper.patient_ID}','${oper.visit_ID}','')">
+										<tr ondblclick="viewDetail('${oper.patient_ID}','${oper.visit_ID}','','${oper.id}')">
 											<td nowrap class="center">
-												<a onclick="viewDetail('${oper.patient_ID}','${oper.visit_ID}','')">${oper.name}<br>${oper.patient_ID}(${oper.visit_ID})</a>	 
+												<a onclick="viewDetail('${oper.patient_ID}','${oper.visit_ID}','','${oper.id}')">${oper.name}<br>${oper.patient_ID}(${oper.visit_ID})</a>	 
 											</td>
 											<td nowrap class="center">${oper.OPERATION_DESC }</td>
 											<td nowrap class="center">${oper.OPERATOR }</td>
@@ -339,12 +339,12 @@ function funSave(pat,vist,idx,patName){
 	
 }
 
-function viewDetail(patId,visitId,ngnum){
+function viewDetail(patId,visitId,ngnum,oId){
 	top.jzts();
 	var diag = new top.Dialog();
 	diag.Drag=true;  
 	diag.Title ="医嘱信息";
-	diag.URL = "<%=path%>/DoctOrder/DoctOrdersDetail.do?patient_id=" + patId + "&visit_Id=" + visitId + "&ngroupnum=" + ngnum;    
+	diag.URL = "<%=path%>/InHospitalRep/DRANO007WorkDetail.do?patient_id=" + patId + "&visit_Id=" + visitId + "&ngroupnum=" + ngnum + "&id=" + oId;    
 	diag.Width = window.screen.width;
 	diag.Height = window.screen.height;  
 	diag.CancelEvent = function(){ //关闭事件

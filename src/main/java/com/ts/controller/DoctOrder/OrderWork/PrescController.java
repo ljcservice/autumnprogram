@@ -41,7 +41,7 @@ import com.ts.util.doctor.DoctorConst;
 public class PrescController extends BaseController {
 	@Resource(name="commonServicePdss")
 	private CommonService commonService;
-	@Autowired
+	@Autowired @Qualifier("prescService")
 	private PrescService prescService;
 	@Autowired
 	private UserManager userService;

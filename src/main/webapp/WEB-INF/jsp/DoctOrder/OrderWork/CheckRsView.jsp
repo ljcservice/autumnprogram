@@ -83,6 +83,15 @@
 												&nbsp;&nbsp;&nbsp;&nbsp;<font color="#87b87f" >当前指定专家：${expert_name}</font>
 											</c:if>
 											</span>
+											&nbsp;
+											|
+											&nbsp;
+											<select  name="is_checkPeople" id="is_checkPeople"  style="vertical-align:top;width: 80px;">
+									 		<option value="">全部审核</option> 
+											<option <c:if test="${page.pd.is_checkPeople == '1' }">selected</c:if> value="1" >药师审核</option>
+											<option <c:if test="${page.pd.is_checkPeople == '0' }">selected</c:if> value="0" >系统审核</option>
+										    </select>
+											
 										</th>
 									</tr>
 								</thead>

@@ -322,9 +322,9 @@ public class DrugSecurityChecker implements IDrugSecurityChecker
         this.drugIngredientCheckerBean.check(po).CopyDrugIngreDientCheckRsltTo(dsr);
         sb.append(" 重复成份:" + (System.currentTimeMillis() - xx));
         /* 用药途径审查 */
-//        xx = System.currentTimeMillis();
-//        this.drugAdministrationCheckerBean.Check(po).CopyAdministrationCheckRsltTo(dsr);
-//        sb.append(" 用药途径:" + (System.currentTimeMillis() - xx));
+        xx = System.currentTimeMillis();
+        this.drugAdministrationCheckerBean.Check(po).CopyAdministrationCheckRsltTo(dsr);
+        sb.append(" 用药途径:" + (System.currentTimeMillis() - xx));
         /* 过敏药物审查 */
         xx = System.currentTimeMillis();
         this.drugAllergenCheckerBean.Check(po).CopyDrugAllergenCheckRsltTo(dsr);

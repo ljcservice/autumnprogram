@@ -169,6 +169,7 @@ public class iasDataFetcherEx extends ReportScheduler implements  IScheduler
 	    	catch(Exception e)
 	        {
 	    		Log(40, "抓取病人" + patV.get("PATIENT_ID") + "信息出现错误");
+	    		e.printStackTrace();
 	        }
         }
 	    

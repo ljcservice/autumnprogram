@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PrescAntiMapper">
+	<!-- 专家列表 -->
+	<select id="prescAntiListPage" parameterType="page" resultType="pd" >
+		select a.*,m.RS_DRUG_TYPES
+		from presc_anti a  
+	   <if test="pd.RS_DRUG_TYPE != null and pd.RS_DRUG_TYPE != ''"> <!-- 问题类型 -->
+		    inner 
+		</if>
+	    <if test="pd.RS_DRUG_TYPE ==null or pd.RS_DRUG_TYPE == ''"> <!-- 问题类型 -->
+		    left 
+		</if>
+		 join ( select NGROUPNUM,listagg( RS_DRUG_TYPE ,'@;@') within GROUP (order by NGROUPNUM) RS_DRUG_TYPES 
+	         from  (
+	         		select NGROUPNUM,RS_DRUG_TYPE  
+	         		from RS_DRUG_CHECKRSLT 
+	         		where 
+<!-- 	         		查询处方点评结果 -->
+	         		in_rs_type = 5 
+	         		<if test="pd.RS_DRUG_TYPE != null and pd.RS_DRUG_TYPE != ''"> <!-- 问题类型 -->
+			    		and RS_DRUG_TYPE = #{pd.RS_DRUG_TYPE}   
+			    	</if>
+	         		group by NGROUPNUM,RS_DRUG_TYPE 
+           	) group by NGROUPNUM
+	    ) m on a.NGROUPNUM=m.NGROUPNUM
+		where 1=1 
+		<if test="pd.id!= null and pd.id != ''">
+			and  a.id = #{pd.id}
+		</if>
+		<!-- 		关键词检索 -->
+		<if test="pd.keywords!= null and pd.keywords != ''">
+			and
+				(
+					 a. DIAGNOSIS_NAMES LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+		</if>
+		<if test="pd.ORG_NAME!= null and pd.ORG_NAME != ''">
+			and a.ORG_NAME LIKE CONCAT(CONCAT('%', #{pd.ORG_NAME}),'%')
+		</if>
+		<if test="pd.DOCTOR_NAME != null and pd.DOCTOR_NAME != ''"> <!-- 医生名-->
+			and a.DOCTOR_NAME = #{pd.DOCTOR_NAME}
+		</if>
+		<!-- 是否合理 -->
+		<choose>
+			<when test="pd.ISCHECKTRUE!= null and pd.ISCHECKTRUE!='' and pd.ISCHECKTRUE==2">
+				and ( a.ISCHECKTRUE =2	or a.ISCHECKTRUE  is null )
+			</when>
+			<otherwise>
+				<if test="pd.ISCHECKTRUE!= null and pd.ISCHECKTRUE  != ''">  
+					and a.ISCHECKTRUE  = #{pd.ISCHECKTRUE }
+				</if>
+			</otherwise>
+		</choose>
+		<if test="pd.ISORDERCHECK!= null and pd.ISORDERCHECK!='' and pd.ISORDERCHECK == 1"> <!--点评记录-->
+			and a.ISORDERCHECK = 1
+		</if>
+		<if test="pd.ISORDERCHECK!= null and pd.ISORDERCHECK!='' and pd.ISORDERCHECK == 0"> <!--点评记录-->
+			and (a.ISORDERCHECK = 0 or a.ISORDERCHECK is null ) 
+		</if>
+<!-- 		<if test="pd.beginDate != null and pd.beginDate != ''"> 更新时间 开始   -->
+			and a.ORDER_DATE &gt;= #{pd.beginDate} 
+<!-- 		</if> -->
+<!-- 		<if test="pd.endDate != null and pd.endDate != ''"> 更新时间 结束 -->
+			and a.ORDER_DATE &lt; #{pd.endDate}
+<!-- 		</if> -->
+		<if test="pd.DRUG_NAME != null and pd.DRUG_NAME != ''"> <!-- 药品名-->
+			 and exists( select PRESC_ID from presc_detail q 
+			 	where a.id = q.PRESC_ID 
+				and q.DRUG_NAME = #{pd.DRUG_NAME}
+			 )
+		</if>
+		<if test="pd.HASKJ != null and pd.HASKJ != ''"> <!-- 是否抗菌 -->
+			and a.HASKJ = #{pd.HASKJ}
+		</if>
+		<if test="pd.HASZS != null and pd.HASZS != ''"> <!-- 是否注射 -->
+			and a.HASZS = #{pd.HASZS}
+		</if>
+		<if test="pd.ELJSY != null and pd.ELJSY != ''"> <!-- 是否二类精神-->
+			and a.ELJSY = #{pd.ELJSY}
+		</if>
+		<if test="pd.DDRUG != null and pd.DDRUG != ''"> <!-- 是否毒药 -->
+			and a.DDRUG = #{pd.DDRUG}
+		</if>
+		<if test="pd.FSDRUG != null and pd.FSDRUG != ''"> <!-- 是否放射 -->
+			and a.FSDRUG = #{pd.FSDRUG}
+		</if>
+		<if test="pd.YLJSY != null and pd.YLJSY != ''"> <!-- 是否一类精神-->
+			and a.YLJSY = #{pd.YLJSY}
+		</if>
+		<if test="pd.GZDRUG != null and pd.GZDRUG != ''"> <!-- 是否贵重 -->
+			and a.GZDRUG = #{pd.GZDRUG}
+		</if>
+		<if test="pd.MDRUG != null and pd.MDRUG != ''"> <!-- 是否麻药 -->
+			and a.MDRUG = #{pd.MDRUG}
+		</if>
+		<if test="pd.DMDRUG != null and pd.DMDRUG != ''"> <!-- 是否毒麻 -->
+			and a.DMDRUG = #{pd.DMDRUG}
+		</if>
+		<if test="pd.IS_EXPERT!=null and pd.IS_EXPERT!='' and pd.IS_EXPERT==0"> <!-- 非专家点评 -->
+			and a.EXPERT_ID is null
+		</if>
+		<if test="pd.IS_EXPERT!=null and pd.IS_EXPERT!='' and pd.IS_EXPERT==1"> <!-- 是专家点评 -->
+			and a.EXPERT_ID is not null
+		</if>
+		<choose>
+			<when test="pd.randomflag!= null and pd.randomflag==1">
+				Order by DBMS_RANDOM.VALUE 
+			</when>
+			<otherwise>
+				Order by ORDER_DATE desc
+			</otherwise>
+		</choose>
+	</select>
+	<!-- 单个处方主要信息 -->
+	<select id="findPrescById" parameterType="pd" resultType="pd" >
+		select a.*,m.RS_DRUG_TYPES from presc_anti a
+		 left join ( select NGROUPNUM,listagg( RS_DRUG_TYPE ,'@;@') within GROUP (order by NGROUPNUM) RS_DRUG_TYPES 
+	         from  (
+	         		select NGROUPNUM,RS_DRUG_TYPE  
+	         		from RS_DRUG_CHECKRSLT 
+	         		where 
+<!-- 	         		查询处方点评结果 -->
+	         		in_rs_type = 5 
+	         		group by NGROUPNUM,RS_DRUG_TYPE 
+           	) group by NGROUPNUM
+	    ) m on a.NGROUPNUM=m.NGROUPNUM
+		
+		where id = #{id}
+		
+	</select>
+	<!-- 	处方详情 -->
+	<select id="prescDetailList" parameterType="pd" resultType="pd" >
+		select * from presc_detail where presc_id = #{id}
+	</select>
+	<!-- 	同日其他处方(同一天，同一个人，开的处方） -->
+	<select id="otherPrescList" parameterType="pd" resultType="pd" >
+		select a.* from presc_anti  a 
+		where  a.id != #{ID}
+		and a.PATIENT_ID = #{PATIENT_ID}
+		and a.ORDER_DATE = #{ORDER_DATE}
+	</select>
+		<!-- 	同日其他处方处方详情 -->
+	<select id="otherPrescDetailList" parameterType="pd" resultType="pd" >
+		select a.* 
+		from presc_detail a, presc_anti b 
+		where a.presc_id = b.id 
+		and b.id != #{ID}
+		and b.PATIENT_ID = #{PATIENT_ID}   
+		and b.ORDER_DATE = #{ORDER_DATE}
+	</select>
+	
+	<!-- 	更新处方的关联问题字段 -->
+	<update id="updatePrescNgroupnum" parameterType="pd" >
+		update presc_anti set NGROUPNUM = #{Ngroupnum} ,ISCHECKTRUE = #{ISCHECKTRUE}
+			<if test="ISORDERCHECK !=null and ISORDERCHECK!='' ">
+				,ISORDERCHECK = 1
+			</if>
+		where id=#{id} 
+	</update>
+	<!-- 	查询处方，为新增点评使用 -->
+	<select id="prescListSpecial" parameterType="pd" resultType="pd">
+		select ORDER_NO||'@;@'||ORDER_SUB_NO||'@;@'||DRUG_CODE||'@;@'||drug_name||'@;@'||presc_id as key
+			, drug_name || '（处方号：'||b.PRESC_NO||'，科室：'||b.ORG_NAME||'，医生：' ||b.DOCTOR_NAME ||'诊断'||b.DIAGNOSIS_NAMES||'）' as value
+		from  presc_detail a, presc_anti b 
+		where a.presc_id = b.id 
+			and PRESC_ID= #{PRESC_ID}
+			order by b.PRESC_NO
+	</select>
+	<!-- 	查询处方，为新增点评使用 -->
+	<select id="otherPrescListSpecial" parameterType="pd" resultType="pd">
+		select ORDER_NO||'@;@'||ORDER_SUB_NO||'@;@'||DRUG_CODE||'@;@'||drug_name||'@;@'||presc_id as key
+			, drug_name || '（处方号：'||b.PRESC_NO||'，科室：'||b.ORG_NAME||'，医生：' ||b.DOCTOR_NAME ||'诊断'||b.DIAGNOSIS_NAMES||'）'  as value
+		from  presc_detail a, presc_anti b 
+		where a.presc_id = b.id 
+		and b.PATIENT_ID = #{PATIENT_ID}
+		and b.ORDER_DATE = #{ORDER_DATE}
+		order by b.PRESC_NO
+	</select>
+	<!-- 	设置为专家点评 -->
+	<update id="updateExpertPresc">
+		update presc_anti  set expert_id=#{expert_id} 
+ 		where  id =#{id} 
+	</update>
+
+	<!-- 按日期查询普通处方  -->
+	<select id="findByDate" parameterType="pd" resultType="pd">
+		select * from presc_anti  where order_date = #{order_date}
+	</select>
+	
+	
+	<select id="findPrescDetailById" parameterType="String" resultType="pd">
+		select * from presc_detail where PRESC_ID = #{id}
+	</select>
+	
+	<!-- 	全部处方 -->
+	<delete id="deleteDrugCheckRslt" parameterType="pd">
+		delete rs_drug_checkrslt  
+			where ngroupnum in (
+				select ngroupnum from  presc_anti  where order_date = #{order_date} and ngroupnum is not null
+			)
+	</delete>
+	
+	<update id="reSetCheckRslt" parameterType="pd">
+		update presc_anti set ngroupnum = '',ISCHECKTRUE=0, ISORDERCHECK=0 where order_date = #{order_date}
+	</update>
+	
+	<!-- 医嘱工作表统计 -->
+	<select id="prescCountReport" parameterType="pd"  resultType="pd">
+		select count(id) ALL_COUNT,sum(DRUG_COUNT) DRUG_COUNT_SUM,sum(HASZS) HASZS_SUM
+			,sum(BASEDRUG_COUNT) BASEDRUG_COUNT_SUM,sum(AMOUNT) AMOUNT_SUM,sum(HASKJ) HASKJ_SUM
+			,round(avg(AMOUNT),2) AMOUNT_AVG,round(avg(DRUG_COUNT),2) DRUG_COUNT_AVG
+			, decode(count(id),0,0.00,round(100*sum(HASZS)/count(id),2)) HASZS_PERSENTS
+			,decode(count(id),0,0.00,round(100*sum(HASKJ)/count(id),2)) HASKJ_PERSENTS
+			,decode(count(id),0,0.00,round(100*sum(BASEDRUG_COUNT)/count(id),2)) BASEDRUG_COUNT_PERSENTS 
+		from presc_anti a
+		where 1=1
+		<!-- 		关键词检索 -->
+		<if test="keywords!= null and keywords != ''">
+			and
+				(
+					 a. DIAGNOSIS_NAMES LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+				)
+		</if>
+		<if test="ORG_NAME!= null and ORG_NAME != ''">
+			and a.ORG_NAME LIKE CONCAT(CONCAT('%', #{ORG_NAME}),'%')
+		</if>
+		<if test="DOCTOR_NAME != null and DOCTOR_NAME != ''"> <!-- 医生名-->
+			and a.DOCTOR_NAME = #{DOCTOR_NAME}
+		</if>
+		<if test="ISCHECKTRUE != null and ISCHECKTRUE != ''"> <!-- 是否合理-->
+			and a.ISCHECKTRUE = #{ISCHECKTRUE} 
+		</if>
+		<if test="ISORDERCHECK != null and ISORDERCHECK != ''"> <!--点评记录-->
+			and a.ISORDERCHECK = #{ISORDERCHECK}
+		</if>
+		<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
+			and a.ORDER_DATE &gt;= #{beginDate} 
+		</if>
+		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+			and a.ORDER_DATE &lt; #{endDate}
+		</if>
+		<if test="DRUG_NAME != null and DRUG_NAME != ''"> <!-- 药品名-->
+			 and exists( select PRESC_ID from presc_detail q 
+			 	where a.id = q.PRESC_ID 
+				and q.DRUG_NAME = #{DRUG_NAME}
+			 )
+		</if>
+		<if test="HASKJ != null and HASKJ != ''"> <!-- 是否抗菌 -->
+			and a.HASKJ = #{HASKJ}
+		</if>
+		<if test="HASZS != null and HASZS != ''"> <!-- 是否抗菌 -->
+			and a.HASZS = #{HASZS}
+		</if>
+		<if test="ELJSY != null and ELJSY != ''"> <!-- 是否抗菌 -->
+			and a.ELJSY = #{ELJSY}
+		</if>
+		<if test="DDRUG != null and DDRUG != ''"> <!-- 是否抗菌 -->
+			and a.DDRUG = #{DDRUG}
+		</if>
+		<if test="FSDRUG != null and FSDRUG != ''"> <!-- 是否抗菌 -->
+			and a.FSDRUG = #{FSDRUG}
+		</if>
+		<if test="YLJSY != null and YLJSY != ''"> <!-- 是否抗菌 -->
+			and a.YLJSY = #{YLJSY}
+		</if>
+		<if test="GZDRUG != null and GZDRUG != ''"> <!-- 是否抗菌 -->
+			and a.GZDRUG = #{GZDRUG}
+		</if>
+		<if test="MDRUG != null and MDRUG != ''"> <!-- 是否抗菌 -->
+			and a.MDRUG = #{MDRUG}
+		</if>
+		<if test="DMDRUG != null and DMDRUG != ''"> <!-- 是否抗菌 -->
+			and a.DMDRUG = #{DMDRUG}
+		</if>
+		
+	</select>
+	
+	
+	<select id="selectCheckPrescExcelByNgroupnum" parameterType="pd" resultType="pd" >
+			select a.rs_id,
+			       a.drug_id1,
+			       (select p.drug_name || '[' || p.drug_spec || '][' || p.dosage ||
+			               p.dosage_units || ',' || p.frequency || ',' ||
+			               p.administration || '][' || p.amount || p.units || ']'
+			          from patienthistory.presc_detail p
+			         where p.presc_id = b.id
+			           and p.drug_code = a.drug_id1
+			           and p.order_no = a.rec_main_no1
+			           and p.order_sub_no = a.rec_sub_no1) drugdetail1,
+			       a.drug_id1_name,
+			       a.rec_main_no1,
+			       a.rec_sub_no1,
+			       a.drug_id2,
+			       a.drug_id2_name,
+			       (select p.drug_name || '[' || p.drug_spec || '][' || p.dosage ||
+			               p.dosage_units || ',' || p.frequency || ',' ||
+			               p.administration || '][' || p.amount || p.units || ']'
+			          from patienthistory.presc_detail p
+			         where p.presc_id = c.id
+			           and p.drug_code = a.drug_id2
+			           and p.order_no = a.rec_main_no2
+			           and p.order_sub_no = a.rec_sub_no2) drugdetail2,
+			       a.rec_main_no2,
+			       a.rec_sub_no2,
+			       a.ngroupnum,
+			       a.rs_drug_type,
+			       a.in_rs_type,
+			       a.alert_level,
+			       a.alert_hint,
+			       a.alert_cause,
+			       a.checkdate,
+			       a.CHECKPEOPLE,
+			       a.RELATION_ID1,
+			       a.RELATION_ID2,
+			       b.DOCTOR_NAME DOCTOR_NAME1,
+			       b.ORG_NAME ORG_NAME1,
+			       b.PRESC_NO PRESC_NO1,
+			       c.DOCTOR_NAME DOCTOR_NAME2,
+			       c.ORG_NAME ORG_NAME2,
+			       c.PRESC_NO PRESC_NO2
+			  from RS_DRUG_CHECKRSLT a
+			  left join presc_anti b
+			    on b.id = a.RELATION_ID1
+			  left join presc_anti c
+			    on c.id = a.RELATION_ID2
+			 where a.ngroupnum = #{ngroupnum} 
+			 
+			 <if test="CHECKPEOPLE !=null and CHECKPEOPLE!='' ">
+				and CHECKPEOPLE is not null
+		 	  </if>
+		 	  
+			order by a.rs_drug_type  ,a.drug_id1 ,a.drug_id2
+	</select>
+	
+
+</mapper>

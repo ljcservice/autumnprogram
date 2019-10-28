@@ -596,6 +596,11 @@
 		  left join pat_visit b
 		    on b.ngroupnum = a.ngroupnum
 		 where a.ngroupnum = #{ngroupnum} 
+		 
+		 <if test="CHECKPEOPLE !=null and CHECKPEOPLE!='' ">
+				and CHECKPEOPLE is not null
+		 </if>
+		 
 		 order by a.rs_drug_type, a.drug_id1, a.drug_id2
 				
 	</select>

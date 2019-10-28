@@ -50,8 +50,11 @@ public class OrderWork extends BaseController
 	private IOrderWorkService orderWorkService;
 	@Autowired
 	private UserManager userService;
-	@Autowired
+	@Autowired @Qualifier("prescService")
 	private PrescService prescService;
+	
+	@Autowired @Qualifier("prescAntiService")
+	private PrescService prescAntiService;
 	
 	/**
 	 * 检索医嘱点评工作信息
@@ -190,6 +193,8 @@ public class OrderWork extends BaseController
 	    if(ngroupnum== null || "".equals(ngroupnum))return "" ;
         PageData pd  = new PageData();
         pd.put("ngroupnum", ngroupnum);
+        //导出人员审核内容
+        pd.put("CHECKPEOPLE","CHECKPEOPLE");
         Map<String,PageData> rsDict = commonService.getCheckTypeDict();
         List<PageData> rsChecks = orderWorkService.checkRsDetail(pd);
         StringBuffer sbRs = new StringBuffer();
@@ -719,6 +724,16 @@ public class OrderWork extends BaseController
 				PageData presc = prescService.findPrescById(pd);
 				Map otherPescMap = prescService.otherPrescListSpecial(presc);
 				mv.addObject("orderMap2", otherPescMap);
+			}else if("2".equals(pd.getString("business_type"))){
+				//处方列表，供给选择
+				pd.put("PRESC_ID", pd.get("id"));
+				Map orderMap = prescAntiService.prescListSpecial(pd);
+				mv.addObject("orderMap1", orderMap);
+//				Map orderMap2 = new HashMap();
+//				orderMap2.putAll(orderMap);
+				PageData presc = prescAntiService.findPrescById(pd);
+				Map otherPescMap = prescAntiService.otherPrescListSpecial(presc);
+				mv.addObject("orderMap2", otherPescMap);
 			}
 			mv.setViewName("DoctOrder/checkRsAdd");
 		} catch(Exception e){
@@ -785,6 +800,25 @@ public class OrderWork extends BaseController
 				}
 				//更新处方的关联问题字段
 				this.prescService.updatePrescNgroupnum(pd);
+			}else if("2".equals(pd.getString("business_type"))){
+				pd.put("in_rs_type", 5);
+				//查询处方记录，找到ngroupnum
+				PageData Presc = prescAntiService.findPrescById(pd);
+				//校验是否为专家点评，如果有专家则校验是否为当前人
+				String expert_id = Presc.getString("expert_id");
+				if(!Tools.isEmpty(expert_id)){
+					if(!user.getUSER_ID().equals(expert_id)){
+						map.put("result","该信息只能由专家进行点评，当前操作人无权限点评。");
+						return map;
+					}
+				}
+				if(Tools.isEmpty(Presc.getString("ngroupnum"))){
+					pd.put("ngroupnum", this.get32UUID());
+				}else{
+					pd.put("ngroupnum", Presc.getString("ngroupnum"));
+				}
+				//更新处方的关联问题字段
+				this.prescAntiService.updatePrescNgroupnum(pd);
 			}
 			pd.put("rs_id", this.get32UUID());
 			

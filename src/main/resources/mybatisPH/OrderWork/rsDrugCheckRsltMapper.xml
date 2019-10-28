@@ -81,8 +81,47 @@
 		where 
 		 	<!-- 审核结果组号 -->  
 			a.ngroupnum = #{pd.ngroupnum} 
+			 
+			<if test='pd.is_checkPeople == "1"'> <!-- 1：人工审核内容-->   
+				and a.checkPeople is not null
+			</if>
+			
+			<if test='pd.is_checkPeople =="0"'> <!-- 0：机器审核内容-->
+				and a.checkPeople is  null
+			</if>
+			
 		order by CHECKDATE
 	</select>
+	
+	<!-- 	抗菌药物 查询审核结果  查询患者点评结果信息-->
+	<select id="selectCheckRsAntiByNgroupnum" parameterType="page" resultType="pd">
+		select a.rs_id,a.drug_id1,a.drug_id1_name,a.rec_main_no1,a.rec_sub_no1,
+			a.drug_id2,a.drug_id2_name,a.rec_main_no2,a.rec_sub_no2,a.ngroupnum,
+			a.rs_drug_type,a.in_rs_type,a.alert_level,a.alert_hint,a.alert_cause,
+			a.checkdate,a.CHECKPEOPLE,a.RELATION_ID1,a.RELATION_ID2	
+			,b.DOCTOR_NAME DOCTOR_NAME1,b.ORG_NAME ORG_NAME1,b.PRESC_NO PRESC_NO1
+			,c.DOCTOR_NAME DOCTOR_NAME2,c.ORG_NAME ORG_NAME2,c.PRESC_NO PRESC_NO2
+			,u.name CHECKPEOPLE_NAME
+		from RS_DRUG_CHECKRSLT a 
+		left join PRESC_anti b on b.id = a.RELATION_ID1 
+		left join PRESC_anti c on c.id = a.RELATION_ID2 
+		left join plat.sys_user u on a.CHECKPEOPLE = u.user_id
+		where 
+		 	<!-- 审核结果组号 -->  
+			a.ngroupnum = #{pd.ngroupnum} 
+			 
+			<if test='pd.is_checkPeople == "1"'> <!-- 1：人工审核内容-->   
+				and a.checkPeople is not null
+			</if>
+			
+			<if test='pd.is_checkPeople =="0"'> <!-- 0：机器审核内容-->
+				and a.checkPeople is  null
+			</if>
+			
+		order by CHECKDATE
+	</select>
+	
+	
 
 	<delete id="delCheckRsByNgroupnum" parameterType="pd" >
 		delete from RS_DRUG_CHECKRSLT
@@ -157,6 +196,45 @@
 		</if>
   		group by a.RS_TYPE_CODE,a.RS_TYPE_NAME
 	</select>
+	
+	
+	<!-- 抗菌药处方报表 -->
+	<select id="prescAntiReport" parameterType="pd" resultType="pd">
+		select a.RS_TYPE_CODE,a.RS_TYPE_NAME,count(b.rs_id) count
+  		from rs_type_dict a 
+  			left join ( 
+  					select m.rs_id,m.IN_RS_TYPE,m.RS_DRUG_TYPE,n.ORDER_DATE
+  					FROM RS_DRUG_CHECKRSLT m, presc n 
+  					WHERE M.NGROUPNUM = N.NGROUPNUM
+					<if test="DOCTOR_NAME != null and DOCTOR_NAME != ''"> <!-- 医生名-->
+						and n.DOCTOR_NAME = #{DOCTOR_NAME}
+					</if>
+					<if test="ORG_NAME != null and ORG_NAME != ''"> <!-- 科室名-->
+						and n.ORG_NAME =#{ORG_NAME}
+					</if>
+					<if test="DRUG_NAME != null and DRUG_NAME != ''"> <!-- 药品名-->
+					 and exists( select PRESC_ID from presc_detail q 
+					 	where n.id = q.PRESC_ID 
+						and q.DRUG_NAME = #{DRUG_NAME}
+					 )
+					</if>
+  				)b
+	  			on ( 
+	  				a.RS_TYPE_CODE = b.RS_DRUG_TYPE and b.IN_RS_TYPE='5' 
+					<if test="beginDate != null and beginDate != ''"> <!--开始日期-->
+						and b.ORDER_DATE &gt;= #{beginDate}
+					</if>
+					<if test="endDate != null and endDate != ''"> <!--开始日期-->
+						and b.ORDER_DATE &lt;= #{endDate}
+					</if>
+	  			)
+  		where 1=1
+		<if test="RS_DRUG_TYPE != null and RS_DRUG_TYPE != ''"> <!-- 类型-->
+			and a.RS_TYPE_CODE = #{RS_DRUG_TYPE} 
+		</if>
+  		group by a.RS_TYPE_CODE,a.RS_TYPE_NAME
+	</select>
+	
 	
 <!-- 	医嘱报表 -->
 	<select id="ordersReport" parameterType="pd" resultType="pd">
@@ -250,10 +328,52 @@
 		group by b.DOCTOR_CODE,b.DOCTOR_NAME
 	</select>
 	
+	<!-- 	处方按医生分组查询统计 -->
+	<select id="prescAntiListByDoctor" parameterType="pd" resultType="pd">
+		select b.DOCTOR_CODE,b.DOCTOR_NAME ,count(a.rs_id) count
+		FROM RS_DRUG_CHECKRSLT a ,presc_anti b
+		WHERE a.NGROUPNUM = b.NGROUPNUM
+				and a.RS_DRUG_TYPE = #{RS_DRUG_TYPE}
+			<if test="beginDate != null and beginDate != ''"> <!--开始日期-->
+				and b.ORDER_DATE &gt;=  #{beginDate}
+			</if>
+			<if test="endDate != null and endDate != ''"> <!--开始日期-->
+				and b.ORDER_DATE &lt;=  #{endDate} 
+			</if>
+			<if test="ORG_NAME!= null and ORG_NAME != ''"> <!--科室-->
+				and b.ORG_NAME = #{ORG_NAME} 
+			</if>
+			<if test="DOCTOR_NAME != null and DOCTOR_NAME != ''"> <!-- 医生名-->
+				and b.DOCTOR_NAME = #{DOCTOR_NAME}
+			</if>
+		group by b.DOCTOR_CODE,b.DOCTOR_NAME
+	</select>
+	
 		<!-- 	处方 按出院科室分组查询统计 -->
 	<select id="prescListByDep" parameterType="pd" resultType="pd">
 		select b.ORG_CODE,b.ORG_NAME ,count(a.rs_id) count
 		FROM RS_DRUG_CHECKRSLT a ,presc b
+		WHERE a.NGROUPNUM = b.NGROUPNUM
+				and a.RS_DRUG_TYPE = #{RS_DRUG_TYPE}
+			<if test="beginDate != null and beginDate != ''"> <!--开始日期-->
+				and b.ORDER_DATE &gt;=  #{beginDate}
+			</if>
+			<if test="endDate != null and endDate != ''"> <!--开始日期-->
+				and b.ORDER_DATE &lt;=  #{endDate} 
+			</if>
+			<if test="ORG_NAME!= null and ORG_NAME != ''"> <!--科室-->
+				and b.ORG_NAME = #{ORG_NAME} 
+			</if>
+			<if test="DOCTOR_NAME != null and DOCTOR_NAME != ''"> <!-- 医生名-->
+				and b.DOCTOR_NAME = #{DOCTOR_NAME}
+			</if>
+		group by b.ORG_CODE,b.ORG_NAME
+	</select>
+	
+	<!-- 	抗菌药物处方 按出院科室分组查询统计 -->
+	<select id="prescAntiListByDep" parameterType="pd" resultType="pd">
+		select b.ORG_CODE,b.ORG_NAME ,count(a.rs_id) count
+		FROM RS_DRUG_CHECKRSLT a ,presc_anti b
 		WHERE a.NGROUPNUM = b.NGROUPNUM
 				and a.RS_DRUG_TYPE = #{RS_DRUG_TYPE}
 			<if test="beginDate != null and beginDate != ''"> <!--开始日期-->
@@ -294,6 +414,29 @@
 		</if>
     </select>
     
+    <!-- 抗菌药物门(急)诊处方点评汇总 -->
+	<select id="prescAntiStatistics1" parameterType="pd"  resultType="pd">
+	    select nvl(SUM(HASKJ),0) HASKJ_SUM
+	    	,nvl(SUM(HASZS),0) HASZS_SUM 
+           ,nvl(SUM(DECODE(ISCHECKTRUE,0,1,0)),0) CHECKFALSE 
+           ,nvl(SUM(DECODE(ISCHECKTRUE,1,1,0)),0) CHECKTRUE 
+           ,nvl(SUM(DECODE(ISCHECKTRUE,2,1,0)),0) CHECKPEND 
+           ,nvl(SUM(BASEDRUG_COUNT),0) BASEDRUG_COUNT_SUM
+           ,nvl(SUM(DRUG_COUNT),0) DRUG_COUNT_SUM
+           ,nvl(SUM(ANTIDRUGCOSTS),0) ANTIDRUGCOSTS_SUM
+           ,nvl(SUM(AMOUNT),0) AMOUNT_SUM
+           ,nvl(SUM(MAXUSEDAY),0) MAXUSEDAY_SUM
+           ,nvl(count(id),0) as count 
+    	from  presc_anti a 
+    	where 1=1 
+    	<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
+			and a.ORDER_DATE &gt;= #{beginDate} 
+		</if>
+		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+			and a.ORDER_DATE &lt;= #{endDate}
+		</if>
+    </select>
+    
 	<select id="prescStatistics2" parameterType="pd"  resultType="pd">
 	   select nvl(count(drug_code),0) DRUG_COUNT
 	   	   ,nvl(sum(decode(ANTI_LEVEL,1,1,0)),0) ONE_LEVEL
@@ -313,6 +456,27 @@
 	        group by  a.drug_code,b.ANTI_LEVEL 
 	    )
 	 </select>
+	 
+	 <select id="prescAntiStatistics2" parameterType="pd"  resultType="pd">
+	   select nvl(count(drug_code),0) DRUG_COUNT
+	   	   ,nvl(sum(decode(ANTI_LEVEL,1,1,0)),0) ONE_LEVEL
+		   ,nvl(sum(decode(ANTI_LEVEL,2,1,0)),0) TWO_LEVEL
+		   ,nvl(sum(decode(ANTI_LEVEL,3,1,0)),0) THREE_LEVEL
+	   from ( 
+	        select a.drug_code,nvl(b.ANTI_LEVEL,1) ANTI_LEVEL 
+	        from  presc_detail a,pdss.drug_map b 
+	        where a.drug_code = b.drug_no_local 
+	              and b.IS_ANTI = 1 
+				<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
+					and a.prescdate &gt;= #{beginDate} 
+				</if>
+				<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+					and a.prescdate &lt;= #{endDate}
+				</if>
+	        group by  a.drug_code,b.ANTI_LEVEL 
+	    )
+	 </select>
+	 
 	 <!-- 门(急)诊处方点评汇总 -->
 	<select id="prescStatistics3" parameterType="pd"  resultType="pd">
 		 select nvl(count(PATIENT_ID),0) PATIENT_ID_COUNT
@@ -327,6 +491,23 @@
 			</if>
 		)
     </select>
+    
+    
+     <!-- 抗菌药门(急)诊处方点评汇总 -->
+	<select id="prescAntiStatistics3" parameterType="pd"  resultType="pd">
+		 select nvl(count(PATIENT_ID),0) PATIENT_ID_COUNT
+		 from (   select distinct(PATIENT_ID) PATIENT_ID
+	    	from  presc_anti a 
+	    	where 1=1 
+	    	<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
+				and a.ORDER_DATE &gt;= #{beginDate} 
+			</if>
+			<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+				and a.ORDER_DATE &lt;= #{endDate}
+			</if>
+		)
+    </select>
+    
 <!--                    超常规统计 start                   -->
 <!--   处方  超常规统计（科室） -->
 	 <select id="exceedCommonDep" parameterType="pd"  resultType="pd">
@@ -357,6 +538,39 @@
 		group by a.ORG_CODE,a.ORG_NAME 
 		order by a.ORG_NAME
 	 </select>
+	 
+	 <!--   抗菌药处方  超常规统计（科室） -->
+	 <select id="AntiexceedCommonDep" parameterType="pd"  resultType="pd">
+	 	select a.ORG_CODE,a.ORG_NAME
+	 			,nvl(sum(decode(rs_drug_type,'diaginfo',1,0)),0) diaginfo_sum
+		       ,nvl(sum(decode(rs_drug_type,'dosage',1,0)),0) dosage_sum
+		       ,nvl(sum(decode(rs_drug_type,'ingredien',1,0)),0) ingredien_sum
+		       ,nvl(sum(decode(rs_drug_type,'interaction',1,0)),0) interaction_sum
+		       ,nvl(sum(decode(rs_drug_type,'iv_effect',1,0)),0) iv_effect_sum
+		       ,nvl(sum(decode(rs_drug_type,'side',1,0)),0) side_sum
+		       ,nvl(sum(decode(rs_drug_type,'administrator',1,0)),0) administrator_sum
+		       ,nvl(sum(decode(rs_drug_type,'specpeople',1,0)),0) specpeople_sum
+		       ,nvl(sum(decode(rs_drug_type,'manager',1,0)),0) manager_sum
+		from presc_anti  a,RS_DRUG_CHECKRSLT b
+		where a.ngroupnum = b.ngroupnum(+)
+		<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
+			and a.ORDER_DATE &gt;= #{beginDate} 
+		</if>
+		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+			and a.ORDER_DATE &lt;= #{endDate}
+		</if>
+		<if test="ORG_NAME!= null and ORG_NAME != ''">
+			and a.ORG_NAME = #{ORG_NAME} 
+		</if>
+		<if test="DOCTOR_NAME != null and DOCTOR_NAME != ''"> <!-- 医生名-->
+			and a.DOCTOR_NAME = #{DOCTOR_NAME}
+		</if>
+		group by a.ORG_CODE,a.ORG_NAME 
+		order by a.ORG_NAME
+	 </select>
+	 
+	 
+	 
 <!-- 	处方 超常规统计（医生） -->
 	 <select id="exceedCommonDoctor" parameterType="pd"  resultType="pd">
 		 select a.DOCTOR_CODE,a.doctor_name
@@ -386,6 +600,38 @@
 		group by a.DOCTOR_CODE,a.doctor_name
 		order by a.doctor_name
 	 </select>
+	 
+	 <!-- 	抗菌药处方 超常规统计（医生） -->
+	 <select id="AntiexceedCommonDoctor" parameterType="pd"  resultType="pd">
+		 select a.DOCTOR_CODE,a.doctor_name
+				,nvl(sum(decode(rs_drug_type,'diaginfo',1,0)),0) diaginfo_sum
+		       ,nvl(sum(decode(rs_drug_type,'dosage',1,0)),0) dosage_sum
+		       ,nvl(sum(decode(rs_drug_type,'ingredien',1,0)),0) ingredien_sum
+		       ,nvl(sum(decode(rs_drug_type,'interaction',1,0)),0) interaction_sum
+		       ,nvl(sum(decode(rs_drug_type,'iv_effect',1,0)),0) iv_effect_sum
+		       ,nvl(sum(decode(rs_drug_type,'side',1,0)),0) side_sum
+		       ,nvl(sum(decode(rs_drug_type,'administrator',1,0)),0) administrator_sum
+		       ,nvl(sum(decode(rs_drug_type,'specpeople',1,0)),0) specpeople_sum
+		       ,nvl(sum(decode(rs_drug_type,'manager',1,0)),0) manager_sum
+		from presc_anti  a,RS_DRUG_CHECKRSLT b
+		where a.ngroupnum = b.ngroupnum(+)
+		<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
+			and a.ORDER_DATE &gt;= #{beginDate} 
+		</if>
+		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+			and a.ORDER_DATE &lt;= #{endDate}
+		</if>
+		<if test="ORG_NAME!= null and ORG_NAME != ''">
+			and a.ORG_NAME = #{ORG_NAME} 
+		</if>
+		<if test="DOCTOR_NAME != null and DOCTOR_NAME != ''"> <!-- 医生名-->
+			and a.DOCTOR_NAME = #{DOCTOR_NAME}
+		</if>
+		group by a.DOCTOR_CODE,a.doctor_name
+		order by a.doctor_name
+	 </select>
+	 
+	 
 	 <select id="exceedCommonAll" parameterType="pd"  resultType="pd">
 		 select nvl(sum(decode(rs_drug_type,'diaginfo',1,0)),0) diaginfo_sum
 		       ,nvl(sum(decode(rs_drug_type,'dosage',1,0)),0) dosage_sum
@@ -411,6 +657,34 @@
 			and a.DOCTOR_NAME = #{DOCTOR_NAME}
 		</if>
 	 </select>
+	 
+	 <select id="AntiexceedCommonAll" parameterType="pd"  resultType="pd">
+		 select nvl(sum(decode(rs_drug_type,'diaginfo',1,0)),0) diaginfo_sum
+		       ,nvl(sum(decode(rs_drug_type,'dosage',1,0)),0) dosage_sum
+		       ,nvl(sum(decode(rs_drug_type,'ingredien',1,0)),0) ingredien_sum
+		       ,nvl(sum(decode(rs_drug_type,'interaction',1,0)),0) interaction_sum
+		       ,nvl(sum(decode(rs_drug_type,'iv_effect',1,0)),0) iv_effect_sum
+		       ,nvl(sum(decode(rs_drug_type,'side',1,0)),0) side_sum
+		       ,nvl(sum(decode(rs_drug_type,'administrator',1,0)),0) administrator_sum
+		       ,nvl(sum(decode(rs_drug_type,'specpeople',1,0)),0) specpeople_sum
+		       ,nvl(sum(decode(rs_drug_type,'manager',1,0)),0) manager_sum
+		from presc_anti  a,RS_DRUG_CHECKRSLT b
+		where a.ngroupnum = b.ngroupnum
+		<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
+			and a.ORDER_DATE &gt;= #{beginDate} 
+		</if>
+		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+			and a.ORDER_DATE &lt;= #{endDate}
+		</if>
+		<if test="ORG_NAME!= null and ORG_NAME != ''">
+			and a.ORG_NAME = #{ORG_NAME} 
+		</if>
+		<if test="DOCTOR_NAME != null and DOCTOR_NAME != ''"> <!-- 医生名-->
+			and a.DOCTOR_NAME = #{DOCTOR_NAME}
+		</if>
+	 </select>
+	 
+	 
 	 <select id="prescCountDoctor" parameterType="pd"  resultType="pd">
 	 	select a.DOCTOR_CODE,nvl(sum(decode(ISCHECKTRUE,1,1,0)),0) checkfalse_sum
 	 		,count(id) presc_count
@@ -430,6 +704,28 @@
 		</if>
 	 	group by a.DOCTOR_CODE
 	 </select>
+	 
+	 <select id="prescAntiCountDoctor" parameterType="pd"  resultType="pd">
+	 	select a.DOCTOR_CODE,nvl(sum(decode(ISCHECKTRUE,1,1,0)),0) checkfalse_sum
+	 		,count(id) presc_count
+	 	from presc_anti a
+	 	WHERE 1=1 
+	 	<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
+			and a.ORDER_DATE &gt;= #{beginDate} 
+		</if>
+		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+			and a.ORDER_DATE &lt;= #{endDate}
+		</if>
+		<if test="ORG_NAME!= null and ORG_NAME != ''">
+			and a.ORG_NAME = #{ORG_NAME} 
+		</if>
+		<if test="DOCTOR_NAME != null and DOCTOR_NAME != ''"> <!-- 医生名-->
+			and a.DOCTOR_NAME = #{DOCTOR_NAME}
+		</if>
+	 	group by a.DOCTOR_CODE
+	 </select>
+	 
+	 
 	 <select id="prescCountDep" parameterType="pd"  resultType="pd">
 	 	select a.ORG_CODE,a.ORG_NAME,nvl(sum(decode(ISCHECKTRUE,1,1,0)),0) checkfalse_sum
 	 		,count(id) presc_count
@@ -449,6 +745,27 @@
 		</if>
 	 	group by a.ORG_CODE,a.ORG_NAME
 	 </select>
+	 
+	 <select id="prescAntiCountDep" parameterType="pd"  resultType="pd">
+	 	select a.ORG_CODE,a.ORG_NAME,nvl(sum(decode(ISCHECKTRUE,1,1,0)),0) checkfalse_sum
+	 		,count(id) presc_count
+	 	from presc_anti a
+	 	WHERE 1=1
+	 	<if test="beginDate != null and beginDate != ''"> <!-- 更新时间 开始-->  
+			and a.ORDER_DATE &gt;= #{beginDate} 
+		</if>
+		<if test="endDate != null and endDate != ''"> <!-- 更新时间 结束-->
+			and a.ORDER_DATE &lt;= #{endDate}
+		</if>
+		<if test="ORG_NAME!= null and ORG_NAME != ''">
+			and a.ORG_NAME = #{ORG_NAME} 
+		</if>
+		<if test="DOCTOR_NAME != null and DOCTOR_NAME != ''"> <!-- 医生名-->
+			and a.DOCTOR_NAME = #{DOCTOR_NAME}
+		</if>
+	 	group by a.ORG_CODE,a.ORG_NAME
+	 </select>
+	 
 	 
 	 <!-- 医嘱  超常规统计（科室） -->
 	 <select id="exceedCommonOrderDep" parameterType="pd"  resultType="pd">
@@ -508,6 +825,9 @@
 		group by a.ATTENDING_DOCTOR
 		order by a.ATTENDING_DOCTOR
 	 </select>
+	 
+	 
+	 
 	 <select id="exceedCommonOrderAll" parameterType="pd"  resultType="pd">
 		 select nvl(sum(decode(rs_drug_type,'diaginfo',1,0)),0) diaginfo_sum
 		       ,nvl(sum(decode(rs_drug_type,'dosage',1,0)),0) dosage_sum

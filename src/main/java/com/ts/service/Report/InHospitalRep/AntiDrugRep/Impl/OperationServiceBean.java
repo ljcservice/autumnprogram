@@ -57,4 +57,9 @@ public class OperationServiceBean  implements IOperationService
     {
         return (List<PageData>)daoPH.findForList("OperationRepMapper.findDRANO009", pd);
     }
+
+	@Override
+	public PageData DRANO007OperationById(PageData pd) throws Exception {
+		return (PageData)daoPH.findForObject("OperationRepMapper.findOperationRepById",pd);
+	}
 }

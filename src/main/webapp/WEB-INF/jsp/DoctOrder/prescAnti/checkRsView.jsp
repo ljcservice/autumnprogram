@@ -34,7 +34,7 @@
 				<div class="page-content">
 					<div class="row">
 						<div >
-							<form name="checkForm" id="checkForm" action="presc/checkRsView.do" method="post">
+							<form name="checkForm" id="checkForm" action="prescAnti/checkRsView.do" method="post">
 							<input type="hidden" value="${page.pd.id}" name="id" id="id"/>
 							<input type="hidden" value="${page.pd.ngroupnum}"  name="ngroupnum"  id="ngroupnum"/>
 							<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:0px;margin-bottom:0px;">
@@ -313,7 +313,7 @@ function delCheckRsBatch(){
 	});
 }
 function toAddCheckRs(ngroupnum){
-	var url = path + "/DoctOrder/toAddCheckRs.do?business_type=1&ngroupnum="+ngroupnum+"&id="+$("#id").val();
+	var url = path + "/DoctOrder/toAddCheckRs.do?business_type=2&ngroupnum="+ngroupnum+"&id="+$("#id").val();
 	//top.jzts();
 	var diag = new top.Dialog();
 	diag.Drag=true;
@@ -333,7 +333,7 @@ function toAddCheckRs(ngroupnum){
 	diag.show();
 }
 function editCheckRs(rs_id){
-	var url = path + "/DoctOrder/toEditCheckRs.do?business_type=1&rs_id="+rs_id;
+	var url = path + "/DoctOrder/toEditCheckRs.do?business_type=2&rs_id="+rs_id;
 	//top.jzts();
 	var diag = new top.Dialog();
 	diag.Drag=true;
@@ -385,7 +385,7 @@ function saveIsCheckTrue(){
 	
 	bootbox.confirm(msg, function(result) {
 		if(result) {
-			var url = path+"/presc/setCheckRsStatus.do?"+$("#checkForm").serialize();
+			var url = path+"/prescAnti/setCheckRsStatus.do?"+$("#checkForm").serialize();
 			$.get(url,function(data){
 				if(data.result=="success"){
 					if(ISCHECKTRUE==0){
@@ -407,7 +407,7 @@ function saveIsCheckTrue(){
 function expertOrders(){
 	//top.jzts();
 	//处方专家列表
-	var url = path + "/expert/selectExpertList.do?business_type=1&IS_RECIPE=1&id="+$("#id").val();
+	var url = path + "/expert/selectExpertList.do?business_type=2&IS_RECIPE=1&id="+$("#id").val();
 	var diag = new top.Dialog();
 	diag.Drag=true;
 	diag.Title ="编辑点评";
@@ -431,7 +431,7 @@ function refreshAll(){
 
 function refreshDoctFrame(){
 	var myngroupnum =  $("#ngroupnum").val(); 
-	var orderUrl = "presc/prescDetailList.do?id=${page.pd.id}&ngroupnum=" + myngroupnum;
+	var orderUrl = "prescAnti/prescDetailList.do?id=${page.pd.id}&ngroupnum=" + myngroupnum;
 	//刷新下方iframe列表
 	//parent.$("#DoctFrame").attr("src",orderUrl);// = orderUrl ;  
 	parent.frames["DoctFrame"].refreshPage(myngroupnum);

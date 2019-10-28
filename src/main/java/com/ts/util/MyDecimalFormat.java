@@ -11,6 +11,13 @@ public class MyDecimalFormat {
 		}
 		return decimalFormat.format(b);
 	}
+	
+	public static String format(Long b){
+		if(b==null){
+			return "0";
+		}
+		return decimalFormat.format(b);
+	}
 	public static void main(String[] args) {
 		System.out.println(format(new Double(0)));
 	}

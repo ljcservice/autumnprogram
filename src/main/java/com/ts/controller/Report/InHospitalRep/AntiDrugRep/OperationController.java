@@ -8,6 +8,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ts.controller.base.BaseController;
 import com.ts.entity.Page;
+import com.ts.service.DoctOrder.OrderWork.IOrderWorkService;
 import com.ts.service.Report.InHospitalRep.AntiDrugRep.IOperationService;
 import com.ts.util.ObjectExcelView;
 import com.ts.util.PageData;
@@ -26,6 +29,8 @@ public class OperationController extends BaseController
 
     @Resource(name="operationServiceBean")
     private IOperationService oper;
+    @Autowired @Qualifier("orderWorkServiceBean")
+	private IOrderWorkService orderWorkService;
     
     
     @RequestMapping(value="/DRANO004UI")
@@ -130,6 +135,34 @@ public class OperationController extends BaseController
         mv.setViewName("Reprot/InHospitalRep/AntiDrugRep/DRANO007");
         return mv ;
     }
+    
+    @RequestMapping(value="/DRANO007WorkDetail")
+    public ModelAndView DRANO07WorkDetail(Page page)throws Exception{
+        ModelAndView mv = this.getModelAndView();
+        PageData pd = this.getPageData();
+        try
+        {
+            page.setPd(pd);
+            
+            PageData pdPat = this.orderWorkService.findByPatient(page);
+
+    		PageData pdOper = this.oper.DRANO007OperationById(pd);
+    		//查询结果ByNgroupnum
+//    		List<PageData> checkRss = this.orderWorkService.findByCheckResultsByNgroupnum(page);
+//    		mv.addObject("checkRss", checkRss);
+//    		mv.setViewName("DoctOrder/OrderWork/OrderWorkDetail");
+    		mv.addObject("pat", pdPat);
+    		mv.addObject("oper",pdOper);
+            
+        }
+        catch(Exception e)
+        {
+            logger.error(e.toString(), e);
+        }
+        mv.setViewName("Reprot/InHospitalRep/AntiDrugRep/DRANO007WorkDetail");
+        return mv ;
+    }
+    
     @RequestMapping(value="/DRANO007Export")
     public ModelAndView DRANO007Export(Page page)throws Exception{
         ModelAndView mv = this.getModelAndView();
@@ -147,11 +180,14 @@ public class OperationController extends BaseController
 			titles.add("手术日期");
 			titles.add("原切口类型");
 			titles.add("现切口类型");
+			titles.add("诊断信息");
+			titles.add("抗菌药医嘱");
 			titles.add("抗菌药");
 			titles.add("联合用药");
 			titles.add("品种");
 			titles.add("疗程");
 			titles.add("时机");
+			titles.add("建议");
 			dataMap.put("titles", titles);
             
             List<PageData> varList = new ArrayList<PageData>();
@@ -165,6 +201,7 @@ public class OperationController extends BaseController
                 }
                 if(varOList!=null){
         			for(int i=0;i<varOList.size();i++){
+        				Page  myPage = new Page(); 
         				PageData vpd = new PageData();
         				vpd.put("var1", varOList.get(i).get("name"));	//2
         				vpd.put("var2", varOList.get(i).get("OPERATION_DESC"));	//4
@@ -173,20 +210,27 @@ public class OperationController extends BaseController
         				vpd.put("var5", varOList.get(i).get("OPERATING_DATE"));
         				vpd.put("var6", varOList.get(i).get("WOUND_GRADE"));
         				vpd.put("var7", varOList.get(i).get("WOUND_GRADE_UPDATE"));
-        				vpd.put("var8", "1".equals(varOList.get(i).getString("HAS_ANTI"))?"是":"");
+        				// 诊断信息
+        				vpd.put("var8",getDiagnosisinfo(varOList.get(i).getString("patient_ID")
+        						,varOList.get(i).getString("visit_ID")));
+        				// 抗菌药物医嘱
+        				vpd.put("var9",AntiOrdersDetail(varOList.get(i).getString("patient_ID")
+        						,varOList.get(i).getString("visit_ID")));
+        				vpd.put("var10", "1".equals(varOList.get(i).getString("HAS_ANTI"))?"是":"");
         				String LH = varOList.get(i).getString("LH");
         				if("1".equals(LH)){
-        					vpd.put("var9", "一联");
+        					vpd.put("var11", "一联");
         				}if("2".equals(LH)){
-        					vpd.put("var9", "二联");
+        					vpd.put("var11", "二联");
         				}if("3".equals(LH)){
-        					vpd.put("var9", "三联");
+        					vpd.put("var11", "三联");
         				}if("4".equals(LH)){
-        					vpd.put("var9", "多联");
+        					vpd.put("var11", "多联");
         				}
-        				vpd.put("var10", "1".equals(varOList.get(i).getString("PZ"))?"是":"");
-        				vpd.put("var11", "1".equals(varOList.get(i).getString("IS_TREATMENT"))?"是":"");
-        				vpd.put("var12", "1".equals(varOList.get(i).getString("IS_TIMING"))?"是":"");
+        				vpd.put("var12", "1".equals(varOList.get(i).getString("PZ"))?"是":"");
+        				vpd.put("var13", "1".equals(varOList.get(i).getString("IS_TREATMENT"))?"是":"");
+        				vpd.put("var14", "1".equals(varOList.get(i).getString("IS_TIMING"))?"是":"");
+        				vpd.put("var15", varOList.get(i).getString("context"));
         				varList.add(vpd);
         			}
                 }
@@ -201,6 +245,62 @@ public class OperationController extends BaseController
         }
         return mv ;
     }
+
+    /**
+     * 诊断信息
+     * @param patId
+     * @param visitId
+     * @return
+     * @throws Exception
+     */
+    private String getDiagnosisinfo(String patId , String visitId) throws Exception {
+    	PageData  pd = new PageData();
+		pd.put("patient_id", patId);
+		pd.put("visit_id", visitId);
+		List<PageData> myPds = this.orderWorkService.queryDiagnosisByPatVisist(pd);
+		String rsInfo = "";
+		for(PageData entity : myPds)
+		{
+			String diagnosis = entity.getString("diagnosis_desc");
+
+			rsInfo += diagnosis + ";";
+		}
+		return rsInfo ;
+    }
+    
+    /**
+     * 
+     * @param patId
+     * @param visitId
+     * @return
+     * @throws Exception
+     */
+	private String AntiOrdersDetail(String patId ,String visitId) throws Exception {
+		Page myPage = new Page();
+		PageData  pd = new PageData();
+		pd.put("patient_id", patId);
+		pd.put("visit_id", visitId);
+		pd.put("HASKJ","HASKJ");
+		pd.put("order_class","A");
+		pd.put("DRUG_TYPE","HASKJ");
+		myPage.setPd(pd);
+		//抗菌药物医嘱
+		List<PageData> myPds = this.orderWorkService.orderList(myPage);
+		String rsInfo = "";
+		for(PageData entity : myPds)
+		{
+			String beginDate = entity.getString("start_date_time");
+			String endDate   = entity.getString("stop_date_time");
+			String drugName  = entity.getString("order_Text");
+			String frequency = entity.getString("frequency");
+			String dosageUnit = entity.getString("dosage" ) + entity.getString("dosage_units");
+			String administr  = entity.getString("");
+			rsInfo += drugName + "[" + beginDate + "" + endDate  +"] "+ frequency + dosageUnit + administr + "\r\n";
+		}
+		return rsInfo;
+	}
+	
+	
     @RequestMapping(value="DRANO07_Ajax01")
     @ResponseBody
     public Object DRANO07_01() throws Exception{

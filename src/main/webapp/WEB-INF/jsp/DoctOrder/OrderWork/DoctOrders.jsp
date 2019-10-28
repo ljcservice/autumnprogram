@@ -36,13 +36,16 @@
 							<input type="hidden" name="show_type_name" value="${page.pd.show_type_name }" id="show_type_name"/>
 							<input type="hidden" name="drug_type" value="${page.pd.drug_type }" id="drug_type"/>
 							<input type="hidden" name="drug_type_name" value="${page.pd.drug_type_name }" id="drug_type_name"/>
+							<input type="hidden" name="checkOrder" value="${page.pd.checkOrder }" id="checkOrder" />
 							<!-- 快捷审核名字  -->
 							<input type="hidden" name="shortcutName" value="${page.pd.shortcutName}" id="shortcutName"/>
 							<!-- 点评结果之一 -->
 							<input type="hidden" name="checkJsonInfo" value='${page.pd.checkJsonInfo}' id="checkJsonInfo"/>
 						<div id="btn-toolbar" style="vertical-align:bottom;padding: 3px;">
 							<div style="margin-top: 5px;margin-bottom: 5px;">
-								<span><b><font color="#6fb3e0" size="4">医嘱信息</font></b><font color="#87b87f">（温馨提示：只有药疗类型的医嘱才能进行点评）</font></span>
+								<span><b><font color="#6fb3e0" size="4">医嘱信息</font></b>
+									<c:if test="${page.pd.checkOrder!='0' }"> <font color="#87b87f">（温馨提示：只有药疗类型的医嘱才能进行点评）</font> </c:if>
+								</span>
 								<div style="float: right;margin-bottom: 5px;">
 									<div  class="btn-toolbar" style="float: right;">
 <!-- 									药品类型 begin -->
@@ -199,37 +202,37 @@
 										</ul>
 									
 									</div><!-- /.btn-group -->
-									
-									<c:if test="${modifyFlag==1 }">
-										<div class="btn-group">
-											<button data-toggle="dropdown" class="btn btn-info btn-sm dropdown-toggle">
-												<span id="shortcutNameSpan" >
-													${page.pd.shortcutName != null && page.pd.shortcutName !=''?page.pd.shortcutName:"快捷点评"}
-												</span>
-												<span class="ace-icon fa fa-caret-down icon-on-right"></span>
-											</button>
-
-											<ul class="dropdown-menu dropdown-info dropdown-menu-right"> 
-												<c:forEach items="${rsTypeDict.keySet()}" var="dict" varStatus="vs">
-												<li>
-													<a href="javascript:shortcutCheck(${rsTypeDict.get(dict).rs_count },'${rsTypeDict.get(dict).rs_type_code }','${rsTypeDict.get(dict).rs_type_name }');">${rsTypeDict.get(dict).rs_type_name }</a>
-												</li>
-												</c:forEach>
-												<li class="divider"></li>
-												<li>
-													<a href="javascript:reSetCheck()" id="resetCheckId">
-														<c:if test="${page.pd.shortcutName != null && page.pd.shortcutName !=''}">
-															已经选中：${page.pd.shortcutName }
-														</c:if>
-														<c:if test="${page.pd.shortcutName == null || page.pd.shortcutName ==''}">
-															未选择点评项
-														</c:if>
-													</a>
-												</li>
-											</ul>
-										</div><!-- /.btn-group -->
-									</c:if>
-										
+									<c:if test="${page.pd.checkOrder!='0' }">
+										<c:if test="${modifyFlag==1 }">
+											<div class="btn-group">
+												<button data-toggle="dropdown" class="btn btn-info btn-sm dropdown-toggle">
+													<span id="shortcutNameSpan" >
+														${page.pd.shortcutName != null && page.pd.shortcutName !=''?page.pd.shortcutName:"快捷点评"}
+													</span>
+													<span class="ace-icon fa fa-caret-down icon-on-right"></span>
+												</button>
+	
+												<ul class="dropdown-menu dropdown-info dropdown-menu-right"> 
+													<c:forEach items="${rsTypeDict.keySet()}" var="dict" varStatus="vs">
+													<li>
+														<a href="javascript:shortcutCheck(${rsTypeDict.get(dict).rs_count },'${rsTypeDict.get(dict).rs_type_code }','${rsTypeDict.get(dict).rs_type_name }');">${rsTypeDict.get(dict).rs_type_name }</a>
+													</li>
+													</c:forEach>
+													<li class="divider"></li>
+													<li>
+														<a href="javascript:reSetCheck()" id="resetCheckId">
+															<c:if test="${page.pd.shortcutName != null && page.pd.shortcutName !=''}">
+																已经选中：${page.pd.shortcutName }
+															</c:if>
+															<c:if test="${page.pd.shortcutName == null || page.pd.shortcutName ==''}">
+																未选择点评项
+															</c:if>
+														</a>
+													</li>
+												  </ul>
+												</div><!-- /.btn-group -->
+											</c:if>
+										</c:if>
 									</div>
 								</div>
 							</div>
