@@ -7,7 +7,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
+import org.apache.commons.collections.CollectionUtils;
 
 import com.ts.dao.DaoSupport;
 import com.ts.entity.Page;

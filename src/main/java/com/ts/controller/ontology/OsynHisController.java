@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.util.CollectionUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 

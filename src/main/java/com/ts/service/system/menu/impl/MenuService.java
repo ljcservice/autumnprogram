@@ -9,7 +9,7 @@ import javax.annotation.Resource;
 
 import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
+import org.apache.commons.collections.CollectionUtils;
 
 import com.ts.dao.DaoSupport;
 import com.ts.entity.system.Menu;

@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.CollectionUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
